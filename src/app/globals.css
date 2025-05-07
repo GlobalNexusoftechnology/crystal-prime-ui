@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffff;
+  --foreground: #1d052c;
+}
+/*
+TODO: add styling for dark mode later. 
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* --background: #0a0a0a;
+    --foreground: #ededed; */
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: scroll !important;
+}
+
+.clothing-container::-webkit-scrollbar {
+  width: 0;
+}
+
+@layer utilities {
+  .scrollbar-none {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
+  }
+}
+
