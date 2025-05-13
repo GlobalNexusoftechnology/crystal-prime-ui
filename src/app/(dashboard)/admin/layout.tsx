@@ -1,17 +1,17 @@
 import "../../globals.css";
 import { ReactQueryProvider } from "@/services/react-query";
-import { RoleRedirectWrapper, SidebarLayout } from "@/components";
+import { RoleRedirectWrapper, AdminSidebarLayout } from "@/components";
 import { Montserrat } from "next/font/google";
 import { Metadata } from "next";
-import { sidebarLinks } from "@/constants";
+import { adminSidebarLinks } from "@/constants";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "Satkar",
-  description: "This is Satkar web app",
+  title: "Reliable Tours & Travels",
+  description: "This is Reliable Tours & Travels web app",
 };
 
 export default function RootAdminLayout({
@@ -25,11 +25,11 @@ export default function RootAdminLayout({
         <body
           className={`${montserrat.className} flex flex-col justify-between`}
         >
-          <div className="px-2 md:px-10 2xl:px-[6vw]">
+          <div>
             <RoleRedirectWrapper>
-              <SidebarLayout sidebarLinks={sidebarLinks}>
+              <AdminSidebarLayout adminSidebarLinks={adminSidebarLinks}>
                 {children}
-              </SidebarLayout>
+              </AdminSidebarLayout>
             </RoleRedirectWrapper>
           </div>
         </body>

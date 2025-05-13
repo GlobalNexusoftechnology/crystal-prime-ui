@@ -18,8 +18,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Satkar",
-  description: "This is Satkar web app",
+  title: "Reliable Tours & Travels",
+  description: "This is Reliable Tours & Travels web app",
 };
 
 export default function RootLayout({

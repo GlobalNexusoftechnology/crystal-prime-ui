@@ -1,92 +1,101 @@
 "use client";
-import { useState, FC, ChangeEvent, InputHTMLAttributes } from "react";
+import React, { useState } from "react";
 
-interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
+interface InputProps
+  extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
-  placeholder?: string;
-  type?: string;
-  name: string;
-  value?: string;
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-
-  error?: string;
-  required?: boolean;
+  error?: string | null;
   icon?: React.ReactNode;
-  onIconClick?: () => void;
-  onButtonChange?: () => void;
-  labelStyle?: string;
-  customClassName?: string;
+  suffixIcon?: React.ReactNode;
+  onIconClick?: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
+  isRequired?: boolean;
+  inputBorderRadius?: string;
+  textAreaBorderRadius?: string;
 }
 
-/**
- * InputField component for rendering a labeled input with validation and styling.
- *
- * @param {InputFieldProps} props - Props for the input field.
- * @returns {JSX.Element} The rendered input field component.
- */
-export const InputField: FC<InputFieldProps> = ({
+export function InputField({
   label,
-  placeholder,
-  type = "text",
-  name,
-  value,
-  onChange,
-  error = "",
-  required = false,
+  error,
   icon,
+  suffixIcon,
   onIconClick,
-  labelStyle,
-  customClassName,
-  onButtonChange,
+  isRequired = false,
+  className,
+  disabled,
+  type = "text",
+  inputBorderRadius = "rounded-xl 2xl:rounded-[0.75vw]",
+  textAreaBorderRadius = "rounded-xl 2xl:rounded-[0.75vw]",
   ...props
-}) => {
-  const [focused, setFocused] = useState(false);
-
-  const handleFocus = () => {
-    setFocused(true);
-  };
-
-  const handleBlur = () => {
-    setFocused(false);
-  };
+}: InputProps) {
+  const [isFocused, setIsFocused] = useState(false);
+  const isTextArea = type === "textarea";
 
   return (
-    <div className="mb-4">
+    <div className="w-full">
+      {/* Label */}
       {label && (
-        <label
-          htmlFor={name}
-          className={`block text-[1rem] 2xl:text-[1.1vw] 2xl:mb-[0.7rem] text-gray-700 ${labelStyle} font-medium`}
-        >
-          {label} {required && <span className={"text-red-500"}>*</span>}
+        <label className="block 2xl:text-[1vw] text-gray-700 mb-2 2xl:mb-[0.5vw]">
+          {label} {isRequired && <span className="text-red-500">*</span>}
         </label>
       )}
-      <div className="relative">
-        <input
-          type={type}
-          name={name}
-          id={name}
-          value={value}
-          onChange={onChange}
-          onClick={onIconClick}
-          placeholder={placeholder}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          className={`w-full p-2 py-2 pr-10 border text-[1rem] 2xl:text-[1.1vw] rounded-md ${customClassName} mt-1 focus:outline-none  focus:ring-2 ${
-            focused ? "focus:ring-[#3a9942]" : "focus:ring-[#F4DF83]"
-          } ${error ? "border-[#7a7878]" : "border-[#7a7878]"}`} // change border color based on figma
-          required={required}
-          {...props}
-        />
-        {icon && (
+
+      {/* Input Wrapper */}
+      <div
+        className={`flex items-${
+          isTextArea ? "start" : "center"
+        } border 2xl:border-[0.1vw] ${
+          error
+            ? "border-red-500"
+            : isFocused
+            ? "border-primary ring-1 ring-primary"
+            : "border-gray-300"
+        } ${
+          isTextArea ? textAreaBorderRadius : inputBorderRadius
+        } px-4 2xl:px-[1vw] py-3 2xl:py-[0.7vw] bg-white transition focus-within:ring-1 focus-within:ring-primary ${className}`}
+      >
+        {/* Left Icon */}
+        {icon && <span className="mr-3 text-gray-500">{icon}</span>}
+
+        {/* Input or Textarea */}
+        {isTextArea ? (
+          <textarea
+            className="w-full bg-transparent outline-none resize-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={disabled}
+            required={isRequired}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+          />
+        ) : (
+          <input
+            className="w-full bg-transparent outline-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={disabled}
+            required={isRequired}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+            {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
+          />
+        )}
+
+        {/* Right Icon (e.g., Eye for Password) */}
+        {suffixIcon && (
           <span
-            onClick={onButtonChange}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 z-50 cursor-pointer"
+            className="text-gray-500 cursor-pointer"
+            onClick={(e) => {
+              if (onIconClick) onIconClick(e);
+            }}
           >
-            {icon}
+            {suffixIcon}
           </span>
         )}
       </div>
-      {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
+
+      {/* Error Message */}
+      {error && (
+        <p className="text-red-500 text-sm 2xl:text-[0.9vw] 2xl:mt-[0.25vw] mt-1">
+          {error}
+        </p>
+      )}
     </div>
   );
-};
+}

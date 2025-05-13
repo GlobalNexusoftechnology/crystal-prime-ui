@@ -1,43 +1,35 @@
-import React from "react";
+import {TIconProps} from "@/constants"
 
-type TSearchIconProps = {
-  width?: number;
-  height?: number;
-  stroke?: string;
-  strokeWidth?: number;
-};
-
-/**
- * ---------------------------------------------------------------------------
- * A circle with a diagonal line through it, with customizable width, height, stroke, and strokeWidth.
- */
+// SearchIcon component renders a search (magnifying glass) icon.
 export function SearchIcon({
-  width = 24,
-  height = 24,
-  stroke = "white", // default stroke color is white
-  strokeWidth = 2, // default stroke width is 2
-}: TSearchIconProps) {
+  className = "w-full h-full",
+  color = "#2B2B3A",
+}: TIconProps) {
   return (
     <svg
-      width={width}
-      height={height}
-      viewBox="0 0 24 24"
+      className={className}
+      viewBox="0 0 17 17"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <circle
-        cx="11"
-        cy="11"
-        r="6"
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-      />
-      <path
-        d="M20 20L17 17"
-        stroke={stroke}
-        strokeWidth={strokeWidth}
-        strokeLinecap="round"
-      />
+      <g opacity="0.5">
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M9.69356 12.5352C12.4234 11.375 13.6959 8.22157 12.5357 5.49173C11.3756 2.76189 8.22212 1.48941 5.49228 2.64957C2.76244 3.80972 1.48996 6.96318 2.65011 9.69302C3.81027 12.4229 6.96373 13.6953 9.69356 12.5352Z"
+          stroke={color}
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <path
+          d="M11.3902 11.3896L15.5556 15.5556"
+          stroke={color}
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </g>
     </svg>
   );
 }
