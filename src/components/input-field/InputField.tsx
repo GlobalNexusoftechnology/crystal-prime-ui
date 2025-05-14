@@ -23,8 +23,8 @@ export function InputField({
   className,
   disabled,
   type = "text",
-  inputBorderRadius = "rounded-xl 2xl:rounded-[0.75vw]",
-  textAreaBorderRadius = "rounded-xl 2xl:rounded-[0.75vw]",
+  inputBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
+  textAreaBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
   ...props
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -51,7 +51,7 @@ export function InputField({
             : "border-gray-300"
         } ${
           isTextArea ? textAreaBorderRadius : inputBorderRadius
-        } px-4 2xl:px-[1vw] py-3 2xl:py-[0.7vw] bg-white transition focus-within:ring-1 focus-within:ring-primary ${className}`}
+        } px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] bg-white transition focus-within:ring-1 focus-within:ring-primary ${className}`}
       >
         {/* Left Icon */}
         {icon && <span className="mr-3 text-gray-500">{icon}</span>}

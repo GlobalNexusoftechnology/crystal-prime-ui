@@ -10,8 +10,8 @@ const montserrat = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Reliable Tours & Travels",
-  description: "This is Reliable Tours & Travels web app",
+  title: "Satkar",
+  description: "This is Satkar web app",
 };
 
 export default function RootLayout({
