@@ -1,7 +1,12 @@
+'use client';
+
 import Link from "next/link";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 import { InputField, Button } from "@/components";
 import { AuthCard } from "@/features";
+
 /**
  * EmailValidation Component
  *
@@ -18,26 +23,48 @@ type TEmailValidationProps = {
 };
 
 export function EmailValidation({ onNext }: TEmailValidationProps) {
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string().email("Invalid email address").required("Email is required"),
+    }),
+    onSubmit: (values) => {
+      console.log("Email Submitted:", values);
+      onNext();
+    },
+  });
+
   return (
     <div className="flex justify-center items-center ">
-      <AuthCard
-        title="Forget Password"
-        copyright="Copyright ©Satkar.com | 2025"
-      >
-        <div className="flex flex-col gap-4 2xl:gap-[1vw]">
-          <span className="text-[1rem] 2xl:text-[1vw] text-center ">
+      <AuthCard title="Forget Password" copyright="Copyright ©Satkar.com | 2025">
+        <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 2xl:gap-[1vw]">
+          <span className="text-[1rem] 2xl:text-[1vw] text-center">
             Please provide your credentials to access your account.
           </span>
+
+          {/* Email Input Field */}
           <div>
-            <InputField placeholder="Enter Email" label="Email" />
+            <InputField
+              label="Email"
+              placeholder="Enter Email"
+              name="email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.email && formik.errors.email ? formik.errors.email : undefined}
+            />
           </div>
 
-          <Button title="Send OTP" onClick={onNext} />
+          {/* Buttons */}
+          <Button title="Send OTP" type="submit" />
           <Button title="Cancel" variant="primary-outline" />
 
+          {/* Link to Create Account */}
           <div className="flex gap-2 2xl:gap-[0.5vw]">
             <span className="text-sm 2xl:text-[0.875vw] text-primary font-medium">
-              Now here
+              New here?
             </span>
             <Link
               href="/create-account"
@@ -46,7 +73,7 @@ export function EmailValidation({ onNext }: TEmailValidationProps) {
               Create your account now
             </Link>
           </div>
-        </div>
+        </form>
       </AuthCard>
     </div>
   );

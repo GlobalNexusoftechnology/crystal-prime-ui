@@ -17,7 +17,6 @@ import { Button } from "@/components";
  * - children: Form elements or content passed into the card.
  */
 
-
 interface IAuthCardProps {
   title: string;
   copyright: string;
@@ -53,12 +52,14 @@ export const AuthCard: React.FC<IAuthCardProps> = ({
       </div>
 
       <div className="xl:absolute xl:top-[50%] xl:left-[50%] xl:translate-x-[-50%] xl:translate-y-[-50%] flex flex-col gap-4 2xl:gap-[1vw] justify-center items-center w-full h-full">
-        <form className="bg-white flex flex-col p-6 2xl:p-[1.5vw] border border-gray-300 border-b-4 border-b-primary rounded-xl 2xl:rounded-[0.75vw] shadow-xl w-full sm:w-[60%] md:w-[50vw] lg:w-[40vw] xl:w-[30vw]">
+        <div className="bg-white flex flex-col p-6 2xl:p-[1.5vw] border border-gray-300 border-b-4 border-b-primary rounded-xl 2xl:rounded-[0.75vw] shadow-xl w-full sm:w-[60%] md:w-[50vw] lg:w-[40vw] xl:w-[30vw]">
           <h1 className="text-2xl md:text-3xl 2xl:text-[1.875vw] font-bold mb-4 2xl:mb-[1vw] text-center">
             {title}
           </h1>
-          <div>{children}</div>
-        </form>
+          <div className="min-h-[300px] max-h-[400px] overflow-y-auto scrollbar-hidden">
+            {children}
+          </div>
+        </div>
         <div className="text-sm 2xl:text-[0.875vw] text-white">{copyright}</div>
       </div>
     </section>
