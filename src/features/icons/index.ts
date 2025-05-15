@@ -6,4 +6,5 @@ export { LeadManagementIcon } from "./LeadManagementIcon";
 export { ProjectManagementIcon } from "./ProjectManagementIcon";
 export { TaskManagementIcon } from "./TaskManagementIcon";
 export { StaffManagementIcon } from "./StaffManagementIcon";
-export { SettingsIcon } from "./SettingsIcon"
+export { SettingsIcon } from "./SettingsIcon";
+export { AnalyticalCardIcon } from "./AnalyticalCardIcon";
