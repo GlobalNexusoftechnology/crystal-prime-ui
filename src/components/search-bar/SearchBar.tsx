@@ -28,7 +28,7 @@ export function SearchBar({
   const [query, setQuery] = useState(""); // State to store the search query
 
   return (
-    <div className="relative flex items-center bg-transparent border 2xl:border-[0.1vw] border-gray-400 px-4 py-2 min-w-sm rounded-xl 2xl:rounded-[0.75vw] min-w-[12rem] w-[25vw]">
+    <div className="relative flex items-center bg-transparent border 2xl:border-[0.1vw] border-gray-400 px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] min-w-sm rounded-xl 2xl:rounded-[0.75vw] min-w-[12rem] w-[25vw]">
       {/* Search Icon */}
       <SearchIcon className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
 
@@ -41,7 +41,7 @@ export function SearchBar({
           onSearch(e.target.value); // Trigger the search function
         }}
         placeholder={placeholder}
-        className="ml-2 bg-transparent focus:outline-none w-full"
+        className="ml-2 2xl:ml-[0.5vw] bg-transparent focus:outline-none w-full 2xl:text-[1vw]"
       />
     </div>
   );
