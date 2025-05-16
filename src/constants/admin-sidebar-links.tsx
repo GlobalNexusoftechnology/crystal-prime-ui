@@ -7,7 +7,6 @@ import {
   SettingsIcon,
   StaffManagementIcon,
   TaskManagementIcon,
-  UserIcon,
 } from "@/features";
 
 /**
@@ -41,43 +40,37 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   {
     path: "/admin/dashboard",
     name: "Dashboard",
-    icon: <DashboardIcon color="#7F7F7F" />,
-    activeIcon: <DashboardIcon />,
+    icon: <DashboardIcon />,
+    activeIcon: <DashboardIcon color="white" />,
   },
   {
     path: "/admin/lead-management",
     name: "Lead Management",
-    icon: <LeadManagementIcon color="#7F7F7F" />,
-    activeIcon: <LeadManagementIcon />,
+    icon: <LeadManagementIcon />,
+    activeIcon: <LeadManagementIcon color="white" />,
   },
   {
     path: "/admin/project-management",
     name: "Project Management",
-    icon: <ProjectManagementIcon color="#7F7F7F" />,
-    activeIcon: <ProjectManagementIcon />,
+    icon: <ProjectManagementIcon />,
+    activeIcon: <ProjectManagementIcon color="white" />,
   },
   {
     path: "/admin/task-management",
     name: "Task Management",
-    icon: <TaskManagementIcon color="#7F7F7F" />,
-    activeIcon: <TaskManagementIcon />,
+    icon: <TaskManagementIcon />,
+    activeIcon: <TaskManagementIcon color="white" />,
   },
   {
     path: "/admin/staff-management",
     name: "Staff Management",
-    icon: <StaffManagementIcon color="#7F7F7F" />,
-    activeIcon: <StaffManagementIcon />,
-  },
-    {
-    path: "/admin/profile",
-    name: "User Profile",
-    icon: <UserIcon color="#7F7F7F" />,
-    activeIcon: <UserIcon />,
+    icon: <StaffManagementIcon />,
+    activeIcon: <StaffManagementIcon color="white" />,
   },
   {
     path: "/admin/settings",
     name: "Settings",
-    icon: <SettingsIcon color="#7F7F7F" />,
-    activeIcon: <SettingsIcon />,
+    icon: <SettingsIcon />,
+    activeIcon: <SettingsIcon color="white" />,
   },
 ];
