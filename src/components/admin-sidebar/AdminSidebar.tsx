@@ -86,13 +86,6 @@ export function AdminSidebar({
                   {link.name}
                 </span>
               </button>
-
-              {/* Tooltip (Visible only when hovering over icon) */}
-              {isVisibleSidebar && (
-                <span className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-200">
-                  {link.name}
-                </span>
-              )}
             </li>
           );
         })}

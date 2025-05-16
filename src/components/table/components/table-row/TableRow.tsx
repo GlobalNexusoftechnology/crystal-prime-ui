@@ -17,9 +17,9 @@ export function TableRow<T extends { id: string | number }>({
 
   return (
     <tr className="border-t 2xl:border-[0.1vw] border-gray-200 hover:bg-gray-50 relative">
-      <td className="p-3 2xl:p-[0.75vw] font-medium text-gray-700">{String(index + 1).padStart(3, "0")}</td>
+      <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">{String(index + 1).padStart(3, "0")}</td>
       {columns.map((col) => (
-        <td key={String(col.accessor)} className="p-3">
+        <td key={String(col.accessor)} className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw]">
           {String(row[col.accessor])}
         </td>
       ))}
@@ -36,11 +36,11 @@ export function TableRow<T extends { id: string | number }>({
           </button>
 
           {isOpen && (
-            <div className="absolute right-[90%] top-[80%] bg-white shadow-lg rounded border z-10 w-32 2xl:w-[8vw]">
+            <div className="absolute right-[90%] top-[80%] bg-white shadow-lg rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] z-10 w-32 2xl:w-[10vw]">
               {actions.map((action, index) => (
                 <button
                   key={index}
-                  className={`block w-full px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left hover:bg-gray-100 ${
+                  className={`block w-full px-4 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left hover:bg-gray-100 ${
                     action.className || ""
                   }`}
                   onClick={() => {

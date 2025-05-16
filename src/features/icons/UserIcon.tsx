@@ -2,7 +2,7 @@ import { TIconProps } from "@/constants";
 
 export function UserIcon({
   className="w-full h-full",
-  color = "#ffff"
+  color = "#505050"
 }: TIconProps) {
   return (
     <svg

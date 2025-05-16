@@ -26,7 +26,7 @@ export function AdminSidebarLayout({
   };
 
   return (
-    <div className="w-full flex justify-end h-screen overflow-hidden">
+    <div className="w-full flex justify-end h-screen overflow-auto">
       {/* Sidebar */}
       <div
         className={`${
