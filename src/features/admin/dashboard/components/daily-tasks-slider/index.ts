@@ -1,0 +1,1 @@
+export { DailyTasksSlider } from "./DailyTasksSlider"

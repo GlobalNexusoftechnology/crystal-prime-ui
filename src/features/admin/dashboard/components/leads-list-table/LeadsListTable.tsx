@@ -114,12 +114,12 @@ const actions: ITableAction<ILeadsListProps>[] = [
 ];
 
 const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
-  { header: "LEAD NAME", accessor: "name", sortable: true, headerClassName: "min-w-[10rem]" },
+  { header: "LEAD NAME", accessor: "name", sortable: true, headerClassName: "min-w-[14rem]" },
   { header: "CONTACT", accessor: "number", headerClassName: "min-w-[10rem]" },
   { header: "EMAIL", accessor: "email", headerClassName: "min-w-[8rem]" },
-  { header: "BUSINESS NAME", accessor: "businessName", sortable: true, headerClassName: "min-w-[12rem]" },
-  { header: "NATURE OF BUSINESS", accessor: "natureOfBusiness", sortable: true, headerClassName: "min-w-[14rem]" },
-    { header: "CITY NAME", accessor: "cityName", sortable: true, headerClassName: "min-w-[12rem]" },
+  { header: "BUSINESS NAME", accessor: "businessName", sortable: true, headerClassName: "min-w-[14rem]" },
+  { header: "NATURE OF BUSINESS", accessor: "natureOfBusiness", sortable: true, headerClassName: "min-w-[16rem]" },
+    { header: "CITY NAME", accessor: "cityName", sortable: true, headerClassName: "min-w-[14rem]" },
 
 ];
 
