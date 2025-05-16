@@ -1,10 +1,12 @@
 import { analyticalCards } from "@/constants";
 import {
   AnalyticalCard,
+  DailyTasksSlider,
   LeadAnalyticsBarChart,
   LeadsListTable,
   ProjectSnapshotDonutChart,
 } from "./components";
+
 
 /**
  * Renders the Dashboard section including a welcome message and
@@ -24,9 +26,10 @@ export function Dashboard() {
           <AnalyticalCard key={index} data={card} />
         ))}
       </div>
-      <div className="flex items-center gap-6 2xl:gap-[1.5vw] px-4 2xl:px-[1vw]">
+      <div className="flex flex-col md:flex-row items-center gap-6 2xl:gap-[1.5vw] px-4 2xl:px-[1vw]">
         <ProjectSnapshotDonutChart />
         <LeadAnalyticsBarChart />
+        <DailyTasksSlider/>
       </div>
       <LeadsListTable />
     </section>

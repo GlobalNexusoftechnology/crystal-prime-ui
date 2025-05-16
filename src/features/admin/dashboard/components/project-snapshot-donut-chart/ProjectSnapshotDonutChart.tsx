@@ -11,7 +11,7 @@ const COLORS = ["#75B2FB", "#054B9E"];
 
 export function ProjectSnapshotDonutChart() {
   return (
-    <div className="flex flex-col bg-white p-4 2xl:p-[1vw] border border-[#D7D7D7] rounded-xl 2xl:rounded-[0.75vw] w-full ">
+    <div className="flex flex-col bg-white p-4 2xl:p-[1vw] border border-[#D7D7D7] rounded-xl 2xl:rounded-[0.75vw] w-[20vw] ">
       {/* Title */}
       <div className="flex justify-between items-center">
         <h2 className="font-semibold text-[1rem] 2xl:text-[1vw]">
@@ -45,9 +45,9 @@ export function ProjectSnapshotDonutChart() {
       </div>
 
       {/* Custom Legend */}
-      <div className="flex justify-center gap-6 2xl:gap-[1.5vw] ">
+      <div className="flex justify-center gap-2 2xl:gap-[0.5vw] ">
         {data.map((entry, index) => (
-          <div key={index} className="flex items-center gap-2 2xl:gap-[0.5vw]">
+          <div key={index} className="flex items-center gap-1 2xl:gap-[0.25vw]">
             <span
               className="w-3 2xl:w-[0.75vw] h-3 2xl:h-[0.75vw] rounded-full inline-block"
               style={{ backgroundColor: COLORS[index] }}
