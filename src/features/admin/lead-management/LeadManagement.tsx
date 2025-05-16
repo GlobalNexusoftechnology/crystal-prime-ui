@@ -1,0 +1,127 @@
+"use client";
+
+import { Button, ModalOverlay, SearchBar } from "@/components";
+import { LeadsListTable } from "./components";
+import { useState, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import Image from "next/image";
+import { ImageRegistry } from "@/constants";
+
+export function LeadManagement() {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    console.log("Dropped files:", acceptedFiles);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+
+  return (
+    <div className="p-4 space-y-6">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <h2 className="text-lg font-semibold">Leads List</h2>
+
+        <div className="flex flex-wrap items-center gap-4">
+          <SearchBar onSearch={(query) => console.log("Searching:", query)} />
+          <Button
+            variant="primary"
+            title="ADD LEAD"
+            onClick={() => setModalOpen(true)}
+          />
+          <Button title="All Status" />
+          <Button title="Export" />
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="h-screen overflow-y-auto bg-white">
+        <LeadsListTable />
+      </div>
+
+      {/* Modal */}
+      <ModalOverlay
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        modalClassName="w-[45rem] h-[35rem]"
+      >
+        <div className="bg-[#F8F8F8]">
+          <div className="space-y-6 p-4 bg-white ">
+            <h3 className="text-sm font-semibold text-start"> - Back to Leads</h3>
+            <div className="border-2 p-4 w-full space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white  rounded-xl">
+                {/* Manual Upload */}
+                <div className="border-2 border-dashed rounded-xl p-4 text-center hover:shadow transition bg-[#F8F8F8]">
+                  <div className=" w-[15rem] h-[6rem] pb-4">
+                    <Image
+                      src={ImageRegistry.onelead}
+                      alt="manual"
+                      width={200}
+                      height={120}
+                      className=" object-contain w-full h-full"
+                    />
+                  </div>
+                  <input type="file" hidden id="manual-upload" />
+                  <label
+                    htmlFor="manual-upload"
+                    className="text-purple-600 font-medium cursor-pointer"
+                  >
+                    Click to upload
+                  </label>
+                  <p className="text-sm text-gray-500">One Lead at a time</p>
+                </div>
+
+                {/* Excel Upload with Dropzone */}
+                <div
+                  {...getRootProps()}
+                  className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition bg-[#F8F8F8] ${
+                    isDragActive ? "bg-purple-100" : "hover:shadow"
+                  }`}
+                >
+                  <input {...getInputProps()} />
+                  <div className="w-[15rem] h-[6rem] pb-4">
+                    <Image
+                      src={ImageRegistry.excel}
+                      alt="excel"
+                      width={200}
+                      height={120}
+                      className="mx-auto mb-4 object-contain w-full h-full"
+                    />
+                  </div>
+                  <p className="text-purple-600 font-medium">Click to upload</p>
+                  <p className="text-sm text-gray-500">or drag and drop</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    .XLS, .XLSX (max. 5MB)
+                  </p>
+                </div>
+              </div>
+              {/* External Upload */}
+              <div className="md:col-span-2 border-2 border-dashed rounded-xl p-2 text-center bg-[#F8F8F8]  flex justify-center items-center flex-col ">
+                <div className="w-[18rem] h-[8rem] pb-4">
+                  <Image
+                    src={ImageRegistry.external}
+                    alt="external"
+                    width={200}
+                    height={120}
+                    className="object-contain w-full h-full"
+                  />
+                </div>
+                <input type="file" hidden id="external-upload" />
+                <label
+                  htmlFor="external-upload"
+                  className="text-purple-600 font-medium cursor-pointer"
+                >
+                  Click to upload
+                </label>
+                <p className="text-sm text-gray-500">or drag and drop</p>
+                <p className="text-xs text-gray-400 mt-1">
+                  SVG, PNG, JPG or GIF (max. 800×400px)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ModalOverlay>
+    </div>
+  );
+}

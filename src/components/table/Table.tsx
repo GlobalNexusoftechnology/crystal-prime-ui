@@ -4,6 +4,8 @@ import { ITableProps } from "@/constants";
 import { useState, useMemo } from "react";
 import { Pagination, TableHeader, TableRow } from "./components";
 
+
+
 export function Table<T extends { id: string | number }>({
   data,
   columns,

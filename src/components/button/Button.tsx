@@ -28,6 +28,7 @@ export const Button: React.FC<ButtonProps> = ({
     secondary: "bg-secondary text-white hover:bg-secondary",
     "secondary-outline":
       "border border-secondary text-secondary hover:text-white hover:bg-secondary",
+      
   };
   return (
     <button
