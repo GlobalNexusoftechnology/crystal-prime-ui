@@ -1,8 +1,13 @@
 import { analyticalCards } from "@/constants";
-import { AnalyticalCard, LeadsListTable } from "./components";
+import {
+  AnalyticalCard,
+  LeadAnalyticsBarChart,
+  LeadsListTable,
+  ProjectSnapshotDonutChart,
+} from "./components";
 
 /**
- * Renders the Dashboard section including a welcome message and 
+ * Renders the Dashboard section including a welcome message and
  * a set of analytical summary cards using data from `analyticalCards`.
  */
 export function Dashboard() {
@@ -14,12 +19,16 @@ export function Dashboard() {
           Wishing you a productive and fulfilling day ahead!
         </span>
       </div>
-      <section className="flex gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
+      <div className="flex gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
         {analyticalCards.map((card, index) => (
           <AnalyticalCard key={index} data={card} />
         ))}
-      </section>
-      <LeadsListTable/>
+      </div>
+      <div className="flex items-center gap-6 2xl:gap-[1.5vw] px-4 2xl:px-[1vw]">
+        <ProjectSnapshotDonutChart />
+        <LeadAnalyticsBarChart />
+      </div>
+      <LeadsListTable />
     </section>
   );
 }
