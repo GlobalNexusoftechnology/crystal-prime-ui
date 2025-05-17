@@ -11,7 +11,7 @@ const COLORS = ["#75B2FB", "#054B9E"];
 
 export function ProjectSnapshotDonutChart() {
   return (
-    <div className="flex flex-col bg-white p-4 2xl:p-[1vw] border border-[#D7D7D7] rounded-xl 2xl:rounded-[0.75vw] w-[20vw] ">
+    <div className="flex flex-col bg-white p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw]">
       {/* Title */}
       <div className="flex justify-between items-center">
         <h2 className="font-semibold text-[1rem] 2xl:text-[1vw]">
@@ -22,7 +22,7 @@ export function ProjectSnapshotDonutChart() {
 
       {/* Chart with adjusted viewbox */}
       <div className="flex justify-center items-center">
-        <PieChart width={200} height={208}>
+        <PieChart width={245} height={208}>
           <Pie
             data={data}
             cx="50%"

@@ -7,31 +7,32 @@ import {
   ProjectSnapshotDonutChart,
 } from "./components";
 
-
 /**
  * Renders the Dashboard section including a welcome message and
  * a set of analytical summary cards using data from `analyticalCards`.
  */
 export function Dashboard() {
   return (
-    <section className="flex flex-col gap-2 2xl:gap-[0.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
+    <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
       <div className="flex flex-col gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
         <h1 className="text-xl 2xl:text-[1.25vw] font-medium">Welcome</h1>
-        <span className="text-sm 2xl:text-[0.875vw] text-[#918F8F]">
+        <span className="text-sm 2xl:text-[0.875vw] text-gray-400">
           Wishing you a productive and fulfilling day ahead!
         </span>
       </div>
-      <div className="flex gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
-        {analyticalCards.map((card, index) => (
-          <AnalyticalCard key={index} data={card} />
-        ))}
+      <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
+          {analyticalCards.map((card, index) => (
+            <AnalyticalCard key={index} data={card} />
+          ))}
+        </div>
+        <div className="flex flex-row flex-wrap gap-6 2xl:gap-[1.5vw] px-4 2xl:px-[1vw]">
+          <ProjectSnapshotDonutChart />
+          <LeadAnalyticsBarChart />
+          <DailyTasksSlider />
+        </div>
+        <LeadsListTable />
       </div>
-      <div className="flex flex-col md:flex-row items-center gap-6 2xl:gap-[1.5vw] px-4 2xl:px-[1vw]">
-        <ProjectSnapshotDonutChart />
-        <LeadAnalyticsBarChart />
-        <DailyTasksSlider/>
-      </div>
-      <LeadsListTable />
     </section>
   );
 }

@@ -51,7 +51,7 @@ const CustomTick = ({ x = 0, y = 0, payload }: CustomTickProps) => {
 
 export function LeadAnalyticsBarChart() {
   return (
-    <div className="bg-white py-4 2xl:py-[1vw] rounded-xl 2xl:rounded-[0.75vw] border border-[#E5E5E5] w-[40vw]">
+    <div className="bg-white py-4 2xl:py-[1vw] rounded-xl 2xl:rounded-[0.75vw] border 2xl:border-[0.1vw] border-gray-300">
       {/* Header */}
       <div className="flex justify-between items-center mb-2 2xl:mb-[0.5vw] px-8 2xl:px-[2vw]">
         <h2 className="text-[1rem] 2xl:text-[1vw] font-semibold">Lead Analytics</h2>

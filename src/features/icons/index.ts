@@ -8,3 +8,4 @@ export { TaskManagementIcon } from "./TaskManagementIcon";
 export { StaffManagementIcon } from "./StaffManagementIcon";
 export { SettingsIcon } from "./SettingsIcon";
 export { AnalyticalCardIcon } from "./AnalyticalCardIcon";
+export { ExportIcon } from "./ExportIcon";

@@ -24,6 +24,10 @@ body {
     display: none; /* Chrome, Safari, and Opera */
   }
 }
+.scrollbar-style {
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+}
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;

@@ -71,7 +71,7 @@ export function AdminSidebar({
                 onClick={() => handleRedirect(link.path)}
                 className={`flex items-center group-hover:scale-105 gap-3 2xl:gap-[0.8vw] px-4 2xl:px-[1vw] py-3 2xl:py-[0.8vw] rounded-lg 2xl:rounded-[0.5vw] transition w-full text-left ${
                   isActive
-                    ? "bg-secondary text-white"
+                    ? "bg-primary text-white"
                     : null
                 }`}
               >

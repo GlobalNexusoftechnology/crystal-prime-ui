@@ -11,6 +11,11 @@ interface SearchBarProps {
   placeholder?: string;
   /** Callback function triggered when the search input changes. */
   onSearch: (query: string) => void;
+
+  bgColor?: string;
+  width?: string;
+
+
 }
 
 /**
@@ -24,11 +29,13 @@ interface SearchBarProps {
 export function SearchBar({
   placeholder = "Search",
   onSearch,
+  bgColor = "transparent",
+  width = "min-w-[12rem] w-[25vw]"
 }: SearchBarProps): JSX.Element {
   const [query, setQuery] = useState(""); // State to store the search query
 
   return (
-    <div className="relative flex items-center bg-transparent border 2xl:border-[0.1vw] border-gray-400 px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] min-w-sm rounded-xl 2xl:rounded-[0.75vw] min-w-[12rem] w-[25vw]">
+    <div className={`bg-${bgColor} relative flex items-center border 2xl:border-[0.1vw] border-gray-300 px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] rounded-xl 2xl:rounded-[0.75vw] ${width}`}>
       {/* Search Icon */}
       <SearchIcon className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
 
