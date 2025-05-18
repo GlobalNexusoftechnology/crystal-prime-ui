@@ -1,13 +1,16 @@
 "use client";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
 import { actions, leadsList, leadsListColumn } from "@/constants";
 import { ExportIcon } from "@/features";
 
-export function LeadsListTable() {
+interface LeadsListTableProps {
+  setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
+}
+
+export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const statusOptions = ["All Status", "New", "Contacted", "Qualified", "Lost"];
-
 
   const handleChange = (val: string) => {
     setSelectedStatus(val);
@@ -24,15 +27,27 @@ export function LeadsListTable() {
             onSearch={(query) => console.log("Searching:", query)}
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
-            
           />
+          {setAddLeadModalOpen && (
+            <Button
+              title="Add Lead"
+              variant="background-white"
+              width="w-full md:w-fit"
+              onClick={() => setAddLeadModalOpen(true)}
+            />
+          )}
           <Dropdown
             options={statusOptions}
             value={selectedStatus}
             onChange={handleChange}
             dropdownWidth="w-full md:w-fit"
           />
-          <Button title="Export" variant="background-white" rightIcon={<ExportIcon />} width="w-full md:w-fit" />
+          <Button
+            title="Export"
+            variant="background-white"
+            rightIcon={<ExportIcon />}
+            width="w-full md:w-fit"
+          />
         </div>
       </div>
       <Table data={leadsList} columns={leadsListColumn} actions={actions} />
