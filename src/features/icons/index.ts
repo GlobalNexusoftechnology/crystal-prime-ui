@@ -1,3 +1,13 @@
 export { SearchIcon } from "./SearchIcon";
 export { MenuIcon } from "./MenuIcon";
 export { UserIcon } from "./UserIcon";
+export { DashboardIcon } from "./DashboardIcon";
+export { LeadManagementIcon } from "./LeadManagementIcon";
+export { ProjectManagementIcon } from "./ProjectManagementIcon";
+export { TaskManagementIcon } from "./TaskManagementIcon";
+export { StaffManagementIcon } from "./StaffManagementIcon";
+export { SettingsIcon } from "./SettingsIcon";
+export { AnalyticalCardIcon } from "./AnalyticalCardIcon";
+export { ExportIcon } from "./ExportIcon";
+export { HorizontalTreeDotIcon } from "./HorizontalTreeDotIcon";
+export { NotificationIcon } from "./NotificationIcon";

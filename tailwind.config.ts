@@ -4,6 +4,7 @@ const config: Config = {
   content: [
     "./src/features/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/constants/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
@@ -11,8 +12,10 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        primary: "#B89D10",
-        secondary: "#005432"
+        primary: "#034A9F",
+        secondary: "#005432",
+        customGray: "#F8F8F8",
+        whiteOverlay: "#FFFFFF1A" 
         
       },
     },

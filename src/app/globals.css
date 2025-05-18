@@ -24,6 +24,10 @@ body {
     display: none; /* Chrome, Safari, and Opera */
   }
 }
+.scrollbar-style {
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+}
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   display: none;
@@ -33,4 +37,28 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 select > option:hover {
   background-color: black;
   color: white;
+}
+
+/* Hide number input arrows for Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Hide number input arrows for Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hidden {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+.box-shadow {
+  box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
 }

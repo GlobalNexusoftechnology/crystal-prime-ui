@@ -69,9 +69,9 @@ export function AdminSidebar({
             <li key={index} className="relative group">
               <button
                 onClick={() => handleRedirect(link.path)}
-                className={`flex items-center group-hover:scale-105 gap-3 2xl:gap-[0.8vw] px-4 2xl:px-[1vw] py-3 2xl:py-[0.8vw] rounded-lg 2xl:rounded-[0.5vw] transition w-full text-left ${
+                className={`flex items-center gap-3 2xl:gap-[0.8vw] px-4 2xl:px-[1vw] py-3 2xl:py-[0.8vw] rounded-lg 2xl:rounded-[0.5vw] transition w-full text-left ${
                   isActive
-                    ? "bg-secondary text-white"
+                    ? "bg-primary text-white"
                     : null
                 }`}
               >
@@ -86,13 +86,6 @@ export function AdminSidebar({
                   {link.name}
                 </span>
               </button>
-
-              {/* Tooltip (Visible only when hovering over icon) */}
-              {isVisibleSidebar && (
-                <span className="absolute left-full ml-3 top-1/2 -translate-y-1/2 bg-black text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-200">
-                  {link.name}
-                </span>
-              )}
             </li>
           );
         })}

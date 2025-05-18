@@ -1,5 +1,13 @@
-import { UserIcon } from "@/features";
 import { ReactNode } from "react";
+
+import {
+  DashboardIcon,
+  LeadManagementIcon,
+  ProjectManagementIcon,
+  SettingsIcon,
+  StaffManagementIcon,
+  TaskManagementIcon,
+} from "@/features";
 
 /**
  * Interface representing a sidebar link in the admin panel.
@@ -32,31 +40,37 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   {
     path: "/admin/dashboard",
     name: "Dashboard",
-    icon: <UserIcon color="#7F7F7F" />,
-    activeIcon: <UserIcon />,
+    icon: <DashboardIcon />,
+    activeIcon: <DashboardIcon color="white" />,
   },
   {
-    path: "/admin/payment-history",
-    name: "Payment History",
-    icon: <UserIcon color="#7F7F7F" />,
-    activeIcon: <UserIcon />,
+    path: "/admin/lead-management",
+    name: "Lead Management",
+    icon: <LeadManagementIcon />,
+    activeIcon: <LeadManagementIcon color="white" />,
   },
   {
-    path: "/admin/subscription-history",
-    name: "Subscription",
-    icon: <UserIcon color="#7F7F7F" />,
-    activeIcon: <UserIcon />,
+    path: "/admin/project-management",
+    name: "Project Management",
+    icon: <ProjectManagementIcon />,
+    activeIcon: <ProjectManagementIcon color="white" />,
   },
   {
-    path: "/admin/user-management",
-    name: "User",
-    icon: <UserIcon color="#7F7F7F" />,
-    activeIcon: <UserIcon />,
+    path: "/admin/task-management",
+    name: "Task Management",
+    icon: <TaskManagementIcon />,
+    activeIcon: <TaskManagementIcon color="white" />,
   },
   {
-    path: "/admin/logout",
-    name: "Logout",
-    icon: <UserIcon color="#7F7F7F" />,
-    activeIcon: <UserIcon />,
+    path: "/admin/staff-management",
+    name: "Staff Management",
+    icon: <StaffManagementIcon />,
+    activeIcon: <StaffManagementIcon color="white" />,
+  },
+  {
+    path: "/admin/settings",
+    name: "Settings",
+    icon: <SettingsIcon />,
+    activeIcon: <SettingsIcon color="white" />,
   },
 ];

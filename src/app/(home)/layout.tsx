@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { ReactQueryProvider } from "@/services/react-query";
-import { Header } from "@/components";
 import { Inter } from "next/font/google";
 import "../globals.css";
 
@@ -10,8 +9,8 @@ const montserrat = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Reliable Tours & Travels",
-  description: "This is Reliable Tours & Travels web app",
+  title: "Satkar",
+  description: "This is Satkar web app",
 };
 
 export default function RootLayout({
@@ -23,7 +22,6 @@ export default function RootLayout({
     <ReactQueryProvider hasDevTools={false}>
       <html lang="en">
         <body className={`${montserrat.className}`}>
-          <Header />
           {children}
         </body>
       </html>

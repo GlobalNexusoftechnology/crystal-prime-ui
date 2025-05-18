@@ -44,12 +44,12 @@ export function Table<T extends { id: string | number }>({
   }, [sortedData, currentPage, pageSize]);
 
   return (
-    <div className="p-4 2xl:p-[1vw]">
-      <div className="overflow-auto border bg-white 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
+    <div>
+      <div className="scrollbar-style overflow-auto border bg-white 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
         <table className="w-full text-sm 2xl:text-[0.875vw] text-left border-gray-200">
           <thead className="text-gray-700">
             <tr>
-              <th className="min-w-[5rem] p-3 2xl:p-[0.75vw] text-left 2xl:text-[1vw]">
+              <th className="min-w-[5rem] 2xl:min-w-[5vw] p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
                 Sr No
               </th>
               {columns.map((col) => (
@@ -61,8 +61,8 @@ export function Table<T extends { id: string | number }>({
                   onSort={handleSort}
                 />
               ))}
-              <th className="min-w-[6rem] p-3 2xl:p-[0.75vw] text-left 2xl:text-[1vw]">
-                Actions
+              <th className="min-w-[6rem] p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
+                Action
               </th>
             </tr>
           </thead>

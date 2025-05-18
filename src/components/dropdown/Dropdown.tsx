@@ -7,6 +7,8 @@ export function Dropdown({
   label,
   isRequired = false,
   dropdownBorderRadius = "rounded-xl 2xl:rounded-[0.75vw]",
+  dropdownWidth= "w-full"
+
 }: {
   options: string[];
   value: string;
@@ -15,9 +17,10 @@ export function Dropdown({
   label?: string;
   isRequired?: boolean;
   dropdownBorderRadius?: string;
+  dropdownWidth?: string
 }) {
   return (
-    <div className="w-full">
+    <div className={dropdownWidth}>
       {label && (
         <label className="block 2xl:text-[1vw] text-gray-700 mb-2 2xl:mb-[0.5vw]">
           {label} {isRequired && <span className="text-red-500">*</span>}
@@ -27,8 +30,8 @@ export function Dropdown({
         <select
           className={`w-full appearance-none 2xl:text-[1vw] border ${
             error ? "border-red-500" : "border-gray-300"
-          } ${dropdownBorderRadius} px-4 2xl:px-[1vw] py-3 2xl:py-[0.7vw] pr-10 2xl:pr-[2.5vw] focus:outline-none focus:ring-2 ${
-            error ? "focus:ring-red-500" : "focus:ring-primary"
+          } ${dropdownBorderRadius} px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] pr-10 2xl:pr-[2.5vw] focus:outline-none ${
+            error ? "focus:ring-red-500" : "focus:ring-none"
           }`}
           value={value}
           onChange={(e) => onChange(e.target.value)}
