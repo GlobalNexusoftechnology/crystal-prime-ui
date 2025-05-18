@@ -1,9 +1,11 @@
+"use client"
 import Image from "next/image";
 
 import { FileUpload } from "../file-upload";
 
 import { ImageRegistry } from "@/constants";
 import { Button, InputField } from "@/components";
+import { useRouter } from "next/navigation";
 
 /**
  * PersonalInfo component
@@ -12,6 +14,11 @@ import { Button, InputField } from "@/components";
  * Includes input fields, an image preview, file upload functionality, and action buttons.
  */
 export function PersonalInfo() {
+  const router = useRouter()
+
+  const handleRedirect = () => {
+    router.push("/admin/dashboard")
+  }
   return (
     <div className="flex flex-col gap-2 2xl:gap-[0.5vw] p-4 2xl:p-[1vw] rounded-lg 2xl:rounded-[0.5vw]">
       <div className="flex flex-col px-4 2xl:px-[1vw] mb-3 2xl:mb-[0.75vw]">
@@ -48,7 +55,7 @@ export function PersonalInfo() {
         </div>
         <div className="flex justify-end gap-2 2xl:gap-[0.5vw]">
           <Button title="cancel" variant="primary-outline" />
-          <Button title="Save changes" />
+          <Button title="Save changes" onClick={handleRedirect}/>
         </div>
       </div>
     </div>

@@ -39,8 +39,8 @@ export const AuthCard: React.FC<IAuthCardProps> = ({
           className="object-cover w-full h-full"
         />
       </div>
-      <div className=" flex justify-between items-center w-full">
-        <div className="h-36 w-36 2xl:h-[9vw] 2xl:w-[9vw]">
+      <div className="absolute top-[-2vw] left-0 flex justify-between items-center w-full px-4 md:px-10 xl:px-[6vw]">
+        <div className="h-36 w-36 2xl:h-[14vw] 2xl:w-[14vw]">
           <Image
             src={ImageRegistry.websiteLogo}
             alt="website-logo"
