@@ -1,5 +1,5 @@
 import { AnalyticalCardData } from "@/constants";
-import { AnalyticalCardIcon } from "@/features";
+import { AnalyticalCardIcon, HorizontalTreeDotIcon } from "@/features";
 
 interface AnalyticalCardDataProps {
   data: AnalyticalCardData;
@@ -30,9 +30,7 @@ export function AnalyticalCard({ data }: AnalyticalCardDataProps) {
         <p className="text-sm 2xl:text-[0.875vw] text-gray-700 font-medium">
           {data.title}
         </p>
-        <p className="text-sm 2xl:text-[0.875vw] text-gray-700 font-medium ">
-          . . .
-        </p>
+        <HorizontalTreeDotIcon className="w-8 h-8 2xl:w-[2vw] 2xl:h-[2vw]" />
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DailyTaskCard } from "./component";
 import { motion, AnimatePresence } from "framer-motion";
+import { HorizontalTreeDotIcon } from "@/features";
 
 const tasks = [
   {
@@ -67,7 +68,7 @@ export function DailyTasksSlider() {
             Tomorrow
           </button>
         </div>
-        <div className="text-xl 2xl:text-[1.25vw] font-semibold">...</div>
+        <HorizontalTreeDotIcon className="w-8 h-8 2xl:w-[2vw] 2xl:h-[2vw]" />
       </div>
       {/* Content */}
       {activeTab === "today" ? (

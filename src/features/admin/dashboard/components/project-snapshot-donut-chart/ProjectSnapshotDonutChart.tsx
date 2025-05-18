@@ -1,5 +1,6 @@
 "use client";
 
+import { HorizontalTreeDotIcon } from "@/features";
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
 
 const data = [
@@ -17,7 +18,7 @@ export function ProjectSnapshotDonutChart() {
         <h2 className="font-semibold text-[1rem] 2xl:text-[1vw]">
           Project Snapshot
         </h2>
-        <span className="text-[1rem] 2xl:text-[1vw] font-bold items-center">. . .</span>
+        <HorizontalTreeDotIcon className="w-8 h-8 2xl:w-[2vw] 2xl:h-[2vw]" />
       </div>
 
       {/* Chart with adjusted viewbox */}

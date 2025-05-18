@@ -1,12 +1,15 @@
-import { Loading } from "@/components";
-import { Suspense } from "react";
+"use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export default function AdminDashboard() {
-  return (
-    <main>
-      <Suspense fallback={<Loading />}>
-        <h1>Admin Dashboard</h1>
-      </Suspense>
-    </main>
-  );
+import { Loading } from "@/components";
+
+export default function AdminPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace("/admin/profile");
+  }, [router]);
+
+  return <Loading />;
 }
