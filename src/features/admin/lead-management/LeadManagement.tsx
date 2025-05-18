@@ -1,14 +1,15 @@
 "use client";
 
-import { Button, ModalOverlay, SearchBar } from "@/components";
-import { LeadsListTable } from "./components";
+import { ModalOverlay } from "@/components";
 import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import Image from "next/image";
-import { ImageRegistry } from "@/constants";
+import { analyticalCards, ImageRegistry } from "@/constants";
+import { LeadsListTable } from "../leads-list-table";
+import { AnalyticalCard } from "../analytical-card";
 
 export function LeadManagement() {
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [isAddLeadModalOpen, setAddLeadModalOpen] = useState(false);
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log("Dropped files:", acceptedFiles);
@@ -17,37 +18,29 @@ export function LeadManagement() {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
-    <div className="p-4 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <h2 className="text-lg font-semibold">Leads List</h2>
-
-        <div className="flex flex-wrap items-center gap-4">
-          <SearchBar onSearch={(query) => console.log("Searching:", query)} />
-          <Button
-            variant="primary"
-            title="ADD LEAD"
-            onClick={() => setModalOpen(true)}
-          />
-          <Button title="All Status" />
-          <Button title="Export" />
+    <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
+      <div className="flex flex-col gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
+        <h1 className="text-xl 2xl:text-[1.25vw] font-medium">Lead Management</h1>
+      </div>
+      <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
+          {analyticalCards.map((card, index) => (
+            <AnalyticalCard key={index} data={card} />
+          ))}
         </div>
+        <LeadsListTable setAddLeadModalOpen={setAddLeadModalOpen} />
       </div>
-
-      {/* Table */}
-      <div className="h-screen overflow-y-auto bg-white">
-        <LeadsListTable />
-      </div>
-
-      {/* Modal */}
       <ModalOverlay
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
+        isOpen={isAddLeadModalOpen}
+        onClose={() => setAddLeadModalOpen(false)}
         modalClassName="w-[45rem] h-[35rem]"
       >
         <div className="bg-[#F8F8F8]">
           <div className="space-y-6 p-4 bg-white ">
-            <h3 className="text-sm font-semibold text-start"> - Back to Leads</h3>
+            <h3 className="text-sm font-semibold text-start">
+              {" "}
+              - Back to Leads
+            </h3>
             <div className="border-2 p-4 w-full space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white  rounded-xl">
                 {/* Manual Upload */}
@@ -122,6 +115,6 @@ export function LeadManagement() {
           </div>
         </div>
       </ModalOverlay>
-    </div>
+    </section>
   );
 }

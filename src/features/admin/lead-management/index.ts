@@ -1,1 +1,1 @@
-export * from "./LeadManagement"
+export { LeadManagement } from "./LeadManagement";

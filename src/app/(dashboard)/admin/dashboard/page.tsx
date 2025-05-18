@@ -5,7 +5,5 @@ import { Dashboard } from "@/features";
  * This is the entry point for the dashboard route.
  */
 export default function DashboardPage() {
-  return (
-  <Dashboard/>
-  )
+  return <Dashboard />;
 }
