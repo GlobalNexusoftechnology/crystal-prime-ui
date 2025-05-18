@@ -55,7 +55,6 @@ export function SignUp() {
           <span className="text-[1rem] 2xl:text-[1vw] text-center">
             Welcome! To create your account, please enter your details below.
           </span>
-     
 
           <div>
             <InputField
@@ -107,18 +106,15 @@ export function SignUp() {
               }
             />
           </div>
-        
 
           <Button type="submit" title="Create Account" />
 
           <Button title="Cancel" variant="primary-outline" />
 
-          <Link
-            href="/forget-password"
-            className="text-sm 2xl:text-[0.875vw] text-primary font-medium"
-          >
-            Already a member? Sign in to your account!
-          </Link>
+          <div className="text-sm 2xl:text-[0.875vw] text-primary font-medium">
+            Already a member?
+            <Link href="/login"> Sign in to your account!</Link>
+          </div>
         </form>
       </AuthCard>
     </div>

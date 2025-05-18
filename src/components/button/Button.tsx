@@ -1,7 +1,7 @@
 import React, { ButtonHTMLAttributes, ReactNode } from "react";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "primary-outline" | "secondary" | "secondary-outline";
+  variant?: "primary" | "primary-outline" | "secondary" | "secondary-outline" | "background-white";
   isLoading?: boolean;
   title?: string;
   leftIcon?: ReactNode;
@@ -28,11 +28,12 @@ export const Button: React.FC<ButtonProps> = ({
     secondary: "bg-secondary text-white hover:bg-secondary",
     "secondary-outline":
       "border border-secondary text-secondary hover:text-white hover:bg-secondary",
-      
+      "background-white":  
+      "border bg-white border-gray-300"
   };
   return (
     <button
-      className={`flex items-center justify-center rounded-md ${width} h-auto 2xl:px-[1vw] 2xl:py-[1vw] px-4 py-2 space-x-2 font-medium ${
+      className={`flex items-center justify-center rounded-xl 2xl:rounded-[0.75vw] ${width} h-auto 2xl:px-[1vw] 2xl:py-[0.65vw] px-4 py-2 space-x-2 font-medium ${
         variantClasses[variant]
       } ${disabled || isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
       disabled={disabled || isLoading}

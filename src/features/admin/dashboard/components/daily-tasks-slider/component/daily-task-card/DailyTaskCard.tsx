@@ -20,22 +20,22 @@ export const DailyTaskCard = ({
       initial={{ y: -30, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className={`relative flex flex-col items-center justify-between w-full h-[14vw] 2xl:h-[14vw] rounded-xl shadow-xl p-4 2xl:p-[1vw] ${color} text-gray-900 `}
+      className={`relative flex flex-col items-center justify-between w-full rounded-xl shadow-xl p-4 2xl:p-[1vw] ${color} text-gray-900 `}
     >
       <div className="flex flex-col items-start">
         <p className="text-sm 2xl:text-[0.875vw] font-medium">Task Name</p>
-        <h2 className="text-lg 2xl:text-[1.125vw] font-semibold">{task}</h2>
+        <h2 className="2xl:text-[1vw]">{task}</h2>
       </div>
-      <div className="flex justify-between items-center mt-4 2xl:mt-[1vw] text-sm 2xl:text-[0.875vw]">
+      <div className="flex flex-wrap justify-between items-center gap-4 2xl:gap-[1vw] mt-4 2xl:mt-[1vw] text-sm 2xl:text-[0.875vw]">
         <div>
           <button className="bg-blue-500 text-white text-sm 2xl:text-[0.875vw] px-2 py-1 rounded-md">
             {priority}
           </button>
         </div>
-        <p>
-          Date <br />
+        <div>
+          <h1>Date</h1>
           <span className="font-semibold">{date}</span>
-        </p>
+        </div>
         <div className="flex flex-col">
           <span className="text-[1rem] 2xl:text-[1vw]">Assigned to</span>
           <div className="flex items-center gap-2 2xl:gap-[0.5vw]">

@@ -12,7 +12,6 @@ import { SignUp } from "@/features";
 export default function SignUpPage() {
   return (
     <main>
-      {/* Suspense allows loading fallback while SignUp component is being rendered */}
       <Suspense fallback={<Loading />}>
         <SignUp />
       </Suspense>

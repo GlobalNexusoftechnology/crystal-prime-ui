@@ -1,15 +1,41 @@
 "use client";
-import { Table } from "@/components";
+import { useState } from "react";
+import { Button, Dropdown, SearchBar, Table } from "@/components";
 import { actions, leadsList, leadsListColumn } from "@/constants";
+import { ExportIcon } from "@/features";
 
 export function LeadsListTable() {
+  const [selectedStatus, setSelectedStatus] = useState("All Status");
+  const statusOptions = ["All Status", "New", "Contacted", "Qualified", "Lost"];
+
+
+  const handleChange = (val: string) => {
+    setSelectedStatus(val);
+  };
+
   return (
-    <main>
-      <Table
-        data={leadsList}
-        columns={leadsListColumn}
-        actions={actions}
-      />
-    </main>
+    <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
+      <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
+        <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
+          Leads List
+        </h1>
+        <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+          <SearchBar
+            onSearch={(query) => console.log("Searching:", query)}
+            bgColor="white"
+            width="w-full min-w-[12rem] md:w-[25vw]"
+            
+          />
+          <Dropdown
+            options={statusOptions}
+            value={selectedStatus}
+            onChange={handleChange}
+            dropdownWidth="w-full md:w-fit"
+          />
+          <Button title="Export" variant="background-white" rightIcon={<ExportIcon />} width="w-full md:w-fit" />
+        </div>
+      </div>
+      <Table data={leadsList} columns={leadsListColumn} actions={actions} />
+    </div>
   );
 }

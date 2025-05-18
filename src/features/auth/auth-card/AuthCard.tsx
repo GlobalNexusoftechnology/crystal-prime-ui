@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 
 import { ImageRegistry } from "@/constants";
 import { Button } from "@/components";
+import Link from "next/link";
 
 /**
  * AuthCard Component
@@ -46,13 +47,13 @@ export const AuthCard: React.FC<IAuthCardProps> = ({
             className="w-full h-full object-contain"
           />
         </div>
-        <div>
-          <Button title="Sign in" />
-        </div>
+        <Link href="/sign-up" className="cursor-pointer z-50">
+          <Button title="Sign up" />
+        </Link>
       </div>
 
       <div className="xl:absolute xl:top-[50%] xl:left-[50%] xl:translate-x-[-50%] xl:translate-y-[-50%] flex flex-col gap-4 2xl:gap-[1vw] justify-center items-center w-full h-full">
-        <div className="bg-white flex flex-col p-6 2xl:p-[1.5vw] border border-gray-300 border-b-4 border-b-primary rounded-xl 2xl:rounded-[0.75vw] shadow-xl w-full sm:w-[60%] md:w-[50vw] lg:w-[40vw] xl:w-[30vw]">
+        <div className="bg-whiteOverlay box-shadow flex flex-col p-6 2xl:p-[1.5vw] border-b-4 2xl:border-b-[0.4vw] border-b-primary rounded-xl 2xl:rounded-[0.75vw] w-full sm:w-[60%] md:w-[50vw] lg:w-[40vw] xl:w-[30vw]">
           <h1 className="text-2xl md:text-3xl 2xl:text-[1.875vw] font-bold mb-4 2xl:mb-[1vw] text-center">
             {title}
           </h1>

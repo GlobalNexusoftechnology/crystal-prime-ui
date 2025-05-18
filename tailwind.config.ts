@@ -12,8 +12,10 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
-        primary: "#7F56D9",
-        secondary: "#005432"
+        primary: "#034A9F",
+        secondary: "#005432",
+        customGray: "#F8F8F8",
+        whiteOverlay: "#FFFFFF1A" 
         
       },
     },
