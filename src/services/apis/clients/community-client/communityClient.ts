@@ -1,14 +1,19 @@
 import { useAuthStore } from "@/services/stores";
 import { ApiClient } from "../../api-client";
 
-import { ILoginPayload, IProductsResponse } from "./types";
+import { IAllLeadResponse, ICreateLeadPayload, ICreateLeadResponse, ILeadDetailResponse, ILoginPayload, IProductsResponse, ISentOtpPayload, ISentOtpResponse, IVerifyEmailPayload, IVerifyEmailResponse } from "./types";
 import {
+  createLeadUrl,
   fetchAllFeatureProductsUrl,
   fetchAllHandmadeCarpetProductsUrl,
+  fetchAllLeadsListUrl,
   fetchAllNewArrivalsProductsUrl,
   fetchAllProductsUrl,
   fetchAllTrendingProductsUrl,
   fetchAllVintageCarpetProductsUrl,
+  getLeadDetailByIdUrl,
+  sentOtpUrl,
+  verifyEmailUrl,
 } from "./urls";
 
 /**
@@ -62,6 +67,69 @@ export class CommunityClient extends ApiClient {
     //   return response?.data?.data;
   };
 
+  public verifyEmail = async (payload: IVerifyEmailPayload) => {
+    const response = await this.post<IVerifyEmailResponse>(
+      verifyEmailUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+
+  public sentOtp = async (payload: ISentOtpPayload) => {
+    const response = await this.post<ISentOtpResponse>(
+      sentOtpUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+
+  //create lead 
+
+  
+  public createLead = async (payload: ICreateLeadPayload) => {
+    const response = await this.post<ICreateLeadResponse>(
+      createLeadUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public getLeadDetailById = async (id: string) => {
+    const response = await this.get<ILeadDetailResponse>(
+      getLeadDetailByIdUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    const isMock = true;
+
+    if (!response?.success && !isMock) {
+      throw response?.errorData;
+    }
+
+    // TODO: Remove this comment once the isMock is removed above.
+    return response;
+  };
+
+
   /**
    * This fetches the list of products on the carpet market platform.
    */
@@ -76,6 +144,22 @@ export class CommunityClient extends ApiClient {
 
     return response?.data?.data;
   };
+
+  /**
+   * This fetches the list of products on the carpet market platform.
+   */
+  public fetchAllLeadsList = async () => {
+    const response = await this.get<IAllLeadResponse>(fetchAllLeadsListUrl(), {
+      requiresAuth: false,
+    });
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data?.data;
+  };
+
 
   /**
    * This fetches the list of products on the carpet market platform.
