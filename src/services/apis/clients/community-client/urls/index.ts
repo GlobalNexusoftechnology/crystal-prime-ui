@@ -36,3 +36,9 @@ export const createLeadUrl   = () => '/';
 
 export const getLeadDetailByIdUrl = (id: string) =>
   `/products/${id}`;
+
+export const registerUrl  = () => '/auth/register';
+
+export const resetPasswordUrl  = () => '/auth/resetPassword'
+
+export const changePasswordUrl  = () => '/auth/changePassword'

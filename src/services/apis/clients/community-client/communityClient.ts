@@ -1,8 +1,9 @@
 import { useAuthStore } from "@/services/stores";
 import { ApiClient } from "../../api-client";
 
-import { IAllLeadResponse, ICreateLeadPayload, ICreateLeadResponse, ILeadDetailResponse, ILoginPayload, IProductsResponse, ISentOtpPayload, ISentOtpResponse, IVerifyEmailPayload, IVerifyEmailResponse } from "./types";
+import { IAllLeadResponse, IChangePasswordPayload, IChangePasswordResponse, ICreateLeadPayload, ICreateLeadResponse, ILeadDetailResponse, ILoginPayload, IProductsResponse, IRegisterPayload, IRegisterResponse, IResetPasswordPayload, IResetPasswordResponse, ISentOtpPayload, ISentOtpResponse, IVerifyEmailPayload, IVerifyEmailResponse } from "./types";
 import {
+  changePasswordUrl,
   createLeadUrl,
   fetchAllFeatureProductsUrl,
   fetchAllHandmadeCarpetProductsUrl,
@@ -12,9 +13,12 @@ import {
   fetchAllTrendingProductsUrl,
   fetchAllVintageCarpetProductsUrl,
   getLeadDetailByIdUrl,
+  registerUrl,
+  resetPasswordUrl,
   sentOtpUrl,
   verifyEmailUrl,
 } from "./urls";
+
 
 /**
  * This is provides the API client methods for the application and routes.
@@ -95,12 +99,54 @@ export class CommunityClient extends ApiClient {
   };
 
 
+  // reset password 
+    public resetPassword = async (payload: IResetPasswordPayload) => {
+    const response = await this.post<IResetPasswordResponse>(
+      resetPasswordUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  //change password 
+      public changePassword = async (payload: IChangePasswordPayload) => {
+    const response = await this.post<IChangePasswordResponse>(
+      changePasswordUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+
   //create lead 
 
   
   public createLead = async (payload: ICreateLeadPayload) => {
     const response = await this.post<ICreateLeadResponse>(
       createLeadUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+ public register = async (payload: IRegisterPayload) => {
+    const response = await this.post<IRegisterResponse>(
+      registerUrl(),
       payload,
       { requiresAuth: false }
     );
@@ -251,6 +297,8 @@ export class CommunityClient extends ApiClient {
     return response?.data?.data;
   };
 }
+
+
 
 /**
  * This creates a new instance of the class. is th base Axios API client Class

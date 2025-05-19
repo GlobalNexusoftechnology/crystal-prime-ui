@@ -8,3 +8,6 @@ export { useAllLeadsListQuery } from "./useAllLeadsListQuery";
 export { useVerifyEmailMutation } from "./useVerifyEmailMutation";
 export { useSentOtpMutation } from "./useSentOtpMutation";
 export { useCreateLeadMutation } from "./useCreateLeadMutation";
+export { useRegisterMutation } from "./useRegisterMutation";
+export {useResetPasswordMutation} from "./useResetPasswordMutation";
+export {useChangePasswordMutation} from "./useChangePasswordMutation";

@@ -125,7 +125,6 @@ export interface ISentOtpResponse {
   email: string;
 }
 
-
 export interface ICreateLeadPayload {
   first_name: string;
   last_name: string;
@@ -152,3 +151,40 @@ export interface ILeadDetailResponse {
   data: IAllLeadsList;
 }
 
+export interface IRegisterPayload {
+  email: string;
+  password: string;
+}
+
+export interface IRegisterResponse {
+  email: string;
+  password: string;
+}
+
+
+// reset password 
+export interface IResetPasswordPayload {
+  email: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface IResetPasswordResponse {
+  email: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+
+// change password 
+export interface IChangePasswordPayload {
+  email: string;
+  oldPassword: string;
+  newPassword: string;
+}
+
+export interface IChangePasswordResponse {
+  email: string;
+  oldPassword: string;
+  newPassword: string;
+}
