@@ -26,7 +26,7 @@ export class CommunityClient extends ApiClient {
     super({
       baseURL:
         process.env
-          .NEXT_PUBLIC_NEXT_FRONTEND_BASIC_FOLDER_STRUCTURE_API_BASE_URL,
+          .NEXT_PUBLIC_SATKAR_API_BASE_URL,
     });
   }
 
@@ -157,7 +157,7 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
 
-    return response?.data?.data;
+    return response?.data.data;
   };
 
 

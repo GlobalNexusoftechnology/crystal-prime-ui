@@ -1,7 +1,7 @@
 import { ITableAction, ITableColumn } from "../table";
 
 export interface ILeadsListProps {
-  id: number;
+  id: string;
   name: string;
   number: string;
   email: string;
@@ -10,62 +10,6 @@ export interface ILeadsListProps {
   cityName: string;
 }
 
-export const leadsList: ILeadsListProps[] = [
-  {
-    id: 1,
-    name: "Jeanette Torp",
-    number: "(385) 344-9378",
-    email: "Jon_Bradtke5l@gmail.com",
-    businessName: "Quigley LLC",
-    natureOfBusiness: "07-25-2022",
-    cityName: "Lake Genesisfort",
-  },
-  {
-    id: 2,
-    name: "Jody Grant",
-    number: "(385) 344-9378",
-    email: "Amari.Zulauf@gmail.com",
-    businessName: "Rolfson and Sons",
-    natureOfBusiness: "07-25-2022",
-    cityName: "Leschland",
-  },
-  {
-    id: 3,
-    name: "Jeanette Torp",
-    number: "(385) 344-9378",
-    email: "Jon_Bradtke5l@gmail.com",
-    businessName: "Upton - Reynolds",
-    natureOfBusiness: "07-25-2022",
-    cityName: "Idellfort",
-  },
-  {
-    id: 4,
-    name: "Jody Grant",
-    number: "(385) 344-9378",
-    email: "Amari.Zulauf@gmail.com",
-    businessName: "Donnelly - Runolfsdottir",
-    natureOfBusiness: "07-25-2022",
-    cityName: "Murphyview",
-  },
-  {
-    id: 5,
-    name: "Jeanette Torp",
-    number: "(385) 344-9378",
-    email: "Jon_Bradtke5l@gmail.com",
-    businessName: "Feest, Grimes and Lesch",
-    natureOfBusiness: "07-25-2022",
-    cityName: "Theomouth",
-  },
-  {
-    id: 6,
-    name: "Jody Grant",
-    number: "(385) 344-9378",
-    email: "Amari.Zulauf@gmail.com",
-    businessName: "Cremin - Kulas",
-    natureOfBusiness: "07-25-2022",
-    cityName: "Terrymouth",
-  },
-];
 export const actions: ITableAction<ILeadsListProps>[] = [
   {
     label: "Edit",

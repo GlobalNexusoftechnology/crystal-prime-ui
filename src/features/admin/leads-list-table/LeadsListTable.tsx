@@ -1,14 +1,27 @@
 "use client";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
-import { actions, leadsList, leadsListColumn } from "@/constants";
+import { actions, ILeadsListProps, leadsListColumn } from "@/constants";
 import { ExportIcon } from "@/features";
+import { useAllLeadsListQuery } from "@/services";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
+  const { data } = useAllLeadsListQuery();
+
+  const leadsList: ILeadsListProps[] = (data ?? []).map((lead) => ({
+    id: lead.id,
+    name: `${lead.first_name} ${lead.last_name}`,
+    number: lead.phone,
+    email: lead.email,
+    businessName: lead.company,
+    natureOfBusiness: lead.requirement,
+    cityName: lead.location,
+  }));
+
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const statusOptions = ["All Status", "New", "Contacted", "Qualified", "Lost"];
 
