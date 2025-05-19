@@ -1,0 +1,1 @@
+export{FollowUpManagementListTable} from "./FollowUpManagementListTable"

@@ -61,6 +61,13 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     icon: <TaskManagementIcon />,
     activeIcon: <TaskManagementIcon color="white" />,
   },
+
+    {
+    path: "/admin/follow-up-management",
+    name: "Follow Up Management",
+    icon: <SettingsIcon />,
+    activeIcon: <SettingsIcon color="white" />,
+  },
   {
     path: "/admin/staff-management",
     name: "Staff Management",
