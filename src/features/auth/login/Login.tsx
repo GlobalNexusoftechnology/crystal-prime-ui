@@ -139,7 +139,7 @@ export function Login() {
               New here?
             </span>
             <Link
-              href="/create-account"
+              href="/sign-up"
               className="text-sm 2xl:text-[0.875vw] text-primary underline underline-offset-4"
             >
               Create your account now

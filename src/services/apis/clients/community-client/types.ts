@@ -181,4 +181,5 @@ export interface ISignupPayload {
 export interface ISignupResponse {
   status: string;
   message: string;
+  data: ISentOtpPayload
 }

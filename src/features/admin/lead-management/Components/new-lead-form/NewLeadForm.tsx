@@ -21,8 +21,8 @@ export interface ICreateLeadPayload {
   location: string;
   budget: number;
   requirement: string;
-  // source_id: string;
-  // status_id: string;
+  source_id: string;
+  status_id: string;
 }
 
 type NewLeadFormProps = {
@@ -76,6 +76,8 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
             location: "",
             budget: 0,
             requirement: "",
+            source_id: "",
+            status_id: "",
           }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
@@ -163,6 +165,26 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
                   error={touched.requirement && errors.requirement}
                 />
               </div>
+
+              <div className="grid grid-cols-2 gap-4 py-2">
+                <InputField
+                  label="Source ID"
+                  placeholder="Enter Source ID"
+                  name="source_id"
+                  value={values.source_id}
+                  onChange={handleChange}
+                  error={touched.source_id && errors.source_id}
+                />
+                <InputField
+                  label="Status ID"
+                  placeholder="Enter Status ID"
+                  name="status_id"
+                  value={values.status_id}
+                  onChange={handleChange}
+                  error={touched.status_id && errors.status_id}
+                />
+              </div>
+
               <div className="flex justify-end mt-6 space-x-4">
                 <Button
                   title="Cancel"
