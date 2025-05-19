@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState, useMemo } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
 import { actions, ILeadsListProps, leadsListColumn } from "@/constants";
 import { ExportIcon } from "@/features";
@@ -22,12 +22,35 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     cityName: lead.location,
   }));
 
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const statusOptions = ["All Status", "New", "Contacted", "Qualified", "Lost"];
 
   const handleChange = (val: string) => {
     setSelectedStatus(val);
   };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query.toLowerCase());
+  };
+
+  // Filter logic for search
+  const filteredLeads = useMemo(() => {
+    return leadsList.filter((lead) => {
+      const matchQuery =
+        lead.name.toLowerCase().includes(searchQuery) ||
+        lead.email.toLowerCase().includes(searchQuery) ||
+        lead.number.toLowerCase().includes(searchQuery) ||
+        lead.businessName.toLowerCase().includes(searchQuery) ||
+        lead.natureOfBusiness.toLowerCase().includes(searchQuery) ||
+        lead.cityName.toLowerCase().includes(searchQuery);
+
+      // const matchStatus =
+      //   selectedStatus === "All Status" || lead.status === selectedStatus;
+
+      return matchQuery;
+    });
+  }, [leadsList, searchQuery]);
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -37,7 +60,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         </h1>
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           <SearchBar
-            onSearch={(query) => console.log("Searching:", query)}
+            onSearch={handleSearch}
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
@@ -63,7 +86,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           />
         </div>
       </div>
-      <Table data={leadsList} columns={leadsListColumn} actions={actions} />
+      <Table data={filteredLeads} columns={leadsListColumn} actions={actions} />
     </div>
   );
 }

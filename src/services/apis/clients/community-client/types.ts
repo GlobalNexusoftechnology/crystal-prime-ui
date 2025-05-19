@@ -127,8 +127,8 @@ export interface ISentOtpResponse {
 
 
 export interface ICreateLeadPayload {
-  first_name: string;
-  last_name: string;
+  first_name : string;
+  last_name : string;
   company: string;
   phone: string;
   email: string;

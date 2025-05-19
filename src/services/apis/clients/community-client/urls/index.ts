@@ -32,7 +32,7 @@ export const verifyEmailUrl  = () =>  '/auth/verify-email';
 
 export const sentOtpUrl  = () => '/auth/sentOTP';
 
-export const createLeadUrl   = () => '/';
+export const createLeadUrl   = () => '/leads';
 
 export const getLeadDetailByIdUrl = (id: string) =>
   `/products/${id}`;
