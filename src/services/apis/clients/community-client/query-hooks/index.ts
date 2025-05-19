@@ -4,3 +4,7 @@ export { useAllHandmadeCarpetProductsQuery } from './useAllHandmadeCarpetProduct
 export { useAllVintageCarpetProductsQuery } from './useAllVintageCarpetProductsQuery';
 export { useAllNewArrivalsProductsQuery } from './useAllNewArrivalsProductsQuery';
 export { useAllTrendingProductsQuery } from './useAllTrendingProductsQuery';
+export { useAllLeadsListQuery } from "./useAllLeadsListQuery";
+export { useVerifyEmailMutation } from "./useVerifyEmailMutation";
+export { useSentOtpMutation } from "./useSentOtpMutation";
+export { useCreateLeadMutation } from "./useCreateLeadMutation";
