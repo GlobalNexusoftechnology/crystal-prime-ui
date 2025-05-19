@@ -1,4 +1,4 @@
-import { ErrorEventsEnum, IErrorLoggerOptions, IErrorLogToRemoteUtilOptions } from './types';
+import { ErrorEventsEnum, IApiError, IErrorLoggerOptions, IErrorLogToRemoteUtilOptions } from './types';
 
 // TODO: Setup NewRelic Logging here.
 
@@ -139,3 +139,8 @@ export function errorLogger({
     // TODO: Log this as a crash & MS teams alert
   }
 }
+
+export const extractErrorMessage = (error: IApiError) => {
+  const responseData = error.response as { data?: { message?: string } };
+  return responseData?.data?.message || error.message || "Something went wrong!";
+};

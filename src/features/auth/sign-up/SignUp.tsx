@@ -6,6 +6,9 @@ import Link from "next/link";
 
 import { Button, InputField } from "@/components";
 import { AuthCard } from "../auth-card";
+import { ISignupResponse, useRegisterMutation } from "@/services";
+import { extractErrorMessage, IApiError } from "@/utils";
+import { useRouter } from "next/navigation";
 
 /**
  * Renders the SignUp form UI with Formik and Yup validation.
@@ -22,14 +25,47 @@ import { AuthCard } from "../auth-card";
  * Includes a navigation link to the "Forget Password" page.
  */
 export function SignUp() {
+  const router = useRouter();
+  /**
+   * Callback for successful registration
+   */
+  const handleSuccessCallback = (data: ISignupResponse) => {
+    window.alert(data?.message);
+    setTimeout(() => {
+      router.push("/login");
+    }, 500);
+  };
+
+  /**
+   * Callback for failed registration or API error
+   */
+  const handleErrorCallback = (error: IApiError) => {
+    const errMsg = extractErrorMessage(error);
+    window.alert(errMsg);
+  };
+
+  /**
+   * Custom mutation hook to register user
+   */
+  const { onRegisterProfile } = useRegisterMutation({
+    onSuccessCallback: handleSuccessCallback,
+    onErrorCallback: handleErrorCallback,
+  });
+
   // Formik setup for form management and validation
   const formik = useFormik({
     initialValues: {
+      name: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
     validationSchema: Yup.object({
+      name: Yup.string()
+        .trim()
+        .min(2, "Name must be at least 2 characters")
+        .max(50, "Name can’t exceed 50 characters")
+        .required("Name is required"),
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
@@ -42,6 +78,13 @@ export function SignUp() {
     }),
     onSubmit: (values) => {
       console.log("SignUp Form Submitted:", values);
+      const data = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        role: "developer",
+      };
+      onRegisterProfile(data);
     },
   });
 
@@ -55,7 +98,22 @@ export function SignUp() {
           <span className="text-[1rem] 2xl:text-[1vw] text-center">
             Welcome! To create your account, please enter your details below.
           </span>
-
+          <div>
+            <InputField
+              label="Name"
+              placeholder="Enter Name"
+              name="name"
+              type="text"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={
+                formik.touched.name && formik.errors.name
+                  ? formik.errors.name
+                  : undefined
+              }
+            />
+          </div>
           <div>
             <InputField
               label="Email"
