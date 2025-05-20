@@ -86,7 +86,7 @@ export interface IStatus {
 }
 
 export interface IAllLeadsList {
-  id: number;
+  id: string;
   created_at: string;
   updated_at: string;
   deleted: boolean;

@@ -1,8 +1,7 @@
-import { Button, InputField, ModalOverlay } from "@/components";
+import { InputField, ModalOverlay } from "@/components";
 import { ILeadsListProps, ImageRegistry } from "@/constants";
 import { PhoneIcon, ThreeIcon } from "@/features/icons";
 import { MailIcon } from "@/features/icons/MailIcon";
-import { MoreVertical } from "lucide-react";
 import Image from "next/image";
 
 const notes = [
