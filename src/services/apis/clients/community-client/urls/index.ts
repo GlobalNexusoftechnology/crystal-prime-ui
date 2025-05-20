@@ -32,7 +32,19 @@ export const verifyEmailUrl  = () =>  '/auth/verify-email';
 
 export const sentOtpUrl  = () => '/auth/sentOTP';
 
-export const createLeadUrl   = () => '/';
+export const createLeadUrl   = () => '/leads';
 
 export const getLeadDetailByIdUrl = (id: string) =>
   `/products/${id}`;
+
+/**
+ * Fetches the URL to authenticate and login a user.
+ * @returns {string} API endpoint for user login.
+ */
+export const loginUrl = () => "/auth/login";
+
+/**
+ * post register api url.
+ * @returns url endpoint
+ */
+export const postRegisterUrl = () => "/auth/register";

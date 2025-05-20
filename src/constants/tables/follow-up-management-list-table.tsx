@@ -1,16 +1,29 @@
-import {  ITableColumn } from "../table";
+import { ITableAction, ITableColumn } from "../table";
 
-export interface ILeadsListProps {
+/**
+ * Interface for a single follow-up management record.
+ */
+export interface IFollowUpManagementListProps {
+  /** Unique identifier for the lead */
   id: number;
+  /** Name of the lead */
   name: string;
+  /** Phone number of the lead */
   number: string;
+  /** Email address of the lead */
   email: string;
+  /** Name of the business associated with the lead */
   businessName: string;
+  /** Nature or date of business activity */
   natureOfBusiness: string;
+  /** City where the lead is located */
   cityName: string;
 }
 
-export const leadsList: ILeadsListProps[] = [
+/**
+ * Sample list of follow-up leads to populate the table.
+ */
+export const FollowUpManagementList: IFollowUpManagementListProps[] = [
   {
     id: 1,
     name: "Jeanette Torp",
@@ -66,38 +79,46 @@ export const leadsList: ILeadsListProps[] = [
     cityName: "Terrymouth",
   },
 ];
-// export const actions: ITableAction<ILeadsListProps>[] = [
-//   {
-//     label: "Edit",
-//     onClick: (row) => {
-//       console.log("Edit clicked", row.id);
-//     },
-//     className: "text-blue-500",
-//   },
-//   {
-//     label: "View",
-//     onClick: (row) => {
-//       console.log("View clicked", row.id);
-//     },
-//     className: "text-blue-500",
-//   },
-//   {
-//     label: "Delete",
-//     onClick: (row) => {
-//       console.log("Delete clicked", row.id);
-//     },
-//     className: "text-blue-500",
-//   },
-//   {
-//     label: "Explore As xlsx ",
-//     onClick: (row) => {
-//       console.log("Explore As xlsx clicked", row.id);
-//     },
-//     className: "text-blue-500 whitespace-nowrap",
-//   },
-// ];
 
-export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
+/**
+ * Actions available for each row in the Follow Up table.
+ * Includes Edit, View, Delete, and Export.
+ */
+export const action: ITableAction<IFollowUpManagementListProps>[] = [
+  {
+    label: "Edit",
+    onClick: (row) => {
+      console.log("Edit clicked", row.id);
+    },
+    className: "text-blue-500",
+  },
+  {
+    label: "View",
+    onClick: (row) => {
+      console.log("View clicked", row.id);
+    },
+    className: "text-blue-500",
+  },
+  {
+    label: "Delete",
+    onClick: (row) => {
+      console.log("Delete clicked", row.id);
+    },
+    className: "text-red-500",
+  },
+  {
+    label: "Explore As xlsx ",
+    onClick: (row) => {
+      console.log("Explore As xlsx clicked", row.id);
+    },
+    className: "text-blue-500 whitespace-nowrap",
+  },
+];
+
+/**
+ * Column definitions for the Follow Up Management table.
+ */
+export const FollowUpManagementListColumn: ITableColumn<IFollowUpManagementListProps>[] = [
   {
     header: "LEAD NAME",
     accessor: "name",
@@ -105,31 +126,19 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "CONTACT",
+    header: "FOllOW UP DATE",
     accessor: "number",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "EMAIL",
+    header: "ASSIGNED TO",
     accessor: "email",
     headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
   },
   {
-    header: "BUSINESS NAME",
+    header: "STATUS",
     accessor: "businessName",
     sortable: true,
     headerClassName: "min-w-[13rem] 2xl:min-w-[15vw]",
-  },
-  {
-    header: "NATURE OF BUSINESS",
-    accessor: "natureOfBusiness",
-    sortable: true,
-    headerClassName: "min-w-[16rem] 2xl:min-w-[16vw]",
-  },
-  {
-    header: "CITY NAME",
-    accessor: "cityName",
-    sortable: true,
-    headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
   },
 ];
