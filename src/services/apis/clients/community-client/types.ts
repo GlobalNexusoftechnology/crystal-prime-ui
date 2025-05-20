@@ -101,7 +101,7 @@ export interface IAllLeadsList {
   requirement: string;
   source: ISource;
   status: IStatus;
-  assigned_to: string | null;
+  assigned_to: IUser;
 }
 
 export interface IAllLeadResponse {
