@@ -1,7 +1,7 @@
 import { IApiError } from "@/utils";
 import { ApiClient } from "../../api-client";
 
-import { IAllLeadResponse, IChangePasswordPayload, IChangePasswordResponse, ICreateLeadPayload, ICreateLeadResponse, ILeadDetailResponse, ILoginPayload, IProductsResponse, IRegisterPayload, IRegisterResponse, IResetPasswordPayload, IResetPasswordResponse, ISentOtpPayload, ISentOtpResponse, IVerifyEmailPayload, IVerifyEmailResponse } from "./types";
+import { IAllLeadResponse, IChangePasswordPayload, IChangePasswordResponse, ICreateLeadPayload, ICreateLeadResponse, ILeadDetailResponse, ILoginPayload, ILoginUserResponse, IProductsResponse, IRegisterPayload, IRegisterResponse, IResetPasswordPayload, IResetPasswordResponse, ISentOtpPayload, ISentOtpResponse, ISignupPayload, ISignupResponse, IVerifyEmailPayload, IVerifyEmailResponse } from "./types";
 import {
   changePasswordUrl,
   createLeadUrl,
