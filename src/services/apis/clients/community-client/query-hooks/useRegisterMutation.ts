@@ -1,14 +1,16 @@
-import { IRegisterResponse, useMutation } from "@/services";
+import { ISignupResponse,useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
+
 import { COMMUNITY_CLIENT } from "../communityClient";
 
 /**
- * This is to track the register mutation.
+ * This is to track the login mutation keys in react query cache.
  */
-const REGITSER_MUTATION_KEY = "register-mutation-key";
+const MUT_USER_REGISTER = "user-register-mutation-key";
 
+//interface for IRegisterOptions
 interface IRegisterOptions {
-  onSuccessCallback: (data: IRegisterResponse) => void;
+  onSuccessCallback: (data: ISignupResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
 
@@ -20,28 +22,30 @@ export const useRegisterMutation = ({
   onErrorCallback,
 }: IRegisterOptions) => {
   const { mutate, isPending, error } = useMutation({
-    mutationKey: [REGITSER_MUTATION_KEY],
-    networkMode: "always", // Ensures the call happens even in offline mode
-    retry: false, // Do not retry failed requests
-    mutationFn: COMMUNITY_CLIENT.register,
+    mutationKey: [MUT_USER_REGISTER],
+    networkMode: "always", // Even make calls when offline
+    retry: false, // For login Request, do not retry failed requests.
+    mutationFn: COMMUNITY_CLIENT.userRegister,
     onSuccess: (response) => {
       onSuccessCallback(response);
     },
+
     onError: (err: IApiError) => {
       errorLogToRemoteUtil({
-        error: err,
+        error,
         errorCode: ErrorEventsEnum.ERROR_IN_API_CALL,
         errorTitle: "Error in useRegisterMutation",
-        message: err?.message,
+        message: error?.message,
       });
 
-      onErrorCallback?.(err);
+      onErrorCallback?.(err); // pass actual 'err' to your screen
+      return err;
     },
   });
 
   return {
     error,
     isPending,
-    register: mutate,
+    onRegisterProfile: mutate,
   };
 };

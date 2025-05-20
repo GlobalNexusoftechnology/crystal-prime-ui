@@ -4,7 +4,8 @@ import React, { useState } from "react";
 interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
-  error?: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error?: string | any;
   icon?: React.ReactNode;
   suffixIcon?: React.ReactNode;
   onIconClick?: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;

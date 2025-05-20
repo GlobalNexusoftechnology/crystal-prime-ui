@@ -1,3 +1,5 @@
+import { IUser } from "@/services/stores";
+
 /**
  * Sample format to be passed to the login form
  */
@@ -126,8 +128,8 @@ export interface ISentOtpResponse {
 }
 
 export interface ICreateLeadPayload {
-  first_name: string;
-  last_name: string;
+  first_name : string;
+  last_name : string;
   company: string;
   phone: string;
   email: string;
@@ -187,4 +189,34 @@ export interface IChangePasswordResponse {
   email: string;
   oldPassword: string;
   newPassword: string;
+}
+export interface ILoginUserResponse {
+  message?: string;
+  status: string;
+  access_token: string;
+  refresh_token: string;
+  user :IUser
+
+}
+
+
+export interface ILoginUserResponseData {
+  message?: string;
+  data: ILoginUserResponse;
+}
+
+
+export interface ISignupPayload {
+  name: string;
+  email: string;
+  password: string;
+  role: string; // Add role as it's part of the response
+
+}
+
+
+export interface ISignupResponse {
+  status: string;
+  message: string;
+  data: ISentOtpPayload
 }

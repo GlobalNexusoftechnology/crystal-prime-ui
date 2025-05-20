@@ -13,7 +13,8 @@ export function Dropdown({
   options: string[];
   value: string;
   onChange: (val: string) => void;
-  error?: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error?: string | any;
   label?: string;
   isRequired?: boolean;
   dropdownBorderRadius?: string;

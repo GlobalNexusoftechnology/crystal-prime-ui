@@ -11,3 +11,4 @@ export { useCreateLeadMutation } from "./useCreateLeadMutation";
 export { useRegisterMutation } from "./useRegisterMutation";
 export {useResetPasswordMutation} from "./useResetPasswordMutation";
 export {useChangePasswordMutation} from "./useChangePasswordMutation";
+export { useLoginMutation } from "./useLoginMutation";

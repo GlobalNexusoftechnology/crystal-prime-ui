@@ -32,7 +32,7 @@ export const verifyEmailUrl  = () =>  '/auth/verify-email';
 
 export const sentOtpUrl  = () => '/auth/sentOTP';
 
-export const createLeadUrl   = () => '/';
+export const createLeadUrl   = () => '/leads';
 
 export const getLeadDetailByIdUrl = (id: string) =>
   `/products/${id}`;
@@ -42,3 +42,7 @@ export const registerUrl  = () => '/auth/register';
 export const resetPasswordUrl  = () => '/auth/resetPassword'
 
 export const changePasswordUrl  = () => '/auth/changePassword'
+
+export const loginUrl = () => "/auth/login";
+
+export const postRegisterUrl = () => "/auth/register";

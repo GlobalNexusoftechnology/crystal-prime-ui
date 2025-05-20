@@ -1,4 +1,4 @@
-import { useAuthStore } from "@/services/stores";
+import { IApiError } from "@/utils";
 import { ApiClient } from "../../api-client";
 
 import { IAllLeadResponse, IChangePasswordPayload, IChangePasswordResponse, ICreateLeadPayload, ICreateLeadResponse, ILeadDetailResponse, ILoginPayload, IProductsResponse, IRegisterPayload, IRegisterResponse, IResetPasswordPayload, IResetPasswordResponse, ISentOtpPayload, ISentOtpResponse, IVerifyEmailPayload, IVerifyEmailResponse } from "./types";
@@ -15,6 +15,8 @@ import {
   getLeadDetailByIdUrl,
   registerUrl,
   resetPasswordUrl,
+  loginUrl,
+  postRegisterUrl,
   sentOtpUrl,
   verifyEmailUrl,
 } from "./urls";
@@ -30,7 +32,7 @@ export class CommunityClient extends ApiClient {
     super({
       baseURL:
         process.env
-          .NEXT_PUBLIC_NEXT_FRONTEND_BASIC_FOLDER_STRUCTURE_API_BASE_URL,
+          .NEXT_PUBLIC_SATKAR_API_BASE_URL,
     });
   }
 
@@ -45,30 +47,31 @@ export class CommunityClient extends ApiClient {
     return this.classInstance;
   };
 
+  
   /**
    * This authenticates the user with the email and password provided
    */
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public userLogin = async (payload: ILoginPayload) => {
-    // TODO: Add our own login API
-    const { activeSession } = useAuthStore.getState();
-    return activeSession;
     /**
      * TODO: Check this API call example to call other API's
      */
-    // const response = await this.post<
-    //     ICustomerFeedbackResponse,
-    //     ICustomerFeedbackRequestPayload,
-    //     IServerResponseError
-    //   >(postCustomerFeedbackRequestUrl(), payload, {
-    //     requiresAuth: true,
-    //   });
+    const response = await this.post<
+      ILoginUserResponse,
+      ILoginPayload,
+      IApiError
+    >(loginUrl(), payload, {
+      requiresAuth: false,
+    });
 
-    //   if (!response?.success) {
-    //     throw response?.errorData;
-    //   }
+    if (!response?.success) {
+      throw response?.error;
+    }
+    // const profileData = await this.fetchUserProfileList(
+    //   response.data.access_token
+    // );
 
-    //   return response?.data?.data;
+    return { data: response?.data };
   };
 
   public verifyEmail = async (payload: IVerifyEmailPayload) => {
@@ -203,7 +206,7 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
 
-    return response?.data?.data;
+    return response?.data.data;
   };
 
 
@@ -295,6 +298,24 @@ export class CommunityClient extends ApiClient {
     }
 
     return response?.data?.data;
+  };
+
+    /**
+   * This post the register of user.
+   */
+  public userRegister = async (payload: ISignupPayload) => {
+    const response = await this.post<
+      ISignupResponse,
+      ISignupPayload,
+      IApiError
+    >(postRegisterUrl(), payload, {
+      requiresAuth: false,
+    });
+    if (!response?.success) {
+      throw response;
+    }
+
+    return response?.data;
   };
 }
 
