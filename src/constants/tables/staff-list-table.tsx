@@ -80,7 +80,7 @@ export const StaffList: IStaffListProps[] = [
   },
 ];
 
-export const actions: ITableAction<IStaffListProps>[] = [
+export const staffActions: ITableAction<IStaffListProps>[] = [
   {
     label: "Edit",
     onClick: (row) => {

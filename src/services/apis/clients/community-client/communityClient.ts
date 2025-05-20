@@ -1,7 +1,39 @@
 import { IApiError } from "@/utils";
 import { ApiClient } from "../../api-client";
 
-import { IAllLeadResponse, IChangePasswordPayload, IChangePasswordResponse, ICreateLeadPayload, ICreateLeadResponse, ILeadDetailResponse, ILoginPayload, ILoginUserResponse, IProductsResponse, IRegisterPayload, IRegisterResponse, IResetPasswordPayload, IResetPasswordResponse, ISentOtpPayload, ISentOtpResponse, ISignupPayload, ISignupResponse, IVerifyEmailPayload, IVerifyEmailResponse } from "./types";
+import {
+  IAllLeadDownloadExcelResponse,
+  IAllLeadResponse,
+  IAllStatusResponse,
+  IChangePasswordPayload,
+  IChangePasswordResponse,
+  ICreateLeadFollowUpPayload,
+  ICreateLeadFollowUpResponse,
+  ICreateLeadPayload,
+  ICreateLeadResponse,
+  IDeleteLeadFollowUpPayload,
+  IDeleteLeadFollowUpResponse,
+  IDeleteLeadPayload,
+  IDeleteLeadResponse,
+  ILeadDetailResponse,
+  ILeadDownloadExcelResponse,
+  ILeadFollowUpDetailResponse,
+  ILoginPayload,
+  ILoginUserResponse,
+  IProductsResponse,
+  IRegisterPayload,
+  IRegisterResponse,
+  IResetPasswordPayload,
+  IResetPasswordResponse,
+  ISentOtpPayload,
+  ISentOtpResponse,
+  ISignupPayload,
+  ISignupResponse,
+  IUpdateLeadFollowUpPayload,
+  IUpdateLeadFollowUpResponse,
+  IVerifyEmailPayload,
+  IVerifyEmailResponse,
+} from "./types";
 import {
   changePasswordUrl,
   createLeadUrl,
@@ -19,8 +51,17 @@ import {
   postRegisterUrl,
   sentOtpUrl,
   verifyEmailUrl,
-} from "./urls";
+  getLeadDownloadExcelByIdUrl,
+  fetchAllLeadDownloadExcelUrl,
+  fetchAllStatusUrl,
+  deleteLeadUrl,
+  createLeadFollowUpUrl,
+  fetchAllLeadFollowUpUrl,
+  getLeadFollowUpDetailByIdUrl,
 
+  updateLeadFollowUpByIdUrl,
+  deleteLeadFollowUpUrl,
+} from "./urls";
 
 /**
  * This is provides the API client methods for the application and routes.
@@ -30,9 +71,7 @@ export class CommunityClient extends ApiClient {
 
   private constructor() {
     super({
-      baseURL:
-        process.env
-          .NEXT_PUBLIC_SATKAR_API_BASE_URL,
+      baseURL: process.env.NEXT_PUBLIC_SATKAR_API_BASE_URL,
     });
   }
 
@@ -47,7 +86,6 @@ export class CommunityClient extends ApiClient {
     return this.classInstance;
   };
 
-  
   /**
    * This authenticates the user with the email and password provided
    */
@@ -87,13 +125,10 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-
   public sentOtp = async (payload: ISentOtpPayload) => {
-    const response = await this.post<ISentOtpResponse>(
-      sentOtpUrl(),
-      payload,
-      { requiresAuth: false }
-    );
+    const response = await this.post<ISentOtpResponse>(sentOtpUrl(), payload, {
+      requiresAuth: false,
+    });
 
     if (!response?.success) {
       throw response?.errorData;
@@ -101,9 +136,8 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-
-  // reset password 
-    public resetPassword = async (payload: IResetPasswordPayload) => {
+  // reset password
+  public resetPassword = async (payload: IResetPasswordPayload) => {
     const response = await this.post<IResetPasswordResponse>(
       resetPasswordUrl(),
       payload,
@@ -116,8 +150,8 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  //change password 
-      public changePassword = async (payload: IChangePasswordPayload) => {
+  //change password
+  public changePassword = async (payload: IChangePasswordPayload) => {
     const response = await this.post<IChangePasswordResponse>(
       changePasswordUrl(),
       payload,
@@ -130,10 +164,8 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
+  //create lead
 
-  //create lead 
-
-  
   public createLead = async (payload: ICreateLeadPayload) => {
     const response = await this.post<ICreateLeadResponse>(
       createLeadUrl(),
@@ -147,7 +179,68 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
- public register = async (payload: IRegisterPayload) => {
+
+
+  public updateLeadFollowUpById = async (id: string, payload: IUpdateLeadFollowUpPayload) => {
+    const response = await this.post<IUpdateLeadFollowUpResponse>(
+      updateLeadFollowUpByIdUrl(id),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+
+
+  // create lead follow up
+
+  public createLeadFollowUp = async (payload: ICreateLeadFollowUpPayload) => {
+    const response = await this.post<ICreateLeadFollowUpResponse>(
+      createLeadFollowUpUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  //delete lead
+  public deleteLead = async (payload: IDeleteLeadPayload) => {
+    const response = await this.post<IDeleteLeadResponse>(
+      deleteLeadUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  // delete lead follow up
+
+    public deleteLeadFollowUp = async (payload: IDeleteLeadFollowUpPayload) => {
+    const response = await this.post<IDeleteLeadFollowUpResponse>(
+      deleteLeadFollowUpUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public register = async (payload: IRegisterPayload) => {
     const response = await this.post<IRegisterResponse>(
       registerUrl(),
       payload,
@@ -178,6 +271,41 @@ export class CommunityClient extends ApiClient {
     return response;
   };
 
+  public getLeadFollowUpDetailById = async (id: string) => {
+    const response = await this.get<ILeadFollowUpDetailResponse>(
+      getLeadFollowUpDetailByIdUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    const isMock = true;
+
+    if (!response?.success && !isMock) {
+      throw response?.errorData;
+    }
+
+    // TODO: Remove this comment once the isMock is removed above.
+    return response;
+  };
+
+  public getLeadDownloadExcelById = async (id: string) => {
+    const response = await this.get<ILeadDownloadExcelResponse>(
+      getLeadDownloadExcelByIdUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    const isMock = true;
+
+    if (!response?.success && !isMock) {
+      throw response?.errorData;
+    }
+
+    // TODO: Remove this comment once the isMock is removed above.
+    return response;
+  };
 
   /**
    * This fetches the list of products on the carpet market platform.
@@ -209,6 +337,36 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
+  // all lead follow ups
+  public fetchAllLeadFollowUp = async () => {
+    const response = await this.get<IAllLeadResponse>(
+      fetchAllLeadFollowUpUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
+  };
+
+  public fetchAllLeadDownloadExcel = async () => {
+    const response = await this.get<IAllLeadDownloadExcelResponse>(
+      fetchAllLeadDownloadExcelUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
+  };
 
   /**
    * This fetches the list of products on the carpet market platform.
@@ -220,6 +378,18 @@ export class CommunityClient extends ApiClient {
         requiresAuth: false,
       }
     );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data?.data;
+  };
+
+  public fetchAllStatus = async () => {
+    const response = await this.get<IAllStatusResponse>(fetchAllStatusUrl(), {
+      requiresAuth: false,
+    });
 
     if (!response?.success) {
       throw response?.errorData;
@@ -300,7 +470,7 @@ export class CommunityClient extends ApiClient {
     return response?.data?.data;
   };
 
-    /**
+  /**
    * This post the register of user.
    */
   public userRegister = async (payload: ISignupPayload) => {
@@ -318,8 +488,6 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 }
-
-
 
 /**
  * This creates a new instance of the class. is th base Axios API client Class
