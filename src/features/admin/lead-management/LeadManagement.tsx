@@ -7,7 +7,7 @@ import { LeadsListTable } from "../leads-list-table";
 import Image from "next/image";
 import { analyticalCards, ImageRegistry } from "@/constants";
 import { AnalyticalCard } from "../analytical-card";
-import { ImportExcel, NewLeadForm } from "./component";
+import { ImportExcel, NewLeadForm } from "./components";
 
 export function LeadManagement() {
   const [isAddLeadModalOpen, setAddLeadModalOpen] = useState(false);
