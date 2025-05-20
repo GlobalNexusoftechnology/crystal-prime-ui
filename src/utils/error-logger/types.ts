@@ -71,6 +71,7 @@ export type TErrorType =
  * the front end error boundaries based on the error types, message & description.
  */
 export interface IApiError {
+  response: unknown;
   /**
    * The actual error object throw by the Axios client, the error handler or
    * JS runtime thread.

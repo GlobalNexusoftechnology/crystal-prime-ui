@@ -1,4 +1,4 @@
-import { IActiveSession, useMutation } from "@/services";
+import { ILoginUserResponseData, useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 
 import { COMMUNITY_CLIENT } from "../communityClient";
@@ -12,7 +12,7 @@ interface IUserLoginOptions {
   /**
    * TODO: Remove null when implementing actual API.
    */
-  onSuccessCallback: (newSessionInfo: IActiveSession | null) => void;
+  onSuccessCallback: (newSessionInfo: ILoginUserResponseData) => void;
   /**
    * This is called on successful login to save the user's session to device
    * storage and wipe existing user data.
@@ -47,9 +47,7 @@ export const useLoginMutation = ({
         errorTitle: "Error in useLoginMutation",
         message: error?.message,
       });
-
       onErrorCallback?.(err);
-
       return err;
     },
   });

@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+import { BsArrowLeft } from "react-icons/bs";
 
 type ModalOverlayProps = {
   isOpen: boolean;
@@ -28,10 +29,11 @@ export const ModalOverlay: React.FC<ModalOverlayProps> = ({
         className={`relative bg-white rounded-2xl shadow-lg p-6  ${modalClassName}`}
       >
         <button
-          className="absolute top-4 left-4 text-gray-600 hover:text-gray-800"
+          className="absolute top-4 left-4 flex items-center text-black"
           onClick={onClose}
         >
-          ✖
+          <BsArrowLeft className="text-[1rem] 2xl:text-[1vw] mr-2" />
+          Back to Leads
         </button>
         {children}
       </div>
