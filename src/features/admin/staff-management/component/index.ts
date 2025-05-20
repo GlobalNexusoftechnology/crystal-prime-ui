@@ -1,1 +1,1 @@
-    export * from "./staff-list-table";
+export * from "./staff-list-table";

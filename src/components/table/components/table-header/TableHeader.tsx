@@ -13,7 +13,7 @@ export function TableHeader<T>({
   return (
     <th
       className={`p-3 2xl:p-[0.75vw] ${column.sortable ? "cursor-pointer" : ""} ${column.headerClassName || ""}`}
-      onClick={() => column.sortable && onSort(column.accessor)}
+      onClick={() => column.sortable && onSort(column?.accessor)}
     >
       <div className="flex items-center text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] gap-4 2xl:gap-[1vw]">
         <h1>{column.header}</h1>

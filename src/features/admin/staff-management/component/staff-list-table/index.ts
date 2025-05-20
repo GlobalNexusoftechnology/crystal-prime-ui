@@ -1,1 +1,1 @@
-export * from "./StaffListTable";
+export { StaffListTable } from "./StaffListTable";
