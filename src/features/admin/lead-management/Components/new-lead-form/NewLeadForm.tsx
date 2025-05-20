@@ -70,7 +70,7 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
             <option>John Doe</option>
           </select>
         </div>
-        <div className="grid grid-cols-2 gap-4 py-2">
+        <div className="grid grid-cols-2 gap-4 py-2 sm:py-4">
           <InputField
             label="Nature Of Business"
             placeholder="Enter Nature Of Business"
@@ -114,9 +114,9 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
           </label>
         </div>
 
-        <div className="flex justify-end mt-6 space-x-4">
+        <div className="flex justify-between mt-6 space-x-4">
           <button
-            className="border px-4 py-2 rounded text-sm bg-white text-blue-600 hover:bg-gray-100"
+            className="border border-blue-500  px-4 py-2 rounded text-sm bg-white text-blue-600 hover:bg-gray-100"
             onClick={handleCancel}
           >
             Cancel

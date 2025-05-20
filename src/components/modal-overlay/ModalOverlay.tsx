@@ -26,7 +26,7 @@ export const ModalOverlay: React.FC<ModalOverlayProps> = ({
 
       {/* Modal Content */}
       <div
-        className={`relative bg-white rounded-2xl shadow-lg p-6  ${modalClassName}`}
+        className={`relative bg-[#A7A7A7] rounded-2xl shadow-lg p-3  ${modalClassName}`}
       >
         <button
           className="absolute top-4 left-4 flex items-center text-black"
