@@ -21,6 +21,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     businessName: lead.company,
     natureOfBusiness: lead.requirement,
     cityName: lead.location,
+    status: lead.status?.name ?? "Unknown",
+    assignedTo: lead.assigned_to?.name ?? "Unassigned",
   }));
 
   const [searchQuery, setSearchQuery] = useState("");

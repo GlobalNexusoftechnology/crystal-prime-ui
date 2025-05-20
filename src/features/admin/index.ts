@@ -8,3 +8,5 @@ export * from "./staff-management"
 export * from "./follow-up-management"
 export * from "./settings"
 export * from "./document-management"
+export * from "./change-password"
+
