@@ -61,7 +61,7 @@ export function Settings() {
       <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium ml-5 py-5">
         Setting
       </h1>
-      <div className="p-6 max-w-2xl 2xl:max-w-7xl bg-[#F8F8F8] rounded-xl shadow-md space-y-4 border-[#D7D7D7] m-5">
+      <div className="p-6 sm:w-[42rem] 2xl:w-[42vw] bg-[#F8F8F8] rounded-xl shadow-md space-y-4 border-[#D7D7D7] m-5">
         {notifications.map((name, idx) => (
           <div key={idx} className="flex justify-between items-center pb-3 2xl:pb-8">
             <div className="text-[0.7rem] sm:text-[1rem] 2xl:text-[1vw] font-medium text-gray-800 w-1/2">
