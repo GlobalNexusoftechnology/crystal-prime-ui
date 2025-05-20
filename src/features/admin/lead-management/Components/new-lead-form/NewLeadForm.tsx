@@ -66,6 +66,26 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
           <h2 className="text-lg font-semibold">Lead Information</h2>
         </div>
 
+        <div className="py-2">
+          <label className="block 2xl:text-[1vw] text-gray-700 mb-2 2xl:mb-[0.5vw]">
+            Assigned To
+          </label>
+          <select className="w-full border rounded px-3 py-2 text-sm">
+            <option>Select Staff</option>
+            <option>John Doe</option>
+          </select>
+        </div>
+        <div className="grid grid-cols-2 gap-4 py-2 sm:py-4">
+          <InputField
+            label="Nature Of Business"
+            placeholder="Enter Nature Of Business"
+            name="natureOfBusiness"
+          />
+          <InputField
+            label="Business Name"
+            placeholder="Enter Business Name"
+            name="businessName"
+          />
         <Formik<ICreateLeadPayload>
           initialValues={{
             first_name: "",
@@ -198,6 +218,7 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
           )}
         </Formik>
       </div>
+    </div>
     </div>
   );
 }
