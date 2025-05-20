@@ -27,6 +27,6 @@ export const createLeadUrl = () => "/leads";
 
 export const fetchAllLeadsListUrl = () => "/leads";
 
-export const getLeadDetailByIdUrl = (id: string) => `/products/${id}`;
+export const getLeadDetailByIdUrl = (id: string) => `/leads/${id}`;
 
 

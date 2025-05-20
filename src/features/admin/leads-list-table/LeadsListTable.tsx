@@ -1,17 +1,63 @@
 "use client";
 import { Dispatch, SetStateAction, useState, useMemo } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
-import { ILeadsListProps, ITableAction, leadsListColumn } from "@/constants";
+import { ILeadsListDetailsProps, ILeadsListProps, ITableAction, leadsListColumn } from "@/constants";
 import { ExportIcon } from "@/features";
-import { ModalView } from "./components";
-import { useAllLeadsListQuery } from "@/services";
+import { LeadDetailModal } from "./components";
+import { useAllLeadsListQuery, useLeadDetailQuery } from "@/services";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
+  const [leadId, setLeadId] = useState("");
   const { data } = useAllLeadsListQuery();
+  const { leadDetailById, leadDetail } = useLeadDetailQuery(leadId);
+
+  const leadDetailModalData: ILeadsListDetailsProps = {
+  id: leadDetailById?.id || "",
+  name: `${leadDetailById?.first_name || ""} ${leadDetailById?.last_name || ""}`,
+  number: leadDetailById?.phone || "",
+  email: leadDetailById?.email || "",
+  businessName: leadDetailById?.company || "",
+  natureOfBusiness: leadDetailById?.requirement || "",
+  cityName: leadDetailById?.location || "",
+  status: leadDetailById?.status || {
+    id: "",
+    name: "",
+    created_at: "",
+    updated_at: "",
+    deleted: false,
+    deleted_at: null,
+  },
+  assignedTo: leadDetailById?.assigned_to || {
+    id: "",
+    businessName: "",
+    created_at: "",
+    updated_at: "",
+    name: "",
+    email: "",
+    phoneNumber: "",
+    businessType: "",
+    userType: "",
+    city: "",
+    country: "",
+    address: "",
+    registrationId: "",
+    businessLicense: "",
+    username: "",
+    role: "",
+    photo: "",
+    isVendorApproved: false,
+    provider: "",
+    providerId: "",
+    authToken: "",
+    refreshToken: "",
+    isSocialLogin: false,
+  },
+};
+
 
   const leadsList: ILeadsListProps[] = (data ?? []).map((lead) => ({
     id: lead.id,
@@ -48,7 +94,11 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     },
     {
       label: "View",
-      onClick: (row) => setViewLead(row),
+      onClick: (row) => {
+        leadDetail()
+        setLeadId(row.id);
+        setViewLead(row);
+      },
       className: "text-blue-500",
     },
     {
@@ -119,7 +169,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       <Table data={filteredLeads} columns={leadsListColumn} actions={actions} />
 
       {viewLead && (
-        <ModalView lead={viewLead} onClose={() => setViewLead(null)} />
+        <LeadDetailModal data={leadDetailModalData} lead={viewLead} onClose={() => setViewLead(null)} />
       )}
     </div>
   );

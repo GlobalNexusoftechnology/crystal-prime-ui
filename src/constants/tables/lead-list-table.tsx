@@ -1,3 +1,4 @@
+import { IStatus, IUser } from "@/services";
 import { ITableColumn } from "../table";
 
 export interface ILeadsListProps {
@@ -10,6 +11,17 @@ export interface ILeadsListProps {
   cityName: string;
   status: string;
   assignedTo: string;
+}
+export interface ILeadsListDetailsProps {
+  id: string;
+  name: string;
+  number: string;
+  email: string;
+  businessName: string;
+  natureOfBusiness: string;
+  cityName: string;
+  status: IStatus;
+  assignedTo: IUser;
 }
 
 export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [

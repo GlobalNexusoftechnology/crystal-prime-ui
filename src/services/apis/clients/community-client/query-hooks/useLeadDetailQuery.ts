@@ -10,7 +10,7 @@ const LEAD_DETAIL_QUERY_KEY = "lead-detail-query-key";
 /**
  * This fetches the lead detail
  */
-export const useProductDetailQuery = (id: string) => {
+export const useLeadDetailQuery = (id: string) => {
   const { data, isError, error, isLoading, isPending, refetch } =
     useQueryWithUserId({
       queryKey: [LEAD_DETAIL_QUERY_KEY],
@@ -23,7 +23,7 @@ export const useProductDetailQuery = (id: string) => {
     isError,
     isLoading,
     isPending,
-    data,
+    leadDetailById: data,
     leadDetail: refetch,
   };
 };

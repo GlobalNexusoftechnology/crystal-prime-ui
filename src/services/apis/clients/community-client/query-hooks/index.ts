@@ -4,3 +4,4 @@ export { useSentOtpMutation } from "./useSentOtpMutation";
 export { useCreateLeadMutation } from "./useCreateLeadMutation";
 export { useLoginMutation } from "./useLoginMutation";
 export { useRegisterMutation } from "./useRegisterMutation";
+export { useLeadDetailQuery } from "./useLeadDetailQuery";

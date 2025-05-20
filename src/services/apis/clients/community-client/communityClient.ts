@@ -158,14 +158,12 @@ export class CommunityClient extends ApiClient {
       }
     );
 
-    const isMock = true;
 
-    if (!response?.success && !isMock) {
+    if (!response?.success) {
       throw response?.errorData;
     }
 
-    // TODO: Remove isMock once the API is fully functional
-    return response;
+    return response.data.data;
   };
 
   /**

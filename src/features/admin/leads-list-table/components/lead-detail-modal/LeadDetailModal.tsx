@@ -1,8 +1,7 @@
-import { InputField, ModalOverlay } from "@/components";
-import { ILeadsListProps, ImageRegistry } from "@/constants";
-import { PhoneIcon, ThreeIcon } from "@/features/icons";
-import { MailIcon } from "@/features/icons/MailIcon";
 import Image from "next/image";
+import { InputField, ModalOverlay } from "@/components";
+import { ILeadsListDetailsProps, ILeadsListProps, ImageRegistry } from "@/constants";
+import { PhoneIcon, ThreeIcon, MailIcon } from "@/features";
 
 const notes = [
   {
@@ -24,9 +23,10 @@ const notes = [
 interface LeadDetailsModalProps {
   lead: ILeadsListProps;
   onClose: () => void;
+  data: ILeadsListDetailsProps
 }
 
-export function ModalView({ onClose }: LeadDetailsModalProps) {
+export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
   return (
     <ModalOverlay isOpen={true} onClose={onClose}>
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
@@ -41,7 +41,7 @@ export function ModalView({ onClose }: LeadDetailsModalProps) {
                 height={40}
                 className="rounded-full"
               />
-              <p className="font-semibold text-lg text-gray-800">Ajax Stark</p>
+              <p className="font-semibold text-lg text-gray-800">{data.name}</p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -54,14 +54,14 @@ export function ModalView({ onClose }: LeadDetailsModalProps) {
           <div className="flex flex-col sm:flex-row justify-between gap-2 mt-4 text-sm text-gray-600">
             <a href="tel:+13853449378" className="flex items-center gap-2">
               <PhoneIcon className="h-5 w-5" />
-              (385) 344-9378
+              {data.number}
             </a>
             <a
               href="mailto:Elna.Ferry@hotmail.com"
               className="flex items-center gap-2"
             >
               <MailIcon className="h-5 w-5" />
-              Elna.Ferry@hotmail.com
+              {data.email}
             </a>
           </div>
         </div>
@@ -70,15 +70,15 @@ export function ModalView({ onClose }: LeadDetailsModalProps) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-gray-200 p-4 rounded-lg  text-sm text-gray-700">
           <div>
             <p className="font-medium">Lead Owner</p>
-            <p className="font-semibold text-textColor">Nisha Sharma</p>
+            <p className="font-semibold text-textColor">{data.name}</p>
           </div>
           <div>
             <p className="font-medium">Created on</p>
-            <p className="font-semibold text-textColor">20 / 02 / 2024</p>
+            <p className="font-semibold text-textColor">{data.assignedTo.name}</p>
           </div>
           <div>
             <p className="font-medium">Business Name</p>
-            <p className="font-semibold text-textColor">Quigley LLC</p>
+            <p className="font-semibold text-textColor">{data.businessName}</p>
           </div>
           <div>
             <p className="font-medium">Status</p>
