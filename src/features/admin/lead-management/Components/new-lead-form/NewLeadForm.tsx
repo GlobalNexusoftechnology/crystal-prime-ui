@@ -86,139 +86,146 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
             placeholder="Enter Business Name"
             name="businessName"
           />
-        <Formik<ICreateLeadPayload>
-          initialValues={{
-            first_name: "",
-            last_name: "",
-            company: "",
-            phone: "",
-            email: "",
-            location: "",
-            budget: 0,
-            requirement: "",
-            source_id: "",
-            status_id: "",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={(values) => {
-            createLead(values);
-          }}
-        >
-          {({ values, handleChange, setFieldValue, errors, touched }) => (
-            <Form>
-              <div className="grid grid-cols-2 gap-4 py-2">
-                <InputField
-                  label="First Name"
-                  placeholder="Enter First Name"
-                  name="first_name"
-                  value={values.first_name}
-                  onChange={handleChange}
-                  error={touched.first_name && errors.first_name}
-                />
-                <InputField
-                  label="Last Name"
-                  placeholder="Enter Last Name"
-                  name="last_name"
-                  value={values.last_name}
-                  onChange={handleChange}
-                  error={touched.last_name && errors.last_name}
-                />
-              </div>
+          <Formik<ICreateLeadPayload>
+            initialValues={{
+              first_name: "",
+              last_name: "",
+              company: "",
+              phone: "",
+              email: "",
+              location: "",
+              budget: 0,
+              requirement: "",
+              source_id: "",
+              status_id: "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={(values) => {
+              createLead(values);
+            }}
+          >
+            {({ values, handleChange, setFieldValue, errors, touched }) => (
+              <Form>
+                <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                  <InputField
+                    label="First Name"
+                    placeholder="Enter First Name"
+                    name="first_name"
+                    value={values.first_name}
+                    onChange={handleChange}
+                    error={touched.first_name && errors.first_name}
+                  />
+                  <InputField
+                    label="Last Name"
+                    placeholder="Enter Last Name"
+                    name="last_name"
+                    value={values.last_name}
+                    onChange={handleChange}
+                    error={touched.last_name && errors.last_name}
+                  />
+                </div>
 
-              <div className="grid grid-cols-2 gap-4 py-2">
-                <InputField
-                  label="Company Name"
-                  placeholder="Enter Company Name"
-                  name="company"
-                  value={values.company}
-                  onChange={handleChange}
-                  error={touched.company && errors.company}
-                />
-                <InputField
-                  label="Phone"
-                  placeholder="Enter Phone Number"
-                  name="phone"
-                  value={values.phone}
-                  onChange={handleChange}
-                  error={touched.phone && errors.phone}
-                />
-              </div>
+                <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                  <InputField
+                    label="Company Name"
+                    placeholder="Enter Company Name"
+                    name="company"
+                    value={values.company}
+                    onChange={handleChange}
+                    error={touched.company && errors.company}
+                  />
+                  <InputField
+                    label="Phone"
+                    placeholder="Enter Phone Number"
+                    name="phone"
+                    value={values.phone}
+                    onChange={handleChange}
+                    error={touched.phone && errors.phone}
+                  />
+                </div>
 
-              <div className="grid grid-cols-2 gap-4 py-2">
-                <InputField
-                  label="Email"
-                  placeholder="Enter Email"
-                  name="email"
-                  type="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  error={touched.email && errors.email}
-                />
-                <InputField
-                  label="Location"
-                  placeholder="Enter Location"
-                  name="location"
-                  value={values.location}
-                  onChange={handleChange}
-                  error={touched.location && errors.location}
-                />
-              </div>
+                <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                  <InputField
+                    label="Email"
+                    placeholder="Enter Email"
+                    name="email"
+                    type="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    error={touched.email && errors.email}
+                  />
+                  <InputField
+                    label="Location"
+                    placeholder="Enter Location"
+                    name="location"
+                    value={values.location}
+                    onChange={handleChange}
+                    error={touched.location && errors.location}
+                  />
+                </div>
 
-              <div className="grid grid-cols-2 gap-4 py-2">
-                <InputField
-                  label="Budget"
-                  placeholder="Enter Budget"
-                  name="budget"
-                  type="number"
-                  value={values.budget}
-                  onChange={(e) => {
-                    setFieldValue("budget", parseFloat(e.target.value || "0"));
-                  }}
-                  error={touched.budget && errors.budget}
-                />
-                <InputField
-                  label="Requirement"
-                  placeholder="Enter Requirement"
-                  name="requirement"
-                  value={values.requirement}
-                  onChange={handleChange}
-                  error={touched.requirement && errors.requirement}
-                />
-              </div>
+                <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                  <InputField
+                    label="Budget"
+                    placeholder="Enter Budget"
+                    name="budget"
+                    type="number"
+                    value={values.budget}
+                    onChange={(e) => {
+                      setFieldValue(
+                        "budget",
+                        parseFloat(e.target.value || "0")
+                      );
+                    }}
+                    error={touched.budget && errors.budget}
+                  />
+                  <InputField
+                    label="Requirement"
+                    placeholder="Enter Requirement"
+                    name="requirement"
+                    value={values.requirement}
+                    onChange={handleChange}
+                    error={touched.requirement && errors.requirement}
+                  />
+                </div>
 
-              <div className="grid grid-cols-2 gap-4 py-2">
-                <InputField
-                  label="Source ID"
-                  placeholder="Enter Source ID"
-                  name="source_id"
-                  value={values.source_id}
-                  onChange={handleChange}
-                  error={touched.source_id && errors.source_id}
-                />
-                <InputField
-                  label="Status ID"
-                  placeholder="Enter Status ID"
-                  name="status_id"
-                  value={values.status_id}
-                  onChange={handleChange}
-                  error={touched.status_id && errors.status_id}
-                />
-              </div>
+                <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                  <InputField
+                    label="Source ID"
+                    placeholder="Enter Source ID"
+                    name="source_id"
+                    value={values.source_id}
+                    onChange={handleChange}
+                    error={touched.source_id && errors.source_id}
+                  />
+                  <InputField
+                    label="Status ID"
+                    placeholder="Enter Status ID"
+                    name="status_id"
+                    value={values.status_id}
+                    onChange={handleChange}
+                    error={touched.status_id && errors.status_id}
+                  />
+                </div>
 
-              <div className="flex justify-end mt-6 space-x-4">
-                <Button
-                  title="Cancel"
-                  onClick={handleCancel}
-                  variant="primary-outline"
-                  type="button"
-                />
-                <Button title="Add Lead" type="submit" isLoading={isPending} />
-              </div>
-            </Form>
-          )}
-        </Formik>
+                <div className="flex justify-between mt-6 space-x-4">
+                  <Button
+                    title="Cancel"
+                    onClick={handleCancel}
+                    variant="primary-outline"
+                    type="button"
+                  />
+                  <Button
+                    title="Add Lead"
+                    type="submit"
+                    isLoading={isPending}
+                  />
+                </div>
+              </Form>
+            )}
+          </Formik>
+        </div>
       </div>
-    </div>
     </div>
   );
 }
