@@ -1,6 +1,8 @@
-import { ModalOverlay } from "@/components";
+import { Button, InputField, ModalOverlay } from "@/components";
 import { ILeadsListProps, ImageRegistry } from "@/constants";
-import { Mail, Phone, MoreVertical } from "lucide-react";
+import { PhoneIcon, ThreeIcon } from "@/features/icons";
+import { MailIcon } from "@/features/icons/MailIcon";
+import { MoreVertical } from "lucide-react";
 import Image from "next/image";
 
 const notes = [
@@ -28,62 +30,62 @@ interface LeadDetailsModalProps {
 export function ModalView({ onClose }: LeadDetailsModalProps) {
   return (
     <ModalOverlay isOpen={true} onClose={onClose}>
-      <div className="p-4 bg-gray-50 md:p-6 overflow-y-auto max-h-[90vh]">
-        {/* Lead Information Section */}
-        <div className="bg-white rounded-lg shadow-md p-4 border border-gray-100">
-          <div className="flex flex-col gap-8">
-            <div className="flex justify-between items-center gap-4">
-              <div className="flex gap-4 items-center">
-                <Image
-                  src={ImageRegistry.ajaxstar}
-                  alt="Avatar"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-
-                <p className="font-medium text-lg">Ajax Stark</p>
-              </div>
-
-              <div className="border border-gray-300 rounded-full p-2 cursor-pointer">
-                <MoreVertical className="text-gray-500 h-5 w-5" />
-              </div>
+      <div className="overflow-y-auto max-h-[80vh] space-y-4">
+        {/* Lead Info Header */}
+        <div className="bg-white rounded-lg p-4 border border-gray-200">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-4">
+              <Image
+                src={ImageRegistry.ajaxstar}
+                alt="Avatar"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+              <p className="font-semibold text-lg text-gray-800">Ajax Stark</p>
             </div>
 
-            <div className="flex justify-between sm:flex-row sm:gap-4 text-sm text-[#252F4A] ">
-              <a href="tel:+13853449378" className="flex items-center gap-1">
-                <Phone className="h-4 w-4 text-[#054B9E]" /> (385) 344-9378
-              </a>
-              <a
-                href="mailto:Elna.Ferry@hotmail.com"
-                className="flex items-center gap-1"
-              >
-                <Mail className="h-4 w-4 text-[#054B9E]" />
-                Elna.Ferry@hotmail.com
-              </a>
+            <div className="flex items-center gap-2">
+              <div className="border border-gray-400 rounded-full p-2 cursor-pointer">
+                <ThreeIcon className="h-5 w-5 text-gray-600" />
+              </div>
             </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-between gap-2 mt-4 text-sm text-gray-600">
+            <a href="tel:+13853449378" className="flex items-center gap-2">
+              <PhoneIcon className="h-5 w-5" />
+              (385) 344-9378
+            </a>
+            <a
+              href="mailto:Elna.Ferry@hotmail.com"
+              className="flex items-center gap-2"
+            >
+              <MailIcon className="h-5 w-5" />
+              Elna.Ferry@hotmail.com
+            </a>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 my-3 shadow-md text-sm text-gray-700 bg-white border border-gray-200 p-4 rounded-lg">
+        {/* Lead Details Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-gray-200 p-4 rounded-lg  text-sm text-gray-700">
           <div>
             <p className="font-medium">Lead Owner</p>
-            <p className=" text-[#252F4A] font-semibold">Nisha Sharma</p>
+            <p className="font-semibold text-textColor">Nisha Sharma</p>
           </div>
           <div>
             <p className="font-medium">Created on</p>
-            <p className=" text-[#252F4A] font-semibold">20 / 02 / 2024</p>
+            <p className="font-semibold text-textColor">20 / 02 / 2024</p>
           </div>
           <div>
             <p className="font-medium">Business Name</p>
-            <p className=" text-[#252F4A] font-semibold">Quigley LLC</p>
+            <p className="font-semibold text-textColor">Quigley LLC</p>
           </div>
           <div>
-            <p className="font-medium mb-1">Status</p>
+            <p className="font-medium">Status</p>
             <select
-              className="inline-flex items-center px-2 py-1 bg-[#08EA79] 
- text-white rounded-lg text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-green-300  "
               defaultValue="initiated"
+              className="mt-1 w-fit bg-[#08EA79] text-white px-3 py-1 text-xs rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-green-300"
             >
               <option value="initiated">Initiated</option>
               <option value="in_progress">In Progress</option>
@@ -93,63 +95,55 @@ export function ModalView({ onClose }: LeadDetailsModalProps) {
           </div>
           <div>
             <p className="font-medium">Nature Of Business</p>
-            <p className=" text-[#252F4A] font-semibold">Retail Business</p>
+            <p className="font-semibold text-textColor">Retail Business</p>
           </div>
           <div>
             <p className="font-medium">Lead Type</p>
-            <p className=" text-[#252F4A] font-semibold">Website</p>
+            <p className="font-semibold text-textColor">Website</p>
           </div>
           <div>
             <p className="font-medium">City</p>
-            <p className=" text-[#252F4A] font-semibold">Lake Genesisfort</p>
+            <p className="font-semibold text-textColor">Lake Genesisfort</p>
           </div>
           <div>
             <p className="font-medium">Uploaded Document</p>
-            <a href="#" className=" text-[#252F4A] font-semibold">
+            <a href="#" className="font-semibold text-blue-600 underline">
               Project Report.pdf
             </a>
           </div>
           <div>
             <p className="font-medium">Assigned To</p>
-            <p className="flex items-center gap-1 text-[#252F4A] font-semibold">
-              <span className="bg-blue-500 rounded-full px-2 py-1 text-md text-white font-medium">
+            <div className="flex items-center gap-2">
+              <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">
                 RM
               </span>
-              Ramesh Gupta
-            </p>
+              <p className="font-semibold text-textColor">Ramesh Gupta</p>
+            </div>
           </div>
         </div>
 
         {/* Notes Section */}
-        <div className="bg-white rounded-lg shadow-md p-4 space-y-3">
+
+        <div className="bg-white rounded-lg p-4 space-y-4 border border-gray-200 overflow-y-auto max-h-64">
           <p className="font-medium text-gray-700">Notes</p>
           {notes.map((note) => (
             <div
               key={note.id}
-              className="bg-gray-100 p-3 rounded-md border border-gray-100"
+              className="bg-gray-100 p-3 rounded-md border border-gray-200 space-y-1"
             >
-              <p className="text-sm font-semibold text-[#252F4A] border-b border-[#252F4A] inline-block">
+              <p className="text-sm font-semibold text-textColor">
                 {note.name}
               </p>
-              <p className="text-[1rem] 2xl:text-[1vw] from-neutral-400 text-black mt-1">
-                {note.message}
-              </p>
-              <p className="text-sm font-semibold text-[#252F4A] border-b border-[#252F4A] inline-block">
-                {note.timestamp}
-              </p>
+              <p className="text-sm text-gray-700">{note.message}</p>
+              <p className="text-xs text-gray-500">{note.timestamp}</p>
             </div>
           ))}
-
-          {/* Add Note Input */}
-          <div className="pt-2 space-y-2">
-            <textarea
+          <div className="pt-2 ">
+            <InputField
               placeholder="Enter Comments"
-              className="w-full border border-gray-300 rounded-md p-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows={3}
+              name="email"
+              type="email"
             />
-            <button className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded hover:bg-blue-700 transition">
-              Add Note
-            </button>
           </div>
         </div>
       </div>

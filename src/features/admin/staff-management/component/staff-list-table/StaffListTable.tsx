@@ -15,7 +15,7 @@
 
 import { Dispatch, SetStateAction, useState } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
-import { actions } from "@/constants";
+// import { actions } from "@/constants";
 import { ExportIcon } from "@/features";
 import { StaffList, StaffListColumn } from "@/constants/tables/staff-list-table";
 
@@ -74,7 +74,7 @@ export function StaffListTable({ setAddStaffModalOpen }: StaffListTableProps) {
           />
         </div>
       </div>
-      <Table data={StaffList} columns={StaffListColumn} actions={actions} />
+      <Table data={StaffList} columns={StaffListColumn}  />
     </div>
   );
 }

@@ -59,16 +59,16 @@ export function LeadManagement() {
       <ModalOverlay
         isOpen={isAddLeadModalOpen}
         onClose={() => handleOpenForm("")}
-        modalClassName="w-[45rem] h-[35rem]"
+        modalClassName="w-[35rem] h-[35rem] 2xl:w-[37vw] 2xl:h-[37vw]"
       >
-        <div className="bg-[#F8F8F8] h-[31rem]">
-          <div className="space-y-6 p-4 bg-white">
+        <div className="bg-white border border-gray-300 rounded-lg h-[31rem]">
+          <div className="space-y-6 p-4">
             {activeStep === "initial" && (
-              <div className="border-2 p-4 w-full space-y-4">
+              <div className="p-4 w-full space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white rounded-xl">
                   {/* Manual Upload */}
                   <div
-                    className="border-2 border-dashed rounded-xl p-4 text-center hover:shadow transition bg-[#F8F8F8]"
+                    className="border-2 border-dashed rounded-xl p-4 text-center hover:shadow transition bg-[#f8f8f8]"
                     onClick={() => handleOpenForm("addForm")}
                   >
                     <div className="w-[15rem] h-[6rem] pb-4">
@@ -94,7 +94,7 @@ export function LeadManagement() {
                   <div
                     {...getRootProps()}
                     onClick={() => handleOpenForm("excel")}
-                    className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition bg-[#F8F8F8] ${
+                    className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition bg-[#f8f8f8] ${
                       isDragActive ? "bg-purple-100" : "hover:shadow"
                     }`}
                   >
@@ -119,7 +119,7 @@ export function LeadManagement() {
                 </div>
 
                 {/* External Upload */}
-                <div className="md:col-span-2 border-2 border-dashed rounded-xl p-2 text-center bg-[#F8F8F8] flex justify-center items-center flex-col">
+                <div className="md:col-span-2 border-2 border-dashed rounded-xl p-2 text-center bg-[#f8f8f8] flex justify-center items-center flex-col">
                   <div className="w-[18rem] h-[8rem] pb-4">
                     <Image
                       src={ImageRegistry.external}
@@ -150,7 +150,7 @@ export function LeadManagement() {
           </div>
         </div>
       </ModalOverlay>
-      
+
       {activeStep === "addForm" && (
         <NewLeadForm setAddLeadModalOpen={handleAddFormClose} />
       )}
