@@ -15,7 +15,7 @@ interface IRegisterOptions {
 }
 
 /**
- * This register the user or vender to carpet market.
+ * Hook to register mutation
  */
 export const useRegisterMutation = ({
   onSuccessCallback,

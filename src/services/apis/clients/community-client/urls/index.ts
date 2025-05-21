@@ -29,4 +29,30 @@ export const fetchAllLeadsListUrl = () => "/leads";
 
 export const getLeadDetailByIdUrl = (id: string) => `/leads/${id}`;
 
+export const getLeadDownloadExcelByIdUrl = (id: string) =>
+  `/lead-download-excel/${id}`;
+
+export const fetchAllLeadDownloadExcelUrl = () => "/leads";
+
+export const fetchAllStatusUrl = () => "/";
+
+export const deleteLeadUrl = () => "/";
+
+export const createLeadFollowUpUrl = () => "/lead-followup";
+
+export const fetchAllLeadFollowUpUrl = () => "/lead-followup";
+
+export const getLeadFollowUpDetailByIdUrl = (id: string) =>
+  `/lead-followup/${id}`;
+
+export const updateLeadFollowUpByIdUrl = (id: string) =>
+  `/lead-followup/${id}`;
+
+export const deleteLeadFollowUpUrl = () => "/lead-followup";
+
+export const registerUrl = () => "/auth/register";
+
+export const resetPasswordUrl = () => "/auth/resetPassword";
+
+export const changePasswordUrl = () => "/auth/changePassword";
 
