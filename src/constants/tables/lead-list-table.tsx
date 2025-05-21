@@ -1,38 +1,54 @@
-import { IStatus, IUser } from "@/services";
+import { ISource, IStatus, IUser } from "@/services";
 import { ITableColumn } from "../table";
 
 export interface ILeadsListProps {
   id: string;
-  name: string;
-  number: string;
+  first_name: string;
+  last_name: string;
+  company: string;
+  phone: string;
   email: string;
-  businessName: string;
-  natureOfBusiness: string;
-  cityName: string;
-  status: string;
-  assignedTo: string;
+  location: string;
+  budget: string;
+  requirement: string;
+  source_id: string;
+  status_id: string;
+  assigned_to: string;
 }
 export interface ILeadsListDetailsProps {
   id: string;
-  name: string;
-  number: string;
+  first_name: string;
+  last_name: string;
+  company: string;
+  phone: string;
   email: string;
-  businessName: string;
-  natureOfBusiness: string;
-  cityName: string;
+  location: string;
+  budget: string;
+  requirement: string;
+  source: ISource;
   status: IStatus;
   assignedTo: IUser;
 }
 
 export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
   {
-    header: "NAME",
-    accessor: "name",
+    header: "FIRST NAME",
+    accessor: "first_name",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "MOBILE NUMBER",
-    accessor: "number",
+    header: "LAST NAME",
+    accessor: "last_name",
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+  },
+  {
+    header: "COMPANY",
+    accessor: "company",
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+  },
+  {
+    header: "PHONE",
+    accessor: "phone",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
@@ -41,28 +57,34 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "BUSINESS NAME",
-    accessor: "businessName",
+    header: "LOCATION",
+    accessor: "location",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "NATURE OF BUSINESS",
-    accessor: "natureOfBusiness",
+    header: "BUDGET",
+    accessor: "budget",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "CITY",
-    accessor: "cityName",
+    header: "REQUIREMENT",
+    accessor: "requirement",
+    headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
+  },
+  {
+    header: "SOURCE",
+    accessor: "source_id",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
     header: "STATUS",
-    accessor: "status",
+    accessor: "status_id",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
     header: "ASSIGNED TO",
-    accessor: "assignedTo",
+    accessor: "assigned_to",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
 ];
+

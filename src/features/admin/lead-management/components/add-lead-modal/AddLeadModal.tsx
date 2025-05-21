@@ -3,6 +3,8 @@ import {
   ICreateLeadPayload,
   ICreateLeadResponse,
   useAllLeadsListQuery,
+  useAllSourcesQuery,
+  useAllStatusesQuery,
   useCreateLeadMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
@@ -28,6 +30,8 @@ const validationSchema = Yup.object().shape({
 
 export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
   const { leadsRefetch } = useAllLeadsListQuery();
+  const { allSourcesData } = useAllSourcesQuery();
+  const { allStatusesData } = useAllStatusesQuery();
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (data: ICreateLeadResponse) => {
       console.log("Lead created successfully", data);
@@ -43,9 +47,18 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
     setAddLeadModalOpen(false);
   };
 
-  const sourceOptions = ["Source A", "Source B", "Source C"];
-const statusOptions = ["Active", "Inactive", "Pending"];
- 
+  const sourceOptions =
+    allSourcesData?.map((source) => ({
+      label: source.name, 
+      value: source.id.toString(),
+    })) || [];
+
+  const statusOptions =
+    allStatusesData?.map((status) => ({
+      label: status.name,
+      value: status.id.toString(),
+    })) || [];
+
   return (
     <ModalOverlay isOpen={true} onClose={handleCancel}>
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
@@ -157,29 +170,17 @@ const statusOptions = ["Active", "Inactive", "Pending"];
                     label="Source ID"
                     options={sourceOptions}
                     value={values.source_id}
-                    onChange={(val) =>
-                      handleChange({
-                        target: { name: "source_id", value: val },
-                      })
-                    }
-                    error={touched.source_id && errors.source_id}
-                    dropdownWidth="w-full"
+                    onChange={(val) => setFieldValue("source_id", val)}
+                    error={touched.source_id ? errors.source_id : undefined}
                   />
-
                   <Dropdown
                     label="Status ID"
                     options={statusOptions}
                     value={values.status_id}
-                    onChange={(val) =>
-                      handleChange({
-                        target: { name: "status_id", value: val },
-                      })
-                    }
-                    error={touched.status_id && errors.status_id}
-                    dropdownWidth="w-full"
+                    onChange={(val) => setFieldValue("status_id", val)}
+                    error={touched.status_id ? errors.status_id : undefined}
                   />
                 </div>
-
                 <div className="flex justify-between mt-6 space-x-4">
                   <Button
                     title="Cancel"

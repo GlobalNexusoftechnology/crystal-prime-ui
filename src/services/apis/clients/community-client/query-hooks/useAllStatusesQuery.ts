@@ -20,7 +20,7 @@ export const useAllStatusesQuery = () => {
   return {
     error,
     isError,
-    data,
+    allStatusesData: data,
     isLoading,
     isPending,
     allStatuses: refetch,

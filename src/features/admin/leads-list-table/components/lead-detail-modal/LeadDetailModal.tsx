@@ -1,7 +1,12 @@
 import Image from "next/image";
 import { InputField, ModalOverlay } from "@/components";
-import { ILeadsListDetailsProps, ILeadsListProps, ImageRegistry } from "@/constants";
+import {
+  ILeadsListDetailsProps,
+  ILeadsListProps,
+  ImageRegistry,
+} from "@/constants";
 import { PhoneIcon, ThreeIcon, MailIcon } from "@/features";
+import { getInitials } from "@/utils";
 
 const notes = [
   {
@@ -23,7 +28,7 @@ const notes = [
 interface LeadDetailsModalProps {
   lead: ILeadsListProps;
   onClose: () => void;
-  data: ILeadsListDetailsProps
+  data: ILeadsListDetailsProps;
 }
 
 export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
@@ -41,7 +46,9 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
                 height={40}
                 className="rounded-full"
               />
-              <p className="font-semibold text-lg text-gray-800">{data.name}</p>
+              <p className="font-semibold text-lg text-gray-800">
+                {data.first_name} {data.last_name}
+              </p>
             </div>
 
             <div className="flex items-center gap-2">
@@ -54,7 +61,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div className="flex flex-col sm:flex-row justify-between gap-2 mt-4 text-sm text-gray-600">
             <a href="tel:+13853449378" className="flex items-center gap-2">
               <PhoneIcon className="h-5 w-5" />
-              {data.number}
+              {data.phone}
             </a>
             <a
               href="mailto:Elna.Ferry@hotmail.com"
@@ -70,27 +77,25 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-gray-200 p-4 rounded-lg  text-sm text-gray-700">
           <div>
             <p className="font-medium">Lead Owner</p>
-            <p className="font-semibold text-textColor">{data.name}</p>
+            <p className="font-semibold text-textColor">
+              {data.first_name} {data.last_name}
+            </p>
           </div>
           <div>
             <p className="font-medium">Created on</p>
-            <p className="font-semibold text-textColor">{data.assignedTo.name}</p>
+            <p className="font-semibold text-textColor">
+              {data.assignedTo.name}
+            </p>
           </div>
           <div>
-            <p className="font-medium">Business Name</p>
-            <p className="font-semibold text-textColor">{data.businessName}</p>
+            <p className="font-medium">Company</p>
+            <p className="font-semibold text-textColor">{data.company}</p>
           </div>
           <div>
             <p className="font-medium">Status</p>
-            <select
-              defaultValue="initiated"
-              className="mt-1 w-fit bg-[#08EA79] text-white px-3 py-1 text-xs rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-green-300"
-            >
-              <option value="initiated">Initiated</option>
-              <option value="in_progress">In Progress</option>
-              <option value="completed">Completed</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
+            <p className="mt-1 w-fit bg-[#08EA79] text-white px-3 py-1 text-xs rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-green-300">
+              {data.status.name}
+            </p>
           </div>
           <div>
             <p className="font-medium">Nature Of Business</p>
@@ -101,8 +106,8 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             <p className="font-semibold text-textColor">Website</p>
           </div>
           <div>
-            <p className="font-medium">City</p>
-            <p className="font-semibold text-textColor">Lake Genesisfort</p>
+            <p className="font-medium">Location</p>
+            <p className="font-semibold text-textColor">{data.location}</p>
           </div>
           <div>
             <p className="font-medium">Uploaded Document</p>
@@ -114,9 +119,11 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             <p className="font-medium">Assigned To</p>
             <div className="flex items-center gap-2">
               <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">
-                RM
+                {getInitials(data.assignedTo.name)}
               </span>
-              <p className="font-semibold text-textColor">Ramesh Gupta</p>
+              <p className="font-semibold text-textColor">
+                {data.assignedTo.name}
+              </p>
             </div>
           </div>
         </div>

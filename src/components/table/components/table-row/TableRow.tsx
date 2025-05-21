@@ -27,12 +27,11 @@ export function TableRow<T extends { id: string | number; status?: string }>(
 
       {columns.map((col, index) => (
         <td key={index} className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700">
-          {col.accessor === "status" && row.status ? (
+          {col.accessor === "status_id" && row.status ? (
             <span className={`px-3 py-1 text-xs font-semibold rounded-full ${statusClass}`}>
               {row.status}
             </span>
           ) : (
-            // Optional chaining to safely access values
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (row as any)[col.accessor]
           )}
@@ -51,7 +50,7 @@ export function TableRow<T extends { id: string | number; status?: string }>(
           </button>
 
           {isOpen && (
-            <div className="absolute right-[60%] top-[70%] bg-white shadow-lg rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] z-10 w-32 2xl:w-[10vw]">
+            <div className="absolute right-[60%] top-[70%] bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-32 2xl:w-[10vw]">
               {actions.map((action, actionIndex) => (
                 <button
                   key={actionIndex}
