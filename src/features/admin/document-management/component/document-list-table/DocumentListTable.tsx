@@ -1,29 +1,36 @@
 "use client";
 
 /**
- * StaffListTable Component
+ * DocumentListTable Component
  *
- * This component renders the Staff List UI including:
- * - Header with title and controls (Approved/Not Approved filters, search bar, status dropdown, export and add staff buttons)
- * - A responsive table displaying staff data
+ * This component renders the Document List UI, including:
+ * - A header with the title and controls such as:
+ *    - Search bar
+ *    - Status dropdown filter
+ *    - Export button
+ *    - "Add Staff" button (conditionally rendered)
+ * - A responsive table displaying document data with configurable actions
  *
  * Props:
- * - setAddStaffModalOpen (optional): Controls visibility of the "Add Staff" modal
+ * - setAddDocumentModalOpen (optional): Controls visibility of the "Add Staff" modal
  *
- * Used in staff management features/pages.
+ * Dependencies:
+ * - Uses reusable components: Button, Dropdown, SearchBar, Table
+ * - Relies on constants: DocumentList (data), DocumentListColumn (column config), documentaction (row actions)
+ *
+ * Typically used in the Document Management page to manage uploaded document records.
  */
 
 import { Dispatch, SetStateAction, useState } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
 import { ExportIcon } from "@/features";
-import { staffActions, StaffList, StaffListColumn } from "@/constants";
+import { documentaction, DocumentList, DocumentListColumn } from "@/constants";
 
-interface StaffListTableProps {
-  setAddStaffModalOpen?: Dispatch<SetStateAction<boolean>>;
+interface DocumentListTableProps {
+  setAddDocumentModalOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
-// StaffListTable: Displays staff records with filters, actions, and export options
-export function StaffListTable({ setAddStaffModalOpen }: StaffListTableProps) {
+export function DocumentListTable({ setAddDocumentModalOpen }: DocumentListTableProps) {
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const statusOptions = ["All Status", "New", "Contacted", "Qualified", "Lost"];
 
@@ -32,39 +39,31 @@ export function StaffListTable({ setAddStaffModalOpen }: StaffListTableProps) {
   };
 
   return (
-    <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
+    <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray 2xl:mx-[1vw] p-4 mt-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
       <div className="flex justify-between items-center flex-nowrap gap-4 2xl:gap-[1vw]">
         <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium whitespace-nowrap pb-8">
-          Staff List
+          DOCUMENT LIST TABLE
         </h1>
         <div className="flex items-center flex-nowrap gap-4 2xl:gap-[1vw]">
-          <h1 className="whitespace-nowrap text-fuchsia-950 underline font-semibold">
-            Approved
-          </h1>
-          <h1 className="whitespace-nowrap font-semibold">Not Approved</h1>
-
           <SearchBar
             onSearch={(query) => console.log("Searching:", query)}
             bgColor="white"
             width="min-w-[12rem] md:w-[25vw]"
           />
-
-          {setAddStaffModalOpen && (
+          {setAddDocumentModalOpen && (
             <Button
               title="Add Staff"
               variant="background-white"
               width="w-full md:w-fit"
-              onClick={() => setAddStaffModalOpen(true)}
+              onClick={() => setAddDocumentModalOpen(true)}
             />
           )}
-
           <Dropdown
             options={statusOptions}
             value={selectedStatus}
             onChange={handleChange}
             dropdownWidth="w-full md:w-fit"
           />
-
           <Button
             title="Export"
             variant="background-white"
@@ -73,7 +72,7 @@ export function StaffListTable({ setAddStaffModalOpen }: StaffListTableProps) {
           />
         </div>
       </div>
-      <Table data={StaffList} columns={StaffListColumn} actions={staffActions} />
+      <Table data={DocumentList} columns={DocumentListColumn} actions={documentaction} />
     </div>
   );
 }

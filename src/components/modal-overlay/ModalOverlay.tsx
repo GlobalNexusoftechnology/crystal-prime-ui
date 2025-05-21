@@ -26,10 +26,10 @@ export const ModalOverlay: React.FC<ModalOverlayProps> = ({
 
       {/* Modal Content */}
       <div
-        className={`relative bg-white rounded-2xl shadow-lg p-6  ${modalClassName}`}
+        className={`relative bg-[#f8f8f8] rounded-2xl shadow-lg p-3  ${modalClassName}`}
       >
         <button
-          className="absolute top-4 left-4 flex items-center text-black"
+          className="top-4 left-4 flex py-2 items-center text-black text-[1rem] 2xl:text-[1vw]"
           onClick={onClose}
         >
           <BsArrowLeft className="text-[1rem] 2xl:text-[1vw] mr-2" />

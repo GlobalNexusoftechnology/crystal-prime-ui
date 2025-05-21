@@ -1,8 +1,5 @@
 import { IUser } from "@/services/stores";
 
-/**
- * Sample format to be passed to the login form
- */
 export interface ILoginPayload {
   email: string;
   password: string;
@@ -12,61 +9,6 @@ export interface IVerifyEmailPayload {
   email: string;
 }
 
-export type TProduct = {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  brand: string;
-  color: string;
-  quantity: number;
-  sizes: string[];
-  material: string;
-  image: string;
-  slug: string;
-};
-
-/**
- * This API response of all the products on the platform
- */
-export interface IProductsResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  data: TProduct[];
-}
-
-export interface IProductProps {
-  productData: TProduct;
-  relatedProducts?: TProduct[];
-}
-
-export interface IAllProductProps {
-  allProductData: TProduct[];
-}
-
-export interface ICreateProductPayload {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  unit: string;
-  width: number;
-  height: number;
-  material: string;
-  color: string;
-  fabric: string;
-  weight: number;
-  shape: string;
-  quantity: number;
-  category: string;
-  gallery: string[];
-  isApproved: boolean;
-  vendorId: string;
-  subCategory: string;
-}
-
-//
 export interface ISource {
   id: string;
   created_at: string;
@@ -101,7 +43,7 @@ export interface IAllLeadsList {
   requirement: string;
   source: ISource;
   status: IStatus;
-  assigned_to: string | null;
+  assigned_to: IUser;
 }
 
 export interface IAllLeadResponse {
@@ -322,32 +264,11 @@ export interface ISignupPayload {
   name: string;
   email: string;
   password: string;
-  role: string; // Add role as it's part of the response
+  role: string;
 }
 
 export interface ISignupResponse {
   status: string;
   message: string;
   data: ISentOtpPayload;
-}
-
-export type TStatus = {
-  id: number;
-  name: string;
-  // price: number;
-  // category: string;
-  // brand: string;
-  // color: string;
-  // quantity: number;
-  // sizes: string[];
-  // material: string;
-  // image: string;
-  // slug: string;
-};
-
-export interface IAllStatusResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  data: TStatus[];
 }

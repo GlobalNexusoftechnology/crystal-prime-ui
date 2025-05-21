@@ -1,16 +1,63 @@
 "use client";
 import { Dispatch, SetStateAction, useState, useMemo } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
-import { actions, ILeadsListProps, leadsListColumn } from "@/constants";
+import { ILeadsListDetailsProps, ILeadsListProps, ITableAction, leadsListColumn } from "@/constants";
 import { ExportIcon } from "@/features";
-import { useAllLeadsListQuery } from "@/services";
+import { LeadDetailModal } from "./components";
+import { useAllLeadsListQuery, useLeadDetailQuery } from "@/services";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
 export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
+  const [leadId, setLeadId] = useState("");
   const { data } = useAllLeadsListQuery();
+  const { leadDetailById, leadDetail } = useLeadDetailQuery(leadId);
+
+  const leadDetailModalData: ILeadsListDetailsProps = {
+  id: leadDetailById?.id || "",
+  name: `${leadDetailById?.first_name || ""} ${leadDetailById?.last_name || ""}`,
+  number: leadDetailById?.phone || "",
+  email: leadDetailById?.email || "",
+  businessName: leadDetailById?.company || "",
+  natureOfBusiness: leadDetailById?.requirement || "",
+  cityName: leadDetailById?.location || "",
+  status: leadDetailById?.status || {
+    id: "",
+    name: "",
+    created_at: "",
+    updated_at: "",
+    deleted: false,
+    deleted_at: null,
+  },
+  assignedTo: leadDetailById?.assigned_to || {
+    id: "",
+    businessName: "",
+    created_at: "",
+    updated_at: "",
+    name: "",
+    email: "",
+    phoneNumber: "",
+    businessType: "",
+    userType: "",
+    city: "",
+    country: "",
+    address: "",
+    registrationId: "",
+    businessLicense: "",
+    username: "",
+    role: "",
+    photo: "",
+    isVendorApproved: false,
+    provider: "",
+    providerId: "",
+    authToken: "",
+    refreshToken: "",
+    isSocialLogin: false,
+  },
+};
+
 
   const leadsList: ILeadsListProps[] = (data ?? []).map((lead) => ({
     id: lead.id,
@@ -20,21 +67,56 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     businessName: lead.company,
     natureOfBusiness: lead.requirement,
     cityName: lead.location,
+    status: lead.status?.name ?? "Unknown",
+    assignedTo: lead.assigned_to?.name ?? "Unassigned",
   }));
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
+  const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
   const statusOptions = ["All Status", "New", "Contacted", "Qualified", "Lost"];
-
-  const handleChange = (val: string) => {
-    setSelectedStatus(val);
-  };
 
   const handleSearch = (query: string) => {
     setSearchQuery(query.toLowerCase());
   };
 
-  // Filter logic for search
+  const handleChange = (val: string) => {
+    setSelectedStatus(val);
+  };
+
+  const actions: ITableAction<ILeadsListProps>[] = [
+    {
+      label: "Edit",
+      onClick: (row: ILeadsListProps) => {
+        console.log("Edit clicked", row.id);
+      },
+      className: "text-blue-500",
+    },
+    {
+      label: "View",
+      onClick: (row) => {
+        leadDetail()
+        setLeadId(row.id);
+        setViewLead(row);
+      },
+      className: "text-blue-500",
+    },
+    {
+      label: "Delete",
+      onClick: (row: ILeadsListProps) => {
+        console.log("Delete clicked", row.id);
+      },
+      className: "text-blue-500",
+    },
+    {
+      label: "Explore As xlsx",
+      onClick: (row: ILeadsListProps) => {
+        console.log("Explore As xlsx clicked", row.id);
+      },
+      className: "text-blue-500 whitespace-nowrap",
+    },
+  ];
+
   const filteredLeads = useMemo(() => {
     return leadsList.filter((lead) => {
       const matchQuery =
@@ -44,9 +126,6 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         lead.businessName.toLowerCase().includes(searchQuery) ||
         lead.natureOfBusiness.toLowerCase().includes(searchQuery) ||
         lead.cityName.toLowerCase().includes(searchQuery);
-
-      // const matchStatus =
-      //   selectedStatus === "All Status" || lead.status === selectedStatus;
 
       return matchQuery;
     });
@@ -86,7 +165,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           />
         </div>
       </div>
+
       <Table data={filteredLeads} columns={leadsListColumn} actions={actions} />
+
+      {viewLead && (
+        <LeadDetailModal data={leadDetailModalData} lead={viewLead} onClose={() => setViewLead(null)} />
+      )}
     </div>
   );
 }

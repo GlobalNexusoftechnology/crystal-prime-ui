@@ -6,6 +6,7 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/constants/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/utils/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -15,7 +16,8 @@ const config: Config = {
         primary: "#034A9F",
         secondary: "#005432",
         customGray: "#F8F8F8",
-        whiteOverlay: "#FFFFFF1A" 
+        whiteOverlay: "#FFFFFF1A",
+        textColor:"#252F4A" 
         
       },
     },

@@ -1,9 +1,3 @@
-export { useAllProductsQuery } from "./useAllProductsQuery";
-export { useAllFeatureProductsQuery } from "./useAllFeatureProductsQuery";
-export { useAllHandmadeCarpetProductsQuery } from "./useAllHandmadeCarpetProductsQuery";
-export { useAllVintageCarpetProductsQuery } from "./useAllVintageCarpetProductsQuery";
-export { useAllNewArrivalsProductsQuery } from "./useAllNewArrivalsProductsQuery";
-export { useAllTrendingProductsQuery } from "./useAllTrendingProductsQuery";
 export { useAllLeadsListQuery } from "./useAllLeadsListQuery";
 export { useVerifyEmailMutation } from "./useVerifyEmailMutation";
 export { useSentOtpMutation } from "./useSentOtpMutation";
@@ -21,3 +15,4 @@ export { useAlLeadFollowUpQuery } from "./useAllLeadFollowUpQuery";
 export { useLeadFollowUpDetailQuery } from "./useLeadFollowUpDetailQuery";
 export { useUpdateLeadFollowUpMutation } from "./useUpdateLeadFollowUpMutation";
 export { useDeleteLeadFollowUpMutation } from "./useDeleteLeadFollowUpMutation";
+export { useLeadDetailQuery } from "./useLeadDetailQuery";

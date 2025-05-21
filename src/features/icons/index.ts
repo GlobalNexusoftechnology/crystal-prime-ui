@@ -11,3 +11,6 @@ export { AnalyticalCardIcon } from "./AnalyticalCardIcon";
 export { ExportIcon } from "./ExportIcon";
 export { HorizontalTreeDotIcon } from "./HorizontalTreeDotIcon";
 export { NotificationIcon } from "./NotificationIcon";
+export { MailIcon } from "./MailIcon";
+export { PhoneIcon } from "./PhoneIcon";
+export { ThreeIcon } from "./ThreeIcon";
