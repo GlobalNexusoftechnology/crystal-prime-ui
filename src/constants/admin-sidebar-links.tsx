@@ -2,8 +2,10 @@ import { ReactNode } from "react";
 
 import {
   DashboardIcon,
+  FollowUpManagementIcon,
   LeadManagementIcon,
   ProjectManagementIcon,
+  
   SettingsIcon,
   StaffManagementIcon,
   TaskManagementIcon,
@@ -65,8 +67,8 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     {
     path: "/admin/follow-up-management",
     name: "Follow Up Management",
-    icon: <SettingsIcon />,
-    activeIcon: <SettingsIcon color="white" />,
+    icon: <FollowUpManagementIcon/>,
+    activeIcon: <FollowUpManagementIcon color="white" />,
   },
   {
     path: "/admin/staff-management",
