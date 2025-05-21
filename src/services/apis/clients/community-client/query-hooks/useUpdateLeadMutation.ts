@@ -6,9 +6,9 @@ import { COMMUNITY_CLIENT } from "../communityClient";
 /**
  * This is to track the login mutation keys in react query cache.
  */
-const UPDATE_LEAD_FOLLOWUP_MUTATION_KEY = "update-lead-followup-mutation-key";
+const UPDATE_LEAD_MUTATION_KEY = "update-lead-mutation-key";
 
-interface IUpdateLeadFollowUpOptions {
+interface IUpdateLeadOptions {
   onSuccessCallback: (data: IUpdateLeadResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
@@ -16,12 +16,12 @@ interface IUpdateLeadFollowUpOptions {
 /**
  * This religion the admin Mu college.
  */
-export const useUpdateLeadFollowUpMutation = ({
+export const useUpdateLeadMutation = ({
   onSuccessCallback,
   onErrorCallback,
-}: IUpdateLeadFollowUpOptions) => {
+}: IUpdateLeadOptions) => {
   const { mutate, isPending, error } = useMutation({
-    mutationKey: [UPDATE_LEAD_FOLLOWUP_MUTATION_KEY],
+    mutationKey: [UPDATE_LEAD_MUTATION_KEY],
     networkMode: "always", // Even make calls when offline
     retry: false, // For login Request, do not retry failed requests.
     mutationFn: COMMUNITY_CLIENT.updateLead,
@@ -32,7 +32,7 @@ export const useUpdateLeadFollowUpMutation = ({
       errorLogToRemoteUtil({
         error,
         errorCode: ErrorEventsEnum.ERROR_IN_API_CALL,
-        errorTitle: "Error in useUpdateLeadFollowUpMutation",
+        errorTitle: "Error in useUpdateLeadMutation",
         message: error?.message,
       });
 

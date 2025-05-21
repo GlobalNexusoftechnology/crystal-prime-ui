@@ -34,6 +34,22 @@ export interface IAllStatusResponse {
   data: IStatus[];
 }
 
+export interface IAllStatusesList {
+ id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+}
+
+export interface IAllStatusesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllStatusesList[];
+}
+
 export interface IAllLeadsList {
   id: string;
   created_at: string;
@@ -58,6 +74,22 @@ export interface IAllLeadResponse {
   message: string;
   success: true;
   data: IAllLeadsList[];
+}
+
+export interface IAllSourcesList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+}
+
+export interface IAllSourcesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllSourcesList[];
 }
 
 export interface IVerifyEmailPayload {
@@ -95,25 +127,28 @@ export interface ICreateLeadResponse {
   data: ICreateLeadPayload[];
 }
 
-export interface IUpdateLeadFollowUpPayload {
-  lead_id?: string; // Optional: You can update this if needed
-  user_id?: string | null; // Optional: Assigned user (nullable)
-  status:
-    | "PENDING"
-    | "RESCHEDULE"
-    | "AWAITING RESPONSE"
-    | "NO RESPONSE"
-    | "FAILED"
-    | "COMPLETED";
-  due_date?: string; // Optional: ISO timestamp
-  completed_date?: string; // Optional: ISO timestamp
-  remarks?: string; // Optional: Remarks about the follow-up
+export interface IUpdateLeadResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateLeadPayload;
 }
+
 export interface IUpdateLeadFollowUpResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IUpdateLeadFollowUpPayload[];
+  data: ICreateLeadFollowUpPayload;
+}
+
+export interface IUpdateLeadPayload {
+  id: string;
+  payload: ICreateLeadPayload;
+}
+
+export interface IUpdateLeadFollowUpPayload {
+  id: string;
+  payload: ICreateLeadFollowUpPayload;
 }
 
 export interface ICreateLeadFollowUpPayload {
