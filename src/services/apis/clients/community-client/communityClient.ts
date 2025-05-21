@@ -12,9 +12,7 @@ import {
   ICreateLeadFollowUpResponse,
   ICreateLeadPayload,
   ICreateLeadResponse,
-  IDeleteLeadFollowUpPayload,
   IDeleteLeadFollowUpResponse,
-  IDeleteLeadPayload,
   IDeleteLeadResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
@@ -250,10 +248,9 @@ export class CommunityClient extends ApiClient {
   };
 
   //delete lead
-  public deleteLead = async (payload: IDeleteLeadPayload) => {
-    const response = await this.post<IDeleteLeadResponse>(
-      deleteLeadUrl(),
-      payload,
+  public deleteLead = async (id: string) => {
+    const response = await this.del<IDeleteLeadResponse>(
+      deleteLeadUrl(id),
       { requiresAuth: false }
     );
 
@@ -264,14 +261,13 @@ export class CommunityClient extends ApiClient {
   };
 
   // delete lead follow up
-
-  public deleteLeadFollowUp = async (payload: IDeleteLeadFollowUpPayload) => {
-    const response = await this.post<IDeleteLeadFollowUpResponse>(
-      deleteLeadFollowUpUrl(),
-      payload,
-      { requiresAuth: false }
+   public deleteLeadFollowUp = async (id: string) => {
+    const response = await this.del<IDeleteLeadFollowUpResponse>(
+      deleteLeadFollowUpUrl(id),
+      {
+        requiresAuth: true,
+      }
     );
-
     if (!response?.success) {
       throw response?.errorData;
     }

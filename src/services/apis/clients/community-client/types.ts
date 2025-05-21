@@ -172,24 +172,11 @@ export interface ICreateLeadFollowUpResponse {
   data: ICreateLeadFollowUpPayload[];
 }
 
-// delete lead
-export interface IDeleteLeadPayload {
-  first_name: string;
-  last_name: string;
-  company: string;
-  phone: string;
-  email: string;
-  location: string;
-  budget: number;
-  requirement: string;
-  source_id: string;
-  status_id: string;
-}
 export interface IDeleteLeadResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IDeleteLeadPayload[];
+  data: ICreateLeadFollowUpPayload;
 }
 
 //delete lead follow up

@@ -36,7 +36,7 @@ export const fetchAllLeadDownloadExcelUrl = () => "/leads";
 
 export const fetchAllStatusesUrl = () => "/lead-statuses";
 
-export const deleteLeadUrl = () => "/";
+export const deleteLeadUrl = (id: string) => `/leads/${id}`;
 
 export const createLeadFollowUpUrl = () => "/lead-followup";
 
@@ -52,7 +52,7 @@ export const updateLeadUrl = (id: string) =>
   `/leads/${id}`;
 
 
-export const deleteLeadFollowUpUrl = () => "/lead-followup";
+export const deleteLeadFollowUpUrl = (id: string) => `/lead-followup/${id}`;
 
 export const registerUrl = () => "/auth/register";
 

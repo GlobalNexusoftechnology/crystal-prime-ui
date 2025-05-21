@@ -9,8 +9,8 @@ import { IApiError } from "@/utils";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-interface IAddLeadModalProps {
-  setAddLeadModalOpen: (open: boolean) => void;
+interface IEditLeadModalProps {
+  setIsEditLeadModalOpen: (open: boolean) => void;
 }
 
 const validationSchema = Yup.object().shape({
@@ -26,12 +26,12 @@ const validationSchema = Yup.object().shape({
   status_id: Yup.string().required("Status ID is required"),
 });
 
-export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
+export function EditLeadModal({ setIsEditLeadModalOpen }: IEditLeadModalProps) {
   const { leadsRefetch } = useAllLeadsListQuery();
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (data: ICreateLeadResponse) => {
       console.log("Lead created successfully", data);
-      setAddLeadModalOpen(false);
+      setIsEditLeadModalOpen(false);
       leadsRefetch();
     },
     onErrorCallback: (err: IApiError) => {
@@ -40,7 +40,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
   });
 
   const handleCancel = () => {
-    setAddLeadModalOpen(false);
+    setIsEditLeadModalOpen(false);
   };
 
   const sourceOptions = ["Source A", "Source B", "Source C"];
@@ -50,7 +50,7 @@ const statusOptions = ["Active", "Inactive", "Pending"];
     <ModalOverlay isOpen={true} onClose={handleCancel}>
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <h2 className="text-lg font-semibold">Lead Information</h2>
+          <h2 className="text-lg font-semibold">Edit Lead Information</h2>
           <Formik<ICreateLeadPayload>
             initialValues={{
               first_name: "",

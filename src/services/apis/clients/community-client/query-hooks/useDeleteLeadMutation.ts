@@ -1,19 +1,20 @@
 import { IDeleteLeadResponse, useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
+
 import { COMMUNITY_CLIENT } from "../communityClient";
 
 /**
- * This is to track the delete lead mutation.
+ * This is to track the login mutation keys in react query cache.
  */
 const DELETE_LEAD_MUTATION_KEY = "delete-lead-mutation-key";
 
 interface IDeleteLeadOptions {
   onSuccessCallback: (data: IDeleteLeadResponse) => void;
-  onErrorCallback?: (err: IApiError) => void;
+  onErrorCallback?: (error: IApiError) => void;
 }
-
+  
 /**
- * Hook to delete lead
+ * This register the user or vender to carpet market.
  */
 export const useDeleteLeadMutation = ({
   onSuccessCallback,
@@ -21,27 +22,29 @@ export const useDeleteLeadMutation = ({
 }: IDeleteLeadOptions) => {
   const { mutate, isPending, error } = useMutation({
     mutationKey: [DELETE_LEAD_MUTATION_KEY],
-    networkMode: "always", // Ensures the call happens even in offline mode
-    retry: false, // Do not retry failed requests
+    networkMode: "always", // Even make calls when offline
+    retry: false, // For login Request, do not retry failed requests.
     mutationFn: COMMUNITY_CLIENT.deleteLead,
     onSuccess: (response) => {
       onSuccessCallback(response);
     },
     onError: (err: IApiError) => {
       errorLogToRemoteUtil({
-        error: err,
+        error,
         errorCode: ErrorEventsEnum.ERROR_IN_API_CALL,
-        errorTitle: "Error in DeleteLeadMutation",
-        message: err?.message,
+        errorTitle: "Error in useAdminDeleteVendorOptionsMutation",
+        message: error?.message,
       });
 
       onErrorCallback?.(err);
+
+      return err;
     },
   });
 
   return {
     error,
     isPending,
-    deleteLead: mutate,
+    onDeleteLead: mutate,
   };
 };
