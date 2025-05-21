@@ -68,7 +68,7 @@ export function LeadManagement() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white rounded-xl">
                   {/* Manual Upload */}
                   <div
-                    className="border-2 border-dashed rounded-xl p-4 text-center hover:shadow transition bg-[#f8f8f8]"
+                    className="border-2 border-dashed rounded-xl p-4 text-center hover:shadow transition bg-customGray"
                     onClick={() => handleOpenForm("addForm")}
                   >
                     <div className="w-[15rem] h-[6rem] pb-4">
@@ -94,7 +94,7 @@ export function LeadManagement() {
                   <div
                     {...getRootProps()}
                     onClick={() => handleOpenForm("excel")}
-                    className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition bg-[#f8f8f8] ${
+                    className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition bg-customGray ${
                       isDragActive ? "bg-purple-100" : "hover:shadow"
                     }`}
                   >
@@ -119,7 +119,7 @@ export function LeadManagement() {
                 </div>
 
                 {/* External Upload */}
-                <div className="md:col-span-2 border-2 border-dashed rounded-xl p-2 text-center bg-[#f8f8f8] flex justify-center items-center flex-col">
+                <div className="md:col-span-2 border-2 border-dashed rounded-xl p-2 text-center bg-customGray flex justify-center items-center flex-col">
                   <div className="w-[18rem] h-[8rem] pb-4">
                     <Image
                       src={ImageRegistry.external}

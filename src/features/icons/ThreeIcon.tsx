@@ -2,7 +2,7 @@ import { TIconProps } from "@/constants";
 
 // DashboardIcon component renders a hamburger menu icon as an SVG.
 export function ThreeIcon({
-  className = "w-full h-full",
+  className = "",
 //   color = "#303030",
 }: TIconProps) {
   return (

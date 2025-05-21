@@ -1,7 +1,9 @@
-import Image from "next/image";
 import { InputField, ModalOverlay } from "@/components";
 import { ILeadsListDetailsProps, ILeadsListProps, ImageRegistry } from "@/constants";
-import { PhoneIcon, ThreeIcon, MailIcon } from "@/features";
+import { PhoneIcon, ThreeIcon } from "@/features/icons";
+import { MailIcon } from "@/features/icons/MailIcon";
+
+import Image from "next/image";
 
 const notes = [
   {
@@ -23,7 +25,7 @@ const notes = [
 interface LeadDetailsModalProps {
   lead: ILeadsListProps;
   onClose: () => void;
-  data: ILeadsListDetailsProps
+  data: ILeadsListDetailsProps;
 }
 
 export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
@@ -74,7 +76,9 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           </div>
           <div>
             <p className="font-medium">Created on</p>
-            <p className="font-semibold text-textColor">{data.assignedTo.name}</p>
+            <p className="font-semibold text-textColor">
+              {data.assignedTo.name}
+            </p>
           </div>
           <div>
             <p className="font-medium">Business Name</p>
@@ -84,7 +88,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             <p className="font-medium">Status</p>
             <select
               defaultValue="initiated"
-              className="mt-1 w-fit bg-[#08EA79] text-white px-3 py-1 text-xs rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-green-300"
+              className="mt-1 w-fit bg-lightGreen text-white px-3 py-1 text-xs rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-green-300"
             >
               <option value="initiated">Initiated</option>
               <option value="in_progress">In Progress</option>
@@ -130,7 +134,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               key={note.id}
               className="bg-gray-100 p-3 rounded-md border border-gray-200 space-y-1"
             >
-              <p className="text-sm font-semibold text-textColor">
+              <p className="text-sm font-semibold text-textColor  underline">
                 {note.name}
               </p>
               <p className="text-sm text-gray-700">{note.message}</p>
