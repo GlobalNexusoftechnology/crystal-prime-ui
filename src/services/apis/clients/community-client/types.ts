@@ -27,6 +27,13 @@ export interface IStatus {
   name: string;
 }
 
+export interface IAllStatusResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IStatus[];
+}
+
 export interface IAllLeadsList {
   id: string;
   created_at: string;

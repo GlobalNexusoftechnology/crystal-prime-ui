@@ -288,14 +288,12 @@ export class CommunityClient extends ApiClient {
       }
     );
 
-    const isMock = true;
-
-    if (!response?.success && !isMock) {
+    if (!response?.success) {
       throw response?.errorData;
     }
 
     // TODO: Remove this comment once the isMock is removed above.
-    return response;
+    return response.data.data;
   };
 
   public getLeadFollowUpDetailById = async (id: string) => {
