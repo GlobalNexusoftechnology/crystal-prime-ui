@@ -1,5 +1,9 @@
 "use client";
 
+import { Dispatch, SetStateAction, useState } from "react";
+import { Button, Dropdown, SearchBar, Table } from "@/components";
+import { ExportIcon } from "@/features";
+import { documentaction, DocumentList, DocumentListColumn } from "@/constants";
 /**
  * DocumentListTable Component
  *
@@ -21,10 +25,6 @@
  * Typically used in the Document Management page to manage uploaded document records.
  */
 
-import { Dispatch, SetStateAction, useState } from "react";
-import { Button, Dropdown, SearchBar, Table } from "@/components";
-import { ExportIcon } from "@/features";
-import { documentaction, DocumentList, DocumentListColumn } from "@/constants";
 
 interface DocumentListTableProps {
   setAddDocumentModalOpen?: Dispatch<SetStateAction<boolean>>;
