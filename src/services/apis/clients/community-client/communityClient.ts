@@ -4,7 +4,8 @@ import { ApiClient } from "../../api-client";
 import {
   IAllLeadDownloadExcelResponse,
   IAllLeadResponse,
-  IAllStatusResponse,
+  IAllSourcesResponse,
+  IAllStatusesResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
   ICreateLeadFollowUpPayload,
@@ -30,6 +31,8 @@ import {
   ISignupResponse,
   IUpdateLeadFollowUpPayload,
   IUpdateLeadFollowUpResponse,
+  IUpdateLeadPayload,
+  IUpdateLeadResponse,
   IVerifyEmailPayload,
   IVerifyEmailResponse,
 } from "./types";
@@ -46,18 +49,19 @@ import {
   verifyEmailUrl,
   getLeadDownloadExcelByIdUrl,
   fetchAllLeadDownloadExcelUrl,
-  fetchAllStatusUrl,
   deleteLeadUrl,
   createLeadFollowUpUrl,
   fetchAllLeadFollowUpUrl,
   getLeadFollowUpDetailByIdUrl,
-
-  updateLeadFollowUpByIdUrl,
   deleteLeadFollowUpUrl,
+  fetchAllSourcesUrl,
+  fetchAllStatusesUrl,
+  updateLeadUrl,
+  updateLeadFollowUpUrl,
 } from "./urls";
 
 /**
- * CommunityClient class handles all API requests related to 
+ * CommunityClient class handles all API requests related to
  * authentication and lead management in the community platform.
  */
 export class CommunityClient extends ApiClient {
@@ -200,13 +204,13 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-
-
-  public updateLeadFollowUpById = async (id: string, payload: IUpdateLeadFollowUpPayload) => {
-    const response = await this.post<IUpdateLeadFollowUpResponse>(
-      updateLeadFollowUpByIdUrl(id),
+  public updateLead = async ({ id, payload }: IUpdateLeadPayload) => {
+    const response = await this.put<IUpdateLeadResponse>(
+      updateLeadUrl(id),
       payload,
-      { requiresAuth: false }
+      {
+        requiresAuth: true,
+      }
     );
 
     if (!response?.success) {
@@ -215,8 +219,21 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
+  public updateLeadFollowUp = async ({ id, payload }: IUpdateLeadFollowUpPayload) => {
+    const response = await this.put<IUpdateLeadFollowUpResponse>(
+      updateLeadFollowUpUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    );
 
-
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+ 
   // create lead follow up
 
   public createLeadFollowUp = async (payload: ICreateLeadFollowUpPayload) => {
@@ -248,7 +265,7 @@ export class CommunityClient extends ApiClient {
 
   // delete lead follow up
 
-    public deleteLeadFollowUp = async (payload: IDeleteLeadFollowUpPayload) => {
+  public deleteLeadFollowUp = async (payload: IDeleteLeadFollowUpPayload) => {
     const response = await this.post<IDeleteLeadFollowUpResponse>(
       deleteLeadFollowUpUrl(),
       payload,
@@ -348,6 +365,18 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
+  public fetchAllSources = async () => {
+    const response = await this.get<IAllSourcesResponse>(fetchAllSourcesUrl(), {
+      requiresAuth: false,
+    });
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
+  };
+
   // all lead follow ups
   public fetchAllLeadFollowUp = async () => {
     const response = await this.get<IAllLeadResponse>(
@@ -379,10 +408,13 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
-  public fetchAllStatus = async () => {
-    const response = await this.get<IAllStatusResponse>(fetchAllStatusUrl(), {
-      requiresAuth: false,
-    });
+  public fetchAllStatuses = async () => {
+    const response = await this.get<IAllStatusesResponse>(
+      fetchAllStatusesUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
 
     if (!response?.success) {
       throw response?.errorData;

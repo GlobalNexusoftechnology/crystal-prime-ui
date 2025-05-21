@@ -34,7 +34,7 @@ export const getLeadDownloadExcelByIdUrl = (id: string) =>
 
 export const fetchAllLeadDownloadExcelUrl = () => "/leads";
 
-export const fetchAllStatusUrl = () => "/";
+export const fetchAllStatusesUrl = () => "/lead-statuses";
 
 export const deleteLeadUrl = () => "/";
 
@@ -45,8 +45,12 @@ export const fetchAllLeadFollowUpUrl = () => "/lead-followup";
 export const getLeadFollowUpDetailByIdUrl = (id: string) =>
   `/lead-followup/${id}`;
 
-export const updateLeadFollowUpByIdUrl = (id: string) =>
+export const updateLeadFollowUpUrl = (id: string) =>
   `/lead-followup/${id}`;
+
+export const updateLeadUrl = (id: string) =>
+  `/leads/${id}`;
+
 
 export const deleteLeadFollowUpUrl = () => "/lead-followup";
 
@@ -55,4 +59,6 @@ export const registerUrl = () => "/auth/register";
 export const resetPasswordUrl = () => "/auth/resetPassword";
 
 export const changePasswordUrl = () => "/auth/changePassword";
+
+export const fetchAllSourcesUrl  = () => '/lead-sources'
 
