@@ -14,3 +14,4 @@ export { NotificationIcon } from "./NotificationIcon";
 export { MailIcon } from "./MailIcon";
 export { PhoneIcon } from "./PhoneIcon";
 export { ThreeIcon } from "./ThreeIcon";
+export { DocumentManagementIcon } from "./DocumentManagementIcon";

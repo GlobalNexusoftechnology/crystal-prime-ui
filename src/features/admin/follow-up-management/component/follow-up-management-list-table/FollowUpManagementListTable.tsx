@@ -8,9 +8,12 @@ import {
   IFollowUpManagementListProps,
   ITableAction,
 } from "@/constants";
-import { ExportIcon, ViewFollowUp } from "@/features";
+import { ViewFollowUp } from "@/features";
 import { EditFollowUp } from "../edit-follow-up";
 
+import { ExportIcon } from "@/features";
+import { useAllStatusesQuery } from "@/services";
+import { useFormik } from "formik";
 
 /**
  * Props for the FollowUpManagementListTable component
@@ -33,36 +36,40 @@ interface LeadsListTableProps {
 export function FollowUpManagementListTable({
   setIsFollowUpModalOpen,
 }: LeadsListTableProps) {
-  // State to track the selected status filter
-  const [selectedStatus, setSelectedStatus] = useState("All Status");
-
   // State to track view/edit follow-up modal
   const [editFollowUp, setEditFollowUp] =
     useState<IFollowUpManagementListProps | null>(null);
 
-    const [viewFollowUp, setViewFollowUp] =
-      useState<IFollowUpManagementListProps | null>(null);
+  const [viewFollowUp, setViewFollowUp] =
+    useState<IFollowUpManagementListProps | null>(null);
 
-  // State to track follow-up ID (if needed)
+  // Fetch statuses from API
+  const { allStatusesData } = useAllStatusesQuery();
 
+  // Create status options dynamically with a fallback
+  const statusOptions = [
+    { label: "All Status", value: "" },
+    ...(allStatusesData?.map((status) => ({
+      label: status?.name,
+      value: status?.id.toString(),
+    })) || []),
+  ];
 
-  // Options for the status filter dropdown
-  const statusOptions = ["All Status", "New", "Contacted", "Qualified", "Lost"];
-
-  /**
-   * Handles change in dropdown status filter
-   * @param val - selected status string
-   */
-  const handleChange = (val: string) => {
-    setSelectedStatus(val);
-  };
+  // Formik state for filters
+  const { values, setFieldValue } = useFormik({
+    initialValues: {
+      status_id: "",
+      search: "",
+    },
+    onSubmit: () => {},
+  });
 
   const actions: ITableAction<IFollowUpManagementListProps>[] = [
     {
       label: "Edit",
       onClick: (row: IFollowUpManagementListProps) => {
         setEditFollowUp(row);
-       console.log("Edit clicked", row.id);
+        console.log("Edit clicked", row.id);
       },
       className: "text-blue-500",
     },
@@ -70,7 +77,6 @@ export function FollowUpManagementListTable({
       label: "View",
       onClick: (row: IFollowUpManagementListProps) => {
         setViewFollowUp(row);
-        
         console.log("View clicked", row.id);
       },
       className: "text-blue-500",
@@ -102,7 +108,10 @@ export function FollowUpManagementListTable({
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           {/* Search input */}
           <SearchBar
-            onSearch={(query) => console.log("Searching:", query)}
+            onSearch={(query) => {
+              console.log("Searching:", query);
+              setFieldValue("search", query);
+            }}
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
@@ -119,10 +128,10 @@ export function FollowUpManagementListTable({
 
           {/* Status filter dropdown */}
           <Dropdown
+            label="Status"
             options={statusOptions}
-            value={selectedStatus}
-            onChange={handleChange}
-            dropdownWidth="w-full md:w-fit"
+            value={values.status_id}
+            onChange={(val) => setFieldValue("status_id", val)}
           />
 
           {/* Export button */}
@@ -154,7 +163,6 @@ export function FollowUpManagementListTable({
         <ViewFollowUp
           showFollowUp={viewFollowUp}
           onClose={() => setViewFollowUp(null)}
-          
         />
       )}
     </div>

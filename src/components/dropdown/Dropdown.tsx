@@ -7,18 +7,16 @@ export function Dropdown({
   label,
   isRequired = false,
   dropdownBorderRadius = "rounded-xl 2xl:rounded-[0.75vw]",
-  dropdownWidth= "w-full"
-
+  dropdownWidth = "w-full"
 }: {
-  options: string[];
+  options: { label: string; value: string }[];
   value: string;
   onChange: (val: string) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  error?: string | any;
+  error?: string;
   label?: string;
   isRequired?: boolean;
   dropdownBorderRadius?: string;
-  dropdownWidth?: string
+  dropdownWidth?: string;
 }) {
   return (
     <div className={dropdownWidth}>
@@ -37,13 +35,14 @@ export function Dropdown({
           value={value}
           onChange={(e) => onChange(e.target.value)}
         >
+          <option value="" disabled>Select an option</option>
           {options.map((option, index) => (
             <option
-              className="2xl:text-[1vw] hover:bg-primary"
               key={index}
-              value={option}
+              value={option.value}
+              className="2xl:text-[1vw]"
             >
-              {option}
+              {option.label}
             </option>
           ))}
         </select>
@@ -71,3 +70,4 @@ export function Dropdown({
     </div>
   );
 }
+

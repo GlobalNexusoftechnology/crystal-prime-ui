@@ -29,4 +29,36 @@ export const fetchAllLeadsListUrl = () => "/leads";
 
 export const getLeadDetailByIdUrl = (id: string) => `/leads/${id}`;
 
+export const getLeadDownloadExcelByIdUrl = (id: string) =>
+  `/lead-download-excel/${id}`;
+
+export const fetchAllLeadDownloadExcelUrl = () => "/leads";
+
+export const fetchAllStatusesUrl = () => "/lead-statuses";
+
+export const deleteLeadUrl = (id: string) => `/leads/${id}`;
+
+export const createLeadFollowUpUrl = () => "/lead-followup";
+
+export const fetchAllLeadFollowUpUrl = () => "/lead-followup";
+
+export const getLeadFollowUpDetailByIdUrl = (id: string) =>
+  `/lead-followup/${id}`;
+
+export const updateLeadFollowUpUrl = (id: string) =>
+  `/lead-followup/${id}`;
+
+export const updateLeadUrl = (id: string) =>
+  `/leads/${id}`;
+
+
+export const deleteLeadFollowUpUrl = (id: string) => `/lead-followup/${id}`;
+
+export const registerUrl = () => "/auth/register";
+
+export const resetPasswordUrl = () => "/auth/resetPassword";
+
+export const changePasswordUrl = () => "/auth/changePassword";
+
+export const fetchAllSourcesUrl  = () => '/lead-sources'
 

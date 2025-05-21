@@ -1,4 +1,4 @@
-import { ISignupResponse,useMutation } from "@/services";
+import { IUpdateLeadResponse, useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 
 import { COMMUNITY_CLIENT } from "../communityClient";
@@ -6,39 +6,38 @@ import { COMMUNITY_CLIENT } from "../communityClient";
 /**
  * This is to track the login mutation keys in react query cache.
  */
-const MUT_USER_REGISTER = "user-register-mutation-key";
+const UPDATE_LEAD_MUTATION_KEY = "update-lead-mutation-key";
 
-//interface for IRegisterOptions
-interface IRegisterOptions {
-  onSuccessCallback: (data: ISignupResponse) => void;
+interface IUpdateLeadOptions {
+  onSuccessCallback: (data: IUpdateLeadResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
 
 /**
- * Hook to register mutation
+ * This religion the admin Mu college.
  */
-export const useRegisterMutation = ({
+export const useUpdateLeadMutation = ({
   onSuccessCallback,
   onErrorCallback,
-}: IRegisterOptions) => {
+}: IUpdateLeadOptions) => {
   const { mutate, isPending, error } = useMutation({
-    mutationKey: [MUT_USER_REGISTER],
+    mutationKey: [UPDATE_LEAD_MUTATION_KEY],
     networkMode: "always", // Even make calls when offline
     retry: false, // For login Request, do not retry failed requests.
-    mutationFn: COMMUNITY_CLIENT.userRegister,
+    mutationFn: COMMUNITY_CLIENT.updateLead,
     onSuccess: (response) => {
       onSuccessCallback(response);
     },
-
     onError: (err: IApiError) => {
       errorLogToRemoteUtil({
         error,
         errorCode: ErrorEventsEnum.ERROR_IN_API_CALL,
-        errorTitle: "Error in useRegisterMutation",
+        errorTitle: "Error in useUpdateLeadMutation",
         message: error?.message,
       });
 
-      onErrorCallback?.(err); // pass actual 'err' to your screen
+      onErrorCallback?.(err);
+
       return err;
     },
   });
@@ -46,6 +45,12 @@ export const useRegisterMutation = ({
   return {
     error,
     isPending,
-    onRegisterProfile: mutate,
+    onEditLead: mutate,
   };
 };
+
+
+
+
+
+

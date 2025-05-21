@@ -1,33 +1,19 @@
-"use client";
-
-import { Button, InputField } from "@/components";
-import React from "react";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
+import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
 import {
+  ICreateLeadPayload,
   ICreateLeadResponse,
   useAllLeadsListQuery,
+  useAllSourcesQuery,
+  useAllStatusesQuery,
   useCreateLeadMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 
-// Define the payload interface
-export interface ICreateLeadPayload {
-  first_name: string;
-  last_name: string; // Added
-  company: string;
-  phone: string;
-  email: string;
-  location: string;
-  budget: number;
-  requirement: string;
-  source_id: string;
-  status_id: string;
-}
-
-type NewLeadFormProps = {
+interface IAddLeadModalProps {
   setAddLeadModalOpen: (open: boolean) => void;
-};
+}
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
@@ -42,8 +28,10 @@ const validationSchema = Yup.object().shape({
   status_id: Yup.string().required("Status ID is required"),
 });
 
-export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
+export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
   const { leadsRefetch } = useAllLeadsListQuery();
+  const { allSourcesData } = useAllSourcesQuery();
+  const { allStatusesData } = useAllStatusesQuery();
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (data: ICreateLeadResponse) => {
       console.log("Lead created successfully", data);
@@ -59,33 +47,23 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
     setAddLeadModalOpen(false);
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-      <div className="bg-white rounded-md w-[500px] max-h-[90vh] overflow-y-auto p-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Lead Information</h2>
-        </div>
+  const sourceOptions =
+    allSourcesData?.map((source) => ({
+      label: source.name, 
+      value: source.id.toString(),
+    })) || [];
 
-        <div className="py-2">
-          <label className="block 2xl:text-[1vw] text-gray-700 mb-2 2xl:mb-[0.5vw]">
-            Assigned To
-          </label>
-          <select className="w-full border rounded px-3 py-2 text-sm">
-            <option>Select Staff</option>
-            <option>John Doe</option>
-          </select>
-        </div>
-        <div className="grid grid-cols-2 gap-4 py-2 sm:py-4">
-          <InputField
-            label="Nature Of Business"
-            placeholder="Enter Nature Of Business"
-            name="natureOfBusiness"
-          />
-          <InputField
-            label="Business Name"
-            placeholder="Enter Business Name"
-            name="businessName"
-          />
+  const statusOptions =
+    allStatusesData?.map((status) => ({
+      label: status.name,
+      value: status.id.toString(),
+    })) || [];
+
+  return (
+    <ModalOverlay isOpen={true} onClose={handleCancel}>
+      <div className="overflow-y-auto max-h-[80vh] space-y-4">
+        <div className="bg-white rounded-lg p-4 border border-gray-200">
+          <h2 className="text-lg font-semibold">Lead Information</h2>
           <Formik<ICreateLeadPayload>
             initialValues={{
               first_name: "",
@@ -143,7 +121,6 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
                     error={touched.phone && errors.phone}
                   />
                 </div>
-
                 <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
                   <InputField
                     label="Email"
@@ -188,37 +165,35 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
                     error={touched.requirement && errors.requirement}
                   />
                 </div>
-
                 <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
-                  <InputField
+                  <Dropdown
                     label="Source ID"
-                    placeholder="Enter Source ID"
-                    name="source_id"
+                    options={sourceOptions}
                     value={values.source_id}
-                    onChange={handleChange}
-                    error={touched.source_id && errors.source_id}
+                    onChange={(val) => setFieldValue("source_id", val)}
+                    error={touched.source_id ? errors.source_id : undefined}
                   />
-                  <InputField
+                  <Dropdown
                     label="Status ID"
-                    placeholder="Enter Status ID"
-                    name="status_id"
+                    options={statusOptions}
                     value={values.status_id}
-                    onChange={handleChange}
-                    error={touched.status_id && errors.status_id}
+                    onChange={(val) => setFieldValue("status_id", val)}
+                    error={touched.status_id ? errors.status_id : undefined}
                   />
                 </div>
-
                 <div className="flex justify-between mt-6 space-x-4">
                   <Button
                     title="Cancel"
                     onClick={handleCancel}
                     variant="primary-outline"
                     type="button"
+                    width="w-full"
                   />
                   <Button
                     title="Add Lead"
                     type="submit"
                     isLoading={isPending}
+                    width="w-full"
                   />
                 </div>
               </Form>
@@ -226,6 +201,6 @@ export function NewLeadForm({ setAddLeadModalOpen }: NewLeadFormProps) {
           </Formik>
         </div>
       </div>
-    </div>
+    </ModalOverlay>
   );
 }

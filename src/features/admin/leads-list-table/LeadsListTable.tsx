@@ -1,10 +1,22 @@
 "use client";
-import { Dispatch, SetStateAction, useState, useMemo } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
-import { ILeadsListDetailsProps, ILeadsListProps, ITableAction, leadsListColumn } from "@/constants";
+import {
+  ILeadsListDetailsProps,
+  ILeadsListProps,
+  ITableAction,
+  leadsListColumn,
+} from "@/constants";
 import { ExportIcon } from "@/features";
-import { LeadDetailModal } from "./components";
-import { useAllLeadsListQuery, useLeadDetailQuery } from "@/services";
+import { EditLeadModal, LeadDetailModal } from "./components";
+import {
+  IDeleteLeadResponse,
+  useAllLeadsListQuery,
+  useAllStatusesQuery,
+  useDeleteLeadMutation,
+  useLeadDetailQuery,
+} from "@/services";
+import { IApiError } from "@/utils";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
@@ -12,69 +24,141 @@ interface LeadsListTableProps {
 
 export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [leadId, setLeadId] = useState("");
-  const { data } = useAllLeadsListQuery();
-  const { leadDetailById, leadDetail } = useLeadDetailQuery(leadId);
-
-  const leadDetailModalData: ILeadsListDetailsProps = {
-  id: leadDetailById?.id || "",
-  name: `${leadDetailById?.first_name || ""} ${leadDetailById?.last_name || ""}`,
-  number: leadDetailById?.phone || "",
-  email: leadDetailById?.email || "",
-  businessName: leadDetailById?.company || "",
-  natureOfBusiness: leadDetailById?.requirement || "",
-  cityName: leadDetailById?.location || "",
-  status: leadDetailById?.status || {
-    id: "",
-    name: "",
-    created_at: "",
-    updated_at: "",
-    deleted: false,
-    deleted_at: null,
-  },
-  assignedTo: leadDetailById?.assigned_to || {
-    id: "",
-    businessName: "",
-    created_at: "",
-    updated_at: "",
-    name: "",
-    email: "",
-    phoneNumber: "",
-    businessType: "",
-    userType: "",
-    city: "",
-    country: "",
-    address: "",
-    registrationId: "",
-    businessLicense: "",
-    username: "",
-    role: "",
-    photo: "",
-    isVendorApproved: false,
-    provider: "",
-    providerId: "",
-    authToken: "",
-    refreshToken: "",
-    isSocialLogin: false,
-  },
-};
-
-
-  const leadsList: ILeadsListProps[] = (data ?? []).map((lead) => ({
-    id: lead.id,
-    name: `${lead.first_name} ${lead.last_name}`,
-    number: lead.phone,
-    email: lead.email,
-    businessName: lead.company,
-    natureOfBusiness: lead.requirement,
-    cityName: lead.location,
-    status: lead.status?.name ?? "Unknown",
-    assignedTo: lead.assigned_to?.name ?? "Unassigned",
-  }));
-
+  const [isEditLeadModalOpen, setIsEditLeadModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
-  const statusOptions = ["All Status", "New", "Contacted", "Qualified", "Lost"];
+
+  const { data, isLoading, leadsRefetch } = useAllLeadsListQuery();
+  const { allStatusesData } = useAllStatusesQuery();
+  const {
+    leadDetailById,
+    isLoading: isLeadDetailLoading,
+    leadDetail: refetchLeadDetail,
+  } = useLeadDetailQuery(leadId);
+
+  const { onDeleteLead } = useDeleteLeadMutation({
+    onSuccessCallback: (data: IDeleteLeadResponse) => {
+      console.log("Lead deleted successfully", data);
+      leadsRefetch();
+    },
+    onErrorCallback: (err: IApiError) => {
+      console.error("Failed to delete lead:", err);
+    },
+  });
+
+  // Fetch lead details on view/edit open
+  useEffect(() => {
+    if (leadId) refetchLeadDetail();
+  }, [leadId, leadDetailById, isEditLeadModalOpen, viewLead, refetchLeadDetail]);
+
+  const actions: ITableAction<ILeadsListProps>[] = [
+    {
+      label: "Edit",
+      onClick: (row) => {
+        setLeadId(row.id);
+        setIsEditLeadModalOpen(true);
+
+      },
+      className: "text-primary",
+    },
+    {
+      label: "View",
+      onClick: (row) => {
+        setLeadId(row.id);
+        setViewLead(row);
+      },
+      className: "text-primary",
+    },
+    {
+      label: "Delete",
+      onClick: (row) => {
+        onDeleteLead(row.id);
+      },
+      className: "text-primary",
+    },
+    {
+      label: "Export As xlsx",
+      onClick: (row) => {
+        console.log("Export clicked", row.id);
+      },
+      className: "text-primary whitespace-nowrap",
+    },
+  ];
+
+  const statusOptions =
+    allStatusesData?.map((status) => ({
+      label: status?.name,
+      value: status?.id.toString(),
+    })) || [];
+
+  const leadDetailModalData: ILeadsListDetailsProps = {
+    id: leadDetailById?.id || "",
+    first_name: leadDetailById?.first_name || "",
+    last_name: leadDetailById?.last_name || "",
+    phone: leadDetailById?.phone || "",
+    email: leadDetailById?.email || "",
+    company: leadDetailById?.company || "",
+    requirement: leadDetailById?.requirement || "",
+    location: leadDetailById?.location || "",
+    budget: leadDetailById?.budget || "",
+    status: leadDetailById?.status || {
+      id: "",
+      name: "",
+      created_at: "",
+      updated_at: "",
+      deleted: false,
+      deleted_at: null,
+    },
+    assignedTo: leadDetailById?.assigned_to || {
+      id: "",
+      name: "Unassigned",
+      email: "",
+      phoneNumber: "",
+      businessName: "",
+      businessType: "",
+      role: "",
+      photo: "",
+      address: "",
+      city: "",
+      country: "",
+      registrationId: "",
+      businessLicense: "",
+      userType: "",
+      username: "",
+      isVendorApproved: false,
+      provider: "",
+      providerId: "",
+      authToken: "",
+      refreshToken: "",
+      isSocialLogin: false,
+      created_at: "",
+      updated_at: "",
+    },
+    source: leadDetailById?.source || {
+      id: "",
+      name: "",
+      created_at: "",
+      updated_at: "",
+      deleted: false,
+      deleted_at: null,
+    },
+  };
+
+  const leadsList: ILeadsListProps[] = (data ?? []).map((lead) => ({
+    id: lead?.id || "",
+    first_name: lead?.first_name || "",
+    last_name: lead?.last_name || "",
+    phone: lead?.phone || "",
+    email: lead?.email || "",
+    company: lead?.company || "",
+    location: lead?.location || "",
+    budget: lead?.budget || "",
+    requirement: lead?.requirement || "",
+    source_id: lead?.source?.name || "N/A",
+    status_id: lead?.status?.name || "N/A",
+    assigned_to: lead?.assigned_to?.name || "Unassigned",
+  }));
 
   const handleSearch = (query: string) => {
     setSearchQuery(query.toLowerCase());
@@ -84,49 +168,16 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     setSelectedStatus(val);
   };
 
-  const actions: ITableAction<ILeadsListProps>[] = [
-    {
-      label: "Edit",
-      onClick: (row: ILeadsListProps) => {
-        console.log("Edit clicked", row.id);
-      },
-      className: "text-blue-500",
-    },
-    {
-      label: "View",
-      onClick: (row) => {
-        leadDetail()
-        setLeadId(row.id);
-        setViewLead(row);
-      },
-      className: "text-blue-500",
-    },
-    {
-      label: "Delete",
-      onClick: (row: ILeadsListProps) => {
-        console.log("Delete clicked", row.id);
-      },
-      className: "text-blue-500",
-    },
-    {
-      label: "Explore As xlsx",
-      onClick: (row: ILeadsListProps) => {
-        console.log("Explore As xlsx clicked", row.id);
-      },
-      className: "text-blue-500 whitespace-nowrap",
-    },
-  ];
-
   const filteredLeads = useMemo(() => {
     return leadsList.filter((lead) => {
       const matchQuery =
-        lead.name.toLowerCase().includes(searchQuery) ||
-        lead.email.toLowerCase().includes(searchQuery) ||
-        lead.number.toLowerCase().includes(searchQuery) ||
-        lead.businessName.toLowerCase().includes(searchQuery) ||
-        lead.natureOfBusiness.toLowerCase().includes(searchQuery) ||
-        lead.cityName.toLowerCase().includes(searchQuery);
-
+        lead.id?.toLowerCase().includes(searchQuery) ||
+        lead.first_name?.toLowerCase().includes(searchQuery) ||
+        lead.last_name?.toLowerCase().includes(searchQuery) ||
+        lead.phone?.toLowerCase().includes(searchQuery) ||
+        lead.company?.toLowerCase().includes(searchQuery) ||
+        lead.budget?.toLowerCase().includes(searchQuery) ||
+        lead.location?.toLowerCase().includes(searchQuery);
       return matchQuery;
     });
   }, [leadsList, searchQuery]);
@@ -134,9 +185,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
-        <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
-          Leads List
-        </h1>
+        <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">Leads List</h1>
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           <SearchBar
             onSearch={handleSearch}
@@ -166,10 +215,28 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         </div>
       </div>
 
-      <Table data={filteredLeads} columns={leadsListColumn} actions={actions} />
+      {isLoading ? (
+        <div className="text-center py-6 text-gray-500">Loading leads...</div>
+      ) : filteredLeads.length === 0 ? (
+        <div className="text-center py-6 text-gray-500">No leads found.</div>
+      ) : (
+        <Table data={filteredLeads} columns={leadsListColumn} actions={actions} />
+      )}
 
-      {viewLead && (
-        <LeadDetailModal data={leadDetailModalData} lead={viewLead} onClose={() => setViewLead(null)} />
+      {/* Conditionally render modals only when data is loaded */}
+      {viewLead && !isLeadDetailLoading && (
+        <LeadDetailModal
+          data={leadDetailModalData}
+          lead={viewLead}
+          onClose={() => setViewLead(null)}
+        />
+      )}
+      {leadDetailById && isEditLeadModalOpen && !isLeadDetailLoading &&  (
+        <EditLeadModal
+          setIsEditLeadModalOpen={setIsEditLeadModalOpen}
+          lead={leadDetailById}
+          
+        />
       )}
     </div>
   );

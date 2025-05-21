@@ -13,10 +13,12 @@
  * Used in staff management features/pages.
  */
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
 import { ExportIcon } from "@/features";
 import { staffActions, StaffList, StaffListColumn } from "@/constants";
+import { useAllStatusesQuery } from "@/services";
+import { useFormik } from "formik";
 
 interface StaffListTableProps {
   setAddStaffModalOpen?: Dispatch<SetStateAction<boolean>>;
@@ -24,12 +26,22 @@ interface StaffListTableProps {
 
 // StaffListTable: Displays staff records with filters, actions, and export options
 export function StaffListTable({ setAddStaffModalOpen }: StaffListTableProps) {
-  const [selectedStatus, setSelectedStatus] = useState("All Status");
-  const statusOptions = ["All Status", "New", "Contacted", "Qualified", "Lost"];
+  const { allStatusesData } = useAllStatusesQuery();
 
-  const handleChange = (val: string) => {
-    setSelectedStatus(val);
-  };
+  const statusOptions =
+    allStatusesData?.map((status) => ({
+      label: status?.name,
+      value: status?.id.toString(),
+    })) || [];
+
+  // Formik state for filters
+  const { values, setFieldValue } = useFormik({
+    initialValues: {
+      status_id: "",
+      search: "",
+    },
+    onSubmit: () => {},
+  });
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -57,14 +69,12 @@ export function StaffListTable({ setAddStaffModalOpen }: StaffListTableProps) {
               onClick={() => setAddStaffModalOpen(true)}
             />
           )}
-
           <Dropdown
+            label="Status"
             options={statusOptions}
-            value={selectedStatus}
-            onChange={handleChange}
-            dropdownWidth="w-full md:w-fit"
+            value={values.status_id}
+            onChange={(val) => setFieldValue("status_id", val)}
           />
-
           <Button
             title="Export"
             variant="background-white"
@@ -73,7 +83,11 @@ export function StaffListTable({ setAddStaffModalOpen }: StaffListTableProps) {
           />
         </div>
       </div>
-      <Table data={StaffList} columns={StaffListColumn} actions={staffActions} />
+      <Table
+        data={StaffList}
+        columns={StaffListColumn}
+        actions={staffActions}
+      />
     </div>
   );
 }
