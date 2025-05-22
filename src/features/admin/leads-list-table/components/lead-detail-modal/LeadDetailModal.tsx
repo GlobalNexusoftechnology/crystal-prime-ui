@@ -33,7 +33,7 @@ interface LeadDetailsModalProps {
 
 export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
   return (
-    <ModalOverlay isOpen={true} onClose={onClose}>
+    <ModalOverlay isOpen={true} onClose={onClose} modalClassName="2xl:w-[40vw]">
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         {/* Lead Info Header */}
         <div className="bg-white rounded-lg p-4 border border-gray-200">
@@ -46,7 +46,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
                 height={40}
                 className="rounded-full"
               />
-              <p className="font-semibold text-lg text-gray-800">
+              <p className="font-semibold text-[1rem] 2xl:text-[1vw] text-gray-800">
                 {data.first_name} {data.last_name}
               </p>
             </div>
@@ -58,14 +58,17 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-between gap-2 mt-4 text-sm text-gray-600">
-            <a href="tel:+13853449378" className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row justify-between gap-2 mt-4 text-[1rem] 2xl:text-[1vw] text-gray-600">
+            <a
+              href="tel:+13853449378"
+              className="flex items-center gap-2 text-[1rem] 2xl:text-[1vw]"
+            >
               <PhoneIcon className="h-5 w-5" />
               {data.phone}
             </a>
             <a
               href="mailto:Elna.Ferry@hotmail.com"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 text-[1rem] 2xl:text-[1vw]"
             >
               <MailIcon className="h-5 w-5" />
               {data.email}
@@ -74,25 +77,27 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
         </div>
 
         {/* Lead Details Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-gray-200 p-4 rounded-lg  text-sm text-gray-700">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-gray-200 p-4 rounded-lg  text-[1rem] 2xl:text-[1vw] text-gray-700">
           <div>
-            <p className="font-medium">Lead Owner</p>
-            <p className="font-semibold text-textColor">
+            <p className="font-medium text-[1rem] 2xl:text-[1vw]">Lead Owner</p>
+            <p className="font-semibold text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.first_name} {data.last_name}
             </p>
           </div>
           <div>
-            <p className="font-medium">Created on</p>
-            <p className="font-semibold text-textColor">
+            <p className="font-medium text-[1rem] 2xl:text-[1vw]">Created on</p>
+            <p className="font-semibold text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.assignedTo.name}
             </p>
           </div>
           <div>
-            <p className="font-medium">Company</p>
-            <p className="font-semibold text-textColor">{data.company}</p>
+            <p className="font-medium text-[1rem] 2xl:text-[1vw]">Company</p>
+            <p className="font-semibold text-textColor text-[1rem] 2xl:text-[1vw]">
+              {data.company}
+            </p>
           </div>
           <div>
-            <p className="font-medium">Status</p>
+            <p className="font-medium text-[1rem] 2xl:text-[1vw]">Status</p>
             <select
               defaultValue="initiated"
               className="mt-1 w-fit bg-lightGreen text-white px-3 py-1 text-xs rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-green-300"
@@ -104,30 +109,45 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             </select>
           </div>
           <div>
-            <p className="font-medium">Nature Of Business</p>
-            <p className="font-semibold text-textColor">Retail Business</p>
+            <p className="font-medium text-[1rem] 2xl:text-[1vw]">
+              Nature Of Business
+            </p>
+            <p className="font-semibold text-textColor text-[1rem] 2xl:text-[1vw]">
+              Retail Business
+            </p>
           </div>
           <div>
-            <p className="font-medium">Lead Type</p>
-            <p className="font-semibold text-textColor">Website</p>
+            <p className="font-medium text-[1rem] 2xl:text-[1vw]">Lead Type</p>
+            <p className="font-semibold text-textColor text-[1rem] 2xl:text-[1vw]">
+              Website
+            </p>
           </div>
           <div>
-            <p className="font-medium">Location</p>
-            <p className="font-semibold text-textColor">{data.location}</p>
+            <p className="font-medium text-[1rem] 2xl:text-[1vw]">Location</p>
+            <p className="font-semibold text-textColor text-[1rem] 2xl:text-[1vw]">
+              {data.location}
+            </p>
           </div>
           <div>
-            <p className="font-medium">Uploaded Document</p>
-            <a href="#" className="font-semibold text-blue-600 underline">
+            <p className="font-medium text-[1rem] 2xl:text-[1vw]">
+              Uploaded Document
+            </p>
+            <a
+              href="#"
+              className="font-semibold text-blue-600 underline text-[1rem] 2xl:text-[1vw]"
+            >
               Project Report.pdf
             </a>
           </div>
           <div>
-            <p className="font-medium">Assigned To</p>
+            <p className="font-medium text-[1rem] 2xl:text-[1vw]">
+              Assigned To
+            </p>
             <div className="flex items-center gap-2">
-              <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+              <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-[1rem] 2xl:text-[1vw] font-medium">
                 {getInitials(data.assignedTo.name)}
               </span>
-              <p className="font-semibold text-textColor">
+              <p className="font-semibold text-textColor text-[1rem] 2xl:text-[1vw]">
                 {data.assignedTo.name}
               </p>
             </div>
@@ -137,17 +157,23 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
         {/* Notes Section */}
 
         <div className="bg-white rounded-lg p-4 space-y-4 border border-gray-200 overflow-y-auto max-h-64">
-          <p className="font-medium text-gray-700">Notes</p>
+          <p className="font-medium text-gray-700 text-[1rem] 2xl:text-[1vw]">
+            Notes
+          </p>
           {notes.map((note) => (
             <div
               key={note.id}
               className="bg-gray-100 p-3 rounded-md border border-gray-200 space-y-1"
             >
-              <p className="text-sm font-semibold text-textColor  underline">
+              <p className="text-[1rem] 2xl:text-[1vw] font-semibold text-textColor  underline">
                 {note.name}
               </p>
-              <p className="text-sm text-gray-700">{note.message}</p>
-              <p className="text-xs text-gray-500">{note.timestamp}</p>
+              <p className=" text-gray-700 text-[1rem] 2xl:text-[1vw]">
+                {note.message}
+              </p>
+              <p className="text-[1rem] 2xl:text-[1vw] text-gray-500">
+                {note.timestamp}
+              </p>
             </div>
           ))}
           <div className="pt-2 ">
