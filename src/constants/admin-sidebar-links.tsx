@@ -78,7 +78,7 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     activeIcon: <StaffManagementIcon color="white" />,
   },
    {
-    path: "/admin/document-management",
+    path: "/admin/role-management",
     name: "Document Management",
     icon: <DocumentManagementIcon />,
     activeIcon: <DocumentManagementIcon color="white" />,

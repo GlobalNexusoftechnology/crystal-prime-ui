@@ -18,3 +18,4 @@ export { useLeadDetailQuery } from "./useLeadDetailQuery";
 export { useAllSourcesQuery } from "./useAllSourcesQuery";
 export { useAllStatusesQuery } from "./useAllStatusesQuery";
 export { useUpdateLeadMutation } from "./useUpdateLeadMutation";
+export { useAllRoleListQuery } from "./useAllRoleListQuery";

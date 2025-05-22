@@ -4,6 +4,7 @@ import { ApiClient } from "../../api-client";
 import {
   IAllLeadDownloadExcelResponse,
   IAllLeadResponse,
+  IAllRoleResponse,
   IAllSourcesResponse,
   IAllStatusesResponse,
   IChangePasswordPayload,
@@ -56,6 +57,7 @@ import {
   fetchAllStatusesUrl,
   updateLeadUrl,
   updateLeadFollowUpUrl,
+  fetchAllRoleListUrl,
 } from "./urls";
 
 /**
@@ -217,7 +219,10 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public updateLeadFollowUp = async ({ id, payload }: IUpdateLeadFollowUpPayload) => {
+  public updateLeadFollowUp = async ({
+    id,
+    payload,
+  }: IUpdateLeadFollowUpPayload) => {
     const response = await this.put<IUpdateLeadFollowUpResponse>(
       updateLeadFollowUpUrl(id),
       payload,
@@ -231,7 +236,7 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   };
- 
+
   // create lead follow up
 
   public createLeadFollowUp = async (payload: ICreateLeadFollowUpPayload) => {
@@ -249,10 +254,9 @@ export class CommunityClient extends ApiClient {
 
   //delete lead
   public deleteLead = async (id: string) => {
-    const response = await this.del<IDeleteLeadResponse>(
-      deleteLeadUrl(id),
-      { requiresAuth: false }
-    );
+    const response = await this.del<IDeleteLeadResponse>(deleteLeadUrl(id), {
+      requiresAuth: false,
+    });
 
     if (!response?.success) {
       throw response?.errorData;
@@ -261,7 +265,7 @@ export class CommunityClient extends ApiClient {
   };
 
   // delete lead follow up
-   public deleteLeadFollowUp = async (id: string) => {
+  public deleteLeadFollowUp = async (id: string) => {
     const response = await this.del<IDeleteLeadFollowUpResponse>(
       deleteLeadFollowUpUrl(id),
       {
@@ -417,6 +421,18 @@ export class CommunityClient extends ApiClient {
     }
 
     return response?.data?.data;
+  };
+
+  public fetchAllRoleList = async () => {
+    const response = await this.get<IAllRoleResponse>(fetchAllRoleListUrl(), {
+      requiresAuth: false,
+    });
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
   };
 }
 

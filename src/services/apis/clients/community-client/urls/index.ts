@@ -62,3 +62,5 @@ export const changePasswordUrl = () => "/auth/changePassword";
 
 export const fetchAllSourcesUrl  = () => '/lead-sources'
 
+export const fetchAllRoleListUrl = () => "/roles";
+
