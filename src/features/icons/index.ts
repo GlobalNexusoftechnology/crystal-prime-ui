@@ -15,3 +15,4 @@ export { MailIcon } from "./MailIcon";
 export { PhoneIcon } from "./PhoneIcon";
 export { ThreeIcon } from "./ThreeIcon";
 export { FollowUpManagementIcon } from "./FollowUpManagementIcon";
+export { DocumentManagementIcon } from "./DocumentManagementIcon";

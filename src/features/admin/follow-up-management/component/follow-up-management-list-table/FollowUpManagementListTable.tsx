@@ -1,6 +1,6 @@
 "use client";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
 import {
   action,
@@ -8,6 +8,8 @@ import {
   FollowUpManagementListColumn,
 } from "@/constants";
 import { ExportIcon } from "@/features";
+import { useAllStatusesQuery } from "@/services";
+import { useFormik } from "formik";
 
 /**
  * Props for the FollowUpManagementListTable component
@@ -19,7 +21,7 @@ interface LeadsListTableProps {
 
 /**
  * FollowUpManagementListTable Component
- * 
+ *
  * This component displays a searchable, filterable table of follow-up leads.
  * It includes options for:
  * - Searching leads by keyword
@@ -30,23 +32,25 @@ interface LeadsListTableProps {
 export function FollowUpManagementListTable({
   setIsFollowUpModalOpen,
 }: LeadsListTableProps) {
-  // Local state to track the selected status filter
-  const [selectedStatus, setSelectedStatus] = useState("All Status");
+  const { allStatusesData } = useAllStatusesQuery();
 
-  // Options for the status filter dropdown
-  const statusOptions = ["All Status", "New", "Contacted", "Qualified", "Lost"];
+  const statusOptions =
+    allStatusesData?.map((status) => ({
+      label: status?.name,
+      value: status?.id.toString(),
+    })) || [];
 
-  /**
-   * Handles change in dropdown status filter
-   * @param val - selected status string
-   */
-  const handleChange = (val: string) => {
-    setSelectedStatus(val);
-  };
+  // Formik state for filters
+  const { values, setFieldValue } = useFormik({
+    initialValues: {
+      status_id: "",
+      search: "",
+    },
+    onSubmit: () => {},
+  });
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
-      
       {/* Header and action controls */}
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
         <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
@@ -73,10 +77,10 @@ export function FollowUpManagementListTable({
 
           {/* Status filter dropdown */}
           <Dropdown
+            label="Status"
             options={statusOptions}
-            value={selectedStatus}
-            onChange={handleChange}
-            dropdownWidth="w-full md:w-fit"
+            value={values.status_id}
+            onChange={(val) => setFieldValue("status_id", val)}
           />
 
           {/* Export button */}

@@ -1,4 +1,4 @@
-import { ISignupResponse,useMutation } from "@/services";
+import { IDeleteLeadResponse, useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 
 import { COMMUNITY_CLIENT } from "../communityClient";
@@ -6,39 +6,38 @@ import { COMMUNITY_CLIENT } from "../communityClient";
 /**
  * This is to track the login mutation keys in react query cache.
  */
-const MUT_USER_REGISTER = "user-register-mutation-key";
+const DELETE_LEAD_MUTATION_KEY = "delete-lead-mutation-key";
 
-//interface for IRegisterOptions
-interface IRegisterOptions {
-  onSuccessCallback: (data: ISignupResponse) => void;
-  onErrorCallback?: (err: IApiError) => void;
+interface IDeleteLeadOptions {
+  onSuccessCallback: (data: IDeleteLeadResponse) => void;
+  onErrorCallback?: (error: IApiError) => void;
 }
-
+  
 /**
- * Hook to register mutation
+ * This register the user or vender to carpet market.
  */
-export const useRegisterMutation = ({
+export const useDeleteLeadMutation = ({
   onSuccessCallback,
   onErrorCallback,
-}: IRegisterOptions) => {
+}: IDeleteLeadOptions) => {
   const { mutate, isPending, error } = useMutation({
-    mutationKey: [MUT_USER_REGISTER],
+    mutationKey: [DELETE_LEAD_MUTATION_KEY],
     networkMode: "always", // Even make calls when offline
     retry: false, // For login Request, do not retry failed requests.
-    mutationFn: COMMUNITY_CLIENT.userRegister,
+    mutationFn: COMMUNITY_CLIENT.deleteLead,
     onSuccess: (response) => {
       onSuccessCallback(response);
     },
-
     onError: (err: IApiError) => {
       errorLogToRemoteUtil({
         error,
         errorCode: ErrorEventsEnum.ERROR_IN_API_CALL,
-        errorTitle: "Error in useRegisterMutation",
+        errorTitle: "Error in useAdminDeleteVendorOptionsMutation",
         message: error?.message,
       });
 
-      onErrorCallback?.(err); // pass actual 'err' to your screen
+      onErrorCallback?.(err);
+
       return err;
     },
   });
@@ -46,6 +45,6 @@ export const useRegisterMutation = ({
   return {
     error,
     isPending,
-    onRegisterProfile: mutate,
+    onDeleteLead: mutate,
   };
 };

@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import {
   DashboardIcon,
   FollowUpManagementIcon,
+  DocumentManagementIcon,
   LeadManagementIcon,
   ProjectManagementIcon,
   
@@ -79,8 +80,8 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
    {
     path: "/admin/document-management",
     name: "Document Management",
-    icon: <StaffManagementIcon />,
-    activeIcon: <StaffManagementIcon color="white" />,
+    icon: <DocumentManagementIcon />,
+    activeIcon: <DocumentManagementIcon color="white" />,
   },
   {
     path: "/admin/settings",

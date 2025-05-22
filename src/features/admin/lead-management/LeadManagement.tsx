@@ -7,7 +7,7 @@ import { LeadsListTable } from "../leads-list-table";
 import Image from "next/image";
 import { analyticalCards, ImageRegistry } from "@/constants";
 import { AnalyticalCard } from "../analytical-card";
-import { ImportExcel, NewLeadForm } from "./components";
+import { ImportExcel, AddLeadModal } from "./components";
 
 export function LeadManagement() {
   const [isAddLeadModalOpen, setAddLeadModalOpen] = useState(false);
@@ -152,7 +152,7 @@ export function LeadManagement() {
       </ModalOverlay>
 
       {activeStep === "addForm" && (
-        <NewLeadForm setAddLeadModalOpen={handleAddFormClose} />
+        <AddLeadModal setAddLeadModalOpen={handleAddFormClose} />
       )}
     </section>
   );
