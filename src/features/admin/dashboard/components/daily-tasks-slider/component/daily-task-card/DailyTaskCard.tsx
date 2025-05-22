@@ -17,10 +17,10 @@ export const DailyTaskCard = ({
 }: IDailyTaskCardProps) => {
   return (
     <motion.div
-      initial={{ y: -30, opacity: 0 }}
+      initial={{ y: -30, opacity: 0}}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className={`relative flex flex-col items-center justify-between w-full rounded-xl shadow-xl p-4 2xl:p-[1vw] ${color} text-gray-900 `}
+      className={`relative flex flex-col items-center justify-between w-full rounded-xl shadow-xl p-4 2xl:p-[1vw] ${color} text-gray-900`}
     >
       <div className="flex flex-col items-start">
         <p className="text-sm 2xl:text-[0.875vw] font-medium">Task Name</p>
