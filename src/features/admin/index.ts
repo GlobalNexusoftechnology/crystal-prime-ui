@@ -9,4 +9,6 @@ export * from "./follow-up-management"
 export * from "./settings"
 export * from "./document-management"
 export * from "./change-password"
+export * from "./task-management"
+
 
