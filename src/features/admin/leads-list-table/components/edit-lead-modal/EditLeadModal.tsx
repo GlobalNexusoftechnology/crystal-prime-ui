@@ -74,10 +74,10 @@ export function EditLeadModal({
     })) || [];
 
   return (
-    <ModalOverlay isOpen={true} onClose={handleCancel}>
+    <ModalOverlay isOpen={true} onClose={handleCancel} modalClassName="w-[18rem] md:w-[30rem] 2xl:w-[37vw]">
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <h2 className="text-lg font-semibold">Edit Lead Information</h2>
+          <h2 className="text-[1rem] 2xl:text-[1vw] font-semibold">Edit Lead Information</h2>
           <Formik<ICreateLeadPayload>
             initialValues={{
               first_name: lead.first_name || "",
@@ -108,7 +108,7 @@ export function EditLeadModal({
 
               return (
                 <Form>
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <InputField
                       label="First Name"
                       placeholder="Enter First Name"
@@ -127,9 +127,9 @@ export function EditLeadModal({
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <InputField
-                      label="Company Name"
+                      label="Company"
                       placeholder="Enter Company Name"
                       name="company"
                       value={values.company}
@@ -146,7 +146,7 @@ export function EditLeadModal({
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <InputField
                       label="Email"
                       placeholder="Enter Email"
@@ -166,7 +166,7 @@ export function EditLeadModal({
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <InputField
                       label="Budget"
                       placeholder="Enter Budget"
@@ -186,7 +186,7 @@ export function EditLeadModal({
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <Dropdown
                       label="Source ID"
                       options={sourceOptions}
@@ -203,7 +203,7 @@ export function EditLeadModal({
                     />
                   </div>
 
-                  <div className="flex justify-between mt-6 space-x-4">
+                  <div className="flex justify-between mt-6 space-x-3">
                     <Button
                       title="Cancel"
                       onClick={handleCancel}

@@ -25,17 +25,15 @@ export function LeadManagement() {
       setAddLeadModalOpen(false);
     } else if (value === "excel") {
       setActiveStep("excel");
-      
     } else {
       setActiveStep("initial");
-      setAddLeadModalOpen(false)
+      setAddLeadModalOpen(false);
     }
-
   };
 
-  const handleAddFormClose = () =>{
-    setActiveStep("initial")
-  }
+  const handleAddFormClose = () => {
+    setActiveStep("initial");
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
@@ -59,68 +57,85 @@ export function LeadManagement() {
       <ModalOverlay
         isOpen={isAddLeadModalOpen}
         onClose={() => handleOpenForm("")}
-        modalClassName="w-[35rem] h-[35rem] 2xl:w-[37vw] 2xl:h-[37vw]"
+        modalClassName="w-[35rem] h-[35rem] 2xl:w-[36vw] 2xl:h-[38vw] "
       >
-        <div className="bg-white border border-gray-300 rounded-lg h-[31rem]">
+        <div className="bg-white border border-gray-300 rounded-lg h-[31rem] 2xl:h-[34vw] overflow-y-auto md:overflow-visible">
           <div className="space-y-6 p-4">
             {activeStep === "initial" && (
-              <div className="p-4 w-full space-y-4">
+              <div className=" w-full space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white rounded-xl">
                   {/* Manual Upload */}
-                  <div
-                    className="border-2 border-dashed rounded-xl p-4 text-center hover:shadow transition bg-customGray"
-                    onClick={() => handleOpenForm("addForm")}
-                  >
-                    <div className="w-[15rem] h-[6rem] pb-4">
-                      <Image
-                        src={ImageRegistry.onelead}
-                        alt="manual"
-                        width={200}
-                        height={120}
-                        className="object-contain w-full h-full"
-                      />
-                    </div>
-                    <input type="file" hidden id="manual-upload" />
-                    <label
-                      htmlFor="manual-upload"
-                      className="text-purple-600 font-medium cursor-pointer"
+                  <div>
+                    <p className="text-[1rem] 2xl:text-[1vw]  pb-2">
+                      Add Lead Manually
+                    </p>
+                    <div
+                      className="border-2 border-dashed rounded-xl p-4 2xl:h-[15vw] text-center hover:shadow transition bg-customGray"
+                      onClick={() => handleOpenForm("addForm")}
                     >
-                      Click to upload
-                    </label>
-                    <p className="text-sm text-gray-500">One Lead at a time</p>
+                      <div className="w-[15rem] h-[6rem] 2xl:w-[15vw] 2xl:h-[6vw] pb-4">
+                        <Image
+                          src={ImageRegistry.onelead}
+                          alt="manual"
+                          width={200}
+                          height={120}
+                          className="object-contain w-full h-full"
+                        />
+                      </div>
+                      <input type="file" hidden id="manual-upload" />
+                      <label
+                        htmlFor="manual-upload"
+                        className="text-purple-600 font-medium cursor-pointer text-[1rem] 2xl:text-[1vw]"
+                      >
+                        Click to upload
+                      </label>
+                      <p className="text-[1rem] 2xl:text-[1vw] text-gray-500">
+                        One Lead at a time
+                      </p>
+                    </div>
                   </div>
 
-                  {/* Excel Upload */}
-                  <div
-                    {...getRootProps()}
-                    onClick={() => handleOpenForm("excel")}
-                    className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition bg-customGray ${
-                      isDragActive ? "bg-purple-100" : "hover:shadow"
-                    }`}
-                  >
-                    <input {...getInputProps()} />
-                    <div className="w-[15rem] h-[6rem] pb-4">
-                      <Image
-                        src={ImageRegistry.excel}
-                        alt="excel"
-                        width={200}
-                        height={120}
-                        className="mx-auto mb-4 object-contain w-full h-full"
-                      />
+                  <div>
+                    <p className="text-[1rem] 2xl:text-[1vw] pb-2 ">
+                      Import From Excel
+                    </p>
+                    {/* Excel Upload */}
+                    <div
+                      {...getRootProps()}
+                      onClick={() => handleOpenForm("excel")}
+                      className={`border-2 border-dashed rounded-xl p-4 2xl:h-[15vw] text-center cursor-pointer transition bg-customGray ${
+                        isDragActive ? "bg-purple-100" : "hover:shadow"
+                      }`}
+                    >
+                      <input {...getInputProps()} />
+                      <div className=" h-[6rem] sm:h-[4.5rem] 2xl:w-[15vw] 2xl:h-[6vw] pb-4">
+                        <Image
+                          src={ImageRegistry.excel}
+                          alt="excel"
+                          width={200}
+                          height={120}
+                          className="mx-auto mb-4 object-contain w-full h-full"
+                        />
+                      </div>
+                      <p className="text-purple-600 text-[1rem] 2xl:text-[1vw] font-medium">
+                        Click to upload
+                      </p>
+                      <p className="text-[1rem] 2xl:text-[1vw] text-gray-500">
+                        or drag and drop
+                      </p>
+                      <p className="text-[1rem] 2xl:text-[1vw] text-gray-400 mt-1">
+                        .XLS, .XLSX (max. 5MB)
+                      </p>
                     </div>
-                    <p className="text-purple-600 font-medium">
-                      Click to upload
-                    </p>
-                    <p className="text-sm text-gray-500">or drag and drop</p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      .XLS, .XLSX (max. 5MB)
-                    </p>
                   </div>
                 </div>
 
+                <p className="text-[1rem] 2xl:text-[1vw]">
+                  Import From External site
+                </p>
                 {/* External Upload */}
-                <div className="md:col-span-2 border-2 border-dashed rounded-xl p-2 text-center bg-customGray flex justify-center items-center flex-col">
-                  <div className="w-[18rem] h-[8rem] pb-4">
+                <div className="md:col-span-2 border-2 2xl:h-[12vw] h-[12rem] border-dashed rounded-xl p-2 text-center bg-customGray flex justify-center items-center flex-col">
+                  <div className="w-[15rem] h-[5.6rem] md:h-[6rem] 2xl:w-[15vw] 2xl:h-[6vw] pb-4">
                     <Image
                       src={ImageRegistry.external}
                       alt="external"
@@ -132,12 +147,14 @@ export function LeadManagement() {
                   <input type="file" hidden id="external-upload" />
                   <label
                     htmlFor="external-upload"
-                    className="text-purple-600 font-medium cursor-pointer"
+                    className="text-purple-600 font-medium cursor-pointer text-[1rem] 2xl:text-[1vw]"
                   >
                     Click to upload
                   </label>
-                  <p className="text-sm text-gray-500">or drag and drop</p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-[1rem] 2xl:text-[1vw] text-gray-500">
+                    or drag and drop
+                  </p>
+                  <p className="text-[1rem] 2xl:text-[1vw] text-gray-400 mt-1">
                     SVG, PNG, JPG or GIF (max. 800×400px)
                   </p>
                 </div>

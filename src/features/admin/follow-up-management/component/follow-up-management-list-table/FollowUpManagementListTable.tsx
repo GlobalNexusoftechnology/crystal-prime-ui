@@ -105,7 +105,7 @@ export function FollowUpManagementListTable({
           Follow Up List
         </h1>
 
-        <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+        <div className="flex items-center gap-4 2xl:gap-[1vw]">
           {/* Search input */}
           <SearchBar
             onSearch={(query) => {
@@ -128,10 +128,11 @@ export function FollowUpManagementListTable({
 
           {/* Status filter dropdown */}
           <Dropdown
-            label="Status"
+            
             options={statusOptions}
             value={values.status_id}
             onChange={(val) => setFieldValue("status_id", val)}
+            dropdownWidth="w-full md:w-fit"
           />
 
           {/* Export button */}
