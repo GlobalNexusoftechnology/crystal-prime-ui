@@ -8,7 +8,6 @@ import {
   ModalOverlay,
 } from "@/components";
 import { IFollowUpManagementListProps } from "@/constants";
-
 import { useState } from "react";
 
 interface IEditFollowUpProps {
@@ -17,17 +16,27 @@ interface IEditFollowUpProps {
 }
 
 export function EditFollowUp({ onClose }: IEditFollowUpProps) {
-  //   const [isFollowUpModalOpen, setIsFollowUpModalOpen] = useState("");
-
   const [assignedTo, setAssignedTo] = useState("");
   const [lead, setLead] = useState("");
   const [selectTo, setSelectTo] = useState("");
   const [remark, setRemark] = useState("");
   const [renewalDate, setRenewalDate] = useState("");
   const [followUpDate, setFollowUpDate] = useState("");
-  const leadOptions = ["Lead 1", "Lead 2"];
-  const assignedToOptions = ["User 1", "User 2"];
-  const documentOptions = ["Document 1", "Document 2"];
+
+  const leadOptions = [
+    { label: "Lead 1", value: "Lead 1" },
+    { label: "Lead 2", value: "Lead 2" },
+  ];
+
+  const assignedToOptions = [
+    { label: "User 1", value: "User 1" },
+    { label: "User 2", value: "User 2" },
+  ];
+
+  const documentOptions = [
+    { label: "Document 1", value: "Document 1" },
+    { label: "Document 2", value: "Document 2" },
+  ];
 
   return (
     <ModalOverlay isOpen={true} onClose={onClose}>
@@ -89,6 +98,7 @@ export function EditFollowUp({ onClose }: IEditFollowUpProps) {
           dropdownWidth="w-full"
         />
       </form>
+
       <div className="flex justify-end pt-4 gap-5">
         <Button title="Cancel" variant="primary-outline" type="button" />
         <Button title="Add Lead" />
