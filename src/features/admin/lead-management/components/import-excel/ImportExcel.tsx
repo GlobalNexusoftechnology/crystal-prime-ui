@@ -155,7 +155,12 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
 
             {/* Footer Buttons */}
             <div className="flex justify-between pt-4">
-              <Button title="Cancel" onClick={handleCancel} />
+              <Button
+                title="Cancel"
+                onClick={handleCancel}
+                variant="primary-outline"
+                type="button"
+              />
               <Button title="Add Lead" onClick={handleNext} />
             </div>
           </>

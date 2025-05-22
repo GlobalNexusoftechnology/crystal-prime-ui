@@ -17,8 +17,9 @@ const config: Config = {
         secondary: "#005432",
         customGray: "#F8F8F8",
         whiteOverlay: "#FFFFFF1A",
-        textColor:"#252F4A" 
-        
+        textColor: "#252F4A",
+        lightYellow: "#DD7A08",
+        lightGreen: "#08EA79",
       },
     },
   },

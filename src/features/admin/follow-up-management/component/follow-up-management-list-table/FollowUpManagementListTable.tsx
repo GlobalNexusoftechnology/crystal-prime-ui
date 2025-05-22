@@ -1,12 +1,16 @@
 "use client";
 
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
 import {
-  action,
   FollowUpManagementList,
   FollowUpManagementListColumn,
+  IFollowUpManagementListProps,
+  ITableAction,
 } from "@/constants";
+import { ViewFollowUp } from "@/features";
+import { EditFollowUp } from "../edit-follow-up";
+
 import { ExportIcon } from "@/features";
 import { useAllStatusesQuery } from "@/services";
 import { useFormik } from "formik";
@@ -32,13 +36,24 @@ interface LeadsListTableProps {
 export function FollowUpManagementListTable({
   setIsFollowUpModalOpen,
 }: LeadsListTableProps) {
+  // State to track view/edit follow-up modal
+  const [editFollowUp, setEditFollowUp] =
+    useState<IFollowUpManagementListProps | null>(null);
+
+  const [viewFollowUp, setViewFollowUp] =
+    useState<IFollowUpManagementListProps | null>(null);
+
+  // Fetch statuses from API
   const { allStatusesData } = useAllStatusesQuery();
 
-  const statusOptions =
-    allStatusesData?.map((status) => ({
+  // Create status options dynamically with a fallback
+  const statusOptions = [
+    { label: "All Status", value: "" },
+    ...(allStatusesData?.map((status) => ({
       label: status?.name,
       value: status?.id.toString(),
-    })) || [];
+    })) || []),
+  ];
 
   // Formik state for filters
   const { values, setFieldValue } = useFormik({
@@ -48,6 +63,39 @@ export function FollowUpManagementListTable({
     },
     onSubmit: () => {},
   });
+
+  const actions: ITableAction<IFollowUpManagementListProps>[] = [
+    {
+      label: "Edit",
+      onClick: (row: IFollowUpManagementListProps) => {
+        setEditFollowUp(row);
+        console.log("Edit clicked", row.id);
+      },
+      className: "text-blue-500",
+    },
+    {
+      label: "View",
+      onClick: (row: IFollowUpManagementListProps) => {
+        setViewFollowUp(row);
+        console.log("View clicked", row.id);
+      },
+      className: "text-blue-500",
+    },
+    {
+      label: "Delete",
+      onClick: (row: IFollowUpManagementListProps) => {
+        console.log("Delete clicked", row.id);
+      },
+      className: "text-blue-500",
+    },
+    {
+      label: "Explore As xlsx",
+      onClick: (row: IFollowUpManagementListProps) => {
+        console.log("Explore As xlsx clicked", row.id);
+      },
+      className: "text-blue-500 whitespace-nowrap",
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -60,12 +108,15 @@ export function FollowUpManagementListTable({
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           {/* Search input */}
           <SearchBar
-            onSearch={(query) => console.log("Searching:", query)}
+            onSearch={(query) => {
+              console.log("Searching:", query);
+              setFieldValue("search", query);
+            }}
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
 
-          {/* Add follow-up button (if modal control is provided) */}
+          {/* Add follow-up button */}
           {setIsFollowUpModalOpen && (
             <Button
               title="Add Follow Up"
@@ -93,12 +144,27 @@ export function FollowUpManagementListTable({
         </div>
       </div>
 
-      {/* Data table for follow-up management */}
+      {/* Data table */}
       <Table
         data={FollowUpManagementList}
         columns={FollowUpManagementListColumn}
-        actions={action}
+        actions={actions}
       />
+
+      {/* Edit/View Modal */}
+      {editFollowUp && (
+        <EditFollowUp
+          followUp={editFollowUp}
+          onClose={() => setEditFollowUp(null)}
+        />
+      )}
+
+      {viewFollowUp && (
+        <ViewFollowUp
+          showFollowUp={viewFollowUp}
+          onClose={() => setViewFollowUp(null)}
+        />
+      )}
     </div>
   );
 }

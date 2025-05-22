@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { InputField, ModalOverlay } from "@/components";
 import {
   ILeadsListDetailsProps,
@@ -7,6 +6,7 @@ import {
 } from "@/constants";
 import { PhoneIcon, ThreeIcon, MailIcon } from "@/features";
 import { getInitials } from "@/utils";
+import Image from "next/image";
 
 const notes = [
   {
@@ -93,9 +93,15 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           </div>
           <div>
             <p className="font-medium">Status</p>
-            <p className="mt-1 w-fit bg-[#08EA79] text-white px-3 py-1 text-xs rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-green-300">
-              {data.status.name}
-            </p>
+            <select
+              defaultValue="initiated"
+              className="mt-1 w-fit bg-lightGreen text-white px-3 py-1 text-xs rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-green-300"
+            >
+              <option value="initiated">Initiated</option>
+              <option value="in_progress">In Progress</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
           </div>
           <div>
             <p className="font-medium">Nature Of Business</p>
@@ -137,7 +143,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               key={note.id}
               className="bg-gray-100 p-3 rounded-md border border-gray-200 space-y-1"
             >
-              <p className="text-sm font-semibold text-textColor">
+              <p className="text-sm font-semibold text-textColor  underline">
                 {note.name}
               </p>
               <p className="text-sm text-gray-700">{note.message}</p>

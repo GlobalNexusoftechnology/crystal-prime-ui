@@ -1,147 +1,119 @@
 "use client";
 
-import { ModalOverlay } from "@/components";
-import { useState, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
-import Image from "next/image";
-import { analyticalCards, ImageRegistry } from "@/constants";
+import { Button, DatePicker, Dropdown, InputField, ModalOverlay } from "@/components";
+import { useState } from "react";
+import { analyticalCards } from "@/constants";
 import { AnalyticalCard } from "../analytical-card";
 import { FollowUpManagementListTable } from "./component";
 
-/**
- * FollowUpManagement Component
- * 
- * This component renders the main UI for managing follow-ups including:
- * - Displaying analytical summary cards
- * - A data table of follow-ups
- * - A modal for uploading lead data (manual, Excel, external)
- */
 export function FollowUpManagement() {
-  // State to manage modal visibility
   const [isFollowUpModalOpen, setIsFollowUpModalOpen] = useState(false);
+  const [lead, setLead] = useState("");
+  const [assignedTo, setAssignedTo] = useState("");
+  const [selectTo, setSelectTo] = useState("");
+  const [remark, setRemark] = useState("");
+  const [renewalDate, setRenewalDate] = useState("");
+  const [followUpDate, setFollowUpDate] = useState("");
+  const leadOptions = [
+    { label: "Lead 1", value: "Lead 1" },
+    { label: "Lead 2", value: "Lead 2" },
+  ];
 
-  /**
-   * Callback function for handling dropped files
-   * @param acceptedFiles - array of uploaded files
-   */
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    console.log("Dropped files:", acceptedFiles);
-  }, []);
+  const assignedToOptions = [
+    { label: "User 1", value: "User 1" },
+    { label: "User 2", value: "User 2" },
+  ];
 
-  // Setup dropzone for Excel uploads
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const documentOptions = [
+    { label: "Document 1", value: "Document 1" },
+    { label: "Document 2", value: "Document 2" },
+  ];
 
   return (
     <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
-      
       {/* Header */}
       <div className="flex flex-col gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
-        <h1 className="text-xl 2xl:text-[1.25vw] font-medium">
+        <h1 className="text-[1rem] 2xl:text-[1vw] font-medium">
           Follow Up Management
         </h1>
       </div>
 
-      {/* Main content: Cards + Table */}
+      {/* Main content */}
       <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
-        
-        {/* Analytical Summary Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
           {analyticalCards.slice(0, 4).map((card, index) => (
             <AnalyticalCard key={index} data={card} />
           ))}
         </div>
 
-        {/* Follow Up Table */}
-        <FollowUpManagementListTable setIsFollowUpModalOpen={setIsFollowUpModalOpen} />
+        <FollowUpManagementListTable
+          setIsFollowUpModalOpen={setIsFollowUpModalOpen}
+        />
       </div>
 
-      {/* Modal for uploading leads */}
+      {/* Modal */}
       <ModalOverlay
         isOpen={isFollowUpModalOpen}
         onClose={() => setIsFollowUpModalOpen(false)}
-        modalClassName="w-[45rem] h-[35rem]"
+        modalClassName="w-[29rem] md:h-[32rem]  2xl:w-[50vw] 2xl:h-[32vw]"
       >
-        <div className="bg-[#F8F8F8]">
-          <div className="space-y-6 p-4 bg-white ">
-            <h3 className="text-sm font-semibold text-start">
-              - Back to Leads
-            </h3>
+        <form className="bg-white p-6 rounded-lg overflow-y-auto max-h-[80vh] md:h-[25rem] h-[24rem] space-y-4 md:w-[27rem] 2xl:w-[49vw] 2xl:h-[26vw] border border-gray-300">
+          <h2 className="text-[1rem] 2xl:text-[1.5vw] font-semibold mb-2">Follow Up Information</h2>
 
-            {/* Upload options container */}
-            <div className="border-2 p-4 w-full space-y-4">
+          <Dropdown
+            label="Select Lead"
+            options={leadOptions}
+            value={lead}
+            onChange={setLead}
+            dropdownWidth="w-full"
+          />
 
-              {/* Manual Upload */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white rounded-xl">
-                <div className="border-2 border-dashed rounded-xl p-4 text-center hover:shadow transition bg-[#F8F8F8]">
-                  <div className="w-[15rem] h-[6rem] pb-4">
-                    <Image
-                      src={ImageRegistry.onelead}
-                      alt="manual"
-                      width={200}
-                      height={120}
-                      className="object-contain w-full h-full"
-                    />
-                  </div>
-                  <input type="file" hidden id="manual-upload" />
-                  <label
-                    htmlFor="manual-upload"
-                    className="text-purple-600 font-medium cursor-pointer"
-                  >
-                    Click to upload
-                  </label>
-                  <p className="text-sm text-gray-500">One Lead at a time</p>
-                </div>
+          <Dropdown
+            label="Assigned To"
+            options={assignedToOptions}
+            value={assignedTo}
+            onChange={setAssignedTo}
+            dropdownWidth="w-full"
+          />
 
-                {/* Excel Upload via Dropzone */}
-                <div
-                  {...getRootProps()}
-                  className={`border-2 border-dashed rounded-xl p-4 text-center cursor-pointer transition bg-[#F8F8F8] ${
-                    isDragActive ? "bg-purple-100" : "hover:shadow"
-                  }`}
-                >
-                  <input {...getInputProps()} />
-                  <div className="w-[15rem] h-[6rem] pb-4">
-                    <Image
-                      src={ImageRegistry.excel}
-                      alt="excel"
-                      width={200}
-                      height={120}
-                      className="mx-auto mb-4 object-contain w-full h-full"
-                    />
-                  </div>
-                  <p className="text-purple-600 font-medium">Click to upload</p>
-                  <p className="text-sm text-gray-500">or drag and drop</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    .XLS, .XLSX (max. 5MB)
-                  </p>
-                </div>
-              </div>
+          <div className="grid grid-cols-2 gap-4">
+            <DatePicker
+              label="Renewal Date"
+              value={renewalDate}
+              onChange={setRenewalDate}
+              placeholder="Select Date"
+            />
 
-              {/* External Upload Option */}
-              <div className="md:col-span-2 border-2 border-dashed rounded-xl p-2 text-center bg-[#F8F8F8] flex justify-center items-center flex-col">
-                <div className="w-[18rem] h-[8rem] pb-4">
-                  <Image
-                    src={ImageRegistry.external}
-                    alt="external"
-                    width={200}
-                    height={120}
-                    className="object-contain w-full h-full"
-                  />
-                </div>
-                <input type="file" hidden id="external-upload" />
-                <label
-                  htmlFor="external-upload"
-                  className="text-purple-600 font-medium cursor-pointer"
-                >
-                  Click to upload
-                </label>
-                <p className="text-sm text-gray-500">or drag and drop</p>
-                <p className="text-xs text-gray-400 mt-1">
-                  SVG, PNG, JPG or GIF (max. 800×400px)
-                </p>
-              </div>
-            </div>
+            <DatePicker
+              label="Follow Up Date"
+              value={followUpDate}
+              onChange={setFollowUpDate}
+              placeholder="Select Date"
+            />
           </div>
+
+          <div>
+            <label className="block text-[1rem] 2xl:text-[1vw] font-medium">Remark</label>
+            <InputField
+              type="text"
+              value={remark}
+              onChange={(e) => setRemark(e.target.value)}
+              placeholder="Description"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            />
+          </div>
+
+          <Dropdown
+            label="Select Document"
+            options={documentOptions}
+            value={selectTo}
+            onChange={setSelectTo}
+            dropdownWidth="w-full"
+          />
+        </form>
+        <div className="flex justify-end pt-4 gap-5">
+          <Button title="Cancel" variant="primary-outline" type="button" />
+          <Button title="Add Lead" />
         </div>
       </ModalOverlay>
     </section>
