@@ -1,4 +1,4 @@
-import { IUpdateLeadFollowUpResponse,useMutation } from "@/services";
+import {  IUpdateSourcesResponse, useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 
 import { COMMUNITY_CLIENT } from "../communityClient";
@@ -6,25 +6,25 @@ import { COMMUNITY_CLIENT } from "../communityClient";
 /**
  * This is to track the login mutation keys in react query cache.
  */
-const UPDATE_LEAD_FOLLOWUP_MUTATION_KEY = "update-lead-followup-mutation-key";
+const UPDATE_SOURCES_MUTATION_KEY = "update-sources-mutation-key";
 
-interface IUpdateLeadFollowUpOptions {
-  onSuccessCallback: (data: IUpdateLeadFollowUpResponse) => void;
+interface IUpdateSourcesOptions {
+  onSuccessCallback: (data: IUpdateSourcesResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
 
 /**
  * This religion the admin Mu college.
  */
-export const useUpdateLeadFollowUpMutation = ({
+export const useUpdateSourcesMutation = ({
   onSuccessCallback,
   onErrorCallback,
-}: IUpdateLeadFollowUpOptions) => {
+}: IUpdateSourcesOptions) => {
   const { mutate, isPending, error } = useMutation({
-    mutationKey: [UPDATE_LEAD_FOLLOWUP_MUTATION_KEY],
+    mutationKey: [UPDATE_SOURCES_MUTATION_KEY],
     networkMode: "always", // Even make calls when offline
     retry: false, // For login Request, do not retry failed requests.
-    mutationFn: COMMUNITY_CLIENT.updateLeadFollowUp,
+    mutationFn: COMMUNITY_CLIENT.updateSources,
     onSuccess: (response) => {
       onSuccessCallback(response);
     },
@@ -32,7 +32,7 @@ export const useUpdateLeadFollowUpMutation = ({
       errorLogToRemoteUtil({
         error,
         errorCode: ErrorEventsEnum.ERROR_IN_API_CALL,
-        errorTitle: "Error in useUpdateLeadFollowUpMutation",
+        errorTitle: "Error in useUpdateSourcesMutation",
         message: error?.message,
       });
 
@@ -45,7 +45,7 @@ export const useUpdateLeadFollowUpMutation = ({
   return {
     error,
     isPending,
-    onEditLead: mutate,
+    onEditSources: mutate,
   };
 };
 
