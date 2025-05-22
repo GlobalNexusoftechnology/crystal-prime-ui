@@ -2,19 +2,29 @@ import { IApiError } from "@/utils";
 import { ApiClient } from "../../api-client";
 
 import {
+  IAllLeadAttachmentResponse,
   IAllLeadDownloadExcelResponse,
+  IAllLeadFollowUpResponse,
   IAllLeadResponse,
   IAllRoleResponse,
   IAllSourcesResponse,
   IAllStatusesResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
+  ICreateLeadAttachmentPayload,
+  ICreateLeadAttachmentResponse,
   ICreateLeadFollowUpPayload,
   ICreateLeadFollowUpResponse,
   ICreateLeadPayload,
   ICreateLeadResponse,
+  ICreateSourcesPayload,
+  ICreateSourcesResponse,
+  ICreateStatusesPayload,
+  ICreateStatusesResponse,
   IDeleteLeadFollowUpResponse,
   IDeleteLeadResponse,
+  IDeleteSourcesResponse,
+  IDeleteStatusesResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
   ILeadFollowUpDetailResponse,
@@ -28,10 +38,16 @@ import {
   ISentOtpResponse,
   ISignupPayload,
   ISignupResponse,
+  ISourcesDetailResponse,
+  IStatusesDetailResponse,
   IUpdateLeadFollowUpPayload,
   IUpdateLeadFollowUpResponse,
   IUpdateLeadPayload,
   IUpdateLeadResponse,
+  IUpdateSourcesPayload,
+  IUpdateSourcesResponse,
+  IUpdateStatusesPayload,
+  IUpdateStatusesResponse,
   IVerifyEmailPayload,
   IVerifyEmailResponse,
 } from "./types";
@@ -43,7 +59,6 @@ import {
   registerUrl,
   resetPasswordUrl,
   loginUrl,
-  postRegisterUrl,
   sentOtpUrl,
   verifyEmailUrl,
   getLeadDownloadExcelByIdUrl,
@@ -58,6 +73,16 @@ import {
   updateLeadUrl,
   updateLeadFollowUpUrl,
   fetchAllRoleListUrl,
+  getStatusesDetailByIdUrl,
+  updateStatusesUrl,
+  deleteStatusesUrl,
+  createSourcesUrl,
+  createStatusesUrl,
+  getSourcesDetailByIdUrl,
+  updateSourcesUrl,
+  deleteSourcesUrl,
+  fetchLeadAttachmentUrl,
+  createLeadAttachmentUrl,
 } from "./urls";
 
 /**
@@ -114,7 +139,7 @@ export class CommunityClient extends ApiClient {
       ISignupResponse,
       ISignupPayload,
       IApiError
-    >(postRegisterUrl(), payload, {
+    >(registerUrl(), payload, {
       requiresAuth: false,
     });
 
@@ -204,9 +229,89 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
+  // create lead attachment
+
+  public createLeadAttachment = async (
+    payload: ICreateLeadAttachmentPayload
+  ) => {
+    const response = await this.post<ICreateLeadAttachmentResponse>(
+      createLeadAttachmentUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data;
+  };
+
+  // create sources
+  public createSources = async (payload: ICreateSourcesPayload) => {
+    const response = await this.post<ICreateSourcesResponse>(
+      createSourcesUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  // all statuses
+
+  public createStatuses = async (payload: ICreateStatusesPayload) => {
+    const response = await this.post<ICreateStatusesResponse>(
+      createStatusesUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data;
+  };
+
   public updateLead = async ({ id, payload }: IUpdateLeadPayload) => {
     const response = await this.put<IUpdateLeadResponse>(
       updateLeadUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  // update statuses
+  public updateStatuses = async ({ id, payload }: IUpdateStatusesPayload) => {
+    const response = await this.put<IUpdateStatusesResponse>(
+      updateStatusesUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  //update Sources
+  public updateSources = async ({ id, payload }: IUpdateSourcesPayload) => {
+    const response = await this.put<IUpdateSourcesResponse>(
+      updateSourcesUrl(id),
       payload,
       {
         requiresAuth: true,
@@ -264,6 +369,38 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
+  // delete statuses
+
+  public deleteStatuses = async (id: string) => {
+    const response = await this.del<IDeleteStatusesResponse>(
+      deleteStatusesUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  // delete sources
+
+  public deleteSources = async (id: string) => {
+    const response = await this.del<IDeleteSourcesResponse>(
+      deleteSourcesUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
   // delete lead follow up
   public deleteLeadFollowUp = async (id: string) => {
     const response = await this.del<IDeleteLeadFollowUpResponse>(
@@ -300,6 +437,41 @@ export class CommunityClient extends ApiClient {
   public getLeadDetailById = async (id: string) => {
     const response = await this.get<ILeadDetailResponse>(
       getLeadDetailByIdUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    // TODO: Remove this comment once the isMock is removed above.
+    return response.data.data;
+  };
+
+  // get by id Sources
+  public getSourcesDetailById = async (id: string) => {
+    const response = await this.get<ISourcesDetailResponse>(
+      getSourcesDetailByIdUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    // TODO: Remove this comment once the isMock is removed above.
+    return response.data.data;
+  };
+
+  // all statuses get by id
+
+  public getStatusesDetailById = async (id: string) => {
+    const response = await this.get<IStatusesDetailResponse>(
+      getStatusesDetailByIdUrl(id),
       {
         requiresAuth: false,
       }
@@ -377,9 +549,26 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
+  // All lead attachment
+
+  public fetchAllLeadAttachment = async () => {
+    const response = await this.get<IAllLeadAttachmentResponse>(
+      fetchLeadAttachmentUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
+  };
+
   // all lead follow ups
   public fetchAllLeadFollowUp = async () => {
-    const response = await this.get<IAllLeadResponse>(
+    const response = await this.get<IAllLeadFollowUpResponse>(
       fetchAllLeadFollowUpUrl(),
       {
         requiresAuth: false,

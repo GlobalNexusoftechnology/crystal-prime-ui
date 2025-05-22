@@ -35,7 +35,7 @@ export interface IAllStatusResponse {
 }
 
 export interface IAllStatusesList {
- id: string;
+  id: string;
   created_at: string;
   updated_at: string;
   deleted: boolean;
@@ -48,6 +48,13 @@ export interface IAllStatusesResponse {
   message: string;
   success: true;
   data: IAllStatusesList[];
+}
+
+export interface ICreateStatusResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllStatusesList;
 }
 
 export interface IAllLeadsList {
@@ -76,6 +83,58 @@ export interface IAllLeadResponse {
   data: IAllLeadsList[];
 }
 
+//
+export interface ICreateStatusResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllStatusesList;
+}
+
+export interface ICreateSourcesPayload {
+  name: string;
+}
+
+export interface ICreateSourcesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateSourcesPayload;
+}
+
+//get by id all statuses
+export interface IStatusesDetailList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+}
+
+export interface IStatusesDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IStatusesDetailList[];
+}
+
+export interface ISourcesDetailList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+}
+
+export interface ISourcesDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ISourcesDetailList;
+}
+
 export interface IAllSourcesList {
   id: string;
   created_at: string;
@@ -90,6 +149,28 @@ export interface IAllSourcesResponse {
   message: string;
   success: true;
   data: IAllSourcesList[];
+}
+
+//get lead attachment
+export interface IAllLeadAttachmentList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  file_path: string;
+  file_type: string;
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  lead: any | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  uploaded_by: any | null;
+}
+
+export interface IAllLeadAttachmentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllLeadAttachmentList[];
 }
 
 export interface IVerifyEmailPayload {
@@ -127,11 +208,64 @@ export interface ICreateLeadResponse {
   data: ICreateLeadPayload[];
 }
 
+
+// create lead attachment
+
+export interface ICreateLeadAttachmentPayload {
+  lead_id: string;
+  uploaded_by: null;
+  file_path: string;
+  file_type: string;
+}
+export interface ICreateLeadAttachmentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateLeadAttachmentPayload[];
+}
+
+// all status
+export interface ICreateStatusesPayload {
+  name: string;
+}
+export interface ICreateStatusesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateStatusesPayload[];
+}
+
 export interface IUpdateLeadResponse {
   status: boolean;
   message: string;
   success: true;
   data: ICreateLeadPayload;
+}
+
+export interface IUpdateStatusesPayload {
+  id: string;
+  payload: ICreateStatusesPayload;
+}
+
+export interface IUpdateStatusesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateStatusesPayload;
+}
+
+//update sources
+
+export interface IUpdateSourcesPayload {
+  id: string;
+  payload: ICreateSourcesPayload;
+}
+
+export interface IUpdateSourcesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateSourcesPayload;
 }
 
 export interface IUpdateLeadFollowUpResponse {
@@ -176,7 +310,24 @@ export interface IDeleteLeadResponse {
   status: boolean;
   message: string;
   success: true;
-  data: ICreateLeadFollowUpPayload;
+  data: ICreateLeadPayload;
+}
+
+// all delete statuses
+
+export interface IDeleteStatusesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateStatusesPayload;
+}
+
+// delete sources
+export interface IDeleteSourcesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateSourcesPayload;
 }
 
 //delete lead follow up
@@ -196,6 +347,13 @@ export interface ILeadDetailResponse {
   message: string;
   success: true;
   data: IAllLeadsList;
+}
+
+export interface IAllLeadFollowUpResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateLeadFollowUpPayload[];
 }
 
 export interface ILeadFollowUpDetailList {

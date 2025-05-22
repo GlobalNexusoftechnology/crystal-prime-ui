@@ -1,4 +1,4 @@
-import { IUpdateLeadFollowUpResponse,useMutation } from "@/services";
+import { IDeleteSourcesResponse, useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 
 import { COMMUNITY_CLIENT } from "../communityClient";
@@ -6,25 +6,25 @@ import { COMMUNITY_CLIENT } from "../communityClient";
 /**
  * This is to track the login mutation keys in react query cache.
  */
-const UPDATE_LEAD_FOLLOWUP_MUTATION_KEY = "update-lead-followup-mutation-key";
+const DELETE_SOURCES_MUTATION_KEY = "delete-sources-mutation-key";
 
-interface IUpdateLeadFollowUpOptions {
-  onSuccessCallback: (data: IUpdateLeadFollowUpResponse) => void;
-  onErrorCallback?: (err: IApiError) => void;
+interface IDeleteSourcesOptions {
+  onSuccessCallback: (data: IDeleteSourcesResponse) => void;
+  onErrorCallback?: (error: IApiError) => void;
 }
 
 /**
- * This religion the admin Mu college.
+ * This register the user or vender to carpet market.
  */
-export const useUpdateLeadFollowUpMutation = ({
+export const useDeleteSourcesMutation = ({
   onSuccessCallback,
   onErrorCallback,
-}: IUpdateLeadFollowUpOptions) => {
+}: IDeleteSourcesOptions) => {
   const { mutate, isPending, error } = useMutation({
-    mutationKey: [UPDATE_LEAD_FOLLOWUP_MUTATION_KEY],
+    mutationKey: [DELETE_SOURCES_MUTATION_KEY],
     networkMode: "always", // Even make calls when offline
     retry: false, // For login Request, do not retry failed requests.
-    mutationFn: COMMUNITY_CLIENT.updateLeadFollowUp,
+    mutationFn: COMMUNITY_CLIENT.deleteSources,
     onSuccess: (response) => {
       onSuccessCallback(response);
     },
@@ -32,7 +32,7 @@ export const useUpdateLeadFollowUpMutation = ({
       errorLogToRemoteUtil({
         error,
         errorCode: ErrorEventsEnum.ERROR_IN_API_CALL,
-        errorTitle: "Error in useUpdateLeadFollowUpMutation",
+        errorTitle: "Error in useDeleteSourcesMutation",
         message: error?.message,
       });
 
@@ -45,12 +45,6 @@ export const useUpdateLeadFollowUpMutation = ({
   return {
     error,
     isPending,
-    onEditLead: mutate,
+    onDeleteSources: mutate,
   };
 };
-
-
-
-
-
-
