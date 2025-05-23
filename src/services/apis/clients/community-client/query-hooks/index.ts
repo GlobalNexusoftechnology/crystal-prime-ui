@@ -37,3 +37,5 @@ export {useCreateUserMutation} from './useCreateUserMutation';
 export {useUserDetailQuery}  from './useUserDetailQuery';
 export {useUpdateUserMutation} from "./useUpdateUserMutation";
 export {useDeleteUserMutation} from "./useDeleteUserMutation";
+export { useAllLeadStatusHistoryQuery } from "./useAllLeadStatusHistoryQuery";
+

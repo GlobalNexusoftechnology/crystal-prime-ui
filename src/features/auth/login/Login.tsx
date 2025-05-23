@@ -12,59 +12,41 @@ import {
 } from "@/services";
 import { IApiError } from "@/utils";
 import { useRouter } from "next/navigation";
-/**
- * Login Component
- *
- * This component renders a login form that allows users to sign in to their account. It uses Formik for form management and Yup for validation. The form includes fields for entering an email and password, as well as error handling for form validation.
- *
- * Key Features:
- * - Form handling with Formik, including form values, validation, and submission.
- * - Yup validation schema for email (must be valid and required) and password (must be at least 6 characters and required).
- * - Conditional rendering of error messages for form fields when validation fails.
- * - Responsive design with Tailwind CSS for better usability on different screen sizes.
- * - Navigation links for "Forgot Password?" and "Create Account" pages.
- */
+import toast from "react-hot-toast"; // ✅ import toast
+
 export function Login() {
   const router = useRouter();
   const { addNewSession } = useAuthStore();
-  // On successful login, store session and redirect
+
   const handleSuccessCallback = (data: ILoginUserResponseData) => {
     addNewSession({
       user: data?.data?.user,
       access_token: data?.data.access_token || "",
       refresh_token: data?.data.refresh_token || "",
     });
-    window.alert(data?.data?.message);
-    const role = data.data.user?.role?.toLowerCase();
 
-    if (role === "admin") {
-      router.push("/admin/dashboard");
-    } else if (role === "developer") {
+    toast.success(data?.data?.message || "Login successful 🎉");
+
+    const role = data.data.user?.role?.toLowerCase();
+    if (role === "admin" || role === "developer") {
       router.push("/admin/dashboard");
     }
   };
 
-  // On login failure, show error
   const handleErrorCallback = (error: IApiError) => {
     const response = error.response as { data?: { message?: string } };
-    if (error) {
-      const errMsg =
-        response?.data?.message ||
-        error?.message ||
-        "Login failed. Please try again.";
-      window.alert(errMsg);
-    }
+    const errMsg =
+      response?.data?.message ||
+      error?.message ||
+      "Login failed. Please try again.";
+    toast.error(errMsg); // ✅ toast error
   };
 
-  // Use mutation hook for login API
   const { submitLogin, isPending } = useLoginMutation({
     onSuccessCallback: handleSuccessCallback,
     onErrorCallback: handleErrorCallback,
   });
 
-  /**
-   * Formik handles form values, validation, and submission.
-   */
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -78,10 +60,6 @@ export function Login() {
         .min(6, "Password must be at least 6 characters")
         .required("Password is required"),
     }),
-    /**
-     * On submit we simply forward the Formik values
-     * to the React-Query mutation.
-     */
     onSubmit: (values) => submitLogin(values),
   });
 

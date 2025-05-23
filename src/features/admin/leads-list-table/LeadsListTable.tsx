@@ -11,6 +11,7 @@ import { ExportIcon } from "@/features";
 import { EditLeadModal, LeadDetailModal } from "./components";
 import {
   IDeleteLeadResponse,
+  useAllLeadDownloadExcelQuery,
   useAllLeadsListQuery,
   useAllStatusesQuery,
   useDeleteLeadMutation,
@@ -31,6 +32,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const { data, isLoading, leadsRefetch } = useAllLeadsListQuery();
   const { allStatusesData } = useAllStatusesQuery();
+  const { data: allLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
+
   const {
     leadDetailById,
     isLoading: isLeadDetailLoading,
@@ -80,14 +83,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       onClick: (row) => {
         onDeleteLead(row.id);
       },
-      className: "text-primary",
-    },
-    {
-      label: "Export As xlsx",
-      onClick: (row) => {
-        console.log("Export clicked", row.id);
-      },
-      className: "text-primary whitespace-nowrap",
+      className: "text-red-500",
     },
   ];
 
@@ -188,6 +184,23 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     });
   }, [leadsList, searchQuery]);
 
+  const downloadFile = (fileURL: string, filename?: string) => {
+    const link = document.createElement("a");
+    link.href = fileURL;
+    link.download = filename || "download.xlsx";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleLeadDownloadExcel = () => {
+    if (allLeadDownloadExcel?.fileURL) {
+      downloadFile(`${allLeadDownloadExcel?.fileURL}`, "leads.xlsx");
+    } else {
+      console.error("Excel download URL is not available");
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
@@ -226,6 +239,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             variant="background-white"
             rightIcon={<ExportIcon />}
             width="w-full md:w-fit"
+            onClick={handleLeadDownloadExcel}
           />
         </div>
       </div>

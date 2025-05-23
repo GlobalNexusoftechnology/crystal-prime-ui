@@ -2,6 +2,8 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, InputField, UploadDocument } from "@/components";
+import { useAllLeadAttachmentQuery } from "@/services";
+import { formattingDate } from "@/utils";
 
 const validationSchema = Yup.object().shape({
   attachments: Yup.mixed().test(
@@ -21,6 +23,7 @@ interface IAttachmentsProps {
 }
 
 export function Attachments({ showForm, setShowForm }: IAttachmentsProps) {
+  const { allLeadAttachmentData } = useAllLeadAttachmentQuery();
   const formik = useFormik({
     initialValues: {
       attachments: [] as File[],
@@ -52,7 +55,6 @@ export function Attachments({ showForm, setShowForm }: IAttachmentsProps) {
             label="Upload Document"
             placeholder="Upload Document"
             onChange={handleFileChange}
-           
           />
 
           <InputField
@@ -77,18 +79,21 @@ export function Attachments({ showForm, setShowForm }: IAttachmentsProps) {
           </div>
         </form>
       ) : (
-        [1, 2].map((item) => (
+        allLeadAttachmentData &&
+        allLeadAttachmentData?.map((attachment, idx) => (
           <div
-            key={item}
+            key={idx}
             className="flex flex-col gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
           >
             <div className="flex flex-col gap-4 2xl:gap-[1vw]">
               <div className="text-primary flex items-center underline">
-                <p>https://aisha.name</p>
+                <p>{attachment.file_path}</p>
               </div>
               <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
                 <p>Created At:</p>
-                <p>26 May 2025, 4:00 PM</p>
+                <p>
+                  {formattingDate(`${attachment.created_at}`, "toReadable")}
+                </p>
               </div>
             </div>
           </div>

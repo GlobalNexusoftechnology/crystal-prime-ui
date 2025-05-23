@@ -172,6 +172,27 @@ export interface IAllLeadAttachmentResponse {
   success: true;
   data: IAllLeadAttachmentList[];
 }
+export interface IAllLeadStatusHistoryResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllLeadStatusHistoryList[];
+}
+export interface IAllLeadStatusHistoryList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  status_remarks: string;
+  lead: IAllLeadsList
+  status: IStatus
+  changed_by: string;
+
+}
+export interface ICreateLeadStatusHistoryPayload {
+  data: IAllLeadStatusHistoryList;
+}
 
 export interface IVerifyEmailPayload {
   email: string;
@@ -286,8 +307,8 @@ export interface IUpdateLeadFollowUpPayload {
 }
 
 export interface ICreateLeadFollowUpPayload {
-  lead_id: string;
-  user_id?: string | null;
+  lead_id: ILeadDetailResponse;
+  user_id?: IUser;
   status:
     | "PENDING"
     | "RESCHEDULE"
@@ -385,11 +406,15 @@ export interface ILeadFollowUpDetailResponse {
   data: ILeadFollowUpDetailList;
 }
 
+export interface ILeadDownloadExcel {
+  fileURL: string
+}
+
 export interface IAllLeadDownloadExcelResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllLeadsList[];
+  fileURL: ILeadDownloadExcel;
 }
 
 export interface ILeadDownloadExcelResponse {

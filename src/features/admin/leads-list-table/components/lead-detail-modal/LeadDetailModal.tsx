@@ -80,7 +80,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div>
             <p className="font-medium text-[1rem] 2xl:text-[1vw]">Created on</p>
             <p className="font-semibold text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data.assignedTo.first_name}{data.assignedTo.last_name}
+              {data.first_name} {data.last_name}
             </p>
           </div>
           <div>

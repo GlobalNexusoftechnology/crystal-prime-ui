@@ -6,6 +6,7 @@ import {
   IAllLeadDownloadExcelResponse,
   IAllLeadFollowUpResponse,
   IAllLeadResponse,
+  IAllLeadStatusHistoryResponse,
   IAllRoleResponse,
   IAllSourcesResponse,
  
@@ -95,12 +96,12 @@ import {
   deleteSourcesUrl,
   fetchLeadAttachmentUrl,
   createLeadAttachmentUrl,
-
   fetchAllUsersUrl,
   createUserUrl,
   deleteUserUrl,
   getUserDetailByIdUrl,
   updateUserUrl,
+  fetchLeadStatusHistoryUrl,
 } from "./urls";
 
 /**
@@ -584,6 +585,23 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
+  // All lead status history
+
+  public fetchAllLeadStatusHistory = async () => {
+    const response = await this.get<IAllLeadStatusHistoryResponse>(
+      fetchLeadStatusHistoryUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
+  };
+
   // all lead follow ups
   public fetchAllLeadFollowUp = async () => {
     const response = await this.get<IAllLeadFollowUpResponse>(
@@ -612,7 +630,7 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
 
-    return response?.data.data;
+    return response?.data;
   };
 
   public fetchAllStatuses = async () => {
