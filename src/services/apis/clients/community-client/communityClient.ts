@@ -8,7 +8,9 @@ import {
   IAllLeadResponse,
   IAllRoleResponse,
   IAllSourcesResponse,
+ 
   IAllStatusesResponse,
+  IAllUsersResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
   ICreateLeadAttachmentPayload,
@@ -19,12 +21,17 @@ import {
   ICreateLeadResponse,
   ICreateSourcesPayload,
   ICreateSourcesResponse,
+
   ICreateStatusesPayload,
   ICreateStatusesResponse,
+  ICreateUserPayload,
+  ICreateUserResponse,
   IDeleteLeadFollowUpResponse,
   IDeleteLeadResponse,
   IDeleteSourcesResponse,
+ 
   IDeleteStatusesResponse,
+  IDeleteUserResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
   ILeadFollowUpDetailResponse,
@@ -39,6 +46,7 @@ import {
   ISignupPayload,
   ISignupResponse,
   ISourcesDetailResponse,
+
   IStatusesDetailResponse,
   IUpdateLeadFollowUpPayload,
   IUpdateLeadFollowUpResponse,
@@ -46,8 +54,12 @@ import {
   IUpdateLeadResponse,
   IUpdateSourcesPayload,
   IUpdateSourcesResponse,
+
   IUpdateStatusesPayload,
   IUpdateStatusesResponse,
+  IUpdateUserPayload,
+  IUpdateUserResponse,
+  IUserDetailResponse,
   IVerifyEmailPayload,
   IVerifyEmailResponse,
 } from "./types";
@@ -83,6 +95,12 @@ import {
   deleteSourcesUrl,
   fetchLeadAttachmentUrl,
   createLeadAttachmentUrl,
+
+  fetchAllUsersUrl,
+  createUserUrl,
+  deleteUserUrl,
+  getUserDetailByIdUrl,
+  updateUserUrl,
 } from "./urls";
 
 /**
@@ -623,7 +641,89 @@ export class CommunityClient extends ApiClient {
 
     return response?.data.data;
   };
+// staff
+
+  public  fetchAllUsers = async () => {
+   const response = await this.get<IAllUsersResponse>(fetchAllUsersUrl(), {
+     requiresAuth: false,
+   });
+  
+   if (!response?.success) {
+     throw response?.errorData;
+   }
+  
+   return response?.data.data;
+  };
+
+//post 
+  public createUser = async (payload: ICreateUserPayload) => {
+    const response = await this.post<ICreateUserResponse>(
+      createUserUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+// get by id
+
+  public getUserDetailById = async (id: string) => {
+    const response = await this.get<IUserDetailResponse>(
+      getUserDetailByIdUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    // TODO: Remove this comment once the isMock is removed above.
+    return response.data.data;
+  };
+
+//update 
+  public updateUser = async ({ id, payload }: IUpdateUserPayload) => {
+    const response = await this.put<IUpdateUserResponse>(
+      updateUserUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  
+  public deleteUser = async (id: string) => {
+    const response = await this.del<IDeleteUserResponse>(
+      deleteUserUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  //above
 }
+ 
+
+
+
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.

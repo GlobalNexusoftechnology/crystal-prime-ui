@@ -80,7 +80,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div>
             <p className="font-medium text-[1rem] 2xl:text-[1vw]">Created on</p>
             <p className="font-semibold text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data.assignedTo.name}
+              {data.assignedTo.first_name}{data.assignedTo.last_name}
             </p>
           </div>
           <div>
@@ -138,10 +138,10 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             </p>
             <div className="flex items-center gap-2">
               <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-[1rem] 2xl:text-[1vw] font-medium">
-                {getInitials(data.assignedTo.name)}
+                {getInitials(data.assignedTo.first_name)} {getInitials(data.assignedTo.last_name)}
               </span>
               <p className="font-semibold text-textColor text-[1rem] 2xl:text-[1vw]">
-                {data.assignedTo.name}
+                {data.assignedTo.first_name} {data.assignedTo.last_name}
               </p>
             </div>
           </div>
