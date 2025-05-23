@@ -1,123 +1,77 @@
 "use client";
-import React, { useState } from "react";
+
+import { useState } from "react";
+import { LeadSources } from "./components";
+import { SettingsTab } from "./components";
+import { LeadStatus } from "./components";
 
 /**
- * List of notification types to be displayed in the settings panel.
- */
-const notifications = [
-  "New Task Assigned",
-  "Project Status Update",
-  "Comment/Note Added on Task",
-  "Follow-up Reminder",
-  "Milestone Achieved Notification",
-  "Staff Project Alert",
-  "Staff Follow Up Progress",
-  "Staff Lead Progress",
-];
-
-/**
- * Settings component for managing individual notification preferences.
- * Provides toggle buttons for "Email" and "In App" (assumed to be SMS or internal alerts).
+ * `Settings` is the main component for managing the settings page.
+ * 
+ * It allows the user to toggle between different settings sections:
+ * - General settings
+ * - Lead sources
+ * - Lead status
+ * - Roles (currently a placeholder)
  */
 export function Settings() {
-  /**
-   * State array to manage the toggle status of "Email" notifications per item.
-   * Initially set to `false` (disabled) for all.
-   */
-  const [emailStates, setEmailStates] = useState(
-    Array(notifications.length).fill(false)
-  );
-
-  /**
-   * State array to manage the toggle status of "In App" (SMS/internal) notifications per item.
-   * Initially set to `true` (enabled) for all.
-   */
-  const [smsStates, setSmsStates] = useState(
-    Array(notifications.length).fill(true)
-  );
-
-  /**
-   * Toggle the "Email" notification state for a specific index.
-   * @param index - The index of the notification item to update.
-   */
-  const toggleEmail = (index: number) => {
-    setEmailStates((prevStates) =>
-      prevStates.map((state, i) => (i === index ? !state : state))
-    );
-  };
-
-  /**
-   * Toggle the "In App" (SMS/internal) notification state for a specific index.
-   * @param index - The index of the notification item to update.
-   */
-  const toggleSMS = (index: number) => {
-    setSmsStates((prevStates) =>
-      prevStates.map((state, i) => (i === index ? !state : state))
-    );
-  };
+  // Tracks the currently active tab/page
+  const [activePage, setActivePage] = useState("settings");
 
   return (
-    <div className="bg-white rounded-lg pb-2 2xl:pb-3">
-      <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium ml-5 py-5">
-        Setting
-      </h1>
-      <div className="p-6 sm:w-[42rem] 2xl:w-[42vw] bg-[#F8F8F8] rounded-xl shadow-md space-y-4 border-[#D7D7D7] m-5">
-        {notifications.map((name, idx) => (
-          <div key={idx} className="flex justify-between items-center pb-3 2xl:pb-8">
-            <div className="text-[0.7rem] sm:text-[1rem] 2xl:text-[1vw] font-medium text-gray-800 w-1/2">
-              {name}
-            </div>
+    <div className="p-4 bg-white rounded-xl">
+      {/* Navigation Buttons to switch between settings views */}
+      <div className="flex space-x-2 pb-2 mb-4">
+        <button
+          className={`px-2 py-2 rounded font-semibold ${
+            activePage === "settings"
+              ? "border-b-4 border-[#65558F] text-lg"
+              : "text-lg"
+          }`}
+          onClick={() => setActivePage("settings")}
+        >
+          Settings
+        </button>
 
-            <div className="flex gap-2 items-center">
-              <div className="flex flex-col gap-1">
-                {/* SMS/In App Toggle */}
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => toggleSMS(idx)}
-                    className={`relative inline-flex h-6 w-10 items-center rounded-full transition-colors duration-300 ${
-                      smsStates[idx]
-                        ? "bg-purple-600"
-                        : "bg-gray-300 border-2 border-purple-600"
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
-                        smsStates[idx] ? "translate-x-5" : "translate-x-0"
-                      }`}
-                    />
-                  </button>
-                  <div className="flex items-start gap-2 text-[0.7rem] sm:text-[1rem] 2xl:text-[1vw]">
-                    Email
-                  </div>
-                </div>
+        <button
+          className={`px-2 py-2 rounded ${
+            activePage === "leadSources"
+              ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm"
+              : "text-sm"
+          }`}
+          onClick={() => setActivePage("leadSources")}
+        >
+          Lead Sources
+        </button>
 
-                {/* Email Toggle */}
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => toggleEmail(idx)}
-                    className={`relative inline-flex h-6 w-10 items-center rounded-full transition-colors duration-300 ${
-                      emailStates[idx]
-                        ? "bg-purple-600"
-                        : "bg-gray-300 border-2 border-purple-600"
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${
-                        emailStates[idx] ? "translate-x-5" : "translate-x-0"
-                      }`}
-                    />
-                  </button>
-                  <div className="flex items-start gap-2 text-[0.7rem] sm:text-[1rem] 2xl:text-[1vw]">
-                    In App
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+        <button
+          className={`px-2 py-2 rounded ${
+            activePage === "leadStatus"
+              ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm"
+              : "text-sm"
+          }`}
+          onClick={() => setActivePage("leadStatus")}
+        >
+          Lead Status
+        </button>
+
+        <button
+          className={`px-2 py-2 rounded ${
+            activePage === "roles"
+              ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm"
+              : "text-sm"
+          }`}
+          onClick={() => setActivePage("role")}
+        >
+          Role
+        </button>
       </div>
+
+      {/* Conditional Rendering of Selected Tab Content */}
+      {activePage === "settings" && <SettingsTab />}
+      {activePage === "leadSources" && <LeadSources />}
+      {activePage === "leadStatus" && <LeadStatus />}
+      {activePage === "role" && "role"} {/* Placeholder for role component */}
     </div>
   );
 }
