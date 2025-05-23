@@ -18,6 +18,7 @@ export { useLeadDetailQuery } from "./useLeadDetailQuery";
 export { useAllSourcesQuery } from "./useAllSourcesQuery";
 export { useAllStatusesQuery } from "./useAllStatusesQuery";
 export { useUpdateLeadMutation } from "./useUpdateLeadMutation";
+export { useAllRoleListQuery } from "./useAllRoleListQuery";
 export { useCreateStatusesMutation} from "./useCreateStatusesMutation"
 export {useStatusesDetailQuery} from "./useStatusesDetailQuery";
 export {useUpdateStatusesMutation} from "./useUpdateStatusMutation";

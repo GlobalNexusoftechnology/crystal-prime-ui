@@ -459,3 +459,18 @@ export interface ISignupResponse {
   message: string;
   data: ISentOtpPayload;
 }
+
+export interface IAllRoleResponse {
+  status: boolean;
+  message: string;
+data: IAllRoleList[];
+}
+
+export interface IAllRoleList {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  // permissions: Permission[];
+}

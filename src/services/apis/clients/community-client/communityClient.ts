@@ -6,6 +6,7 @@ import {
   IAllLeadDownloadExcelResponse,
   IAllLeadFollowUpResponse,
   IAllLeadResponse,
+  IAllRoleResponse,
   IAllSourcesResponse,
   IAllStatusesResponse,
   IChangePasswordPayload,
@@ -71,6 +72,7 @@ import {
   fetchAllStatusesUrl,
   updateLeadUrl,
   updateLeadFollowUpUrl,
+  fetchAllRoleListUrl,
   getStatusesDetailByIdUrl,
   updateStatusesUrl,
   deleteStatusesUrl,
@@ -608,6 +610,18 @@ export class CommunityClient extends ApiClient {
     }
 
     return response?.data?.data;
+  };
+
+  public fetchAllRoleList = async () => {
+    const response = await this.get<IAllRoleResponse>(fetchAllRoleListUrl(), {
+      requiresAuth: false,
+    });
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
   };
 }
 
