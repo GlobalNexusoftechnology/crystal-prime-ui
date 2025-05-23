@@ -2,8 +2,6 @@ import Image from "next/image";
 import { ReactNode } from "react";
 
 import { ImageRegistry } from "@/constants";
-import { Button } from "@/components";
-import Link from "next/link";
 
 /**
  * AuthCard Component
@@ -36,7 +34,7 @@ export const AuthCard: React.FC<IAuthCardProps> = ({
           src={ImageRegistry.satkarBackground}
           alt="website-background"
           fill
-          className="object-cover w-full h-full"
+          className="object-fit w-full h-full"
         />
       </div>
       <div className="absolute top-[-2vw] left-0 flex justify-between items-center w-full px-4 md:px-10 xl:px-[6vw]">
@@ -47,17 +45,14 @@ export const AuthCard: React.FC<IAuthCardProps> = ({
             className="w-full h-full object-contain"
           />
         </div>
-        <Link href="/sign-up" className="cursor-pointer z-50">
-          <Button title="Sign up" />
-        </Link>
       </div>
 
       <div className="xl:absolute xl:top-[50%] xl:left-[50%] xl:translate-x-[-50%] xl:translate-y-[-50%] flex flex-col gap-4 2xl:gap-[1vw] justify-center items-center w-full h-full">
         <div className="bg-whiteOverlay box-shadow flex flex-col p-6 2xl:p-[1.5vw] border-b-4 2xl:border-b-[0.4vw] border-b-primary rounded-xl 2xl:rounded-[0.75vw] w-full sm:w-[60%] md:w-[50vw] lg:w-[40vw] xl:w-[30vw]">
-          <h1 className="text-2xl md:text-3xl 2xl:text-[1.875vw] font-bold mb-4 2xl:mb-[1vw] text-center">
+          <h1 className="text-2xl md:text-3xl 2xl:text-[1.875vw] font-semibold mb-4 2xl:mb-[1vw] text-center">
             {title}
           </h1>
-          <div className="min-h-[300px] max-h-[300px] 2xl:min-h-[25vw] px-2 overflow-y-auto scrollbar-hidden">
+          <div className="px-2 overflow-y-auto scrollbar-hidden">
             {children}
           </div>
         </div>

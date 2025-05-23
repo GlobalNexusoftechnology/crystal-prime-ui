@@ -50,7 +50,13 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   // Fetch lead details on view/edit open
   useEffect(() => {
     if (leadId) refetchLeadDetail();
-  }, [leadId, leadDetailById, isEditLeadModalOpen, viewLead, refetchLeadDetail]);
+  }, [
+    leadId,
+    leadDetailById,
+    isEditLeadModalOpen,
+    viewLead,
+    refetchLeadDetail,
+  ]);
 
   const actions: ITableAction<ILeadsListProps>[] = [
     {
@@ -58,7 +64,6 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       onClick: (row) => {
         setLeadId(row.id);
         setIsEditLeadModalOpen(true);
-
       },
       className: "text-primary",
     },
@@ -184,8 +189,10 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
-      <div className="flex justify-between items-center gap-4 2xl:gap-[1vw]">
-        <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">Leads List</h1>
+      <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
+        <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
+          Leads List
+        </h1>
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           <SearchBar
             onSearch={handleSearch}
@@ -193,12 +200,19 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
           {setAddLeadModalOpen && (
-            <Button
-              title="Add Lead"
-              variant="background-white"
-              width="w-full md:w-fit"
-              onClick={() => setAddLeadModalOpen(true)}
-            />
+            <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+              <Button
+                title="Add Lead"
+                variant="background-white"
+                width="w-full md:w-fit"
+                onClick={() => setAddLeadModalOpen(true)}
+              />
+              <Button
+                title="Download Template"
+                variant="background-white"
+                width="w-full md:w-fit"
+              />
+            </div>
           )}
           <Dropdown
             options={statusOptions}
@@ -220,7 +234,11 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       ) : filteredLeads.length === 0 ? (
         <div className="text-center py-6 text-gray-500">No leads found.</div>
       ) : (
-        <Table data={filteredLeads} columns={leadsListColumn} actions={actions} />
+        <Table
+          data={filteredLeads}
+          columns={leadsListColumn}
+          actions={actions}
+        />
       )}
 
       {/* Conditionally render modals only when data is loaded */}
@@ -231,11 +249,10 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           onClose={() => setViewLead(null)}
         />
       )}
-      {leadDetailById && isEditLeadModalOpen && !isLeadDetailLoading &&  (
+      {leadDetailById && isEditLeadModalOpen && !isLeadDetailLoading && (
         <EditLeadModal
           setIsEditLeadModalOpen={setIsEditLeadModalOpen}
           lead={leadDetailById}
-          
         />
       )}
     </div>

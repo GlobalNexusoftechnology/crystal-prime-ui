@@ -28,7 +28,7 @@ export function ResetPassword() {
     <div className="flex justify-center items-center">
       <AuthCard
         title="Forget Password"
-        copyright="Copyright ©Satkar.com | 2025"
+        copyright="Copyrights and developed © Islahdata.com"
       >
         <Formik
           initialValues={{

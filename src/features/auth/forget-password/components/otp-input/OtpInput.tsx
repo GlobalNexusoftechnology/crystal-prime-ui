@@ -49,7 +49,7 @@ export function OtpInput({ value, onChange }: OtpInputProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="text-lg md:text-xl 2xl:text-[1.5vw] font-semibold">
+      <h1 className="text-[1rem] 2xl:text-[1vw]">
         Enter OTP
       </h1>
       <div className="flex gap-2 justify-start">

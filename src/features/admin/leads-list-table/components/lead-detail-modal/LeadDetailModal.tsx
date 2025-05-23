@@ -1,4 +1,5 @@
-import { InputField, ModalOverlay } from "@/components";
+"use client";
+import { ModalOverlay } from "@/components";
 import {
   ILeadsListDetailsProps,
   ILeadsListProps,
@@ -7,23 +8,10 @@ import {
 import { PhoneIcon, ThreeIcon, MailIcon } from "@/features";
 import { getInitials } from "@/utils";
 import Image from "next/image";
-
-const notes = [
-  {
-    id: 1,
-    name: "Nisha Sharma",
-    message:
-      "Followed up via WhatsApp. Awaiting response regarding package details.",
-    timestamp: "20/02/2024 10:24 AM",
-  },
-  {
-    id: 2,
-    name: "Nisha Sharma",
-    message:
-      "Followed up via WhatsApp. Awaiting response regarding package details.",
-    timestamp: "20/02/2024 10:24 AM",
-  },
-];
+import { useState } from "react";
+import { FiPlusSquare } from "react-icons/fi";
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import { Attachments, Followups, StatusHistory } from "./components";
 
 interface LeadDetailsModalProps {
   lead: ILeadsListProps;
@@ -31,7 +19,12 @@ interface LeadDetailsModalProps {
   data: ILeadsListDetailsProps;
 }
 
+const tabs = ["Followups", "Attachment", "Status History"];
+
 export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
+  const [activeTab, setActiveTab] = useState("Followups");
+  const [showForm, setShowForm] = useState(false);
+
   return (
     <ModalOverlay isOpen={true} onClose={onClose} modalClassName="2xl:w-[40vw]">
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
@@ -154,34 +147,45 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           </div>
         </div>
 
-        {/* Notes Section */}
-
-        <div className="bg-white rounded-lg p-4 space-y-4 border border-gray-200 overflow-y-auto max-h-64">
-          <p className="font-medium text-gray-700 text-[1rem] 2xl:text-[1vw]">
-            Notes
-          </p>
-          {notes.map((note) => (
-            <div
-              key={note.id}
-              className="bg-gray-100 p-3 rounded-md border border-gray-200 space-y-1"
-            >
-              <p className="text-[1rem] 2xl:text-[1vw] font-semibold text-textColor  underline">
-                {note.name}
-              </p>
-              <p className=" text-gray-700 text-[1rem] 2xl:text-[1vw]">
-                {note.message}
-              </p>
-              <p className="text-[1rem] 2xl:text-[1vw] text-gray-500">
-                {note.timestamp}
-              </p>
+        <div className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:px-[1vw] bg-white border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
+          {/* Tabs */}
+          <div className="flex justify-between items-center">
+            <div className="flex space-x-4">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  className={`pb-2 font-medium ${
+                    activeTab === tab
+                      ? "border-b-2 border-primary text-primary"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    setShowForm(false); // Reset form on tab switch
+                  }}
+                >
+                  {tab}
+                </button>
+              ))}
             </div>
-          ))}
-          <div className="pt-2 ">
-            <InputField
-              placeholder="Enter Comments"
-              name="email"
-              type="email"
-            />
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="flex items-center gap-2 text-primary"
+            >
+              {showForm ? (
+                <IoMdCloseCircleOutline className="w-5 h-5" />
+              ) : (
+                <FiPlusSquare className="w-5 h-5" />
+              )}
+              <span>{showForm ? "Close" : "Add"}</span>
+            </button>
+          </div>
+
+          {/* Tab Contents */}
+          <div>
+            {activeTab === "Followups" && <Followups showForm={showForm} setShowForm={setShowForm}/>}
+            {activeTab === "Attachment" && <Attachments showForm={showForm} setShowForm={setShowForm}/>}
+            {activeTab === "Status History" && <StatusHistory showForm={showForm} setShowForm={setShowForm}/>}
           </div>
         </div>
       </div>

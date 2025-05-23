@@ -57,9 +57,9 @@ export function LeadManagement() {
       <ModalOverlay
         isOpen={isAddLeadModalOpen}
         onClose={() => handleOpenForm("")}
-        modalClassName="w-[35rem] h-[35rem] 2xl:w-[36vw] 2xl:h-[38vw] "
+        modalClassName="w-[35rem] 2xl:w-[36vw]"
       >
-        <div className="bg-white border border-gray-300 rounded-lg h-[31rem] 2xl:h-[34vw] overflow-y-auto md:overflow-visible">
+        <div className="bg-white border border-gray-300 rounded-lg overflow-y-auto md:overflow-visible">
           <div className="space-y-6 p-4">
             {activeStep === "initial" && (
               <div className=" w-full space-y-4">
@@ -87,7 +87,7 @@ export function LeadManagement() {
                         htmlFor="manual-upload"
                         className="text-purple-600 font-medium cursor-pointer text-[1rem] 2xl:text-[1vw]"
                       >
-                        Click to upload
+                        Click to add
                       </label>
                       <p className="text-[1rem] 2xl:text-[1vw] text-gray-500">
                         One Lead at a time
@@ -129,38 +129,8 @@ export function LeadManagement() {
                     </div>
                   </div>
                 </div>
-
-                <p className="text-[1rem] 2xl:text-[1vw]">
-                  Import From External site
-                </p>
-                {/* External Upload */}
-                <div className="md:col-span-2 border-2 2xl:h-[12vw] h-[12rem] border-dashed rounded-xl p-2 text-center bg-customGray flex justify-center items-center flex-col">
-                  <div className="w-[15rem] h-[5.6rem] md:h-[6rem] 2xl:w-[15vw] 2xl:h-[6vw] pb-4">
-                    <Image
-                      src={ImageRegistry.external}
-                      alt="external"
-                      width={200}
-                      height={120}
-                      className="object-contain w-full h-full"
-                    />
-                  </div>
-                  <input type="file" hidden id="external-upload" />
-                  <label
-                    htmlFor="external-upload"
-                    className="text-purple-600 font-medium cursor-pointer text-[1rem] 2xl:text-[1vw]"
-                  >
-                    Click to upload
-                  </label>
-                  <p className="text-[1rem] 2xl:text-[1vw] text-gray-500">
-                    or drag and drop
-                  </p>
-                  <p className="text-[1rem] 2xl:text-[1vw] text-gray-400 mt-1">
-                    SVG, PNG, JPG or GIF (max. 800×400px)
-                  </p>
-                </div>
               </div>
             )}
-
             {activeStep === "excel" && (
               <ImportExcel setAddLeadModalOpen={setAddLeadModalOpen} />
             )}
