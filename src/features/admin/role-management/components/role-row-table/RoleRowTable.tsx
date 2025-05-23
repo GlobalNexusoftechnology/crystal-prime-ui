@@ -26,8 +26,8 @@ interface RoleRowProps {
 }
 
 export function RoleRowTable({ role, isExpanded, onToggle }: RoleRowProps) {
-
- const {isError,isPending, data, isLoading, RoleRefetch } = useAllRoleListQuery();
+  // RoleRefetch;
+ const {isError,isPending, data, isLoading, } = useAllRoleListQuery();
  const hasNoData = data?.length===0
  const shouldRenderFallback = isError|| isPending|| isLoading|| hasNoData
  console.log("data",data);
@@ -44,7 +44,11 @@ export function RoleRowTable({ role, isExpanded, onToggle }: RoleRowProps) {
         onClick={onToggle}
       >
         <td className="p-3 flex items-center gap-2 ">
-          {isExpanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+          {isExpanded ? (
+            <ChevronDown className="w-4 h-4 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+          ) : (
+            <ChevronRight className="w-4 h-4 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+          )}
           {role.id}
         </td>
         <td className="p-3">{role.name}</td>
