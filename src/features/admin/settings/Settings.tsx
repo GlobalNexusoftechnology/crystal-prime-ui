@@ -4,6 +4,7 @@ import { useState } from "react";
 import { LeadSources } from "./components";
 import { SettingsTab } from "./components";
 import { LeadStatus } from "./components";
+import { RoleManagement } from "../role-management";
 
 /**
  * `Settings` is the main component for managing the settings page.
@@ -71,7 +72,7 @@ export function Settings() {
       {activePage === "settings" && <SettingsTab />}
       {activePage === "leadSources" && <LeadSources />}
       {activePage === "leadStatus" && <LeadStatus />}
-      {activePage === "role" && "role"} {/* Placeholder for role component */}
+      {activePage === "role" && <RoleManagement/>} {/* Placeholder for role component */}
     </div>
   );
 }

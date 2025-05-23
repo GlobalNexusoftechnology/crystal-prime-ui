@@ -1,15 +1,7 @@
-interface Permission {
-  module: string;
-  read: boolean;
-  edit: boolean;
-  add: boolean;
-  delete: boolean;
-}
-
 export function RolePermission({
   permissions,
 }: {
-  permissions: Permission[];
+  permissions: string[];
 }) {
   return (
     <div className="p-4">
@@ -24,16 +16,16 @@ export function RolePermission({
           </tr>
         </thead>
         <tbody>
-          {permissions.map((perm, index) => (
+          {permissions.map((item, index) => (
             <tr
               key={index}
               className="hover:bg-gray-100 transition-colors duration-150 bg-white text-[1rem] 2xl:text-[1vw]"
             >
-              <td className="p-2">{perm.module}</td>
-              <td className="p-2">{perm.read ? "Yes" : "No"}</td>
-              <td className="p-2">{perm.edit ? "Yes" : "No"}</td>
-              <td className="p-2">{perm.add ? "Yes" : "No"}</td>
-              <td className="p-2">{perm.delete ? "Yes" : "No"}</td>
+              <td className="p-2">{item}</td>
+              <td className="p-2">{ "No"}</td>
+              <td className="p-2">{"No"}</td>
+              <td className="p-2">{"No"}</td>
+              <td className="p-2">{"No"}</td>
             </tr>
           ))}
         </tbody>

@@ -468,9 +468,28 @@ data: IAllRoleList[];
 
 export interface IAllRoleList {
   id: number;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
-  deletedAt: string;
-  // permissions: Permission[];
+  role: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+  permissions: string[];
+}
+export interface Permission{
+ 
+    module: string;
+    read: boolean;
+    edit: boolean;
+    add: boolean;
+    delete: boolean;
+  }
+
+
+export interface ICreateAddRoleResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateAddRolePayload[];
+}
+export interface ICreateAddRolePayload {
+ id: number;
 }

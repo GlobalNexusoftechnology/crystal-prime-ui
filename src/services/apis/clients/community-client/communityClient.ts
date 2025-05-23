@@ -11,6 +11,8 @@ import {
   IAllStatusesResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
+  ICreateAddRolePayload,
+  ICreateAddRoleResponse,
   ICreateLeadAttachmentPayload,
   ICreateLeadAttachmentResponse,
   ICreateLeadFollowUpPayload,
@@ -83,6 +85,7 @@ import {
   deleteSourcesUrl,
   fetchLeadAttachmentUrl,
   createLeadAttachmentUrl,
+  createAddRoleUrl,
 } from "./urls";
 
 /**
@@ -622,6 +625,19 @@ export class CommunityClient extends ApiClient {
     }
 
     return response?.data.data;
+  };
+
+  public createAddRole = async (payload: ICreateAddRolePayload) => {
+    const response = await this.post<ICreateAddRoleResponse>(
+      createAddRoleUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
   };
 }
 

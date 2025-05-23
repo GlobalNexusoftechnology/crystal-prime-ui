@@ -4,43 +4,14 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Button, SearchBar } from "@/components";
 import { RoleRowTable } from "../role-row-table";
 import { AddNewRole } from "../add-new-role";
+import { useAllRoleListQuery } from "@/services";
+// import { ILeadSourcesListTable } from "@/constants";
+// import { IRoleListTable } from "@/constants/tables/role-list-table";
 
 interface LeadsListTableProps {
   setIsFollowUpModalOpen?: Dispatch<SetStateAction<boolean>>;
 }
 
-const roleData = [
-  {
-    id: 1,
-    name: "Admin",
-    createdAt: "07-25-2022",
-    updatedAt: "07-25-2022",
-    deletedAt: "07-25-2022",
-    permissions: [
-      {
-        module: "Lead Management",
-        read: false,
-        edit: true,
-        add: true,
-        delete: false,
-      },
-      {
-        module: "Project Management",
-        read: false,
-        edit: true,
-        add: false,
-        delete: true,
-      },
-      {
-        module: "Task Management",
-        read: true,
-        edit: true,
-        add: true,
-        delete: true,
-      },
-    ],
-  },
-];
 
 export function RoleManagementListTable({}: LeadsListTableProps) {
   const [expandedId, setExpandedId] = useState<number | null>(null);
@@ -49,7 +20,12 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
   const toggleExpand = (id: number) => {
     setExpandedId(expandedId === id ? null : id);
   };
-
+  const { isError, isPending, data, isLoading } = useAllRoleListQuery();
+  const hasNoData = data?.length === 0;
+  const shouldRenderFallback = isError || isPending || isLoading || hasNoData;
+  console.log("data", data);
+  console.log(shouldRenderFallback);
+ 
   return (
     <>
       <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -81,25 +57,30 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
         <div className="p-4 ">
           <div className="overflow-x-auto border rounded-md shadow-sm">
             <table className="w-full text-[1rem] 2xl:text-[1vw] text-left border-collapse">
-              <thead className="bg-white text-gray-600 uppercase text-[1rem] 2xl:text-[1vw]">
+              <thead className="bg-white  uppercase text-[1rem] 2xl:text-[1vw] text-gray-300">
                 <tr>
-                  <th className="p-3">ID</th>
-                  <th className="p-3">Role Name</th>
-                  <th className="p-3">Created At</th>
-                  <th className="p-3">Updated At</th>
-                  <th className="p-3">Deleted At</th>
-                  <th className="p-3">Action</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw]">ID</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw]">Role Name</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw]">Created At</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw]">Updated At</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw]">Deleted At</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw]">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {roleData.map((role) => (
-                  <RoleRowTable
-                    key={role.id}
-                    role={role}
-                    isExpanded={expandedId === role.id}
-                    onToggle={() => toggleExpand(role.id)}
-                  />
-                ))}
+                {data?.map((role) => {
+                  console.log("Role:", role); //  Console log to check each role
+
+                  return (
+                    <RoleRowTable
+                      key={role.id}
+                      role={role}
+                      isExpanded={expandedId === role.id}
+                      onToggle={() => toggleExpand(role.id)}
+                      // action={Roleaction}
+                    />
+                  );
+                })}
               </tbody>
             </table>
           </div>

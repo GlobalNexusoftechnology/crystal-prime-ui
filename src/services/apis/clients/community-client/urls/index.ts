@@ -111,3 +111,5 @@ export const deleteLeadAttachmentUrl = (id: string) => `/lead-attachment/${id}`;
 
 export const fetchAllRoleListUrl = () => "/roles";
 
+export const createAddRoleUrl = () => "/roles";
+

@@ -12,7 +12,7 @@ const modules = [
   },
 ];
 
-const permissions = ["All","Read Only", "Add", "edit", "Delete"];
+const permissions = ["Read Only", "Add", "edit", "Delete"];
 
 interface RolePermissionModalProps {
   onClose: () => void;
@@ -63,36 +63,39 @@ export function AddNewRole({ onClose }: RolePermissionModalProps) {
 
           {modules.map((mod) => (
             <div key={mod.id} className="mb-4">
-              <div className="flex items-center space-x-2 mb-2 text-[1rem] 2xl:text-[1vw]">
-                <input
-                  type="checkbox"
-                  checked={
-                    formData[mod.id] &&
-                    permissions.every((p) => formData[mod.id].includes(p))
-                  }
-                  onChange={() => toggleAll(mod.id)}
-                  className="w-4 h-4 2xl:w-[1.2vw] 2xl:h-[1.2vw]"
-                />
+              <div className="flex items-start mb-2 text-[1rem] 2xl:text-[1vw]">
                 <span className="font-medium text-gray-800 text-[1rem] 2xl:text-[1vw]">
                   {mod.id}. {mod.name}
                 </span>
               </div>
               <div className="ml-6 flex flex-wrap gap-4">
-                {permissions.map((perm) => (
-                  <label
-                    key={perm}
-                    className="flex items-center space-x-2 text-gray-700 text-[1rem] 2xl:text-[1vw]"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={formData[mod.id]?.includes(perm) || false}
-                      onChange={() => togglePermission(mod.id, perm)}
-                      className="w-4 h-4 2xl:w-[1.2vw] 2xl:h-[1.2vw]"
-                    />
-                    <span>{perm}</span>
-                  </label>
-                ))}
-              </div>
+              <label className="flex items-center space-x-2 text-gray-700 text-[1rem] 2xl:text-[1vw]">
+                <input
+                  type="checkbox"
+                  checked={permissions.every((p) =>
+                    formData[mod.id]?.includes(p)
+                  )}
+                  onChange={() => toggleAll(mod.id)}
+                  className="w-4 h-4 2xl:w-[1.2vw] 2xl:h-[1.2vw]"
+                />
+                <span>All</span>
+              </label>
+
+              {permissions.map((perm) => (
+                <label
+                  key={perm}
+                  className="flex items-center space-x-2 text-gray-700 text-[1rem] 2xl:text-[1vw]"
+                >
+                  <input
+                    type="checkbox"
+                    checked={formData[mod.id]?.includes(perm) || false}
+                    onChange={() => togglePermission(mod.id, perm)}
+                    className="w-4 h-4 2xl:w-[1.2vw] 2xl:h-[1.2vw]"
+                  />
+                  <span>{perm}</span>
+                </label>
+              ))}
+            </div>
             </div>
           ))}
         </div>
