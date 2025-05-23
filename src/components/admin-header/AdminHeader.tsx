@@ -21,7 +21,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
     <header className="flex justify-between items-center sticky z-20 top-0 bg-white shadow-sm px-4 md:px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw]">
       {/* Left: Menu + SearchBar */}
       <div className="flex items-center gap-4">
-        <button className="text-gray-700" onClick={SetIsVisibleSidebar}>
+        <button className="text-gray-700 flex xl:hidden" onClick={SetIsVisibleSidebar}>
           <MenuIcon className="w-8 2xl:w-[2vw] h-8 2xl:h-[2vw]" />
         </button>
         <SearchBar

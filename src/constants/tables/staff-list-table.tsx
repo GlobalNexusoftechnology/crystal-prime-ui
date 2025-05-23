@@ -1,99 +1,107 @@
-/**
- * Staff List Table Configuration
- *
- * This module defines the data structure, dummy data, table column configurations,
- * and available row actions for the Staff List feature in the Staff Management module.
- *
- * Exports:
- * - IStaffListProps: TypeScript interface for individual staff data.
- * - StaffList: Sample data representing staff records.
- * - actions: Row-level action buttons (e.g., Edit, View, Delete, Export).
- * - StaffListColumn: Column definitions for rendering the staff table.
- */
-
 import { ITableAction, ITableColumn } from "../table";
 
 export interface IStaffListProps {
   id: number;
-  name: string;
-  number: string;
+  firstName: string;
+  lastName: string;
+  contact: string;
+  dob: string;
   email: string;
-  businessName: string;
-  natureOfBusiness: string;
-  cityName: string;
+  roleName: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
-export const StaffList: IStaffListProps[] = [
+export const staffList: IStaffListProps[] = [
   {
     id: 1,
-    name: "Jeanette Torp",
-    number: "(385) 344-9378",
-    email: "Jon_Bradtke5l@gmail.com",
-    businessName: "Quigley LLC",
-    natureOfBusiness: "5",
-    cityName: "Lake Genesisfort",
+    firstName: "Jeanette",
+    lastName: "Torp",
+    contact: "(385) 344-9378",
+    dob: "07-25-2022",
+    email: "Elna.Ferry@hotmail.com",
+    roleName: "Developer",
+    createdAt: "07-25-2022",
+    updatedAt: "07-25-2022",
   },
   {
     id: 2,
-    name: "Jody Grant",
-    number: "(385) 344-9378",
-    email: "Amari.Zulauf@gmail.com",
-    businessName: "Rolfson and Sons",
-    natureOfBusiness: "10",
-    cityName: "Leschland",
+    firstName: "Jody",
+    lastName: "Grant",
+    contact: "(385) 344-9378",
+    dob: "07-25-2022",
+    email: "Willis.Schaden@yahoo.com",
+    roleName: "HR",
+    createdAt: "07-25-2022",
+    updatedAt: "07-25-2022",
   },
   {
     id: 3,
-    name: "Jeanette Torp",
-    number: "(385) 344-9378",
-    email: "Jon_Bradtke5l@gmail.com",
-    businessName: "Upton - Reynolds",
-    natureOfBusiness: "3",
-    cityName: "Idellfort",
+    firstName: "Francisco",
+    lastName: "Keebler",
+    contact: "(385) 344-9378",
+    dob: "07-25-2022",
+    email: "Savanna_Satterfield@hotmail.com",
+    roleName: "Francisco Keebler",
+    createdAt: "07-25-2022",
+    updatedAt: "07-25-2022",
   },
   {
     id: 4,
-    name: "Jody Grant",
-    number: "(385) 344-9378",
-    email: "Amari.Zulauf@gmail.com",
-    businessName: "Donnelly - Runolfsdottir",
-    natureOfBusiness: "1",
-    cityName: "Murphyview",
+    firstName: "Jean",
+    lastName: "Hyatt",
+    contact: "(385) 344-9378",
+    dob: "07-25-2022",
+    email: "Brown23@gmail.com",
+    roleName: "Jean Hyatt",
+    createdAt: "07-25-2022",
+    updatedAt: "07-25-2022",
   },
   {
     id: 5,
-    name: "Jeanette Torp",
-    number: "(385) 344-9378",
-    email: "Jon_Bradtke5l@gmail.com",
-    businessName: "Feest, Grimes and Lesch",
-    natureOfBusiness: "10",
-    cityName: "Theomouth",
+    firstName: "Miss Dianna",
+    lastName: "Hills",
+    contact: "(385) 344-9378",
+    dob: "07-25-2022",
+    email: "Zelma_Dachlite@yahoo.com",
+    roleName: "Miss Dianna Hills",
+    createdAt: "07-25-2022",
+    updatedAt: "07-25-2022",
   },
   {
     id: 6,
-    name: "Jody Grant",
-    number: "(385) 344-9378",
-    email: "Amari.Zulauf@gmail.com",
-    businessName: "Cremin - Kulas",
-    natureOfBusiness: "20",
-    cityName: "Terrymouth",
+    firstName: "Tommie",
+    lastName: "Jaskolski",
+    contact: "(385) 344-9378",
+    dob: "07-25-2022",
+    email: "Eryn_Goldner@yahoo.com",
+    roleName: "Tommie Jaskolski",
+    createdAt: "07-25-2022",
+    updatedAt: "07-25-2022",
+  },
+  {
+    id: 7,
+    firstName: "Michele",
+    lastName: "Jakubowski",
+    contact: "(385) 344-9378",
+    dob: "07-25-2022",
+    email: "Dorris_Brakus92@gmail.com",
+    roleName: "Michele Jakubowski",
+    createdAt: "07-25-2022",
+    updatedAt: "07-25-2022",
   },
 ];
 
+
+
 export const staffActions: ITableAction<IStaffListProps>[] = [
+
   {
     label: "Edit",
     onClick: (row) => {
       console.log("Edit clicked", row.id);
     },
-    className: "text-blue-500",
-  },
-  {
-    label: "View",
-    onClick: (row) => {
-      console.log("View clicked", row.id);
-    },
-    className: "text-blue-500",
+    className: "text-blue-500 whitespace-nowrap",
   },
   {
     label: "Delete",
@@ -102,42 +110,49 @@ export const staffActions: ITableAction<IStaffListProps>[] = [
     },
     className: "text-red-500",
   },
-  {
-    label: "Explore As xlsx",
-    onClick: (row) => {
-      console.log("Explore As xlsx clicked", row.id);
-    },
-    className: "text-blue-500 whitespace-nowrap",
-  },
 ];
+export const staffListColumn: ITableColumn<IStaffListProps>[] = [
 
-export const StaffListColumn: ITableColumn<IStaffListProps>[] = [
   {
-    header: "STAFF NAME",
-    accessor: "name",
+    header: "FIRST NAME",
+    accessor: "firstName",
     sortable: true,
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem]",
+  },
+  {
+    header: "LAST NAME",
+    accessor: "lastName",
+    sortable: true,
+    headerClassName: "min-w-[10rem]",
   },
   {
     header: "CONTACT",
-    accessor: "number",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    accessor: "contact",
+    headerClassName: "min-w-[10rem]",
+  },
+  {
+    header: "DOB",
+    accessor: "dob",
+    headerClassName: "min-w-[10rem]",
   },
   {
     header: "EMAIL",
     accessor: "email",
-    headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
+    headerClassName: "min-w-[16rem]",
   },
   {
-    header: "STATUS",
-    accessor: "businessName",
-    sortable: true,
-    headerClassName: "min-w-[13rem] 2xl:min-w-[15vw]",
+    header: "ROLE NAME",
+    accessor: "roleName",
+    headerClassName: "min-w-[14rem]",
   },
   {
-    header: "ASSIGNED TASK",
-    accessor: "natureOfBusiness",
-    sortable: true,
-    headerClassName: "min-w-[16rem] 2xl:min-w-[16vw]",
+    header: "CREATED AT",
+    accessor: "createdAt",
+    headerClassName: "min-w-[10rem]",
+  },
+  {
+    header: "UPDATED AT",
+    accessor: "updatedAt",
+    headerClassName: "min-w-[10rem]",
   },
 ];
