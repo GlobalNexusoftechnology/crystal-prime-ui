@@ -27,7 +27,7 @@ interface RoleRowProps {
 
 export function RoleRowTable({ role, isExpanded, onToggle }: RoleRowProps) {
 
- const {isError,isPending, data, isLoading, RoleRefetch } = useAllRoleListQuery();
+ const {isError,isPending, data, isLoading } = useAllRoleListQuery();
  const hasNoData = data?.length===0
  const shouldRenderFallback = isError|| isPending|| isLoading|| hasNoData
  console.log("data",data);

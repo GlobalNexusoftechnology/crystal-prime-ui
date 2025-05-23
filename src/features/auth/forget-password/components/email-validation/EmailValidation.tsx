@@ -38,10 +38,10 @@ export function EmailValidation({ onNext }: TEmailValidationProps) {
 
   return (
     <div className="flex justify-center items-center ">
-      <AuthCard title="Forget Password" copyright="Copyright ©Satkar.com | 2025">
+      <AuthCard title="Forget Password" copyright="Copyrights and developed © Islahdata.com">
         <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 2xl:gap-[1vw]">
           <span className="text-[1rem] 2xl:text-[1vw] text-center">
-            Please provide your credentials to access your account.
+            Please Enter you email to forget password
           </span>
 
           {/* Email Input Field */}

@@ -2,14 +2,15 @@ import { ReactNode } from "react";
 
 import {
   DashboardIcon,
-  FollowUpManagementIcon,
   DocumentManagementIcon,
+  // FollowUpManagementIcon,
+  // DocumentManagementIcon,
   LeadManagementIcon,
-  ProjectManagementIcon,
+  // ProjectManagementIcon,
   
   SettingsIcon,
   StaffManagementIcon,
-  TaskManagementIcon,
+  // TaskManagementIcon,
 } from "@/features";
 
 /**
@@ -44,49 +45,49 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     path: "/admin/dashboard",
     name: "Dashboard",
     icon: <DashboardIcon />,
-    activeIcon: <DashboardIcon color="white" />,
+    activeIcon: <DashboardIcon color="#034A9F" />,
   },
   {
     path: "/admin/lead-management",
     name: "Lead Management",
     icon: <LeadManagementIcon />,
-    activeIcon: <LeadManagementIcon color="white" />,
+    activeIcon: <LeadManagementIcon color="#034A9F" />,
   },
-  {
-    path: "/admin/project-management",
-    name: "Project Management",
-    icon: <ProjectManagementIcon />,
-    activeIcon: <ProjectManagementIcon color="white" />,
-  },
-  {
-    path: "/admin/task-management",
-    name: "Task Management",
-    icon: <TaskManagementIcon />,
-    activeIcon: <TaskManagementIcon color="white" />,
-  },
+  // {
+  //   path: "/admin/project-management",
+  //   name: "Project Management",
+  //   icon: <ProjectManagementIcon />,
+  //   activeIcon: <ProjectManagementIcon color="#034A9F" />,
+  // },
+  // {
+  //   path: "/admin/task-management",
+  //   name: "Task Management",
+  //   icon: <TaskManagementIcon />,
+  //   activeIcon: <TaskManagementIcon color="#034A9F" />,
+  // },
 
-    {
-    path: "/admin/follow-up-management",
-    name: "Follow Up Management",
-    icon: <FollowUpManagementIcon/>,
-    activeIcon: <FollowUpManagementIcon color="white" />,
-  },
+  //   {
+  //   path: "/admin/follow-up-management",
+  //   name: "Follow Up Management",
+  //   icon: <FollowUpManagementIcon/>,
+  //   activeIcon: <FollowUpManagementIcon color="#034A9F" />,
+  // },
   {
     path: "/admin/staff-management",
     name: "Staff Management",
     icon: <StaffManagementIcon />,
-    activeIcon: <StaffManagementIcon color="white" />,
+    activeIcon: <StaffManagementIcon color="#034A9F" />,
   },
-   {
-    path: "/admin/role-management",
-    name: "Document Management",
-    icon: <DocumentManagementIcon />,
-    activeIcon: <DocumentManagementIcon color="white" />,
-  },
+  //  {
+  //   path: "/admin/document-management",
+  //   name: "Document Management",
+  //   icon: <DocumentManagementIcon />,
+  //   activeIcon: <DocumentManagementIcon color="#034A9F" />,
+  // },
   {
     path: "/admin/settings",
     name: "Settings",
     icon: <SettingsIcon />,
-    activeIcon: <SettingsIcon color="white" />,
+    activeIcon: <SettingsIcon color="#034A9F" />,
   },
 ];

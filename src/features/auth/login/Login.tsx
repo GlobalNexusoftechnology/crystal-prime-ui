@@ -40,7 +40,7 @@ export function Login() {
     if (role === "admin") {
       router.push("/admin/dashboard");
     } else if (role === "developer") {
-      router.push("/admin/profile");
+      router.push("/admin/dashboard");
     }
   };
 
@@ -95,7 +95,6 @@ export function Login() {
           <span className="text-[1rem] 2xl:text-[1vw] text-center">
             Please provide your credentials to access your account.
           </span>
-
           <InputField
             label="Email"
             placeholder="Enter Email"
@@ -109,7 +108,6 @@ export function Login() {
                 : undefined
             }
           />
-
           <InputField
             label="Password"
             placeholder="Enter Password"
@@ -124,27 +122,13 @@ export function Login() {
                 : undefined
             }
           />
-
           <Button type="submit" title={isPending ? "Logging in..." : "Login"} />
-
           <Link
             href="/forget-password"
             className="text-sm 2xl:text-[0.875vw] text-black underline underline-offset-4"
           >
             Forget Password?
           </Link>
-
-          <div className="flex gap-2 2xl:gap-[0.5vw]">
-            <span className="text-sm 2xl:text-[0.875vw] text-primary">
-              New here?
-            </span>
-            <Link
-              href="/sign-up"
-              className="text-sm 2xl:text-[0.875vw] text-primary underline underline-offset-4"
-            >
-              Create your account now
-            </Link>
-          </div>
         </form>
       </AuthCard>
     </div>
