@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, DatePicker, Dropdown, InputField } from "@/components";
+import { useAllLeadStatusHistoryQuery } from "@/services";
 
 const statusOptions = [
   { label: "Initiated", value: "initiated" },
@@ -28,22 +28,7 @@ interface IStatusHistoryProps {
 }
 
 export function StatusHistory({ showForm, setShowForm }: IStatusHistoryProps) {
-  const [history, setHistory] = useState<
-    { date: string; status: string; assignedTo: string; remark: string }[]
-  >([
-    {
-      date: "2025-05-20",
-      status: "initiated",
-      assignedTo: "meena",
-      remark: "Initial task created",
-    },
-    {
-      date: "2025-05-22",
-      status: "in_progress",
-      assignedTo: "ajay",
-      remark: "Working on the implementation",
-    },
-  ]);
+  const { allLeadStatusHistoryData } = useAllLeadStatusHistoryQuery();
 
   const formik = useFormik({
     initialValues: {
@@ -54,7 +39,6 @@ export function StatusHistory({ showForm, setShowForm }: IStatusHistoryProps) {
     },
     validationSchema,
     onSubmit: (values, { resetForm }) => {
-      setHistory((prev) => [...prev, values]);
       resetForm();
       setShowForm(false);
     },
@@ -117,7 +101,7 @@ export function StatusHistory({ showForm, setShowForm }: IStatusHistoryProps) {
           </div>
         </form>
       ) : (
-        history.map((item, index) => (
+        allLeadStatusHistoryData?.map((statusHistory, index) => (
           <div
             key={index}
             className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
@@ -125,19 +109,17 @@ export function StatusHistory({ showForm, setShowForm }: IStatusHistoryProps) {
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2 underline">
                 <p>Status:</p>
-                <p>
-                  {statusOptions.find((s) => s.value === item.status)?.label}
-                </p>
+                <p>{statusHistory?.status.name}</p>
               </div>
               <div className="text-lightGreen flex items-center gap-2 underline">
                 <p>Created At:</p>
-                <p>{item.date}</p>
+                <p>{statusHistory.created_at}</p>
               </div>
             </div>
-            <h1>{item.remark}</h1>
+            <h1>{statusHistory.status_remarks}</h1>
             <h1 className="text-primary underline">
-              Assigned To:{" "}
-              {assignOptions.find((a) => a.value === item.assignedTo)?.label}
+              Assigned To:
+              {statusHistory.lead.first_name} {statusHistory.lead.last_name}
             </h1>
           </div>
         ))

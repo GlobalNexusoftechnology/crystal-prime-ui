@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "../../globals.css";
 import { ReactQueryProvider } from "@/services/react-query";
 import { Poppins } from "next/font/google";
+import { Toaster } from "react-hot-toast";
+
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -25,6 +27,7 @@ export default function RootLayout({
           className={`${poppins.className} antialiased`}
         >
           {children}
+          <Toaster position="top-right" reverseOrder={false} />
         </body>
       </html>
     </ReactQueryProvider>

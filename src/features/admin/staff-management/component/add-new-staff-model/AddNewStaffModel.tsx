@@ -1,10 +1,32 @@
 import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
 import React from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
 
 interface AddNewStaffModelProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const initialValues = {
+  firstName: "",
+  lastName: "",
+  dob: "",
+  phoneNumber: "",
+  email: "",
+  role: "",
+  password: "",
+};
+
+const validationSchema = Yup.object({
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  dob: Yup.string().required("Date of Birth is required"),
+  phoneNumber: Yup.string().required("Phone number is required"),
+  email: Yup.string().email("Invalid email").required("Email is required"),
+  role: Yup.string().required("Role is required"),
+  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+});
 
 export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
   isOpen,
@@ -17,49 +39,106 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
         onClose={onClose}
         modalClassName="w-full md:w-[70%] lg:w-[60%] xl:w-[40%] 2xl:w-[40vw]"
       >
-        <form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1ve] bg-white rounded-xl 2xl:rounded-[0.75vw] border-gray-400">
-            <h1 className="text-md 2xl:text-[1vw] text-gray-900 ">Add New Staff</h1>
-          <div className="flex flex-col gap-4 md:gap-8 2xl:gap-[2vw] md:flex-row justify-between items-center">
-            <InputField label="First Name" placeholder="Enter First name" />
-            <InputField label="Last Name" placeholder="Enter Last name" />
-          </div>
-          <div className="flex flex-col gap-4 md:gap-8 2xl:gap-[2vw] md:flex-row justify-between items-center">
-            <InputField label="DOB" placeholder="Enter DOB" />
-            <InputField label="Phone Number" placeholder="Enter Phone Number" />
-          </div>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={(values) => {
+            console.log("Form values:", values);
+            onClose(); // Close modal on success
+          }}
+        >
+          {({ values, handleChange, handleBlur, setFieldValue, errors, touched }) => (
+            <Form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] bg-white rounded-xl border-gray-400">
+              <h1 className="text-md 2xl:text-[1vw] text-gray-900">Add New Staff</h1>
 
-          <div className="flex flex-col gap-4 md:gap-8 2xl:gap-[2vw] md:flex-row justify-between items-center">
-            <InputField label="Email" placeholder="Enter Email" />
-            <Dropdown
-            label="Role Name"
-              options={[
-                { label: "Add Staff", value: "add_staff" },
-                { label: "Edit Staff", value: "edit_staff" },
-                {
-                  label: "Assign Project",
-                  value: "assign_project",
-                },
-                {
-                  label: "View Progress",
-                  value: "view_progress",
-                },
-              ]}
-              value={""}
-              onChange={(val: string) => {
-                console.log("Selected role:", val);
-              }}
-            />
-          </div>
-          <InputField
-            label="Enter Password"
-            placeholder="Enter Enter Password"
-          />
-          <div className="flex gap-4 2xl:gap-[1vw] w-full ">
-            <Button title="Cancel" variant="primary-outline" width="w-full" />
+              <div className="flex flex-col md:flex-row gap-4 md:gap-8 2xl:gap-[2vw]">
+                <InputField
+                  label="First Name"
+                  name="firstName"
+                  placeholder="Enter First name"
+                  value={values.firstName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.firstName && errors.firstName}
+                />
+                <InputField
+                  label="Last Name"
+                  name="lastName"
+                  placeholder="Enter Last name"
+                  value={values.lastName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.lastName && errors.lastName}
+                />
+              </div>
 
-            <Button title="Add Staff" width="w-full" />
-          </div>
-        </form>
+              <div className="flex flex-col md:flex-row gap-4 md:gap-8 2xl:gap-[2vw]">
+                <InputField
+                  label="DOB"
+                  name="dob"
+                  placeholder="Enter DOB"
+                  value={values.dob}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.dob && errors.dob}
+                />
+                <InputField
+                  label="Phone Number"
+                  name="phoneNumber"
+                  placeholder="Enter Phone Number"
+                  value={values.phoneNumber}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.phoneNumber && errors.phoneNumber}
+                />
+              </div>
+
+              <div className="flex flex-col md:flex-row gap-4 md:gap-8 2xl:gap-[2vw]">
+                <InputField
+                  label="Email"
+                  name="email"
+                  placeholder="Enter Email"
+                  value={values.email}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.email && errors.email}
+                />
+                <Dropdown
+                  label="Role Name"
+                  options={[
+                    { label: "Add Staff", value: "add_staff" },
+                    { label: "Edit Staff", value: "edit_staff" },
+                    { label: "Assign Project", value: "assign_project" },
+                    { label: "View Progress", value: "view_progress" },
+                  ]}
+                  value={values.role}
+                  onChange={(val: string) => setFieldValue("role", val)}
+                />
+              </div>
+
+              <InputField
+                label="Enter Password"
+                name="password"
+                placeholder="Enter Password"
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.password && errors.password}
+              />
+
+              <div className="flex gap-4 2xl:gap-[1vw] w-full">
+                <Button
+                  title="Cancel"
+                  variant="primary-outline"
+                  width="w-full"
+                  onClick={onClose}
+                  type="button"
+                />
+                <Button title="Add Staff" width="w-full" type="submit" />
+              </div>
+            </Form>
+          )}
+        </Formik>
       </ModalOverlay>
     </div>
   );

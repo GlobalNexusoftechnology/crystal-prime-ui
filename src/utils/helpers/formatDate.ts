@@ -1,4 +1,4 @@
-export function formatDate(isoDateString: string) {
+export function formatDate(isoDateString: string | number) {
     const date = new Date(isoDateString);
   
     const months = [

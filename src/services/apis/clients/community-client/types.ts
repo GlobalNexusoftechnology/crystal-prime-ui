@@ -172,6 +172,27 @@ export interface IAllLeadAttachmentResponse {
   success: true;
   data: IAllLeadAttachmentList[];
 }
+export interface IAllLeadStatusHistoryResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllLeadStatusHistoryList[];
+}
+export interface IAllLeadStatusHistoryList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  status_remarks: string;
+  lead: IAllLeadsList
+  status: IStatus
+  changed_by: string;
+
+}
+export interface ICreateLeadStatusHistoryPayload {
+  data: IAllLeadStatusHistoryList;
+}
 
 export interface IVerifyEmailPayload {
   email: string;
@@ -286,8 +307,8 @@ export interface IUpdateLeadFollowUpPayload {
 }
 
 export interface ICreateLeadFollowUpPayload {
-  lead_id: string;
-  user_id?: string | null;
+  lead_id: ILeadDetailResponse;
+  user_id?: IUser;
   status:
     | "PENDING"
     | "RESCHEDULE"
@@ -385,11 +406,15 @@ export interface ILeadFollowUpDetailResponse {
   data: ILeadFollowUpDetailList;
 }
 
+export interface ILeadDownloadExcel {
+  fileURL: string
+}
+
 export interface IAllLeadDownloadExcelResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllLeadsList[];
+  fileURL: ILeadDownloadExcel;
 }
 
 export interface ILeadDownloadExcelResponse {
@@ -492,4 +517,100 @@ export interface ICreateAddRoleResponse {
 }
 export interface ICreateAddRolePayload {
  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  deletedAt: string;
+  // permissions: Permission[];
+}
+
+
+//staff 
+
+//get
+export interface IAllUsersList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  role: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  number: string | null;
+  role_id: string | null;
+  dob: string | null;
+  verificationCode: string;
+  authToken: string | null;
+  refreshToken: string | null;
+  otp: string | null;
+  otpExpiresAt: string | null;
+  isOtpVerified: boolean;
+  password: string;
+}
+
+export interface IAllUsersResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllUsersList[];
+}
+
+//post  ...
+ export interface ICreateUserPayload {
+   first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+  role: string;
+}
+
+export interface ICreateUserResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateUserPayload;
+}
+
+//get by id ...
+export interface IUserDetailList {
+   id: string;
+  email: string;
+  number: string | null;
+  dob: string | null;
+  role: string;
+  role_id: string | null;
+  first_name: string;
+  last_name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  assignedLeads: any[]; // Replace `any` with a proper interface if available
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  assignedTasks: any[];
+}
+
+export interface IUserDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUserDetailList;
+}
+//update 
+export interface IUpdateUserPayload {
+  id: string;
+  payload: ICreateUserPayload;
+}
+
+export interface IUpdateUserResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateUserPayload;
+}
+//delete 
+export interface IDeleteUserResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateUserPayload;
 }

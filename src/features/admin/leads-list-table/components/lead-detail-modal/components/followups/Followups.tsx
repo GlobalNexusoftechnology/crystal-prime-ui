@@ -2,6 +2,8 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, DatePicker, Dropdown, InputField } from "@/components";
+import { useAlLeadFollowUpQuery } from "@/services";
+import { formatDate, formattingDate } from "@/utils";
 
 const statusOptions = [
   { label: "Initiated", value: "initiated" },
@@ -27,6 +29,7 @@ interface IFollowupsProps {
 }
 
 export function Followups({ showForm, setShowForm }: IFollowupsProps) {
+  const { data: followupData } = useAlLeadFollowUpQuery();
   const formik = useFormik({
     initialValues: {
       nextFollowupDate: "",
@@ -105,32 +108,34 @@ export function Followups({ showForm, setShowForm }: IFollowupsProps) {
           </div>
         </form>
       ) : (
-        [1, 2].map((item) => (
+        followupData?.map((followup, idx) => (
           <div
-            key={item}
+            key={idx}
             className="flex flex-col gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
           >
             <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
               <div className="flex items-center gap-4 2xl:gap-[1vw]">
                 <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
                   <p>Assigned To:</p>
-                  <p>Meena Kapoor</p>
+                  <p>{`${followup.user_id?.first_name} ${followup.user_id?.last_name}`}</p>
                 </div>
                 <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
                   <p>Status:</p>
-                  <p>Failed</p>
+                  <p>{followup.status}</p>
                 </div>
               </div>
-              <h1>Waiting for feedback on proposal.</h1>
+              <h1>{followup.remarks}</h1>
             </div>
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
                 <p>Due:</p>
-                <p>26 May 2025</p>
+                <p>{formatDate(`${followup?.due_date}`)}</p>
               </div>
               <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
                 <p>Created At:</p>
-                <p>26 May 2025, 4:00 PM</p>
+                <p>
+                  {formattingDate(`${followup.completed_date}`, "toReadable")}
+                </p>
               </div>
             </div>
           </div>
