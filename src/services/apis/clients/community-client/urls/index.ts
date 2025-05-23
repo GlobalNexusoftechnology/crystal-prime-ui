@@ -58,7 +58,7 @@ export const updateLeadFollowUpUrl = (id: string) => `/lead-followup/${id}`;
 
 export const deleteLeadFollowUpUrl = (id: string) => `/lead-followup/${id}`;
 
-// Status API
+// Status API hook
 
 export const fetchAllStatusesUrl = () => "/lead-statuses"; //Get
 
@@ -92,7 +92,7 @@ export const updateSourcesUrl = (
 export const deleteSourcesUrl = (id: string) => `/lead-sources/${id}`; //delete
 
 
-//  Lead Attachment API's
+//  Lead Attachment API's hook
 
 export const fetchLeadAttachmentUrl = () => "/lead-attachment"; //Get
 
@@ -109,5 +109,25 @@ export const updateLeadAttachmentUrl = (
 
 export const deleteLeadAttachmentUrl = (id: string) => `/lead-attachment/${id}`; //delete
 
+//role
+
 export const fetchAllRoleListUrl = () => "/roles";
 
+
+
+//  Staff API's hook
+
+export const fetchAllUsersUrl = () => "/users"; //Get
+
+export const createUserUrl = () => "/users"; //post
+
+export const getUserDetailByIdUrl = (
+  id: string //get by id
+) => `/users/${id}`;
+
+export const updateUserUrl = (
+  id: string //put
+) => `/users/${id}`;
+
+
+export const deleteUserUrl = (id: string) => `/users/${id}`; //delete

@@ -1,29 +1,29 @@
-import {   ICreateSourcesResponse, useMutation } from "@/services";
+import {   ICreateUserResponse, useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 import { COMMUNITY_CLIENT } from "../communityClient";
 
 /**
  * This is to track the create lead mutation.
  */
-const CREATE_SOURCES_MUTATION_KEY = "create-sources-mutation-key";
+const CREATE_USER_MUTATION_KEY = "create-user-mutation-key";
 
-interface ICreateSourcesOptions {
-  onSuccessCallback: (data: ICreateSourcesResponse) => void;
+interface ICreateUserOptions {
+  onSuccessCallback: (data: ICreateUserResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
 
 /**
- * Hook to create Sourcees
+ * Hook to create User
  */
-export const useCreateSourcesMutation = ({
+export const useCreateUserMutation = ({
   onSuccessCallback,
   onErrorCallback,
-}: ICreateSourcesOptions) => {
+}: ICreateUserOptions) => {
   const { mutate, isPending, error } = useMutation({
-    mutationKey: [CREATE_SOURCES_MUTATION_KEY],
+    mutationKey: [CREATE_USER_MUTATION_KEY],
     networkMode: "always", // Ensures the call happens even in offline mode
     retry: false, // Do not retry failed requests
-    mutationFn: COMMUNITY_CLIENT.createSources,
+    mutationFn: COMMUNITY_CLIENT.createUser,
     onSuccess: (response) => {
       onSuccessCallback(response);
     },
@@ -31,7 +31,7 @@ export const useCreateSourcesMutation = ({
       errorLogToRemoteUtil({
         error: err,
         errorCode: ErrorEventsEnum.ERROR_IN_API_CALL,
-        errorTitle: "Error in usecreateLeadMutation",
+        errorTitle: "Error in useCreateUserMutation",
         message: err?.message,
       });
 
@@ -42,6 +42,6 @@ export const useCreateSourcesMutation = ({
   return {
     error,
     isPending,
-    onStatusMutation: mutate,
+    onCreateUser: mutate,
   };
 };

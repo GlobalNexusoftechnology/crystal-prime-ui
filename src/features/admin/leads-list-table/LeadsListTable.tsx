@@ -117,7 +117,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     },
     assignedTo: leadDetailById?.assigned_to || {
       id: "",
-      name: "Unassigned",
+      first_name: "Unassigned",
+      last_name: "Unassigned",
       email: "",
       phoneNumber: "",
       businessName: "",
@@ -162,7 +163,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     requirement: lead?.requirement || "",
     source_id: lead?.source?.name || "N/A",
     status_id: lead?.status?.name || "N/A",
-    assigned_to: lead?.assigned_to?.name || "Unassigned",
+    assigned_to: `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` || "Unassigned",
   }));
 
   const handleSearch = (query: string) => {
