@@ -1,80 +1,97 @@
 "use client";
 
-/**
- * StaffListTable Component
- *
- * This component renders the Staff List UI including:
- * - Header with title and controls (Approved/Not Approved filters, search bar, status dropdown, export and add staff buttons)
- * - A responsive table displaying staff data
- *
- * Props:
- * - setAddStaffModalOpen (optional): Controls visibility of the "Add Staff" modal
- *
- * Used in staff management features/pages.
- */
-
-import { Dispatch, SetStateAction } from "react";
-import { Button, Dropdown, SearchBar, Table } from "@/components";
+import { useState } from "react";
+import { Button, SearchBar, Table } from "@/components";
+import {
+  IStaffListProps,
+  ITableAction,
+  staffList,
+  staffListColumn,
+} from "@/constants";
 import { ExportIcon } from "@/features";
-import { staffActions, StaffList, StaffListColumn } from "@/constants";
-import { useAllStatusesQuery } from "@/services";
-import { useFormik } from "formik";
+import { AddNewStaffModel } from "../add-new-staff-model";
+import { EditStaffModel } from "../edit-staff-model";
+import { ViewStaffModel } from "../view-staff-model";
 
-interface StaffListTableProps {
-  setAddStaffModalOpen?: Dispatch<SetStateAction<boolean>>;
-}
+export function StaffListTable() {
+  const [isAddStaffModalOpen, setAddStaffIsModalOpen] = useState(false);
+  const [isEditStaffModalOpen, setEditStaffIsModalOpen] = useState(false);
+    const [isViewStaffModalOpen, setViewStaffIsModalOpen] = useState(false);
 
-// StaffListTable: Displays staff records with filters, actions, and export options
-export function StaffListTable({ setAddStaffModalOpen }: StaffListTableProps) {
-  const { allStatusesData } = useAllStatusesQuery();
 
-  const statusOptions =
-    allStatusesData?.map((status) => ({
-      label: status?.name,
-      value: status?.id.toString(),
-    })) || [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [, setSelectedRow] = useState<any>(null);
 
-  // Formik state for filters
-  const { values, setFieldValue } = useFormik({
-    initialValues: {
-      status_id: "",
-      search: "",
+  const handleOpenModal = () => {
+    setSelectedRow(null);
+    setAddStaffIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setAddStaffIsModalOpen(false);
+    setSelectedRow(null);
+  };
+  const handleCloseEditStaffModel = () => {
+    setEditStaffIsModalOpen(false);
+  };
+
+ const handleCloseViewStaffModel = () => {
+    setViewStaffIsModalOpen(false);
+  };
+
+  const staffActions: ITableAction<IStaffListProps>[] = [
+        {
+      label: "View",
+      onClick: (row) => {
+        console.log("View clicked", row.id);
+        setViewStaffIsModalOpen(true);
+      },
+      className: "text-blue-500 whitespace-nowrap",
     },
-    onSubmit: () => {},
-  });
+    {
+      label: "Edit",
+      onClick: (row) => {
+        console.log("Edit clicked", row.id);
+        setEditStaffIsModalOpen(true);
+      },
+      className: "text-blue-500 whitespace-nowrap",
+    },
+    {
+      label: "Delete",
+      onClick: (row) => {
+        console.log("Delete clicked", row.id);
+      },
+      className: "text-red-500",
+    },
+  ];
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
-      <div className="flex justify-between items-center flex-nowrap gap-4 2xl:gap-[1vw]">
-        <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium whitespace-nowrap pb-8">
+      <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
+        <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
           Staff List
         </h1>
-        <div className="flex items-center flex-nowrap gap-4 2xl:gap-[1vw]">
-          <h1 className="whitespace-nowrap text-fuchsia-950 underline font-semibold">
-            Approved
-          </h1>
-          <h1 className="whitespace-nowrap font-semibold">Not Approved</h1>
-
+        <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           <SearchBar
             onSearch={(query) => console.log("Searching:", query)}
             bgColor="white"
-            width="min-w-[12rem] md:w-[25vw]"
+            width="w-full min-w-[12rem] md:w-[25vw]"
           />
 
-          {setAddStaffModalOpen && (
+          <div>
             <Button
               title="Add Staff"
               variant="background-white"
               width="w-full md:w-fit"
-              onClick={() => setAddStaffModalOpen(true)}
+              onClick={handleOpenModal}
             />
-          )}
-          <Dropdown
-            label="Status"
-            options={statusOptions}
-            value={values.status_id}
-            onChange={(val) => setFieldValue("status_id", val)}
-          />
+
+            <AddNewStaffModel
+              isOpen={isAddStaffModalOpen}
+              onClose={handleCloseModal}
+            />
+          </div>
+
           <Button
             title="Export"
             variant="background-white"
@@ -83,11 +100,26 @@ export function StaffListTable({ setAddStaffModalOpen }: StaffListTableProps) {
           />
         </div>
       </div>
+
       <Table
-        data={StaffList}
-        columns={StaffListColumn}
+        data={staffList}
+        columns={staffListColumn}
         actions={staffActions}
       />
+
+      {isEditStaffModalOpen && (
+        <EditStaffModel
+          isOpen={isEditStaffModalOpen}
+          onClose={handleCloseEditStaffModel}
+        />
+      )}
+
+        {isViewStaffModalOpen && (
+        <ViewStaffModel
+          isOpen={isViewStaffModalOpen}
+          onClose={handleCloseViewStaffModel}
+        />
+      )}
     </div>
   );
 }
