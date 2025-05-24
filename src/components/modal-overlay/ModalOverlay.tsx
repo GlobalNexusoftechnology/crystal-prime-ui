@@ -33,7 +33,7 @@ export const ModalOverlay: React.FC<ModalOverlayProps> = ({
           onClick={onClose}
         >
           <BsArrowLeft className="text-[1rem] 2xl:text-[1vw] mr-2" />
-          Back to Leads
+          Back to Leads 
         </button>
         {children}
       </div>

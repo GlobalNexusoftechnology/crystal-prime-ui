@@ -50,13 +50,6 @@ export interface IAllStatusesResponse {
   data: IAllStatusesList[];
 }
 
-export interface ICreateStatusResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  data: IAllStatusesList;
-}
-
 export interface IAllLeadsList {
   id: string;
   created_at: string;
