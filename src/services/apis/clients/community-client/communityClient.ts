@@ -9,7 +9,6 @@ import {
   IAllLeadStatusHistoryResponse,
   IAllRoleResponse,
   IAllSourcesResponse,
- 
   IAllStatusesResponse,
   IAllUsersResponse,
   IChangePasswordPayload,
@@ -24,7 +23,6 @@ import {
   ICreateLeadStatusHistoryResponse,
   ICreateSourcesPayload,
   ICreateSourcesResponse,
-
   ICreateStatusesPayload,
   ICreateStatusesResponse,
   ICreateUserPayload,
@@ -32,7 +30,6 @@ import {
   IDeleteLeadFollowUpResponse,
   IDeleteLeadResponse,
   IDeleteSourcesResponse,
- 
   IDeleteStatusesResponse,
   IDeleteUserResponse,
   ILeadDetailResponse,
@@ -49,7 +46,6 @@ import {
   ISignupPayload,
   ISignupResponse,
   ISourcesDetailResponse,
-
   IStatusesDetailResponse,
   IUpdateLeadFollowUpPayload,
   IUpdateLeadFollowUpResponse,
@@ -57,7 +53,6 @@ import {
   IUpdateLeadResponse,
   IUpdateSourcesPayload,
   IUpdateSourcesResponse,
-
   IUpdateStatusesPayload,
   IUpdateStatusesResponse,
   IUpdateUserPayload,
@@ -753,10 +748,6 @@ export class CommunityClient extends ApiClient {
   };
 
 }
- 
-
-
-
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.
