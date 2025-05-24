@@ -37,5 +37,8 @@ export {useCreateUserMutation} from './useCreateUserMutation';
 export {useUserDetailQuery}  from './useUserDetailQuery';
 export {useUpdateUserMutation} from "./useUpdateUserMutation";
 export {useDeleteUserMutation} from "./useDeleteUserMutation";
+
+// lead status history APIs hooks
 export { useAllLeadStatusHistoryQuery } from "./useAllLeadStatusHistoryQuery";
+export { useCreateLeadStatusHistoryMutation } from "./useCreateLeadStatusHistoryMutation";
 

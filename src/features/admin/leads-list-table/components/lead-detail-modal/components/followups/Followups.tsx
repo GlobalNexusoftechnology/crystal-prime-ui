@@ -2,48 +2,78 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, DatePicker, Dropdown, InputField } from "@/components";
-import { useAlLeadFollowUpQuery } from "@/services";
-import { formatDate, formattingDate } from "@/utils";
+import {
+  ICreateLeadFollowUpPayload,
+  ICreateLeadFollowUpResponse,
+  LeadFollowupStatus,
+  useAlLeadFollowUpQuery,
+  useAllUsersQuery,
+  useAuthStore,
+  useCreateLeadFollowUpMutation,
+} from "@/services";
+import { formatDate, formattingDate, IApiError } from "@/utils";
 
-const statusOptions = [
-  { label: "Initiated", value: "initiated" },
-  { label: "In Progress", value: "in_progress" },
-  { label: "Completed", value: "completed" },
-];
-
-const assignOptions = [
-  { label: "Meena Kapoor", value: "meena" },
-  { label: "Ajay Kumar", value: "ajay" },
-];
-
+// ✅ Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
-  nextFollowupDate: Yup.string().required("Next follow-up date is required"),
-  status: Yup.string().required("Status is required"),
-  assign: Yup.string().required("Assignee is required"),
-  remark: Yup.string().required("Remark is required"),
+  due_date: Yup.string().required("Next follow-up date is required"),
+  completed_date: Yup.string().required("Completed date is required"),
+  status: Yup.string().oneOf(
+    Object.values(LeadFollowupStatus),
+    "Invalid status"
+  ),
+  user_id: Yup.string().required("Assignee is required"),
+  remarks: Yup.string().required("Remark is required"),
 });
 
 interface IFollowupsProps {
   showForm: boolean;
   setShowForm: (val: boolean) => void;
+  leadId: string;
 }
 
-export function Followups({ showForm, setShowForm }: IFollowupsProps) {
-  const { data: followupData } = useAlLeadFollowUpQuery();
-  const formik = useFormik({
+export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
+  const { data: followupData, LeadFollowUp } = useAlLeadFollowUpQuery();
+  const { allUsersData } = useAllUsersQuery();
+  const { activeSession } = useAuthStore();
+  const userId = activeSession?.user?.id;
+
+  const { createLeadFollowUp } = useCreateLeadFollowUpMutation({
+    onSuccessCallback: (data: ICreateLeadFollowUpResponse) => {
+      console.log("Lead follow-up created successfully", data);
+      formik.resetForm();
+      setShowForm(false);
+      LeadFollowUp()
+    },
+    onErrorCallback: (err: IApiError) => {
+      console.error("Failed to create lead follow-up:", err);
+    },
+  });
+
+  const formik = useFormik<ICreateLeadFollowUpPayload>({
     initialValues: {
-      nextFollowupDate: "",
+      lead_id: leadId,
+      due_date: "",
       status: "",
-      assign: "",
-      remark: "",
+      completed_date: "",
+      user_id: userId,
+      remarks: "",
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("Followup Submitted:", values);
-      formik.resetForm();
-      setShowForm(false);
+      createLeadFollowUp(values);
     },
   });
+
+  const statusOptions = Object.entries(LeadFollowupStatus).map(([, value]) => ({
+    label: value,
+    value,
+  }));
+
+  const userOptions =
+    allUsersData?.map((user) => ({
+      label: `${user?.first_name} ${user?.last_name}`,
+      value: user?.id.toString(),
+    })) || [];
 
   return (
     <div className="flex flex-col gap-4">
@@ -54,12 +84,19 @@ export function Followups({ showForm, setShowForm }: IFollowupsProps) {
         >
           <DatePicker
             label="Next Followup Date"
-            value={formik.values.nextFollowupDate}
-            onChange={(date) => formik.setFieldValue("nextFollowupDate", date)}
+            value={`${formik.values.due_date}`}
+            onChange={(date) => formik.setFieldValue("due_date", date)}
             placeholder="Next Followup Date"
+            error={formik.touched.due_date ? formik.errors.due_date : undefined}
+          />
+          <DatePicker
+            label="Completed Date"
+            value={`${formik.values.completed_date}`}
+            onChange={(date) => formik.setFieldValue("completed_date", date)}
+            placeholder="Completed Date"
             error={
-              formik.touched.nextFollowupDate
-                ? formik.errors.nextFollowupDate
+              formik.touched.completed_date
+                ? formik.errors.completed_date
                 : undefined
             }
           />
@@ -70,28 +107,25 @@ export function Followups({ showForm, setShowForm }: IFollowupsProps) {
               options={statusOptions}
               value={formik.values.status}
               onChange={(val) => formik.setFieldValue("status", val)}
-              dropdownWidth="w-full"
               error={formik.touched.status ? formik.errors.status : undefined}
             />
-
             <Dropdown
-              label="Assign To"
-              options={assignOptions}
-              value={formik.values.assign}
-              onChange={(val) => formik.setFieldValue("assign", val)}
-              dropdownWidth="w-full"
-              error={formik.touched.assign ? formik.errors.assign : undefined}
+              label="Assigned To"
+              options={userOptions}
+              value={formik.values.user_id?.toString() || ""}
+              onChange={(val) => formik.setFieldValue("user_id", val)}
+              error={formik.touched.user_id ? formik.errors.user_id : undefined}
             />
           </div>
 
           <InputField
-            label="Remark"
-            name="remark"
-            placeholder="Enter remark"
-            value={formik.values.remark}
+            label="Remarks"
+            name="remarks"
+            placeholder="Enter remarks"
+            value={formik.values.remarks}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.remark ? formik.errors.remark : undefined}
+            error={formik.touched.remarks ? formik.errors.remarks : undefined}
           />
 
           <div className="flex items-center gap-4 2xl:gap-[1vw]">
@@ -99,9 +133,7 @@ export function Followups({ showForm, setShowForm }: IFollowupsProps) {
               title="Cancel"
               variant="primary-outline"
               type="button"
-              onClick={() => {
-                setShowForm(false);
-              }}
+              onClick={() => setShowForm(false)}
               width="w-full"
             />
             <Button title="Add Next Followup" type="submit" width="w-full" />
@@ -117,7 +149,7 @@ export function Followups({ showForm, setShowForm }: IFollowupsProps) {
               <div className="flex items-center gap-4 2xl:gap-[1vw]">
                 <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
                   <p>Assigned To:</p>
-                  <p>{`${followup.user_id?.first_name} ${followup.user_id?.last_name}`}</p>
+                  <p>{`${followup?.user?.first_name} ${followup?.user?.last_name}`}</p>
                 </div>
                 <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
                   <p>Status:</p>
@@ -132,7 +164,7 @@ export function Followups({ showForm, setShowForm }: IFollowupsProps) {
                 <p>{formatDate(`${followup?.due_date}`)}</p>
               </div>
               <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
-                <p>Created At:</p>
+                <p>Completed:</p>
                 <p>
                   {formattingDate(`${followup.completed_date}`, "toReadable")}
                 </p>

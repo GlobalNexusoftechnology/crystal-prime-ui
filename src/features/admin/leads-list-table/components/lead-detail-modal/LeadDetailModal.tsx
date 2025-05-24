@@ -183,9 +183,9 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
 
           {/* Tab Contents */}
           <div>
-            {activeTab === "Followups" && <Followups showForm={showForm} setShowForm={setShowForm}/>}
+            {activeTab === "Followups" && <Followups leadId={data.id} showForm={showForm} setShowForm={setShowForm}/>}
             {activeTab === "Attachment" && <Attachments showForm={showForm} setShowForm={setShowForm}/>}
-            {activeTab === "Status History" && <StatusHistory showForm={showForm} setShowForm={setShowForm}/>}
+            {activeTab === "Status History" && <StatusHistory leadId={data.id} showForm={showForm} setShowForm={setShowForm}/>}
           </div>
         </div>
       </div>

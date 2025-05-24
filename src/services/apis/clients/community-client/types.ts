@@ -50,13 +50,6 @@ export interface IAllStatusesResponse {
   data: IAllStatusesList[];
 }
 
-export interface ICreateStatusResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  data: IAllStatusesList;
-}
-
 export interface IAllLeadsList {
   id: string;
   created_at: string;
@@ -160,7 +153,7 @@ export interface IAllLeadAttachmentList {
   deleted_at: string | null;
   file_path: string;
   file_type: string;
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lead: any | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   uploaded_by: any | null;
@@ -171,27 +164,6 @@ export interface IAllLeadAttachmentResponse {
   message: string;
   success: true;
   data: IAllLeadAttachmentList[];
-}
-export interface IAllLeadStatusHistoryResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  data: IAllLeadStatusHistoryList[];
-}
-export interface IAllLeadStatusHistoryList {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  deleted: boolean;
-  deleted_at: string | null;
-  status_remarks: string;
-  lead: IAllLeadsList
-  status: IStatus
-  changed_by: string;
-
-}
-export interface ICreateLeadStatusHistoryPayload {
-  data: IAllLeadStatusHistoryList;
 }
 
 export interface IVerifyEmailPayload {
@@ -228,7 +200,6 @@ export interface ICreateLeadResponse {
   success: true;
   data: ICreateLeadPayload[];
 }
-
 
 // create lead attachment
 
@@ -301,32 +272,6 @@ export interface IUpdateLeadPayload {
   payload: ICreateLeadPayload;
 }
 
-export interface IUpdateLeadFollowUpPayload {
-  id: string;
-  payload: ICreateLeadFollowUpPayload;
-}
-
-export interface ICreateLeadFollowUpPayload {
-  lead_id: ILeadDetailResponse;
-  user_id?: IUser;
-  status:
-    | "PENDING"
-    | "RESCHEDULE"
-    | "AWAITING RESPONSE"
-    | "NO RESPONSE"
-    | "FAILED"
-    | "COMPLETED";
-  due_date?: string;
-  completed_date?: string;
-  remarks?: string;
-}
-export interface ICreateLeadFollowUpResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  data: ICreateLeadFollowUpPayload[];
-}
-
 export interface IDeleteLeadResponse {
   status: boolean;
   message: string;
@@ -370,13 +315,6 @@ export interface ILeadDetailResponse {
   data: IAllLeadsList;
 }
 
-export interface IAllLeadFollowUpResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  data: ICreateLeadFollowUpPayload[];
-}
-
 export interface ILeadFollowUpDetailList {
   id: string;
   created_at: string;
@@ -407,7 +345,7 @@ export interface ILeadFollowUpDetailResponse {
 }
 
 export interface ILeadDownloadExcel {
-  fileURL: string
+  fileURL: string;
 }
 
 export interface IAllLeadDownloadExcelResponse {
@@ -488,7 +426,7 @@ export interface ISignupResponse {
 export interface IAllRoleResponse {
   status: boolean;
   message: string;
-data: IAllRoleList[];
+  data: IAllRoleList[];
 }
 
 export interface IAllRoleList {
@@ -524,9 +462,6 @@ export interface ICreateAddRolePayload {
   // permissions: Permission[];
 }
 
-
-//staff 
-
 //get
 export interface IAllUsersList {
   id: string;
@@ -550,16 +485,28 @@ export interface IAllUsersList {
   password: string;
 }
 
+export interface IAllUsersListResponse {
+  id: string,
+  created_at: string;
+  updated_at: string;
+  role: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  number: string;
+  dob: string;
+}
+
 export interface IAllUsersResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllUsersList[];
+  data: IAllUsersListResponse[];
 }
 
 //post  ...
- export interface ICreateUserPayload {
-   first_name: string;
+export interface ICreateUserPayload {
+  first_name: string;
   last_name: string;
   email: string;
   password: string;
@@ -575,7 +522,7 @@ export interface ICreateUserResponse {
 
 //get by id ...
 export interface IUserDetailList {
-   id: string;
+  id: string;
   email: string;
   number: string | null;
   dob: string | null;
@@ -595,7 +542,7 @@ export interface IUserDetailResponse {
   success: true;
   data: IUserDetailList;
 }
-//update 
+//update
 export interface IUpdateUserPayload {
   id: string;
   payload: ICreateUserPayload;
@@ -607,10 +554,102 @@ export interface IUpdateUserResponse {
   success: true;
   data: IUpdateUserPayload;
 }
-//delete 
+//delete
 export interface IDeleteUserResponse {
   status: boolean;
   message: string;
   success: true;
   data: ICreateUserPayload;
+}
+
+//  Lead Status History APIs Types
+// -----------------------------------------------------
+
+// Lead Status History List
+export interface IAllLeadStatusHistoryList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  status_remarks: string;
+  lead: IAllLeadsList;
+  changed_by: IUser;
+  status: IStatus;
+}
+
+// Create Lead Status History Payload
+export interface ICreateLeadStatusHistoryPayload {
+  lead_id: string;
+  status_id: string;
+  status_remarks: string;
+  changed_by: string;
+}
+
+// All Lead Status History Response
+export interface IAllLeadStatusHistoryResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllLeadStatusHistoryList[];
+}
+
+// Create Lead Status History Response
+export interface ICreateLeadStatusHistoryResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllLeadStatusHistoryList;
+}
+
+/// Lead Followups APIs Types
+//------------------------------------------------------
+
+export interface LeadFollowupsList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  status: LeadFollowupStatus;
+  due_date: string;
+  completed_date: string | null;
+  remarks: string;
+  lead: IUser;
+  user: IUser;
+}
+export enum LeadFollowupStatus {
+  PENDING = "PENDING",
+  RESCHEDULE = "RESCHEDULE",
+  AWAITING_RESPONSE = "AWAITING RESPONSE",
+  NO_RESPONSE = "NO RESPONSE",
+  FAILED = "FAILED",
+  COMPLETED = "COMPLETED",
+}
+
+export interface IUpdateLeadFollowUpPayload {
+  id: string;
+  payload: ICreateLeadFollowUpPayload;
+}
+
+export interface ICreateLeadFollowUpPayload {
+  lead_id: string;
+  user_id?: string;
+  status: string;
+  due_date?: string;
+  completed_date?: string;
+  remarks?: string;
+}
+export interface ICreateLeadFollowUpResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: LeadFollowupsList;
+}
+
+export interface IAllLeadFollowUpResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: LeadFollowupsList[];
 }

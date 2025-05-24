@@ -12,6 +12,7 @@ interface UserDropdownProps {
 
 export const UserDropdown: React.FC<UserDropdownProps> = ({ name, image }) => {
   const [open, setOpen] = useState(false);
+
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown if clicked outside
@@ -58,19 +59,12 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ name, image }) => {
             >
               Profile
             </Link>
-             <Link
+            <Link
               href="/admin/change-password"
               className="px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] hover:bg-gray-100 cursor-pointer"
             >
               change password
             </Link>
-            <Link
-              href=""
-              className="px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] hover:bg-gray-100 cursor-pointer"
-            >
-              Logout
-            </Link>
-           
           </ul>
         </div>
       )}

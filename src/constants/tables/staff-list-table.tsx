@@ -1,4 +1,5 @@
-import { ITableAction, ITableColumn } from "../table";
+import { IAllUsersListResponse } from "@/services";
+import { ITableColumn } from "../table";
 
 export interface IStaffListProps {
   id: number;
@@ -12,122 +13,23 @@ export interface IStaffListProps {
   updatedAt: string;
 }
 
-export const staffList: IStaffListProps[] = [
-  {
-    id: 1,
-    firstName: "Jeanette",
-    lastName: "Torp",
-    contact: "(385) 344-9378",
-    dob: "07-25-2022",
-    email: "Elna.Ferry@hotmail.com",
-    roleName: "Developer",
-    createdAt: "07-25-2022",
-    updatedAt: "07-25-2022",
-  },
-  {
-    id: 2,
-    firstName: "Jody",
-    lastName: "Grant",
-    contact: "(385) 344-9378",
-    dob: "07-25-2022",
-    email: "Willis.Schaden@yahoo.com",
-    roleName: "HR",
-    createdAt: "07-25-2022",
-    updatedAt: "07-25-2022",
-  },
-  {
-    id: 3,
-    firstName: "Francisco",
-    lastName: "Keebler",
-    contact: "(385) 344-9378",
-    dob: "07-25-2022",
-    email: "Savanna_Satterfield@hotmail.com",
-    roleName: "Francisco Keebler",
-    createdAt: "07-25-2022",
-    updatedAt: "07-25-2022",
-  },
-  {
-    id: 4,
-    firstName: "Jean",
-    lastName: "Hyatt",
-    contact: "(385) 344-9378",
-    dob: "07-25-2022",
-    email: "Brown23@gmail.com",
-    roleName: "Jean Hyatt",
-    createdAt: "07-25-2022",
-    updatedAt: "07-25-2022",
-  },
-  {
-    id: 5,
-    firstName: "Miss Dianna",
-    lastName: "Hills",
-    contact: "(385) 344-9378",
-    dob: "07-25-2022",
-    email: "Zelma_Dachlite@yahoo.com",
-    roleName: "Miss Dianna Hills",
-    createdAt: "07-25-2022",
-    updatedAt: "07-25-2022",
-  },
-  {
-    id: 6,
-    firstName: "Tommie",
-    lastName: "Jaskolski",
-    contact: "(385) 344-9378",
-    dob: "07-25-2022",
-    email: "Eryn_Goldner@yahoo.com",
-    roleName: "Tommie Jaskolski",
-    createdAt: "07-25-2022",
-    updatedAt: "07-25-2022",
-  },
-  {
-    id: 7,
-    firstName: "Michele",
-    lastName: "Jakubowski",
-    contact: "(385) 344-9378",
-    dob: "07-25-2022",
-    email: "Dorris_Brakus92@gmail.com",
-    roleName: "Michele Jakubowski",
-    createdAt: "07-25-2022",
-    updatedAt: "07-25-2022",
-  },
-];
-
-
-
-export const staffActions: ITableAction<IStaffListProps>[] = [
-
-  {
-    label: "Edit",
-    onClick: (row) => {
-      console.log("Edit clicked", row.id);
-    },
-    className: "text-blue-500 whitespace-nowrap",
-  },
-  {
-    label: "Delete",
-    onClick: (row) => {
-      console.log("Delete clicked", row.id);
-    },
-    className: "text-red-500",
-  },
-];
-export const staffListColumn: ITableColumn<IStaffListProps>[] = [
+export const staffListColumn: ITableColumn<IAllUsersListResponse>[] = [
 
   {
     header: "FIRST NAME",
-    accessor: "firstName",
+    accessor: "first_name",
     sortable: true,
     headerClassName: "min-w-[10rem]",
   },
   {
     header: "LAST NAME",
-    accessor: "lastName",
+    accessor: "last_name",
     sortable: true,
     headerClassName: "min-w-[10rem]",
   },
   {
     header: "CONTACT",
-    accessor: "contact",
+    accessor: "number",
     headerClassName: "min-w-[10rem]",
   },
   {
@@ -142,17 +44,17 @@ export const staffListColumn: ITableColumn<IStaffListProps>[] = [
   },
   {
     header: "ROLE NAME",
-    accessor: "roleName",
+    accessor: "role",
     headerClassName: "min-w-[14rem]",
   },
   {
     header: "CREATED AT",
-    accessor: "createdAt",
+    accessor: "created_at",
     headerClassName: "min-w-[10rem]",
   },
   {
     header: "UPDATED AT",
-    accessor: "updatedAt",
+    accessor: "updated_at",
     headerClassName: "min-w-[10rem]",
   },
 ];

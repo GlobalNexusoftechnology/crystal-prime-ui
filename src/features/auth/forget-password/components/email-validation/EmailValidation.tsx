@@ -1,6 +1,5 @@
 'use client';
 
-import Link from "next/link";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -59,20 +58,7 @@ export function EmailValidation({ onNext }: TEmailValidationProps) {
 
           {/* Buttons */}
           <Button title="Send OTP" type="submit" />
-          <Button title="Cancel" variant="primary-outline" />
-
-          {/* Link to Create Account */}
-          <div className="flex gap-2 2xl:gap-[0.5vw]">
-            <span className="text-sm 2xl:text-[0.875vw] text-primary font-medium">
-              New here?
-            </span>
-            <Link
-              href="/create-account"
-              className="text-sm 2xl:text-[0.875vw] text-primary underline underline-offset-4 font-medium"
-            >
-              Create your account now
-            </Link>
-          </div>
+          <Button title="Cancel" variant="primary-outline" />          
         </form>
       </AuthCard>
     </div>
