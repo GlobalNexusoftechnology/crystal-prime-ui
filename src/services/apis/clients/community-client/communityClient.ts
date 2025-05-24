@@ -143,7 +143,7 @@ export class CommunityClient extends ApiClient {
       throw response?.error;
     }
 
-    return { data: response?.data };
+    return response?.data;
   };
 
   /**

@@ -1,4 +1,4 @@
-import { ILoginUserResponseData, useMutation } from "@/services";
+import { ILoginUserResponse, useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 
 import { COMMUNITY_CLIENT } from "../communityClient";
@@ -12,7 +12,7 @@ interface IUserLoginOptions {
   /**
    * TODO: Remove null when implementing actual API.
    */
-  onSuccessCallback: (newSessionInfo: ILoginUserResponseData) => void;
+  onSuccessCallback: (newSessionInfo: ILoginUserResponse) => void;
   /**
    * This is called on successful login to save the user's session to device
    * storage and wipe existing user data.

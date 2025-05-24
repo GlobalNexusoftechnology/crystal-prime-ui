@@ -401,14 +401,13 @@ export interface IChangePasswordResponse {
 export interface ILoginUserResponse {
   message?: string;
   status: string;
-  access_token: string;
-  refresh_token: string;
-  user: IUser;
+  data: ILoginUserResponseData
 }
 
 export interface ILoginUserResponseData {
-  message?: string;
-  data: ILoginUserResponse;
+  access_token: string;
+  refresh_token: string;
+  user: IUser;
 }
 
 export interface ISignupPayload {

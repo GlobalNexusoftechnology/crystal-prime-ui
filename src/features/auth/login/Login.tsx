@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Button, InputField } from "@/components";
 import { AuthCard } from "../auth-card";
 import {
-  ILoginUserResponseData,
+  ILoginUserResponse,
   useAuthStore,
   useLoginMutation,
 } from "@/services";
@@ -18,19 +18,17 @@ export function Login() {
   const router = useRouter();
   const { addNewSession } = useAuthStore();
 
-  const handleSuccessCallback = (data: ILoginUserResponseData) => {
+  const handleSuccessCallback = (response: ILoginUserResponse) => {
+    const loginData = response.data;
+
     addNewSession({
-      user: data?.data?.user,
-      access_token: data?.data.access_token || "",
-      refresh_token: data?.data.refresh_token || "",
+      user: loginData?.user,
+      access_token: loginData.access_token || "",
+      refresh_token: loginData.refresh_token || "",
     });
 
-    toast.success(data?.data?.message || "Login successful 🎉");
-
-    const role = data.data.user?.role?.toLowerCase();
-    if (role === "admin" || role === "developer") {
-      router.push("/admin/dashboard");
-    }
+    toast.success(response?.message || "Login successful 🎉");
+    router.push("/admin/dashboard");
   };
 
   const handleErrorCallback = (error: IApiError) => {
