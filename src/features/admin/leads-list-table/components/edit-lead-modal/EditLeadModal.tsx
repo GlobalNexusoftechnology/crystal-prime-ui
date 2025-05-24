@@ -62,7 +62,7 @@ export function EditLeadModal({
   };
 
   const sourceOptions =
-    allSourcesData?.map((source) => ({
+    allSourcesData?.data?.map((source) => ({
       label: source?.name,
       value: source.id.toString(),
     })) || [];
@@ -90,6 +90,7 @@ export function EditLeadModal({
               requirement: lead.requirement || "",
               source_id: lead.source_id?.name || "",
               status_id: lead.status_id?.name || "",
+              assigned_to: lead.assigned_to?.name || "",
             }}
             validationSchema={validationSchema}
             onSubmit={(values: ICreateLeadPayload) => {

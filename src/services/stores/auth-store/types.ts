@@ -18,7 +18,7 @@ export interface IUser {
 export interface IActiveSession {
   access_token: string;
   refresh_token: string;
-  user: IUser;
+  user: IUser | null;
 }
 
 /**

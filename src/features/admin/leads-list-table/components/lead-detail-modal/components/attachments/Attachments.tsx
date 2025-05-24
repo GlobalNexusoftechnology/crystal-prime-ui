@@ -27,7 +27,9 @@ export function Attachments({ leadId, showForm, setShowForm }: IAttachmentsProps
   const { allLeadAttachmentData, allLeadAttachment } =
     useAllLeadAttachmentQuery();
   const { activeSession } = useAuthStore()
-  const uploaded_by = `${activeSession?.user.first_name} ${activeSession?.user.last_name}`
+  const firstName = activeSession?.user?.first_name;
+  const lastName = activeSession?.user?.last_name;
+  const uploaded_by = `${firstName} ${lastName}`
 
   const { onCreateLeadAttachment } = useCreateLeadAttachmentMutation(
     {
