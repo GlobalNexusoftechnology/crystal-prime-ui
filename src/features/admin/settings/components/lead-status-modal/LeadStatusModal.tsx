@@ -1,4 +1,6 @@
 import { Button, InputField, ModalOverlay } from "@/components";
+import { ICreateStatusesResponse, useCreateStatusesMutation } from "@/services";
+import { IApiError } from "@/utils";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -24,6 +26,16 @@ interface LeadStatusModalProps {
  * @param onClose - Function called to close the modal.
  */
 export function LeadStatusModal({ onClose }: LeadStatusModalProps) {
+    const { onAllStatusMutation } = useCreateStatusesMutation({
+      onSuccessCallback: (data: ICreateStatusesResponse) => {
+        console.log("Lead created successfully", data);
+       onClose();
+      },
+      onErrorCallback: (err: IApiError) => {
+        console.error("Failed to create lead:", err);
+      },
+    });
+
   return (
     <ModalOverlay isOpen={true} onClose={onClose}>
       <div className="bg-[#F8F8F8] sm:w-[30rem] mx-auto rounded-lg p-6 shadow space-y-1">
@@ -32,20 +44,19 @@ export function LeadStatusModal({ onClose }: LeadStatusModalProps) {
             Add Lead Status
           </h2>
 
-          <Formik
-            initialValues={{ leadStatus: "" }}
-            validationSchema={Yup.object({
-              leadStatus: Yup.string()
-                .required("Lead status is required")
-                .max(50, "Must be 50 characters or less"),
-            })}
-            onSubmit={(values, { resetForm }) => {
-              // Log submitted values, reset form, then close modal
-              console.log("Form Submitted:", values);
-              resetForm();
-              onClose();
-            }}
-          >
+        <Formik
+  initialValues={{ name: "" }}
+  validationSchema={Yup.object({
+    name: Yup.string()
+      .required("Lead status is required")
+      .max(50, "Must be 50 characters or less"),
+  })}
+  onSubmit={(values, { resetForm }) => {
+    onAllStatusMutation({name: values.name}); // actual API call
+    resetForm();
+  }}
+>
+
             {({ isSubmitting }) => (
               <Form className="space-y-4">
                 {/* Lead Status Input Field */}
@@ -54,13 +65,13 @@ export function LeadStatusModal({ onClose }: LeadStatusModalProps) {
                     Lead Status
                   </label>
                   <Field
-                    name="leadStatus"
+                    name="name"
                     as={InputField}
                     type="text"
                     placeholder="Enter New Lead Status"
                   />
                   <div className="text-red-500 text-sm mt-1">
-                    <ErrorMessage name="leadStatus" />
+                    <ErrorMessage name="name" />
                   </div>
                 </div>
 
@@ -89,3 +100,5 @@ export function LeadStatusModal({ onClose }: LeadStatusModalProps) {
     </ModalOverlay>
   );
 }
+
+

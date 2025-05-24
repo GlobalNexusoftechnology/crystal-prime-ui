@@ -1,5 +1,9 @@
 import { Button, InputField, ModalOverlay } from "@/components";
+import { IApiError } from "@/utils";
 import React from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { ICreateSourcesResponse, useCreateSourcesMutation } from "@/services";
 
 interface AddLeadSourcesModalProps {
   isOpen: boolean;
@@ -10,27 +14,78 @@ export const AddLeadSourcesModal: React.FC<AddLeadSourcesModalProps> = ({
   isOpen,
   onClose,
 }) => {
-  return (
-    <div>
-      <ModalOverlay
-        isOpen={isOpen}
-        onClose={onClose}
-        modalClassName="w-full md:w-[70%] lg:w-[60%] xl:w-[40%] 2xl:w-[40vw]"
-      >
-        <form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1ve] bg-white rounded-xl 2xl:rounded-[0.75vw] border-gray-400">
-          <h1 className="text-md 2xl:text-[1vw] text-gray-900 ">
-            Add New Lead Source
-          </h1>
-          <div className="flex flex-col gap-4 md:gap-8 2xl:gap-[2vw] md:flex-row justify-between items-center">
-            <InputField label="Name" placeholder="Enter Lead Source Name" />
-          </div>
-          <div className="flex gap-4 2xl:gap-[1vw] w-full ">
-            <Button title="Cancel" variant="primary-outline" width="w-full" />
+  const { onStatusMutation } = useCreateSourcesMutation({
+    onSuccessCallback: (data: ICreateSourcesResponse) => {
+      console.log("Lead source created successfully", data);
+      onClose();
+    },
+    onErrorCallback: (err: IApiError) => {
+      console.error("Failed to create lead source:", err);
+    },
+  });
 
-            <Button title="Add Staff" width="w-full" />
-          </div>
-        </form>
-      </ModalOverlay>
-    </div>
+  return (
+    <ModalOverlay
+      isOpen={isOpen}
+      onClose={onClose}
+      modalClassName="w-full sm:w-[30rem]"
+    >
+      <Formik
+        initialValues={{ name: "" }}
+        validationSchema={Yup.object({
+          name: Yup.string()
+            .required("Lead source name is required")
+            .max(50, "Must be 50 characters or less"),
+        })}
+        onSubmit={(values, { resetForm }) => {
+          onStatusMutation({ name: values.name }); // Actual API call
+          resetForm();
+          onClose();
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw] border-gray-400">
+            <h1 className="text-md 2xl:text-[1vw] text-gray-900">
+              Add New Lead Source
+            </h1>
+
+            <div className="flex flex-col gap-4 md:gap-8 2xl:gap-[2vw] md:flex-row justify-between items-center w-full">
+              <div className="w-full">
+                <label className="block mb-1 text-sm font-medium text-gray-700">
+                  Name
+                </label>
+                <Field
+                  name="name"
+                  as={InputField}
+                  placeholder="Enter Lead Source Name"
+                />
+                <div className="text-red-500 text-sm mt-1">
+                  <ErrorMessage name="name" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex gap-4 2xl:gap-[1vw] w-full">
+              <Button
+                title="Cancel"
+                variant="primary-outline"
+                width="w-full"
+                type="button"
+                onClick={onClose}
+              />
+              <Button
+                title="Add Source"
+                variant="primary"
+                width="w-full"
+                type="submit"
+                disabled={isSubmitting}
+              />
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </ModalOverlay>
   );
 };
+
+
