@@ -1,5 +1,5 @@
-"use client"
-import React, { useRef } from "react";
+"use client";
+import React, { useRef, useState } from "react";
 
 interface UploadDocumentProps {
   label?: string;
@@ -17,13 +17,20 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
   error,
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [selectedFileName, setSelectedFileName] = useState<string>("");
 
   const handleFileClick = () => {
     fileInputRef.current?.click();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.files);
+    const files = e.target.files;
+    onChange(files);
+    if (files && files[0]) {
+      setSelectedFileName(files[0].name);
+    } else {
+      setSelectedFileName("");
+    }
   };
 
   return (
@@ -33,9 +40,9 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
       )}
       <div
         onClick={handleFileClick}
-        className="w-full cursor-pointer px-3 py-2 border rounded-md bg-white text-gray-400 border-gray-300 hover:border-gray-400 transition"
+        className="w-full cursor-pointer px-3 py-2 border rounded-md bg-white text-gray-600 border-gray-300 hover:border-gray-400 transition"
       >
-        {placeholder}
+        {selectedFileName || placeholder}
         <input
           type="file"
           accept={accept}
@@ -44,12 +51,11 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
           className="hidden"
         />
       </div>
-      {/* Error Message */}
       {error && (
         <p className="text-red-500 text-sm 2xl:text-[0.9vw] 2xl:mt-[0.25vw] mt-1">
           {error}
         </p>
-      )}{" "}
+      )}
     </div>
   );
 };

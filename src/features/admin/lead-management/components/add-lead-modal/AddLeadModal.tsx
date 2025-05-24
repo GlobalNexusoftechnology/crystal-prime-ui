@@ -52,7 +52,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
   };
 
   const sourceOptions =
-    allSourcesData?.map((source) => ({
+    allSourcesData?.data.map((source) => ({
       label: source.name, 
       value: source.id.toString(),
     })) || [];

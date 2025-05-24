@@ -80,7 +80,7 @@ export function StaffListTable() {
     },
   ];
 
-  const handleNewStaffSuccesCallback = () => {
+  const handleNewStaffSuccessCallback = () => {
     refetchAllUsers();
   }
 
@@ -108,7 +108,7 @@ export function StaffListTable() {
             <AddNewStaffModel
               isOpen={isAddStaffModalOpen}
               onClose={handleCloseModal}
-              onNewStaffSuccesCallback={handleNewStaffSuccesCallback}
+              onNewStaffSuccessCallback={handleNewStaffSuccessCallback}
             />
           </div>
 

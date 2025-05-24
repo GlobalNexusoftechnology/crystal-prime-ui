@@ -212,11 +212,20 @@ export interface ICreateLeadResponse {
   data: ILeadDetails[];
 }
 
-// create lead attachment
 
+export interface IUploadAttachmentResponse {
+  status: string;
+  message: string;
+  data: {
+    docUrl: string;
+    fileType: string;
+  };
+}
+
+// create lead attachment
 export interface ICreateLeadAttachmentPayload {
   lead_id: string;
-  uploaded_by: null;
+  uploaded_by: string;
   file_path: string;
   file_type: string;
 }

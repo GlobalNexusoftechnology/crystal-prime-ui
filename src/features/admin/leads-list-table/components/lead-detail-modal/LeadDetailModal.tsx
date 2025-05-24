@@ -18,7 +18,6 @@ interface LeadDetailsModalProps {
 
 const tabs = ["Followups", "Attachment", "Status History"];
 
-
 export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
   const [activeTab, setActiveTab] = useState("Followups");
   const [showForm, setShowForm] = useState(false);
@@ -105,7 +104,9 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           </div>
           <div>
             <p className="text-sm 2xl:text-[0.875vw]">Source Name</p>
-            <p className="text-textColor text-[1rem] 2xl:text-[1vw]">{data.source.name}</p>
+            <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
+              {data.source.name}
+            </p>
           </div>
           <div>
             <p className="text-sm 2xl:text-[0.875vw]">Budget</p>
@@ -116,7 +117,10 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div>
             <p className="text-sm 2xl:text-[0.875vw]">Assigned To</p>
             <div className="flex gap-2 2xl:gap-[0.5vw] items-center">
-              <p>{getInitials(data.assignedTo.first_name)}{getInitials(data.assignedTo.last_name)}</p>
+              <p>
+                {getInitials(data.assignedTo.first_name)}
+                {getInitials(data.assignedTo.last_name)}
+              </p>
               <p className="underline font-medium text-textColor text-[1rem] 2xl:text-[1vw]">
                 {data?.assignedTo?.first_name} {data?.assignedTo?.last_name}
               </p>
@@ -174,7 +178,11 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               />
             )}
             {activeTab === "Attachment" && (
-              <Attachments showForm={showForm} setShowForm={setShowForm} />
+              <Attachments
+                leadId={data.id}
+                showForm={showForm}
+                setShowForm={setShowForm}
+              />
             )}
             {activeTab === "Status History" && (
               <StatusHistory

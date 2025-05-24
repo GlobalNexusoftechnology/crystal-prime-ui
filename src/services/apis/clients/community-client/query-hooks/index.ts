@@ -42,3 +42,6 @@ export {useDeleteUserMutation} from "./useDeleteUserMutation";
 export { useAllLeadStatusHistoryQuery } from "./useAllLeadStatusHistoryQuery";
 export { useCreateLeadStatusHistoryMutation } from "./useCreateLeadStatusHistoryMutation";
 
+// upload attachment
+export { useUploadAttachmentMutation } from "./useUploadAttachmentMutation";
+

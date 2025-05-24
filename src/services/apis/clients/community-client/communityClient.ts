@@ -57,6 +57,7 @@ import {
   IUpdateStatusesResponse,
   IUpdateUserPayload,
   IUpdateUserResponse,
+  IUploadAttachmentResponse,
   IUserDetailResponse,
   IVerifyEmailPayload,
   IVerifyEmailResponse,
@@ -100,6 +101,7 @@ import {
   updateUserUrl,
   fetchLeadStatusHistoryUrl,
   createLeadStatusHistoryUrl,
+  uploadAttachmentUrl,
 } from "./urls";
 
 /**
@@ -263,6 +265,28 @@ export class CommunityClient extends ApiClient {
 
     return response?.data;
   };
+
+
+ public uploadAttachment = async (
+  formData: FormData
+) => {
+  const response = await this.post<IUploadAttachmentResponse>(
+    uploadAttachmentUrl(),
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      requiresAuth: true, // if no auth required, else set true
+    }
+  );
+
+  if (!response?.success) {
+    throw response?.errorData;
+  }
+
+  return response?.data;
+};
 
   // create sources
   public createSources = async (payload: ICreateSourcesPayload) => {

@@ -87,6 +87,8 @@ export const updateLeadAttachmentUrl = (id: string) => `/lead-attachments/${id}`
 
 export const deleteLeadAttachmentUrl = (id: string) => `/lead-attachments/${id}`; //delete
 
+export const uploadAttachmentUrl = () => "/lead-attachments/uploadAttachment";
+
 //role
 export const fetchAllRoleListUrl = () => "/roles";
 

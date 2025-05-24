@@ -1,99 +1,130 @@
 "use client";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, InputField, UploadDocument } from "@/components";
-import { useAllLeadAttachmentQuery } from "@/services";
-import { formattingDate } from "@/utils";
-
-const validationSchema = Yup.object().shape({
-  attachments: Yup.mixed().test(
-    "required",
-    "Please upload at least one file",
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (value: any) => {
-      return value && value.length > 0;
-    }
-  ),
-  remark: Yup.string().required("Remark is required"),
-});
+import { Button, UploadDocument } from "@/components";
+import {
+  useAllLeadAttachmentQuery,
+  useAuthStore,
+  useCreateLeadAttachmentMutation,
+  useUploadAttachmentMutation,
+} from "@/services";
+import { formattingDate, IApiError } from "@/utils";
+import toast from "react-hot-toast";
 
 interface IAttachmentsProps {
   showForm: boolean;
   setShowForm: (val: boolean) => void;
+  leadId: string
 }
 
-export function Attachments({ showForm, setShowForm }: IAttachmentsProps) {
-  const { allLeadAttachmentData } = useAllLeadAttachmentQuery();
-  const formik = useFormik({
-    initialValues: {
-      attachments: [] as File[],
-      remark: "",
-    },
-    validationSchema,
-    onSubmit: (values, { resetForm }) => {
-      console.log("Files Uploaded:", values.attachments);
-      console.log("Remark:", values.remark);
-      resetForm();
+const validationSchema = Yup.object({
+  document: Yup.mixed()
+    .required("Please upload a file")
+});
+
+export function Attachments({ leadId, showForm, setShowForm }: IAttachmentsProps) {
+  const { allLeadAttachmentData, allLeadAttachment } =
+    useAllLeadAttachmentQuery();
+  const { activeSession } = useAuthStore()
+  const uploaded_by = `${activeSession?.user.first_name} ${activeSession?.user.last_name}`
+
+  const { onCreateLeadAttachment } = useCreateLeadAttachmentMutation(
+    {
+      onSuccessCallback: (response) => {
+        toast.success(response.message);
+        setShowForm(false);
+        allLeadAttachment();
+      },
+      onErrorCallback: (error: IApiError) => {
+        toast.error(error.message);
+      },
+    }
+  );
+
+  const { isPending,  onUploadAttachment } = useUploadAttachmentMutation({
+    onSuccessCallback: (response) => {
+      toast.success(response.message);
       setShowForm(false);
+      onCreateLeadAttachment({
+        lead_id: leadId,
+        uploaded_by: uploaded_by,
+        file_path: response.data.docUrl,
+        file_type: response.data.fileType,
+      });
+      allLeadAttachment();
+    },
+    onErrorCallback: (error: IApiError) => {
+      toast.error(error.message);
     },
   });
 
-  const handleFileChange = (files: FileList | null) => {
-    if (files) {
-      formik.setFieldValue("attachments", Array.from(files));
-    }
-  };
+  const formik = useFormik({
+    initialValues: { document: null },
+    validationSchema,
+    onSubmit: async (values, { resetForm }) => {
+      if (values.document) {
+        const formData = new FormData();
+        formData.append("document", values.document);
+
+        try {
+          await onUploadAttachment(formData);
+          resetForm();
+        } catch (err) {
+          console.error("Upload error:", err);
+        }
+      } else {
+        console.warn("No valid file found to upload");
+      }
+    },
+  });
 
   return (
     <div className="flex flex-col gap-4">
       {showForm ? (
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
+          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md"
         >
           <UploadDocument
             label="Upload Document"
             placeholder="Upload Document"
-            onChange={handleFileChange}
-          />
-
-          <InputField
-            label="Remark"
-            name="remark"
-            value={formik.values.remark}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.remark && formik.errors.remark}
+            onChange={(files: FileList | null) => {
+              if (files && files[0]) {
+                formik.setFieldValue("document", files[0]);
+              }
+            }}
+            error={formik.touched.document ? formik.errors.document : undefined}
           />
 
           <div className="flex justify-end gap-4 2xl:gap-[1vw]">
             <Button
               title="Cancel"
-              onClick={() => {
-                setShowForm(false);
-              }}
+              onClick={() => setShowForm(false)}
               variant="primary-outline"
               width="w-full"
             />
-            <Button type="submit" title="Add Document" width="w-full" />
+            <Button
+              type="submit"
+              title="Add Document"
+              width="w-full"
+              disabled={isPending}
+            />
           </div>
         </form>
       ) : (
-        allLeadAttachmentData &&
         allLeadAttachmentData?.map((attachment, idx) => (
           <div
             key={idx}
-            className="flex flex-col gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
+            className="flex flex-col gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md"
           >
             <div className="flex flex-col gap-4 2xl:gap-[1vw]">
-              <div className="text-primary flex items-center underline">
+              <div className="text-primary flex items-center underline scrollbar-hidden overflow-x-auto">
                 <p>{attachment.file_path}</p>
               </div>
               <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
                 <p>Created At:</p>
-                <p>
-                  {formattingDate(`${attachment.created_at}`, "toReadable")}
-                </p>
+                <p>{formattingDate(attachment.created_at, "toReadable")}</p>
               </div>
             </div>
           </div>

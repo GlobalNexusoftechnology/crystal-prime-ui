@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 interface AddNewStaffModelProps {
   isOpen: boolean
   onClose: () => void
-  onNewStaffSuccesCallback: () => void
+  onNewStaffSuccessCallback: () => void
 }
 
 interface IAddStaffFormValues {
@@ -47,11 +47,11 @@ const validationSchema = Yup.object({
 export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
   isOpen,
   onClose,
-  onNewStaffSuccesCallback
+  onNewStaffSuccessCallback
 }) => {
   const handleCreateUserSuccessCallback = (response: ICreateUserResponse) => {
     toast.success(response.message);
-    onNewStaffSuccesCallback();
+    onNewStaffSuccessCallback();
     onClose();
   }
 

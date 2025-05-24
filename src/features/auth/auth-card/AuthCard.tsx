@@ -28,7 +28,7 @@ export const AuthCard: React.FC<IAuthCardProps> = ({
   children,
 }) => {
   return (
-    <section className="relative w-full h-auto md:h-screen px-4 md:px-10 xl:px-[6vw]">
+    <section className="relative w-full h-screen px-4 md:px-10 xl:px-[6vw]">
       <div className="absolute inset-0 -z-10 h-full ">
         <Image
           src={ImageRegistry.satkarBackground}

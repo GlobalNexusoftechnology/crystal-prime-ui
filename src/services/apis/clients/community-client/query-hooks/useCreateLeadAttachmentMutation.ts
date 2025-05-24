@@ -32,7 +32,7 @@ export const useCreateLeadAttachmentMutation = ({
       errorLogToRemoteUtil({
         error: err,
         errorCode: ErrorEventsEnum.ERROR_IN_API_CALL,
-        errorTitle: "Error in usecreateLeadAttachmentMutation",
+        errorTitle: "Error in useCreateLeadAttachmentMutation",
         message: err?.message,
       });
 
@@ -43,6 +43,6 @@ export const useCreateLeadAttachmentMutation = ({
   return {
     error,
     isPending,
-    createLead: mutate,
+    onCreateLeadAttachment: mutate,
   };
 };
