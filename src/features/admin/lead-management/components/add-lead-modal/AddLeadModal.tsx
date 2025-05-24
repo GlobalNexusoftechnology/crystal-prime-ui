@@ -178,19 +178,20 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                 </div>
                 <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
                   <Dropdown
-                    label="Source ID"
+                    label="Source"
                     options={sourceOptions}
                     value={values.source_id}
                     onChange={(val) => setFieldValue("source_id", val)}
                     error={touched.source_id ? errors.source_id : undefined}
                   />
                   <Dropdown
-                    label="Status ID"
+                    label="Status"
                     options={statusOptions}
                     value={values.status_id}
                     onChange={(val) => setFieldValue("status_id", val)}
                     error={touched.status_id ? errors.status_id : undefined}
                   />
+                </div>
                   <Dropdown
                     label="Assigned To"
                     options={userOptions}
@@ -198,7 +199,6 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     onChange={(val) => setFieldValue("assigned_to", val)}
                     error={touched.assigned_to ? errors.assigned_to : undefined}
                   />
-                </div>
                 <div className="flex justify-between mt-6 space-x-4">
                   <Button
                     title="Cancel"
