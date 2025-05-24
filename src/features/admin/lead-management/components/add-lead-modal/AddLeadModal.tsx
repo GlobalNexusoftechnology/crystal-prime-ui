@@ -95,7 +95,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
           >
             {({ values, handleChange, setFieldValue, errors, touched }) => (
               <Form>
-                <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                <div className="grid grid-cols-2 gap-4 py-2">
                   <InputField
                     label="First Name"
                     placeholder="Enter First Name"
@@ -114,7 +114,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                <div className="grid grid-cols-2 gap-4 py-2">
                   <InputField
                     label="Company Name"
                     placeholder="Enter Company Name"
@@ -132,7 +132,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     error={touched.phone && errors.phone}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                <div className="grid grid-cols-2 gap-4 py-2">
                   <InputField
                     label="Email"
                     placeholder="Enter Email"
@@ -152,7 +152,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                <div className="grid grid-cols-2 gap-4 py-2">
                   <InputField
                     label="Budget"
                     placeholder="Enter Budget"
@@ -176,7 +176,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     error={touched.requirement && errors.requirement}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4 py-2 w-[27rem]">
+                <div className="grid grid-cols-2 gap-4 py-2">
                   <Dropdown
                     label="Source"
                     options={sourceOptions}
@@ -192,6 +192,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     error={touched.status_id ? errors.status_id : undefined}
                   />
                 </div>
+                <div className="grid grid-cols-1 gap-4 py-2">
                   <Dropdown
                     label="Assigned To"
                     options={userOptions}
@@ -199,6 +200,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     onChange={(val) => setFieldValue("assigned_to", val)}
                     error={touched.assigned_to ? errors.assigned_to : undefined}
                   />
+                </div>
                 <div className="flex justify-between mt-6 space-x-4">
                   <Button
                     title="Cancel"

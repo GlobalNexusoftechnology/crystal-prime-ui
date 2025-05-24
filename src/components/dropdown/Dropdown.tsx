@@ -6,7 +6,7 @@ export function Dropdown({
   error,
   label,
   isRequired = false,
-  dropdownBorderRadius = "rounded-xl 2xl:rounded-[0.75vw]",
+  dropdownBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
   dropdownWidth = "w-full"
 }: {
   options: { label: string; value: string }[];
