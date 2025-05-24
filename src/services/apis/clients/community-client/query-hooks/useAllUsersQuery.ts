@@ -22,6 +22,6 @@ export const useAllUsersQuery = () => {
     allUsersData: data,
     isLoading,
     isPending,
-    allUsers: refetch,
+    refetchAllUsers: refetch,
   };
 };

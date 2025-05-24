@@ -15,7 +15,7 @@ import { ViewStaffModel } from "../view-staff-model";
 import { formatDate } from "@/utils";
 
 export function StaffListTable() {
-  const { allUsersData } = useAllUsersQuery();
+  const { allUsersData, refetchAllUsers } = useAllUsersQuery();
   const [ userId, setUserId] = useState("")
   const [isAddStaffModalOpen, setAddStaffIsModalOpen] = useState(false);
   const [isEditStaffModalOpen, setEditStaffIsModalOpen] = useState(false);
@@ -25,7 +25,7 @@ export function StaffListTable() {
         id: user.id || "",
         first_name: user?.first_name || "",
         last_name: user?.last_name || "",
-        number: user?.number || "",
+        number: user?.phone_number || "",
         email: user?.email || "",
         role: user?.role || "",
         dob: user?.dob || "",
@@ -80,6 +80,10 @@ export function StaffListTable() {
     },
   ];
 
+  const handleNewStaffSuccesCallback = () => {
+    refetchAllUsers();
+  }
+
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
@@ -104,6 +108,7 @@ export function StaffListTable() {
             <AddNewStaffModel
               isOpen={isAddStaffModalOpen}
               onClose={handleCloseModal}
+              onNewStaffSuccesCallback={handleNewStaffSuccesCallback}
             />
           </div>
 

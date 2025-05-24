@@ -195,11 +195,21 @@ export interface ICreateLeadPayload {
   status_id: string;
   assigned_to: string;
 }
+
+interface IBaseDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+}
+
+interface ILeadDetails extends ICreateLeadPayload, IBaseDetails{};
+
 export interface ICreateLeadResponse {
   status: boolean;
   message: string;
   success: true;
-  data: ICreateLeadPayload[];
+  data: ILeadDetails[];
 }
 
 // create lead attachment
@@ -232,7 +242,7 @@ export interface IUpdateLeadResponse {
   status: boolean;
   message: string;
   success: true;
-  data: ICreateLeadPayload;
+  data: ILeadDetails;
 }
 
 export interface IUpdateStatusesPayload {
@@ -277,7 +287,7 @@ export interface IDeleteLeadResponse {
   status: boolean;
   message: string;
   success: true;
-  data: ICreateLeadPayload;
+  data: ILeadDetails;
 }
 
 // all delete statuses
@@ -463,26 +473,17 @@ export interface ICreateAddRolePayload {
 }
 
 //get
-export interface IAllUsersList {
+export interface IUsersDetails {
   id: string;
   created_at: string;
   updated_at: string;
-  deleted: boolean;
-  deleted_at: string | null;
   role: string;
   email: string;
   first_name: string;
   last_name: string;
-  number: string | null;
-  role_id: string | null;
-  dob: string | null;
-  verificationCode: string;
-  authToken: string | null;
-  refreshToken: string | null;
-  otp: string | null;
-  otpExpiresAt: string | null;
-  isOtpVerified: boolean;
-  password: string;
+  phone_number: string;
+  role_id: string;
+  dob: string;
 }
 
 export interface IAllUsersListResponse {
@@ -501,7 +502,7 @@ export interface IAllUsersResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllUsersListResponse[];
+  data: IUsersDetails[];
 }
 
 //post  ...
@@ -509,8 +510,10 @@ export interface ICreateUserPayload {
   first_name: string;
   last_name: string;
   email: string;
+  dob: string;
+  phone_number: string;
   password: string;
-  role: string;
+  role_id: string;
 }
 
 export interface ICreateUserResponse {
@@ -524,7 +527,7 @@ export interface IUserDetailResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllUsersListResponse;
+  data: IUsersDetails;
 }
 //update
 export interface IUpdateUserPayload {
@@ -558,7 +561,7 @@ export interface IAllLeadStatusHistoryList {
   deleted_at: string | null;
   status_remarks: string;
   lead: IAllLeadsList;
-  changed_by: IAllUsersListResponse;
+  changed_by: IUsersDetails;
   status: IStatus;
 }
 
@@ -599,8 +602,8 @@ export interface LeadFollowupsList {
   due_date: string;
   completed_date: string | null;
   remarks: string;
-  lead: IAllUsersListResponse;
-  user: IAllUsersListResponse;
+  lead: ILeadDetails;
+  user: IUsersDetails;
 }
 export enum LeadFollowupStatus {
   PENDING = "PENDING",

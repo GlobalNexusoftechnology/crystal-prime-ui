@@ -3,7 +3,7 @@ import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 import { COMMUNITY_CLIENT } from "../communityClient";
 
 /**
- * This is to track the create lead mutation.
+ * This is to track the create user mutation.
  */
 const CREATE_USER_MUTATION_KEY = "create-user-mutation-key";
 

@@ -659,7 +659,6 @@ export class CommunityClient extends ApiClient {
     const response = await this.post<ICreateUserResponse>(
       createUserUrl(),
       payload,
-      { requiresAuth: false }
     );
 
     if (!response?.success) {
