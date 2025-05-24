@@ -3,21 +3,35 @@
 import { useState } from "react";
 import { Button, SearchBar, Table } from "@/components";
 import {
-  IStaffListProps,
   ITableAction,
-  staffList,
+  // staffList,
   staffListColumn,
 } from "@/constants";
+import { IAllUsersListResponse, useAllUsersQuery } from "@/services"; 
 import { ExportIcon } from "@/features";
 import { AddNewStaffModel } from "../add-new-staff-model";
 import { EditStaffModel } from "../edit-staff-model";
 import { ViewStaffModel } from "../view-staff-model";
+import { formatDate } from "@/utils";
 
 export function StaffListTable() {
+  const { allUsersData } = useAllUsersQuery();
+  const [ userId, setUserId] = useState("")
   const [isAddStaffModalOpen, setAddStaffIsModalOpen] = useState(false);
   const [isEditStaffModalOpen, setEditStaffIsModalOpen] = useState(false);
     const [isViewStaffModalOpen, setViewStaffIsModalOpen] = useState(false);
 
+      const userList: IAllUsersListResponse[] = (allUsersData ?? []).map((user) => ({
+        id: user.id || "",
+        first_name: user?.first_name || "",
+        last_name: user?.last_name || "",
+        number: user?.number || "",
+        email: user?.email || "",
+        role: user?.role || "",
+        dob: user?.dob || "",
+        created_at: formatDate(user?.created_at) || "",
+        updated_at: formatDate(user?.updated_at) || "",
+      }));
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [, setSelectedRow] = useState<any>(null);
@@ -39,12 +53,13 @@ export function StaffListTable() {
     setViewStaffIsModalOpen(false);
   };
 
-  const staffActions: ITableAction<IStaffListProps>[] = [
+  const staffActions: ITableAction<IAllUsersListResponse>[] = [
         {
       label: "View",
       onClick: (row) => {
         console.log("View clicked", row.id);
         setViewStaffIsModalOpen(true);
+        setUserId(row.id)
       },
       className: "text-blue-500 whitespace-nowrap",
     },
@@ -102,7 +117,7 @@ export function StaffListTable() {
       </div>
 
       <Table
-        data={staffList}
+        data={userList}
         columns={staffListColumn}
         actions={staffActions}
       />
@@ -118,6 +133,7 @@ export function StaffListTable() {
         <ViewStaffModel
           isOpen={isViewStaffModalOpen}
           onClose={handleCloseViewStaffModel}
+          userId={userId}
         />
       )}
     </div>
