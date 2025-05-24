@@ -1,3 +1,4 @@
+import { IAllSourcesList } from "@/services";
 import { ITableAction, ITableColumn } from "../table";
 
 /**
@@ -125,7 +126,7 @@ export const leadaction: ITableAction<ILeadSourcesListTable>[] = [
 /**
  * Column definitions for the Follow Up Management table.
  */
-export const ILeadSourcesListTableColumn: ITableColumn<ILeadSourcesListTable>[] =
+export const ILeadSourcesListTableColumn: ITableColumn<IAllSourcesList>[] =
   [
     {
       header: "SOURCES",
@@ -135,18 +136,12 @@ export const ILeadSourcesListTableColumn: ITableColumn<ILeadSourcesListTable>[] 
     },
     {
       header: "CREATED AT",
-      accessor: "number",
+      accessor: "created_at",
       headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
     },
     {
       header: "UPDATED AT",
-      accessor: "email",
+      accessor: "updated_at",
       headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
-    },
-    {
-      header: "STATUS",
-      accessor: "businessName",
-      sortable: true,
-      headerClassName: "min-w-[13rem] 2xl:min-w-[15vw]",
     },
   ];

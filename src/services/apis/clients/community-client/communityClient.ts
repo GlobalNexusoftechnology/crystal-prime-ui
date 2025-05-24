@@ -555,15 +555,13 @@ export class CommunityClient extends ApiClient {
   };
 
   public fetchAllSources = async () => {
-    const response = await this.get<IAllSourcesResponse>(fetchAllSourcesUrl(), {
-      requiresAuth: false,
-    });
+    const response = await this.get<IAllSourcesResponse>(fetchAllSourcesUrl());
 
     if (!response?.success) {
       throw response?.errorData;
     }
 
-    return response?.data.data;
+    return response?.data;
   };
 
   // All lead attachment

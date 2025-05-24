@@ -4,23 +4,28 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { ICreateSourcesResponse, useCreateSourcesMutation } from "@/services";
+import toast from "react-hot-toast";
 
 interface AddLeadSourcesModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onAddSourceSuccessCallback: () => void;
 }
 
 export const AddLeadSourcesModal: React.FC<AddLeadSourcesModalProps> = ({
   isOpen,
   onClose,
+  onAddSourceSuccessCallback,
 }) => {
   const { onStatusMutation } = useCreateSourcesMutation({
-    onSuccessCallback: (data: ICreateSourcesResponse) => {
-      console.log("Lead source created successfully", data);
+    onSuccessCallback: (response: ICreateSourcesResponse) => {
+      onAddSourceSuccessCallback();
       onClose();
+      toast.success(response.message);
     },
     onErrorCallback: (err: IApiError) => {
       console.error("Failed to create lead source:", err);
+      toast.error(err.message);
     },
   });
 

@@ -1,13 +1,14 @@
 import { useQuery } from "@/services";
+
 import { COMMUNITY_CLIENT } from "../communityClient";
 
 /**
- * This is to track the list of leads list from the backend.
+ * This is to track the list of sources from the backend.
  */
 const ALL_SOURCES_QUERY_KEY = "all-sources-query-key";
 
 /**
- * This hook fetches a list of all the leads list in the bloom portal.
+ * This hook fetches a list of all the sources from the backend.
  */
 export const useAllSourcesQuery = () => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
@@ -22,6 +23,6 @@ export const useAllSourcesQuery = () => {
     allSourcesData: data,
     isLoading,
     isPending,
-    allSources: refetch,
+    fetchAllSources: refetch,
   };
 };

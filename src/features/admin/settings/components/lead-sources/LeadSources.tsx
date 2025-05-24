@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { SearchBar, Button, Table } from "@/components";
-import { ILeadSourcesListTable, ILeadSourcesListTableColumn, LeadSourcesListTable } from "@/constants";
+import { ILeadSourcesListTableColumn } from "@/constants";
 import {
   AddLeadSourcesModal,
 } from "../add-lead-sources-modal";
+import { IAllSourcesList, useAllSourcesQuery } from "@/services";
 
 export function LeadSources() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,14 +16,16 @@ export function LeadSources() {
     setSearchTerm(value);
   };
 
-  const filteredData = LeadSourcesListTable.filter((lead) =>
-    lead.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  const { allSourcesData, fetchAllSources } = useAllSourcesQuery();
+
+  const filteredData = (allSourcesData?.data ?? []).filter((sourceData: IAllSourcesList) =>
+    sourceData.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const leadaction = [
+  const leadSourcesaction = [
     {
       label: "Edit",
-      onClick: (row: ILeadSourcesListTable) => {
+      onClick: (row: IAllSourcesList) => {
         console.log("Edit clicked", row.id);
       },
       className: "text-blue-500",
@@ -34,13 +37,16 @@ export function LeadSources() {
     },
     {
       label: "Delete",
-      onClick: (row: ILeadSourcesListTable) => {
+      onClick: (row: IAllSourcesList) => {
         console.log("Delete clicked", row.id);
       },
       className: "text-red-500",
     },
-
   ];
+
+  const handleAddSourceSuccessCallback = () => {
+    fetchAllSources();
+  }
 
   return (
     <div className="bg-[#F8F8F8] p-5 rounded-xl">
@@ -67,7 +73,7 @@ export function LeadSources() {
         <Table
           data={filteredData}
           columns={ILeadSourcesListTableColumn}
-          actions={leadaction}
+          actions={leadSourcesaction}
         />
       </div>
 
@@ -76,6 +82,7 @@ export function LeadSources() {
         <AddLeadSourcesModal
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
+          onAddSourceSuccessCallback={handleAddSourceSuccessCallback}
         />
       )}
     </div>
