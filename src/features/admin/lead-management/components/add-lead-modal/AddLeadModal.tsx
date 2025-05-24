@@ -5,6 +5,7 @@ import {
   useAllLeadsListQuery,
   useAllSourcesQuery,
   useAllStatusesQuery,
+  useAllUsersQuery,
   useCreateLeadMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
@@ -24,14 +25,17 @@ const validationSchema = Yup.object().shape({
   location: Yup.string().required("Location is required"),
   budget: Yup.number().required("Budget is required"),
   requirement: Yup.string().required("Requirement is required"),
-  source_id: Yup.string().required("Source ID is required"),
-  status_id: Yup.string().required("Status ID is required"),
+  source_id: Yup.string().required("Source is required"),
+  status_id: Yup.string().required("Status is required"),
+  assigned_to: Yup.string().required("Assigned To is required"),
 });
 
 export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
   const { leadsRefetch } = useAllLeadsListQuery();
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
+    const { allUsersData } = useAllUsersQuery();
+  
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (data: ICreateLeadResponse) => {
       console.log("Lead created successfully", data);
@@ -59,6 +63,12 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
       value: status.id.toString(),
     })) || [];
 
+    const userOptions =
+    allUsersData?.map((user) => ({
+      label: `${user?.first_name} ${user?.last_name}`,
+      value: user?.id.toString(),
+    })) || [];
+
   return (
     <ModalOverlay isOpen={true} onClose={handleCancel}>
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
@@ -76,6 +86,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
               requirement: "",
               source_id: "",
               status_id: "",
+              assigned_to: "",
             }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
@@ -179,6 +190,13 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     value={values.status_id}
                     onChange={(val) => setFieldValue("status_id", val)}
                     error={touched.status_id ? errors.status_id : undefined}
+                  />
+                  <Dropdown
+                    label="Assigned To"
+                    options={userOptions}
+                    value={values.assigned_to}
+                    onChange={(val) => setFieldValue("assigned_to", val)}
+                    error={touched.assigned_to ? errors.assigned_to : undefined}
                   />
                 </div>
                 <div className="flex justify-between mt-6 space-x-4">

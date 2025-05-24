@@ -1,4 +1,4 @@
-import { ISource, IStatus, IUser } from "@/services";
+import { IAllUsersListResponse, ISource, IStatus } from "@/services";
 import { ITableColumn } from "../table";
 
 export interface ILeadsListProps {
@@ -14,6 +14,10 @@ export interface ILeadsListProps {
   source_id: string;
   status_id: string;
   assigned_to: string;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
+
 }
 export interface ILeadsListDetailsProps {
   id: string;
@@ -27,7 +31,10 @@ export interface ILeadsListDetailsProps {
   requirement: string;
   source: ISource;
   status: IStatus;
-  assignedTo: IUser;
+  assignedTo: IAllUsersListResponse;
+  created_at: string;
+  updated_at: string;
+  deleted_at: string;
 }
 
 export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [

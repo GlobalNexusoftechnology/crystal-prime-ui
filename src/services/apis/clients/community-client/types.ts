@@ -66,7 +66,7 @@ export interface IAllLeadsList {
   requirement: string;
   source: ISource;
   status: IStatus;
-  assigned_to: IUser;
+  assigned_to: IAllUsersListResponse;
 }
 
 export interface IAllLeadResponse {
@@ -193,6 +193,7 @@ export interface ICreateLeadPayload {
   requirement: string;
   source_id: string;
   status_id: string;
+  assigned_to: string;
 }
 export interface ICreateLeadResponse {
   status: boolean;
@@ -520,27 +521,11 @@ export interface ICreateUserResponse {
   data: ICreateUserPayload;
 }
 
-//get by id ...
-export interface IUserDetailList {
-  id: string;
-  email: string;
-  number: string | null;
-  dob: string | null;
-  role: string;
-  role_id: string | null;
-  first_name: string;
-  last_name: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  assignedLeads: any[]; // Replace `any` with a proper interface if available
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  assignedTasks: any[];
-}
-
 export interface IUserDetailResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IUserDetailList;
+  data: IAllUsersListResponse;
 }
 //update
 export interface IUpdateUserPayload {
@@ -574,7 +559,7 @@ export interface IAllLeadStatusHistoryList {
   deleted_at: string | null;
   status_remarks: string;
   lead: IAllLeadsList;
-  changed_by: IUser;
+  changed_by: IAllUsersListResponse;
   status: IStatus;
 }
 
@@ -615,8 +600,8 @@ export interface LeadFollowupsList {
   due_date: string;
   completed_date: string | null;
   remarks: string;
-  lead: IUser;
-  user: IUser;
+  lead: IAllUsersListResponse;
+  user: IAllUsersListResponse;
 }
 export enum LeadFollowupStatus {
   PENDING = "PENDING",
