@@ -103,3 +103,5 @@ export const deleteUserUrl = (id: string) => `/users/${id}`; //delete
 
 // lead status history
 export const fetchLeadStatusHistoryUrl = () => "/lead-status-history"; //Get
+
+export const createLeadStatusHistoryUrl = () => "/lead-status-history"; //Post

@@ -20,6 +20,8 @@ import {
   ICreateLeadFollowUpResponse,
   ICreateLeadPayload,
   ICreateLeadResponse,
+  ICreateLeadStatusHistoryPayload,
+  ICreateLeadStatusHistoryResponse,
   ICreateSourcesPayload,
   ICreateSourcesResponse,
 
@@ -102,6 +104,7 @@ import {
   getUserDetailByIdUrl,
   updateUserUrl,
   fetchLeadStatusHistoryUrl,
+  createLeadStatusHistoryUrl,
 } from "./urls";
 
 /**
@@ -585,23 +588,6 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
-  // All lead status history
-
-  public fetchAllLeadStatusHistory = async () => {
-    const response = await this.get<IAllLeadStatusHistoryResponse>(
-      fetchLeadStatusHistoryUrl(),
-      {
-        requiresAuth: false,
-      }
-    );
-
-    if (!response?.success) {
-      throw response?.errorData;
-    }
-
-    return response?.data.data;
-  };
-
   // all lead follow ups
   public fetchAllLeadFollowUp = async () => {
     const response = await this.get<IAllLeadFollowUpResponse>(
@@ -736,7 +722,36 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  //above
+  // All lead status history
+  public fetchAllLeadStatusHistory = async () => {
+    const response = await this.get<IAllLeadStatusHistoryResponse>(
+      fetchLeadStatusHistoryUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
+  };
+
+  // create lead follow up
+  public createLeadStatusHistory = async (payload: ICreateLeadStatusHistoryPayload) => {
+    const response = await this.post<ICreateLeadStatusHistoryResponse>(
+      createLeadStatusHistoryUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
 }
  
 

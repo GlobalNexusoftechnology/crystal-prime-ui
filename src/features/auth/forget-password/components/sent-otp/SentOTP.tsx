@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -55,17 +54,6 @@ export function SentOTP({ onNext }: TSentOTPProps) {
               />
               <Button type="submit" title="Reset Password" />
               <Button title="Cancel" variant="primary-outline" />
-              <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw]">
-                <span className="text-sm 2xl:text-[0.875vw] text-black">
-                  Haven&apos;t received the OTP?
-                </span>
-                <Link
-                  href="/create-account"
-                  className="text-sm 2xl:text-[0.875vw] text-primary underline underline-offset-4"
-                >
-                  Click here to resend.
-                </Link>
-              </div>
             </Form>
           )}
         </Formik>

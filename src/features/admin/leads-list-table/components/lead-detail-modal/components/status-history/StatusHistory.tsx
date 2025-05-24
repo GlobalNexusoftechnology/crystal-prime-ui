@@ -1,48 +1,73 @@
 "use client";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, DatePicker, Dropdown, InputField } from "@/components";
-import { useAllLeadStatusHistoryQuery } from "@/services";
+import { Button, Dropdown, InputField } from "@/components";
+import {
+  ICreateLeadStatusHistoryPayload,
+  ICreateLeadStatusHistoryResponse,
+  useAllLeadStatusHistoryQuery,
+  useAllStatusesQuery,
+  useAuthStore,
+  useCreateLeadStatusHistoryMutation,
+} from "@/services";
+import { IApiError } from "@/utils";
 
-const statusOptions = [
-  { label: "Initiated", value: "initiated" },
-  { label: "In Progress", value: "in_progress" },
-  { label: "Completed", value: "completed" },
-];
-
-const assignOptions = [
-  { label: "Meena Kapoor", value: "meena" },
-  { label: "Ajay Kumar", value: "ajay" },
-];
-
+// ✅ Validation schema
 const validationSchema = Yup.object().shape({
-  date: Yup.string().required("Date is required"),
-  status: Yup.string().required("Status is required"),
-  assignedTo: Yup.string().required("Assignee is required"),
-  remark: Yup.string().required("Remark is required"),
+  lead_id: Yup.string().required(),
+  status_id: Yup.string().required("Status is required"),
+  status_remarks: Yup.string().required("Remark is required"),
+  changed_by: Yup.string().required(),
 });
 
 interface IStatusHistoryProps {
+  leadId: string;
   showForm: boolean;
   setShowForm: (val: boolean) => void;
 }
 
-export function StatusHistory({ showForm, setShowForm }: IStatusHistoryProps) {
-  const { allLeadStatusHistoryData } = useAllLeadStatusHistoryQuery();
+export function StatusHistory({
+  leadId,
+  showForm,
+  setShowForm,
+}: IStatusHistoryProps) {
+  const { allLeadStatusHistoryData, allLeadStatusHistory } = useAllLeadStatusHistoryQuery();
+  const { allStatusesData } = useAllStatusesQuery();
+  const { activeSession } = useAuthStore();
 
-  const formik = useFormik({
-    initialValues: {
-      date: "",
-      status: "",
-      assignedTo: "",
-      remark: "",
-    },
-    validationSchema,
-    onSubmit: (values, { resetForm }) => {
-      resetForm();
+  const userId = activeSession?.user?.id
+
+  const { createLeadStatusHistory } = useCreateLeadStatusHistoryMutation({
+    onSuccessCallback: (data: ICreateLeadStatusHistoryResponse) => {
+      console.log("Lead status created successfully", data);
+      formik.resetForm();
       setShowForm(false);
+      allLeadStatusHistory()
+    },
+    onErrorCallback: (err: IApiError) => {
+      console.error("Failed to create lead status:", err);
     },
   });
+
+  const formik = useFormik<ICreateLeadStatusHistoryPayload>({
+    initialValues: {
+      lead_id: leadId,
+      status_id: "",
+      status_remarks: "",
+      changed_by: userId ? userId : "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      createLeadStatusHistory(values);
+    },
+    enableReinitialize: true, // In case leadId or changed_by changes
+  });
+
+  const statusOptions =
+    allStatusesData?.map((status) => ({
+      label: status?.name,
+      value: status?.id.toString(),
+    })) || [];
 
   return (
     <div className="flex flex-col gap-4">
@@ -53,40 +78,25 @@ export function StatusHistory({ showForm, setShowForm }: IStatusHistoryProps) {
         >
           <p className="font-bold">Add Status Update</p>
 
-          <DatePicker
-            label="Date"
-            value={formik.values.date}
-            onChange={(value: string) => formik.setFieldValue("date", value)}
-            error={formik.touched.date ? formik.errors.date : undefined}
-          />
-
           <Dropdown
             label="Status"
             options={statusOptions}
-            value={formik.values.status}
-            onChange={(value: string) => formik.setFieldValue("status", value)}
-            error={formik.touched.status ? formik.errors.status : undefined}
-          />
-
-          <Dropdown
-            label="Assign To"
-            options={assignOptions}
-            value={formik.values.assignedTo}
-            onChange={(value: string) =>
-              formik.setFieldValue("assignedTo", value)
-            }
-            error={
-              formik.touched.assignedTo ? formik.errors.assignedTo : undefined
-            }
+            value={formik.values.status_id}
+            onChange={(val) => formik.setFieldValue("status_id", val)}
+            error={formik.touched.status_id ? formik.errors.status_id : undefined}
           />
 
           <InputField
-            label="Remark"
-            name="remark"
-            value={formik.values.remark}
+            label="Remarks"
+            name="status_remarks"
+            value={formik.values.status_remarks}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.remark && formik.errors.remark}
+            error={
+              formik.touched.status_remarks
+                ? formik.errors.status_remarks
+                : undefined
+            }
           />
 
           <div className="flex justify-end gap-4">
@@ -109,17 +119,17 @@ export function StatusHistory({ showForm, setShowForm }: IStatusHistoryProps) {
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-2 underline">
                 <p>Status:</p>
-                <p>{statusHistory?.status.name}</p>
+                <p>{statusHistory?.status?.name}</p>
               </div>
               <div className="text-lightGreen flex items-center gap-2 underline">
                 <p>Created At:</p>
-                <p>{statusHistory.created_at}</p>
+                <p>{statusHistory?.created_at}</p>
               </div>
             </div>
-            <h1>{statusHistory.status_remarks}</h1>
+            <h1>{statusHistory?.status_remarks}</h1>
             <h1 className="text-primary underline">
-              Assigned To:
-              {statusHistory.lead.first_name} {statusHistory.lead.last_name}
+              Assigned To: {statusHistory?.changed_by?.first_name}{" "}
+              {statusHistory?.changed_by?.last_name}
             </h1>
           </div>
         ))
