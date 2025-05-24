@@ -468,11 +468,23 @@ export interface IAllUsersList {
   password: string;
 }
 
+export interface IAllUsersListResponse {
+  id: string,
+  created_at: string;
+  updated_at: string;
+  role: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  number: string;
+  dob: string;
+}
+
 export interface IAllUsersResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllUsersList[];
+  data: IAllUsersListResponse[];
 }
 
 //post  ...

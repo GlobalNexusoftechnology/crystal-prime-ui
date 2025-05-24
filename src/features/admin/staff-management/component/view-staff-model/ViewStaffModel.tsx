@@ -1,17 +1,22 @@
 import { ModalOverlay } from "@/components";
 import { ThreeIcon } from "@/features";
+import { useUserDetailQuery } from "@/services";
 import { Mail, Phone } from "lucide-react";
 import React from "react";
 
 interface ViewStaffModelProps {
   isOpen: boolean;
   onClose: () => void;
+  userId: string;
 }
 
 export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
+  userId,
   isOpen,
   onClose,
 }) => {
+  const { userDetailById } = useUserDetailQuery(userId)
+  console.log(userDetailById, "userDetailById########")
   return (
     <div>
       <ModalOverlay
