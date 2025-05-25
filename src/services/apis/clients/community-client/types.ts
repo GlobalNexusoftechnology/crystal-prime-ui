@@ -364,7 +364,7 @@ export interface ILeadFollowUpDetailResponse {
   data: ILeadFollowUpDetailList;
 }
 
-export interface ILeadDownloadExcel {
+export interface IDownloadExcel {
   fileURL: string;
 }
 
@@ -372,7 +372,13 @@ export interface IAllLeadDownloadExcelResponse {
   status: boolean;
   message: string;
   success: true;
-  fileURL: ILeadDownloadExcel;
+  fileURL: IDownloadExcel;
+}
+export interface IAllUserDownloadExcelResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  fileURL: IDownloadExcel;
 }
 
 export interface ILeadDownloadExcelResponse {

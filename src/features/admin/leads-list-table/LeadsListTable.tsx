@@ -17,7 +17,7 @@ import {
   useDeleteLeadMutation,
   useLeadDetailQuery,
 } from "@/services";
-import { formatDate, IApiError } from "@/utils";
+import { downloadFile, formatDate, IApiError } from "@/utils";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
@@ -176,15 +176,6 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       return matchQuery;
     });
   }, [leadsList, searchQuery]);
-
-  const downloadFile = (fileURL: string, filename?: string) => {
-    const link = document.createElement("a");
-    link.href = fileURL;
-    link.download = filename || "download.xlsx";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
 
   const handleLeadDownloadExcel = () => {
     if (allLeadDownloadExcel?.fileURL) {

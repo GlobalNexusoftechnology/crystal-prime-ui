@@ -1,6 +1,7 @@
 import { ModalOverlay } from "@/components";
 import { ThreeIcon } from "@/features";
 import { useUserDetailQuery } from "@/services";
+import { formatDate } from "@/utils";
 import { Mail, Phone } from "lucide-react";
 import React from "react";
 
@@ -16,7 +17,6 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
   onClose,
 }) => {
   const { userDetailById } = useUserDetailQuery(userId)
-  console.log(userDetailById, "userDetailById########")
   return (
     <div>
       <ModalOverlay
@@ -32,7 +32,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   First Name
                 </span>
                 <span className="underline text-[1rem] 2xl:text-[1vw] ">
-                  Nisha
+                  {userDetailById?.first_name}
                 </span>
               </div>
               <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
@@ -40,7 +40,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   Last Name
                 </span>
                 <span className="underline text-[1rem] 2xl:text-[1vw] ">
-                  Sharma
+                  {userDetailById?.last_name}
                 </span>
               </div>
               <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
@@ -48,7 +48,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   ID
                 </span>
                 <span className="underline text-[1rem] 2xl:text-[1vw] ">
-                  2546
+                  {userDetailById?.id}
                 </span>
               </div>
               <div className="border border-gray-400 2xl:border-[0.1vw] p-2 rounded-full flex items-center justify-center">
@@ -59,11 +59,11 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
               {/* Contact Info */}
               <div className="flex items-center gap-2 2xl:gap-[0.5vw] ">
                 <Phone className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw] text-blue-700" />
-                <span  className="underline text-[1rem] 2xl:text-[1vw] ">(385) 344-9378</span>
+                <span  className="underline text-[1rem] 2xl:text-[1vw] ">{userDetailById?.phone_number}</span>
               </div>
               <div className="flex items-center gap-2 2xl:gap-[0.5vw] ">
                 <Mail className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw] text-blue-700" />
-                <span className="underline text-[1rem] 2xl:text-[1vw] ">Elna.Ferry@hotmail.com</span>
+                <span className="underline text-[1rem] 2xl:text-[1vw] ">{userDetailById?.email}</span>
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   DOB
                 </span>
                 <span className=" text-[1rem] 2xl:text-[1vw]">
-                  20 / 02 / 2024
+                  {formatDate(`${userDetailById?.dob}`)}
                 </span>
               </div>
               <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
@@ -83,7 +83,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   Created At
                 </span>
                 <span className=" text-[1rem] 2xl:text-[1vw]">
-                  20 / 02 / 2024
+                  {userDetailById?.created_at}
                 </span>
               </div>
 
@@ -91,7 +91,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                 <span className="text-sm 2xl:text-[0.875vw] text-gray-600">
                   Role Name
                 </span>
-                <span className=" text-[1rem] 2xl:text-[1vw]">Developer</span>
+                <span className=" text-[1rem] 2xl:text-[1vw]">{userDetailById?.role}</span>
               </div>
             </div>
             <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
@@ -99,7 +99,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                 Updated At
               </span>
               <span className=" text-[1rem] 2xl:text-[1vw]">
-                20 / 02 / 2024
+                {userDetailById?.updated_at}
               </span>
             </div>
           </div>

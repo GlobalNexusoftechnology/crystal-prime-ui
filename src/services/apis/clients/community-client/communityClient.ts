@@ -10,6 +10,7 @@ import {
   IAllRoleResponse,
   IAllSourcesResponse,
   IAllStatusesResponse,
+  IAllUserDownloadExcelResponse,
   IAllUsersResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
@@ -102,6 +103,7 @@ import {
   fetchLeadStatusHistoryUrl,
   createLeadStatusHistoryUrl,
   uploadAttachmentUrl,
+  fetchAllUserDownloadExcelUrl,
 } from "./urls";
 
 /**
@@ -624,6 +626,21 @@ export class CommunityClient extends ApiClient {
   public fetchAllLeadDownloadExcel = async () => {
     const response = await this.get<IAllLeadDownloadExcelResponse>(
       fetchAllLeadDownloadExcelUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data;
+  };
+  
+  public fetchAllUserDownloadExcel = async () => {
+    const response = await this.get<IAllUserDownloadExcelResponse>(
+      fetchAllUserDownloadExcelUrl(),
       {
         requiresAuth: false,
       }
