@@ -19,24 +19,24 @@ export function Settings() {
   const [activePage, setActivePage] = useState("leadSources");
 
   return (
-    <div className="p-4 bg-white rounded-xl">
+    <div className="p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw]">
       {/* Navigation Buttons to switch between settings views */}
-      <div className="flex space-x-2 pb-2 mb-4">
+      <div className="flex space-x-2 mb-4 2xl:mb-[1vw]">
         <button
-          className={`px-2 py-2 rounded font-semibold ${
+          className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw] font-semibold ${
             activePage === "settings"
-              ? "border-b-4 border-[#65558F] text-lg"
-              : "text-lg"
+              ? "border-b-4 border-[#65558F] text-lg 2xl:text-[1.125vw]"
+              : "text-lg 2xl:text-[1.125vw]"
           }`}
         >
           Settings
         </button>
 
         <button
-          className={`px-2 py-2 rounded ${
+          className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw]  ${
             activePage === "leadSources"
-              ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm"
-              : "text-sm"
+              ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm 2xl:text-[0.875vw]"
+              : "text-sm 2xl:text-[0.875vw]"
           }`}
           onClick={() => setActivePage("leadSources")}
         >
@@ -44,10 +44,10 @@ export function Settings() {
         </button>
 
         <button
-          className={`px-2 py-2 rounded ${
+          className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw] ${
             activePage === "leadStatus"
-              ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm"
-              : "text-sm"
+              ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm 2xl:text-[0.875vw]"
+              : "text-sm 2xl:text-[0.875vw]"
           }`}
           onClick={() => setActivePage("leadStatus")}
         >
@@ -55,10 +55,10 @@ export function Settings() {
         </button>
 
         <button
-          className={`px-2 py-2 rounded ${
+          className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw] ${
             activePage === "role"
-              ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm"
-              : "text-sm"
+              ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm 2xl:text-[0.875vw]"
+              : "text-sm 2xl:text-[0.875vw]"
           }`}
           onClick={() => setActivePage("role")}
         >

@@ -51,7 +51,7 @@ export function AddLeadStatusModal({
 
   return (
     <ModalOverlay isOpen={isOpen} onClose={onClose}>
-      <div className="bg-[#F8F8F8] sm:w-[30rem] mx-auto rounded-lg p-6 shadow space-y-1">
+      <div className="bg-[#F8F8F8] sm:w-[30rem]">
         <div className="border border-[#D7D7D7] rounded-lg p-4 space-y-4 bg-[#FFFFFF]">
           <h2 className="text-base font-semibold text-gray-800">
             {statusId ? "Edit Lead Status" : "Add Lead Status"}
