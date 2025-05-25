@@ -69,11 +69,22 @@ export interface IAllLeadsList {
   assigned_to: IAllUsersListResponse;
 }
 
+export interface IStats {
+  totalLeads: number;
+  assignedToMe: number;
+  profileSent: number;
+  businessDone: number;
+  notInterested: 0;
+}
+
 export interface IAllLeadResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllLeadsList[];
+  data: {
+    list: IAllLeadsList[];
+    stats: IStats;
+  };
 }
 
 //
@@ -203,7 +214,7 @@ interface IBaseDetails {
   deleted_at: string;
 }
 
-interface ILeadDetails extends ICreateLeadPayload, IBaseDetails{};
+interface ILeadDetails extends ICreateLeadPayload, IBaseDetails {}
 
 export interface ICreateLeadResponse {
   status: boolean;
@@ -211,7 +222,6 @@ export interface ICreateLeadResponse {
   success: true;
   data: ILeadDetails[];
 }
-
 
 export interface IUploadAttachmentResponse {
   status: string;
@@ -368,12 +378,19 @@ export interface IDownloadExcel {
   fileURL: string;
 }
 
+export interface ILeadDownloadTemplateExcelResponse {
+  status: boolean;
+  message: string;
+  success: true;
+}
+
 export interface IAllLeadDownloadExcelResponse {
   status: boolean;
   message: string;
   success: true;
   fileURL: IDownloadExcel;
 }
+
 export interface IAllUserDownloadExcelResponse {
   status: boolean;
   message: string;
@@ -426,7 +443,7 @@ export interface IChangePasswordResponse {
 export interface ILoginUserResponse {
   message?: string;
   status: string;
-  data: ILoginUserResponseData
+  data: ILoginUserResponseData;
 }
 
 export interface ILoginUserResponseData {
@@ -462,15 +479,13 @@ export interface IAllRoleList {
   deleted_at: string;
   permissions: string[];
 }
-export interface Permission{
- 
-    module: string;
-    read: boolean;
-    edit: boolean;
-    add: boolean;
-    delete: boolean;
-  }
-
+export interface Permission {
+  module: string;
+  read: boolean;
+  edit: boolean;
+  add: boolean;
+  delete: boolean;
+}
 
 export interface ICreateAddRoleResponse {
   status: boolean;
@@ -479,7 +494,7 @@ export interface ICreateAddRoleResponse {
   data: ICreateAddRolePayload[];
 }
 export interface ICreateAddRolePayload {
- id: number;
+  id: number;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -502,7 +517,7 @@ export interface IUsersDetails {
 }
 
 export interface IAllUsersListResponse {
-  id: string,
+  id: string;
   created_at: string;
   updated_at: string;
   role: string;

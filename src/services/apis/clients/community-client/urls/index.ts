@@ -42,6 +42,8 @@ export const getLeadDownloadExcelByIdUrl = (id: string) => `/lead-download-excel
 
 export const fetchAllLeadDownloadExcelUrl = () => "/leads/export/excel";
 
+export const fetchLeadDownloadTemplateExcelUrl = () => "/leads/template/download";
+
 export const fetchAllUserDownloadExcelUrl = () => "/users/export";
 
 //lead followup

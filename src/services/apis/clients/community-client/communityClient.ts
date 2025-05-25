@@ -35,6 +35,7 @@ import {
   IDeleteUserResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
+  ILeadDownloadTemplateExcelResponse,
   ILeadFollowUpDetailResponse,
   ILoginPayload,
   ILoginUserResponse,
@@ -104,6 +105,7 @@ import {
   createLeadStatusHistoryUrl,
   uploadAttachmentUrl,
   fetchAllUserDownloadExcelUrl,
+  fetchLeadDownloadTemplateExcelUrl,
 } from "./urls";
 
 /**
@@ -569,15 +571,13 @@ export class CommunityClient extends ApiClient {
    * @returns list of leads
    */
   public fetchAllLeadsList = async () => {
-    const response = await this.get<IAllLeadResponse>(fetchAllLeadsListUrl(), {
-      requiresAuth: false,
-    });
+    const response = await this.get<IAllLeadResponse>(fetchAllLeadsListUrl());
 
     if (!response?.success) {
       throw response?.errorData;
     }
 
-    return response?.data.data;
+    return response?.data;
   };
 
   public fetchAllSources = async () => {
@@ -626,6 +626,21 @@ export class CommunityClient extends ApiClient {
   public fetchAllLeadDownloadExcel = async () => {
     const response = await this.get<IAllLeadDownloadExcelResponse>(
       fetchAllLeadDownloadExcelUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data;
+  };
+
+  public fetchLeadDownloadTemplateExcel = async () => {
+    const response = await this.get<ILeadDownloadTemplateExcelResponse>(
+      fetchLeadDownloadTemplateExcelUrl(),
       {
         requiresAuth: false,
       }

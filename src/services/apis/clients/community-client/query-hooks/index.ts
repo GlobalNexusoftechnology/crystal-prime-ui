@@ -35,6 +35,7 @@ export { useUserDetailQuery } from "./useUserDetailQuery";
 export { useUpdateUserMutation } from "./useUpdateUserMutation";
 export { useDeleteUserMutation } from "./useDeleteUserMutation";
 export { useAllUserDownloadExcelQuery } from "./useAllUserDownloadExcelQuery";
+export { useLeadDownloadTemplateExcelQuery } from "./useLeadDownloadTemplateExcelQuery";
 
 // lead status history APIs hooks
 export { useAllLeadStatusHistoryQuery } from "./useAllLeadStatusHistoryQuery";

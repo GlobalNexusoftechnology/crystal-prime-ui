@@ -16,6 +16,7 @@ import {
   useAllStatusesQuery,
   useDeleteLeadMutation,
   useLeadDetailQuery,
+  useLeadDownloadTemplateExcelQuery,
 } from "@/services";
 import { downloadFile, formatDate, IApiError } from "@/utils";
 
@@ -30,9 +31,11 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
 
-  const { data, isLoading, leadsRefetch } = useAllLeadsListQuery();
+  const { data: allLeadList, isLoading, leadsRefetch } = useAllLeadsListQuery();
   const { allStatusesData } = useAllStatusesQuery();
   const { data: allLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
+
+  const { onLeadDownloadTemplateExcel } = useLeadDownloadTemplateExcelQuery();
 
   const {
     leadDetailById,
@@ -122,8 +125,10 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       email: leadDetailById?.assigned_to?.email || "",
       role: leadDetailById?.assigned_to?.role || "",
       dob: leadDetailById?.assigned_to?.dob || "",
-      created_at: formatDate(`${leadDetailById?.assigned_to?.created_at}`) || "",
-      updated_at: formatDate(`${leadDetailById?.assigned_to?.updated_at}`) || "",
+      created_at:
+        formatDate(`${leadDetailById?.assigned_to?.created_at}`) || "",
+      updated_at:
+        formatDate(`${leadDetailById?.assigned_to?.updated_at}`) || "",
     },
     source: leadDetailById?.source || {
       id: leadDetailById?.source?.id || "null",
@@ -135,25 +140,27 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     },
   };
 
-  const leadsList: ILeadsListProps[] = (data ?? []).map((lead) => ({
-    id: lead?.id || "N/A",
-    first_name: lead?.first_name || "N/A",
-    last_name: lead?.last_name || "N/A",
-    phone: lead?.phone || "N/A",
-    email: lead?.email || "N/A",
-    company: lead?.company || "N/A",
-    location: lead?.location || "N/A",
-    budget: lead?.budget || "N/A",
-    requirement: lead?.requirement || "N/A",
-    source_id: lead?.source?.name || "N/A",
-    status_id: lead?.status?.name || "N/A",
-    created_at: lead?.created_at || "N/A",
-    updated_at: lead?.updated_at || "N/A",
-    deleted_at: lead?.deleted_at || "N/A",
-    assigned_to:
-      `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` ||
-      "Unassigned",
-  }));
+  const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
+    (lead) => ({
+      id: lead?.id || "N/A",
+      first_name: lead?.first_name || "N/A",
+      last_name: lead?.last_name || "N/A",
+      phone: lead?.phone || "N/A",
+      email: lead?.email || "N/A",
+      company: lead?.company || "N/A",
+      location: lead?.location || "N/A",
+      budget: lead?.budget || "N/A",
+      requirement: lead?.requirement || "N/A",
+      source_id: lead?.source?.name || "N/A",
+      status_id: lead?.status?.name || "N/A",
+      created_at: lead?.created_at || "N/A",
+      updated_at: lead?.updated_at || "N/A",
+      deleted_at: lead?.deleted_at || "N/A",
+      assigned_to:
+        `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` ||
+        "Unassigned",
+    })
+  );
 
   const handleSearch = (query: string) => {
     setSearchQuery(query.toLowerCase());
@@ -185,6 +192,10 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     }
   };
 
+  const handleLeadDownloadTemplateExcel = () => {
+    onLeadDownloadTemplateExcel();
+  };
+
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
@@ -209,6 +220,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
                 title="Download Template"
                 variant="background-white"
                 width="w-full md:w-fit"
+                onClick={handleLeadDownloadTemplateExcel}
               />
             </div>
           )}

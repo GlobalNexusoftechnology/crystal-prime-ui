@@ -17,7 +17,7 @@ import { ExportIcon } from "@/features";
 import { AddNewStaffModel } from "../add-new-staff-model";
 import { EditStaffModel } from "../edit-staff-model";
 import { ViewStaffModel } from "../view-staff-model";
-import { downloadFile, formatDate, IApiError } from "@/utils";
+import { downloadFile, formatDate, formatDateToMMDDYYYY, IApiError } from "@/utils";
 import toast from "react-hot-toast";
 
 export function StaffListTable() {
@@ -46,7 +46,7 @@ export function StaffListTable() {
       number: user?.phone_number || "",
       email: user?.email || "",
       role: user?.role || "",
-      dob: formatDate(user?.dob) || "",
+      dob: formatDateToMMDDYYYY(user?.dob) || "",
       created_at: formatDate(user?.created_at) || "",
       updated_at: formatDate(user?.updated_at) || "",
     })
