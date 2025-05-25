@@ -518,7 +518,7 @@ export interface IUsersDetails {
   id: string;
   created_at: string;
   updated_at: string;
-  role: string;
+  role: IRoleData;
   email: string;
   first_name: string;
   last_name: string;

@@ -1,8 +1,8 @@
-import { Button, Dropdown, InputField, ModalOverlay } from "@/components"
+import { Button, DatePicker, Dropdown, InputField, ModalOverlay } from "@/components"
 import React from "react"
 import { Formik, Form } from "formik"
 import * as Yup from "yup"
-import { ICreateUserPayload, ICreateUserResponse, useCreateUserMutation } from "@/services"
+import { ICreateUserPayload, ICreateUserResponse, useAllRoleListQuery, useCreateUserMutation } from "@/services"
 import { IApiError } from "@/utils"
 import toast from "react-hot-toast";
 
@@ -49,6 +49,14 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
   onClose,
   onNewStaffSuccessCallback
 }) => {
+  const { data: rolesList } = useAllRoleListQuery();
+
+  const roleOptions =
+    rolesList?.map((roleData) => ({
+      label: roleData?.role,
+      value: roleData?.id.toString(),
+    })) || [];
+
   const handleCreateUserSuccessCallback = (response: ICreateUserResponse) => {
     toast.success(response.message);
     onNewStaffSuccessCallback();
@@ -124,13 +132,12 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
               </div>
 
               <div className="flex flex-col md:flex-row gap-4 md:gap-8 2xl:gap-[2vw]">
-                <InputField
+                <DatePicker
                   label="DOB"
                   name="dob"
-                  placeholder="Enter DOB"
                   value={values.dob}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+                  onChange={(value) => setFieldValue('dob', value)}
+                  placeholder="Select DOB"
                   error={touched.dob && errors.dob}
                 />
                 <InputField
@@ -156,12 +163,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                 />
                 <Dropdown
                   label="Role Name"
-                  options={[
-                    { label: "Add Staff", value: "add_staff" },
-                    { label: "Edit Staff", value: "edit_staff" },
-                    { label: "Assign Project", value: "assign_project" },
-                    { label: "View Progress", value: "view_progress" },
-                  ]}
+                  options={roleOptions}
                   value={values.role}
                   onChange={(val: string) => setFieldValue("role", val)}
                 />

@@ -15,14 +15,16 @@ export function DatePicker({
   label,
   isRequired = false,
   datePickerBorderRadius = "rounded-xl 2xl:rounded-[0.75vw]",
+  name="date"
 }: {
   value: string;
   onChange: (val: string) => void;
-  error?: string | null;
+  error?: string | null | boolean;
   placeholder?: string;
   label?: string;
   isRequired?: boolean;
   datePickerBorderRadius?: string;
+  name?: string
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -45,6 +47,7 @@ export function DatePicker({
             error ? "focus:ring-red-500" : "focus:ring-primary"
           }`}
           value={value}
+          name={name}
           onChange={(e) => onChange(e.target.value)}
         />
         {/* Custom Calendar Icon (Now Works on All Browsers) */}

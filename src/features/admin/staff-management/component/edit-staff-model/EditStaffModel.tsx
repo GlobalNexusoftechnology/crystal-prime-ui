@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-import { Button, Dropdown, InputField, Loading, ModalOverlay } from "@/components";
-import { useUpdateUserMutation, useUserDetailQuery } from "@/services";
+import { Button, DatePicker, Dropdown, InputField, Loading, ModalOverlay } from "@/components";
+import { useAllRoleListQuery, useUpdateUserMutation, useUserDetailQuery } from "@/services";
 import { formatDateToMMDDYYYY, IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import { IAddStaffFormValues } from "../add-new-staff-model/AddNewStaffModel";
@@ -43,8 +43,16 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
   userId,
   onAEditSuccessCallback,
 }) => {
-  const { userDetailById, isLoading } = useUserDetailQuery(userId);
   const [initialValues, setInitialValues] = useState<IAddStaffFormValues>(initialEditValues);;
+  
+  const { userDetailById, isLoading } = useUserDetailQuery(userId);
+  const { data: rolesList } = useAllRoleListQuery();
+  
+  const roleOptions =
+    rolesList?.map((roleData) => ({
+      label: roleData?.role,
+      value: roleData?.id.toString(),
+    })) || [];
 
   const { onEditUser } = useUpdateUserMutation({
     onSuccessCallback: (response) => {
@@ -135,13 +143,12 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
             </div>
 
             <div className="flex flex-col md:flex-row gap-4 md:gap-8 2xl:gap-[2vw]">
-              <InputField
+              <DatePicker
                 label="DOB"
                 name="dob"
-                placeholder="Enter DOB"
                 value={values.dob}
-                onChange={handleChange}
-                onBlur={handleBlur}
+                onChange={(value) => setFieldValue('dob', value)}
+                placeholder="Select DOB"
                 error={touched.dob && errors.dob}
               />
               <InputField
@@ -167,12 +174,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
               />
               <Dropdown
                 label="Role Name"
-                options={[
-                  { label: "Add Staff", value: "add_staff" },
-                  { label: "Edit Staff", value: "edit_staff" },
-                  { label: "Assign Project", value: "assign_project" },
-                  { label: "View Progress", value: "view_progress" },
-                ]}
+                options={roleOptions}
                 value={values.role}
                 onChange={(val: string) => setFieldValue("role", val)}
               />

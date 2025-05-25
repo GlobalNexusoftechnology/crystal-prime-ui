@@ -52,7 +52,7 @@ export function StaffListTable() {
       last_name: user?.last_name || "",
       number: user?.phone_number || "",
       email: user?.email || "",
-      role: user?.role || "",
+      role: user.role?.role || "",
       dob: formatDateToMMDDYYYY(user?.dob) || "",
       created_at: formatDate(user?.created_at) || "",
       updated_at: formatDate(user?.updated_at) || "",
