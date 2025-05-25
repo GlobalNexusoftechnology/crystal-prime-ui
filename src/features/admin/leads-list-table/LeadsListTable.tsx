@@ -18,7 +18,7 @@ import {
   useLeadDetailQuery,
   useLeadDownloadTemplateExcelQuery,
 } from "@/services";
-import { downloadFile, formatDate, IApiError } from "@/utils";
+import { downloadBlobFile, formatDate, IApiError } from "@/utils";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
@@ -33,9 +33,22 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const { data: allLeadList, isLoading, leadsRefetch } = useAllLeadsListQuery();
   const { allStatusesData } = useAllStatusesQuery();
-  const { data: allLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
+  const { onAllLeadDownloadExcel, data: allLeadDownloadExcelData } = useAllLeadDownloadExcelQuery();
 
-  const { onLeadDownloadTemplateExcel } = useLeadDownloadTemplateExcelQuery();
+  const { onLeadDownloadTemplateExcel, data: leadDownloadTemplateExcelData } = useLeadDownloadTemplateExcelQuery();
+
+  useEffect(() => {
+  if (allLeadDownloadExcelData instanceof Blob) {
+      // You may want to pass filename manually or extract it from a header elsewhere
+      downloadBlobFile(allLeadDownloadExcelData, "leads"+ new Date().getTime() + ".xlsx");
+    }
+  }, [allLeadDownloadExcelData]);
+
+  useEffect(() => {
+    if (leadDownloadTemplateExcelData instanceof Blob) {
+      downloadBlobFile(leadDownloadTemplateExcelData, "upload_lead_template.xlsx");
+    }
+  }, [leadDownloadTemplateExcelData]);
 
   const {
     leadDetailById,
@@ -56,12 +69,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   // Fetch lead details on view/edit open
   useEffect(() => {
     if (leadId) refetchLeadDetail();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     leadId,
     leadDetailById,
     isEditLeadModalOpen,
     viewLead,
-    refetchLeadDetail,
   ]);
 
   const actions: ITableAction<ILeadsListProps>[] = [
@@ -185,11 +198,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   }, [leadsList, searchQuery]);
 
   const handleLeadDownloadExcel = () => {
-    if (allLeadDownloadExcel?.fileURL) {
-      downloadFile(`${allLeadDownloadExcel?.fileURL}`, "leads.xlsx");
-    } else {
-      console.error("Excel download URL is not available");
-    }
+    onAllLeadDownloadExcel();
   };
 
   const handleLeadDownloadTemplateExcel = () => {

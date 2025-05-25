@@ -15,6 +15,7 @@ export const useAllLeadDownloadExcelQuery = () => {
     queryKey: [ALL_LEAD_DOWNLOAD_EXCEL_QUERY_KEY],
     queryFn: COMMUNITY_CLIENT.fetchAllLeadDownloadExcel,
     networkMode: 'always',
+    enabled: false
   });
 
   return {
@@ -23,6 +24,6 @@ export const useAllLeadDownloadExcelQuery = () => {
     data,
     isLoading,
     isPending,
-    allLeadDownloadExcel: refetch,
+    onAllLeadDownloadExcel: refetch,
   };
 };

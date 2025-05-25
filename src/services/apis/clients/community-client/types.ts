@@ -409,30 +409,6 @@ export interface ILeadFollowUpDetailResponse {
   data: ILeadFollowUpDetailList;
 }
 
-export interface IDownloadExcel {
-  fileURL: string;
-}
-
-export interface ILeadDownloadTemplateExcelResponse {
-  status: boolean;
-  message: string;
-  success: true;
-}
-
-export interface IAllLeadDownloadExcelResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  fileURL: IDownloadExcel;
-}
-
-export interface IAllUserDownloadExcelResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  fileURL: IDownloadExcel;
-}
-
 export interface ILeadDownloadExcelResponse {
   status: boolean;
   message: string;

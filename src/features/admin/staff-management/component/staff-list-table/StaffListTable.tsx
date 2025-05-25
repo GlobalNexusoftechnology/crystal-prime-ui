@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, SearchBar, Table } from "@/components";
+import toast from "react-hot-toast";
+
 import {
   ITableAction,
   // staffList,
@@ -17,8 +19,7 @@ import { ExportIcon } from "@/features";
 import { AddNewStaffModel } from "../add-new-staff-model";
 import { EditStaffModel } from "../edit-staff-model";
 import { ViewStaffModel } from "../view-staff-model";
-import { downloadFile, formatDate, formatDateToMMDDYYYY, IApiError } from "@/utils";
-import toast from "react-hot-toast";
+import { downloadBlobFile, formatDate, formatDateToMMDDYYYY, IApiError } from "@/utils";
 
 export function StaffListTable() {
   const { allUsersData, refetchAllUsers } = useAllUsersQuery();
@@ -26,7 +27,13 @@ export function StaffListTable() {
   const [isAddStaffModalOpen, setAddStaffIsModalOpen] = useState(false);
   const [isEditStaffModalOpen, setEditStaffIsModalOpen] = useState(false);
   const [isViewStaffModalOpen, setViewStaffIsModalOpen] = useState(false);
-  const { data: allUserDownloadExcel } = useAllUserDownloadExcelQuery();
+  const { downloadAllUserExcel, data: downloadAllUserExcelData } = useAllUserDownloadExcelQuery();
+
+  useEffect(() => {
+    if (downloadAllUserExcelData instanceof Blob) {
+      downloadBlobFile(downloadAllUserExcelData, "staff_list"+ new Date().getTime() + ".xlsx");
+    }
+  }, [downloadAllUserExcelData]);
 
   const { onDeleteUser } = useDeleteUserMutation({
     onSuccessCallback: (data) => {
@@ -103,11 +110,7 @@ export function StaffListTable() {
   };
 
   const handleUserDownloadExcel = () => {
-    if (allUserDownloadExcel?.fileURL) {
-      downloadFile(`${allUserDownloadExcel?.fileURL}`, "leads.xlsx");
-    } else {
-      console.error("Excel download URL is not available");
-    }
+    downloadAllUserExcel();
   };
 
   return (

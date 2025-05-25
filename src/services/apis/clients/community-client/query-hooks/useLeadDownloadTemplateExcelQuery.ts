@@ -15,6 +15,7 @@ export const useLeadDownloadTemplateExcelQuery = () => {
     queryKey: [ALL_LEAD_DOWNLOAD_TEMPLATE_EXCEL_QUERY_KEY],
     queryFn: COMMUNITY_CLIENT.fetchLeadDownloadTemplateExcel,
     networkMode: 'always',
+    enabled: false
   });
 
   return {

@@ -3,14 +3,12 @@ import { ApiClient } from "../../api-client";
 
 import {
   IAllLeadAttachmentResponse,
-  IAllLeadDownloadExcelResponse,
   IAllLeadFollowUpResponse,
   IAllLeadResponse,
   IAllLeadStatusHistoryResponse,
   IAllRoleResponse,
   IAllSourcesResponse,
   IAllStatusesResponse,
-  IAllUserDownloadExcelResponse,
   IAllUsersResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
@@ -38,7 +36,6 @@ import {
   IDeleteUserResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
-  ILeadDownloadTemplateExcelResponse,
   ILeadFollowUpDetailResponse,
   ILoginPayload,
   ILoginUserResponse,
@@ -658,10 +655,10 @@ export class CommunityClient extends ApiClient {
   }
 
   public fetchAllLeadDownloadExcel = async () => {
-    const response = await this.get<IAllLeadDownloadExcelResponse>(
+    const response = await this.get<Blob>(
       fetchAllLeadDownloadExcelUrl(),
       {
-        requiresAuth: false,
+        responseType: 'blob'
       }
     )
 
@@ -673,10 +670,10 @@ export class CommunityClient extends ApiClient {
   }
 
   public fetchLeadDownloadTemplateExcel = async () => {
-    const response = await this.get<ILeadDownloadTemplateExcelResponse>(
+    const response = await this.get<Blob>(
       fetchLeadDownloadTemplateExcelUrl(),
       {
-        requiresAuth: false,
+        responseType: 'blob'
       }
     )
 
@@ -684,14 +681,14 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData
     }
 
-    return response?.data
+    return response?.data;
   }
 
   public fetchAllUserDownloadExcel = async () => {
-    const response = await this.get<IAllUserDownloadExcelResponse>(
+    const response = await this.get<Blob>(
       fetchAllUserDownloadExcelUrl(),
       {
-        requiresAuth: false,
+        responseType: 'blob'
       }
     )
 
