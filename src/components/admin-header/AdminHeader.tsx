@@ -1,8 +1,10 @@
-import { SearchBar } from "../search-bar";
+'use client'
+
 import { MenuIcon, NotificationIcon } from "@/features";
-import { UserDropdown } from "../user-dropdown";
 import { ImageRegistry } from "@/constants";
 import { useAuthStore } from "@/services";
+import { UserDropdown } from '../user-dropdown';
+import { SearchBar } from "../search-bar";
 
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
@@ -19,7 +21,10 @@ interface AdminHeaderProps {
  */
 export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
   const {activeSession} = useAuthStore()
-  const userName = `${activeSession?.user?.first_name} ${activeSession?.user?.last_name}`
+  const firstName = activeSession?.user?.first_name;
+  const lastName = activeSession?.user?.last_name;
+  const userName = firstName && lastName ? `${firstName} ${lastName}` : null;
+  
   return (
     <header className="flex justify-between items-center sticky z-20 top-0 bg-white shadow-sm px-4 md:px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw]">
       {/* Left: Menu + SearchBar */}
@@ -36,10 +41,14 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
         <div className="cursor-pointer border 2xl:border-[0.1vw] bg-customGray border-gray-300 p-2 2xl:p-[0.5vw] rounded-xl 2xl:rounded-[0.75vw]">
           <NotificationIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
         </div>
-        <UserDropdown
-        name={userName}
-        image={ImageRegistry.profileImage} 
-      />
+        {userName ? (
+          <UserDropdown
+            name={userName}
+            image={ImageRegistry.profileImage} 
+          />
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+        )}
       </div>
     </header>
   );
