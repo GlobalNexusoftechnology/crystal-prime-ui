@@ -1,9 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { SearchBar, Button, Table } from "@/components";
-import { IAllStatusesList, useAllStatusesQuery, useDeleteStatusesMutation } from "@/services";
-import { IApiError } from "@/utils";
+import {
+  IAllStatusesList,
+  useAllStatusesQuery,
+  useDeleteStatusesMutation,
+} from "@/services";
+import { formatDate, IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import { AddLeadStatusModal } from "../add-lead-status-modal";
 import { ILeadStatusListTableColumn } from "@/constants";
@@ -11,6 +15,10 @@ import { ILeadStatusListTableColumn } from "@/constants";
 export function LeadStatus() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -20,36 +28,51 @@ export function LeadStatus() {
 
   const { onDeleteStatuses } = useDeleteStatusesMutation({
     onSuccessCallback: (data) => {
-      toast.success(data.message)
-      allStatuses()
+      toast.success(data.message);
+      allStatuses();
     },
     onErrorCallback: (err: IApiError) => {
-      toast.error(err.message)
+      toast.error(err.message);
     },
   });
 
-  const filteredData = (allStatusesData ?? []).filter((sourceData: IAllStatusesList) =>
-    sourceData.name?.toLowerCase().includes(searchTerm.toLowerCase())
+  // Prepare full list from API
+  const fullStatusesList: IAllStatusesList[] = (allStatusesData ?? []).map(
+    (lead) => ({
+      id: lead?.id || "N/A",
+      name: lead?.name || "N/A",
+      created_at: `${formatDate(lead?.created_at)}` || "N/A",
+      updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
+    })
   );
+
+  // Filter list based on search term (case-insensitive)
+  const filteredStatusesList = useMemo(() => {
+    if (!searchTerm.trim()) return fullStatusesList;
+    return fullStatusesList.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.created_at.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        item.updated_at.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, fullStatusesList]);
 
   const leadStatusAction = [
     {
       label: "Edit",
       onClick: (row: IAllStatusesList) => {
         console.log("Edit clicked", row.id);
+        setSelectedStatus({ id: row.id, name: row.name });
+        setIsAddModalOpen(true)
       },
-      className: "text-blue-500",
-    },
-    {
-      label: "View",
-      onClick: () => {},
       className: "text-blue-500",
     },
     {
       label: "Delete",
       onClick: (row: IAllStatusesList) => {
         console.log("Delete clicked", row.id);
-        onDeleteStatuses(row.id)
+        onDeleteStatuses(row.id);
       },
       className: "text-red-500",
     },
@@ -57,7 +80,7 @@ export function LeadStatus() {
 
   const handleAddStatusSuccessCallback = () => {
     allStatuses();
-  }
+  };
 
   return (
     <div className="bg-[#F8F8F8] p-5 rounded-xl">
@@ -82,7 +105,7 @@ export function LeadStatus() {
 
       <div className="w-full mt-4">
         <Table
-          data={filteredData}
+          data={filteredStatusesList}
           columns={ILeadStatusListTableColumn}
           actions={leadStatusAction}
         />
@@ -94,6 +117,8 @@ export function LeadStatus() {
           isOpen={isAddModalOpen}
           onClose={() => setIsAddModalOpen(false)}
           onAddStatusSuccessCallback={handleAddStatusSuccessCallback}
+          statusId={selectedStatus?.id}
+          statusName={selectedStatus?.name}
         />
       )}
     </div>

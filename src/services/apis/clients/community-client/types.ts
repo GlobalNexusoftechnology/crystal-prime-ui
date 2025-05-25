@@ -38,8 +38,6 @@ export interface IAllStatusesList {
   id: string;
   created_at: string;
   updated_at: string;
-  deleted: boolean;
-  deleted_at: string | null;
   name: string;
 }
 
@@ -143,8 +141,6 @@ export interface IAllSourcesList {
   id: string;
   created_at: string;
   updated_at: string;
-  deleted: boolean;
-  deleted_at: string | null;
   name: string;
 }
 
