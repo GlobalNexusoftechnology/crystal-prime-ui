@@ -36,6 +36,8 @@ export const getLeadDetailByIdUrl = (id: string) => `/leads/${id}`;
 
 export const deleteLeadUrl = (id: string) => `/leads/${id}`;
 
+export const deleteRoleUrl = (id: string) => `/roles/${id}`;
+
 export const updateLeadUrl = (id: string) => `/leads/${id}`;
 
 export const updateRoleUrl = (id: string) => `/roles/${id}`;

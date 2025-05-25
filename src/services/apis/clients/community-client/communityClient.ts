@@ -32,6 +32,7 @@ import {
   ICreateUserResponse,
   IDeleteLeadFollowUpResponse,
   IDeleteLeadResponse,
+  IDeleteRoleResponse,
   IDeleteSourcesResponse,
   IDeleteStatusesResponse,
   IDeleteUserResponse,
@@ -112,6 +113,7 @@ import {
   fetchLeadDownloadTemplateExcelUrl,
   createRoleUrl,
   updateRoleUrl,
+  deleteRoleUrl,
 } from "./urls";
 
 /**
@@ -429,9 +431,16 @@ export class CommunityClient extends ApiClient {
 
   //delete lead
   public deleteLead = async (id: string) => {
-    const response = await this.del<IDeleteLeadResponse>(deleteLeadUrl(id), {
-      requiresAuth: false,
-    })
+    const response = await this.del<IDeleteLeadResponse>(deleteLeadUrl(id))
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+    return response?.data
+  }
+
+  public deleteRole = async (id: string) => {
+    const response = await this.del<IDeleteRoleResponse>(deleteRoleUrl(id))
 
     if (!response?.success) {
       throw response?.errorData

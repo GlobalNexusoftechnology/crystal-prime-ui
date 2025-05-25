@@ -4,7 +4,8 @@ import { Dispatch, SetStateAction, useState } from "react"
 import { Button, SearchBar } from "@/components"
 import { RoleRowTable } from "../role-row-table"
 import { RolePermissionModal } from "../role-permission-modal"
-import { IAllRoleList, useAllRoleListQuery } from "@/services"
+import { IAllRoleList, IDeleteRoleResponse, useAllRoleListQuery, useDeleteRoleMutation } from "@/services"
+import { IApiError } from "@/utils"
 // import { ILeadSourcesListTable } from "@/constants";
 // import { IRoleListTable } from "@/constants/tables/role-list-table";
 
@@ -20,14 +21,26 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id)
   }
+
   const { isError, isPending, data, isLoading, refetchRoles } =
     useAllRoleListQuery()
+
+  const { onDeleteRole } = useDeleteRoleMutation({
+    onSuccessCallback: (data: IDeleteRoleResponse) => {
+      console.log("Role deleted successfully", data)
+      refetchRoles()
+    },
+    onErrorCallback: (err: IApiError) => {
+      console.error("Failed to delete lead:", err)
+    },
+  })
+  
   const hasNoData = data?.length === 0
   const shouldRenderFallback = isError || isPending || isLoading || hasNoData
   console.log(shouldRenderFallback)
 
   const handleRoleDelete = (roleId: string) => {
-    console.log(roleId)
+    onDeleteRole(roleId);
   }
 
   const handleRoleEdit = (role: IAllRoleList) => {

@@ -338,6 +338,12 @@ export interface IDeleteLeadResponse {
   data: ILeadDetails;
 }
 
+export interface IDeleteRoleResponse {
+  status: boolean;
+  message: string;
+  success: true;
+}
+
 // all delete statuses
 
 export interface IDeleteStatusesResponse {
