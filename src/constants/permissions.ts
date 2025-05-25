@@ -18,5 +18,3 @@ export const ACTIONS: TOptionItem[] = [
   { key: "EDIT", label: "Edit", value: '3' },
   { key: "DELETE", label: "Delete", value: '4' },
 ];
-
-export const getPermissionCode = (module: string, action: string) => `${module}_${action}`;

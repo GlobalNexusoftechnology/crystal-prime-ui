@@ -55,7 +55,7 @@ export function RoleRowTable({
             <ChevronRight className="w-[3rem] h-[3rem] 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
           )}
           <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">
-            {String(index + 1).padStart(3, "0")}
+            {index + 1}
           </td>{" "}
         </td>
         <td className="p-3 2xl:p-[0.75vw]">{role.role}</td>
