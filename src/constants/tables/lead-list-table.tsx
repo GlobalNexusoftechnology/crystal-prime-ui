@@ -86,12 +86,12 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
   {
     header: "STATUS",
     accessor: "status_id",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[13rem] 2xl:min-w-[13vw]",
   },
   {
     header: "ASSIGNED TO",
     accessor: "assigned_to",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[13rem] 2xl:min-w-[13vw]",
   },
 ];
 

@@ -103,11 +103,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     },
   ];
 
-  const statusOptions =
-    allStatusesData?.map((status) => ({
-      label: status?.name,
-      value: status?.id.toString(),
-    })) || [];
+  // const statusOptions =
+  //   allStatusesData?.map((status) => ({
+  //     label: status?.name,
+  //     value: status?.id.toString(),
+  //   })) || [];
+    
 
   const leadDetailModalData: ILeadsListDetailsProps = {
     id: leadDetailById?.id || "null",
@@ -179,23 +180,39 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     setSearchQuery(query.toLowerCase());
   };
 
-  const handleChange = (val: string) => {
-    setSelectedStatus(val);
-  };
+ const statusOptions = [
+  { label: "All Status", value: "All Status" },
+  ...(allStatusesData?.map((status) => ({
+    label: status?.name,
+    value: status?.id.toString(),
+  })) || []),
+];
 
-  const filteredLeads = useMemo(() => {
-    return leadsList.filter((lead) => {
-      const matchQuery =
-        lead.id?.toLowerCase().includes(searchQuery) ||
-        lead.first_name?.toLowerCase().includes(searchQuery) ||
-        lead.last_name?.toLowerCase().includes(searchQuery) ||
-        lead.phone?.toLowerCase().includes(searchQuery) ||
-        lead.company?.toLowerCase().includes(searchQuery) ||
-        lead.budget?.toLowerCase().includes(searchQuery) ||
-        lead.location?.toLowerCase().includes(searchQuery);
-      return matchQuery;
-    });
-  }, [leadsList, searchQuery]);
+const handleChange = (val: string) => {
+  setSelectedStatus(val);
+};
+
+const filteredLeads = useMemo(() => {
+  return leadsList.filter((lead) => {
+    const matchQuery =
+      lead.id?.toLowerCase().includes(searchQuery) ||
+      lead.first_name?.toLowerCase().includes(searchQuery) ||
+      lead.last_name?.toLowerCase().includes(searchQuery) ||
+      lead.phone?.toLowerCase().includes(searchQuery) ||
+      lead.company?.toLowerCase().includes(searchQuery) ||
+      lead.budget?.toLowerCase().includes(searchQuery) ||
+      lead.requirement?.toLowerCase().includes(searchQuery) ||
+      lead.email?.toLowerCase().includes(searchQuery) ||
+      lead.location?.toLowerCase().includes(searchQuery);
+
+    const matchStatus =
+      selectedStatus === "All Status" ||
+      lead.status_id?.toLowerCase() ===
+        allStatusesData?.find((status) => status.id.toString() === selectedStatus)?.name?.toLowerCase();
+
+    return matchQuery && matchStatus;
+  });
+}, [leadsList, searchQuery, selectedStatus, allStatusesData]);;
 
   const handleLeadDownloadExcel = () => {
     onAllLeadDownloadExcel();

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 import { Button, Dropdown, InputField, Loading, ModalOverlay } from "@/components";
 import { useUpdateUserMutation, useUserDetailQuery } from "@/services";
-import { formatDate, IApiError } from "@/utils";
+import { formatDateToMMDDYYYY, IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import { IAddStaffFormValues } from "../add-new-staff-model/AddNewStaffModel";
 
@@ -63,7 +63,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
         setInitialValues({
           firstName: userDetailById.first_name || "",
           lastName: userDetailById.last_name || "",
-          dob: formatDate(userDetailById.dob) || "",
+          dob: formatDateToMMDDYYYY(userDetailById.dob) || "",
           phoneNumber: userDetailById.phone_number || "",
           email: userDetailById.email || "",
           role: userDetailById.role_id || "",

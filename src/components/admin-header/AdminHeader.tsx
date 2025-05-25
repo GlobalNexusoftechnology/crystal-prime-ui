@@ -2,6 +2,7 @@ import { SearchBar } from "../search-bar";
 import { MenuIcon, NotificationIcon } from "@/features";
 import { UserDropdown } from "../user-dropdown";
 import { ImageRegistry } from "@/constants";
+import { useAuthStore } from "@/services";
 
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
@@ -17,6 +18,8 @@ interface AdminHeaderProps {
  * @returns {JSX.Element} The rendered AdminHeader component.
  */
 export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
+  const {activeSession} = useAuthStore()
+  const userName = `${activeSession?.user?.first_name} ${activeSession?.user?.last_name}`
   return (
     <header className="flex justify-between items-center sticky z-20 top-0 bg-white shadow-sm px-4 md:px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw]">
       {/* Left: Menu + SearchBar */}
@@ -34,8 +37,8 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
           <NotificationIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
         </div>
         <UserDropdown
-        name="Ajax Stark"
-        image={ImageRegistry.profileImage} // Make sure this image exists in /public or use a URL
+        name={userName}
+        image={ImageRegistry.profileImage} 
       />
       </div>
     </header>
