@@ -54,30 +54,29 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
         </div>
 
         {/* Data table */}
-        <div className="p-4 ">
+        <div>
           <div className="overflow-x-auto border rounded-md shadow-sm">
-            <table className="w-full text-[1rem] 2xl:text-[1vw] text-left border-collapse">
-              <thead className="bg-white  uppercase text-[1rem] 2xl:text-[1vw] text-gray-300">
+            <table className="w-full text-[0.9rem] 2xl:text-[0.9vw] text-left border-collapse">
+              <thead className="bg-white  uppercase text-[0.9rem] 2xl:text-[0.9vw]">
                 <tr>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw]">ID</th>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw]">Role Name</th>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw]">Created At</th>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw]">Updated At</th>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw]">Deleted At</th>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw]">Action</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">SR NO</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">Role Name</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">Created At</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">Updated At</th>
+                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {data?.map((role) => {
+                {data?.map((role, index) => {
                   console.log("Role:", role); //  Console log to check each role
 
                   return (
                     <RoleRowTable
+                      index={index}
                       key={role.id}
                       role={role}
                       isExpanded={expandedId === role.id}
                       onToggle={() => toggleExpand(role.id)}
-                      // action={Roleaction}
                     />
                   );
                 })}

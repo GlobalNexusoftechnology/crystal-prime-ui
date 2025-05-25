@@ -24,7 +24,6 @@ export function TableRow<T extends { id: string | number; status?: string }>(
       <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">
         {String(index + 1).padStart(3, "0")}
       </td>
-
       {columns.map((col, index) => (
         <td key={index} className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700">
           {col.accessor === "status_id" && row.status ? (

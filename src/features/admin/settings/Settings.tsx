@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { LeadSources } from "./components";
-import { SettingsTab } from "./components";
 import { LeadStatus } from "./components";
 import { RoleManagement } from "./components";
 
@@ -57,7 +56,7 @@ export function Settings() {
 
         <button
           className={`px-2 py-2 rounded ${
-            activePage === "roles"
+            activePage === "role"
               ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm"
               : "text-sm"
           }`}
@@ -68,10 +67,9 @@ export function Settings() {
       </div>
 
       {/* Conditional Rendering of Selected Tab Content */}
-      {activePage === "settings" && <SettingsTab />}
       {activePage === "leadSources" && <LeadSources />}
       {activePage === "leadStatus" && <LeadStatus />}
-      {activePage === "role" && <RoleManagement/>} {/* Placeholder for role component */}
+      {activePage === "role" && <RoleManagement/>} 
     </div>
   );
 }
