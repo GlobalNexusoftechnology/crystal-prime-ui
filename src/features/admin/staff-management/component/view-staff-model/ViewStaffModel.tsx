@@ -1,7 +1,7 @@
 import { ModalOverlay } from "@/components";
 import { ThreeIcon } from "@/features";
 import { useUserDetailQuery } from "@/services";
-import { formatDate } from "@/utils";
+import { formatDate, formatDateToMMDDYYYY } from "@/utils";
 import { Mail, Phone } from "lucide-react";
 import React from "react";
 
@@ -17,6 +17,8 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
   onClose,
 }) => {
   const { userDetailById } = useUserDetailQuery(userId);
+
+  const dob = userDetailById && formatDateToMMDDYYYY(userDetailById?.dob);
   return (
     <div>
       <ModalOverlay
@@ -44,14 +46,14 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   {userDetailById?.last_name}
                 </span>
               </div>
-              <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
+              {/* <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
                 <span className="text-sm 2xl:text-[0.875vw] text-gray-600">
                   ID
                 </span>
                 <span className="underline text-[1rem] 2xl:text-[1vw] ">
                   {userDetailById?.id}
                 </span>
-              </div>
+              </div> */}
               <div className="border border-gray-400 2xl:border-[0.1vw] p-2 rounded-full flex items-center justify-center">
                 <ThreeIcon className="h-5 w-5 2xl:h-[1.25vw] 2xl:w-[1.25vw] text-gray-600" />
               </div>
@@ -79,16 +81,14 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                 <span className="text-sm 2xl:text-[0.875vw] text-gray-600">
                   DOB
                 </span>
-                <span className=" text-[1rem] 2xl:text-[1vw]">
-                  {formatDate(`${userDetailById?.dob}`)}
-                </span>
+                <span className=" text-[1rem] 2xl:text-[1vw]">{dob}</span>
               </div>
               <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
                 <span className="text-sm 2xl:text-[0.875vw] text-gray-600">
                   Created At
                 </span>
                 <span className=" text-[1rem] 2xl:text-[1vw]">
-                  {userDetailById?.created_at}
+                  {formatDate(`${userDetailById?.created_at}`)}
                 </span>
               </div>
 
@@ -106,7 +106,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                 Updated At
               </span>
               <span className=" text-[1rem] 2xl:text-[1vw]">
-                {userDetailById?.updated_at}
+                {formatDate(`${userDetailById?.updated_at}`)}
               </span>
             </div>
           </div>
