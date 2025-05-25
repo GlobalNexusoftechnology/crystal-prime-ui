@@ -12,7 +12,7 @@ interface AddNewStaffModelProps {
   onNewStaffSuccessCallback: () => void
 }
 
-interface IAddStaffFormValues {
+export interface IAddStaffFormValues {
   firstName: string
   lastName: string
   dob: string

@@ -1,9 +1,12 @@
-import { Button, Dropdown, InputField, Loading, ModalOverlay } from "@/components";
+import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
+
+import { Button, Dropdown, InputField, Loading, ModalOverlay } from "@/components";
 import { useUpdateUserMutation, useUserDetailQuery } from "@/services";
 import { formatDate, IApiError } from "@/utils";
 import toast from "react-hot-toast";
+import { IAddStaffFormValues } from "../add-new-staff-model/AddNewStaffModel";
 
 interface EditStaffModelProps {
   isOpen: boolean;
@@ -24,6 +27,16 @@ const validationSchema = Yup.object({
     .required("Password is required"),
 });
 
+const initialEditValues: IAddStaffFormValues = {
+  firstName: "",
+  lastName: "",
+  dob: "",
+  phoneNumber: "",
+  email: "",
+  role: "",
+  password: "",
+}
+
 export const EditStaffModel: React.FC<EditStaffModelProps> = ({
   isOpen,
   onClose,
@@ -31,6 +44,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
   onAEditSuccessCallback,
 }) => {
   const { userDetailById, isLoading } = useUserDetailQuery(userId);
+  const [initialValues, setInitialValues] = useState<IAddStaffFormValues>(initialEditValues);;
 
   const { onEditUser } = useUpdateUserMutation({
     onSuccessCallback: (response) => {
@@ -44,19 +58,23 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
     },
   });
 
+   useEffect(() => {
+      if(userDetailById) {
+        setInitialValues({
+          firstName: userDetailById.first_name || "",
+          lastName: userDetailById.last_name || "",
+          dob: formatDate(userDetailById.dob) || "",
+          phoneNumber: userDetailById.phone_number || "",
+          email: userDetailById.email || "",
+          role: userDetailById.role_id || "",
+          password: "",
+        })
+      }
+    }, [userDetailById]);
+
   if (!userDetailById || isLoading) {
     return <Loading/>;
   }
-
-  const initialValues = {
-    firstName: userDetailById.first_name || "",
-    lastName: userDetailById.last_name || "",
-    dob: formatDate(userDetailById.dob) || "",
-    phoneNumber: userDetailById.phone_number || "",
-    email: userDetailById.email || "",
-    role: userDetailById.role_id || "",
-    password: "", // Keep empty for editing; user can enter new password
-  };
 
   return (
     <ModalOverlay
