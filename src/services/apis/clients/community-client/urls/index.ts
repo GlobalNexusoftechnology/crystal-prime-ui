@@ -38,6 +38,8 @@ export const deleteLeadUrl = (id: string) => `/leads/${id}`;
 
 export const updateLeadUrl = (id: string) => `/leads/${id}`;
 
+export const updateRoleUrl = (id: string) => `/roles/${id}`;
+
 // download excel
 export const getLeadDownloadExcelByIdUrl = (id: string) => `/lead-download-excel/${id}`;
 

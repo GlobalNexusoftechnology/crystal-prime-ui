@@ -44,3 +44,4 @@ export { useCreateLeadStatusHistoryMutation } from "./useCreateLeadStatusHistory
 // upload attachment
 export { useUploadAttachmentMutation } from "./useUploadAttachmentMutation";
 export { useCreateRoleMutation } from './useCreateRoleMutation';
+export { useUpdateRoleMutation } from './useUpdateRoleMutation';

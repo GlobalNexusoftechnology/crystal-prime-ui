@@ -55,6 +55,8 @@ import {
   IUpdateLeadFollowUpResponse,
   IUpdateLeadPayload,
   IUpdateLeadResponse,
+  IUpdateRolePayload,
+  IUpdateRoleResponse,
   IUpdateSourcesPayload,
   IUpdateSourcesResponse,
   IUpdateStatusesPayload,
@@ -109,6 +111,7 @@ import {
   fetchAllUserDownloadExcelUrl,
   fetchLeadDownloadTemplateExcelUrl,
   createRoleUrl,
+  updateRoleUrl,
 } from "./urls";
 
 /**
@@ -339,9 +342,18 @@ export class CommunityClient extends ApiClient {
     const response = await this.put<IUpdateLeadResponse>(
       updateLeadUrl(id),
       payload,
-      {
-        requiresAuth: true,
-      }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+    return response?.data
+  }
+
+  public updateRole = async ({ id, payload }: IUpdateRolePayload) => {
+    const response = await this.put<IUpdateRoleResponse>(
+      updateRoleUrl(id),
+      payload,
     )
 
     if (!response?.success) {

@@ -281,6 +281,13 @@ export interface IUpdateLeadResponse {
   data: ILeadDetails;
 }
 
+export interface IUpdateRoleResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IRoleData;
+}
+
 export interface IUpdateStatusesPayload {
   id: string;
   payload: ICreateStatusesPayload;
@@ -317,6 +324,11 @@ export interface IUpdateLeadFollowUpResponse {
 export interface IUpdateLeadPayload {
   id: string;
   payload: ICreateLeadPayload;
+}
+
+export interface IUpdateRolePayload {
+  id: string;
+  payload: ICreateRolePayload;
 }
 
 export interface IDeleteLeadResponse {
@@ -489,7 +501,7 @@ export interface IAllRoleResponse {
 }
 
 export interface IAllRoleList {
-  id: number;
+  id: string;
   role: string;
   created_at: string;
   updated_at: string;

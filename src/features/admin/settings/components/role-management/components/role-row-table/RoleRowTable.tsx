@@ -11,6 +11,8 @@ interface RoleRowProps {
   index: number;
   isExpanded: boolean;
   onToggle: () => void;
+  onRoleDelete: (roleId: string) => void;
+  onRoleEdit: (roleId: IAllRoleList) => void;
 }
 
 export function RoleRowTable({
@@ -18,6 +20,8 @@ export function RoleRowTable({
   role,
   isExpanded,
   onToggle,
+  onRoleDelete,
+  onRoleEdit
 }: RoleRowProps) {
   const [openActionId, setOpenActionId] = useState<string | number | null>(
     null
@@ -29,14 +33,14 @@ export function RoleRowTable({
     {
       label: "Edit",
       onClick: () => {
-        console.log("Edit clicked", role.id);
+        onRoleEdit(role);
       },
       className: "text-blue-500",
     },
     {
       label: "Delete",
       onClick: () => {
-        console.log("Delete clicked", role.id);
+        onRoleDelete(role.id);
       },
       className: "text-red-500",
     },

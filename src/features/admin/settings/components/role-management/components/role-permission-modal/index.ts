@@ -1,0 +1,1 @@
+export { RolePermissionModal } from "./RolePermissionModal";
