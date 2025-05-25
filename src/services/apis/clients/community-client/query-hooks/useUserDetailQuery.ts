@@ -13,7 +13,7 @@ const USER_DETAIL_QUERY_KEY = "User-user-query-key";
 export const useUserDetailQuery = (id: string) => {
   const { data, isError, error, isLoading, isPending, refetch } =
     useQueryWithUserId({
-      queryKey: [USER_DETAIL_QUERY_KEY],
+      queryKey: [USER_DETAIL_QUERY_KEY, id],
       queryFn: () => COMMUNITY_CLIENT.getUserDetailById(id),
       networkMode: "always",
     });

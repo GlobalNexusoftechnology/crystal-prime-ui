@@ -76,16 +76,15 @@ export function StaffListTable() {
     {
       label: "View",
       onClick: (row) => {
-        console.log("View clicked", row.id);
-        setViewStaffIsModalOpen(true);
         setUserId(row.id);
+        setViewStaffIsModalOpen(true);
       },
       className: "text-blue-500 whitespace-nowrap",
     },
     {
       label: "Edit",
       onClick: (row) => {
-        console.log("Edit clicked", row.id);
+        setUserId(row.id);
         setEditStaffIsModalOpen(true);
       },
       className: "text-blue-500 whitespace-nowrap",
@@ -93,7 +92,6 @@ export function StaffListTable() {
     {
       label: "Delete",
       onClick: (row) => {
-        console.log("Delete clicked", row.id);
         onDeleteUser(row.id);
       },
       className: "text-red-500",
@@ -152,7 +150,7 @@ export function StaffListTable() {
 
       <Table data={userList} columns={staffListColumn} actions={staffActions} />
 
-      {isEditStaffModalOpen && (
+      {isEditStaffModalOpen && userId && (
         <EditStaffModel
           isOpen={isEditStaffModalOpen}
           userId={userId}
@@ -161,7 +159,7 @@ export function StaffListTable() {
         />
       )}
 
-      {isViewStaffModalOpen && (
+      {isViewStaffModalOpen && userId && (
         <ViewStaffModel
           isOpen={isViewStaffModalOpen}
           onClose={handleCloseViewStaffModel}
