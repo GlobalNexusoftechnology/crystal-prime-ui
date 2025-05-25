@@ -1,46 +1,110 @@
 import { useState } from "react";
+
 import { Button, InputField, ModalOverlay } from "@/components";
-
-const modules = [
-  {
-    id: 1,
-    name: "Lead Management Module",
-  },
-  {
-    id: 2,
-    name: "Project Management Module",
-  },
-];
-
-const permissions = ["Read Only", "Add", "edit", "Delete"];
+import { MODULES, ACTIONS, TOptionItem } from "@/constants";
+import { IApiError } from "@/utils";
+import { ICreateRoleResponse, useCreateRoleMutation } from "@/services";
 
 interface RolePermissionModalProps {
   onClose: () => void;
+  refetchRoles: () => void;
 }
 
-export function AddNewRole({ onClose }: RolePermissionModalProps) {
-  const [formData, setFormData] = useState<Record<number, string[]>>({});
+// Converts string keys for consistent permission tracking
+const getModuleKey = (value: string) => parseInt(value, 10);
 
-  const togglePermission = (moduleId: number, permission: string) => {
+export function AddNewRole({ onClose, refetchRoles }: RolePermissionModalProps) {
+  const [formData, setFormData] = useState<Record<number, string[]>>({});
+  const [roleName, setRoleName] = useState<string>("");
+  const [roleNameError, setRoleNameError] = useState<string>("");
+  const [permissionError, setPermissionError] = useState<string>("");
+
+  const { createRole, isPending } = useCreateRoleMutation({
+    onSuccessCallback: (data: ICreateRoleResponse) => {
+      console.log("Lead role successfully", data);
+      refetchRoles();
+      onClose()
+    },
+    onErrorCallback: (err: IApiError) => {
+      console.error("Failed to create role:", err);
+    },
+  });
+
+  const togglePermission = (moduleValue: string, actionValue: string) => {
+    setPermissionError('');
+    const key = getModuleKey(moduleValue);
     setFormData((prev) => {
-      const current = prev[moduleId] || [];
-      const updated = current.includes(permission)
-        ? current.filter((p) => p !== permission)
-        : [...current, permission];
-      return { ...prev, [moduleId]: updated };
+      const current = prev[key] || [];
+      const updated = current.includes(actionValue)
+        ? current.filter((p) => p !== actionValue)
+        : [...current, actionValue];
+      return { ...prev, [key]: updated };
     });
   };
 
-  const toggleAll = (moduleId: number) => {
+  const toggleAll = (moduleValue: string) => {
+    setPermissionError('');
+    const key = getModuleKey(moduleValue);
     setFormData((prev) => {
-      const current = prev[moduleId] || [];
-      const allSelected = permissions.every((p) => current.includes(p));
+      const current = prev[key] || [];
+      const allSelected = ACTIONS.every((action) => current.includes(action.value));
       return {
         ...prev,
-        [moduleId]: allSelected ? [] : [...permissions],
+        [key]: allSelected ? [] : [...ACTIONS.map((action) => action.value)],
       };
     });
   };
+
+  const handleFormSubmit = () => {
+    if (!validateForm()) return;
+    const permissions: string[] = [];
+
+    for (const [moduleValue, actionValues] of Object.entries(formData)) {
+      if (actionValues.length > 0) {
+        const sorted = [...actionValues].sort(); // Ensure consistent order
+        permissions.push(`${moduleValue}${sorted.join("")}`);
+      }
+    }
+
+    const payload = {
+      role: roleName,
+      permissions,
+    };
+
+    createRole(payload)
+  };
+
+  const handleRoleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRoleName(e.target.value);
+    if (e.target.value.trim() !== "") {
+      setRoleNameError(""); // Clear error if valid
+    }
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+
+    if (roleName.trim() === "") {
+      setRoleNameError("Role name is required.");
+      isValid = false;
+    }
+
+    let emptyPermission = 0;
+    for (const actionValues of Object.values(formData)) {
+      if (actionValues.length === 0) {
+       emptyPermission = emptyPermission + 1;
+      }
+    }
+
+    
+    if(Object.entries(formData).length === emptyPermission) {
+      setPermissionError('Permission selection is required.');
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
 
   return (
     <ModalOverlay isOpen={true} onClose={onClose} modalClassName="2xl:w-[40vw]">
@@ -57,61 +121,70 @@ export function AddNewRole({ onClose }: RolePermissionModalProps) {
             <InputField
               type="text"
               placeholder="Enter Role Name"
-              className="w-full border rounded px-3 py-2 text-[1rem] 2xl:text-[1vw] text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={roleName}
+              error={roleNameError}
+              onChange={handleRoleNameChange}
             />
           </div>
 
-          {modules.map((mod) => (
-            <div key={mod.id} className="mb-4">
+          {permissionError && (
+            <p className="text-red-500 text-sm 2xl:text-[0.9vw] 2xl:mt-[0.25vw] mt-1">
+              {permissionError}
+            </p>
+          )}
+
+          {MODULES.map((mod: TOptionItem, idx) => (
+            <div key={mod.value} className="mb-4">
               <div className="flex items-start mb-2 text-[1rem] 2xl:text-[1vw]">
                 <span className="font-medium text-gray-800 text-[1rem] 2xl:text-[1vw]">
-                  {mod.id}. {mod.name}
+                  {idx + 1}. {mod.label}
                 </span>
               </div>
               <div className="ml-6 flex flex-wrap gap-4">
-              <label className="flex items-center space-x-2 text-gray-700 text-[1rem] 2xl:text-[1vw]">
-                <input
-                  type="checkbox"
-                  checked={permissions.every((p) =>
-                    formData[mod.id]?.includes(p)
-                  )}
-                  onChange={() => toggleAll(mod.id)}
-                  className="w-4 h-4 2xl:w-[1.2vw] 2xl:h-[1.2vw]"
-                />
-                <span>All</span>
-              </label>
-
-              {permissions.map((perm) => (
-                <label
-                  key={perm}
-                  className="flex items-center space-x-2 text-gray-700 text-[1rem] 2xl:text-[1vw]"
-                >
+                <label className="flex items-center space-x-2 text-gray-700 text-[1rem] 2xl:text-[1vw]">
                   <input
                     type="checkbox"
-                    checked={formData[mod.id]?.includes(perm) || false}
-                    onChange={() => togglePermission(mod.id, perm)}
+                    checked={ACTIONS.every((a) =>
+                      formData[getModuleKey(mod.value)]?.includes(a.value)
+                    )}
+                    onChange={() => toggleAll(mod.value)}
                     className="w-4 h-4 2xl:w-[1.2vw] 2xl:h-[1.2vw]"
                   />
-                  <span>{perm}</span>
+                  <span>All</span>
                 </label>
-              ))}
-            </div>
+
+                {ACTIONS.map((perm) => (
+                  <label
+                    key={perm.value}
+                    className="flex items-center space-x-2 text-gray-700 text-[1rem] 2xl:text-[1vw]"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={formData[getModuleKey(mod.value)]?.includes(perm.value) || false}
+                      onChange={() => togglePermission(mod.value, perm.value)}
+                      className="w-4 h-4 2xl:w-[1.2vw] 2xl:h-[1.2vw]"
+                    />
+                    <span>{perm.label}</span>
+                  </label>
+                ))}
+              </div>
             </div>
           ))}
         </div>
         <div className="flex justify-between mt-6 space-x-4">
           <Button
             title="Cancel"
-            // onClick={handleCancel}
+            onClick={onClose}
             variant="primary-outline"
             type="button"
             width="w-full"
           />
           <Button
-            title="Add Lead"
+            title="Add Role"
             type="submit"
-            // isLoading={isPending}
+            onClick={handleFormSubmit}
             width="w-full"
+            disabled={isPending}
           />
         </div>
       </div>

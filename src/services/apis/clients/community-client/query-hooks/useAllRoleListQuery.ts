@@ -22,6 +22,6 @@ export const useAllRoleListQuery = () => {
     data,
     isLoading,
     isPending,
-    RoleRefetch: refetch,
+    refetchRoles: refetch,
   };
 };
