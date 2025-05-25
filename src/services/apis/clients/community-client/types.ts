@@ -203,6 +203,11 @@ export interface ICreateLeadPayload {
   assigned_to: string;
 }
 
+export interface ICreateRolePayload {
+  role: string;
+  permissions: string[];
+}
+
 interface IBaseDetails {
   id: string;
   created_at: string;
@@ -217,6 +222,22 @@ export interface ICreateLeadResponse {
   message: string;
   success: true;
   data: ILeadDetails[];
+}
+
+export interface ICreateRoleResponse {
+  status: "success" | "error";
+  message: string;
+  data: IRoleData;
+}
+
+export interface IRoleData {
+  id: string;
+  role: string;
+  permissions: string[];
+  deleted: boolean;
+  deleted_at: string | null;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface IUploadAttachmentResponse {

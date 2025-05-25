@@ -4,7 +4,4 @@ export * from './images-registry';
 export * from './table';
 export * from "./dashboard-card-data";
 export * from "./tables";
-
-
-
-
+export * from './permissions';

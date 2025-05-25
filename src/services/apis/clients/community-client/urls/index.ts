@@ -28,6 +28,7 @@ export const changePasswordUrl = () => "/auth/changePassword";
 
 // leads APIs url
 export const createLeadUrl = () => "/leads";
+export const createRoleUrl = () => "/roles";
 
 export const fetchAllLeadsListUrl = () => "/leads";
 

@@ -20,10 +20,9 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
   const toggleExpand = (id: number) => {
     setExpandedId(expandedId === id ? null : id);
   };
-  const { isError, isPending, data, isLoading } = useAllRoleListQuery();
+  const { isError, isPending, data, isLoading, refetchRoles } = useAllRoleListQuery();
   const hasNoData = data?.length === 0;
   const shouldRenderFallback = isError || isPending || isLoading || hasNoData;
-  console.log("data", data);
   console.log(shouldRenderFallback);
  
   return (
@@ -68,8 +67,6 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
               </thead>
               <tbody>
                 {data?.map((role, index) => {
-                  console.log("Role:", role); //  Console log to check each role
-
                   return (
                     <RoleRowTable
                       index={index}
@@ -87,7 +84,7 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
       </div>
 
       {/* 🔵 Modal rendering */}
-      {showModal && <AddNewRole onClose={() => setShowModal(false)} />}
+      {showModal && <AddNewRole onClose={() => setShowModal(false)} refetchRoles={refetchRoles} />}
     </>
   );
 }
