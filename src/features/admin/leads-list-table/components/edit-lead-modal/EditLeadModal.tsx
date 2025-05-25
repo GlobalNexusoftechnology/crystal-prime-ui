@@ -108,11 +108,9 @@ export function EditLeadModal({
               location: lead.location || "",
               budget: lead.budget ?? 0,
               requirement: lead.requirement || "",
-              source_id: lead?.source?.name || "",
-              status_id: lead.status?.name || "",
-              assigned_to:
-                `${lead.assigned_to?.first_name} ${lead.assigned_to?.last_name}` ||
-                "",
+              source_id: lead?.source?.id || "",
+              status_id: lead.status?.id || "",
+              assigned_to: lead.assigned_to?.id || "",
             }}
             validationSchema={validationSchema}
             onSubmit={(values: ICreateLeadPayload) => {
