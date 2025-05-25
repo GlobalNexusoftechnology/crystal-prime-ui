@@ -126,12 +126,6 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               </p>
             </div>
           </div>
-          <div>
-            <p className="text-sm 2xl:text-[0.875vw]">Deleted At</p>
-            <p className="underline text-textColor text-[1rem] 2xl:text-[1vw]">
-              {formatDate(`${data?.deleted_at}`)}
-            </p>
-          </div>
         </div>
 
         <div className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:px-[1vw] bg-white border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">

@@ -34,8 +34,8 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
   const { leadsRefetch } = useAllLeadsListQuery();
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
-    const { allUsersData } = useAllUsersQuery();
-  
+  const { allUsersData } = useAllUsersQuery();
+
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (data: ICreateLeadResponse) => {
       console.log("Lead created successfully", data);
@@ -53,7 +53,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
 
   const sourceOptions =
     allSourcesData?.data.map((source) => ({
-      label: source.name, 
+      label: source.name,
       value: source.id.toString(),
     })) || [];
 
@@ -63,7 +63,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
       value: status.id.toString(),
     })) || [];
 
-    const userOptions =
+  const userOptions =
     allUsersData?.map((user) => ({
       label: `${user?.first_name} ${user?.last_name}`,
       value: user?.id.toString(),

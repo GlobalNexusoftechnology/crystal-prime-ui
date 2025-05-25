@@ -5,6 +5,7 @@ import {
   useAllLeadsListQuery,
   useAllSourcesQuery,
   useAllStatusesQuery,
+  useAllUsersQuery,
   useUpdateLeadMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
@@ -28,6 +29,7 @@ const validationSchema = Yup.object().shape({
   requirement: Yup.string().required("Requirement is required"),
   source_id: Yup.string().required("Source ID is required"),
   status_id: Yup.string().required("Status ID is required"),
+  assigned_to: Yup.string().required("Status ID is required"),
 });
 
 export function EditLeadModal({
@@ -37,6 +39,7 @@ export function EditLeadModal({
   const { leadsRefetch } = useAllLeadsListQuery();
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
+  const { allUsersData } = useAllUsersQuery();
 
   const { onEditLead, isPending } = useUpdateLeadMutation({
     onSuccessCallback: (data: IUpdateLeadResponse) => {
@@ -73,11 +76,23 @@ export function EditLeadModal({
       value: status?.id.toString(),
     })) || [];
 
+  const userOptions =
+    allUsersData?.map((user) => ({
+      label: `${user?.first_name} ${user?.last_name}`,
+      value: user?.id.toString(),
+    })) || [];
+
   return (
-    <ModalOverlay isOpen={true} onClose={handleCancel} modalClassName="w-[18rem] md:w-[30rem] 2xl:w-[37vw]">
+    <ModalOverlay
+      isOpen={true}
+      onClose={handleCancel}
+      modalClassName="w-[18rem] md:w-[30rem] 2xl:w-[39vw]"
+    >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <h2 className="text-[1rem] 2xl:text-[1vw] font-semibold">Edit Lead Information</h2>
+          <h2 className="text-[1rem] 2xl:text-[1vw] font-semibold">
+            Edit Lead Information
+          </h2>
           <Formik<ICreateLeadPayload>
             initialValues={{
               first_name: lead.first_name || "",
@@ -88,9 +103,9 @@ export function EditLeadModal({
               location: lead.location || "",
               budget: lead.budget ?? 0,
               requirement: lead.requirement || "",
-              source_id: lead.source_id?.name || "",
-              status_id: lead.status_id?.name || "",
-              assigned_to: lead.assigned_to?.name || "",
+              source_id: lead?.source?.name || "",
+              status_id: lead.status?.name || "",
+              assigned_to: `${lead.assigned_to?.first_name} ${lead.assigned_to?.last_name}` || "",
             }}
             validationSchema={validationSchema}
             onSubmit={(values: ICreateLeadPayload) => {
@@ -201,6 +216,17 @@ export function EditLeadModal({
                       value={values.status_id}
                       onChange={(val) => setFieldValue("status_id", val)}
                       error={touched.status_id ? errors.status_id : undefined}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 py-2">
+                    <Dropdown
+                      label="Assigned To"
+                      options={userOptions}
+                      value={values.assigned_to}
+                      onChange={(val) => setFieldValue("assigned_to", val)}
+                      error={
+                        touched.assigned_to ? errors.assigned_to : undefined
+                      }
                     />
                   </div>
 

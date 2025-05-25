@@ -5,15 +5,52 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { LeadsListTable } from "../leads-list-table";
 import Image from "next/image";
-import { analyticalCards, ImageRegistry } from "@/constants";
+import { AnalyticalCardData, ImageRegistry } from "@/constants";
 import { AnalyticalCard } from "../analytical-card";
 import { ImportExcel, AddLeadModal } from "./components";
+import { useAllLeadsListQuery } from "@/services";
+import { AnalyticalCardIcon } from "@/features";
 
 export function LeadManagement() {
   const [isAddLeadModalOpen, setAddLeadModalOpen] = useState(false);
+  const { data: allLeadList } = useAllLeadsListQuery();
+
   const [activeStep, setActiveStep] = useState<"initial" | "addForm" | "excel">(
     "initial"
   );
+
+  const analyticalCards: AnalyticalCardData[] = [
+    {
+      count: `${allLeadList?.data.stats.totalLeads} Leads`,
+      title: "Total Leads",
+      subtitle: "All leads in the system",
+      icon: <AnalyticalCardIcon />,
+    },
+    {
+      count: `${allLeadList?.data.stats.profileSent} Leads`,
+      title: "Profile Sent",
+      subtitle: "Profiles sent this week",
+      icon: <AnalyticalCardIcon />,
+    },
+    {
+      count: `${allLeadList?.data.stats.businessDone} Leads`,
+      title: "Business Done",
+      subtitle: "Leads business done",
+      icon: <AnalyticalCardIcon />,
+    },
+    {
+      count: `${allLeadList?.data.stats.notInterested} Leads`,
+      title: "Not Interested",
+      subtitle: "Leads not interested",
+      icon: <AnalyticalCardIcon />,
+    },
+    {
+      count: `${allLeadList?.data.stats.assignedToMe} Leads`,
+      title: "Assigned To Me",
+      subtitle: "Leads assigned to me",
+      icon: <AnalyticalCardIcon />,
+    },
+  ];
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log("Dropped files:", acceptedFiles);
