@@ -18,6 +18,7 @@ interface IViewFollowUpProps {
 export function ViewFollowUp({ onClose }: IViewFollowUpProps) {
   return (
     <ModalOverlay
+      modalTitle="Back to Follow up"
       isOpen={true}
       onClose={onClose}
       modalClassName="w-[20rem] md:w-[34rem] xl:w-[40rem] 2xl:w-[50vw] 2xl:h-[29vw]"

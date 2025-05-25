@@ -54,7 +54,11 @@ export function EditLeadModal({
   // Defensive check: if lead or required fields not loaded yet, show loading or null
   if (!lead || !lead.first_name) {
     return (
-      <ModalOverlay isOpen={true} onClose={() => setIsEditLeadModalOpen(false)}>
+      <ModalOverlay
+        modalTitle="Back to Leads"
+        isOpen={true}
+        onClose={() => setIsEditLeadModalOpen(false)}
+      >
         <div className="p-4">Loading lead data...</div>
       </ModalOverlay>
     );
@@ -84,6 +88,7 @@ export function EditLeadModal({
 
   return (
     <ModalOverlay
+      modalTitle="Back to Leads"
       isOpen={true}
       onClose={handleCancel}
       modalClassName="w-[18rem] md:w-[30rem] 2xl:w-[39vw]"
@@ -105,7 +110,9 @@ export function EditLeadModal({
               requirement: lead.requirement || "",
               source_id: lead?.source?.name || "",
               status_id: lead.status?.name || "",
-              assigned_to: `${lead.assigned_to?.first_name} ${lead.assigned_to?.last_name}` || "",
+              assigned_to:
+                `${lead.assigned_to?.first_name} ${lead.assigned_to?.last_name}` ||
+                "",
             }}
             validationSchema={validationSchema}
             onSubmit={(values: ICreateLeadPayload) => {

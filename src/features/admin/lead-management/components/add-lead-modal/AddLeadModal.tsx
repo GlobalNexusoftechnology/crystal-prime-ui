@@ -70,7 +70,9 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
     })) || [];
 
   return (
-    <ModalOverlay isOpen={true} onClose={handleCancel}>
+    <ModalOverlay
+    modalTitle="Back to Leads"
+     isOpen={true} onClose={handleCancel}>
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         <div className="bg-white rounded-lg p-4 border border-gray-200">
           <h2 className="text-lg font-semibold">Lead Information</h2>

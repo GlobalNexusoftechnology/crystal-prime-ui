@@ -92,6 +92,7 @@ export function LeadManagement() {
       </div>
 
       <ModalOverlay
+        modalTitle="Back to Leads"
         isOpen={isAddLeadModalOpen}
         onClose={() => handleOpenForm("")}
         modalClassName="w-[35rem] 2xl:w-[36vw]"

@@ -56,6 +56,7 @@ export const AddLeadSourcesModal: React.FC<AddLeadSourcesModalProps> = ({
 
   return (
     <ModalOverlay
+      modalTitle="Back to Add Sources"
       isOpen={isOpen}
       onClose={onClose}
       modalClassName="w-full sm:w-[30rem]"
