@@ -6,7 +6,9 @@ import { ILeadSourcesListTableColumn } from "@/constants";
 import {
   AddLeadSourcesModal,
 } from "../add-lead-sources-modal";
-import { IAllSourcesList, useAllSourcesQuery } from "@/services";
+import { IAllSourcesList, useAllSourcesQuery, useDeleteSourcesMutation } from "@/services";
+import { IApiError } from "@/utils";
+import toast from "react-hot-toast";
 
 export function LeadSources() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,11 +20,21 @@ export function LeadSources() {
 
   const { allSourcesData, fetchAllSources } = useAllSourcesQuery();
 
+  const { onDeleteSources } = useDeleteSourcesMutation({
+    onSuccessCallback: (data) => {
+      toast.success(data.message)
+      fetchAllSources()
+    },
+    onErrorCallback: (err: IApiError) => {
+      toast.error(err.message)
+    },
+  });
+
   const filteredData = (allSourcesData?.data ?? []).filter((sourceData: IAllSourcesList) =>
     sourceData.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const leadSourcesaction = [
+  const leadSourcesAction = [
     {
       label: "Edit",
       onClick: (row: IAllSourcesList) => {
@@ -39,6 +51,7 @@ export function LeadSources() {
       label: "Delete",
       onClick: (row: IAllSourcesList) => {
         console.log("Delete clicked", row.id);
+        onDeleteSources(row.id)
       },
       className: "text-red-500",
     },
@@ -73,7 +86,7 @@ export function LeadSources() {
         <Table
           data={filteredData}
           columns={ILeadSourcesListTableColumn}
-          actions={leadSourcesaction}
+          actions={leadSourcesAction}
         />
       </div>
 

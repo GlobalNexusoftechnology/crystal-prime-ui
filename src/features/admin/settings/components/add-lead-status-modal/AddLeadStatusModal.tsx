@@ -6,57 +6,63 @@ import * as Yup from "yup";
 
 /**
  * Props for the LeadStatusModal component.
- * 
+ *
  * @property onClose - Callback function to close the modal.
  */
-interface LeadStatusModalProps {
+interface AddLeadStatusModalProps {
+  isOpen: boolean;
   onClose: () => void;
+  onAddStatusSuccessCallback: () => void;
 }
 
 /**
  * `LeadStatusModal` is a modal dialog component for adding a new lead status.
- * 
+ *
  * It uses Formik for form state management and Yup for validation.
  * The form consists of a single input for the lead status, which is required and
  * limited to 50 characters.
- * 
+ *
  * On successful submission, the form data is logged to the console, the form resets,
  * and the modal is closed.
- * 
+ *
  * @param onClose - Function called to close the modal.
  */
-export function LeadStatusModal({ onClose }: LeadStatusModalProps) {
-    const { onAllStatusMutation } = useCreateStatusesMutation({
-      onSuccessCallback: (data: ICreateStatusesResponse) => {
-        console.log("Lead created successfully", data);
-       onClose();
-      },
-      onErrorCallback: (err: IApiError) => {
-        console.error("Failed to create lead:", err);
-      },
-    });
+export function AddLeadStatusModal({
+  onClose,
+  onAddStatusSuccessCallback,
+  isOpen,
+}: AddLeadStatusModalProps) {
+  const { onAllStatusMutation } = useCreateStatusesMutation({
+    onSuccessCallback: (data: ICreateStatusesResponse) => {
+      console.log("Lead created successfully", data);
+      onClose();
+      onAddStatusSuccessCallback();
+    },
+    onErrorCallback: (err: IApiError) => {
+      console.error("Failed to create lead:", err);
+    },
+  });
 
   return (
-    <ModalOverlay isOpen={true} onClose={onClose}>
+    <ModalOverlay isOpen={isOpen} onClose={onClose}>
       <div className="bg-[#F8F8F8] sm:w-[30rem] mx-auto rounded-lg p-6 shadow space-y-1">
         <div className="border border-[#D7D7D7] rounded-lg p-4 space-y-4 bg-[#FFFFFF]">
           <h2 className="text-base font-semibold text-gray-800">
             Add Lead Status
           </h2>
 
-        <Formik
-  initialValues={{ name: "" }}
-  validationSchema={Yup.object({
-    name: Yup.string()
-      .required("Lead status is required")
-      .max(50, "Must be 50 characters or less"),
-  })}
-  onSubmit={(values, { resetForm }) => {
-    onAllStatusMutation({name: values.name}); // actual API call
-    resetForm();
-  }}
->
-
+          <Formik
+            initialValues={{ name: "" }}
+            validationSchema={Yup.object({
+              name: Yup.string()
+                .required("Lead status is required")
+                .max(50, "Must be 50 characters or less"),
+            })}
+            onSubmit={(values, { resetForm }) => {
+              onAllStatusMutation({ name: values.name }); // actual API call
+              resetForm();
+            }}
+          >
             {({ isSubmitting }) => (
               <Form className="space-y-4">
                 {/* Lead Status Input Field */}
@@ -100,5 +106,3 @@ export function LeadStatusModal({ onClose }: LeadStatusModalProps) {
     </ModalOverlay>
   );
 }
-
-
