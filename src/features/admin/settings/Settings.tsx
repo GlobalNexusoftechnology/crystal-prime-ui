@@ -4,7 +4,7 @@ import { useState } from "react";
 import { LeadSources } from "./components";
 import { SettingsTab } from "./components";
 import { LeadStatus } from "./components";
-import { RoleManagement } from "../role-management";
+import { RoleManagement } from "./components";
 
 /**
  * `Settings` is the main component for managing the settings page.
@@ -17,7 +17,7 @@ import { RoleManagement } from "../role-management";
  */
 export function Settings() {
   // Tracks the currently active tab/page
-  const [activePage, setActivePage] = useState("settings");
+  const [activePage, setActivePage] = useState("leadSources");
 
   return (
     <div className="p-4 bg-white rounded-xl">
@@ -29,7 +29,6 @@ export function Settings() {
               ? "border-b-4 border-[#65558F] text-lg"
               : "text-lg"
           }`}
-          onClick={() => setActivePage("settings")}
         >
           Settings
         </button>
