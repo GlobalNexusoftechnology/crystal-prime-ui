@@ -5,14 +5,16 @@ type ModalOverlayProps = {
   isOpen: boolean;
   onClose: () => void;
   children: ReactNode;
-  modalClassName?: string; // ➕ Add this line
+  modalClassName?: string;
+  modalTitle?: string // ➕ Add this line
 };
 
 export const ModalOverlay: React.FC<ModalOverlayProps> = ({
   isOpen,
   onClose,
   children,
-  modalClassName = "", // ➕ Default to empty string
+  modalClassName = "",
+  modalTitle
 }) => {
   if (!isOpen) return null;
 
@@ -33,7 +35,7 @@ export const ModalOverlay: React.FC<ModalOverlayProps> = ({
           onClick={onClose}
         >
           <BsArrowLeft className="text-[1rem] 2xl:text-[1vw] mr-2" />
-          Back to Leads 
+          {modalTitle} 
         </button>
         {children}
       </div>

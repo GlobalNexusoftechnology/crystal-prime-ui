@@ -147,7 +147,7 @@ export function RolePermissionModal({
   }
 
   return (
-    <ModalOverlay isOpen={true} onClose={onClose} modalClassName="2xl:w-[40vw]">
+    <ModalOverlay modalTitle="Back to Roles" isOpen={true} onClose={onClose} modalClassName="2xl:w-[40vw]">
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         <div className="bg-white rounded-lg p-4 border border-gray-200">
           <h2 className="text-[1rem] 2xl:text-[1vw] font-semibold mb-4 text-gray-800">

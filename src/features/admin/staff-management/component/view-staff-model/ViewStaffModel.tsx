@@ -16,10 +16,11 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
   isOpen,
   onClose,
 }) => {
-  const { userDetailById } = useUserDetailQuery(userId)
+  const { userDetailById } = useUserDetailQuery(userId);
   return (
     <div>
       <ModalOverlay
+        modalTitle="Back to Staff"
         isOpen={isOpen}
         onClose={onClose}
         modalClassName="w-full md:w-[76%] lg:w-[66%] xl:w-[44%] 2xl:w-[40vw]"
@@ -59,11 +60,15 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
               {/* Contact Info */}
               <div className="flex items-center gap-2 2xl:gap-[0.5vw] ">
                 <Phone className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw] text-blue-700" />
-                <span  className="underline text-[1rem] 2xl:text-[1vw] ">{userDetailById?.phone_number}</span>
+                <span className="underline text-[1rem] 2xl:text-[1vw] ">
+                  {userDetailById?.phone_number}
+                </span>
               </div>
               <div className="flex items-center gap-2 2xl:gap-[0.5vw] ">
                 <Mail className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw] text-blue-700" />
-                <span className="underline text-[1rem] 2xl:text-[1vw] ">{userDetailById?.email}</span>
+                <span className="underline text-[1rem] 2xl:text-[1vw] ">
+                  {userDetailById?.email}
+                </span>
               </div>
             </div>
           </div>
@@ -91,7 +96,9 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                 <span className="text-sm 2xl:text-[0.875vw] text-gray-600">
                   Role Name
                 </span>
-                <span className=" text-[1rem] 2xl:text-[1vw]">{userDetailById?.role}</span>
+                <span className=" text-[1rem] 2xl:text-[1vw]">
+                  {userDetailById?.role}
+                </span>
               </div>
             </div>
             <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">

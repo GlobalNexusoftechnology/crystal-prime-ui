@@ -53,6 +53,7 @@ export function FollowUpManagement() {
 
       {/* Modal */}
       <ModalOverlay
+        modalTitle="Back to Follow up"
         isOpen={isFollowUpModalOpen}
         onClose={() => setIsFollowUpModalOpen(false)}
         modalClassName="w-[29rem] md:h-[32rem]  2xl:w-[50vw] 2xl:h-[32vw]"

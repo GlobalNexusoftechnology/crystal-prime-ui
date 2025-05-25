@@ -79,6 +79,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
   return (
     <div>
       <ModalOverlay
+        modalTitle="Back to Staffs"
         isOpen={isOpen}
         onClose={onClose}
         modalClassName="w-full md:w-[70%] lg:w-[60%] xl:w-[40%] 2xl:w-[40vw]"

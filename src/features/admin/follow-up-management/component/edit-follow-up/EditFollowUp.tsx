@@ -39,7 +39,7 @@ export function EditFollowUp({ onClose }: IEditFollowUpProps) {
   ];
 
   return (
-    <ModalOverlay isOpen={true} onClose={onClose}>
+    <ModalOverlay modalTitle="Back to Follow up" isOpen={true} onClose={onClose}>
       <form className="bg-white p-6 rounded-lg overflow-y-auto max-h-[80vh] md:h-[27rem] h-[24rem] space-y-4 md:w-[27rem] 2xl:w-[49vw] 2xl:h-[26vw] border border-gray-300">
         <h2 className="text-[1rem] 2xl:text-[1.5vw] font-semibold mb-2">
           Follow Up Information
