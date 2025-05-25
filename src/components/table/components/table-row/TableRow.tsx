@@ -32,7 +32,7 @@ export function TableRow<
           {col.accessor === "assigned_to" && row.assigned_to ? (
             <div className="flex items-center gap-2">
               <p
-                className="p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
+                className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
                 style={{ backgroundColor: getRandomColor(row.assigned_to) }}
               >
                 {getInitials(row.assigned_to)}
