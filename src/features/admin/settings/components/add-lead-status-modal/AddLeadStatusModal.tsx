@@ -1,45 +1,51 @@
 import { Button, InputField, ModalOverlay } from "@/components";
-import { ICreateStatusesResponse, useCreateStatusesMutation } from "@/services";
+import {
+  ICreateStatusesResponse,
+  IUpdateStatusesResponse,
+  useCreateStatusesMutation,
+  useUpdateStatusesMutation
+} from "@/services";
 import { IApiError } from "@/utils";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import toast from "react-hot-toast";
 import * as Yup from "yup";
 
-/**
- * Props for the LeadStatusModal component.
- *
- * @property onClose - Callback function to close the modal.
- */
 interface AddLeadStatusModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddStatusSuccessCallback: () => void;
+  statusId?: string;
+  statusName?: string;
 }
 
-/**
- * `LeadStatusModal` is a modal dialog component for adding a new lead status.
- *
- * It uses Formik for form state management and Yup for validation.
- * The form consists of a single input for the lead status, which is required and
- * limited to 50 characters.
- *
- * On successful submission, the form data is logged to the console, the form resets,
- * and the modal is closed.
- *
- * @param onClose - Function called to close the modal.
- */
 export function AddLeadStatusModal({
   onClose,
   onAddStatusSuccessCallback,
   isOpen,
+  statusId,
+  statusName
 }: AddLeadStatusModalProps) {
   const { onAllStatusMutation } = useCreateStatusesMutation({
-    onSuccessCallback: (data: ICreateStatusesResponse) => {
-      console.log("Lead created successfully", data);
-      onClose();
+    onSuccessCallback: (response: ICreateStatusesResponse) => {
       onAddStatusSuccessCallback();
+      onClose();
+      toast.success(response.message);
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to create lead:", err);
+      console.error("Failed to create lead status:", err);
+      toast.error(err.message);
+    },
+  });
+
+  const { onEditStatuses } = useUpdateStatusesMutation({
+    onSuccessCallback: (response: IUpdateStatusesResponse) => {
+      onAddStatusSuccessCallback();
+      onClose();
+      toast.success(response.message);
+    },
+    onErrorCallback: (err: IApiError) => {
+      console.error("Failed to update lead status:", err);
+      toast.error(err.message);
     },
   });
 
@@ -48,24 +54,28 @@ export function AddLeadStatusModal({
       <div className="bg-[#F8F8F8] sm:w-[30rem] mx-auto rounded-lg p-6 shadow space-y-1">
         <div className="border border-[#D7D7D7] rounded-lg p-4 space-y-4 bg-[#FFFFFF]">
           <h2 className="text-base font-semibold text-gray-800">
-            Add Lead Status
+            {statusId ? "Edit Lead Status" : "Add Lead Status"}
           </h2>
 
           <Formik
-            initialValues={{ name: "" }}
+            initialValues={{ name: statusName || "" }}
+            enableReinitialize
             validationSchema={Yup.object({
               name: Yup.string()
                 .required("Lead status is required")
                 .max(50, "Must be 50 characters or less"),
             })}
             onSubmit={(values, { resetForm }) => {
-              onAllStatusMutation({ name: values.name }); // actual API call
+              if (statusId) {
+                onEditStatuses({ id: statusId, payload: { name: values.name } });
+              } else {
+                onAllStatusMutation({ name: values.name });
+              }
               resetForm();
             }}
           >
             {({ isSubmitting }) => (
               <Form className="space-y-4">
-                {/* Lead Status Input Field */}
                 <div>
                   <label className="text-sm font-medium text-gray-700 block mb-2">
                     Lead Status
@@ -81,7 +91,6 @@ export function AddLeadStatusModal({
                   </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex gap-4 pt-2">
                   <Button
                     variant="primary-outline"
@@ -92,7 +101,7 @@ export function AddLeadStatusModal({
                   />
                   <Button
                     variant="primary"
-                    title="Add Status"
+                    title={statusId ? "Update Status" : "Add Status"}
                     width="w-full"
                     type="submit"
                     disabled={isSubmitting}
