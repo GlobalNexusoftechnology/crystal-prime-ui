@@ -19,38 +19,39 @@ export function LeadManagement() {
     "initial"
   );
 
-  const analyticalCards: AnalyticalCardData[] = [
-    {
-      count: `${allLeadList?.data.stats.totalLeads}`,
-      title: "Total Leads",
-      subtitle: "All leads in the system",
-      icon: <AnalyticalCardIcon />,
-    },
-    {
-      count: `${allLeadList?.data.stats.profileSent}`,
-      title: "Profile Sent",
-      subtitle: "Profiles sent this week",
-      icon: <AnalyticalCardIcon />,
-    },
-    {
-      count: `${allLeadList?.data.stats.businessDone}`,
-      title: "Business Done",
-      subtitle: "Leads business done",
-      icon: <AnalyticalCardIcon />,
-    },
-    {
-      count: `${allLeadList?.data.stats.notInterested}`,
-      title: "Not Interested",
-      subtitle: "Leads not interested",
-      icon: <AnalyticalCardIcon />,
-    },
-    {
-      count: `${allLeadList?.data.stats.assignedToMe}`,
-      title: "Assigned To Me",
-      subtitle: "Leads assigned to me",
-      icon: <AnalyticalCardIcon />,
-    },
-  ];
+const analyticalCards: AnalyticalCardData[] = [
+  {
+    count: `${allLeadList?.data.stats.totalLeads}`,
+    title: "Total Leads",
+    subtitle: "Total leads in the system",
+    icon: <AnalyticalCardIcon />,
+  },
+  // {
+  //   count: `${allLeadList?.data.stats.profileSent}`,
+  //   title: "Profile Sent",
+  //   subtitle: "Profiles sent this week",
+  //   icon: <AnalyticalCardIcon />,
+  // },
+  {
+    count: `${allLeadList?.data.stats.businessDone}`,
+    title: "Business Done",
+    subtitle: "Successful leads closed",
+    icon: <AnalyticalCardIcon />,
+  },
+  {
+    count: `${allLeadList?.data.stats.notInterested}`,
+    title: "Not Interested",
+    subtitle: "Leads declined or inactive",
+    icon: <AnalyticalCardIcon />,
+  },
+  {
+    count: `${allLeadList?.data.stats.assignedToMe}`,
+    title: "Assigned To Me",
+    subtitle: "Leads assigned for follow-up",
+    icon: <AnalyticalCardIcon />,
+  },
+];
+
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     console.log("Dropped files:", acceptedFiles);
@@ -83,7 +84,7 @@ export function LeadManagement() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
           {analyticalCards.map((card, index) => (
             <AnalyticalCard key={index} data={card} />
           ))}

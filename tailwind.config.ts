@@ -19,7 +19,7 @@ const config: Config = {
         whiteOverlay: "#FFFFFF1A",
         textColor: "#252F4A",
         lightYellow: "#DD7A08",
-        lightGreen: "#08EA79",
+        lightGreen: "#57B708",
       },
     },
   },

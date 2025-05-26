@@ -4,7 +4,7 @@
       hash = name.charCodeAt(i) + ((hash << 5) - hash);
     }
     const hue = hash % 360;
-    return `hsl(${hue}, 70%, 80%)`;
+    return `hsl(${hue}, 70%, 20%)`;
   }
 
   const STATUS_COLORS = [
