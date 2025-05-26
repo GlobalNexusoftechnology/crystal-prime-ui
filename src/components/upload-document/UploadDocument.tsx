@@ -7,6 +7,7 @@ interface UploadDocumentProps {
   accept?: string;
   onChange: (files: FileList | null) => void;
   error?: string;
+  className?: string
 }
 
 export const UploadDocument: React.FC<UploadDocumentProps> = ({
@@ -15,6 +16,7 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
   accept = ".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg",
   onChange,
   error,
+  className
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFileName, setSelectedFileName] = useState<string>("");
@@ -34,13 +36,13 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className={`flex flex-col gap-1`}>
       {label && (
         <label className="text-sm font-medium text-gray-800">{label}</label>
       )}
       <div
         onClick={handleFileClick}
-        className="w-full cursor-pointer px-3 py-2 border rounded-md bg-white text-gray-600 border-gray-300 hover:border-gray-400 transition"
+        className={`w-full cursor-pointer px-3 py-2 border rounded-md bg-white text-gray-600 border-gray-300 hover:border-gray-400 transition ${className}`}
       >
         {selectedFileName || placeholder}
         <input

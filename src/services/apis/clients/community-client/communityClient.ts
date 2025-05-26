@@ -62,6 +62,7 @@ import {
   IUpdateUserPayload,
   IUpdateUserResponse,
   IUploadAttachmentResponse,
+  IUploadLeadFromExcelResponse,
   IUserDetailResponse,
   IVerifyEmailPayload,
   IVerifyEmailResponse,
@@ -111,6 +112,7 @@ import {
   createRoleUrl,
   updateRoleUrl,
   deleteRoleUrl,
+  uploadLeadFromExcelUrl,
 } from "./urls";
 
 /**
@@ -297,6 +299,25 @@ export class CommunityClient extends ApiClient {
           "Content-Type": "multipart/form-data",
         },
         requiresAuth: true, // if no auth required, else set true
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data
+  }
+
+    public uploadLeadFromExcel = async (formData: FormData) => {
+    const response = await this.post<IUploadLeadFromExcelResponse>(
+      uploadLeadFromExcelUrl(),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        requiresAuth: true, 
       }
     )
 

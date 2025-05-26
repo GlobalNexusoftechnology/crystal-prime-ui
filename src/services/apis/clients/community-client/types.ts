@@ -248,6 +248,11 @@ export interface IUploadAttachmentResponse {
     fileType: string;
   };
 }
+export interface IUploadLeadFromExcelResponse {
+  status: string;
+  message: string;
+  data: ILeadDetails;
+}
 
 // create lead attachment
 export interface ICreateLeadAttachmentPayload {
