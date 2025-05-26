@@ -10,11 +10,13 @@ import { CgLogOut } from "react-icons/cg";
 interface IAdminSidebarProps {
   adminSidebarLinks: IAdminSidebarLink[];
   SetIsVisibleSidebar: () => void;
+  isVisibleSidebar: boolean;
 }
 
 export function AdminSidebar({
   adminSidebarLinks,
   SetIsVisibleSidebar,
+  isVisibleSidebar,
 }: IAdminSidebarProps) {
   const pathName = usePathname();
   const router = useRouter();
@@ -45,15 +47,26 @@ export function AdminSidebar({
       >
         <BsBoxArrowLeft className="w-7 h-7" />
       </div>
-      <div className="flex justify-center py-4 2xl:py-[2vw]">
-        <div className={`w-[13rem] xl:w-[15vw]`}>
-          <Image
-            src={ImageRegistry.websiteLogo}
-            alt="website-logo"
-            className="w-full h-full cursor-pointer"
-            onClick={() => router.push("/")}
-          />
-        </div>
+      <div className="flex justify-center pb-4 2xl:pb-[1vw]">
+        {!isVisibleSidebar ? (
+          <div className={`w-[13rem] xl:w-[15vw]`}>
+            <Image
+              src={ImageRegistry.websiteLogo}
+              alt="website-logo"
+              className="w-full h-full cursor-pointer"
+              onClick={() => router.push("/")}
+            />
+          </div>
+        ) : (
+          <div className={`w-[3rem] xl:w-[3vw]`}>
+            <Image
+              src={ImageRegistry.websiteLogoIcon}
+              alt="website-logo"
+              className="w-full h-full cursor-pointer"
+              onClick={() => router.push("/")}
+            />
+          </div>
+        )}
       </div>
       <ul className="w-full h-full flex flex-col justify-between gap-4 2xl:gap-[1vw] overflow-scroll admin-sidebar-links-container">
         <div className="flex flex-col gap-4 2xl:gap-[1vw]">
@@ -74,7 +87,7 @@ export function AdminSidebar({
                     {isActive ? link.activeIcon : link.icon}
                   </span>
                   <span
-                    className={`${
+                    className={`${isVisibleSidebar ? "hidden" : "flex"} ${
                       isActive ? "text-primary font-medium" : " text-gray-600"
                     } text-base 2xl:text-[1vw]`}
                   >
@@ -85,9 +98,20 @@ export function AdminSidebar({
             );
           })}
         </div>
-        <div onClick={handleLogout} className="flex gap-4 2xl:gap-[1vw] px-4 cursor-pointer">
+        <div
+          onClick={handleLogout}
+          className={`${
+            isVisibleSidebar ? "justify-center" : "justify-start"
+          } flex items-center gap-4 2xl:gap-[1vw] p-6 2xl:p-[1.5vw]  cursor-pointer`}
+        >
           <CgLogOut className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
-          <h1 className="text-base 2xl:text-[1vw]">Logout</h1>
+          <h1
+            className={`${
+              isVisibleSidebar ? "hidden" : "flex"
+            } text-base 2xl:text-[1vw]`}
+          >
+            Logout
+          </h1>
         </div>
       </ul>
     </aside>
