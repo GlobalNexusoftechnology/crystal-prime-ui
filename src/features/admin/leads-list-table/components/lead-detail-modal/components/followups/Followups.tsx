@@ -82,25 +82,6 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
           onSubmit={formik.handleSubmit}
           className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
         >
-          <DatePicker
-            label="Next Followup Date"
-            value={`${formik.values.due_date}`}
-            onChange={(date) => formik.setFieldValue("due_date", date)}
-            placeholder="Next Followup Date"
-            error={formik.touched.due_date ? formik.errors.due_date : undefined}
-          />
-          <DatePicker
-            label="Completed Date"
-            value={`${formik.values.completed_date}`}
-            onChange={(date) => formik.setFieldValue("completed_date", date)}
-            placeholder="Completed Date"
-            error={
-              formik.touched.completed_date
-                ? formik.errors.completed_date
-                : undefined
-            }
-          />
-
           <div className="flex items-center gap-4 2xl:gap-[1vw]">
             <Dropdown
               label="Status"
@@ -117,7 +98,6 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
               error={formik.touched.user_id ? formik.errors.user_id : undefined}
             />
           </div>
-
           <InputField
             label="Remarks"
             name="remarks"
@@ -126,6 +106,24 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={formik.touched.remarks ? formik.errors.remarks : undefined}
+          />
+                    <DatePicker
+            label="Next Followup Date"
+            value={`${formik.values.due_date}`}
+            onChange={(date) => formik.setFieldValue("due_date", date)}
+            placeholder="Next Followup Date"
+            error={formik.touched.due_date ? formik.errors.due_date : undefined}
+          />
+          <DatePicker
+            label="Completed Date"
+            value={`${formik.values.completed_date}`}
+            onChange={(date) => formik.setFieldValue("completed_date", date)}
+            placeholder="Completed Date"
+            error={
+              formik.touched.completed_date
+                ? formik.errors.completed_date
+                : undefined
+            }
           />
 
           <div className="flex items-center gap-4 2xl:gap-[1vw]">

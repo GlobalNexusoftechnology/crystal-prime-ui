@@ -8,7 +8,7 @@ import { FiPlusSquare } from "react-icons/fi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { Attachments, Followups, StatusHistory } from "./components";
 import Link from "next/link";
-import { formatDate, getInitials, getRandomColor } from "@/utils";
+import { formattingDate, getInitials, getRandomColor } from "@/utils";
 
 interface LeadDetailsModalProps {
   lead: ILeadsListProps;
@@ -81,7 +81,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div>
             <p className=" text-sm 2xl:text-[0.875vw]">Created At</p>
             <p className=" text-textColor text-[1rem] 2xl:text-[1vw]">
-              {formatDate(`${data?.created_at}`)}
+              {formattingDate(data.created_at, "toReadable")}
             </p>
           </div>
           <div>
@@ -93,13 +93,13 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div>
             <p className="text-sm 2xl:text-[0.875vw]">Updated By</p>
             <p className="underline text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data.first_name} {data.first_name}
+              {data.first_name} {data.last_name}
             </p>
           </div>
           <div>
             <p className="text-sm 2xl:text-[0.875vw]">Updated At</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
-              {formatDate(`${data?.updated_at}`)}
+              {formattingDate(data.updated_at, "toReadable")}
             </p>
           </div>
           <div>
