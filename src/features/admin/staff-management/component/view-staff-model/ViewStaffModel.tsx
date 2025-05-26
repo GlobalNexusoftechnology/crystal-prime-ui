@@ -97,7 +97,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   Role Name
                 </span>
                 <span className=" text-[1rem] 2xl:text-[1vw]">
-                  {userDetailById?.role}
+                  {userDetailById?.role.role}
                 </span>
               </div>
             </div>
