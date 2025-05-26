@@ -63,7 +63,7 @@ export function StaffListTable() {
     dob: formatDateToMMDDYYYY(user?.dob) || "",
     created_at: formatDate(user?.created_at) || "",
     updated_at: formatDate(user?.updated_at) || "",
-    role_id: user.role.id || "",
+    role_id: user?.role?.id || "",
   }));
 
   // Table actions
