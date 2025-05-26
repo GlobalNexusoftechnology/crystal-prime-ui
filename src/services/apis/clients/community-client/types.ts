@@ -688,7 +688,6 @@ export interface ICreateLeadFollowUpPayload {
   user_id?: string;
   status: string;
   due_date?: string;
-  completed_date?: string;
   remarks?: string;
 }
 export interface ICreateLeadFollowUpResponse {
