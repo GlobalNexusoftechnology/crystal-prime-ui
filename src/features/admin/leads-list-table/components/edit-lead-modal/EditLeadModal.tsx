@@ -22,14 +22,22 @@ const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
   last_name: Yup.string().required("Last Name is required"),
   company: Yup.string().required("Company is required"),
-  phone: Yup.number().required("Phone Number is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  phone: Yup.string()
+    .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+    .required("Phone Number is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
+    .required("Email is required"),
   location: Yup.string().required("Location is required"),
-  budget: Yup.number().required("Budget is required"),
+  budget: Yup.number()
+    .typeError("Budget must be a number")
+    .positive("Budget must be a positive number")
+    .required("Budget is required"),
   requirement: Yup.string().required("Requirement is required"),
-  source_id: Yup.string().required("Source ID is required"),
-  status_id: Yup.string().required("Status ID is required"),
-  assigned_to: Yup.string().required("Status ID is required"),
+  source_id: Yup.string().required("Source is required"),
+  status_id: Yup.string().required("Status is required"),
+  assigned_to: Yup.string().required("Assigned To is required"),
 });
 
 export function EditLeadModal({
