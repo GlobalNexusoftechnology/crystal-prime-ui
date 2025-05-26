@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { ITableRowProps } from "@/constants"; // Adjust path if needed
-import { getInitials, getRandomColor } from "@/utils";
+import { ITableColumn, ITableRowProps } from "@/constants"; // Adjust path if needed
+import { getInitials, getRandomColor, getColorForStatus } from "@/utils";
 import { FiMoreVertical } from "react-icons/fi";
 
 export function TableRow<
@@ -53,27 +53,7 @@ export function TableRow<
       </td>
 
       {columns.map((col, index) => (
-        <td
-          key={index}
-          className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700"
-        >
-          {col.accessor === "assigned_to" && row.assigned_to ? (
-            <div className="flex items-center gap-2">
-              <p
-                className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
-                style={{ backgroundColor: getRandomColor(row.assigned_to) }}
-              >
-                {getInitials(row.assigned_to)}
-              </p>
-              <p className="px-3 py-1 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw]">
-                {row.assigned_to}
-              </p>
-            </div>
-          ) : (
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (row as any)[col.accessor]
-          )}
-        </td>
+        <TableCell key={index} row={row} col={col} index={index} />
       ))}
 
       {actions.length > 0 && (
@@ -110,5 +90,56 @@ export function TableRow<
         </td>
       )}
     </tr>
+  );
+}
+
+type TableCellProps<T extends { id: string | number }> = {
+  row: T;
+  col: ITableColumn<T>;
+  index: number;
+};
+
+export function TableCell<T extends { id: string | number }>({
+  row,
+  col,
+  index,
+}: TableCellProps<T>) {
+  const value = row[col.accessor];
+  const initials = getInitials(value as string);
+  const isAssignedTo = col.accessor === "assigned_to";
+  const isStatusColumn = col.accessor === "status";
+  const randomColor = getRandomColor(value as string);
+  const statusColor = getColorForStatus(value as string);
+
+  return (
+    <td
+      key={index}
+      className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700"
+    >
+      {isAssignedTo && typeof value === "string" ? (
+        <div className="flex items-center gap-2">
+          <p
+            className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
+            style={{ backgroundColor: randomColor }}
+          >
+            {initials}
+          </p>
+          <p className="px-3 py-1 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw]">
+            {value}
+          </p>
+        </div>
+      ) : isStatusColumn && typeof value === "string" ? (
+        <span
+          className="inline-block px-3 py-1 rounded-full text-white text-[0.8rem] 2xl:text-[0.8vw]"
+          style={{ backgroundColor: statusColor }}
+        >
+          {value}
+        </span>
+      ) : col.cell ? (
+        col.cell({ row, value })
+      ) : (
+        value as React.ReactNode
+      )}
+    </td>
   );
 }
