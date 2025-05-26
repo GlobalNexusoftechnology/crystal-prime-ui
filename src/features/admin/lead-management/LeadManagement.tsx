@@ -109,7 +109,7 @@ const analyticalCards: AnalyticalCardData[] = [
                       Add Lead Manually
                     </p>
                     <div
-                      className="border-2 border-dashed rounded-xl p-4 2xl:h-[15vw] text-center hover:shadow transition bg-customGray"
+                      className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-4 2xl:h-[15vw] text-center hover:shadow transition bg-customGray"
                       onClick={() => handleOpenForm("addForm")}
                     >
                       <div className="w-[15rem] h-[6rem] 2xl:w-[15vw] 2xl:h-[6vw] pb-4">
@@ -134,7 +134,7 @@ const analyticalCards: AnalyticalCardData[] = [
                     </div>
                   </div>
 
-                  <div>
+                  <div >
                     <p className="text-[1rem] 2xl:text-[1vw] pb-2 ">
                       Import From Excel
                     </p>
@@ -142,7 +142,7 @@ const analyticalCards: AnalyticalCardData[] = [
                     <div
                       {...getRootProps()}
                       onClick={() => handleOpenForm("excel")}
-                      className={`border-2 border-dashed rounded-xl p-4 2xl:h-[15vw] text-center cursor-pointer transition bg-customGray ${
+                      className={`flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-4 2xl:h-[15vw] text-center cursor-pointer transition bg-customGray ${
                         isDragActive ? "bg-purple-100" : "hover:shadow"
                       }`}
                     >
