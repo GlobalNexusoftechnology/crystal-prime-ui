@@ -1,25 +1,36 @@
-import { Button, DatePicker, Dropdown, InputField, ModalOverlay } from "@/components"
-import React from "react"
-import { Formik, Form } from "formik"
-import * as Yup from "yup"
-import { ICreateUserPayload, ICreateUserResponse, useAllRoleListQuery, useCreateUserMutation } from "@/services"
-import { IApiError } from "@/utils"
+import {
+  Button,
+  DatePicker,
+  Dropdown,
+  InputField,
+  ModalOverlay,
+} from "@/components";
+import React from "react";
+import { Formik, Form } from "formik";
+import * as Yup from "yup";
+import {
+  ICreateUserPayload,
+  ICreateUserResponse,
+  useAllRoleListQuery,
+  useCreateUserMutation,
+} from "@/services";
+import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
 
 interface AddNewStaffModelProps {
-  isOpen: boolean
-  onClose: () => void
-  onNewStaffSuccessCallback: () => void
+  isOpen: boolean;
+  onClose: () => void;
+  onNewStaffSuccessCallback: () => void;
 }
 
 export interface IAddStaffFormValues {
-  firstName: string
-  lastName: string
-  dob: string
-  phoneNumber: string
-  email: string
-  role: string
-  password: string
+  firstName: string;
+  lastName: string;
+  dob: string;
+  phoneNumber: string;
+  email: string;
+  role: string;
+  password: string;
 }
 
 const initialValues: IAddStaffFormValues = {
@@ -30,24 +41,27 @@ const initialValues: IAddStaffFormValues = {
   email: "",
   role: "",
   password: "",
-}
+};
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
   dob: Yup.string().required("Date of Birth is required"),
   phoneNumber: Yup.string().required("Phone number is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  email: Yup.string()
+    .email("Invalid email")
+    .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
+    .required("Email is required"),
   role: Yup.string().required("Role is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
     .required("Password is required"),
-})
+});
 
 export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
   isOpen,
   onClose,
-  onNewStaffSuccessCallback
+  onNewStaffSuccessCallback,
 }) => {
   const { data: rolesList } = useAllRoleListQuery();
 
@@ -61,16 +75,16 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
     toast.success(response.message);
     onNewStaffSuccessCallback();
     onClose();
-  }
+  };
 
   const handleCreateUserErrorCallback = (error: IApiError) => {
     toast.error(error.message);
-  }
+  };
 
   const { isPending, onCreateUser } = useCreateUserMutation({
     onSuccessCallback: handleCreateUserSuccessCallback,
     onErrorCallback: handleCreateUserErrorCallback,
-  })
+  });
 
   const handleAddNewStaffSubmit = (values: IAddStaffFormValues) => {
     const createUserPayload: ICreateUserPayload = {
@@ -78,11 +92,11 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
       first_name: values.firstName,
       last_name: values.lastName,
       phone_number: values.phoneNumber,
-      role_id: values.role
-    }
+      role_id: values.role,
+    };
 
     onCreateUser(createUserPayload);
-  }
+  };
 
   return (
     <div>
@@ -136,7 +150,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   label="DOB"
                   name="dob"
                   value={values.dob}
-                  onChange={(value) => setFieldValue('dob', value)}
+                  onChange={(value) => setFieldValue("dob", value)}
                   placeholder="Select DOB"
                   error={touched.dob && errors.dob}
                 />
@@ -166,6 +180,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   options={roleOptions}
                   value={values.role}
                   onChange={(val: string) => setFieldValue("role", val)}
+                  error={touched.role ? errors.role : undefined}
                 />
               </div>
 
@@ -187,12 +202,17 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   onClick={onClose}
                   type="button"
                 />
-                <Button disabled={isPending} title="Add Staff" width="w-full" type="submit" />
+                <Button
+                  disabled={isPending}
+                  title="Add Staff"
+                  width="w-full"
+                  type="submit"
+                />
               </div>
             </Form>
           )}
         </Formik>
       </ModalOverlay>
     </div>
-  )
-}
+  );
+};

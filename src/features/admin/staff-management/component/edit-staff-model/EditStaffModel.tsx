@@ -23,17 +23,39 @@ import { IAddStaffFormValues } from "../add-new-staff-model/AddNewStaffModel";
 interface EditStaffModelProps {
   isOpen: boolean;
   onClose: () => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectStaff: IUserViewDetails;
   onAEditSuccessCallback: () => void;
 }
 
+// Updated Yup validation schema
 const validationSchema = Yup.object({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
-  dob: Yup.string().required("Date of Birth is required"),
-  phoneNumber: Yup.string().required("Phone number is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  firstName: Yup.string()
+    .trim()
+    .required("First name is required")
+    .min(2, "First name must be at least 2 characters")
+    .max(50, "First name must be at most 50 characters"),
+
+  lastName: Yup.string()
+    .trim()
+    .required("Last name is required")
+    .min(2, "Last name must be at least 2 characters")
+    .max(50, "Last name must be at most 50 characters"),
+
+  dob: Yup.date()
+    .max(new Date(), "DOB cannot be in the future")
+    .required("Date of Birth is required")
+    .typeError("Invalid date format (YYYY-MM-DD)"),
+
+  phoneNumber: Yup.string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits"),
+
+  email: Yup.string()
+    .trim()
+    .email("Invalid email format")
+    .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
+    .required("Email is required"),
+
   role: Yup.string().required("Role is required"),
 });
 
@@ -58,23 +80,18 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
 
   const { data: rolesList } = useAllRoleListQuery();
 
-const formatDateForSave = (inputDate: string) => {
-  if (!inputDate) return "";
-
-  // Check if it's already in ISO format
-  if (inputDate.includes("T")) {
-    return inputDate.slice(0, 10); // Extract YYYY-MM-DD
-  }
-
-  // If it's in MM-DD-YYYY format
-  const [month, day, year] = inputDate.split("-");
-  if (month && day && year) {
-    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
-  }
-
-  return "";
-};
-
+  // Format date for form field (YYYY-MM-DD)
+  const formatDateForSave = (inputDate: string) => {
+    if (!inputDate) return "";
+    if (inputDate.includes("T")) {
+      return inputDate.slice(0, 10);
+    }
+    const [month, day, year] = inputDate.split("-");
+    if (month && day && year) {
+      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    }
+    return "";
+  };
 
   const roleOptions =
     rolesList?.map((roleData) => ({
@@ -96,7 +113,7 @@ const formatDateForSave = (inputDate: string) => {
 
   useEffect(() => {
     if (selectStaff) {
-      const convertedDOB = selectStaff && formatDateForSave(selectStaff.dob);
+      const convertedDOB = formatDateForSave(selectStaff.dob);
       setInitialValues({
         firstName: selectStaff.first_name || "",
         lastName: selectStaff.last_name || "",
@@ -190,6 +207,7 @@ const formatDateForSave = (inputDate: string) => {
                 value={values.phoneNumber}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                error={touched.phoneNumber && errors.phoneNumber}
               />
             </div>
 
@@ -208,6 +226,7 @@ const formatDateForSave = (inputDate: string) => {
                 options={roleOptions}
                 value={values.role}
                 onChange={(val: string) => setFieldValue("role", val)}
+                error={touched.role ? errors.role : undefined}
               />
             </div>
 

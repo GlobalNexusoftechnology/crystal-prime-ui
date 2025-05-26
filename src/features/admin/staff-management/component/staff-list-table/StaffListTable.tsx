@@ -31,8 +31,9 @@ export function StaffListTable() {
   const [isEditStaffModalOpen, setIsEditStaffModalOpen] = useState(false);
   const [isViewStaffModalOpen, setIsViewStaffModalOpen] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState<IUserViewDetails | null>(null);
-  const { downloadAllUserExcel, data: downloadAllUserExcelData } = useAllUserDownloadExcelQuery();
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
+  const { downloadAllUserExcel, data: downloadAllUserExcelData } = useAllUserDownloadExcelQuery();
 
   const { onDeleteUser } = useDeleteUserMutation({
     onSuccessCallback: (data) => {
@@ -66,23 +67,35 @@ export function StaffListTable() {
     role_id: user.role.id || "",
   }));
 
+  // Filter user list based on search query
+  const filteredUserList = userList.filter((user) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      user.first_name.toLowerCase().includes(query) ||
+      user.last_name.toLowerCase().includes(query) ||
+      user.email.toLowerCase().includes(query) ||
+      user.number.toLowerCase().includes(query) ||
+      user.role.toLowerCase().includes(query)
+    );
+  });
+
   // Table actions
   const staffActions: ITableAction<IAllUsersListResponse>[] = [
     {
       label: "View",
       onClick: (row) => {
         setSelectedStaff({
-        id: row.id || "",
-        first_name: row.first_name || "",
-        last_name: row.last_name || "",
-        email: row.email || "",
-        phone_number: row.number || "",
-        dob: row.dob || "",
-        role: row?.role || "",
-        role_id: row.role_id || "",
-        created_at: formatDate(row.created_at) || "",
-        updated_at: formatDate(row.updated_at) || "",
-      });
+          id: row.id || "",
+          first_name: row.first_name || "",
+          last_name: row.last_name || "",
+          email: row.email || "",
+          phone_number: row.number || "",
+          dob: row.dob || "",
+          role: row?.role || "",
+          role_id: row.role_id || "",
+          created_at: formatDate(row.created_at) || "",
+          updated_at: formatDate(row.updated_at) || "",
+        });
         setIsViewStaffModalOpen(true);
       },
       className: "text-blue-500 whitespace-nowrap",
@@ -91,17 +104,17 @@ export function StaffListTable() {
       label: "Edit",
       onClick: (row) => {
         setSelectedStaff({
-        id: row.id || "",
-        first_name: row.first_name || "",
-        last_name: row.last_name || "",
-        email: row.email || "",
-        phone_number: row.number || "",
-        dob: row.dob || "",
-        role: row?.role || "",
-        role_id: row.role_id || "",
-        created_at: formatDate(row.created_at) || "",
-        updated_at: formatDate(row.updated_at) || "",
-      });
+          id: row.id || "",
+          first_name: row.first_name || "",
+          last_name: row.last_name || "",
+          email: row.email || "",
+          phone_number: row.number || "",
+          dob: row.dob || "",
+          role: row?.role || "",
+          role_id: row.role_id || "",
+          created_at: formatDate(row.created_at) || "",
+          updated_at: formatDate(row.updated_at) || "",
+        });
         setIsEditStaffModalOpen(true);
       },
       className: "text-blue-500 whitespace-nowrap",
@@ -132,7 +145,7 @@ export function StaffListTable() {
         </h1>
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           <SearchBar
-            onSearch={(query) => console.log("Searching:", query)}
+            onSearch={(query) => setSearchQuery(query)}
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
@@ -152,7 +165,7 @@ export function StaffListTable() {
         </div>
       </div>
 
-      <Table data={userList} columns={staffListColumn} actions={staffActions} />
+      <Table data={filteredUserList} columns={staffListColumn} actions={staffActions} />
 
       {/* Modals */}
       <AddNewStaffModel
