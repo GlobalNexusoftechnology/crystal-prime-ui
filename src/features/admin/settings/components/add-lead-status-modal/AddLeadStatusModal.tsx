@@ -66,10 +66,11 @@ export function AddLeadStatusModal({
                 .max(50, "Must be 50 characters or less"),
             })}
             onSubmit={(values, { resetForm }) => {
+              const lowerCaseName = values.name.toLowerCase().trim();
               if (statusId) {
-                onEditStatuses({ id: statusId, payload: { name: values.name } });
+                onEditStatuses({ id: statusId, payload: { name: lowerCaseName } });
               } else {
-                onAllStatusMutation({ name: values.name });
+                onAllStatusMutation({ name: lowerCaseName });
               }
               resetForm();
             }}
