@@ -17,7 +17,6 @@ export function TableRow<
   setOpenActionId: (id: string | number | null) => void;
 }) {
   const isOpen = openActionId === row.id;
-  // const statusClass = row.assigned_to ? getStatusBadge(row.assigned_to) : "";
 
   return (
     <tr className="border-t 2xl:border-[0.1vw] border-gray-200 hover:bg-gray-50 relative">
@@ -59,11 +58,11 @@ export function TableRow<
           </button>
 
           {isOpen && (
-            <div className="absolute right-[60%] top-[70%] bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-32 2xl:w-[10vw]">
+            <div className={`right-[95%] top-[-40%] absolute bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-fit min-w-[8rem] 2xl:min-w-[8vw]`}>
               {actions.map((action, actionIndex) => (
                 <button
                   key={actionIndex}
-                  className={`block w-full px-4 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left hover:bg-gray-100 ${
+                  className={`block w-full px-4 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] 2xl:px-[1vw] py-1 2xl:py-[0.25vw] text-left hover:bg-gray-100 ${
                     action.className || ""
                   }`}
                   onClick={() => {

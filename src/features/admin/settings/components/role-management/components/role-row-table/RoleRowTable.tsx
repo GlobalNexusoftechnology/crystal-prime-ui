@@ -81,7 +81,7 @@ export function RoleRowTable({
           </button>
 
           {isOpen && (
-            <div className="absolute right-[80%] top-[70%] bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-32 2xl:w-[10vw]">
+            <div className="absolute right-[95%] top-[-40%] bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-32 2xl:w-[10vw]">
               {actions.map((action, index) => (
                 <button
                   key={index}
