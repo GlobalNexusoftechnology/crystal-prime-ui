@@ -107,7 +107,7 @@ export function TableCell<T extends { id: string | number }>({
   const value = row[col.accessor];
   const initials = getInitials(value as string);
   const isAssignedTo = col.accessor === "assigned_to";
-  const isStatusColumn = col.accessor === "status";
+  const isStatusColumn = col.accessor === "status_id";
   const randomColor = getRandomColor(value as string);
   const statusColor = getColorForStatus(value as string);
 
