@@ -1,4 +1,5 @@
-import { ITableRowProps } from "@/constants"; // Adjust this path if needed
+import { useEffect, useRef } from "react";
+import { ITableRowProps } from "@/constants"; // Adjust path if needed
 import { getInitials, getRandomColor } from "@/utils";
 import { FiMoreVertical } from "react-icons/fi";
 
@@ -18,11 +19,39 @@ export function TableRow<
 }) {
   const isOpen = openActionId === row.id;
 
+  const actionRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        actionRef.current &&
+        !actionRef.current.contains(event.target as Node) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target as Node)
+      ) {
+        setOpenActionId(null);
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    // Cleanup
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, setOpenActionId]);
+
   return (
     <tr className="border-t 2xl:border-[0.1vw] border-gray-200 hover:bg-gray-50 relative">
       <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">
         {String(index + 1).padStart(3, "0")}
       </td>
+
       {columns.map((col, index) => (
         <td
           key={index}
@@ -36,9 +65,7 @@ export function TableRow<
               >
                 {getInitials(row.assigned_to)}
               </p>
-              <p
-                className={`px-3 py-1 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw]`}
-              >
+              <p className="px-3 py-1 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw]">
                 {row.assigned_to}
               </p>
             </div>
@@ -48,9 +75,11 @@ export function TableRow<
           )}
         </td>
       ))}
+
       {actions.length > 0 && (
         <td className="p-3 2xl:p-[0.75vw] relative">
           <button
+            ref={buttonRef}
             onClick={() => setOpenActionId(isOpen ? null : row.id)}
             className="p-1 2xl:p-[0.25vw] rounded hover:bg-gray-200"
           >
@@ -58,7 +87,10 @@ export function TableRow<
           </button>
 
           {isOpen && (
-            <div className={`right-[95%] top-[-40%] absolute bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-fit min-w-[8rem] 2xl:min-w-[8vw]`}>
+            <div
+              ref={actionRef}
+              className={`right-[95%] top-[-40%] absolute bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-fit min-w-[8rem] 2xl:min-w-[8vw]`}
+            >
               {actions.map((action, actionIndex) => (
                 <button
                   key={actionIndex}
