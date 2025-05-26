@@ -7,37 +7,32 @@
     return `hsl(${hue}, 70%, 20%)`;
   }
 
-  const STATUS_COLORS = [
-  "#60A5FA", // blue-400
-  "#34D399", // green-400
-  "#FBBF24", // yellow-400
-  "#F87171", // red-400
-  "#A78BFA", // purple-400
-  "#F472B6", // pink-400
-  "#38BDF8", // sky-400
-  "#FDBA74", // orange-400
-  "#4ADE80", // emerald-400
+const STATUS_COLORS = [
+  "#60A5FA", "#34D399", "#FBBF24", "#F87171",
+  "#A78BFA", "#F472B6", "#38BDF8", "#FDBA74", "#4ADE80",
 ];
 
 const statusColorMap = new Map<string, string>();
-let nextColorIndex = 0;
+let availableColors = [...STATUS_COLORS];
 
-/**
- * Get a unique color for a status name.
- * Guarantees the same status always gets the same color, and no two statuses get the same color until pool exhausted.
- */
 export function getColorForStatus(status: string): string {
   const key = status.toLowerCase();
 
-  // Return if already assigned
   if (statusColorMap.has(key)) {
+    // Return the existing color for the same status
     return statusColorMap.get(key)!;
   }
 
-  // Assign next color
-  const color = STATUS_COLORS[nextColorIndex % STATUS_COLORS.length];
-  statusColorMap.set(key, color);
-  nextColorIndex++;
+  if (availableColors.length === 0) {
+    availableColors = [...STATUS_COLORS]; // Reset pool
+  }
+
+  const randomIndex = Math.floor(Math.random() * availableColors.length);
+  const color = availableColors[randomIndex];
+
+  statusColorMap.set(key, color); // Remember the color for this status
+  availableColors.splice(randomIndex, 1); // Remove used color
 
   return color;
 }
+

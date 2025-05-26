@@ -130,7 +130,7 @@ export function TableCell<T extends { id: string | number }>({
         </div>
       ) : isStatusColumn && typeof value === "string" ? (
         <span
-          className="inline-block px-3 py-1 rounded-full text-white text-[0.8rem] 2xl:text-[0.8vw]"
+          className="inline-block px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] rounded-full text-white text-[0.8rem] 2xl:text-[0.8vw]"
           style={{ backgroundColor: statusColor }}
         >
           {value}
