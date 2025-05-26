@@ -49,7 +49,7 @@ export function TableRow<
   return (
     <tr className="border-t 2xl:border-[0.1vw] border-gray-200 hover:bg-gray-50 relative">
       <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">
-        {String(index + 1).padStart(3, "0")}
+        {String(index + 1).padStart(1, "0")}
       </td>
 
       {columns.map((col, index) => (
