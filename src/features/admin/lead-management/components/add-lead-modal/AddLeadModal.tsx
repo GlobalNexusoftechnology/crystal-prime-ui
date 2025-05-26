@@ -174,7 +174,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     onChange={(e) => {
                       setFieldValue(
                         "budget",
-                        parseFloat(e.target.value || "0")
+                        parseFloat(e.target.value)
                       );
                     }}
                     error={touched.budget && errors.budget}
