@@ -21,31 +21,31 @@ export function LeadManagement() {
 
   const analyticalCards: AnalyticalCardData[] = [
     {
-      count: `${allLeadList?.data.stats.totalLeads} Leads`,
+      count: `${allLeadList?.data.stats.totalLeads}`,
       title: "Total Leads",
       subtitle: "All leads in the system",
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data.stats.profileSent} Leads`,
+      count: `${allLeadList?.data.stats.profileSent}`,
       title: "Profile Sent",
       subtitle: "Profiles sent this week",
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data.stats.businessDone} Leads`,
+      count: `${allLeadList?.data.stats.businessDone}`,
       title: "Business Done",
       subtitle: "Leads business done",
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data.stats.notInterested} Leads`,
+      count: `${allLeadList?.data.stats.notInterested}`,
       title: "Not Interested",
       subtitle: "Leads not interested",
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data.stats.assignedToMe} Leads`,
+      count: `${allLeadList?.data.stats.assignedToMe}`,
       title: "Assigned To Me",
       subtitle: "Leads assigned to me",
       icon: <AnalyticalCardIcon />,
