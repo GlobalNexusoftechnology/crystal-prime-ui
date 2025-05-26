@@ -526,6 +526,19 @@ export interface IUsersDetails {
   role_id: string;
   dob: string;
 }
+export interface IUserViewDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  role: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  role_id: string;
+  password?:string;
+  dob: string;
+}
 
 export interface IAllUsersListResponse {
   id: string;
@@ -537,6 +550,7 @@ export interface IAllUsersListResponse {
   last_name: string;
   number: string;
   dob: string;
+  role_id: string;
 }
 
 export interface IAllUsersResponse {
@@ -556,6 +570,15 @@ export interface ICreateUserPayload {
   password: string;
   role_id: string;
 }
+export interface IUserUpdatePayload {
+  first_name: string;
+  last_name: string;
+  email: string;
+  dob: string;
+  phone_number: string;
+  password?: string;
+  role_id: string;
+}
 
 export interface ICreateUserResponse {
   status: boolean;
@@ -573,7 +596,7 @@ export interface IUserDetailResponse {
 //update
 export interface IUpdateUserPayload {
   id: string;
-  payload: ICreateUserPayload;
+  payload: IUserUpdatePayload;
 }
 
 export interface IUpdateUserResponse {
