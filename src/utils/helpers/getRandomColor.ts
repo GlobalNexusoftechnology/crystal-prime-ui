@@ -17,25 +17,27 @@
   "#38BDF8", // sky-400
   "#FDBA74", // orange-400
   "#4ADE80", // emerald-400
-  "#818CF8", // indigo-400
 ];
 
-/**
- * Simple hash function to convert string to number
- */
-function hashString(str: string): number {
-  let hash = 0;
-  for (let i = 0; i < str.length; i++) {
-    hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return Math.abs(hash);
-}
+const statusColorMap = new Map<string, string>();
+let nextColorIndex = 0;
 
 /**
- * Get a consistent color for a status name
+ * Get a unique color for a status name.
+ * Guarantees the same status always gets the same color, and no two statuses get the same color until pool exhausted.
  */
 export function getColorForStatus(status: string): string {
-  const index = hashString(status.toLowerCase()) % STATUS_COLORS.length;
-  return STATUS_COLORS[index];
+  const key = status.toLowerCase();
+
+  // Return if already assigned
+  if (statusColorMap.has(key)) {
+    return statusColorMap.get(key)!;
+  }
+
+  // Assign next color
+  const color = STATUS_COLORS[nextColorIndex % STATUS_COLORS.length];
+  statusColorMap.set(key, color);
+  nextColorIndex++;
+
+  return color;
 }
