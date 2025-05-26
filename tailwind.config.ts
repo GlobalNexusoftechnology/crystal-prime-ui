@@ -20,6 +20,7 @@ const config: Config = {
         textColor: "#252F4A",
         lightYellow: "#DD7A08",
         lightGreen: "#57B708",
+        darkBlue: "#252F4A",
       },
     },
   },

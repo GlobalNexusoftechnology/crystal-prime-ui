@@ -130,7 +130,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
             className="flex flex-col gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
           >
             <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
-              <div className="flex items-center gap-4 2xl:gap-[1vw]">
+              <div className="text-darkBlue flex justify-between items-center gap-4 2xl:gap-[1vw]">
                 <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
                   <p>Assigned To:</p>
                   <p>{`${followup?.user?.first_name} ${followup?.user?.last_name}`}</p>
