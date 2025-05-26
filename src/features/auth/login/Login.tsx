@@ -1,22 +1,24 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import Link from "next/link";
 import { Button, InputField } from "@/components";
 import { AuthCard } from "../auth-card";
-import {
-  ILoginUserResponse,
-  useAuthStore,
-  useLoginMutation,
-} from "@/services";
+import { ILoginUserResponse, useAuthStore, useLoginMutation } from "@/services";
 import { IApiError } from "@/utils";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast"; // ✅ import toast
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 export function Login() {
   const router = useRouter();
   const { addNewSession } = useAuthStore();
+const [showPassword, setShowPassword] = useState(false);
+
+const togglePasswordVisibility = () => {
+  setShowPassword((prev) => !prev);
+};
 
   const handleSuccessCallback = (response: ILoginUserResponse) => {
     const loginData = response.data;
@@ -88,7 +90,7 @@ export function Login() {
             label="Password"
             placeholder="Enter Password"
             name="password"
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={formik.values.password}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -97,7 +99,12 @@ export function Login() {
                 ? formik.errors.password
                 : undefined
             }
+            suffixIcon={
+              showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />
+            }
+            onIconClick={togglePasswordVisibility}
           />
+
           <Button type="submit" title={isPending ? "Logging in..." : "Login"} />
           <Link
             href="/forget-password"
