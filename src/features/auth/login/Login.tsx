@@ -65,7 +65,7 @@ const togglePasswordVisibility = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <AuthCard title="Login" copyright="Copyright ©Satkar.com | 2025">
+      <AuthCard title="Login" copyright="Copyrights and developed © Islahdata.com">
         <form
           onSubmit={formik.handleSubmit}
           className="flex flex-col gap-4 2xl:gap-[1vw]"
