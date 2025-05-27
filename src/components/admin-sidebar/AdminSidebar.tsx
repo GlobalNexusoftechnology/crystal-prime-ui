@@ -83,7 +83,7 @@ export function AdminSidebar({
                     isActive ? "text-primary" : null
                   }`}
                 >
-                  <span className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]">
+                  <span className="w-8 2xl:w-[2vw] h-8 2xl:h-[2vw]">
                     {isActive ? link.activeIcon : link.icon}
                   </span>
                   <span

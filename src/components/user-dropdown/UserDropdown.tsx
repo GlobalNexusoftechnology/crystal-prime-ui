@@ -1,16 +1,15 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import Image, { StaticImageData } from "next/image";
 import { FiChevronDown } from "react-icons/fi";
 import Link from "next/link";
+import { getInitials } from "@/utils";
 
 interface UserDropdownProps {
   name: string;
-  image: StaticImageData;
 }
 
-export const UserDropdown: React.FC<UserDropdownProps> = ({ name, image }) => {
+export const UserDropdown: React.FC<UserDropdownProps> = ({ name }) => {
   const [open, setOpen] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -35,13 +34,9 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ name, image }) => {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 2xl:gap-[0.5vw] bg-customGray border 2xl:border-[0.1vw] border-gray-300 px-4 py-2 2xl:px-[1vw] 2xl:py-[0.25vw] rounded-xl 2xl:rounded-[0.75vw] shadow-sm hover:bg-gray-50 transition-all"
       >
-        <Image
-          src={image}
-          alt={name}
-          width={32}
-          height={32}
-          className="rounded-full object-cover"
-        />
+        <span className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full bg-primary">
+          {getInitials(name)}
+        </span>
         <span className="font-medium text-black">{name}</span>
         <FiChevronDown
           className={`w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.25vw] transition-transform ${

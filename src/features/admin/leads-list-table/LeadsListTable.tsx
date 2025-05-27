@@ -19,6 +19,8 @@ import {
   useLeadDownloadTemplateExcelQuery,
 } from "@/services";
 import { downloadBlobFile, formatDate, IApiError } from "@/utils";
+import { FiPlus } from "react-icons/fi";
+import { ImDownload2 } from "react-icons/im";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
@@ -33,20 +35,28 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const { data: allLeadList, isLoading, leadsRefetch } = useAllLeadsListQuery();
   const { allStatusesData } = useAllStatusesQuery();
-  const { onAllLeadDownloadExcel, data: allLeadDownloadExcelData } = useAllLeadDownloadExcelQuery();
+  const { onAllLeadDownloadExcel, data: allLeadDownloadExcelData } =
+    useAllLeadDownloadExcelQuery();
 
-  const { onLeadDownloadTemplateExcel, data: leadDownloadTemplateExcelData } = useLeadDownloadTemplateExcelQuery();
+  const { onLeadDownloadTemplateExcel, data: leadDownloadTemplateExcelData } =
+    useLeadDownloadTemplateExcelQuery();
 
   useEffect(() => {
-  if (allLeadDownloadExcelData instanceof Blob) {
+    if (allLeadDownloadExcelData instanceof Blob) {
       // You may want to pass filename manually or extract it from a header elsewhere
-      downloadBlobFile(allLeadDownloadExcelData, "leads"+ new Date().getTime() + ".xlsx");
+      downloadBlobFile(
+        allLeadDownloadExcelData,
+        "leads" + new Date().getTime() + ".xlsx"
+      );
     }
   }, [allLeadDownloadExcelData]);
 
   useEffect(() => {
     if (leadDownloadTemplateExcelData instanceof Blob) {
-      downloadBlobFile(leadDownloadTemplateExcelData, "upload_lead_template.xlsx");
+      downloadBlobFile(
+        leadDownloadTemplateExcelData,
+        "upload_lead_template.xlsx"
+      );
     }
   }, [leadDownloadTemplateExcelData]);
 
@@ -69,13 +79,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   // Fetch lead details on view/edit open
   useEffect(() => {
     if (leadId) refetchLeadDetail();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    leadId,
-    leadDetailById,
-    isEditLeadModalOpen,
-    viewLead,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leadId, leadDetailById, isEditLeadModalOpen, viewLead]);
 
   const actions: ITableAction<ILeadsListProps>[] = [
     {
@@ -108,7 +113,6 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   //     label: status?.name,
   //     value: status?.id.toString(),
   //   })) || [];
-    
 
   const leadDetailModalData: ILeadsListDetailsProps = {
     id: leadDetailById?.id || "null",
@@ -181,39 +185,41 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     setSearchQuery(query.toLowerCase());
   };
 
- const statusOptions = [
-  { label: "All Status", value: "All Status" },
-  ...(allStatusesData?.map((status) => ({
-    label: status?.name,
-    value: status?.id.toString(),
-  })) || []),
-];
+  const statusOptions = [
+    { label: "All Status", value: "All Status" },
+    ...(allStatusesData?.map((status) => ({
+      label: status?.name,
+      value: status?.id.toString(),
+    })) || []),
+  ];
 
-const handleChange = (val: string) => {
-  setSelectedStatus(val);
-};
+  const handleChange = (val: string) => {
+    setSelectedStatus(val);
+  };
 
-const filteredLeads = useMemo(() => {
-  return leadsList.filter((lead) => {
-    const matchQuery =
-      lead.id?.toLowerCase().includes(searchQuery) ||
-      lead.first_name?.toLowerCase().includes(searchQuery) ||
-      lead.last_name?.toLowerCase().includes(searchQuery) ||
-      lead.phone?.toLowerCase().includes(searchQuery) ||
-      lead.company?.toLowerCase().includes(searchQuery) ||
-      lead.budget?.toLowerCase().includes(searchQuery) ||
-      lead.requirement?.toLowerCase().includes(searchQuery) ||
-      lead.email?.toLowerCase().includes(searchQuery) ||
-      lead.location?.toLowerCase().includes(searchQuery);
+  const filteredLeads = useMemo(() => {
+    return leadsList.filter((lead) => {
+      const matchQuery =
+        lead.id?.toLowerCase().includes(searchQuery) ||
+        lead.first_name?.toLowerCase().includes(searchQuery) ||
+        lead.last_name?.toLowerCase().includes(searchQuery) ||
+        lead.phone?.toLowerCase().includes(searchQuery) ||
+        lead.company?.toLowerCase().includes(searchQuery) ||
+        lead.budget?.toLowerCase().includes(searchQuery) ||
+        lead.requirement?.toLowerCase().includes(searchQuery) ||
+        lead.email?.toLowerCase().includes(searchQuery) ||
+        lead.location?.toLowerCase().includes(searchQuery);
 
-    const matchStatus =
-      selectedStatus === "All Status" ||
-      lead.status_id?.toLowerCase() ===
-        allStatusesData?.find((status) => status.id.toString() === selectedStatus)?.name?.toLowerCase();
+      const matchStatus =
+        selectedStatus === "All Status" ||
+        lead.status_id?.toLowerCase() ===
+          allStatusesData
+            ?.find((status) => status.id.toString() === selectedStatus)
+            ?.name?.toLowerCase();
 
-    return matchQuery && matchStatus;
-  });
-}, [leadsList, searchQuery, selectedStatus, allStatusesData]);;
+      return matchQuery && matchStatus;
+    });
+  }, [leadsList, searchQuery, selectedStatus, allStatusesData]);
 
   const handleLeadDownloadExcel = () => {
     onAllLeadDownloadExcel();
@@ -241,13 +247,10 @@ const filteredLeads = useMemo(() => {
                 title="Add Lead"
                 variant="background-white"
                 width="w-full md:w-fit"
+                leftIcon={
+                  <FiPlus className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                }
                 onClick={() => setAddLeadModalOpen(true)}
-              />
-              <Button
-                title="Download Template"
-                variant="background-white"
-                width="w-full md:w-fit"
-                onClick={handleLeadDownloadTemplateExcel}
               />
             </div>
           )}
@@ -263,6 +266,15 @@ const filteredLeads = useMemo(() => {
             rightIcon={<ExportIcon />}
             width="w-full md:w-fit"
             onClick={handleLeadDownloadExcel}
+          />
+          <Button
+            variant="background-white"
+            width="w-full md:w-fit"
+            onClick={handleLeadDownloadTemplateExcel}
+            leftIcon={
+              <ImDownload2 className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+            }
+            tooltip="Download Template"
           />
         </div>
       </div>

@@ -1,10 +1,8 @@
 'use client'
 
 import { MenuIcon, NotificationIcon } from "@/features";
-import { ImageRegistry } from "@/constants";
 import { useAuthStore } from "@/services";
 import { UserDropdown } from '../user-dropdown';
-import { SearchBar } from "../search-bar";
 
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
@@ -32,10 +30,6 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
         <button className="text-gray-700 flex" onClick={SetIsVisibleSidebar}>
           <MenuIcon className="w-8 2xl:w-[2vw] h-8 2xl:h-[2vw]" />
         </button>
-        <SearchBar
-          onSearch={(query) => console.log("Searching:", query)}
-          bgColor="customGray"
-        />
       </div>
       <div className="flex items-center gap-4 2xl:gap-[1vw]">
         <div className="cursor-pointer border 2xl:border-[0.1vw] bg-customGray border-gray-300 p-2 2xl:p-[0.5vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -44,7 +38,6 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
         {userName ? (
           <UserDropdown
             name={userName}
-            image={ImageRegistry.profileImage} 
           />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
