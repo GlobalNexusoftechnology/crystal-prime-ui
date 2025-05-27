@@ -62,7 +62,6 @@ export function LeadSources() {
     {
       label: "Edit",
       onClick: (row: IAllSourcesList) => {
-        console.log("Edit clicked", row.id);
         setSelectedSource({ id: row.id, name: row.name });
         setIsAddModalOpen(true);
       },
@@ -71,15 +70,23 @@ export function LeadSources() {
     {
       label: "Delete",
       onClick: (row: IAllSourcesList) => {
-        console.log("Delete clicked", row.id);
         onDeleteSources(row.id);
       },
       className: "text-red-500",
     },
   ];
 
+  // Called after add or edit success: refetch + clear edit state
   const handleAddSourceSuccessCallback = () => {
     fetchAllSources();
+    setSelectedSource(null); // Clear edit source after success
+    setIsAddModalOpen(false); // Close modal after success
+  };
+
+  // Clear modal and edit source when modal closes (Cancel or outside click)
+  const handleModalClose = () => {
+    setIsAddModalOpen(false);
+    setSelectedSource(null);
   };
 
   return (
@@ -98,7 +105,10 @@ export function LeadSources() {
             title="Add Sources"
             variant="background-white"
             width="w-full md:w-fit"
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={() => {
+              setSelectedSource(null); // Clear any edit before opening
+              setIsAddModalOpen(true);
+            }}
           />
         </div>
       </div>
@@ -113,10 +123,11 @@ export function LeadSources() {
       {isAddModalOpen && (
         <AddLeadSourcesModal
           isOpen={isAddModalOpen}
-          onClose={() => setIsAddModalOpen(false)}
+          onClose={handleModalClose}
           onAddSourceSuccessCallback={handleAddSourceSuccessCallback}
           sourceId={selectedSource?.id}
           sourceName={selectedSource?.name}
+          onClearEditData={() => setSelectedSource(null)}
         />
       )}
     </div>

@@ -3,27 +3,34 @@ import { IApiError } from "@/utils";
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { ICreateSourcesResponse, IUpdateSourcesResponse, useCreateSourcesMutation, useUpdateSourcesMutation } from "@/services";
+import {
+  ICreateSourcesResponse,
+  IUpdateSourcesResponse,
+  useCreateSourcesMutation,
+  useUpdateSourcesMutation,
+} from "@/services";
 import toast from "react-hot-toast";
 
 interface AddLeadSourcesModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddSourceSuccessCallback: () => void;
-  sourceId?: string; 
-  sourceName?: string; 
+  onClearEditData?: () => void; // NEW: Callback to clear edit mode
+  sourceId?: string;
+  sourceName?: string;
 }
 
 export const AddLeadSourcesModal: React.FC<AddLeadSourcesModalProps> = ({
   isOpen,
   onClose,
   onAddSourceSuccessCallback,
+  onClearEditData,
   sourceId,
-  sourceName = "", // Default to empty string
+  sourceName = "",
 }) => {
   const [initialValues, setInitialValues] = useState({ name: "" });
 
-  // Set initial values when modal opens
+  // Update form values when modal opens or sourceName changes
   useEffect(() => {
     if (isOpen) {
       setInitialValues({ name: sourceName || "" });
@@ -34,6 +41,7 @@ export const AddLeadSourcesModal: React.FC<AddLeadSourcesModalProps> = ({
     onSuccessCallback: (response: ICreateSourcesResponse) => {
       onAddSourceSuccessCallback();
       onClose();
+      onClearEditData?.(); // Clear edit mode
       toast.success(response.message);
     },
     onErrorCallback: (err: IApiError) => {
@@ -46,6 +54,7 @@ export const AddLeadSourcesModal: React.FC<AddLeadSourcesModalProps> = ({
     onSuccessCallback: (response: IUpdateSourcesResponse) => {
       onAddSourceSuccessCallback();
       onClose();
+      onClearEditData?.(); // Clear edit mode
       toast.success(response.message);
     },
     onErrorCallback: (err: IApiError) => {
@@ -62,7 +71,7 @@ export const AddLeadSourcesModal: React.FC<AddLeadSourcesModalProps> = ({
       modalClassName="w-full sm:w-[30rem]"
     >
       <Formik
-        enableReinitialize // Important: Allows form to update when initialValues change
+        enableReinitialize
         initialValues={initialValues}
         validationSchema={Yup.object({
           name: Yup.string()
@@ -107,7 +116,10 @@ export const AddLeadSourcesModal: React.FC<AddLeadSourcesModalProps> = ({
                 variant="primary-outline"
                 width="w-full"
                 type="button"
-                onClick={onClose}
+                onClick={() => {
+                  onClose();
+                  onClearEditData?.();
+                }}
               />
               <Button
                 title={sourceId ? "Update Source" : "Add Source"}

@@ -3,7 +3,7 @@ import {
   ICreateStatusesResponse,
   IUpdateStatusesResponse,
   useCreateStatusesMutation,
-  useUpdateStatusesMutation
+  useUpdateStatusesMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -14,6 +14,7 @@ interface AddLeadStatusModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAddStatusSuccessCallback: () => void;
+  onClearEditData?: () => void; // NEW: Callback to clear edit mode
   statusId?: string;
   statusName?: string;
 }
@@ -21,14 +22,16 @@ interface AddLeadStatusModalProps {
 export function AddLeadStatusModal({
   onClose,
   onAddStatusSuccessCallback,
+  onClearEditData,
   isOpen,
   statusId,
-  statusName
+  statusName,
 }: AddLeadStatusModalProps) {
   const { onAllStatusMutation } = useCreateStatusesMutation({
     onSuccessCallback: (response: ICreateStatusesResponse) => {
       onAddStatusSuccessCallback();
       onClose();
+      onClearEditData?.(); // Clear edit mode
       toast.success(response.message);
     },
     onErrorCallback: (err: IApiError) => {
@@ -41,6 +44,7 @@ export function AddLeadStatusModal({
     onSuccessCallback: (response: IUpdateStatusesResponse) => {
       onAddStatusSuccessCallback();
       onClose();
+      onClearEditData?.(); // Clear edit mode
       toast.success(response.message);
     },
     onErrorCallback: (err: IApiError) => {
@@ -68,7 +72,10 @@ export function AddLeadStatusModal({
             onSubmit={(values, { resetForm }) => {
               const lowerCaseName = values.name.toLowerCase().trim();
               if (statusId) {
-                onEditStatuses({ id: statusId, payload: { name: lowerCaseName } });
+                onEditStatuses({
+                  id: statusId,
+                  payload: { name: lowerCaseName },
+                });
               } else {
                 onAllStatusMutation({ name: lowerCaseName });
               }
@@ -97,7 +104,10 @@ export function AddLeadStatusModal({
                     variant="primary-outline"
                     title="Cancel"
                     width="w-full"
-                    onClick={onClose}
+                    onClick={() => {
+                      onClose();
+                      onClearEditData?.();
+                    }}
                     type="button"
                   />
                   <Button

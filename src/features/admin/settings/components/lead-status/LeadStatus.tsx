@@ -64,7 +64,7 @@ export function LeadStatus() {
       onClick: (row: IAllStatusesList) => {
         console.log("Edit clicked", row.id);
         setSelectedStatus({ id: row.id, name: row.name });
-        setIsAddModalOpen(true)
+        setIsAddModalOpen(true);
       },
       className: "text-blue-500",
     },
@@ -80,6 +80,14 @@ export function LeadStatus() {
 
   const handleAddStatusSuccessCallback = () => {
     allStatuses();
+    setSelectedStatus(null); // Clear edit status after success
+    setIsAddModalOpen(false); // Close modal after success
+  };
+
+  // Clear modal and edit status when modal closes (Cancel or outside click)
+  const handleModalClose = () => {
+    setIsAddModalOpen(false);
+    setSelectedStatus(null);
   };
 
   return (
@@ -98,7 +106,10 @@ export function LeadStatus() {
             title="Add Status"
             variant="background-white"
             width="w-full md:w-fit"
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={() => {
+              setSelectedStatus(null); // Clear any edit before opening
+              setIsAddModalOpen(true);
+            }}
           />
         </div>
       </div>
@@ -110,15 +121,15 @@ export function LeadStatus() {
           actions={leadStatusAction}
         />
       </div>
-
       {/* 👇 MODAL WHEN "VIEW" IS CLICKED */}
       {isAddModalOpen && (
         <AddLeadStatusModal
           isOpen={isAddModalOpen}
-          onClose={() => setIsAddModalOpen(false)}
+          onClose={handleModalClose}
           onAddStatusSuccessCallback={handleAddStatusSuccessCallback}
           statusId={selectedStatus?.id}
           statusName={selectedStatus?.name}
+          onClearEditData={() => setSelectedStatus(null)}
         />
       )}
     </div>
