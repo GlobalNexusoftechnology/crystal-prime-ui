@@ -34,7 +34,6 @@ export function AdminSidebarLayout({
         } h-full z-40 transition-all duration-500 ease-in-out overflow-hidden bg-white shadow-md fixed left-0`}
       >
         <AdminSidebar
-          SetIsVisibleSidebar={toggleSidebar}
           adminSidebarLinks={adminSidebarLinks}
           isVisibleSidebar={isVisibleSidebar}
         />

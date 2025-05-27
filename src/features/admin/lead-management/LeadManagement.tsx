@@ -110,7 +110,7 @@ export function LeadManagement() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
+        <div className="flex gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
           {analyticalCards.map((card, index) => (
             <AnalyticalCard key={index} data={card} />
           ))}

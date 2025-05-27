@@ -30,7 +30,7 @@ const togglePasswordVisibility = () => {
     });
 
     toast.success(response?.message || "Login successful 🎉");
-    router.push("/admin/dashboard");
+    router.push("/admin/lead-management");
   };
 
   const handleErrorCallback = (error: IApiError) => {
@@ -39,7 +39,7 @@ const togglePasswordVisibility = () => {
       response?.data?.message ||
       error?.message ||
       "Login failed. Please try again.";
-    toast.error(errMsg); // ✅ toast error
+    toast.error(errMsg); 
   };
 
   const { submitLogin, isPending } = useLoginMutation({

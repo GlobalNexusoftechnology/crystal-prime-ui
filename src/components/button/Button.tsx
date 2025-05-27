@@ -25,7 +25,7 @@ export const Button: React.FC<ButtonProps> = ({
   rightIcon: RightIcon,
   actionIcon: ActionIcon,
   tooltip,
-  width = "w-auto",
+  width = "w-full",
   ...props
 }) => {
   const variantClasses = {
@@ -38,9 +38,9 @@ export const Button: React.FC<ButtonProps> = ({
     "background-white": "border bg-white border-gray-300",
   };
   return (
-    <div className="relative group inline-block">
+    <div className={`${width} relative group inline-block`}>
       <button
-        className={`flex items-center justify-center rounded-xl 2xl:rounded-[0.75vw] ${width} h-auto 2xl:px-[1vw] 2xl:py-[0.65vw] px-4 py-2 space-x-2 font-medium ${
+        className={`flex items-center justify-center rounded-xl w-full 2xl:rounded-[0.75vw] h-auto 2xl:px-[1vw] 2xl:py-[0.65vw] px-4 py-2 space-x-2 font-medium ${
           variantClasses[variant]
         } ${disabled || isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={disabled || isLoading}
