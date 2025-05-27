@@ -102,7 +102,7 @@ export function Attachments({
                 formik.setFieldValue("document", files[0]);
               }
             }}
-            error={formik.touched.document ? formik.errors.document : undefined}
+            error={formik?.touched?.document ? formik?.errors?.document : undefined}
           />
 
           <div className="flex justify-end gap-4 2xl:gap-[1vw]">
@@ -128,11 +128,11 @@ export function Attachments({
           >
             <div className="w-[70%] flex flex-col gap-4 2xl:gap-[1vw]">
               <div className="text-primary flex items-center underline scrollbar-hidden overflow-x-auto">
-                <p>{attachment.file_path}</p>
+                <p>{attachment?.file_path}</p>
               </div>
               <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
                 <p>Created At:</p>
-                <p>{formattingDate(attachment.created_at, "toReadable")}</p>
+                <p>{formattingDate(attachment?.created_at, "toReadable")}</p>
               </div>
             </div>
             <div>
@@ -146,8 +146,8 @@ export function Attachments({
                     ),
                   }}
                 >
-                  {getInitials(attachment?.uploaded_by.first_name)}
-                  {getInitials(attachment?.uploaded_by.last_name)}
+                  {getInitials(attachment?.uploaded_by?.first_name)}
+                  {getInitials(attachment?.uploaded_by?.last_name)}
                 </p>
                 <p className="underline font-medium text-textColor text-[1rem] 2xl:text-[1vw]">
                   {attachment?.uploaded_by?.first_name} {attachment?.uploaded_by?.last_name}
