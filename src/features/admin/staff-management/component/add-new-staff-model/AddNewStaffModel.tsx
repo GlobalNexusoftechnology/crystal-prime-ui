@@ -46,8 +46,13 @@ const initialValues: IAddStaffFormValues = {
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
-  dob: Yup.string().required("Date of Birth is required"),
-  phoneNumber: Yup.string().required("Phone number is required"),
+  dob: Yup.date()
+    .max(new Date(), "DOB cannot be in the future")
+    .required("Date of Birth is required")
+    .typeError("Invalid date format (YYYY-MM-DD)"),
+  phoneNumber: Yup.string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits"),
   email: Yup.string()
     .email("Invalid email")
     .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
