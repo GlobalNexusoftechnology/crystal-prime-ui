@@ -1,7 +1,7 @@
 "use client";
 
 import { ModalOverlay, UploadDocument } from "@/components";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LeadsListTable } from "../leads-list-table";
 import Image from "next/image";
 import { AnalyticalCardData, ImageRegistry } from "@/constants";
@@ -29,6 +29,7 @@ export function LeadManagement() {
     },
     onErrorCallback: (error: IApiError) => {
       toast.error(error.message);
+      formik.resetForm();
     },
   });
 
@@ -100,13 +101,6 @@ export function LeadManagement() {
     },
   });
 
-  // Automatically call API when file changes
-  useEffect(() => {
-    if (formik.values.file) {
-      formik.submitForm();
-    }
-  }, [formik, formik.values.file]);
-
   return (
     <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
       <div className="flex flex-col gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
@@ -176,8 +170,10 @@ export function LeadManagement() {
                         label=""
                         className="absolute top-0 left-0 opacity-0 w-full h-full"
                         onChange={(files: FileList | null) => {
+                          console.log("On Change happening", files)
                           if (files && files[0]) {
                             formik.setFieldValue("file", files[0]);
+                            formik.submitForm();
                           }
                         }}
                         error={
@@ -201,9 +197,6 @@ export function LeadManagement() {
                       </p>
                       <p className="text-[1rem] 2xl:text-[1vw] text-gray-400 mt-1">
                         .XLS, .XLSX (max. 5MB)
-                      </p>
-                      <p className="text-red-500">
-                        {formik.touched.file ? formik.errors.file : undefined}
                       </p>
                     </div>
                   </div>
