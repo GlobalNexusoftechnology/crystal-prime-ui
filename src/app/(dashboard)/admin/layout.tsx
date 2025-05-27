@@ -4,6 +4,7 @@ import { RoleRedirectWrapper, AdminSidebarLayout } from "@/components";
 import { Poppins } from "next/font/google";
 import { Metadata } from "next";
 import { adminSidebarLinks } from "@/constants";
+import { Toaster } from "react-hot-toast";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -23,13 +24,12 @@ export default function RootAdminLayout({
   return (
     <ReactQueryProvider hasDevTools={false}>
       <html lang="en">
-        <body
-          className={`${poppins.className} flex flex-col justify-between`}
-        >
+        <body className={`${poppins.className} flex flex-col justify-between`}>
           <div>
             <RoleRedirectWrapper>
               <AdminSidebarLayout adminSidebarLinks={adminSidebarLinks}>
                 {children}
+                <Toaster position="top-right" reverseOrder={false} />
               </AdminSidebarLayout>
             </RoleRedirectWrapper>
           </div>

@@ -24,6 +24,8 @@ export function LeadManagement() {
   const { onUploadLeadFromExcel, isPending } = useUploadLeadFromExcelMutation({
     onSuccessCallback: (response) => {
       toast.success(response.message);
+      leadsRefetch();
+      setAddLeadModalOpen(false);
     },
     onErrorCallback: (error: IApiError) => {
       toast.error(error.message);
@@ -91,7 +93,6 @@ export function LeadManagement() {
         try {
           await onUploadLeadFromExcel(formData);
           resetForm();
-          leadsRefetch()
         } catch (err) {
           console.error("Upload error:", err);
         }
@@ -201,7 +202,9 @@ export function LeadManagement() {
                       <p className="text-[1rem] 2xl:text-[1vw] text-gray-400 mt-1">
                         .XLS, .XLSX (max. 5MB)
                       </p>
-                      <p className="text-red-500">{formik.touched.file ? formik.errors.file : undefined}</p>
+                      <p className="text-red-500">
+                        {formik.touched.file ? formik.errors.file : undefined}
+                      </p>
                     </div>
                   </div>
                 </div>
