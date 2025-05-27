@@ -69,6 +69,7 @@ export function InputField({
           />
         ) : (
           <input
+            type={type}
             className="w-full bg-transparent outline-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={disabled}
             required={isRequired}
@@ -78,10 +79,9 @@ export function InputField({
           />
         )}
 
-        {/* Right Icon (e.g., Eye for Password) */}
         {suffixIcon && (
           <span
-            className="text-gray-500 cursor-pointer"
+            className="text-gray-500 cursor-pointer flex-shrink-0"
             onClick={(e) => {
               if (onIconClick) onIconClick(e);
             }}

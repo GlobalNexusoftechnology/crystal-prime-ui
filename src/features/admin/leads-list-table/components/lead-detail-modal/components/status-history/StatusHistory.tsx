@@ -116,7 +116,7 @@ export function StatusHistory({
             key={index}
             className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
           >
-            <div className="flex justify-between items-center">
+            <div className="text-darkBlue flex justify-between items-center">
               <div className="flex items-center gap-2 underline">
                 <p>Status:</p>
                 <p>{statusHistory?.status?.name}</p>

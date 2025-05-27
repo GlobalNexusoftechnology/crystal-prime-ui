@@ -70,10 +70,11 @@ export const AddLeadSourcesModal: React.FC<AddLeadSourcesModalProps> = ({
             .max(50, "Must be 50 characters or less"),
         })}
         onSubmit={(values, { resetForm }) => {
+          const lowerCaseName = values.name.toLowerCase().trim();
           if (sourceId) {
-            onEditSources({ id: sourceId, payload: values });
+            onEditSources({ id: sourceId, payload: { name: lowerCaseName } });
           } else {
-            onStatusMutation({ name: values.name });
+            onStatusMutation({ name: lowerCaseName });
           }
           resetForm();
         }}

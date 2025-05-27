@@ -16,7 +16,6 @@ import { formatDate, formattingDate, IApiError } from "@/utils";
 // ✅ Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
   due_date: Yup.string().required("Next follow-up date is required"),
-  completed_date: Yup.string().required("Completed date is required"),
   status: Yup.string().oneOf(
     Object.values(LeadFollowupStatus),
     "Invalid status"
@@ -42,7 +41,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
       console.log("Lead follow-up created successfully", data);
       formik.resetForm();
       setShowForm(false);
-      LeadFollowUp()
+      LeadFollowUp();
     },
     onErrorCallback: (err: IApiError) => {
       console.error("Failed to create lead follow-up:", err);
@@ -54,7 +53,6 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
       lead_id: leadId,
       due_date: "",
       status: "",
-      completed_date: "",
       user_id: userId,
       remarks: "",
     },
@@ -82,25 +80,6 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
           onSubmit={formik.handleSubmit}
           className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
         >
-          <DatePicker
-            label="Next Followup Date"
-            value={`${formik.values.due_date}`}
-            onChange={(date) => formik.setFieldValue("due_date", date)}
-            placeholder="Next Followup Date"
-            error={formik.touched.due_date ? formik.errors.due_date : undefined}
-          />
-          <DatePicker
-            label="Completed Date"
-            value={`${formik.values.completed_date}`}
-            onChange={(date) => formik.setFieldValue("completed_date", date)}
-            placeholder="Completed Date"
-            error={
-              formik.touched.completed_date
-                ? formik.errors.completed_date
-                : undefined
-            }
-          />
-
           <div className="flex items-center gap-4 2xl:gap-[1vw]">
             <Dropdown
               label="Status"
@@ -117,7 +96,6 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
               error={formik.touched.user_id ? formik.errors.user_id : undefined}
             />
           </div>
-
           <InputField
             label="Remarks"
             name="remarks"
@@ -127,7 +105,13 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
             onBlur={formik.handleBlur}
             error={formik.touched.remarks ? formik.errors.remarks : undefined}
           />
-
+          <DatePicker
+            label="Next Followup Date"
+            value={`${formik.values.due_date}`}
+            onChange={(date) => formik.setFieldValue("due_date", date)}
+            placeholder="Next Followup Date"
+            error={formik.touched.due_date ? formik.errors.due_date : undefined}
+          />
           <div className="flex items-center gap-4 2xl:gap-[1vw]">
             <Button
               title="Cancel"
@@ -146,7 +130,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
             className="flex flex-col gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
           >
             <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
-              <div className="flex items-center gap-4 2xl:gap-[1vw]">
+              <div className="text-darkBlue flex justify-between items-center gap-4 2xl:gap-[1vw]">
                 <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
                   <p>Assigned To:</p>
                   <p>{`${followup?.user?.first_name} ${followup?.user?.last_name}`}</p>
@@ -163,12 +147,14 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
                 <p>Due:</p>
                 <p>{formatDate(`${followup?.due_date}`)}</p>
               </div>
-              <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
-                <p>Completed:</p>
-                <p>
-                  {formattingDate(`${followup.completed_date}`, "toReadable")}
-                </p>
-              </div>
+              {followup.completed_date ? (
+                <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
+                  <p>Completed:</p>
+                  <p>
+                    {formattingDate(`${followup.completed_date}`, "toReadable")}
+                  </p>
+                </div>
+              ) : null}
             </div>
           </div>
         ))

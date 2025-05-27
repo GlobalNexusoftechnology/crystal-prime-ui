@@ -40,6 +40,7 @@ export { useLeadDownloadTemplateExcelQuery } from "./useLeadDownloadTemplateExce
 // lead status history APIs hooks
 export { useAllLeadStatusHistoryQuery } from "./useAllLeadStatusHistoryQuery";
 export { useCreateLeadStatusHistoryMutation } from "./useCreateLeadStatusHistoryMutation";
+export { useUploadLeadFromExcelMutation } from "./useUploadLeadFromExcelMutation";
 
 // upload attachment
 export { useUploadAttachmentMutation } from "./useUploadAttachmentMutation";

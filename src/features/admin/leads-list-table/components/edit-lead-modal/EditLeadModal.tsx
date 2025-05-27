@@ -22,14 +22,22 @@ const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
   last_name: Yup.string().required("Last Name is required"),
   company: Yup.string().required("Company is required"),
-  phone: Yup.number().required("Phone Number is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  phone: Yup.string()
+    .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+    .required("Phone Number is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
+    .required("Email is required"),
   location: Yup.string().required("Location is required"),
-  budget: Yup.number().required("Budget is required"),
+  budget: Yup.number()
+    .typeError("Budget must be a number")
+    .positive("Budget must be a positive number")
+    .required("Budget is required"),
   requirement: Yup.string().required("Requirement is required"),
-  source_id: Yup.string().required("Source ID is required"),
-  status_id: Yup.string().required("Status ID is required"),
-  assigned_to: Yup.string().required("Status ID is required"),
+  source_id: Yup.string().required("Source is required"),
+  status_id: Yup.string().required("Status is required"),
+  assigned_to: Yup.string().required("Assigned To is required"),
 });
 
 export function EditLeadModal({
@@ -48,9 +56,10 @@ export function EditLeadModal({
       leadsRefetch();
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to update lead:", err);
+      console.error("Failed to update lead:", err?.message || err);
     },
   });
+
   // Defensive check: if lead or required fields not loaded yet, show loading or null
   if (!lead || !lead.first_name) {
     return (
@@ -86,6 +95,30 @@ export function EditLeadModal({
       value: user?.id.toString(),
     })) || [];
 
+  // Normalize initialValues to handle undefined nested fields
+  const initialValues: ICreateLeadPayload = {
+    first_name: lead.first_name || "",
+    last_name: lead.last_name || "",
+    company: lead.company || "",
+    phone: lead.phone || "",
+    email: lead.email || "",
+    location: lead.location || "",
+    budget: lead.budget ?? 0,
+    requirement: lead.requirement || "",
+    source_id:
+      lead.source?.id?.toString() ||
+      lead.source_id?.toString() ||
+      "",
+    status_id:
+      lead.status?.id?.toString() ||
+      lead.status_id?.toString() ||
+      "",
+    assigned_to:
+      lead.assigned_to?.id?.toString() ||
+      lead.assigned_to_id?.toString() ||
+      "",
+  };
+
   return (
     <ModalOverlay
       modalTitle="Back to Leads"
@@ -99,19 +132,8 @@ export function EditLeadModal({
             Edit Lead Information
           </h2>
           <Formik<ICreateLeadPayload>
-            initialValues={{
-              first_name: lead.first_name || "",
-              last_name: lead.last_name || "",
-              company: lead.company || "",
-              phone: lead.phone || "",
-              email: lead.email || "",
-              location: lead.location || "",
-              budget: lead.budget ?? 0,
-              requirement: lead.requirement || "",
-              source_id: lead?.source?.id || "",
-              status_id: lead.status?.id || "",
-              assigned_to: lead.assigned_to?.id || "",
-            }}
+            key={lead.id} // Ensures Formik reinitializes when lead changes
+            initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={(values: ICreateLeadPayload) => {
               onEditLead({
@@ -124,9 +146,6 @@ export function EditLeadModal({
             }}
           >
             {({ values, handleChange, setFieldValue, errors, touched }) => {
-              // Debug Formik values
-              console.log("Formik values:", values);
-
               return (
                 <Form>
                   <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">

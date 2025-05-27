@@ -9,42 +9,48 @@ import {
   useCreateLeadAttachmentMutation,
   useUploadAttachmentMutation,
 } from "@/services";
-import { formattingDate, IApiError } from "@/utils";
+import {
+  formattingDate,
+  getInitials,
+  getRandomColor,
+  IApiError,
+} from "@/utils";
 import toast from "react-hot-toast";
 
 interface IAttachmentsProps {
   showForm: boolean;
   setShowForm: (val: boolean) => void;
-  leadId: string
+  leadId: string;
 }
 
 const validationSchema = Yup.object({
-  document: Yup.mixed()
-    .required("Please upload a file")
+  document: Yup.mixed().required("Please upload a file"),
 });
 
-export function Attachments({ leadId, showForm, setShowForm }: IAttachmentsProps) {
+export function Attachments({
+  leadId,
+  showForm,
+  setShowForm,
+}: IAttachmentsProps) {
   const { allLeadAttachmentData, allLeadAttachment } =
     useAllLeadAttachmentQuery();
-  const { activeSession } = useAuthStore()
+  const { activeSession } = useAuthStore();
   const firstName = activeSession?.user?.first_name;
   const lastName = activeSession?.user?.last_name;
-  const uploaded_by = `${firstName} ${lastName}`
+  const uploaded_by = `${firstName} ${lastName}`;
 
-  const { onCreateLeadAttachment } = useCreateLeadAttachmentMutation(
-    {
-      onSuccessCallback: (response) => {
-        toast.success(response.message);
-        setShowForm(false);
-        allLeadAttachment();
-      },
-      onErrorCallback: (error: IApiError) => {
-        toast.error(error.message);
-      },
-    }
-  );
+  const { onCreateLeadAttachment } = useCreateLeadAttachmentMutation({
+    onSuccessCallback: (response) => {
+      toast.success(response.message);
+      setShowForm(false);
+      allLeadAttachment();
+    },
+    onErrorCallback: (error: IApiError) => {
+      toast.error(error.message);
+    },
+  });
 
-  const { isPending,  onUploadAttachment } = useUploadAttachmentMutation({
+  const { isPending, onUploadAttachment } = useUploadAttachmentMutation({
     onSuccessCallback: (response) => {
       toast.success(response.message);
       setShowForm(false);
@@ -118,15 +124,34 @@ export function Attachments({ leadId, showForm, setShowForm }: IAttachmentsProps
         allLeadAttachmentData?.map((attachment, idx) => (
           <div
             key={idx}
-            className="flex flex-col gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md"
+            className="flex gap-6 2xl:gap-[2vw] text-darkBlue bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md"
           >
-            <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+            <div className="w-[70%] flex flex-col gap-4 2xl:gap-[1vw]">
               <div className="text-primary flex items-center underline scrollbar-hidden overflow-x-auto">
                 <p>{attachment.file_path}</p>
               </div>
               <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
                 <p>Created At:</p>
                 <p>{formattingDate(attachment.created_at, "toReadable")}</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm 2xl:text-[0.875vw]">Assigned To</p>
+              <div className="flex gap-2 2xl:gap-[0.5vw] items-center">
+                <p
+                  className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-8 h-8 2xl:w-[2vw] 2xl:h-[2vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
+                  style={{
+                    backgroundColor: getRandomColor(
+                      `${attachment?.uploaded_by?.first_name}`
+                    ),
+                  }}
+                >
+                  {getInitials(attachment?.uploaded_by.first_name)}
+                  {getInitials(attachment?.uploaded_by.last_name)}
+                </p>
+                <p className="underline font-medium text-textColor text-[1rem] 2xl:text-[1vw]">
+                  {attachment?.uploaded_by?.first_name} {attachment?.uploaded_by?.last_name}
+                </p>
               </div>
             </div>
           </div>

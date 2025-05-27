@@ -2,29 +2,61 @@ import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
-import { Button, DatePicker, Dropdown, InputField, Loading, ModalOverlay } from "@/components";
-import { useAllRoleListQuery, useUpdateUserMutation, useUserDetailQuery } from "@/services";
-import { formatDateToMMDDYYYY, IApiError } from "@/utils";
+import {
+  Button,
+  DatePicker,
+  Dropdown,
+  InputField,
+  Loading,
+  ModalOverlay,
+} from "@/components";
+import {
+  IUserUpdatePayload,
+  IUserViewDetails,
+  useAllRoleListQuery,
+  useUpdateUserMutation,
+} from "@/services";
+import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import { IAddStaffFormValues } from "../add-new-staff-model/AddNewStaffModel";
 
 interface EditStaffModelProps {
   isOpen: boolean;
   onClose: () => void;
-  userId: string;
+  selectStaff: IUserViewDetails;
   onAEditSuccessCallback: () => void;
 }
 
+// Updated Yup validation schema
 const validationSchema = Yup.object({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
-  dob: Yup.string().required("Date of Birth is required"),
-  phoneNumber: Yup.string().required("Phone number is required"),
-  email: Yup.string().email("Invalid email").required("Email is required"),
+  firstName: Yup.string()
+    .trim()
+    .required("First name is required")
+    .min(2, "First name must be at least 2 characters")
+    .max(50, "First name must be at most 50 characters"),
+
+  lastName: Yup.string()
+    .trim()
+    .required("Last name is required")
+    .min(2, "Last name must be at least 2 characters")
+    .max(50, "Last name must be at most 50 characters"),
+
+  dob: Yup.date()
+    .max(new Date(), "DOB cannot be in the future")
+    .required("Date of Birth is required")
+    .typeError("Invalid date format (YYYY-MM-DD)"),
+
+  phoneNumber: Yup.string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits"),
+
+  email: Yup.string()
+    .trim()
+    .email("Invalid email format")
+    .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
+    .required("Email is required"),
+
   role: Yup.string().required("Role is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .required("Password is required"),
 });
 
 const initialEditValues: IAddStaffFormValues = {
@@ -35,19 +67,32 @@ const initialEditValues: IAddStaffFormValues = {
   email: "",
   role: "",
   password: "",
-}
+};
 
 export const EditStaffModel: React.FC<EditStaffModelProps> = ({
   isOpen,
   onClose,
-  userId,
+  selectStaff,
   onAEditSuccessCallback,
 }) => {
-  const [initialValues, setInitialValues] = useState<IAddStaffFormValues>(initialEditValues);;
-  
-  const { userDetailById, isLoading } = useUserDetailQuery(userId);
+  const [initialValues, setInitialValues] =
+    useState<IAddStaffFormValues>(initialEditValues);
+
   const { data: rolesList } = useAllRoleListQuery();
-  
+
+  // Format date for form field (YYYY-MM-DD)
+  const formatDateForSave = (inputDate: string) => {
+    if (!inputDate) return "";
+    if (inputDate.includes("T")) {
+      return inputDate.slice(0, 10);
+    }
+    const [month, day, year] = inputDate.split("-");
+    if (month && day && year) {
+      return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    }
+    return "";
+  };
+
   const roleOptions =
     rolesList?.map((roleData) => ({
       label: roleData?.role,
@@ -66,22 +111,23 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
     },
   });
 
-   useEffect(() => {
-      if(userDetailById) {
-        setInitialValues({
-          firstName: userDetailById.first_name || "",
-          lastName: userDetailById.last_name || "",
-          dob: formatDateToMMDDYYYY(userDetailById.dob) || "",
-          phoneNumber: userDetailById.phone_number || "",
-          email: userDetailById.email || "",
-          role: userDetailById.role_id || "",
-          password: "",
-        })
-      }
-    }, [userDetailById]);
+  useEffect(() => {
+    if (selectStaff) {
+      const convertedDOB = formatDateForSave(selectStaff.dob);
+      setInitialValues({
+        firstName: selectStaff.first_name || "",
+        lastName: selectStaff.last_name || "",
+        dob: convertedDOB,
+        phoneNumber: selectStaff.phone_number || "",
+        email: selectStaff.email || "",
+        role: selectStaff.role_id?.toString() || "",
+        password: "",
+      });
+    }
+  }, [selectStaff]);
 
-  if (!userDetailById || isLoading) {
-    return <Loading/>;
+  if (!selectStaff) {
+    return <Loading />;
   }
 
   return (
@@ -96,17 +142,20 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
         validationSchema={validationSchema}
         enableReinitialize
         onSubmit={(values) => {
+          const payload: IUserUpdatePayload = {
+            first_name: values.firstName,
+            last_name: values.lastName,
+            dob: values.dob,
+            email: values.email,
+            role_id: values.role,
+            phone_number: values.phoneNumber,
+            ...(values.password &&
+              values.password.trim() !== "" && { password: values.password }),
+          };
+
           onEditUser({
-            id: userId,
-            payload: {
-              first_name: values.firstName,
-              last_name: values.lastName,
-              dob: values.dob,
-              email: values.email,
-              role_id: values.role,
-              phone_number: values.phoneNumber,
-              password: values.password,
-            },
+            id: selectStaff?.id,
+            payload,
           });
         }}
       >
@@ -147,7 +196,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
                 label="DOB"
                 name="dob"
                 value={values.dob}
-                onChange={(value) => setFieldValue('dob', value)}
+                onChange={(value) => setFieldValue("dob", value)}
                 placeholder="Select DOB"
                 error={touched.dob && errors.dob}
               />
@@ -177,6 +226,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
                 options={roleOptions}
                 value={values.role}
                 onChange={(val: string) => setFieldValue("role", val)}
+                error={touched.role ? errors.role : undefined}
               />
             </div>
 
@@ -187,7 +237,6 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
               value={values.password}
               onChange={handleChange}
               onBlur={handleBlur}
-              error={touched.password && errors.password}
             />
 
             <div className="flex gap-4 2xl:gap-[1vw] w-full">

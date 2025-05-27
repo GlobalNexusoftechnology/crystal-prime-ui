@@ -98,6 +98,8 @@ export const deleteLeadAttachmentUrl = (id: string) => `/lead-attachments/${id}`
 
 export const uploadAttachmentUrl = () => "/lead-attachments/uploadAttachment";
 
+export const uploadLeadFromExcelUrl = () => "/leads/upload-excel";
+
 //role
 export const fetchAllRoleListUrl = () => "/roles";
 

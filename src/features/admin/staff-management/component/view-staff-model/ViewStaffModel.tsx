@@ -1,6 +1,6 @@
 import { ModalOverlay } from "@/components";
 import { ThreeIcon } from "@/features";
-import { useUserDetailQuery } from "@/services";
+import { IUserViewDetails } from "@/services";
 import { formatDate, formatDateToMMDDYYYY } from "@/utils";
 import { Mail, Phone } from "lucide-react";
 import React from "react";
@@ -8,17 +8,17 @@ import React from "react";
 interface ViewStaffModelProps {
   isOpen: boolean;
   onClose: () => void;
-  userId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  selectStaff: IUserViewDetails;
 }
 
 export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
-  userId,
+  selectStaff,
   isOpen,
   onClose,
 }) => {
-  const { userDetailById } = useUserDetailQuery(userId);
+  const dob = selectStaff && formatDateToMMDDYYYY(selectStaff?.dob);
 
-  const dob = userDetailById && formatDateToMMDDYYYY(userDetailById?.dob);
   return (
     <div>
       <ModalOverlay
@@ -35,7 +35,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   First Name
                 </span>
                 <span className="underline text-[1rem] 2xl:text-[1vw] ">
-                  {userDetailById?.first_name}
+                  {selectStaff?.first_name}
                 </span>
               </div>
               <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
@@ -43,7 +43,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   Last Name
                 </span>
                 <span className="underline text-[1rem] 2xl:text-[1vw] ">
-                  {userDetailById?.last_name}
+                  {selectStaff?.last_name}
                 </span>
               </div>
               {/* <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
@@ -51,7 +51,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   ID
                 </span>
                 <span className="underline text-[1rem] 2xl:text-[1vw] ">
-                  {userDetailById?.id}
+                  {selectStaff?.id}
                 </span>
               </div> */}
               <div className="border border-gray-400 2xl:border-[0.1vw] p-2 rounded-full flex items-center justify-center">
@@ -63,13 +63,13 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
               <div className="flex items-center gap-2 2xl:gap-[0.5vw] ">
                 <Phone className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw] text-blue-700" />
                 <span className="underline text-[1rem] 2xl:text-[1vw] ">
-                  {userDetailById?.phone_number}
+                  {selectStaff?.phone_number}
                 </span>
               </div>
               <div className="flex items-center gap-2 2xl:gap-[0.5vw] ">
                 <Mail className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw] text-blue-700" />
                 <span className="underline text-[1rem] 2xl:text-[1vw] ">
-                  {userDetailById?.email}
+                  {selectStaff?.email}
                 </span>
               </div>
             </div>
@@ -88,7 +88,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   Created At
                 </span>
                 <span className=" text-[1rem] 2xl:text-[1vw]">
-                  {formatDate(`${userDetailById?.created_at}`)}
+                  {formatDate(`${selectStaff?.created_at}`)}
                 </span>
               </div>
 
@@ -97,7 +97,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                   Role Name
                 </span>
                 <span className=" text-[1rem] 2xl:text-[1vw]">
-                  {userDetailById?.role}
+                  {selectStaff?.role}
                 </span>
               </div>
             </div>
@@ -106,7 +106,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                 Updated At
               </span>
               <span className=" text-[1rem] 2xl:text-[1vw]">
-                {formatDate(`${userDetailById?.updated_at}`)}
+                {formatDate(`${selectStaff?.updated_at}`)}
               </span>
             </div>
           </div>

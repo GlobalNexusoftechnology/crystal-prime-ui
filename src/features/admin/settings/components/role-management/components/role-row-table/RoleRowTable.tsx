@@ -3,7 +3,7 @@
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { RolePermission } from "../role-permission/RolePermission";
 import { IAllRoleList } from "@/services";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FiMoreVertical } from "react-icons/fi";
 // import { Pagination } from "@/components/table/components";
 
@@ -24,14 +24,24 @@ export function RoleRowTable({
   onRoleDelete,
   onRoleEdit
 }: RoleRowProps) {
-  const [openActionId, setOpenActionId] = useState<string | number | null>(
-    null
-  );
-  // const [currentPage, setCurrentPage] = useState(1);
-  // const [sortBy, setSortBy] = useState<keyof IAllRoleList | null>(null);
-  // const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [openActionId, setOpenActionId] = useState<string | number | null>(null);
+  const actionRef = useRef<HTMLTableCellElement>(null);
 
   const isOpen = openActionId === role.id;
+
+  // Handle click outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (actionRef.current && !actionRef.current.contains(event.target as Node)) {
+        setOpenActionId(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const actions = [
     {
@@ -89,7 +99,7 @@ export function RoleRowTable({
           )}
           <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">
             {index + 1}
-          </td>{" "}
+          </td>
         </td>
         <td className="p-3 2xl:p-[0.75vw]">{role.role}</td>
         <td className="p-3 2xl:p-[0.75vw]">
@@ -98,7 +108,7 @@ export function RoleRowTable({
         <td className="p-3 2xl:p-[0.75vw]">
           {new Date(role.updated_at).toLocaleDateString()}
         </td>
-        <td className="p-3 2xl:p-[0.75vw] relative">
+        <td className="p-3 2xl:p-[0.75vw] relative" ref={actionRef}>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -110,7 +120,7 @@ export function RoleRowTable({
           </button>
 
           {isOpen && (
-            <div className="absolute right-[80%] top-[70%] bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-32 2xl:w-[10vw]">
+            <div className="absolute right-[95%] top-[-40%] bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-32 2xl:w-[10vw]">
               {actions.map((action, index) => (
                 <button
                   key={index}

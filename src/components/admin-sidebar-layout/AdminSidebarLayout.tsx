@@ -29,16 +29,21 @@ export function AdminSidebarLayout({
     <div className="w-full flex justify-end h-screen overflow-auto">
       {/* Sidebar */}
       <div
-        className={`${isVisibleSidebar ? "translate-x-0": "translate-x-[-100%] xl:translate-x-0"} w-[70%] md:w-[35%] lg:w-[30%] xl:w-[20%] h-full z-40 transition-all duration-500 ease-in-out overflow-hidden bg-white shadow-md fixed left-0`}
+        className={`${
+          isVisibleSidebar ? "w-0 xl:w-[6%]" : "w-[70%] md:w-[35%] lg:w-[25%] xl:w-[20%]"
+        } h-full z-40 transition-all duration-500 ease-in-out overflow-hidden bg-white shadow-md fixed left-0`}
       >
         <AdminSidebar
-          adminSidebarLinks={adminSidebarLinks}
           SetIsVisibleSidebar={toggleSidebar}
+          adminSidebarLinks={adminSidebarLinks}
+          isVisibleSidebar={isVisibleSidebar}
         />
       </div>
       {/* Main Content */}
       <div
-        className={`w-full xl:w-[80%] transition-all duration-500 ease-in-out`}
+        className={`${
+          isVisibleSidebar ? "w-full xl:w-[94%]" : "w-[30%] md:w-[65%] lg:w-[75%] xl:w-[80%]"
+        } transition-all duration-500 ease-in-out`}
       >
         <AdminHeader SetIsVisibleSidebar={toggleSidebar} />
         <div className="px-4 md:px-6 xl:px-[1.5vw] py-[1.5vw] overflow-auto min-h-[91.5vh]">

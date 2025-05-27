@@ -3,14 +3,13 @@
 import { useEffect, useState } from "react";
 import { Button, SearchBar, Table } from "@/components";
 import toast from "react-hot-toast";
-
 import {
   ITableAction,
-  // staffList,
   staffListColumn,
 } from "@/constants";
 import {
   IAllUsersListResponse,
+  IUserViewDetails,
   useAllUserDownloadExcelQuery,
   useAllUsersQuery,
   useDeleteUserMutation,
@@ -19,21 +18,22 @@ import { ExportIcon } from "@/features";
 import { AddNewStaffModel } from "../add-new-staff-model";
 import { EditStaffModel } from "../edit-staff-model";
 import { ViewStaffModel } from "../view-staff-model";
-import { downloadBlobFile, formatDate, formatDateToMMDDYYYY, IApiError } from "@/utils";
+import {
+  downloadBlobFile,
+  formatDate,
+  formatDateToMMDDYYYY,
+  IApiError,
+} from "@/utils";
 
 export function StaffListTable() {
   const { allUsersData, refetchAllUsers } = useAllUsersQuery();
-  const [userId, setUserId] = useState("");
-  const [isAddStaffModalOpen, setAddStaffIsModalOpen] = useState(false);
-  const [isEditStaffModalOpen, setEditStaffIsModalOpen] = useState(false);
-  const [isViewStaffModalOpen, setViewStaffIsModalOpen] = useState(false);
-  const { downloadAllUserExcel, data: downloadAllUserExcelData } = useAllUserDownloadExcelQuery();
+  const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
+  const [isEditStaffModalOpen, setIsEditStaffModalOpen] = useState(false);
+  const [isViewStaffModalOpen, setIsViewStaffModalOpen] = useState(false);
+  const [selectedStaff, setSelectedStaff] = useState<IUserViewDetails | null>(null);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  useEffect(() => {
-    if (downloadAllUserExcelData instanceof Blob) {
-      downloadBlobFile(downloadAllUserExcelData, "staff_list"+ new Date().getTime() + ".xlsx");
-    }
-  }, [downloadAllUserExcelData]);
+  const { downloadAllUserExcel, data: downloadAllUserExcelData } = useAllUserDownloadExcelQuery();
 
   const { onDeleteUser } = useDeleteUserMutation({
     onSuccessCallback: (data) => {
@@ -45,54 +45,77 @@ export function StaffListTable() {
     },
   });
 
-  const userList: IAllUsersListResponse[] = (allUsersData ?? []).map(
-    (user) => ({
-      id: user.id || "",
-      first_name: user?.first_name || "",
-      last_name: user?.last_name || "",
-      number: user?.phone_number || "",
-      email: user?.email || "",
-      role: user.role?.role || "",
-      dob: formatDateToMMDDYYYY(user?.dob) || "",
-      created_at: formatDate(user?.created_at) || "",
-      updated_at: formatDate(user?.updated_at) || "",
-    })
-  );
+  // Process Excel file download
+  useEffect(() => {
+    if (downloadAllUserExcelData instanceof Blob) {
+      const filename = `staff_list_${new Date().getTime()}.xlsx`;
+      downloadBlobFile(downloadAllUserExcelData, filename);
+    }
+  }, [downloadAllUserExcelData]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [, setSelectedRow] = useState<any>(null);
+  // Prepare staff list data for table
+  const userList: IAllUsersListResponse[] = (allUsersData ?? []).map((user) => ({
+    id: user.id || "",
+    first_name: user?.first_name || "",
+    last_name: user?.last_name || "",
+    number: user?.phone_number || "",
+    email: user?.email || "",
+    role: user?.role?.role || "",
+    dob: formatDateToMMDDYYYY(user?.dob) || "",
+    created_at: formatDate(user?.created_at) || "",
+    updated_at: formatDate(user?.updated_at) || "",
+    role_id: user?.role?.id || "",
+  }));
 
-  const handleOpenModal = () => {
-    setSelectedRow(null);
-    setAddStaffIsModalOpen(true);
-  };
+  // Filter user list based on search query
+  const filteredUserList = userList.filter((user) => {
+    const query = searchQuery.toLowerCase();
+    return (
+      user.first_name.toLowerCase().includes(query) ||
+      user.last_name.toLowerCase().includes(query) ||
+      user.email.toLowerCase().includes(query) ||
+      user.number.toLowerCase().includes(query) ||
+      user.role.toLowerCase().includes(query)
+    );
+  });
 
-  const handleCloseModal = () => {
-    setAddStaffIsModalOpen(false);
-    setSelectedRow(null);
-  };
-  const handleCloseEditStaffModel = () => {
-    setEditStaffIsModalOpen(false);
-  };
-
-  const handleCloseViewStaffModel = () => {
-    setViewStaffIsModalOpen(false);
-  };
-
+  // Table actions
   const staffActions: ITableAction<IAllUsersListResponse>[] = [
     {
       label: "View",
       onClick: (row) => {
-        setUserId(row.id);
-        setViewStaffIsModalOpen(true);
+        setSelectedStaff({
+          id: row.id || "",
+          first_name: row.first_name || "",
+          last_name: row.last_name || "",
+          email: row.email || "",
+          phone_number: row.number || "",
+          dob: row.dob || "",
+          role: row?.role || "",
+          role_id: row.role_id || "",
+          created_at: formatDate(row.created_at) || "",
+          updated_at: formatDate(row.updated_at) || "",
+        });
+        setIsViewStaffModalOpen(true);
       },
       className: "text-blue-500 whitespace-nowrap",
     },
     {
       label: "Edit",
       onClick: (row) => {
-        setUserId(row.id);
-        setEditStaffIsModalOpen(true);
+        setSelectedStaff({
+          id: row.id || "",
+          first_name: row.first_name || "",
+          last_name: row.last_name || "",
+          email: row.email || "",
+          phone_number: row.number || "",
+          dob: row.dob || "",
+          role: row?.role || "",
+          role_id: row.role_id || "",
+          created_at: formatDate(row.created_at) || "",
+          updated_at: formatDate(row.updated_at) || "",
+        });
+        setIsEditStaffModalOpen(true);
       },
       className: "text-blue-500 whitespace-nowrap",
     },
@@ -105,9 +128,10 @@ export function StaffListTable() {
     },
   ];
 
-  const handleNewStaffSuccessCallback = () => {
-    refetchAllUsers();
-  };
+  // Modal close handlers
+  const handleCloseAddModal = () => setIsAddStaffModalOpen(false);
+  const handleCloseEditModal = () => setIsEditStaffModalOpen(false);
+  const handleCloseViewModal = () => setIsViewStaffModalOpen(false);
 
   const handleUserDownloadExcel = () => {
     downloadAllUserExcel();
@@ -121,52 +145,49 @@ export function StaffListTable() {
         </h1>
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           <SearchBar
-            onSearch={(query) => console.log("Searching:", query)}
+            onSearch={(query) => setSearchQuery(query)}
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
-
-          <div>
-            <Button
-              title="Add Staff"
-              variant="background-white"
-              width="w-full md:w-fit"
-              onClick={handleOpenModal}
-            />
-
-            <AddNewStaffModel
-              isOpen={isAddStaffModalOpen}
-              onClose={handleCloseModal}
-              onNewStaffSuccessCallback={handleNewStaffSuccessCallback}
-            />
-          </div>
-
+          <Button
+            title="Add Staff"
+            variant="background-white"
+            width="w-full md:w-fit"
+            onClick={() => setIsAddStaffModalOpen(true)}
+          />
           <Button
             title="Export"
             variant="background-white"
             rightIcon={<ExportIcon />}
-            onClick={handleUserDownloadExcel}
             width="w-full md:w-fit"
+            onClick={handleUserDownloadExcel}
           />
         </div>
       </div>
 
-      <Table data={userList} columns={staffListColumn} actions={staffActions} />
+      <Table data={filteredUserList} columns={staffListColumn} actions={staffActions} />
 
-      {isEditStaffModalOpen && userId && (
+      {/* Modals */}
+      <AddNewStaffModel
+        isOpen={isAddStaffModalOpen}
+        onClose={handleCloseAddModal}
+        onNewStaffSuccessCallback={refetchAllUsers}
+      />
+
+      {isEditStaffModalOpen && selectedStaff && (
         <EditStaffModel
           isOpen={isEditStaffModalOpen}
-          userId={userId}
-          onAEditSuccessCallback={handleNewStaffSuccessCallback}
-          onClose={handleCloseEditStaffModel}
+          selectStaff={selectedStaff}
+          onClose={handleCloseEditModal}
+          onAEditSuccessCallback={refetchAllUsers}
         />
       )}
 
-      {isViewStaffModalOpen && userId && (
+      {isViewStaffModalOpen && selectedStaff && (
         <ViewStaffModel
           isOpen={isViewStaffModalOpen}
-          onClose={handleCloseViewStaffModel}
-          userId={userId}
+          selectStaff={selectedStaff}
+          onClose={handleCloseViewModal}
         />
       )}
     </div>
