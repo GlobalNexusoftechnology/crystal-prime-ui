@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState } from "react"
 import { Button, InputField, ModalOverlay } from "@/components"
 import { MODULES, ACTIONS, TOptionItem } from "@/constants"
