@@ -768,7 +768,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
     return response?.data
   }
@@ -802,7 +802,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
     return response?.data
   }

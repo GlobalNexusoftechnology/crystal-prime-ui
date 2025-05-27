@@ -106,7 +106,6 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
       toast.success(response.message);
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to edit user:", err);
       toast.error(err.message);
     },
   });

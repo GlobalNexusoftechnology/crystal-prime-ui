@@ -55,6 +55,15 @@ export interface IErrorServer {
   message: string;
 }
 
+export interface IData {
+  message: string
+  status: string
+}
+
+export interface IResponse {
+  data: IData
+}
+
 /**
  * Denotes the type of errors to be addressed by the error handler and by the
  * error boundaries across apps.
@@ -71,7 +80,7 @@ export type TErrorType =
  * the front end error boundaries based on the error types, message & description.
  */
 export interface IApiError {
-  response: unknown;
+  response: IResponse;
   /**
    * The actual error object throw by the Axios client, the error handler or
    * JS runtime thread.
