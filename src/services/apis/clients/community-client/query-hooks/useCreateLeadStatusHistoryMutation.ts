@@ -5,7 +5,8 @@ import { COMMUNITY_CLIENT } from "../communityClient";
 /**
  * This is to track the create lead follow up mutation.
  */
-const CREATE_LEAD_STATUS_HISTORY_MUTATION_KEY = "create-lead-status-history-mutation-key";
+const CREATE_LEAD_STATUS_HISTORY_MUTATION_KEY =
+  "create-lead-status-history-mutation-key";
 
 interface ICreateLeadStatusHistoryOptions {
   onSuccessCallback: (data: ICreateLeadStatusHistoryResponse) => void;
@@ -35,6 +36,7 @@ export const useCreateLeadStatusHistoryMutation = ({
         message: err?.message,
       });
 
+      // Call optional error callback
       onErrorCallback?.(err);
     },
   });

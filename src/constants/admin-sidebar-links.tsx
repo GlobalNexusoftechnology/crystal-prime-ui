@@ -5,6 +5,7 @@ import {
   // FollowUpManagementIcon,
   // DocumentManagementIcon,
   LeadManagementIcon,
+  ProjectManagementIcon,
   // ProjectManagementIcon,
   
   SettingsIcon,
@@ -52,12 +53,12 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     icon: <LeadManagementIcon />,
     activeIcon: <LeadManagementIcon color="#034A9F" />,
   },
-  // {
-  //   path: "/admin/project-management",
-  //   name: "Project Management",
-  //   icon: <ProjectManagementIcon />,
-  //   activeIcon: <ProjectManagementIcon color="#034A9F" />,
-  // },
+  {
+    path: "/admin/project-management",
+    name: "Project Management",
+    icon: <ProjectManagementIcon />,
+    activeIcon: <ProjectManagementIcon color="#034A9F" />,
+  },
   // {
   //   path: "/admin/task-management",
   //   name: "Task Management",

@@ -5,6 +5,7 @@ import { RolePermission } from "../role-permission/RolePermission";
 import { IAllRoleList } from "@/services";
 import { useState } from "react";
 import { FiMoreVertical } from "react-icons/fi";
+// import { Pagination } from "@/components/table/components";
 
 interface RoleRowProps {
   role: IAllRoleList;
@@ -26,6 +27,9 @@ export function RoleRowTable({
   const [openActionId, setOpenActionId] = useState<string | number | null>(
     null
   );
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [sortBy, setSortBy] = useState<keyof IAllRoleList | null>(null);
+  // const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const isOpen = openActionId === role.id;
 
@@ -45,6 +49,31 @@ export function RoleRowTable({
       className: "text-red-500",
     },
   ];
+
+  // const handleSort = (accessor: keyof IAllRoleList) => {
+  //   if (sortBy === accessor) {
+  //     setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+  //   } else {
+  //     setSortBy(accessor);
+  //     setSortOrder("asc");
+  //   }
+  // };
+
+  // const sortedData = useMemo(() => {
+  //   if (!sortBy) return data;
+  //   return [...data].sort((a, b) => {
+  //     const aValue = a[sortBy];
+  //     const bValue = b[sortBy];
+  //     return sortOrder === "asc"
+  //       ? String(aValue).localeCompare(String(bValue))
+  //       : String(bValue).localeCompare(String(aValue));
+  //   });
+  // }, [data, sortBy, sortOrder]);
+
+  // const paginatedData = useMemo(() => {
+  //   const start = (currentPage - 1) * pageSize;
+  //   return sortedData.slice(start, start + pageSize);
+  // }, [sortedData, currentPage, pageSize]);
 
   return (
     <>
@@ -107,6 +136,20 @@ export function RoleRowTable({
           </td>
         </tr>
       )}
+
+      {/* Optional: Move this out to a parent container if this is per-role */}
+      <tr>
+        <td colSpan={6}>
+          {/* <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(data.length / pageSize)}
+            onPageChange={(page) => {
+              setOpenActionId(null);
+              setCurrentPage(page);
+            }}
+          /> */}
+        </td>
+      </tr>
     </>
   );
 }
