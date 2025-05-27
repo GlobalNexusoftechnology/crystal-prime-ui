@@ -58,7 +58,7 @@ export function AdminSidebar({
             />
           </div>
         ) : (
-          <div className={`w-[3rem] xl:w-[3vw]`}>
+          <div className={`w-[5rem] xl:w-[5vw]`}>
             <Image
               src={ImageRegistry.websiteLogoIcon}
               alt="website-logo"
