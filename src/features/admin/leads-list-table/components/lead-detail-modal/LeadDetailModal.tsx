@@ -2,8 +2,7 @@
 import { ModalOverlay } from "@/components";
 import { ILeadsListDetailsProps, ILeadsListProps } from "@/constants";
 import { PhoneIcon, MailIcon } from "@/features";
-// import { getInitials } from "@/utils";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FiPlusSquare } from "react-icons/fi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { Attachments, Followups, StatusHistory } from "./components";
@@ -22,9 +21,26 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
   const [activeTab, setActiveTab] = useState("Followups");
   const [showForm, setShowForm] = useState(false);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (showForm && bottomRef.current) {
+      bottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [showForm]);
+
   return (
-    <ModalOverlay modalTitle="Back to Leads" isOpen={true} onClose={onClose} modalClassName="2xl:w-[40vw]">
-      <div className="overflow-y-auto max-h-[80vh] space-y-4">
+    <ModalOverlay
+      modalTitle="Back to Leads"
+      isOpen={true}
+      onClose={onClose}
+      modalClassName="2xl:w-[40vw]"
+    >
+      <div
+        className="overflow-y-auto max-h-[80vh] space-y-4"
+        ref={containerRef}
+      >
         {/* Lead Info Header */}
         <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-white rounded-lg p-4 border border-gray-200">
           <div className="flex justify-between items-center">
@@ -44,7 +60,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
 
           <div className="flex flex-col sm:flex-row justify-between gap-2 2xl:gap-[0.5vw] mt-4 text-[1rem] 2xl:text-[1vw] text-gray-600">
             <Link
-              href="tel:+13853449378"
+              href={`tel:${data.phone}`}
               className="flex items-center gap-2 2xl:gap-[0.5vw] text-[1rem] 2xl:text-[1vw]"
             >
               <PhoneIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw]" />
@@ -53,7 +69,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               </p>
             </Link>
             <Link
-              href="mailto:Elna.Ferry@hotmail.com"
+              href={`mailto:${data.email}`}
               className="flex items-center gap-2 2xl:gap-[0.5vw] text-[1rem] 2xl:text-[1vw]"
             >
               <MailIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw]" />
@@ -111,7 +127,14 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div>
             <p className="text-sm 2xl:text-[0.875vw]">Assigned To</p>
             <div className="flex gap-2 2xl:gap-[0.5vw] items-center">
-              <p className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full" style={{ backgroundColor: getRandomColor(`${data.assignedTo.first_name}${data.assignedTo.last_name}`) }}>
+              <p
+                className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
+                style={{
+                  backgroundColor: getRandomColor(
+                    `${data.assignedTo.first_name}${data.assignedTo.last_name}`
+                  ),
+                }}
+              >
                 {getInitials(data.assignedTo.first_name)}
                 {getInitials(data.assignedTo.last_name)}
               </p>
@@ -144,7 +167,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               ))}
             </div>
             <button
-              onClick={() => setShowForm(!showForm)}
+              onClick={() => setShowForm((prev) => !prev)}
               className="flex items-center gap-2 2xl:gap-[0.5vw] text-primary"
             >
               {showForm ? (
@@ -180,6 +203,8 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               />
             )}
           </div>
+
+          <div ref={bottomRef} />
         </div>
       </div>
     </ModalOverlay>
