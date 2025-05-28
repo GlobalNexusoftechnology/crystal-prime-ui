@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 
 import { useAuthStore } from "@/services";
-import { IApiError, IError } from "@/utils";
+import { IApiError, IError, IResponse } from "@/utils";
 
 /**
  * The error code thrown when the app session expires and cannot be renewed by
@@ -38,7 +38,7 @@ export const generateCustomErrorFromAPICall = (
   const removeSession = useAuthStore.getState()?.removeSession;
   const errorResponse: IApiError = {
     /* full Axios response, or null if unavailable */
-    response: error.response ?? null,
+    response: (error.response ?? null) as IResponse | null,
     error,
     errorData: error.response?.data?.error,
     message: error.response?.data.error ?? "An unexpected error occurred.",

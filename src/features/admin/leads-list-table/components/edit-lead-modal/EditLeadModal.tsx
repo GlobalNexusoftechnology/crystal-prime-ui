@@ -10,6 +10,7 @@ import {
 } from "@/services";
 import { IApiError } from "@/utils";
 import { Formik, Form } from "formik";
+import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 interface IEditLeadModalProps {
@@ -50,13 +51,13 @@ export function EditLeadModal({
   const { allUsersData } = useAllUsersQuery();
 
   const { onEditLead, isPending } = useUpdateLeadMutation({
-    onSuccessCallback: (data: IUpdateLeadResponse) => {
-      console.log("Lead updated successfully", data);
+    onSuccessCallback: (response: IUpdateLeadResponse) => {
+      toast.success(response.message)
       setIsEditLeadModalOpen(false);
       leadsRefetch();
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to update lead:", err?.message || err);
+      toast.error(err.message)
     },
   });
 

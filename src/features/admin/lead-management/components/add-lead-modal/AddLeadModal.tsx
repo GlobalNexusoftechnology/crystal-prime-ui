@@ -10,6 +10,7 @@ import {
 } from "@/services";
 import { IApiError } from "@/utils";
 import { Formik, Form } from "formik";
+import toast from "react-hot-toast";
 import * as Yup from "yup";
 
 interface IAddLeadModalProps {
@@ -45,13 +46,14 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
   const { allUsersData } = useAllUsersQuery();
 
   const { createLead, isPending } = useCreateLeadMutation({
-    onSuccessCallback: (data: ICreateLeadResponse) => {
-      console.log("Lead created successfully", data);
+    onSuccessCallback: (response: ICreateLeadResponse) => {
+      console.log("Lead created successfully", response);
+      toast.success(response.message)
       setAddLeadModalOpen(false);
       leadsRefetch();
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to create lead:", err);
+      toast.error(err.message)
     },
   });
 
