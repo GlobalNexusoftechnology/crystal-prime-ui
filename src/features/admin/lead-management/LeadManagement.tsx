@@ -109,9 +109,7 @@ export function LeadManagement() {
   return (
     <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
       <div className="flex flex-col gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
-        <h1 className="text-xl 2xl:text-[1.25vw] font-medium">
-          Lead Management
-        </h1>
+        <h1 className="text-xl 2xl:text-[1.25vw] ">Lead Management</h1>
       </div>
 
       <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
@@ -127,23 +125,23 @@ export function LeadManagement() {
         modalTitle="Back to Leads"
         isOpen={isAddLeadModalOpen}
         onClose={() => handleOpenForm("")}
-        modalClassName="w-[35rem] 2xl:w-[36vw]"
+        modalClassName="w-[39rem] 2xl:w-[38vw]"
       >
         <div className="bg-white border border-gray-300 rounded-lg overflow-y-auto md:overflow-visible">
-          <div className="space-y-6 p-4">
+          <div className="space-y-6 p-4 2xl:p-[1vw]">
             {activeStep === "initial" && (
               <div className=" w-full space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white rounded-xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw]">
                   {/* Manual Upload */}
                   <div>
-                    <p className="text-[1rem] 2xl:text-[1vw] pb-2">
+                    <p className="text-sm 2xl:text-[0.875vw] pb-2 2xl:pb-[1vw] pl-[0.3vw] 2xl:pl-[0.5vw]">
                       Add Lead Manually
                     </p>
                     <div
-                      className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-4 2xl:h-[15vw] text-center hover:shadow transition bg-customGray"
+                      className="flex flex-col items-center justify-center border-2 border-dashed 2xl:border-[0.1vw] 2xl:border-dashed rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] 2xl:h-[15vw] text-center hover:shadow transition bg-customGray"
                       onClick={() => handleOpenForm("addForm")}
                     >
-                      <div className="w-[15rem] h-[6rem] 2xl:w-[15vw] 2xl:h-[6vw] pb-4">
+                      <div className="w-[16rem] h-[7rem] 2xl:w-[17vw] 2xl:h-[8vw] pb-4 2xl:pb-[1vw]">
                         <Image
                           src={ImageRegistry.onelead}
                           alt="manual"
@@ -152,10 +150,10 @@ export function LeadManagement() {
                           className="object-contain w-full h-full"
                         />
                       </div>
-                      <p className="text-purple-600 font-medium cursor-pointer text-[1rem] 2xl:text-[1vw]">
+                      <p className="text-purple-600  cursor-pointer text-sm 2xl:text-[0.875vw] 2xl:pb-[0.5vw]">
                         Click to add
                       </p>
-                      <p className="text-[1rem] 2xl:text-[1vw] text-gray-500">
+                      <p className="text-sm 2xl:text-[0.875vw] text-gray-500">
                         One Lead at a time
                       </p>
                     </div>
@@ -163,11 +161,11 @@ export function LeadManagement() {
 
                   {/* Excel Upload */}
                   <div>
-                    <p className="text-[1rem] 2xl:text-[1vw] pb-2">
+                    <p className="text-sm 2xl:text-[0.875vw] pb-2 2xl:pb-[1vw] pl-[0.3vw] 2xl:pl-[0.5vw]">
                       Import From Excel
                     </p>
                     <div
-                      className={`relative flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-4 2xl:h-[15vw] text-center cursor-pointer transition bg-customGray ${
+                      className={`relative flex flex-col items-center justify-center border-2 border-dashed rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] 2xl:h-[15vw] text-center cursor-pointer transition bg-customGray ${
                         isPending ? "opacity-50 pointer-events-none" : ""
                       }`}
                     >
@@ -175,7 +173,7 @@ export function LeadManagement() {
                         label=""
                         className="absolute top-0 left-0 opacity-0 w-full h-full"
                         onChange={(files: FileList | null) => {
-                          console.log("On Change happening", files)
+                          console.log("On Change happening", files);
                           if (files && files[0]) {
                             formik.setFieldValue("file", files[0]);
                             formik.submitForm();
@@ -185,22 +183,27 @@ export function LeadManagement() {
                           formik.touched.file ? formik.errors.file : undefined
                         }
                       />
-                      <div className="h-[6rem] sm:h-[4.5rem] 2xl:w-[15vw] 2xl:h-[6vw] pb-4">
+
+                      <div className="w-[16rem] h-[6.8rem] 2xl:w-[17vw] 2xl:h-[8vw] pb-4 2xl:pb-[1vw]">
                         <Image
                           src={ImageRegistry.excel}
                           alt="excel"
                           width={200}
                           height={120}
-                          className="mx-auto mb-4 object-contain w-full h-full"
+                          className="object-contain w-full h-full"
                         />
                       </div>
-                      <p className="text-purple-600 text-[1rem] 2xl:text-[1vw] font-medium">
-                        {isPending ? "Uploading..." : "Click to upload"}
-                      </p>
-                      <p className="text-[1rem] 2xl:text-[1vw] text-gray-500">
-                        or drag and drop
-                      </p>
-                      <p className="text-[1rem] 2xl:text-[1vw] text-gray-400 mt-1">
+
+                      <div className="flex md:flex-row flx-col gap-2 2xl:gap-[0.5vw] 2xl:pb-[0.3vw]">
+                        {" "}
+                        <p className="text-purple-600 text-sm 2xl:text-[0.875vw] whitespace-nowrap">
+                          {isPending ? "Uploading..." : "Click to upload"}
+                        </p>
+                        <p className="text-sm 2xl:text-[0.875vw] text-gray-500 whitespace-nowrap ">
+                          or drag and drop
+                        </p>
+                      </div>
+                      <p className="text-sm 2xl:text-[0.875vw] text-gray-400 mt-1 2xl:mt-[0.25vw]">
                         .XLS, .XLSX (max. 5MB)
                       </p>
                     </div>

@@ -1,5 +1,4 @@
 import { ModalOverlay } from "@/components";
-import { ThreeIcon } from "@/features";
 import { IUserViewDetails } from "@/services";
 import { formatDate, formatDateToMMDDYYYY } from "@/utils";
 import { Mail, Phone } from "lucide-react";
