@@ -9,16 +9,17 @@ import { useAuthStore } from "@/services";
 export default function AdminPage() {
   const router = useRouter();
   const { activeSession } = useAuthStore()
+  const accessToken = activeSession?.access_token
 
   useEffect(() => {
-    if (!activeSession?.access_token) {
+    if (!accessToken) {
       // If no token, redirect to login
       router.replace("/login");
     } else {
       // If token exists, redirect to dashboard
-      router.replace("/admin/dashboard");
+      router.replace("/admin/lead-management");
     }
-  }, [activeSession?.access_token, router]);
+  }, [accessToken, router]);
 
   return <Loading />;
 }
