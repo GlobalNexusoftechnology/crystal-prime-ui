@@ -305,7 +305,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.error
+      throw response.response?.data
     }
 
     return response?.data

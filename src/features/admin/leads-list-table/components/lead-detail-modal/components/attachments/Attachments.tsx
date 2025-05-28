@@ -66,6 +66,7 @@ export function Attachments({
     },
     onErrorCallback: (error: IApiError) => {
       toast.error(error.message);
+      formik.resetForm()
     },
   });
 
@@ -82,9 +83,11 @@ export function Attachments({
           resetForm();
         } catch (err) {
           console.error("Upload error:", err);
+          resetForm();
         }
       } else {
         console.warn("No valid file found to upload");
+        resetForm();
       }
     },
   });
