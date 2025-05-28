@@ -32,7 +32,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
         </button>
       </div>
       <div className="flex items-center gap-4 2xl:gap-[1vw]">
-        <div className="cursor-pointer border 2xl:border-[0.1vw] bg-customGray border-gray-300 p-2 2xl:p-[0.5vw] rounded-xl 2xl:rounded-[0.75vw]">
+        <div className="cursor-pointer border 2xl:border-[0.1vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw]">
           <NotificationIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
         </div>
         {userName ? (
