@@ -1,7 +1,7 @@
 "use client";
 
 import { ModalOverlay, UploadDocument } from "@/components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LeadsListTable } from "../leads-list-table";
 import Image from "next/image";
 import { AnalyticalCardData, ImageRegistry } from "@/constants";
@@ -100,6 +100,11 @@ export function LeadManagement() {
       }
     },
   });
+    useEffect(() => {
+    if (formik.values.file) {
+      formik.submitForm();
+    }
+  }, [formik, formik.values.file]);
 
   return (
     <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
