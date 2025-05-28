@@ -44,7 +44,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   useEffect(() => {
     if (allLeadDownloadExcelData instanceof Blob) {
       // You may want to pass filename manually or extract it from a header elsewhere
-      downloadBlobFile(
+       downloadBlobFile(
         allLeadDownloadExcelData,
         "leads" + new Date().getTime() + ".xlsx"
       );
@@ -107,12 +107,6 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       className: "text-red-500",
     },
   ];
-
-  // const statusOptions =
-  //   allStatusesData?.map((status) => ({
-  //     label: status?.name,
-  //     value: status?.id.toString(),
-  //   })) || [];
 
   const leadDetailModalData: ILeadsListDetailsProps = {
     id: leadDetailById?.id || "null",

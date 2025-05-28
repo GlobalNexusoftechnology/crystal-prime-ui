@@ -653,7 +653,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.error
     }
 
     return response?.data.data

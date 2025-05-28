@@ -160,6 +160,7 @@ export interface IAllLeadAttachmentList {
   deleted_at: string | null;
   file_path: string;
   file_type: string;
+  file_name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lead: any | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -246,6 +247,7 @@ export interface IUploadAttachmentResponse {
   data: {
     docUrl: string;
     fileType: string;
+    fileName: string;
   };
 }
 export interface IUploadLeadFromExcelResponse {
@@ -260,6 +262,7 @@ export interface ICreateLeadAttachmentPayload {
   uploaded_by: string;
   file_path: string;
   file_type: string;
+  file_name: string;
 }
 export interface ICreateLeadAttachmentResponse {
   status: boolean;

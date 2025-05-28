@@ -16,6 +16,7 @@ import {
   IApiError,
 } from "@/utils";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 interface IAttachmentsProps {
   showForm: boolean;
@@ -51,14 +52,15 @@ export function Attachments({
   });
 
   const { isPending, onUploadAttachment } = useUploadAttachmentMutation({
-    onSuccessCallback: (response) => {
+    onSuccessCallback: async (response) => {
       toast.success(response.message);
       setShowForm(false);
-      onCreateLeadAttachment({
+      await onCreateLeadAttachment({
         lead_id: leadId,
         uploaded_by: uploaded_by,
         file_path: response.data.docUrl,
         file_type: response.data.fileType,
+        file_name: response.data.fileName,
       });
       allLeadAttachment();
     },
@@ -128,7 +130,7 @@ export function Attachments({
           >
             <div className="w-[70%] flex flex-col gap-4 2xl:gap-[1vw]">
               <div className="text-primary flex items-center underline scrollbar-hidden overflow-x-auto">
-                <p>{attachment?.file_path}</p>
+                <Link href={attachment.file_path}>{attachment?.file_name}</Link>
               </div>
               <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
                 <p>Created At:</p>
