@@ -49,12 +49,14 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ name }) => {
         <div className="absolute right-0 mt-2 2xl:mt-[0.5vw] w-48 2xl:w-[12vw] bg-white border border-gray-300 rounded-md 2xl:rounded-[0.375vw] z-50">
           <ul className="flex flex-col py-2 2xl:py-[0.5vw] text-sm text-gray-700">
             <Link
+              onClick={() => setOpen(false)}
               href="/admin/profile"
               className="px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] 2xl:text-[1vw] hover:bg-gray-100 cursor-pointer"
             >
               Profile
             </Link>
             <Link
+              onClick={() => setOpen(false)}
               href="/admin/change-password"
               className="px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] 2xl:text-[1vw] hover:bg-gray-100 cursor-pointer"
             >
