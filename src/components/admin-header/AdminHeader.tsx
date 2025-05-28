@@ -40,7 +40,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
             name={userName}
           />
         ) : (
-          <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+          <div className="w-8 2xl:w-[2vw] h-8 2xl:h-[2vw] rounded-full bg-gray-200 animate-pulse" />
         )}
       </div>
     </header>

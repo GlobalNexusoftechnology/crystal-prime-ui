@@ -40,7 +40,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <div className={`${width} relative group inline-block`}>
       <button
-        className={`flex items-center justify-center rounded-xl w-full 2xl:rounded-[0.75vw] h-auto 2xl:px-[1vw] 2xl:py-[0.65vw] px-4 py-2 space-x-2 font-medium ${
+        className={`flex items-center justify-center rounded-xl w-full 2xl:rounded-[0.75vw] h-auto 2xl:px-[1vw] 2xl:py-[0.65vw] px-4 py-2 space-x-2 2xl:space-x-[0.5vw] font-medium ${
           variantClasses[variant]
         } ${disabled || isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={disabled || isLoading}
@@ -51,7 +51,7 @@ export const Button: React.FC<ButtonProps> = ({
         ) : (
           <>
             {LeftIcon && (
-              <span className="w-5 h-5 text-current">{LeftIcon}</span>
+              <span className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.125vw] text-current">{LeftIcon}</span>
             )}
             {title && (
               <span className="text-sm 2xl:text-[1vw] text-nowrap">
@@ -59,7 +59,7 @@ export const Button: React.FC<ButtonProps> = ({
               </span>
             )}
             {RightIcon && (
-              <span className="w-5 h-5 text-current">{RightIcon}</span>
+              <span className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.125vw] text-current">{RightIcon}</span>
             )}
             {ActionIcon && ActionIcon}
           </>
