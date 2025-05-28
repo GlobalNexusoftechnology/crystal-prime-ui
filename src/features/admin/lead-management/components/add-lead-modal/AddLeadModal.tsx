@@ -181,13 +181,12 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     }}
                     error={touched.budget && errors.budget}
                   />
-                  <InputField
-                    label="Requirement"
-                    placeholder="Enter Requirement"
-                    name="requirement"
-                    value={values.requirement}
-                    onChange={handleChange}
-                    error={touched.requirement && errors.requirement}
+                   <Dropdown
+                    label="Assigned To"
+                    options={userOptions}
+                    value={values.assigned_to}
+                    onChange={(val) => setFieldValue("assigned_to", val)}
+                    error={touched.assigned_to ? errors.assigned_to : undefined}
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-4 py-2">
@@ -207,12 +206,14 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                   />
                 </div>
                 <div className="grid grid-cols-1 gap-4 py-2">
-                  <Dropdown
-                    label="Assigned To"
-                    options={userOptions}
-                    value={values.assigned_to}
-                    onChange={(val) => setFieldValue("assigned_to", val)}
-                    error={touched.assigned_to ? errors.assigned_to : undefined}
+                  <InputField
+                    label="Requirement"
+                    placeholder="Enter Requirement"
+                    name="requirement"
+                    type="textarea"
+                    value={values.requirement}
+                    onChange={handleChange}
+                    error={touched.requirement && errors.requirement}
                   />
                 </div>
                 <div className="flex justify-between mt-6 space-x-4">

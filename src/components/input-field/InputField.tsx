@@ -12,6 +12,7 @@ interface InputProps
   isRequired?: boolean;
   inputBorderRadius?: string;
   textAreaBorderRadius?: string;
+  textAreaHeight?: string;
 }
 
 export function InputField({
@@ -26,6 +27,7 @@ export function InputField({
   type = "text",
   inputBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
   textAreaBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
+  textAreaHeight ="min-h-[8rem] 2xl:min-h-[8vw]",
   ...props
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -60,7 +62,7 @@ export function InputField({
         {/* Input or Textarea */}
         {isTextArea ? (
           <textarea
-            className="w-full bg-transparent outline-none resize-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`w-full bg-transparent outline-none resize-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${textAreaHeight}`}
             disabled={disabled}
             required={isRequired}
             onFocus={() => setIsFocused(true)}

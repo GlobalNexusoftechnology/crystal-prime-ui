@@ -52,12 +52,12 @@ export function EditLeadModal({
 
   const { onEditLead, isPending } = useUpdateLeadMutation({
     onSuccessCallback: (response: IUpdateLeadResponse) => {
-      toast.success(response.message)
+      toast.success(response.message);
       setIsEditLeadModalOpen(false);
       leadsRefetch();
     },
     onErrorCallback: (err: IApiError) => {
-      toast.error(err.message)
+      toast.error(err.message);
     },
   });
 
@@ -106,18 +106,10 @@ export function EditLeadModal({
     location: lead.location || "",
     budget: lead.budget ?? 0,
     requirement: lead.requirement || "",
-    source_id:
-      lead.source?.id?.toString() ||
-      lead.source_id?.toString() ||
-      "",
-    status_id:
-      lead.status?.id?.toString() ||
-      lead.status_id?.toString() ||
-      "",
+    source_id: lead.source?.id?.toString() || lead.source_id?.toString() || "",
+    status_id: lead.status?.id?.toString() || lead.status_id?.toString() || "",
     assigned_to:
-      lead.assigned_to?.id?.toString() ||
-      lead.assigned_to_id?.toString() ||
-      "",
+      lead.assigned_to?.id?.toString() || lead.assigned_to_id?.toString() || "",
   };
 
   return (
@@ -217,13 +209,14 @@ export function EditLeadModal({
                       onChange={handleChange}
                       error={touched.budget && errors.budget}
                     />
-                    <InputField
-                      label="Requirement"
-                      placeholder="Enter Requirement"
-                      name="requirement"
-                      value={values.requirement}
-                      onChange={handleChange}
-                      error={touched.requirement && errors.requirement}
+                    <Dropdown
+                      label="Assigned To"
+                      options={userOptions}
+                      value={values.assigned_to}
+                      onChange={(val) => setFieldValue("assigned_to", val)}
+                      error={
+                        touched.assigned_to ? errors.assigned_to : undefined
+                      }
                     />
                   </div>
 
@@ -244,15 +237,15 @@ export function EditLeadModal({
                     />
                   </div>
                   <div className="grid grid-cols-1 gap-4 py-2">
-                    <Dropdown
-                      label="Assigned To"
-                      options={userOptions}
-                      value={values.assigned_to}
-                      onChange={(val) => setFieldValue("assigned_to", val)}
-                      error={
-                        touched.assigned_to ? errors.assigned_to : undefined
-                      }
-                    />
+                    <InputField
+                      label="Requirement"
+                      placeholder="Enter Requirement"
+                      name="requirement"
+                      type="textarea"
+                      value={values.requirement}
+                      onChange={handleChange}
+                      error={touched.requirement && errors.requirement}
+                  />
                   </div>
 
                   <div className="flex justify-between mt-6 space-x-3">
