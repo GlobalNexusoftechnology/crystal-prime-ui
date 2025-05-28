@@ -12,6 +12,11 @@ import {
   // TaskManagementIcon,
 } from "@/features";
 
+type TSidebarPermission = {
+  module: string;
+  actions: string;
+}
+
 /**
  * Interface representing a sidebar link in the admin panel.
  */
@@ -24,6 +29,10 @@ export interface IAdminSidebarLink {
   icon: ReactNode;
   /** The icon displayed when the link is active. */
   activeIcon: ReactNode;
+  /**
+   * Permission mapping for the sidebar link.
+   */
+  permission: TSidebarPermission;
 }
 
 /**
@@ -45,48 +54,55 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     name: "Dashboard",
     icon: <DashboardIcon />,
     activeIcon: <DashboardIcon color="#034A9F" />,
+    permission: { module: "DASHBOARD", actions: "VIEW" },
   },
   {
     path: "/admin/lead-management",
     name: "Lead Management",
     icon: <LeadManagementIcon />,
     activeIcon: <LeadManagementIcon color="#034A9F" />,
+    permission: { module: "LEAD_MANAGEMENT", actions: "VIEW" },
   },
   // {
   //   path: "/admin/project-management",
   //   name: "Project Management",
   //   icon: <ProjectManagementIcon />,
   //   activeIcon: <ProjectManagementIcon color="#034A9F" />,
+  //   permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" },
   // },
   // {
   //   path: "/admin/task-management",
   //   name: "Task Management",
   //   icon: <TaskManagementIcon />,
   //   activeIcon: <TaskManagementIcon color="#034A9F" />,
+  //   permission: { module: "TASK_MANAGEMENT", actions: "VIEW" }, // Assuming task is under project
   // },
-
-  //   {
+  // {
   //   path: "/admin/follow-up-management",
   //   name: "Follow Up Management",
-  //   icon: <FollowUpManagementIcon/>,
+  //   icon: <FollowUpManagementIcon />,
   //   activeIcon: <FollowUpManagementIcon color="#034A9F" />,
+  //   permission: { module: "FOLLOW_UP_MANAGEMENT", actions: "VIEW" }, // Adjust if separate module
   // },
   {
     path: "/admin/staff-management",
     name: "Staff Management",
     icon: <StaffManagementIcon />,
     activeIcon: <StaffManagementIcon color="#034A9F" />,
+    permission: { module: "STAFF_MANAGEMENT", actions: "VIEW" },
   },
-  //  {
+  // {
   //   path: "/admin/document-management",
   //   name: "Document Management",
   //   icon: <DocumentManagementIcon />,
   //   activeIcon: <DocumentManagementIcon color="#034A9F" />,
+  //   permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" }, // Or create new module key
   // },
   {
     path: "/admin/settings",
     name: "Settings",
     icon: <SettingsIcon />,
     activeIcon: <SettingsIcon color="#034A9F" />,
+    permission: { module: "SETTINGS", actions: "VIEW" }, // Example: only visible to HR/manager
   },
 ];

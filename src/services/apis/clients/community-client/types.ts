@@ -137,6 +137,13 @@ export interface ISourcesDetailResponse {
   data: ISourcesDetailList;
 }
 
+export interface IRoleDetailsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IRoleData;
+}
+
 export interface IAllSourcesList {
   id: string;
   created_at: string;

@@ -2,6 +2,7 @@
 import React, { JSX, useState } from "react";
 import { AdminHeader, AdminSidebar } from "@/components";
 import { IAdminSidebarLayoutProps } from "@/constants";
+import { usePermission } from "@/utils/hooks";
 
 /**
  * AdminSidebarLayout component renders a responsive admin layout with a taggable sidebar.
@@ -17,6 +18,11 @@ export function AdminSidebarLayout({
   adminSidebarLinks,
 }: IAdminSidebarLayoutProps): JSX.Element {
   const [isVisibleSidebar, SetIsVisibleSidebar] = useState(false);
+  const { hasPermission } = usePermission();
+
+  const filteredLinks = adminSidebarLinks.filter((item) =>
+    item.permission ? hasPermission(item.permission.module, item.permission.actions) : true
+  );
 
   /**
    * Toggles the visibility of the sidebar.
@@ -34,7 +40,7 @@ export function AdminSidebarLayout({
         } h-full z-40 transition-all duration-500 ease-in-out overflow-hidden bg-white shadow-md fixed left-0`}
       >
         <AdminSidebar
-          adminSidebarLinks={adminSidebarLinks}
+          adminSidebarLinks={filteredLinks}
           isVisibleSidebar={isVisibleSidebar}
         />
       </div>

@@ -43,6 +43,7 @@ import {
   IRegisterResponse,
   IResetPasswordPayload,
   IResetPasswordResponse,
+  IRoleDetailsResponse,
   ISentOtpPayload,
   ISentOtpResponse,
   ISignupPayload,
@@ -113,6 +114,7 @@ import {
   updateRoleUrl,
   deleteRoleUrl,
   uploadLeadFromExcelUrl,
+  getRoleDetailByIdUrl,
 } from "./urls";
 
 /**
@@ -562,6 +564,20 @@ export class CommunityClient extends ApiClient {
 
     // TODO: Remove this comment once the isMock is removed above.
     return response.data.data
+  }
+
+  // get role details by id.
+  public getRoleDetailById = async (id: string) => {
+    const response = await this.get<IRoleDetailsResponse>(
+      getRoleDetailByIdUrl(id),
+    )
+
+    if (!response?.success) {
+      throw response
+    }
+
+    // TODO: Remove this comment once the isMock is removed above.
+    return response.data;
   }
 
   // all statuses get by id

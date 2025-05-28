@@ -1,26 +1,38 @@
 "use client";
 
-// import { useRoleRedirect } from "@/utils";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
+
+import { useAuthStore, useRoleDetailQuery } from "@/services";
+
+import { Loading } from "../loading";
 
 export function RoleRedirectWrapper({
-  // allowedRoles,
-  // redirectTo,
   children,
 }: {
-  allowedRoles?: string[];
-  redirectTo?: string;
   children: ReactNode;
 }) {
-  // const { loading } = useRoleRedirect({ allowedRoles, redirectTo });
+  const { activeSession, updateActiveSession } = useAuthStore();
+  const userId = activeSession?.user?.role?.id || '';
 
-  // if (loading) {
-  //   return (
-  //     <div className="flex justify-center items-center h-screen w-screen text-center">
-  //       <div className="spinner font-bold text-2xl">Loading...</div>
-  //     </div>
-  //   );
-  // }
+  const {
+    roleDetailsData,
+    isLoading: isRoleDetailsLoading,
+  } = useRoleDetailQuery(userId);
+
+  useEffect(() => {
+    if (roleDetailsData && activeSession?.user) {
+      updateActiveSession({...activeSession, user: {...activeSession.user, role: roleDetailsData.data } });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roleDetailsData]);
+
+  if (isRoleDetailsLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen w-screen text-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return <div>{children}</div>;
 }

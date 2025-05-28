@@ -80,6 +80,8 @@ export const createSourcesUrl = () => "/lead-sources"; //post
 
 export const getSourcesDetailByIdUrl = (id: string) => `/lead-sources/${id}`;//get by id
 
+export const getRoleDetailByIdUrl = (id: string) => `/roles/${id}`;//get by id
+
 export const updateSourcesUrl = (id: string) => `/lead-sources/${id}`;//put
 
 export const deleteSourcesUrl = (id: string) => `/lead-sources/${id}`; //delete
