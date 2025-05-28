@@ -35,30 +35,26 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const { data: allLeadList, isLoading, leadsRefetch } = useAllLeadsListQuery();
   const { allStatusesData } = useAllStatusesQuery();
-  const { onAllLeadDownloadExcel, data: allLeadDownloadExcelData } =
-    useAllLeadDownloadExcelQuery();
+  const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
 
-  const { onLeadDownloadTemplateExcel, data: leadDownloadTemplateExcelData } =
-    useLeadDownloadTemplateExcelQuery();
+  const { onLeadDownloadTemplateExcel } = useLeadDownloadTemplateExcelQuery();
 
-  useEffect(() => {
-    if (allLeadDownloadExcelData instanceof Blob) {
-      // You may want to pass filename manually or extract it from a header elsewhere
-       downloadBlobFile(
-        allLeadDownloadExcelData,
-        "leads" + new Date().getTime() + ".xlsx"
+  const handleLeadDownloadExcel = async () => {
+    const { data } = await onAllLeadDownloadExcel();
+    if (data instanceof Blob) {
+      await downloadBlobFile(data, `leads_${new Date().getTime()}.xlsx`);
+    }
+  };
+
+  const handleLeadDownloadTemplateExcel = async () => {
+    const { data } = await onLeadDownloadTemplateExcel();
+    if (data instanceof Blob) {
+      await downloadBlobFile(
+        data,
+        `upload_lead_template.xlsx`
       );
     }
-  }, [allLeadDownloadExcelData]);
-
-  useEffect(() => {
-    if (leadDownloadTemplateExcelData instanceof Blob) {
-      downloadBlobFile(
-        leadDownloadTemplateExcelData,
-        "upload_lead_template.xlsx"
-      );
-    }
-  }, [leadDownloadTemplateExcelData]);
+  };
 
   const {
     leadDetailById,
@@ -214,14 +210,6 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       return matchQuery && matchStatus;
     });
   }, [leadsList, searchQuery, selectedStatus, allStatusesData]);
-
-  const handleLeadDownloadExcel = () => {
-    onAllLeadDownloadExcel();
-  };
-
-  const handleLeadDownloadTemplateExcel = () => {
-    onLeadDownloadTemplateExcel();
-  };
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">

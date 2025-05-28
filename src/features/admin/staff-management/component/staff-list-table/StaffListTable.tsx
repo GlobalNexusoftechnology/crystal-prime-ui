@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, SearchBar, Table } from "@/components";
 import toast from "react-hot-toast";
 import {
@@ -33,7 +33,7 @@ export function StaffListTable() {
   const [selectedStaff, setSelectedStaff] = useState<IUserViewDetails | null>(null);
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const { downloadAllUserExcel, data: downloadAllUserExcelData } = useAllUserDownloadExcelQuery();
+  const { downloadAllUserExcel } = useAllUserDownloadExcelQuery();
 
   const { onDeleteUser } = useDeleteUserMutation({
     onSuccessCallback: (data) => {
@@ -45,13 +45,15 @@ export function StaffListTable() {
     },
   });
 
-  // Process Excel file download
-  useEffect(() => {
-    if (downloadAllUserExcelData instanceof Blob) {
-      const filename = `staff_list_${new Date().getTime()}.xlsx`;
-      downloadBlobFile(downloadAllUserExcelData, filename);
+    const handleUserDownloadExcel = async () => {
+   const {data} = await downloadAllUserExcel();
+    if (data instanceof Blob) {
+      await downloadBlobFile(
+        data,
+        `staff_list_${new Date().getTime()}.xlsx`
+      );
     }
-  }, [downloadAllUserExcelData]);
+  };
 
   // Prepare staff list data for table
   const userList: IAllUsersListResponse[] = (allUsersData ?? []).map((user) => ({
@@ -132,10 +134,6 @@ export function StaffListTable() {
   const handleCloseAddModal = () => setIsAddStaffModalOpen(false);
   const handleCloseEditModal = () => setIsEditStaffModalOpen(false);
   const handleCloseViewModal = () => setIsViewStaffModalOpen(false);
-
-  const handleUserDownloadExcel = () => {
-    downloadAllUserExcel();
-  };
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
