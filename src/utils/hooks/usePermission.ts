@@ -8,7 +8,6 @@ export function usePermission() {
     const userPermissions = activeSession?.user?.role?.permissions || [];
     return parsePermissions(userPermissions);
   }, [activeSession]);
-  console.log("active session", {activeSession});
   
   function hasPermission(moduleKey: string, actionKeys: string | string[]): boolean {
     const moduleValue = getModuleValueByKey(moduleKey);
