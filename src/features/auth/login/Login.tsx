@@ -100,7 +100,7 @@ const togglePasswordVisibility = () => {
                 : undefined
             }
             suffixIcon={
-              showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />
+              showPassword ? <FiEye className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" /> : <FiEyeOff className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
             }
             onIconClick={togglePasswordVisibility}
           />
