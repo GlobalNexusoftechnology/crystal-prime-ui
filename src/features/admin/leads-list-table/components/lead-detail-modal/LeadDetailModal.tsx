@@ -1,7 +1,7 @@
 "use client";
 import { ModalOverlay } from "@/components";
 import { ILeadsListDetailsProps, ILeadsListProps } from "@/constants";
-import { PhoneIcon, ThreeIcon, MailIcon } from "@/features";
+import { PhoneIcon, MailIcon } from "@/features";
 // import { getInitials } from "@/utils";
 import { useState } from "react";
 import { FiPlusSquare } from "react-icons/fi";
@@ -39,12 +39,6 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               <p className="underline text-textColor text-[1.1rem] 2xl:text-[1.1vw]">
                 {data.last_name}
               </p>
-            </div>
-
-            <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
-              <div className="border border-gray-400 rounded-full p-2 2xl:p-[0.5vw] cursor-pointer flex items-center">
-                <ThreeIcon className="h-5 w-5 2xl:h-[1.5vw] 2xl:w-[1.5vw] text-gray-600 " />
-              </div>
             </div>
           </div>
 
