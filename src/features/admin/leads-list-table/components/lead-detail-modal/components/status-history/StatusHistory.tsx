@@ -70,11 +70,11 @@ export function StatusHistory({
     })) || [];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 2xl:gap-[1vw]">
       {showForm ? (
         <form
           onSubmit={formik.handleSubmit}
-          className="mb-4 p-4 border rounded bg-customGray flex flex-col gap-4"
+          className="mb-4 2xl:mb-[1vw] p-4 2xl:p-[1vw] border rounded bg-customGray flex flex-col gap-4 2xl:gap-[1vw]"
         >
           <p className="font-bold">Add Status Update</p>
 
@@ -99,7 +99,7 @@ export function StatusHistory({
             }
           />
 
-          <div className="flex justify-end gap-4">
+          <div className="flex justify-end gap-4 2xl:gap-[1vw]">
             <Button
               title="Cancel"
               onClick={() => {
@@ -114,20 +114,20 @@ export function StatusHistory({
         allLeadStatusHistoryData?.map((statusHistory, index) => (
           <div
             key={index}
-            className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
+            className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
           >
             <div className="text-darkBlue flex justify-between items-center">
-              <div className="flex items-center gap-2 underline">
-                <p>Status:</p>
-                <p>{statusHistory?.status?.name}</p>
+              <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
+                <p className="text-[1rem] 2xl:text-[1vw]">Status:</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">{statusHistory?.status?.name}</p>
               </div>
-              <div className="text-lightGreen flex items-center gap-2 underline">
-                <p>Created At:</p>
-                <p>{statusHistory?.created_at}</p>
+              <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
+                <p className="text-[1rem] 2xl:text-[1vw]">Created At:</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">{statusHistory?.created_at}</p>
               </div>
             </div>
-            <h1>{statusHistory?.status_remarks}</h1>
-            <h1 className="text-primary underline">
+            <h1 className="text-[1rem] 2xl:text-[1vw]">{statusHistory?.status_remarks}</h1>
+            <h1 className="text-primary underline text-[1rem] 2xl:text-[1vw]">
               Assigned To: {statusHistory?.changed_by?.first_name}{" "}
               {statusHistory?.changed_by?.last_name}
             </h1>
