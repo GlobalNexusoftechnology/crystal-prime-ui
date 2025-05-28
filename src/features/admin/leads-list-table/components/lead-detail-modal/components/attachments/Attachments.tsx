@@ -88,11 +88,11 @@ export function Attachments({
   });
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 2xl:gap-[1vw]">
       {showForm ? (
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md"
+          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw]"
         >
           <UploadDocument
             label="Upload Document"
@@ -105,7 +105,7 @@ export function Attachments({
             error={formik?.touched?.document ? formik?.errors?.document : undefined}
           />
 
-          <div className="flex justify-end gap-4 2xl:gap-[1vw]">
+          <div className="flex justify-end gap-4 2xl:gap-[1vw] ">
             <Button
               title="Cancel"
               onClick={() => setShowForm(false)}
@@ -124,15 +124,15 @@ export function Attachments({
         allLeadAttachmentData?.map((attachment, idx) => (
           <div
             key={idx}
-            className="flex gap-6 2xl:gap-[2vw] text-darkBlue bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md"
+            className="flex gap-6 2xl:gap-[2vw] text-darkBlue bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw]"
           >
-            <div className="w-[70%] flex flex-col gap-4 2xl:gap-[1vw]">
+            <div className="w-[70%] flex flex-col gap-4 2xl:gap-[1vw] ">
               <div className="text-primary flex items-center underline scrollbar-hidden overflow-x-auto">
-                <p>{attachment?.file_path}</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">{attachment?.file_path}</p>
               </div>
               <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
-                <p>Created At:</p>
-                <p>{formattingDate(attachment?.created_at, "toReadable")}</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">Created At:</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">{formattingDate(attachment?.created_at, "toReadable")}</p>
               </div>
             </div>
             <div>

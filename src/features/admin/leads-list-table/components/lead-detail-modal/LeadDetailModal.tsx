@@ -42,17 +42,17 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
         ref={containerRef}
       >
         {/* Lead Info Header */}
-        <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-white rounded-lg p-4 border border-gray-200">
+        <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
           <div className="flex justify-between items-center">
-            <div>
+            <div >
               <p className=" text-[1rem] 2xl:text-[1vw]">First Name</p>
-              <p className="underline text-textColor text-[1.1rem] 2xl:text-[1.1vw]">
+              <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1.1rem] 2xl:text-[1.1vw]">
                 {data.first_name}
               </p>
             </div>
             <div className="flex flex-col">
               <p className=" text-[1rem] 2xl:text-[1vw]">Last Name</p>
-              <p className="underline text-textColor text-[1.1rem] 2xl:text-[1.1vw]">
+              <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1.1rem] 2xl:text-[1.1vw]">
                 {data.last_name}
               </p>
             </div>
@@ -64,7 +64,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               className="flex items-center gap-2 2xl:gap-[0.5vw] text-[1rem] 2xl:text-[1vw]"
             >
               <PhoneIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw]" />
-              <p className="underline text-textColor text-[1rem] 2xl:text-[1vw]">
+              <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
                 {data.phone}
               </p>
             </Link>
@@ -73,7 +73,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               className="flex items-center gap-2 2xl:gap-[0.5vw] text-[1rem] 2xl:text-[1vw]"
             >
               <MailIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw]" />
-              <p className="underline text-textColor text-[1rem] 2xl:text-[1vw]">
+              <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
                 {data.email}
               </p>
             </Link>
@@ -81,50 +81,50 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
         </div>
 
         {/* Lead Details Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-gray-200 p-4 rounded-lg  text-[1rem] 2xl:text-[1vw] text-gray-700">
-          <div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-gray-200 p-4 2xl:p-[1vw] rounded-lg 2xl:rounded-[0.5vw] text-[1rem] 2xl:text-[1vw] text-gray-700">
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className=" text-sm 2xl:text-[0.875vw]">Created By</p>
-            <p className="underline text-textColor text-[1rem] 2xl:text-[1vw]">
+            <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.first_name} {data.last_name}
             </p>
           </div>
-          <div>
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className=" text-sm 2xl:text-[0.875vw]">Created At</p>
             <p className=" text-textColor text-[1rem] 2xl:text-[1vw]">
               {formattingDate(data.created_at, "toReadable")}
             </p>
           </div>
-          <div>
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className=" text-sm 2xl:text-[0.875vw]">Location</p>
             <p className=" text-textColor text-[1rem] 2xl:text-[1vw]">
               {data?.location}
             </p>
           </div>
-          <div>
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-sm 2xl:text-[0.875vw]">Updated By</p>
-            <p className="underline text-textColor text-[1rem] 2xl:text-[1vw]">
+            <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.first_name} {data.last_name}
             </p>
           </div>
-          <div>
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-sm 2xl:text-[0.875vw]">Updated At</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {formattingDate(data.updated_at, "toReadable")}
             </p>
           </div>
-          <div>
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-sm 2xl:text-[0.875vw]">Source Name</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.source.name}
             </p>
           </div>
-          <div>
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-sm 2xl:text-[0.875vw]">Budget</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.budget}
             </p>
           </div>
-          <div>
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-sm 2xl:text-[0.875vw]">Assigned To</p>
             <div className="flex gap-2 2xl:gap-[0.5vw] items-center">
               <p
@@ -138,7 +138,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
                 {getInitials(data.assignedTo.first_name)}
                 {getInitials(data.assignedTo.last_name)}
               </p>
-              <p className="underline font-medium text-textColor text-[1rem] 2xl:text-[1vw]">
+              <p className="underline underline-offset-2 2xl:underline-offset-4 font-medium text-textColor text-[1rem] 2xl:text-[1vw]">
                 {data?.assignedTo?.first_name} {data?.assignedTo?.last_name}
               </p>
             </div>
@@ -152,7 +152,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               {tabs.map((tab) => (
                 <button
                   key={tab}
-                  className={`pb-2 font-medium ${
+                  className={`pb-2 2xl:pb-[0.5vw] 2xl:gap-[2vw] font-medium text-[1rem] 2xl:text-[1vw] ${
                     activeTab === tab
                       ? "border-b-2 border-primary text-primary"
                       : "text-gray-500"
@@ -168,12 +168,12 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             </div>
             <button
               onClick={() => setShowForm((prev) => !prev)}
-              className="flex items-center gap-2 2xl:gap-[0.5vw] text-primary"
+              className="flex items-center gap-2 2xl:gap-[0.5vw] text-primary text-[1rem] 2xl:text-[1vw]"
             >
               {showForm ? (
-                <IoMdCloseCircleOutline className="w-5 h-5" />
+                <IoMdCloseCircleOutline className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
               ) : (
-                <FiPlusSquare className="w-5 h-5" />
+                <FiPlusSquare className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
               )}
               <span>{showForm ? "Close" : "Add"}</span>
             </button>
