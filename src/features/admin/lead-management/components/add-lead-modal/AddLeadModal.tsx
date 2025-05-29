@@ -21,18 +21,19 @@ const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
   last_name: Yup.string().required("Last Name is required"),
   company: Yup.string().required("Company is required"),
-  phone: Yup.string()
-    .matches(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits")
-    .required("Phone Number is required"),
+  phone: Yup.number()
+    .typeError("Phone number must be a valid number")
+    .test("len", "Phone number must be between 10 and 15 digits", (val) => {
+      if (val === undefined || val === null) return false;
+      const length = val.toString().length;
+      return length >= 10 && length <= 15;
+    })
+    .required("Phone number is required"),
   email: Yup.string()
     .email("Invalid email address")
     .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
     .required("Email is required"),
   location: Yup.string().required("Location is required"),
-  budget: Yup.number()
-    .typeError("Budget must be a number")
-    .positive("Budget must be a positive number")
-    .required("Budget is required"),
   requirement: Yup.string().required("Requirement is required"),
   source_id: Yup.string().required("Source is required"),
   status_id: Yup.string().required("Status is required"),
@@ -48,12 +49,12 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (response: ICreateLeadResponse) => {
       console.log("Lead created successfully", response);
-      toast.success(response.message)
+      toast.success(response.message);
       setAddLeadModalOpen(false);
       leadsRefetch();
     },
     onErrorCallback: (err: IApiError) => {
-      toast.error(err.message)
+      toast.error(err.message);
     },
   });
 
@@ -93,7 +94,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
               first_name: "",
               last_name: "",
               company: "",
-              phone: "",
+              phone: 0,
               email: "",
               location: "",
               budget: 0,
@@ -141,6 +142,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     label="Phone"
                     placeholder="Enter Phone Number"
                     name="phone"
+                    type="number"
                     value={values.phone}
                     onChange={handleChange}
                     error={touched.phone && errors.phone}
@@ -174,14 +176,10 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     type="number"
                     value={values.budget}
                     onChange={(e) => {
-                      setFieldValue(
-                        "budget",
-                        parseFloat(e.target.value)
-                      );
+                      setFieldValue("budget", parseFloat(e.target.value));
                     }}
-                    error={touched.budget && errors.budget}
                   />
-                   <Dropdown
+                  <Dropdown
                     label="Assigned To"
                     options={userOptions}
                     value={values.assigned_to}

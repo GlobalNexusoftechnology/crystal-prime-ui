@@ -201,10 +201,10 @@ export interface ICreateLeadPayload {
   first_name: string;
   last_name: string;
   company: string;
-  phone: string;
+  phone: number;
   email: string;
   location: string;
-  budget: number;
+  budget?: number | null;
   requirement: string;
   source_id: string;
   status_id: string;

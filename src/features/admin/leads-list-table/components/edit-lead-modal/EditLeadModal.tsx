@@ -23,18 +23,19 @@ const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
   last_name: Yup.string().required("Last Name is required"),
   company: Yup.string().required("Company is required"),
-  phone: Yup.string()
-    .matches(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits")
-    .required("Phone Number is required"),
+  phone: Yup.number()
+    .typeError("Phone number must be a valid number")
+    .test("len", "Phone number must be between 10 and 15 digits", (val) => {
+      if (val === undefined || val === null) return false;
+      const length = val.toString().length;
+      return length >= 10 && length <= 15;
+    })
+    .required("Phone number is required"),
   email: Yup.string()
     .email("Invalid email address")
     .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
     .required("Email is required"),
   location: Yup.string().required("Location is required"),
-  budget: Yup.number()
-    .typeError("Budget must be a number")
-    .positive("Budget must be a positive number")
-    .required("Budget is required"),
   requirement: Yup.string().required("Requirement is required"),
   source_id: Yup.string().required("Source is required"),
   status_id: Yup.string().required("Status is required"),
@@ -101,7 +102,7 @@ export function EditLeadModal({
     first_name: lead.first_name || "",
     last_name: lead.last_name || "",
     company: lead.company || "",
-    phone: lead.phone || "",
+    phone: lead.phone || 0,
     email: lead.email || "",
     location: lead.location || "",
     budget: lead.budget ?? 0,
@@ -134,6 +135,7 @@ export function EditLeadModal({
                 payload: {
                   ...values,
                   budget: Number(values.budget),
+                  phone: Number(values.phone),
                 },
               });
             }}
@@ -171,6 +173,7 @@ export function EditLeadModal({
                     />
                     <InputField
                       label="Phone"
+                      type="number"
                       placeholder="Enter Phone Number"
                       name="phone"
                       value={values.phone}
@@ -207,7 +210,6 @@ export function EditLeadModal({
                       type="number"
                       value={values.budget}
                       onChange={handleChange}
-                      error={touched.budget && errors.budget}
                     />
                     <Dropdown
                       label="Assigned To"
@@ -245,7 +247,7 @@ export function EditLeadModal({
                       value={values.requirement}
                       onChange={handleChange}
                       error={touched.requirement && errors.requirement}
-                  />
+                    />
                   </div>
 
                   <div className="flex justify-between mt-6 space-x-3">
