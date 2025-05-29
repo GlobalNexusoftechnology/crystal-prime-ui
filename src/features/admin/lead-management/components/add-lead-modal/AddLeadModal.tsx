@@ -174,7 +174,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     placeholder="Enter Budget"
                     name="budget"
                     type="number"
-                    value={values.budget}
+                    value={values.budget ?? 0}
                     onChange={(e) => {
                       setFieldValue("budget", parseFloat(e.target.value));
                     }}

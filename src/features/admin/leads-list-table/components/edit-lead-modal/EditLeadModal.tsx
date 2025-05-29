@@ -208,7 +208,7 @@ export function EditLeadModal({
                       placeholder="Enter Budget"
                       name="budget"
                       type="number"
-                      value={values.budget}
+                      value={values.budget ?? 0}
                       onChange={handleChange}
                     />
                     <Dropdown
