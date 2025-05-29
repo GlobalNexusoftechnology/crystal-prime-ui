@@ -120,7 +120,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
               onClick={() => setShowForm(false)}
               width="w-full"
             />
-            <Button title="Add Next Followup" type="submit" width="w-full" />
+            <Button title="Submit followup" type="submit" width="w-full" />
           </div>
         </form>
       ) : (
