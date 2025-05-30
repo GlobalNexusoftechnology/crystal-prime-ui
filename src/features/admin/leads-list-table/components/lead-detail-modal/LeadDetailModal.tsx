@@ -18,6 +18,7 @@ interface LeadDetailsModalProps {
 const tabs = ["Followups", "Attachment", "Status History"];
 
 export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
+  console.log(data, "data#######################")
   const [activeTab, setActiveTab] = useState("Followups");
   const [showForm, setShowForm] = useState(false);
 
@@ -122,6 +123,12 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             <p className="text-sm 2xl:text-[0.875vw]">Budget</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.budget}
+            </p>
+          </div>
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
+            <p className="text-sm 2xl:text-[0.875vw]">Other Contact</p>
+            <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
+              {data?.other_contact}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">

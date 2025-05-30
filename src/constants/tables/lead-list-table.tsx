@@ -7,6 +7,7 @@ export interface ILeadsListProps {
   last_name: string;
   company: string;
   phone: string;
+  other_contact: string;
   email: string;
   location: string;
   budget: string;
@@ -25,6 +26,7 @@ export interface ILeadsListDetailsProps {
   last_name: string;
   company: string;
   phone: string;
+  other_contact: string;
   email: string;
   location: string;
   budget: string;
@@ -58,6 +60,11 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
     header: "PHONE",
     accessor: "phone",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+  },
+  {
+    header: "OTHER CONTACT",
+    accessor: "other_contact",
+    headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
   },
   {
     header: "EMAIL",

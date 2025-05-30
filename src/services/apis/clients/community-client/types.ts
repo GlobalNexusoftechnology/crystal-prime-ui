@@ -120,6 +120,7 @@ export interface IAllLeadsList {
   last_name: string;
   company: string;
   phone: string;
+  other_contact: string;
   email: string;
   location: string;
   budget: string;
@@ -264,6 +265,7 @@ export interface ICreateLeadPayload {
   last_name: string;
   company: string;
   phone: string;
+  other_contact: string;
   email: string;
   location: string;
   budget?: number | null;

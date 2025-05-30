@@ -93,6 +93,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
               last_name: "",
               company: "",
               phone: "",
+              other_contact: "",
               email: "",
               location: "",
               budget: 0,
@@ -153,6 +154,23 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                         {errors.phone}
                       </p>
                     )}
+                  </div>
+                </div>
+                <div className="w-full grid grid-cols-1 gap-4 py-2 relative">
+                  <div className="w-full flex flex-col justify-center pt-[0.4rem] 2xl:pt-[0.4vw]">
+                    <label className="text-sm 2xl:text-[0.875vw] font-medium text-gray-700 mb-1 2xl:mb-[0.25vw] block">
+                      Other Contact
+                    </label>
+                    <PhoneInput
+                      country="in"
+                      value={values.other_contact}
+                      onChange={(value) =>
+                        setFieldValue("other_contact", value)
+                      }
+                      inputClass="!w-[95%] text-[1vw] !ml-8 !2xl:ml-[2vw] !border !border-gray-300 !rounded-md !px-4 py-5 2xl:py-[1.25vw] !text-gray-700 !placeholder-gray-500 !focus:outline-primary"
+                      containerClass="w-full"
+                      inputProps={{ name: "other_contact" }}
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 py-2">
