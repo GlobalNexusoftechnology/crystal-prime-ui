@@ -1,6 +1,10 @@
 "use client";
 import { ModalOverlay } from "@/components";
-import { ILeadsListDetailsProps, ILeadsListProps } from "@/constants";
+import {
+  ILeadsListDetailsProps,
+  ILeadsListProps,
+  ImageRegistry,
+} from "@/constants";
 import { PhoneIcon, MailIcon } from "@/features";
 import { useEffect, useRef, useState } from "react";
 import { FiPlusSquare } from "react-icons/fi";
@@ -8,6 +12,7 @@ import { IoMdCloseCircleOutline } from "react-icons/io";
 import { Attachments, Followups, StatusHistory } from "./components";
 import Link from "next/link";
 import { formattingDate, getInitials, getRandomColor } from "@/utils";
+import Image from "next/image";
 
 interface LeadDetailsModalProps {
   lead: ILeadsListProps;
@@ -18,7 +23,6 @@ interface LeadDetailsModalProps {
 const tabs = ["Followups", "Attachment", "Status History"];
 
 export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
-  console.log(data, "data#######################")
   const [activeTab, setActiveTab] = useState("Followups");
   const [showForm, setShowForm] = useState(false);
 
@@ -150,8 +154,25 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               </p>
             </div>
           </div>
+          <div className="flex flex-col justify-center relative group">
+            <Link
+              href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3VCLODb2NPMj0903NYc27RodmYGwV8ZQDRVkcjv5-gEaLYHkiH5OOXEz0AiLwXXEhP_NjvauEi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-20 h-20 2xl:w-[5vw] 2xl:h-[5vw]"
+            >
+              <Image
+                src={ImageRegistry.googleCalendarIcon}
+                alt="Google Calendar"
+                className="w-full h-full"
+              />
+            </Link>
+            {/* Tooltip */}
+            <div className="absolute bottom-full bg-black text-white text-xs 2xl:text-[0.7vw] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+              Schedule Meeting
+            </div>
+          </div>
         </div>
-
         <div className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:px-[1vw] bg-white border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
           {/* Tabs */}
           <div className="flex justify-between items-center">
