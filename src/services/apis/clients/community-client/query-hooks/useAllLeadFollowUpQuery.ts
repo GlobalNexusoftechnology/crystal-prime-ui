@@ -10,11 +10,12 @@ const LEADS_LIST_QUERY_KEY = 'lead-follow-up-query-key';
 /**
  * This hook fetches  all lead follow up.
  */
-export const useAlLeadFollowUpQuery = () => {
+export const useAlLeadFollowUpQuery = (leadId: string) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
     queryKey: [LEADS_LIST_QUERY_KEY],
-    queryFn: COMMUNITY_CLIENT.fetchAllLeadFollowUp,
+    queryFn: () => COMMUNITY_CLIENT.fetchAllLeadFollowUp(leadId),
     networkMode: 'always',
+    enabled: !!leadId
   });
 
   return {

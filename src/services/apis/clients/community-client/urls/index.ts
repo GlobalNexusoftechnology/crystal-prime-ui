@@ -54,7 +54,7 @@ export const fetchAllUserDownloadExcelUrl = () => "/users/export";
 //lead followup
 export const createLeadFollowUpUrl = () => "/lead-followup";
 
-export const fetchAllLeadFollowUpUrl = () => "/lead-followup";
+export const fetchAllLeadFollowUpUrl = (leadId?: string) => `/lead-followup?leadId=${leadId}`;
 
 export const getLeadFollowUpDetailByIdUrl = (id: string) =>`/lead-followup/${id}`;
 

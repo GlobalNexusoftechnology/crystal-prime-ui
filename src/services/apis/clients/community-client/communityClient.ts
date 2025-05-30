@@ -739,16 +739,16 @@ export class CommunityClient extends ApiClient {
   }
 
   // all lead follow ups
-  public fetchAllLeadFollowUp = async () => {
+  public fetchAllLeadFollowUp = async (leadId?: string) => {
     const response = await this.get<IAllLeadFollowUpResponse>(
-      fetchAllLeadFollowUpUrl(),
+      fetchAllLeadFollowUpUrl(leadId),
       {
         requiresAuth: false,
       }
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.error
     }
 
     return response?.data.data

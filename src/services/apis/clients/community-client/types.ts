@@ -263,7 +263,7 @@ export interface ICreateLeadPayload {
   first_name: string;
   last_name: string;
   company: string;
-  phone: number;
+  phone: string;
   email: string;
   location: string;
   budget?: number | null;

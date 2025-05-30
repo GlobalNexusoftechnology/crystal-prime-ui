@@ -11,6 +11,8 @@ import {
 import { IApiError } from "@/utils";
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import * as Yup from "yup";
 
 interface IAddLeadModalProps {
@@ -21,13 +23,9 @@ const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
   last_name: Yup.string().required("Last Name is required"),
   company: Yup.string().required("Company is required"),
-  phone: Yup.number()
-    .typeError("Phone number must be a valid number")
-    .test("len", "Phone number must be between 10 and 15 digits", (val) => {
-      if (val === undefined || val === null) return false;
-      const length = val.toString().length;
-      return length >= 10 && length <= 15;
-    })
+  phone: Yup.string()
+    .min(10, "Phone must be at least 10 digits")
+    .max(15, "Phone must be at most 15 digits")
     .required("Phone number is required"),
   email: Yup.string()
     .email("Invalid email address")
@@ -63,15 +61,15 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
   };
 
   const sourceOptions =
-    allSourcesData?.data.map((source) => ({
-      label: source.name,
-      value: source.id.toString(),
+    allSourcesData?.data?.map((source) => ({
+      label: source?.name,
+      value: source?.id.toString(),
     })) || [];
 
   const statusOptions =
     allStatusesData?.map((status) => ({
-      label: status.name,
-      value: status.id.toString(),
+      label: status?.name,
+      value: status?.id.toString(),
     })) || [];
 
   const userOptions =
@@ -94,7 +92,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
               first_name: "",
               last_name: "",
               company: "",
-              phone: 0,
+              phone: "",
               email: "",
               location: "",
               budget: 0,
@@ -115,7 +113,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     label="First Name"
                     placeholder="Enter First Name"
                     name="first_name"
-                    value={values.first_name}
+                    value={values?.first_name}
                     onChange={handleChange}
                     error={touched.first_name && errors.first_name}
                   />
@@ -123,7 +121,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     label="Last Name"
                     placeholder="Enter Last Name"
                     name="last_name"
-                    value={values.last_name}
+                    value={values?.last_name}
                     onChange={handleChange}
                     error={touched.last_name && errors.last_name}
                   />
@@ -134,19 +132,28 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     label="Company Name"
                     placeholder="Enter Company Name"
                     name="company"
-                    value={values.company}
+                    value={values?.company}
                     onChange={handleChange}
-                    error={touched.company && errors.company}
+                    error={touched?.company && errors?.company}
                   />
-                  <InputField
-                    label="Phone"
-                    placeholder="Enter Phone Number"
-                    name="phone"
-                    type="number"
-                    value={values.phone}
-                    onChange={handleChange}
-                    error={touched.phone && errors.phone}
-                  />
+                  <div className="flex flex-col justify-center pt-[0.4rem] 2xl:pt-[0.4vw]">
+                    <label className="text-sm 2xl:text-[0.875vw] font-medium text-gray-700 mb-1 2xl:mb-[0.25vw] block">
+                      Phone
+                    </label>
+                    <PhoneInput
+                      country="in"
+                      value={values.phone}
+                      onChange={(value) => setFieldValue("phone", value)}
+                      inputClass="text-[1vw] !ml-8 !2xl:ml-[2vw] !border !border-gray-300 !rounded-md !px-4 py-5 2xl:py-[1.25vw] !text-gray-700 !placeholder-gray-500 !focus:outline-primary"
+                      containerClass="w-full"
+                      inputProps={{ name: "phone" }}
+                    />
+                    {errors.phone && touched.phone && (
+                      <p className="text-red-500 text-sm mt-1">
+                        {errors.phone}
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4 py-2">
                   <InputField

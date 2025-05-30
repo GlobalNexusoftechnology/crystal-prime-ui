@@ -24,12 +24,12 @@ export function LeadManagement() {
 
   const { onUploadLeadFromExcel, isPending } = useUploadLeadFromExcelMutation({
     onSuccessCallback: (response) => {
-      toast.success(response.message);
+      toast.success(response?.message);
       leadsRefetch();
       setAddLeadModalOpen(false);
     },
     onErrorCallback: (error: IApiError) => {
-      toast.error(error.message);
+      toast.error(error?.message);
       formik.resetForm();
     },
   });
@@ -40,25 +40,25 @@ export function LeadManagement() {
 
   const analyticalCards: AnalyticalCardData[] = [
     {
-      count: `${allLeadList?.data.stats.totalLeads}`,
+      count: `${allLeadList?.data?.stats?.totalLeads}`,
       title: "Total Leads",
       subtitle: "Total leads in the system",
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data.stats.businessDone}`,
+      count: `${allLeadList?.data?.stats?.businessDone}`,
       title: "Business Done",
       subtitle: "Successful leads closed",
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data.stats.notInterested}`,
+      count: `${allLeadList?.data?.stats?.notInterested}`,
       title: "Not Interested",
       subtitle: "Leads declined or inactive",
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data.stats.assignedToMe}`,
+      count: `${allLeadList?.data?.stats?.assignedToMe}`,
       title: "Assigned To Me",
       subtitle: "Leads assigned for follow-up",
       icon: <AnalyticalCardIcon />,
@@ -89,9 +89,9 @@ export function LeadManagement() {
       file: Yup.mixed().required("File is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
-      if (values.file) {
+      if (values?.file) {
         const formData = new FormData();
-        formData.append("file", values.file);
+        formData.append("file", values?.file);
         try {
           await onUploadLeadFromExcel(formData);
           resetForm();
@@ -102,10 +102,10 @@ export function LeadManagement() {
     },
   });
     useEffect(() => {
-    if (formik.values.file) {
+    if (formik?.values?.file) {
       formik.submitForm();
     }
-  }, [formik, formik.values.file]);
+  }, [formik, formik?.values?.file]);
 
   return (
     <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
@@ -181,7 +181,7 @@ export function LeadManagement() {
                           }
                         }}
                         error={
-                          formik.touched.file ? formik.errors.file : undefined
+                          formik?.touched?.file ? formik?.errors?.file : undefined
                         }
                       />
 

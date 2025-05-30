@@ -103,7 +103,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       label: "View",
       onClick: (row: ILeadsListProps) => {
         setLeadId(row.id);
-        setIsEditLeadModalOpen(true);
+        setViewLead(row);
       },
       className: "text-blue-500",
     });
@@ -113,7 +113,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       label: "Edit",
       onClick: (row: ILeadsListProps) => {
         setLeadId(row.id);
-        setViewLead(row);
+        setIsEditLeadModalOpen(true);
       },
       className: "text-blue-500",
     });
