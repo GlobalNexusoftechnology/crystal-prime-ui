@@ -35,7 +35,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
       modalTitle="Back to Leads"
       isOpen={true}
       onClose={onClose}
-      modalClassName="2xl:w-[40vw]"
+      modalClassName="w-full md:w-[70vw] lg:w-[60vw] xl:w-[50vw] 2xl:w-[52vw]"
     >
       <div
         className="overflow-y-auto max-h-[80vh] space-y-4"
@@ -43,8 +43,8 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
       >
         {/* Lead Info Header */}
         <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
-          <div className="flex justify-between items-center">
-            <div >
+          <div className="flex flex-col md:flex-row gap-4 justify-between">
+            <div className="flex flex-col">
               <p className=" text-[1rem] 2xl:text-[1vw]">First Name</p>
               <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1.1rem] 2xl:text-[1.1vw]">
                 {data.first_name}

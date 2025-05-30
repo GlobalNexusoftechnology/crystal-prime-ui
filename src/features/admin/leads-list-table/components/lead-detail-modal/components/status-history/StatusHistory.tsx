@@ -116,12 +116,12 @@ export function StatusHistory({
             key={index}
             className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
           >
-            <div className="text-darkBlue flex justify-between items-center">
-              <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
+            <div className="text-darkBlue flex justify-between flex-col gap-2 2xl:gap-[1vw]">
+              <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                 <p className="text-[1rem] 2xl:text-[1vw]">Status:</p>
                 <p className="text-[1rem] 2xl:text-[1vw]">{statusHistory?.status?.name}</p>
               </div>
-              <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
+              <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                 <p className="text-[1rem] 2xl:text-[1vw]">Created At:</p>
                 <p className="text-[1rem] 2xl:text-[1vw]">{statusHistory?.created_at}</p>
               </div>

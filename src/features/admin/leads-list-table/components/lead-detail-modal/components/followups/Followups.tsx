@@ -13,7 +13,7 @@ import {
 } from "@/services";
 import { formatDate, formattingDate, IApiError } from "@/utils";
 
-// ✅ Fixing validationSchema field names to match Formik fields
+// Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
   due_date: Yup.string().required("Next follow-up date is required"),
   status: Yup.string().oneOf(
@@ -80,7 +80,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
           onSubmit={formik.handleSubmit}
           className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
         >
-          <div className="flex items-center gap-4 2xl:gap-[1vw]">
+          <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw]">
             <Dropdown
               label="Status"
               options={statusOptions}
@@ -127,28 +127,28 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
         followupData?.map((followup, idx) => (
           <div
             key={idx}
-            className="flex flex-col gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+            className="flex flex-col gap-2 md:gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
           >
             <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
               <div className="text-darkBlue flex justify-between items-center gap-4 2xl:gap-[1vw]">
-                <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
+                <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                   <p className="text-[1rem] 2xl:text-[1vw]">Assigned To:</p>
                   <p className="text-[1rem] 2xl:text-[1vw]">{`${followup?.user?.first_name} ${followup?.user?.last_name}`}</p>
                 </div>
-                <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
+                <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                   <p className="text-[1rem] 2xl:text-[1vw]">Status:</p>
                   <p className="text-[1rem] 2xl:text-[1vw]">{followup.status}</p>
                 </div>
               </div>
               <h1 className="text-[1rem] 2xl:text-[1vw]">{followup.remarks}</h1>
             </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
+            <div className="flex justify-between flex-col md:flex-row gap-4">
+              <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                 <p className="text-[1rem] 2xl:text-[1vw]">Due:</p>
                 <p className="text-[1rem] 2xl:text-[1vw]">{formatDate(`${followup?.due_date}`)}</p>
               </div>
               {followup.completed_date ? (
-                <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
+                <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                   <p className="text-[1rem] 2xl:text-[1vw]">Completed:</p>
                   <p className="text-[1rem] 2xl:text-[1vw]">
                     {formattingDate(`${followup.completed_date}`, "toReadable")}
