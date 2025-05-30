@@ -5,5 +5,6 @@ export * from "./staff-list-table"
 export * from "./task-management-list"
 export * from "./lead-sources-list-table"
 export * from "./lead-status-list-table"
+export * from "./lead-types-list-table"
 
 

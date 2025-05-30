@@ -120,3 +120,14 @@ export const deleteUserUrl = (id: string) => `/users/${id}`; //delete
 export const fetchLeadStatusHistoryUrl = () => "/lead-status-history"; //Get
 
 export const createLeadStatusHistoryUrl = () => "/lead-status-history"; //Post
+
+// Types API
+export const fetchAllTypesUrl = () => "/lead-types"; //Get
+
+export const createTypeUrl = () => "/lead-types"; //post
+
+export const getTypeDetailByIdUrl = (id: string) => `/lead-types/${id}`;//get by id
+
+export const updateTypeUrl = (id: string) => `/lead-types/${id}`;//put
+
+export const deleteTypeUrl = (id: string) => `/lead-types/${id}`; //delete

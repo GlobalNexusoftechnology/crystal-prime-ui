@@ -48,3 +48,10 @@ export { useCreateRoleMutation } from './useCreateRoleMutation';
 export { useUpdateRoleMutation } from './useUpdateRoleMutation';
 export { useDeleteRoleMutation } from './useDeleteRoleMutation';
 export { useRoleDetailQuery } from './useRoleDetailQuery';
+
+
+// lead types
+export { useAllTypesQuery } from "./useAllTypesQuery"
+export { useCreateTypeMutation } from "./useCreateTypeMutation"
+export { useDeleteTypeMutation } from "./useDeleteTypeMutation"
+export { useUpdateTypeMutation } from "./useUpdateTypeMutation"

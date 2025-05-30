@@ -48,6 +48,68 @@ export interface IAllStatusesResponse {
   data: IAllStatusesList[];
 }
 
+// START LEAD TYPES 
+
+export interface ICreateTypesPayload {
+  name: string;
+}
+
+export interface ICreateTypesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateTypesPayload;
+}
+export interface IUpdateTypesPayload {
+  id: string;
+  payload: ICreateTypesPayload;
+}
+
+export interface IUpdateTypesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateTypesPayload;
+}
+
+export interface IType {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+}
+
+export interface IAllTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IType[];
+}
+
+export interface IAllTypesList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+}
+
+export interface IAllTypesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllTypesList[];
+}
+// delete types
+export interface IDeleteTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateTypesPayload;
+}
+// END LEAD TYPES
+
 export interface IAllLeadsList {
   id: string;
   created_at: string;

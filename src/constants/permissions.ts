@@ -2,6 +2,7 @@ export enum EModule {
   DASHBOARD = "DASHBOARD",
   LEAD_MANAGEMENT = "LEAD_MANAGEMENT",
   STAFF_MANAGEMENT = "STAFF_MANAGEMENT",
+  LEAD_TYPES = "LEAD_TYPES",
   LEAD_SOURCES = "LEAD_SOURCES",
   LEAD_STATUSES = "LEAD_STATUSES",
   ROLES = "ROLES",
@@ -30,6 +31,7 @@ export const MODULES: TOptionItem[] = [
   { key: EModule.LEAD_STATUSES, label: "Lead Statuses Module", value: '15'},
   { key: EModule.ROLES, label: "Roles Module", value: '16'},
   { key: EModule.SETTINGS, label: "Settings Module", value: '17' },
+  { key: EModule.LEAD_TYPES, label: "Lead Types Module", value: '18' },
   // Add more as needed
 ];
 

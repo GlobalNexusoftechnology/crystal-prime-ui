@@ -9,6 +9,7 @@ import {
   IAllRoleResponse,
   IAllSourcesResponse,
   IAllStatusesResponse,
+  IAllTypesResponse,
   IAllUsersResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
@@ -26,6 +27,8 @@ import {
   ICreateSourcesResponse,
   ICreateStatusesPayload,
   ICreateStatusesResponse,
+  ICreateTypesPayload,
+  ICreateTypesResponse,
   ICreateUserPayload,
   ICreateUserResponse,
   IDeleteLeadFollowUpResponse,
@@ -33,6 +36,7 @@ import {
   IDeleteRoleResponse,
   IDeleteSourcesResponse,
   IDeleteStatusesResponse,
+  IDeleteTypeResponse,
   IDeleteUserResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
@@ -60,6 +64,8 @@ import {
   IUpdateSourcesResponse,
   IUpdateStatusesPayload,
   IUpdateStatusesResponse,
+  IUpdateTypesPayload,
+  IUpdateTypesResponse,
   IUpdateUserPayload,
   IUpdateUserResponse,
   IUploadAttachmentResponse,
@@ -115,6 +121,10 @@ import {
   deleteRoleUrl,
   uploadLeadFromExcelUrl,
   getRoleDetailByIdUrl,
+  createTypeUrl,
+  deleteTypeUrl,
+  updateTypeUrl,
+  fetchAllTypesUrl,
 } from "./urls";
 
 /**
@@ -343,6 +353,19 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data
   }
+  // create sources
+  public createType = async (payload: ICreateTypesPayload) => {
+    const response = await this.post<ICreateTypesResponse>(
+      createTypeUrl(),
+      payload,
+      { requiresAuth: false }
+    )
+
+    if (!response?.success) {
+      throw response
+    }
+    return response?.data
+  }
 
   // all statuses
 
@@ -404,6 +427,22 @@ export class CommunityClient extends ApiClient {
   public updateSources = async ({ id, payload }: IUpdateSourcesPayload) => {
     const response = await this.put<IUpdateSourcesResponse>(
       updateSourcesUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    )
+
+    if (!response?.success) {
+      throw response
+    }
+    return response?.data
+  }
+
+  //update Sources
+  public updateType = async ({ id, payload }: IUpdateTypesPayload) => {
+    const response = await this.put<IUpdateTypesResponse>(
+      updateTypeUrl(id),
       payload,
       {
         requiresAuth: true,
@@ -489,6 +528,20 @@ export class CommunityClient extends ApiClient {
   public deleteSources = async (id: string) => {
     const response = await this.del<IDeleteSourcesResponse>(
       deleteSourcesUrl(id),
+      {
+        requiresAuth: false,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+    return response?.data
+  }
+
+  public deleteType = async (id: string) => {
+    const response = await this.del<IDeleteTypeResponse>(
+      deleteTypeUrl(id),
       {
         requiresAuth: false,
       }
@@ -650,6 +703,16 @@ export class CommunityClient extends ApiClient {
 
   public fetchAllSources = async () => {
     const response = await this.get<IAllSourcesResponse>(fetchAllSourcesUrl())
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data
+  }
+
+  public fetchAllTypes = async () => {
+    const response = await this.get<IAllTypesResponse>(fetchAllTypesUrl())
 
     if (!response?.success) {
       throw response?.errorData
