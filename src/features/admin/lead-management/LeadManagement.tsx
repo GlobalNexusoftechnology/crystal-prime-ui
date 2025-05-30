@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 import { IApiError } from "@/utils";
 
 export function LeadManagement() {
+
   const [isAddLeadModalOpen, setAddLeadModalOpen] = useState(false);
   const { data: allLeadList, leadsRefetch } = useAllLeadsListQuery();
 

@@ -2,6 +2,8 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Button, Dropdown, SearchBar, Table } from "@/components";
 import {
+  EAction,
+  EModule,
   ILeadsListDetailsProps,
   ILeadsListProps,
   ITableAction,
@@ -21,6 +23,7 @@ import {
 import { downloadBlobFile, formatDate, IApiError } from "@/utils";
 import { FiPlus } from "react-icons/fi";
 import { ImDownload2 } from "react-icons/im";
+import { usePermission } from "@/utils/hooks";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
@@ -39,6 +42,24 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const { onLeadDownloadTemplateExcel } = useLeadDownloadTemplateExcelQuery();
 
+  const { hasPermission } = usePermission();
+  const cavAddLeadManagement = hasPermission(
+    EModule.LEAD_MANAGEMENT,
+    EAction.ADD
+  );
+  const cavViewLeadManagement = hasPermission(
+    EModule.LEAD_MANAGEMENT,
+    EAction.VIEW
+  );
+  const cavEditLeadManagement = hasPermission(
+    EModule.LEAD_MANAGEMENT,
+    EAction.EDIT
+  );
+  const cavDeleteLeadManagement = hasPermission(
+    EModule.LEAD_MANAGEMENT,
+    EAction.DELETE
+  );
+
   const handleLeadDownloadExcel = async () => {
     const { data } = await onAllLeadDownloadExcel();
     if (data instanceof Blob) {
@@ -49,10 +70,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const handleLeadDownloadTemplateExcel = async () => {
     const { data } = await onLeadDownloadTemplateExcel();
     if (data instanceof Blob) {
-      await downloadBlobFile(
-        data,
-        `upload_lead_template.xlsx`
-      );
+      await downloadBlobFile(data, `upload_lead_template.xlsx`);
     }
   };
 
@@ -78,31 +96,38 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [leadId, leadDetailById, isEditLeadModalOpen, viewLead]);
 
-  const actions: ITableAction<ILeadsListProps>[] = [
-    {
-      label: "Edit",
-      onClick: (row) => {
+  const leadLeadManagementAction: ITableAction<ILeadsListProps>[] = [];
+
+  if (cavViewLeadManagement) {
+    leadLeadManagementAction.push({
+      label: "View",
+      onClick: (row: ILeadsListProps) => {
         setLeadId(row.id);
         setIsEditLeadModalOpen(true);
       },
-      className: "text-primary",
-    },
-    {
-      label: "View",
-      onClick: (row) => {
+      className: "text-blue-500",
+    });
+  }
+  if (cavEditLeadManagement) {
+    leadLeadManagementAction.push({
+      label: "Edit",
+      onClick: (row: ILeadsListProps) => {
         setLeadId(row.id);
         setViewLead(row);
       },
-      className: "text-primary",
-    },
-    {
+      className: "text-blue-500",
+    });
+  }
+
+  if (cavDeleteLeadManagement) {
+    leadLeadManagementAction.push({
       label: "Delete",
-      onClick: (row) => {
+      onClick: (row: ILeadsListProps) => {
         onDeleteLead(row.id);
       },
       className: "text-red-500",
-    },
-  ];
+    });
+  }
 
   const leadDetailModalData: ILeadsListDetailsProps = {
     id: leadDetailById?.id || "null",
@@ -223,19 +248,20 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
-          {setAddLeadModalOpen && (
-            <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
-              <Button
-                title="Add Lead"
-                variant="background-white"
-                width="w-full md:w-fit"
-                leftIcon={
-                  <FiPlus className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-                }
-                onClick={() => setAddLeadModalOpen(true)}
-              />
-            </div>
-          )}
+          {setAddLeadModalOpen &&
+            (cavAddLeadManagement ? (
+              <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+                <Button
+                  title="Add Lead"
+                  variant="background-white"
+                  width="w-full md:w-fit"
+                  leftIcon={
+                    <FiPlus className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                  }
+                  onClick={() => setAddLeadModalOpen(true)}
+                />
+              </div>
+            ) : null)}
           <Dropdown
             options={statusOptions}
             value={selectedStatus}
@@ -269,7 +295,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         <Table
           data={filteredLeads}
           columns={leadsListColumn}
-          actions={actions}
+          actions={leadLeadManagementAction}
         />
       )}
 
