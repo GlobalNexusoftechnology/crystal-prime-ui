@@ -1,40 +1,54 @@
 "use client";
 
-import { ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { ReactNode, useEffect } from "react";
 
-// import { ReactNode, useEffect } from "react";
+import { useAuthStore, useRoleDetailQuery } from "@/services";
+import { Loading } from "../loading";
 
-// import { useAuthStore, useRoleDetailQuery } from "@/services";
+export function RoleRedirectWrapper({ children }: { children: ReactNode }) {
+  const { activeSession, updateActiveSession } = useAuthStore();
+  const router = useRouter();
 
-// import { Loading } from "../loading";
+  const userId = activeSession?.user?.role?.id || "";
 
-export function RoleRedirectWrapper({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  // const { activeSession, updateActiveSession } = useAuthStore();
-  // const userId = activeSession?.user?.role?.id || '';
+  const { roleDetailsData, isLoading: isRoleDetailsLoading } =
+    useRoleDetailQuery(userId);
 
-  // const {
-  //   roleDetailsData,
-  //   isLoading: isRoleDetailsLoading,
-  // } = useRoleDetailQuery(userId);
+  useEffect(() => {
+    // Skip running this effect if data is still loading
+    if (isRoleDetailsLoading) return;
 
-  // useEffect(() => {
-  //   if (roleDetailsData && activeSession?.user) {
-  //     updateActiveSession({...activeSession, user: {...activeSession.user, role: roleDetailsData.data } });
-  //   }
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [roleDetailsData]);
+    if (!activeSession?.user || !roleDetailsData?.data) {
+      router.push("/login");
+      return;
+    }
 
-  // if (isRoleDetailsLoading) {
-  //   return (
-  //     <div className="flex justify-center items-center h-screen w-screen text-center">
-  //       <Loading />
-  //     </div>
-  //   );
-  // }
+    const currentRoleId = activeSession.user.role?.id;
+    const newRoleId = roleDetailsData.data.id;
+
+    // Only update if role IDs are different
+    if (currentRoleId !== newRoleId) {
+      updateActiveSession({
+        ...activeSession,
+        user: { ...activeSession.user, role: roleDetailsData.data },
+      });
+    }
+  }, [
+    isRoleDetailsLoading,
+    activeSession,
+    roleDetailsData,
+    updateActiveSession,
+    router,
+  ]);
+
+  if (isRoleDetailsLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen w-screen text-center">
+        <Loading />
+      </div>
+    );
+  }
 
   return <div>{children}</div>;
 }
