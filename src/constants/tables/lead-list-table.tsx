@@ -43,7 +43,6 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
   {
     header: "FIRST NAME",
     accessor: "first_name",
-    sortable: true,
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
