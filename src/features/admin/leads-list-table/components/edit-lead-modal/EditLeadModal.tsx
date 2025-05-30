@@ -70,7 +70,7 @@ export function EditLeadModal({
         isOpen={true}
         onClose={() => setIsEditLeadModalOpen(false)}
       >
-        <div className="p-4">Loading lead data...</div>
+        <div className="p-4 2xl:p-[1vw]">Loading lead data...</div>
       </ModalOverlay>
     );
   }
@@ -121,8 +121,8 @@ export function EditLeadModal({
       modalClassName="w-[18rem] md:w-[30rem] 2xl:w-[39vw]"
     >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <h2 className="text-[1rem] 2xl:text-[1vw] font-semibold">
+        <div className="bg-white rounded-lg p-4 2xl:p-[1vw] border border-gray-200">
+          <h2 className="text-[1rem] 2xl:text-[1.3vw] font-semibold 2xl:pl-[1vw]" >
             Edit Lead Information
           </h2>
           <Formik<ICreateLeadPayload>
@@ -142,8 +142,8 @@ export function EditLeadModal({
           >
             {({ values, handleChange, setFieldValue, errors, touched }) => {
               return (
-                <Form>
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
+                <Form className="2xl:pl-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2  gap-4 2xl:gap-[2vw] py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <InputField
                       label="First Name"
                       placeholder="Enter First Name"
@@ -161,8 +161,7 @@ export function EditLeadModal({
                       error={touched.last_name && errors.last_name}
                     />
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[2vw] py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <InputField
                       label="Company"
                       placeholder="Enter Company Name"
@@ -182,7 +181,7 @@ export function EditLeadModal({
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[2vw] py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <InputField
                       label="Email"
                       placeholder="Enter Email"
@@ -202,7 +201,7 @@ export function EditLeadModal({
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[2vw] py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <InputField
                       label="Budget"
                       placeholder="Enter Budget"
@@ -222,7 +221,7 @@ export function EditLeadModal({
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[2vw] py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <Dropdown
                       label="Source ID"
                       options={sourceOptions}
@@ -238,7 +237,7 @@ export function EditLeadModal({
                       error={touched.status_id ? errors.status_id : undefined}
                     />
                   </div>
-                  <div className="grid grid-cols-1 gap-4 py-2">
+                  <div className="grid grid-cols-1 gap-4 2xl:gap-[2vw] py-2 2xl:py-[0.5vw] w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
                     <InputField
                       label="Requirement"
                       placeholder="Enter Requirement"
@@ -248,9 +247,7 @@ export function EditLeadModal({
                       onChange={handleChange}
                       error={touched.requirement && errors.requirement}
                     />
-                  </div>
-
-                  <div className="flex justify-between mt-6 space-x-3">
+                  <div className="flex justify-between mt-6 2xl:mt-[1.5vw] space-x-3">
                     <Button
                       title="Cancel"
                       onClick={handleCancel}
@@ -265,6 +262,7 @@ export function EditLeadModal({
                       width="w-full"
                       disabled={!lead?.id}
                     />
+                  </div>
                   </div>
                 </Form>
               );
