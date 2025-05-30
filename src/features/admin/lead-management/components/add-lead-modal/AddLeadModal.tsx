@@ -1,4 +1,10 @@
-import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  InputField,
+  ModalOverlay,
+} from "@/components";
 import {
   ICreateLeadPayload,
   ICreateLeadResponse,
@@ -94,6 +100,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
               company: "",
               phone: "",
               other_contact: "",
+              escalate_to: false,
               email: "",
               location: "",
               budget: 0,
@@ -237,6 +244,16 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     value={values.requirement}
                     onChange={handleChange}
                     error={touched.requirement && errors.requirement}
+                  />
+                </div>
+                <div className="py-2">
+                  <Checkbox
+                    label="Escalate To"
+                    name="escalate_to"
+                    checked={values.escalate_to}
+                    onChange={(e) =>
+                      setFieldValue("escalate_to", e.target.checked)
+                    }
                   />
                 </div>
                 <div className="flex justify-between mt-6 space-x-4">

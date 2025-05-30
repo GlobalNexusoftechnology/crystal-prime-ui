@@ -266,6 +266,7 @@ export interface ICreateLeadPayload {
   company: string;
   phone: string;
   other_contact: string;
+  escalate_to: boolean;
   email: string;
   location: string;
   budget?: number | null;
