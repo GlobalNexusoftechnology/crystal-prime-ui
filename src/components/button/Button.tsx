@@ -40,7 +40,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <div className={`${width} relative group inline-block`}>
       <button
-        className={`flex items-center justify-center rounded-xl w-full 2xl:rounded-[0.5vw] h-auto 2xl:px-[1vw] 2xl:py-[0.75vw] px-4 py-2 space-x-2 2xl:space-x-[0.5vw] font-medium ${
+        className={`flex items-center justify-center rounded-xl w-full 2xl:rounded-[0.75vw] h-auto 2xl:px-[1vw] 2xl:py-[0.65vw] px-4 py-2 space-x-2 2xl:space-x-[0.5vw] font-medium ${
           variantClasses[variant]
         } ${disabled || isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={disabled || isLoading}
