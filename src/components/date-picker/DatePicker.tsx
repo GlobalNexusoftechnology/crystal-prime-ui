@@ -14,7 +14,7 @@ export function DatePicker({
   error,
   label,
   isRequired = false,
-  datePickerBorderRadius = "rounded-xl 2xl:rounded-[0.75vw]",
+  datePickerBorderRadius = "rounded-md 2xl:rounded-[0.5vw]",
   name="date"
 }: {
   value: string;
@@ -41,9 +41,9 @@ export function DatePicker({
           placeholder={placeholder}
           ref={inputRef}
           type="date"
-          className={`w-full 2xl:text-[1vw] border ${
+          className={`w-full 2xl:text-[1vw] border 2xl:border-[0.1px] ${
             error ? "border-red-500" : "border-gray-300"
-          } ${datePickerBorderRadius} px-4 2xl:px-[1vw] py-3 2xl:py-[0.7vw] pr-10 2xl:pr-[2.5vw] focus:outline-none focus:ring-1 ${
+          } ${datePickerBorderRadius} px-4 2xl:px-[1vw] py-3 2xl:py-[0.5vw] pr-10 2xl:pr-[2.5vw] focus:outline-none focus:ring-1 ${
             error ? "focus:ring-red-500" : "focus:ring-primary"
           }`}
           value={value}
