@@ -1,4 +1,10 @@
-import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  InputField,
+  ModalOverlay,
+} from "@/components";
 import {
   ICreateLeadPayload,
   IUpdateLeadResponse,
@@ -6,6 +12,7 @@ import {
   useAllSourcesQuery,
   useAllStatusesQuery,
   useAllUsersQuery,
+  useCreateLeadFollowUpMutation,
   useUpdateLeadMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
@@ -44,6 +51,7 @@ export function EditLeadModal({
   setIsEditLeadModalOpen,
   lead,
 }: IEditLeadModalProps) {
+  const currentUser = `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}`;
   const { leadsRefetch } = useAllLeadsListQuery();
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
@@ -54,6 +62,15 @@ export function EditLeadModal({
       toast.success(response.message);
       setIsEditLeadModalOpen(false);
       leadsRefetch();
+    },
+    onErrorCallback: (err: IApiError) => {
+      toast.error(err.message);
+    },
+  });
+
+  const { createLeadFollowUp } = useCreateLeadFollowUpMutation({
+    onSuccessCallback: () => {
+      toast.success("Follow-up created successfully.");
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
@@ -102,6 +119,7 @@ export function EditLeadModal({
     company: lead.company || "",
     phone: lead.phone || "",
     other_contact: lead.other_contact || "",
+    escalate_to: lead.escalate_to || false,
     email: lead.email || "",
     location: lead.location || "",
     budget: lead.budget ?? 0,
@@ -136,6 +154,16 @@ export function EditLeadModal({
                   budget: Number(values.budget),
                 },
               });
+
+              if (values.escalate_to) {
+                createLeadFollowUp({
+                  lead_id: lead.id,
+                  user_id: values.assigned_to,
+                  remarks: `${lead.first_name} ${lead.last_name} escalated by ${lead.assigned_to?.first_name} ${lead.assigned_to?.last_name}`,
+                  status: "PENDING",
+                  due_date: Date()
+                });
+              }
             }}
           >
             {({ values, handleChange, setFieldValue, errors, touched }) => {
@@ -270,6 +298,16 @@ export function EditLeadModal({
                       onChange={handleChange}
                       error={touched.requirement && errors.requirement}
                     />
+                    <div className="py-2">
+                      <Checkbox
+                        label="Escalate To"
+                        name="escalate_to"
+                        checked={values.escalate_to}
+                        onChange={(e) =>
+                          setFieldValue("escalate_to", e.target.checked)
+                        }
+                      />
+                    </div>
                     <div className="flex justify-between mt-6 2xl:mt-[1.5vw] space-x-3">
                       <Button
                         title="Cancel"
