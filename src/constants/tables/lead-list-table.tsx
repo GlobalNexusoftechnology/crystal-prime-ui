@@ -40,6 +40,11 @@ export interface ILeadsListDetailsProps {
 }
 
 export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
+    {
+    header: "STATUS",
+    accessor: "status_id",
+    headerClassName: "min-w-[13rem] 2xl:min-w-[13vw]",
+  },
   {
     header: "FIRST NAME",
     accessor: "first_name",
@@ -89,11 +94,6 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
     header: "SOURCE",
     accessor: "source_id",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
-  },
-  {
-    header: "STATUS",
-    accessor: "status_id",
-    headerClassName: "min-w-[13rem] 2xl:min-w-[13vw]",
   },
   {
     header: "ASSIGNED TO",
