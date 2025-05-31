@@ -154,12 +154,23 @@ export function EditLeadModal({
               });
 
               if (values.escalate_to) {
+                const newAssignee = allUsersData?.find(
+                  (user) => user.id.toString() === values.assigned_to
+                );
+
+                const previousAssigneeName = `${
+                  lead.assigned_to?.first_name || ""
+                } ${lead.assigned_to?.last_name || ""}`.trim();
+                const newAssigneeName = `${newAssignee?.first_name || ""} ${
+                  newAssignee?.last_name || ""
+                }`.trim();
+
                 createLeadFollowUp({
                   lead_id: lead.id,
                   user_id: values.assigned_to,
-                  remarks: `${lead.first_name} ${lead.last_name} escalated by ${lead.assigned_to?.first_name} ${lead.assigned_to?.last_name}`,
+                  remarks: `${previousAssigneeName} escalate to ${newAssigneeName}`,
                   status: "PENDING",
-                  due_date: Date(),
+                  due_date: new Date().toISOString(),
                 });
               }
             }}
