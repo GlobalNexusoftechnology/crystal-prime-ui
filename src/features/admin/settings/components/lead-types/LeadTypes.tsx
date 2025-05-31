@@ -42,7 +42,7 @@ export function LeadTypes() {
   });
 
   // Prepare full list from API
-  const fullTypesList: IAllTypesList[] = (allTypesData?.data ?? []).map(
+  const fullTypesList: IAllTypesList[] = (allTypesData ?? []).map(
     (lead) => ({
       id: lead?.id || "N/A",
       name: lead?.name || "N/A",
