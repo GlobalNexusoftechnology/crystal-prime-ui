@@ -51,7 +51,6 @@ export function EditLeadModal({
   setIsEditLeadModalOpen,
   lead,
 }: IEditLeadModalProps) {
-  const currentUser = `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}`;
   const { leadsRefetch } = useAllLeadsListQuery();
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
