@@ -173,6 +173,14 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       deleted: leadDetailById?.source?.deleted || false,
       deleted_at: leadDetailById?.source?.deleted_at || "null",
     },
+    type: leadDetailById?.type || {
+      id: leadDetailById?.type?.id || "null",
+      name: leadDetailById?.type?.name || "null",
+      created_at: leadDetailById?.type?.created_at || "null",
+      updated_at: leadDetailById?.type?.updated_at || "null",
+      deleted: leadDetailById?.type?.deleted || false,
+      deleted_at: leadDetailById?.type?.deleted_at || "null",
+    },
   };
 
   const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
@@ -189,6 +197,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       requirement: lead?.requirement || "N/A",
       source_id: lead?.source?.name || "N/A",
       status_id: lead?.status?.name || "N/A",
+      type_id: lead?.type?.name || "N/A",
       created_at: lead?.created_at || "N/A",
       updated_at: lead?.updated_at || "N/A",
       deleted_at: lead?.deleted_at || "N/A",

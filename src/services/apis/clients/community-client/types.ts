@@ -127,6 +127,7 @@ export interface IAllLeadsList {
   requirement: string;
   source: ISource;
   status: IStatus;
+  type: IType;
   assigned_to: IAllUsersListResponse;
 }
 
@@ -273,6 +274,7 @@ export interface ICreateLeadPayload {
   requirement: string;
   source_id: string;
   status_id: string;
+  type_id: string;
   assigned_to: string;
 }
 

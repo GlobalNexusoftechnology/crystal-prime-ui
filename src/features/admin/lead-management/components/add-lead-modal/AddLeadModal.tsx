@@ -11,6 +11,7 @@ import {
   useAllLeadsListQuery,
   useAllSourcesQuery,
   useAllStatusesQuery,
+  useAllTypesQuery,
   useAllUsersQuery,
   useCreateLeadMutation,
 } from "@/services";
@@ -41,6 +42,7 @@ const validationSchema = Yup.object().shape({
   requirement: Yup.string().required("Requirement is required"),
   source_id: Yup.string().required("Source is required"),
   status_id: Yup.string().required("Status is required"),
+  type_id: Yup.string().required("Type is required"),
   assigned_to: Yup.string().required("Assigned To is required"),
 });
 
@@ -49,6 +51,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
   const { allUsersData } = useAllUsersQuery();
+  const { allTypesData } = useAllTypesQuery();
 
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (response: ICreateLeadResponse) => {
@@ -84,6 +87,12 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
       value: user?.id.toString(),
     })) || [];
 
+   const typeOptions =
+    allTypesData?.map((type) => ({
+      label: type?.name,
+      value: type?.id.toString(),
+    })) || [];
+
   return (
     <ModalOverlay
       modalTitle="Back to Leads"
@@ -107,6 +116,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
               requirement: "",
               source_id: "",
               status_id: "",
+              type_id: "",
               assigned_to: "",
             }}
             validationSchema={validationSchema}
@@ -134,7 +144,6 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     error={touched.last_name && errors.last_name}
                   />
                 </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <InputField
                     label="Company Name"
@@ -229,6 +238,15 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     value={values.status_id}
                     onChange={(val) => setFieldValue("status_id", val)}
                     error={touched.status_id ? errors.status_id : undefined}
+                  />
+                </div>
+                <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                  <Dropdown
+                    label="Type"
+                    options={typeOptions}
+                    value={values.type_id}
+                    onChange={(val) => setFieldValue("type_id", val)}
+                    error={touched.type_id ? errors.type_id : undefined}
                   />
                 </div>
                 <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">

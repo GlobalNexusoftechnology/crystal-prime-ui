@@ -718,7 +718,7 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData
     }
 
-    return response?.data
+    return response?.data.data
   }
 
   // All lead attachment

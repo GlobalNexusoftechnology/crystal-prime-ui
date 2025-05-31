@@ -1,4 +1,4 @@
-import { IAllUsersListResponse, ISource, IStatus } from "@/services";
+import { IAllUsersListResponse, ISource, IStatus, IType } from "@/services";
 import { ITableColumn } from "../table";
 
 export interface ILeadsListProps {
@@ -14,6 +14,7 @@ export interface ILeadsListProps {
   requirement: string;
   source_id: string;
   status_id: string;
+  type_id: string;
   assigned_to: string;
   created_at: string;
   updated_at: string;
@@ -33,6 +34,7 @@ export interface ILeadsListDetailsProps {
   requirement: string;
   source: ISource;
   status: IStatus;
+  type: IType;
   assignedTo: IAllUsersListResponse;
   created_at: string;
   updated_at: string;
@@ -93,6 +95,11 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
   {
     header: "SOURCE",
     accessor: "source_id",
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+  },
+  {
+    header: "TYPE",
+    accessor: "type_id",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {

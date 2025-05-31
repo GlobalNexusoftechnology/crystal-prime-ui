@@ -154,6 +154,12 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               </p>
             </div>
           </div>
+            <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
+            <p className="text-sm 2xl:text-[0.875vw]">Type Name</p>
+            <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
+              {data.type.name}
+            </p>
+          </div>
           <div className="flex flex-col justify-center relative group">
             <Link
               href="https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ3VCLODb2NPMj0903NYc27RodmYGwV8ZQDRVkcjv5-gEaLYHkiH5OOXEz0AiLwXXEhP_NjvauEi"

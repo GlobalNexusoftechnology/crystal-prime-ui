@@ -11,6 +11,7 @@ import {
   useAllLeadsListQuery,
   useAllSourcesQuery,
   useAllStatusesQuery,
+  useAllTypesQuery,
   useAllUsersQuery,
   useCreateLeadFollowUpMutation,
   useUpdateLeadMutation,
@@ -55,6 +56,7 @@ export function EditLeadModal({
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
   const { allUsersData } = useAllUsersQuery();
+  const { allTypesData } = useAllTypesQuery();
 
   const { onEditLead, isPending } = useUpdateLeadMutation({
     onSuccessCallback: (response: IUpdateLeadResponse) => {
@@ -111,6 +113,12 @@ export function EditLeadModal({
       value: user?.id.toString(),
     })) || [];
 
+  const typeOptions =
+    allTypesData?.map((type) => ({
+      label: type?.name,
+      value: type?.id.toString(),
+    })) || [];
+
   // Normalize initialValues to handle undefined nested fields
   const initialValues: ICreateLeadPayload = {
     first_name: lead.first_name || "",
@@ -125,6 +133,7 @@ export function EditLeadModal({
     requirement: lead.requirement || "",
     source_id: lead.source?.id?.toString() || lead.source_id?.toString() || "",
     status_id: lead.status?.id?.toString() || lead.status_id?.toString() || "",
+    type_id: lead.type?.id?.toString() || lead.type_id?.toString() || "",
     assigned_to:
       lead.assigned_to?.id?.toString() || lead.assigned_to_id?.toString() || "",
   };
@@ -290,6 +299,15 @@ export function EditLeadModal({
                       value={values.status_id}
                       onChange={(val) => setFieldValue("status_id", val)}
                       error={touched.status_id ? errors.status_id : undefined}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                    <Dropdown
+                      label="Type"
+                      options={typeOptions}
+                      value={values.type_id}
+                      onChange={(val) => setFieldValue("type_id", val)}
+                      error={touched.type_id ? errors.type_id : undefined}
                     />
                   </div>
                   <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
