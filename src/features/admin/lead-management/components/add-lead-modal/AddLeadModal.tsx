@@ -252,7 +252,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     }
                   />
                 </div>
-                <div className="flex justify-between mt-6 space-x-4">
+                <div className="flex justify-between mt-6 2xl:mt-[1.5vw] space-x-4">
                   <Button
                     title="Cancel"
                     onClick={handleCancel}
