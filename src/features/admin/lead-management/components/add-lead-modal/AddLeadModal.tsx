@@ -91,8 +91,8 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
       onClose={handleCancel}
     >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <h2 className="text-lg font-semibold">Lead Information</h2>
+        <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
+          <h2 className="text-lg 2xl:text-[1.125vw] font-semibold">Lead Information</h2>
           <Formik<ICreateLeadPayload>
             initialValues={{
               first_name: "",
@@ -116,7 +116,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
           >
             {({ values, handleChange, setFieldValue, errors, touched }) => (
               <Form>
-                <div className="grid grid-cols-2 gap-4 py-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <InputField
                     label="First Name"
                     placeholder="Enter First Name"
@@ -135,7 +135,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 py-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <InputField
                     label="Company Name"
                     placeholder="Enter Company Name"
@@ -144,28 +144,26 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     onChange={handleChange}
                     error={touched?.company && errors?.company}
                   />
-                  <div className="flex flex-col justify-center pt-[0.4rem] 2xl:pt-[0.4vw]">
-                    <label className="text-sm 2xl:text-[0.875vw] font-medium text-gray-700 mb-1 2xl:mb-[0.25vw] block">
+                  <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
+                    <label className="2xl:text-[1vw] text-gray-700 block">
                       Phone
                     </label>
                     <PhoneInput
                       country="in"
                       value={values.phone}
                       onChange={(value) => setFieldValue("phone", value)}
-                      inputClass="text-[1vw] !ml-8 !2xl:ml-[2vw] !border !border-gray-300 !rounded-md !px-4 py-5 2xl:py-[1.25vw] !text-gray-700 !placeholder-gray-500 !focus:outline-primary"
-                      containerClass="w-full"
                       inputProps={{ name: "phone" }}
                     />
                     {errors.phone && touched.phone && (
-                      <p className="text-red-500 text-sm mt-1">
+                      <p className="text-red-500 text-sm 2xl:text-[0.9vw]">
                         {errors.phone}
                       </p>
                     )}
                   </div>
                 </div>
-                <div className="w-full grid grid-cols-1 gap-4 py-2 relative">
-                  <div className="w-full flex flex-col justify-center pt-[0.4rem] 2xl:pt-[0.4vw]">
-                    <label className="text-sm 2xl:text-[0.875vw] font-medium text-gray-700 mb-1 2xl:mb-[0.25vw] block">
+                <div className="w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
+                  <div className="w-full flex flex-col justify-center gap-2 2xl:gap-[0.5vw]">
+                    <label className="2xl:text-[1vw] text-gray-700 block">
                       Other Contact
                     </label>
                     <PhoneInput
@@ -174,13 +172,11 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                       onChange={(value) =>
                         setFieldValue("other_contact", value)
                       }
-                      inputClass="!w-[95%] text-[1vw] !ml-8 !2xl:ml-[2vw] !border !border-gray-300 !rounded-md !px-4 py-5 2xl:py-[1.25vw] !text-gray-700 !placeholder-gray-500 !focus:outline-primary"
-                      containerClass="w-full"
                       inputProps={{ name: "other_contact" }}
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4 py-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <InputField
                     label="Email"
                     placeholder="Enter Email"
@@ -200,7 +196,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 py-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <InputField
                     label="Budget"
                     placeholder="Enter Budget"
@@ -219,7 +215,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     error={touched.assigned_to ? errors.assigned_to : undefined}
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4 py-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <Dropdown
                     label="Source"
                     options={sourceOptions}
@@ -235,7 +231,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     error={touched.status_id ? errors.status_id : undefined}
                   />
                 </div>
-                <div className="grid grid-cols-1 gap-4 py-2">
+                <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <InputField
                     label="Requirement"
                     placeholder="Enter Requirement"
@@ -246,7 +242,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     error={touched.requirement && errors.requirement}
                   />
                 </div>
-                <div className="py-2">
+                <div className="py-2 2xl:py-[0.5vw]">
                   <Checkbox
                     label="Escalate To"
                     name="escalate_to"

@@ -20,13 +20,13 @@ export function Checkbox({
   ...props
 }: CheckboxProps) {
   return (
-    <div className={`flex items-center gap-2 ${wrapperClassName}`}>
+    <div className={`flex items-center gap-2 2xl:gap-[0.5vw] ${wrapperClassName}`}>
       <input
         type="checkbox"
-        className={`h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-2 focus:ring-blue-500 ${className}`}
+        className={`h-5 2xl:h-[1.25vw] w-5 2xl:w-[1.25vw] rounded 2xl:rounded-[0.25vw] border-gray-300 text-primary focus:ring-2 focus:ring-primary ${className}`}
         {...props}
       />
-      {label && <label className={`text-gray-700 text-sm ${labelClassName}`}>{label}</label>}
+      {label && <label className={`text-gray-700 2xl:text-[1vw] ${labelClassName}`}>{label}</label>}
     </div>
   );
 }
