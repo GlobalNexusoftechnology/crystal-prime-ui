@@ -4,13 +4,15 @@ import React, { useState } from "react";
 interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
   label?: string;
-  error?: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  error?: string | any;
   icon?: React.ReactNode;
   suffixIcon?: React.ReactNode;
   onIconClick?: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
   isRequired?: boolean;
   inputBorderRadius?: string;
   textAreaBorderRadius?: string;
+  textAreaHeight?: string;
 }
 
 export function InputField({
@@ -25,6 +27,7 @@ export function InputField({
   type = "text",
   inputBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
   textAreaBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
+  textAreaHeight ="min-h-[8rem] 2xl:min-h-[8vw]",
   ...props
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -59,7 +62,7 @@ export function InputField({
         {/* Input or Textarea */}
         {isTextArea ? (
           <textarea
-            className="w-full bg-transparent outline-none resize-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            className={`w-full bg-transparent outline-none resize-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${textAreaHeight}`}
             disabled={disabled}
             required={isRequired}
             onFocus={() => setIsFocused(true)}
@@ -68,6 +71,7 @@ export function InputField({
           />
         ) : (
           <input
+            type={type}
             className="w-full bg-transparent outline-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={disabled}
             required={isRequired}
@@ -77,10 +81,9 @@ export function InputField({
           />
         )}
 
-        {/* Right Icon (e.g., Eye for Password) */}
         {suffixIcon && (
           <span
-            className="text-gray-500 cursor-pointer"
+            className="text-gray-500 cursor-pointer flex-shrink-0"
             onClick={(e) => {
               if (onIconClick) onIconClick(e);
             }}

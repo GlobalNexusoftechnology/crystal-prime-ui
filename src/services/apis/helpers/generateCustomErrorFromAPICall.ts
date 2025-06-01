@@ -1,22 +1,24 @@
-import axios, { AxiosError } from 'axios';
+import axios, { AxiosError } from "axios";
 
-import { useAuthStore } from '@/services';
-import { IApiError, IError } from '@/utils';
+import { useAuthStore } from "@/services";
+import { IApiError, IError, IResponse } from "@/utils";
 
 /**
  * The error code thrown when the app session expires and cannot be renewed by
  * the refresh token.
  */
-export const EXPIRED_SESSION_REFRESH_TOKEN = 'EXPIRED_SESSION_REFRESH_TOKEN';
+export const EXPIRED_SESSION_REFRESH_TOKEN = "EXPIRED_SESSION_REFRESH_TOKEN";
 
 export const sessionTimeoutError: IApiError = {
-  description: 'Your session has expired. Please log in again.',
-  error: Error('Session has Expired'),
-  message: 'Session has expired.',
+  /* Axios/fetch response isn’t available here, so use a neutral placeholder */
+  response: null,
+  description: "Your session has expired. Please log in again.",
+  error: Error("Session has Expired"),
+  message: "Session has expired.",
   success: false,
   status: false,
-  statusCode: '419',
-  type: 'SESSION_ERROR',
+  statusCode: "419",
+  type: "SESSION_ERROR",
 };
 
 /**
@@ -26,20 +28,25 @@ export const sessionTimeoutError: IApiError = {
  *
  * @link [Axios Docs : Handling Errors](https://axios-http.com/docs/handling_errors)
  */
-export const generateCustomErrorFromAPICall = (error: AxiosError<IError>): IApiError => {
+export const generateCustomErrorFromAPICall = (
+  error: AxiosError<IError>
+): IApiError => {
   /**
    * Setup the default error. Later override the keys to update them depending
    * on the filtered out error case.
    */
   const removeSession = useAuthStore.getState()?.removeSession;
   const errorResponse: IApiError = {
+    /* full Axios response, or null if unavailable */
+    response: (error.response ?? null) as IResponse | null,
     error,
     errorData: error.response?.data?.error,
-    message: error.response?.data.error ?? 'An unexpected error occurred.',
-    description: error.response?.data.error_description ?? 'An unexpected error occurred.',
+    message: error.response?.data.error ?? "An unexpected error occurred.",
+    description:
+      error.response?.data.error_description ?? "An unexpected error occurred.",
     success: false,
     status: error?.response?.data?.status || false,
-    type: 'JS_TYPE_ERROR',
+    type: "JS_TYPE_ERROR",
   };
 
   /**
@@ -71,12 +78,12 @@ export const generateCustomErrorFromAPICall = (error: AxiosError<IError>): IApiE
         message:
           error.response?.data.error ||
           error.response.data?.message ||
-          'Bad Request. Please check your input.',
+          "Bad Request. Please check your input.",
         description:
           error.response?.data.error_description ||
-          'Bad Request. Please check your input.',
+          "Bad Request. Please check your input.",
         status: error.response.data?.status || false,
-        type: 'SERVER_ERROR',
+        type: "SERVER_ERROR",
       };
     }
 
@@ -87,10 +94,10 @@ export const generateCustomErrorFromAPICall = (error: AxiosError<IError>): IApiE
     if (error.response.status === 404) {
       return {
         ...errorResponse,
-        message: 'Not Found. The requested resource could not be found.',
-        description: 'The requested resource could not be found on the server.',
+        message: "Not Found. The requested resource could not be found.",
+        description: "The requested resource could not be found on the server.",
         status: error.response.data?.status || false,
-        type: 'SERVER_ERROR',
+        type: "SERVER_ERROR",
       };
     }
 
@@ -100,14 +107,16 @@ export const generateCustomErrorFromAPICall = (error: AxiosError<IError>): IApiE
     if (error.response.status === 500) {
       return {
         ...errorResponse,
-        message: error.response.data.error || 'Internal Server Error.',
-        description: error.response.data.error || 'An unexpected error occurred on the server.',
+        message: error.response.data.error || "Internal Server Error.",
+        description:
+          error.response.data.error ||
+          "An unexpected error occurred on the server.",
         status: error?.response.data?.status || false,
         errorServer: {
-          title: 'You might be having some invalid inputs',
-          message: error?.response.data.errorMessage ?? '',
+          title: "You might be having some invalid inputs",
+          message: error?.response.data.errorMessage ?? "",
         },
-        type: 'SERVER_ERROR',
+        type: "SERVER_ERROR",
       };
     }
   } else if (error.request) {
@@ -122,13 +131,13 @@ export const generateCustomErrorFromAPICall = (error: AxiosError<IError>): IApiE
      * Error in network connection, thrown when `axios` failed to establish a
      * connection to the server.
      */
-    if (error.code === 'ERR_NETWORK') {
+    if (error.code === "ERR_NETWORK") {
       return {
         ...errorResponse,
-        message: 'Network Error. Please check your internet connection.',
-        description: 'Unable to connect to the server. Please try again later.',
+        message: "Network Error. Please check your internet connection.",
+        description: "Unable to connect to the server. Please try again later.",
         status: false,
-        type: 'NETWORK_ERROR',
+        type: "NETWORK_ERROR",
       };
     }
 
@@ -136,13 +145,13 @@ export const generateCustomErrorFromAPICall = (error: AxiosError<IError>): IApiE
      * Request timed out based on what was set in the `config.timeout`,
      * thrown by `axios` when the server takes longer than expected to respond.
      */
-    if (error.code === 'ECONNABORTED') {
+    if (error.code === "ECONNABORTED") {
       return {
         ...errorResponse,
-        message: 'Request timed out. Please try again later.',
-        description: 'The server took too long to respond.',
+        message: "Request timed out. Please try again later.",
+        description: "The server took too long to respond.",
         status: false,
-        type: 'NETWORK_ERROR',
+        type: "NETWORK_ERROR",
       };
     }
   } else {

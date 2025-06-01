@@ -4,7 +4,7 @@ import React from "react";
 type Task = {
   id: number;
   taskName: string;
-  priority: "High" | "Avg" | "Low";
+
   endDate: string;
   project: string;
   lastUser: string;
@@ -23,7 +23,7 @@ const tasksData: TasksData = {
     {
       id: 1,
       taskName: "UI/UX App Development",
-      priority: "High",
+    
       endDate: "22/01/2022",
       project: "E-Commerce App Development",
       lastUser: "Nikesh Thakre",
@@ -33,7 +33,7 @@ const tasksData: TasksData = {
     {
       id: 2,
       taskName: "UI/UX App Development",
-      priority: "Avg",
+      
       endDate: "20/01/2022",
       project: "E-Commerce App Development",
       lastUser: "Nikesh Thakre",
@@ -43,7 +43,7 @@ const tasksData: TasksData = {
     {
       id: 3,
       taskName: "UI/UX App Development",
-      priority: "Low",
+      
       endDate: "22/01/2022",
       project: "E-Commerce App Development",
       lastUser: "Nikesh Thakre",
@@ -57,11 +57,6 @@ const statusColors: Record<"open" | "inProgress" | "final", string> = {
   final: "bg-green-400",
 };
 
-const priorityColors: Record<Task["priority"], string> = {
-  High: "bg-blue-600",
-  Avg: "bg-orange-600",
-  Low: "bg-green-600",
-};
 
 export  function ProjectManagement() {
   return (
@@ -78,26 +73,18 @@ export  function ProjectManagement() {
             className={`rounded-md shadow-sm ${statusColors.open} p-4 mb-4 text-white`}
           >
             <div className="flex justify-between items-center mb-3">
+              <p>Project Name</p>
               <h3 className="font-bold text-lg">{task.taskName}</h3>
-              <span
-                className={`text-sm font-semibold px-2 py-1 rounded ${
-                  priorityColors[task.priority]
-                }`}
-              >
-                {task.priority}
-              </span>
+           
             </div>
             <div className="flex justify-between items-center text-xs">
               <div>
                 <p>End Date</p>
                 <p>{task.endDate}</p>
               </div>
+         
               <div>
-                <p>Project Name</p>
-                <p>{task.project}</p>
-              </div>
-              <div>
-                <p>Last User</p>
+                <p>Lead Name</p>
                 <p>{task.lastUser}</p>
               </div>
             </div>
@@ -117,26 +104,18 @@ export  function ProjectManagement() {
             className={`rounded-md shadow-sm ${statusColors.inProgress} p-4 mb-4 text-white`}
           >
             <div className="flex justify-between items-center mb-3">
+              <p>Project Name</p>
               <h3 className="font-bold text-lg">{task.taskName}</h3>
-              <span
-                className={`text-sm font-semibold px-2 py-1 rounded ${
-                  priorityColors[task.priority]
-                }`}
-              >
-                {task.priority}
-              </span>
+            
             </div>
             <div className="flex justify-between items-center text-xs">
               <div>
                 <p>End Date</p>
                 <p>{task.endDate}</p>
               </div>
+           
               <div>
-                <p>Project Name</p>
-                <p>{task.project}</p>
-              </div>
-              <div>
-                <p>Last User</p>
+                <p>Lead Name</p>
                 <p>{task.lastUser}</p>
               </div>
             </div>
@@ -156,26 +135,18 @@ export  function ProjectManagement() {
             className={`rounded-md shadow-sm ${statusColors.final} p-4 mb-4 text-white`}
           >
             <div className="flex justify-between items-center mb-3">
+              <p>Project Name</p>
               <h3 className="font-bold text-lg">{task.taskName}</h3>
-              <span
-                className={`text-sm font-semibold px-2 py-1 rounded ${
-                  priorityColors[task.priority]
-                }`}
-              >
-                {task.priority}
-              </span>
+           
             </div>
             <div className="flex justify-between items-center text-xs">
               <div>
                 <p>End Date</p>
                 <p>{task.endDate}</p>
               </div>
+          
               <div>
-                <p>Project Name</p>
-                <p>{task.project}</p>
-              </div>
-              <div>
-                <p>Last User</p>
+                <p>Lead Name</p>
                 <p>{task.lastUser}</p>
               </div>
             </div>

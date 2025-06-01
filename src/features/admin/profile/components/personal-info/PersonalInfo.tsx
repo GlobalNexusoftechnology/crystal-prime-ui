@@ -1,9 +1,5 @@
 "use client"
-import Image from "next/image";
 
-import { FileUpload } from "../file-upload";
-
-import { ImageRegistry } from "@/constants";
 import { Button, InputField } from "@/components";
 import { useRouter } from "next/navigation";
 
@@ -42,16 +38,6 @@ export function PersonalInfo() {
           <div className="mb-4 2xl:mb-[1vw]">
             <InputField label="Role" placeholder="Enter role" />
           </div>
-        </div>
-        <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw]">
-          <div className="h-16 w-16 2xl:h-[4vw] 2xl:w-[4vw]">
-            <Image
-              src={ImageRegistry.profileImage}
-              alt="profile image"
-              className="object-contain w-full h-full"
-            />
-          </div>
-          <FileUpload />
         </div>
         <div className="flex justify-end gap-2 2xl:gap-[0.5vw]">
           <Button title="cancel" variant="primary-outline" />

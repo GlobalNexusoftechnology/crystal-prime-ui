@@ -1,68 +1,75 @@
-import { IPaginationProps } from "@/constants";
+"use client";
 
-export function Pagination({
-  currentPage,
-  totalPages,
-  onPageChange,
-}: IPaginationProps) {
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
   const getPages = () => {
     const pages = [];
-
     if (totalPages <= 7) {
-      // Show all pages if not too many
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
-      pages.push(1); // First
-
-      if (currentPage > 3) {
-        pages.push("..."); // Left ellipsis
-      }
-
-      // Middle pages
+      pages.push(1);
+      if (currentPage > 3) pages.push("...");
       const start = Math.max(2, currentPage - 1);
       const end = Math.min(totalPages - 1, currentPage + 1);
-      for (let i = start; i <= end; i++) {
-        pages.push(i);
-      }
-
-      if (currentPage < totalPages - 2) {
-        pages.push("..."); // Right ellipsis
-      }
-
-      pages.push(totalPages); // Last
+      for (let i = start; i <= end; i++) pages.push(i);
+      if (currentPage < totalPages - 2) pages.push("...");
+      pages.push(totalPages);
     }
-
     return pages;
   };
 
   const pagesToRender = getPages();
 
   return (
-    <div className="mt-4 2xl:mt-[1vw] flex gap-2 2xl:gap-[0.5vw] ">
-      {pagesToRender.map((page, index) =>
+    <div className="mt-4 flex items-center gap-1">
+      <button
+        onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className={`flex items-center gap-1 px-3 py-1 text-sm rounded ${
+          currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-gray-700 hover:text-primary"
+        }`}
+      >
+        <FiChevronLeft />
+        Previous
+      </button>
+
+      {pagesToRender.map((page, idx) =>
         page === "..." ? (
-          <span
-            key={`ellipsis-${index}`}
-            className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-blue-500"
-          >
+          <span key={`ellipsis-${idx}`} className="px-2 text-gray-500">
             ...
           </span>
         ) : (
           <button
             key={page}
-            className={`px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] 2xl:text-[1vw] rounded 2xl:rounded-[0.25vw] ${
-              page === currentPage
-                ? "bg-primary text-white"
-                : "bg-white text-gray-800"
-            }`}
             onClick={() => onPageChange(Number(page))}
+            className={`w-8 h-8 rounded flex items-center justify-center text-sm ${
+              page === currentPage ? "bg-primary text-white" : "text-gray-700 hover:text-primary"
+            }`}
           >
             {page}
           </button>
         )
       )}
+
+      <button
+        onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className={`flex items-center gap-1 px-3 py-1 text-sm rounded ${
+          currentPage === totalPages
+            ? "text-gray-400 cursor-not-allowed"
+            : "text-gray-700 hover:text-primary"
+        }`}
+      >
+        Next
+        <FiChevronRight />
+      </button>
     </div>
   );
 }

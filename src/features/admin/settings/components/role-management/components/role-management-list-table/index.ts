@@ -1,0 +1,1 @@
+export { RoleManagementListTable } from "./RoleManagementListTable";

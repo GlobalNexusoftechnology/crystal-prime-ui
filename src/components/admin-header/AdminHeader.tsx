@@ -1,7 +1,8 @@
-import { SearchBar } from "../search-bar";
+'use client'
+
 import { MenuIcon, NotificationIcon } from "@/features";
-import { UserDropdown } from "../user-dropdown";
-import { ImageRegistry } from "@/constants";
+import { useAuthStore } from "@/services";
+import { UserDropdown } from '../user-dropdown';
 
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
@@ -17,26 +18,30 @@ interface AdminHeaderProps {
  * @returns {JSX.Element} The rendered AdminHeader component.
  */
 export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
+  const {activeSession} = useAuthStore()
+  const firstName = activeSession?.user?.first_name;
+  const lastName = activeSession?.user?.last_name;
+  const userName = firstName && lastName ? `${firstName} ${lastName}` : null;
+  
   return (
     <header className="flex justify-between items-center sticky z-20 top-0 bg-white shadow-sm px-4 md:px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw]">
       {/* Left: Menu + SearchBar */}
       <div className="flex items-center gap-4">
-        <button className="text-gray-700" onClick={SetIsVisibleSidebar}>
+        <button className="text-gray-700 flex" onClick={SetIsVisibleSidebar}>
           <MenuIcon className="w-8 2xl:w-[2vw] h-8 2xl:h-[2vw]" />
         </button>
-        <SearchBar
-          onSearch={(query) => console.log("Searching:", query)}
-          bgColor="customGray"
-        />
       </div>
       <div className="flex items-center gap-4 2xl:gap-[1vw]">
-        <div className="cursor-pointer border 2xl:border-[0.1vw] bg-customGray border-gray-300 p-2 2xl:p-[0.5vw] rounded-xl 2xl:rounded-[0.75vw]">
+        <div className="cursor-pointer border 2xl:border-[0.1vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw]">
           <NotificationIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
         </div>
-        <UserDropdown
-        name="Ajax Stark"
-        image={ImageRegistry.profileImage} // Make sure this image exists in /public or use a URL
-      />
+        {userName ? (
+          <UserDropdown
+            name={userName}
+          />
+        ) : (
+          <div className="w-8 2xl:w-[2vw] h-8 2xl:h-[2vw] rounded-full bg-gray-200 animate-pulse" />
+        )}
       </div>
     </header>
   );

@@ -13,7 +13,6 @@ export function Table<T extends { id: string | number }>({
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState<keyof T | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-
   const [openActionId, setOpenActionId] = useState<string | number | null>(
     null
   );
@@ -45,12 +44,15 @@ export function Table<T extends { id: string | number }>({
 
   return (
     <div>
-      <div className="scrollbar-style overflow-auto border bg-white 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
+      <div className="scrollbar-style overflow-x-auto border bg-white 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
         <table className="w-full text-sm 2xl:text-[0.875vw] text-left border-gray-200">
           <thead className="text-gray-700">
             <tr>
               <th className="min-w-[5rem] 2xl:min-w-[5vw] p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
                 Sr No
+              </th>
+                <th className="min-w-[6rem] p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
+                Action
               </th>
               {columns.map((col) => (
                 <TableHeader
@@ -61,23 +63,24 @@ export function Table<T extends { id: string | number }>({
                   onSort={handleSort}
                 />
               ))}
-              <th className="min-w-[6rem] p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
-                Action
-              </th>
+            
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((row, idx) => (
-              <TableRow
-                key={idx}
-                row={row}
-                columns={columns}
-                actions={actions}
-                index={idx}
-                openActionId={openActionId}
-                setOpenActionId={setOpenActionId}
-              />
-            ))}
+            {paginatedData.map((row, idx) => {
+              const serialNumber = (currentPage - 1) * pageSize + idx;
+              return (
+                <TableRow
+                  key={row.id}
+                  row={row}
+                  columns={columns}
+                  actions={actions}
+                  index={serialNumber}
+                  openActionId={openActionId}
+                  setOpenActionId={setOpenActionId}
+                />
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -85,7 +88,7 @@ export function Table<T extends { id: string | number }>({
         currentPage={currentPage}
         totalPages={Math.ceil(data.length / pageSize)}
         onPageChange={(page) => {
-          setOpenActionId(null); 
+          setOpenActionId(null);
           setCurrentPage(page);
         }}
       />

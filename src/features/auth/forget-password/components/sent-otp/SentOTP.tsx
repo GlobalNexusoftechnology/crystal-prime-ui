@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { Formik, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
@@ -26,13 +25,12 @@ const validationSchema = Yup.object().shape({
     .matches(/^\d+$/, "OTP must contain only digits"),
 });
 
-
 export function SentOTP({ onNext }: TSentOTPProps) {
   return (
     <div className="flex justify-center items-center">
       <AuthCard
         title="Forget Password"
-        copyright="Copyright ©Satkar.com | 2025"
+        copyright="Copyrights and developed © Islahdata.com"
       >
         <Formik
           initialValues={{ otp: "" }}
@@ -54,31 +52,6 @@ export function SentOTP({ onNext }: TSentOTPProps) {
                 component="div"
                 className="text-red-500 text-sm"
               />
-
-              <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw]">
-                <span className="text-sm 2xl:text-[0.875vw] text-black">
-                  Haven&apos;t received the OTP?
-                </span>
-                <Link
-                  href="/create-account"
-                  className="text-sm 2xl:text-[0.875vw] text-primary underline underline-offset-4"
-                >
-                  Click here to resend.
-                </Link>
-              </div>
-
-              <div className="flex gap-2 2xl:gap-[0.5vw]">
-                <span className="text-sm 2xl:text-[0.875vw] text-primary">
-                  Now here
-                </span>
-                <Link
-                  href="/create-account"
-                  className="text-sm 2xl:text-[0.875vw] text-primary underline underline-offset-4"
-                >
-                  Create your account now!
-                </Link>
-              </div>
-
               <Button type="submit" title="Reset Password" />
               <Button title="Cancel" variant="primary-outline" />
             </Form>

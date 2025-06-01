@@ -4,8 +4,9 @@ export interface ITableColumn<T> {
   sortable?: boolean;
   width?: string;
   headerClassName?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cell?: (props: { row: T; value: T[keyof T] }) => React.ReactNode;
 }
-
 export interface ITableAction<T> {
   label: string;
   onClick: (row: T) => void;

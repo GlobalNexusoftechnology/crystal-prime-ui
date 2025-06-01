@@ -1,7 +1,7 @@
 "use client";
 
 import { SearchIcon } from "@/features";
-import { useState } from "react";
+import { JSX, useState } from "react";
 
 /**
  * Props for the SearchBar component.

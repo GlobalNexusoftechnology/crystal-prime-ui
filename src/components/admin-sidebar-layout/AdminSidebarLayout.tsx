@@ -2,6 +2,7 @@
 import React, { JSX, useState } from "react";
 import { AdminHeader, AdminSidebar } from "@/components";
 import { IAdminSidebarLayoutProps } from "@/constants";
+import { usePermission } from "@/utils/hooks";
 
 /**
  * AdminSidebarLayout component renders a responsive admin layout with a taggable sidebar.
@@ -17,6 +18,11 @@ export function AdminSidebarLayout({
   adminSidebarLinks,
 }: IAdminSidebarLayoutProps): JSX.Element {
   const [isVisibleSidebar, SetIsVisibleSidebar] = useState(false);
+  const { hasPermission } = usePermission();
+
+  const filteredLinks = adminSidebarLinks.filter((item) =>
+    item.permission ? hasPermission(item.permission.module, item.permission.actions) : true
+  );
 
   /**
    * Toggles the visibility of the sidebar.
@@ -30,18 +36,18 @@ export function AdminSidebarLayout({
       {/* Sidebar */}
       <div
         className={`${
-          isVisibleSidebar ? "w-0 xl:w-[6%]" : "w-[70%] md:w-[35%] lg:w-[25%] xl:w-[18%]"
+          isVisibleSidebar ? "w-0 xl:w-[6%]" : "w-[70%] md:w-[35%] lg:w-[25%] xl:w-[20%]"
         } h-full z-40 transition-all duration-500 ease-in-out overflow-hidden bg-white shadow-md fixed left-0`}
       >
         <AdminSidebar
-          adminSidebarLinks={adminSidebarLinks}
+          adminSidebarLinks={filteredLinks}
           isVisibleSidebar={isVisibleSidebar}
         />
       </div>
       {/* Main Content */}
       <div
         className={`${
-          isVisibleSidebar ? "w-full xl:w-[94%]" : "w-[30%] md:w-[65%] lg:w-[75%] xl:w-[82%]"
+          isVisibleSidebar ? "w-full xl:w-[94%]" : "w-[30%] md:w-[65%] lg:w-[75%] xl:w-[80%]"
         } transition-all duration-500 ease-in-out`}
       >
         <AdminHeader SetIsVisibleSidebar={toggleSidebar} />
