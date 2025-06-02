@@ -234,7 +234,9 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         lead.budget?.toLowerCase().includes(searchQuery) ||
         lead.requirement?.toLowerCase().includes(searchQuery) ||
         lead.email?.toLowerCase().includes(searchQuery) ||
-        lead.location?.toLowerCase().includes(searchQuery);
+        lead.location?.toLowerCase().includes(searchQuery) ||
+        lead.type_id?.toLowerCase().includes(searchQuery) 
+
 
       const matchStatus =
         selectedStatus === "All Status" ||
