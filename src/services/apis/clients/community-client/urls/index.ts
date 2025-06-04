@@ -24,10 +24,11 @@ export const sentOtpUrl = () => "/auth/sentOTP";
 
 export const resetPasswordUrl = () => "/auth/resetPassword";
 
-export const changePasswordUrl = () => "/auth/changePassword";
+export const changePasswordUrl = () => "/users/change-password";
 
 // leads APIs url
 export const createLeadUrl = () => "/leads";
+
 export const createRoleUrl = () => "/roles";
 
 export const fetchAllLeadsListUrl = () => "/leads";

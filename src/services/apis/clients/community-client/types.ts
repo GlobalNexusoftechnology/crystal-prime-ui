@@ -525,15 +525,14 @@ export interface IResetPasswordResponse {
 
 // change password
 export interface IChangePasswordPayload {
-  email: string;
   oldPassword: string;
   newPassword: string;
 }
 
 export interface IChangePasswordResponse {
-  email: string;
-  oldPassword: string;
-  newPassword: string;
+  message: string;
+  status: string;
+  data: ILoginUserResponseData;
 }
 export interface ILoginUserResponse {
   message?: string;
