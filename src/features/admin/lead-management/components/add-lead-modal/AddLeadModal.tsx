@@ -177,7 +177,6 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                       name="other_contact"
                       value={values?.other_contact}
                       onChange={handleChange}
-                      error={touched?.other_contact && errors?.other_contact}
                     />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
