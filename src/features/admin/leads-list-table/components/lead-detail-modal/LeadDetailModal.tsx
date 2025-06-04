@@ -90,7 +90,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className=" text-sm 2xl:text-[0.875vw]">Created By</p>
             <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data.first_name} {data.last_name}
+              {data.created_by}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
@@ -108,7 +108,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-sm 2xl:text-[0.875vw]">Updated By</p>
             <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data.first_name} {data.last_name}
+              {data.updated_by}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">

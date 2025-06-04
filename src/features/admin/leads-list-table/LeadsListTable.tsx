@@ -153,6 +153,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     },
     created_at: leadDetailById?.created_at || "null",
     updated_at: leadDetailById?.updated_at || "null",
+    created_by: leadDetailById?.created_by || "null",
+    updated_by: leadDetailById?.updated_by || "null",
     deleted_at: leadDetailById?.deleted_at || "null",
     assignedTo: leadDetailById?.assigned_to || {
       id: leadDetailById?.assigned_to?.id || "",

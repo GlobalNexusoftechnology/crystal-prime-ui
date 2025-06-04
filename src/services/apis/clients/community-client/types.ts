@@ -114,6 +114,8 @@ export interface IAllLeadsList {
   id: string;
   created_at: string;
   updated_at: string;
+  created_by: string;
+  updated_by: string;
   deleted: boolean;
   deleted_at: string | null;
   first_name: string;
