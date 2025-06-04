@@ -31,7 +31,7 @@ export function StatusHistory({
   showForm,
   setShowForm,
 }: IStatusHistoryProps) {
-  const { allLeadStatusHistoryData, allLeadStatusHistory } = useAllLeadStatusHistoryQuery();
+  const { allLeadStatusHistoryData, allLeadStatusHistory } = useAllLeadStatusHistoryQuery(leadId);
   const { allStatusesData } = useAllStatusesQuery();
   const { activeSession } = useAuthStore();
 

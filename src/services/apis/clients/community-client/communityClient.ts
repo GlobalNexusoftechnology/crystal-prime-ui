@@ -723,9 +723,9 @@ export class CommunityClient extends ApiClient {
 
   // All lead attachment
 
-  public fetchAllLeadAttachment = async () => {
+  public fetchAllLeadAttachment = async (leadId?: string) => {
     const response = await this.get<IAllLeadAttachmentResponse>(
-      fetchLeadAttachmentUrl(),
+      fetchLeadAttachmentUrl(leadId),
       {
         requiresAuth: false,
       }
@@ -898,9 +898,9 @@ export class CommunityClient extends ApiClient {
   }
 
   // All lead status history
-  public fetchAllLeadStatusHistory = async () => {
+  public fetchAllLeadStatusHistory = async (leadId?: string) => {
     const response = await this.get<IAllLeadStatusHistoryResponse>(
-      fetchLeadStatusHistoryUrl(),
+      fetchLeadStatusHistoryUrl(leadId),
       {
         requiresAuth: false,
       }
