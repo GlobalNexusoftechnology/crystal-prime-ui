@@ -16,6 +16,7 @@ import {
   useAllLeadDownloadExcelQuery,
   useAllLeadsListQuery,
   useAllStatusesQuery,
+  useAllTypesQuery,
   useDeleteLeadMutation,
   useLeadDetailQuery,
   useLeadDownloadTemplateExcelQuery,
@@ -34,10 +35,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [isEditLeadModalOpen, setIsEditLeadModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
+  const [selectedType, setSelectedType] = useState("All Type");
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
 
   const { data: allLeadList, isLoading, leadsRefetch } = useAllLeadsListQuery();
   const { allStatusesData } = useAllStatusesQuery();
+  const { allTypesData } = useAllTypesQuery();
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
 
   const { onLeadDownloadTemplateExcel } = useLeadDownloadTemplateExcelQuery();
@@ -219,8 +222,20 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     })) || []),
   ];
 
-  const handleChange = (val: string) => {
+  const typeOptions = [
+    { label: "All Type", value: "All Type" },
+    ...(allTypesData?.map((type) => ({
+      label: type?.name,
+      value: type?.id.toString(),
+    })) || []),
+  ];
+
+  const handleStatusChange = (val: string) => {
     setSelectedStatus(val);
+  };
+
+  const handleTypeChange = (val: string) => {
+    setSelectedType(val);
   };
 
   const filteredLeads = useMemo(() => {
@@ -234,20 +249,25 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         lead.budget?.toLowerCase().includes(searchQuery) ||
         lead.requirement?.toLowerCase().includes(searchQuery) ||
         lead.email?.toLowerCase().includes(searchQuery) ||
-        lead.location?.toLowerCase().includes(searchQuery) ||
-        lead.type_id?.toLowerCase().includes(searchQuery) 
+        lead.location?.toLowerCase().includes(searchQuery)
 
+        const matchStatus =
+          selectedStatus === "All Status" ||
+          lead.status_id?.toLowerCase() ===
+            allStatusesData
+              ?.find((status) => status.id.toString() === selectedStatus)
+              ?.name?.toLowerCase();
 
-      const matchStatus =
-        selectedStatus === "All Status" ||
-        lead.status_id?.toLowerCase() ===
-          allStatusesData
-            ?.find((status) => status.id.toString() === selectedStatus)
-            ?.name?.toLowerCase();
+        const matchType =
+          selectedType === "All Type" ||
+          lead.type_id?.toLowerCase() ===
+            allTypesData
+              ?.find((type) => type.id.toString() === selectedType)
+              ?.name?.toLowerCase();
 
-      return matchQuery && matchStatus;
+      return matchQuery && matchStatus && matchType;
     });
-  }, [leadsList, searchQuery, selectedStatus, allStatusesData]);
+  }, [leadsList, searchQuery, selectedStatus, allStatusesData, selectedType, allTypesData]);
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -259,7 +279,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           <SearchBar
             onSearch={handleSearch}
             bgColor="white"
-            width="w-full min-w-[12rem] md:w-[25vw]"
+            width="w-full min-w-[12rem] md:w-[20vw]"
           />
           {setAddLeadModalOpen &&
             (cavAddLeadManagement ? (
@@ -278,7 +298,13 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           <Dropdown
             options={statusOptions}
             value={selectedStatus}
-            onChange={handleChange}
+            onChange={handleStatusChange}
+            dropdownWidth="w-full md:w-fit"
+          />
+          <Dropdown
+            options={typeOptions}
+            value={selectedType}
+            onChange={handleTypeChange}
             dropdownWidth="w-full md:w-fit"
           />
           <Button
