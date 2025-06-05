@@ -14,7 +14,7 @@ import {
 import { ExportIcon } from "@/features";
 import { AddNewStaffModel } from "../add-new-staff-model";
 import { EditStaffModel } from "../edit-staff-model";
-import { ViewStaffModel } from "../view-staff-model";
+// import { ViewStaffModel } from "../view-staff-model";
 import {
   downloadBlobFile,
   formatDate,
@@ -27,7 +27,7 @@ export function StaffListTable() {
   const { allUsersData, refetchAllUsers } = useAllUsersQuery();
   const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
   const [isEditStaffModalOpen, setIsEditStaffModalOpen] = useState(false);
-  const [isViewStaffModalOpen, setIsViewStaffModalOpen] = useState(false);
+  // const [isViewStaffModalOpen, setIsViewStaffModalOpen] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState<IUserViewDetails | null>(
     null
   );
@@ -40,10 +40,10 @@ export function StaffListTable() {
     EModule.STAFF_MANAGEMENT,
     EAction.ADD
   );
-  const cavViewStaffManagement = hasPermission(
-    EModule.STAFF_MANAGEMENT,
-    EAction.VIEW
-  );
+  // const cavViewStaffManagement = hasPermission(
+  //   EModule.STAFF_MANAGEMENT,
+  //   EAction.VIEW
+  // );
   const cavEditStaffManagement = hasPermission(
     EModule.STAFF_MANAGEMENT,
     EAction.EDIT
@@ -100,27 +100,27 @@ export function StaffListTable() {
 
   const leadStaffManagementAction: ITableAction<IAllUsersListResponse>[] = [];
 
-  if (cavViewStaffManagement) {
-    leadStaffManagementAction.push({
-      label: "View",
-      onClick: (row: IAllUsersListResponse) => {
-        setSelectedStaff({
-          id: row.id || "",
-          first_name: row.first_name || "",
-          last_name: row.last_name || "",
-          email: row.email || "",
-          phone_number: row.number || "",
-          dob: row.dob || "",
-          role: row?.role || "",
-          role_id: row.role_id || "",
-          created_at: formatDate(row.created_at) || "",
-          updated_at: formatDate(row.updated_at) || "",
-        });
-        setIsViewStaffModalOpen(true);
-      },
-      className: "text-blue-500 whitespace-nowrap",
-    });
-  }
+  // if (cavViewStaffManagement) {
+  //   leadStaffManagementAction.push({
+  //     label: "View",
+  //     onClick: (row: IAllUsersListResponse) => {
+  //       setSelectedStaff({
+  //         id: row.id || "",
+  //         first_name: row.first_name || "",
+  //         last_name: row.last_name || "",
+  //         email: row.email || "",
+  //         phone_number: row.number || "",
+  //         dob: row.dob || "",
+  //         role: row?.role || "",
+  //         role_id: row.role_id || "",
+  //         created_at: formatDate(row.created_at) || "",
+  //         updated_at: formatDate(row.updated_at) || "",
+  //       });
+  //       setIsViewStaffModalOpen(true);
+  //     },
+  //     className: "text-blue-500 whitespace-nowrap",
+  //   });
+  // }
   if (cavEditStaffManagement) {
     leadStaffManagementAction.push({
       label: "Edit",
@@ -156,7 +156,7 @@ export function StaffListTable() {
   // Modal close handlers
   const handleCloseAddModal = () => setIsAddStaffModalOpen(false);
   const handleCloseEditModal = () => setIsEditStaffModalOpen(false);
-  const handleCloseViewModal = () => setIsViewStaffModalOpen(false);
+  // const handleCloseViewModal = () => setIsViewStaffModalOpen(false);
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -210,13 +210,13 @@ export function StaffListTable() {
         />
       )}
 
-      {isViewStaffModalOpen && selectedStaff && (
+      {/* {isViewStaffModalOpen && selectedStaff && (
         <ViewStaffModel
           isOpen={isViewStaffModalOpen}
           selectStaff={selectedStaff}
           onClose={handleCloseViewModal}
         />
-      )}
+      )} */}
     </div>
   );
 }

@@ -38,6 +38,8 @@ export interface ILeadsListDetailsProps {
   assignedTo: IAllUsersListResponse;
   created_at: string;
   updated_at: string;
+  created_by: string;
+  updated_by: string;
   deleted_at: string;
 }
 

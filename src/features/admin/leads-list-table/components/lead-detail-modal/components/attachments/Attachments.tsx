@@ -34,7 +34,7 @@ export function Attachments({
   setShowForm,
 }: IAttachmentsProps) {
   const { allLeadAttachmentData, allLeadAttachment } =
-    useAllLeadAttachmentQuery();
+    useAllLeadAttachmentQuery(leadId);
   const { activeSession } = useAuthStore();
   const firstName = activeSession?.user?.first_name;
   const lastName = activeSession?.user?.last_name;

@@ -24,10 +24,11 @@ export const sentOtpUrl = () => "/auth/sentOTP";
 
 export const resetPasswordUrl = () => "/auth/resetPassword";
 
-export const changePasswordUrl = () => "/auth/changePassword";
+export const changePasswordUrl = () => "/users/change-password";
 
 // leads APIs url
 export const createLeadUrl = () => "/leads";
+
 export const createRoleUrl = () => "/roles";
 
 export const fetchAllLeadsListUrl = () => "/leads";
@@ -88,7 +89,7 @@ export const deleteSourcesUrl = (id: string) => `/lead-sources/${id}`; //delete
 
 
 //  Lead Attachment API's hook
-export const fetchLeadAttachmentUrl = () => "/lead-attachments"; //Get
+export const fetchLeadAttachmentUrl = (leadId?: string) => `/lead-attachments?leadId=${leadId}`; //Get
 
 export const createLeadAttachmentUrl = () => "/lead-attachments"; //post
 
@@ -117,7 +118,7 @@ export const updateUserUrl = (id: string) => `/users/${id}`;//put
 export const deleteUserUrl = (id: string) => `/users/${id}`; //delete
 
 // lead status history
-export const fetchLeadStatusHistoryUrl = () => "/lead-status-history"; //Get
+export const fetchLeadStatusHistoryUrl = (leadId?: string) => `/lead-status-history?leadId=${leadId}`; //Get
 
 export const createLeadStatusHistoryUrl = () => "/lead-status-history"; //Post
 

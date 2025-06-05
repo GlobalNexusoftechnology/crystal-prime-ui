@@ -9,11 +9,12 @@ const ALL_LEAD_ATTACHMENT_QUERY_KEY = "all-lead-attachment-query-key";
 /**
  * This hook fetches a list of all the leads list in the bloom portal.
  */
-export const useAllLeadAttachmentQuery = () => {
+export const useAllLeadAttachmentQuery = (leadId?: string) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
-    queryKey: [ALL_LEAD_ATTACHMENT_QUERY_KEY],
-    queryFn: COMMUNITY_CLIENT.fetchAllLeadAttachment,
+    queryKey: [ALL_LEAD_ATTACHMENT_QUERY_KEY, leadId],
+    queryFn: () => COMMUNITY_CLIENT.fetchAllLeadAttachment(leadId),
     networkMode: "always",
+    enabled: !!leadId,
   });
 
   return {

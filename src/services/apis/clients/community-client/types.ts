@@ -114,6 +114,8 @@ export interface IAllLeadsList {
   id: string;
   created_at: string;
   updated_at: string;
+  created_by: string;
+  updated_by: string;
   deleted: boolean;
   deleted_at: string | null;
   first_name: string;
@@ -523,15 +525,14 @@ export interface IResetPasswordResponse {
 
 // change password
 export interface IChangePasswordPayload {
-  email: string;
   oldPassword: string;
   newPassword: string;
 }
 
 export interface IChangePasswordResponse {
-  email: string;
-  oldPassword: string;
-  newPassword: string;
+  message: string;
+  status: string;
+  data: ILoginUserResponseData;
 }
 export interface ILoginUserResponse {
   message?: string;
