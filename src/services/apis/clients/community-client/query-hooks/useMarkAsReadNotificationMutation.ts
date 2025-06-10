@@ -15,7 +15,7 @@ interface IMarkNotificationAsReadOptions {
 /**
  * Custom mutation hook to mark a notification as read
  */
-export const useMarkNotificationAsReadMutation = ({
+export const useMarkAsReadNotificationMutation = ({
   // onSuccessCallback,
   onErrorCallback,
 }: IMarkNotificationAsReadOptions) => {
