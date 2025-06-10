@@ -38,6 +38,7 @@ import {
   IDeleteStatusesResponse,
   IDeleteTypeResponse,
   IDeleteUserResponse,
+  IGetNotificationsResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
   ILeadFollowUpDetailResponse,
@@ -125,6 +126,7 @@ import {
   deleteTypeUrl,
   updateTypeUrl,
   fetchAllTypesUrl,
+  getNotificationsUrl,
 } from "./urls";
 
 /**
@@ -927,6 +929,18 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData
     }
     return response?.data
+  }
+  
+  public getNotifications = async () => {
+    const response = await this.get<IGetNotificationsResponse>(getNotificationsUrl(), {
+      requiresAuth: false,
+    })
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data.data
   }
 }
 

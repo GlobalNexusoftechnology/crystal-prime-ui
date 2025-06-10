@@ -643,6 +643,32 @@ export interface IAllUsersResponse {
   data: IUsersDetails[];
 }
 
+export interface INotification {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  type: 'LEAD_ASSIGNED' | 'PASSWORD_CHANGE' | 'FOLLOW_UP' | string; // Add more types as needed
+  message: string;
+  isRead: boolean;
+  metadata: {
+    leadId?: string;
+    leadName?: string;
+    assignedBy?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any; // Allow extra keys
+  };
+  userId: string;
+}
+
+export interface IGetNotificationsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: INotification[];
+}
+
 //post  ...
 export interface ICreateUserPayload {
   first_name: string;

@@ -55,3 +55,5 @@ export { useAllTypesQuery } from "./useAllTypesQuery"
 export { useCreateTypeMutation } from "./useCreateTypeMutation"
 export { useDeleteTypeMutation } from "./useDeleteTypeMutation"
 export { useUpdateTypeMutation } from "./useUpdateTypeMutation"
+
+export { useNotificationsQuery } from "./useNotificationsQuery"
