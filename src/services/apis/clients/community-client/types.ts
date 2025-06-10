@@ -812,3 +812,17 @@ export interface IAllLeadFollowUpResponse {
   success: true;
   data: LeadFollowupsList[];
 }
+
+//interface for mark as read notification api response
+export interface IMarkAsReadNotificationResponse {
+  status: string;
+  message: string;
+  
+}
+
+
+export interface IDeleteNotification {
+  status: string;
+  message: string;
+ 
+}

@@ -1,7 +1,7 @@
 'use client'
 
 import { MenuIcon, NotificationIcon } from "@/features";
-import { useAuthStore, useNotificationsQuery } from "@/services";
+import { useAuthStore, useMarkAsReadNotificationMutation, useNotificationsQuery } from "@/services";
 import { UserDropdown } from '../user-dropdown';
 import { useState } from "react";
 import { formatDate } from "@/utils";
@@ -29,7 +29,15 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
   const userName = firstName && lastName ? `${firstName} ${lastName}` : null;
 
   const unreadCount = notifications?.filter(n => !n.isRead).length || 0;
-  
+const { markNotificationAsRead } = useMarkAsReadNotificationMutation({
+  onSuccessCallback: () => {
+    // do something on success
+  },
+  onErrorCallback: (err) => {
+    console.error("Failed to mark as read", err.message);
+  },
+});
+
   return (
     <header className="flex justify-between items-center sticky z-20 top-0 bg-white shadow-sm px-4 md:px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw]">
       {/* Left: Menu + SearchBar */}
@@ -40,7 +48,10 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
       </div>
       <div className="flex items-center gap-4 2xl:gap-[1vw]">
         <div className="relative cursor-pointer border 2xl:border-[0.1vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw]"
-          onClick={() => setShowNotifications(!showNotifications)}>
+          onClick={() => {
+    setShowNotifications(!showNotifications);
+    markNotificationAsRead(); // 🔁 Call API to mark all as read
+  }}>
           <NotificationIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
