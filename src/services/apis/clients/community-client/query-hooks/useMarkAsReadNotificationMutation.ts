@@ -19,7 +19,7 @@ export const useMarkAsReadNotificationMutation = ({
   // onSuccessCallback,
   onErrorCallback,
 }: IMarkNotificationAsReadOptions) => {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
   const {
     mutate,
@@ -34,7 +34,7 @@ export const useMarkAsReadNotificationMutation = ({
     //   onSuccessCallback(response);
     // },
     onSuccess: () => {
-queryClient.invalidateQueries({ queryKey: ["notifications-query-key"] });
+      queryClient.invalidateQueries({ queryKey: ["notifications-query-key"] });
     },
     onError: (err: IApiError) => {
       errorLogToRemoteUtil({

@@ -28,7 +28,6 @@ interface IAddLeadModalProps {
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
-  last_name: Yup.string().required("Last Name is required"),
   company: Yup.string().required("Company is required"),
   phone: Yup.string()
     .min(10, "Phone must be at least 10 digits")
@@ -55,7 +54,6 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
 
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (response: ICreateLeadResponse) => {
-      console.log("Lead created successfully", response);
       toast.success(response.message);
       setAddLeadModalOpen(false);
       leadsRefetch();
@@ -141,7 +139,7 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     name="last_name"
                     value={values?.last_name}
                     onChange={handleChange}
-                    error={touched.last_name && errors.last_name}
+                    // error={touched.last_name && errors.last_name}
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
