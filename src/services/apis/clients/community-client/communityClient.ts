@@ -33,6 +33,7 @@ import {
   ICreateUserResponse,
   IDeleteLeadFollowUpResponse,
   IDeleteLeadResponse,
+  IDeleteNotification,
   IDeleteRoleResponse,
   IDeleteSourcesResponse,
   IDeleteStatusesResponse,
@@ -44,6 +45,7 @@ import {
   ILeadFollowUpDetailResponse,
   ILoginPayload,
   ILoginUserResponse,
+  IMarkAsReadNotificationResponse,
   IRegisterPayload,
   IRegisterResponse,
   IResetPasswordPayload,
@@ -127,6 +129,8 @@ import {
   updateTypeUrl,
   fetchAllTypesUrl,
   getNotificationsUrl,
+  markAsReadNotificationUrl,
+  deleteNotificationUrl,
 } from "./urls";
 
 /**
@@ -942,7 +946,37 @@ export class CommunityClient extends ApiClient {
 
     return response?.data.data
   }
+
+  // mark as read notification
+  public updateMarkAsReadNotification = async () => {
+    const response = await this.patch<IMarkAsReadNotificationResponse>(
+      markAsReadNotificationUrl(),
+      {
+        requiresAuth: true,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data
+  }
+  
+  //delete notification hook
+
+ //delete lead
+  public deleteNotification = async (id: string) => {
+    const response = await this.del<IDeleteNotification>(deleteNotificationUrl(id))
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+    return response?.data
+  }
+
 }
+
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.

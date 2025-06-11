@@ -57,3 +57,10 @@ export { useDeleteTypeMutation } from "./useDeleteTypeMutation"
 export { useUpdateTypeMutation } from "./useUpdateTypeMutation"
 
 export { useNotificationsQuery } from "./useNotificationsQuery"
+
+export { useMarkAsReadNotificationMutation } from "./useMarkAsReadNotificationMutation"
+export { useDeleteNotificationMutation } from "./useDeleteNotificationMutation"
+
+
+
+
