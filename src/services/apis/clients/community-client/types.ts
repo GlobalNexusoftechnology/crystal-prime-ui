@@ -643,31 +643,34 @@ export interface IAllUsersResponse {
   data: IUsersDetails[];
 }
 
-export interface INotification {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  deleted: boolean;
-  deleted_at: string | null;
-  type: 'LEAD_ASSIGNED' | 'PASSWORD_CHANGE' | 'FOLLOW_UP' | string; // Add more types as needed
-  message: string;
-  isRead: boolean;
-  metadata: {
-    leadId?: string;
-    leadName?: string;
-    assignedBy?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any; // Allow extra keys
-  };
-  userId: string;
-}
+// export interface INotification {
+//   id: string;
+//   created_at: string;
+//   updated_at: string;
+//   deleted: boolean;
+//   deleted_at: string | null;
+//   type: 'LEAD_ASSIGNED' | 'PASSWORD_CHANGE' | 'FOLLOW_UP' | string; // Add more types as needed
+//   message: string;
+//   isRead: boolean;
+//   metadata: {
+//     leadId?: string;
+//     leadName?: string;
+//     assignedBy?: string;
+//     leadContact?: string;
+//     dueDate?: string;
+//     remarks?: string;
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//     [key: string]: any; // Allow extra keys
+//   };
+//   userId: string;
+// }
 
-export interface IGetNotificationsResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  data: INotification[];
-}
+// export interface IGetNotificationsResponse {
+//   status: boolean;
+//   message: string;
+//   success: true;
+//   data: INotification[];
+// }
 
 //post  ...
 export interface ICreateUserPayload {
@@ -825,4 +828,36 @@ export interface IDeleteNotification {
   status: string;
   message: string;
  
+}
+
+
+
+
+interface INotificationMetadata {
+  leadId: string;
+  leadName: string;
+  assignedBy?: string;
+  dueDate?: string;
+  remarks?: string;
+  followupId?: string;
+  leadContact?: string;
+  reminderDate?: string;
+}
+
+export interface INotification {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  type: 'LEAD_ASSIGNED' | 'FOLLOWUP_REMINDER' | 'FOLLOWUP_CREATED' | 'QUOTATION_SENT' | 'BUSINESS_DONE' | 'LEAD_ESCALATED';
+  message: string;
+  isRead: boolean;
+  metadata: INotificationMetadata;
+  userId: string;
+  user: IUser;
+}
+
+export interface INotificationsResponse {
+  data: INotification[];
 }

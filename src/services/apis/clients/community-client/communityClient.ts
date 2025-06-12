@@ -39,13 +39,14 @@ import {
   IDeleteStatusesResponse,
   IDeleteTypeResponse,
   IDeleteUserResponse,
-  IGetNotificationsResponse,
+  // IGetNotificationsResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
   ILeadFollowUpDetailResponse,
   ILoginPayload,
   ILoginUserResponse,
   IMarkAsReadNotificationResponse,
+  INotificationsResponse,
   IRegisterPayload,
   IRegisterResponse,
   IResetPasswordPayload,
@@ -936,7 +937,7 @@ export class CommunityClient extends ApiClient {
   }
   
   public getNotifications = async () => {
-    const response = await this.get<IGetNotificationsResponse>(getNotificationsUrl(), {
+    const response = await this.get<INotificationsResponse>(getNotificationsUrl(), {
       requiresAuth: false,
     })
 
