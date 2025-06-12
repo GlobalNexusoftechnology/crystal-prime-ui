@@ -1,4 +1,4 @@
-// import { IUser } from "@/services/stores";
+import { IUser } from "@/services/stores";
 
 export interface ILoginPayload {
   email: string;
@@ -643,34 +643,34 @@ export interface IAllUsersResponse {
   data: IUsersDetails[];
 }
 
-export interface INotification {
-  id: string;
-  created_at: string;
-  updated_at: string;
-  deleted: boolean;
-  deleted_at: string | null;
-  type: 'LEAD_ASSIGNED' | 'PASSWORD_CHANGE' | 'FOLLOW_UP' | string; // Add more types as needed
-  message: string;
-  isRead: boolean;
-  metadata: {
-    leadId?: string;
-    leadName?: string;
-    assignedBy?: string;
-    leadContact?: string;
-    dueDate?: string;
-    remarks?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any; // Allow extra keys
-  };
-  userId: string;
-}
+// export interface INotification {
+//   id: string;
+//   created_at: string;
+//   updated_at: string;
+//   deleted: boolean;
+//   deleted_at: string | null;
+//   type: 'LEAD_ASSIGNED' | 'PASSWORD_CHANGE' | 'FOLLOW_UP' | string; // Add more types as needed
+//   message: string;
+//   isRead: boolean;
+//   metadata: {
+//     leadId?: string;
+//     leadName?: string;
+//     assignedBy?: string;
+//     leadContact?: string;
+//     dueDate?: string;
+//     remarks?: string;
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//     [key: string]: any; // Allow extra keys
+//   };
+//   userId: string;
+// }
 
-export interface IGetNotificationsResponse {
-  status: boolean;
-  message: string;
-  success: true;
-  data: INotification[];
-}
+// export interface IGetNotificationsResponse {
+//   status: boolean;
+//   message: string;
+//   success: true;
+//   data: INotification[];
+// }
 
 //post  ...
 export interface ICreateUserPayload {
@@ -832,20 +832,6 @@ export interface IDeleteNotification {
 
 
 
-interface IUserRole {
-  id: string;
-  role: string;
-  permissions: string[];
-}
-
-interface IUser {
-  id: string;
-  email: string;
-  first_name: string;
-  last_name: string;
-  phone_number: string | null;
-  role: IUserRole;
-}
 
 interface INotificationMetadata {
   leadId: string;
@@ -858,7 +844,7 @@ interface INotificationMetadata {
   reminderDate?: string;
 }
 
-interface INotification {
+export interface INotification {
   id: string;
   created_at: string;
   updated_at: string;

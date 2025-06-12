@@ -2,6 +2,7 @@
 
 import {  MenuIcon, NotificationIcon } from "@/features";
 import {
+  INotification,
   useAuthStore,
   useDeleteNotificationMutation,
   useMarkAsReadNotificationMutation,
@@ -13,7 +14,6 @@ import {  IApiError } from "@/utils";
 import { format } from "date-fns";
 import { Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { INotification } from "@/services/apis/clients/community-client/types";
 
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
