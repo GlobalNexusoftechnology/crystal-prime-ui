@@ -52,9 +52,9 @@ export function LeadManagement() {
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data?.stats?.notInterested}`,
-      title: "Not Interested",
-      subtitle: "Leads declined or inactive",
+      count: `${allLeadList?.data?.stats?.todayFollowups}`,
+      title: "Today Followups",
+      subtitle: "Follow-up scheduled for today",
       icon: <AnalyticalCardIcon />,
     },
     {

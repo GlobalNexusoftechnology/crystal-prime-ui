@@ -138,7 +138,8 @@ export interface IStats {
   assignedToMe: number;
   profileSent: number;
   businessDone: number;
-  notInterested: 0;
+  todayFollowups: 0;
+
 }
 
 export interface IAllLeadResponse {
