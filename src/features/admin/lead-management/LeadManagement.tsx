@@ -54,7 +54,7 @@ export function LeadManagement() {
     {
       count: `${allLeadList?.data?.stats?.todayFollowups}`,
       title: "Today Followups",
-      subtitle: "Leads today followups",
+      subtitle: "Leads scheduled for follow-up today.",
       icon: <AnalyticalCardIcon />,
     },
     {
