@@ -1,6 +1,6 @@
 "use client";
 
-import { CrossIcon, MenuIcon, NotificationIcon } from "@/features";
+import {  MenuIcon, NotificationIcon } from "@/features";
 import {
   useAuthStore,
   useDeleteNotificationMutation,
@@ -9,7 +9,11 @@ import {
 } from "@/services";
 import { UserDropdown } from "../user-dropdown";
 import { useEffect, useRef, useState } from "react";
-import { formatDate, IApiError } from "@/utils";
+import {  IApiError } from "@/utils";
+import { format } from "date-fns";
+import { Trash2 } from "lucide-react";
+import toast from "react-hot-toast";
+import { INotification } from "@/services/apis/clients/community-client/types";
 
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
@@ -34,7 +38,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
   const lastName = activeSession?.user?.last_name;
   const userName = firstName && lastName ? `${firstName} ${lastName}` : null;
 
-  const unreadCount = notifications?.filter((n) => !n.isRead).length || 0;
+  const unreadCount = notifications?.filter((n: INotification) => !n.isRead).length || 0;
   const { markNotificationAsRead } = useMarkAsReadNotificationMutation({
     onSuccessCallback: () => {
       // do something on success
@@ -43,9 +47,61 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
       console.error("Failed to mark as read", err.message);
     },
   });
-  const { deleteNotification } = useDeleteNotificationMutation();
+  const { deleteNotification } = useDeleteNotificationMutation({
+    onSuccessCallback: () => {
+      toast.success('Notification deleted successfully');
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || 'Failed to delete notification');
+    },
+  });
 
-// Close dropdown on outside click
+  const handleDeleteNotification = (e: React.MouseEvent, notificationId: string) => {
+    e.stopPropagation();
+    deleteNotification({ id: notificationId });
+  };
+
+
+
+  const getNotificationIcon = (type: string) => {
+    switch (type) {
+      case 'LEAD_ASSIGNED':
+        return '👤';
+      case 'FOLLOWUP_REMINDER':
+        return '⏰';
+      case 'FOLLOWUP_CREATED':
+        return '📝';
+      case 'QUOTATION_SENT':
+        return '📄';
+      case 'BUSINESS_DONE':
+        return '✅';
+      case 'LEAD_ESCALATED':
+        return '🔄';
+      default:
+        return '📢';
+    }
+  };
+
+  const getNotificationTitle = (type: string) => {
+    switch (type) {
+      case 'LEAD_ASSIGNED':
+        return 'New Lead Assigned';
+      case 'FOLLOWUP_REMINDER':
+        return 'Follow-up Reminder';
+      case 'FOLLOWUP_CREATED':
+        return 'New Follow-up Created';
+      case 'QUOTATION_SENT':
+        return 'Quotation Sent';
+      case 'BUSINESS_DONE':
+        return 'Business Completed';
+      case 'LEAD_ESCALATED':
+        return 'Lead Escalated';
+      default:
+        return type.replace('_', ' ');
+    }
+  };
+
+  // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -99,61 +155,51 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
          className="absolute top-[100%] right-4 md:right-6 2xl:right-[1.5vw] mt-2 w-[300px] 2xl:w-[22vw] bg-white shadow-lg rounded-xl p-4 z-30 space-y-4 max-h-[400px] overflow-y-auto">
           {isLoading ? (
             <div className="text-center py-4">Loading notifications...</div>
-          ) : notifications?.length === 0 ? (
+          ) : !notifications || notifications.length === 0 ? (
             <div className="text-center py-4">No notifications</div>
           ) : (
-            notifications?.map((notification) => (
-              <div
-                key={notification.id}
-                className={`border-2 border-[#044A9F] flex flex-col gap-[1rem] 2xl:gap-[1vw] p-5 2xl:p-[1.25vw] rounded-2xl w-full relative ${
-                  !notification.isRead ? "bg-blue-50" : "bg-white"
-                }`}
+            notifications.map((notification: INotification) => (
+              <div 
+                key={notification.id} 
+                className={`border rounded-xl p-4 shadow-sm ${!notification.isRead ? 'bg-blue-50' : ''} relative group cursor-pointer`}
               >
-                <div className="flex justify-between">
-                  <h3 className="font-bold text-lg 2xl:text-[1.2vw]">
-                    {notification.type.replace("_", " ")}
-                  </h3>
-                  <div
-                    onClick={() => {
-                      const confirmDelete = confirm(
-                        "Are you sure you want to delete this notification?"
-                      );
-                      if (confirmDelete) {
-                        deleteNotification({ id: notification.id });
-                      }
-                    }}
-                    className="bg-[#E5E5E5] h-7 2xl:h-[1.75vw] w-7 2xl:w-[1.75vw] flex items-center justify-center rounded-full absolute top-2 2xl:top-[0.5vw] right-2 2xl:right-[0.5vw] cursor-pointer"
-                  >
-                    <div className="h-3 w-3 2xl:h-[0.75vw] 2xl:w-[0.75vw]">
-                      <CrossIcon className="h-full w-full" />
+                <button
+                  onClick={(e) => handleDeleteNotification(e, notification.id)}
+                  className="absolute top-2 right-2 p-1 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl">{getNotificationIcon(notification.type)}</span>
+                  <div className="flex-1">
+                    <p className="font-bold">{getNotificationTitle(notification.type)}</p>
+                    <p className="text-sm mt-1">{notification.message}</p>
+                    {notification.metadata && (
+                      <div className="text-sm mt-2 space-y-1">
+                        {notification.metadata.leadName && (
+                          <p>Lead: <span className="font-semibold text-blue-600">{notification.metadata.leadName}</span></p>
+                        )}
+                        {notification.metadata.assignedBy && (
+                          <p>Assigned by: <span className="font-semibold text-blue-600">{notification.metadata.assignedBy}</span></p>
+                        )}
+                        {notification.metadata.leadContact && (
+                          <p>Contact: <span className="font-semibold text-blue-600">{notification.metadata.leadContact}</span></p>
+                        )}
+                        {notification.metadata.dueDate && (
+                          <p>Due Date: <span className="font-semibold text-blue-600">{format(new Date(notification.metadata.dueDate), 'MMM d, yyyy')}</span></p>
+                        )}
+                        {notification.metadata.remarks && (
+                          <p>Remarks: <span className="font-semibold text-blue-600">{notification.metadata.remarks}</span></p>
+                        )}
+                      </div>
+                    )}
+                    <div className="flex items-center justify-between mt-2">
+                      <p className="text-xs text-gray-500">
+                        {format(new Date(notification.created_at), 'MMM d, yyyy h:mm a')}
+                      </p>
                     </div>
                   </div>
                 </div>
-
-                <div className="text-sm 2xl:text-[0.9vw] flex flex-wrap gap-1 2xl:gap-[0.25vw]">
-                  {notification.metadata && (
-                    <div className="text-sm mt-2">
-                      <p>
-                        Lead:{" "}
-                        <span className="font-bold text-[#044A9F]">
-                          {notification.metadata.leadName}
-                        </span>
-                      </p>
-                      <p>
-                        Assigned by:{" "}
-                        <span className="font-bold text-[#044A9F] underline">
-                          {notification.metadata.assignedBy}
-                        </span>
-                      </p>
-                    </div>
-                  )}
-                
-                </div>
-
-
-                <p className="text-xs text-gray-500 absolute bottom-2 right-2">
-                  {formatDate(notification.created_at)}
-                </p>
               </div>
             ))
           )}
