@@ -22,6 +22,7 @@ import toast from "react-hot-toast";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import * as Yup from "yup";
+import { Plus, X } from "lucide-react";
 
 interface IEditLeadModalProps {
   setIsEditLeadModalOpen: (open: boolean) => void;
@@ -37,14 +38,19 @@ const validationSchema = Yup.object().shape({
     .min(10, "Phone must be at least 10 digits")
     .max(15, "Phone must be at most 15 digits")
     .required("Phone number is required"),
-  email: Yup.string()
-    .email("Invalid email address")
-    .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
+  email: Yup.array()
+    .of(
+      Yup.string()
+        .email("Invalid email address")
+        .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
+    )
+    .min(1, "At least one email is required")
     .required("Email is required"),
   location: Yup.string().required("Location is required"),
   requirement: Yup.string().required("Requirement is required"),
   source_id: Yup.string().required("Source is required"),
   status_id: Yup.string().required("Status is required"),
+  type_id: Yup.string().required("Type is required"),
   assigned_to: Yup.string().required("Assigned To is required"),
 });
 
@@ -127,7 +133,11 @@ export function EditLeadModal({
     phone: lead.phone || "",
     other_contact: lead.other_contact || "",
     escalate_to: lead.escalate_to || false,
-    email: lead.email || "",
+    email: typeof lead.email === 'string' 
+      ? lead.email.split(',').map((email: string) => email.trim()).filter((email: string) => email !== '')
+      : Array.isArray(lead.email) 
+        ? lead.email 
+        : [""],
     location: lead.location || "",
     budget: lead.budget ?? 0,
     requirement: lead.requirement || "",
@@ -241,15 +251,48 @@ export function EditLeadModal({
                       />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
-                    <InputField
-                      label="Email"
-                      placeholder="Enter Email"
-                      name="email"
-                      type="email"
-                      value={values.email}
-                      onChange={handleChange}
-                      error={touched.email && errors.email}
-                    />
+                    <div className="w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">Emails</label>
+                        {values.email.map((_, index) => (
+                          <div key={index} className="flex gap-2">
+                            <InputField
+                              placeholder="Enter Email"
+                              name={`email.${index}`}
+                              type="email"
+                              value={values.email[index]}
+                              onChange={handleChange}
+                              error={touched.email && Array.isArray(errors.email) && errors.email[index]}
+                            />
+                            {index > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newEmails = [...values.email];
+                                  newEmails.splice(index, 1);
+                                  setFieldValue("email", newEmails);
+                                }}
+                                className="p-2 text-red-500 hover:text-red-700"
+                              >
+                                <X className="w-5 h-5" />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFieldValue("email", [...values.email, ""]);
+                          }}
+                          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+                        >
+                          <Plus className="w-4 h-4" />
+                          Add Another Email
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                     <InputField
                       label="Location"
                       placeholder="Enter Location"

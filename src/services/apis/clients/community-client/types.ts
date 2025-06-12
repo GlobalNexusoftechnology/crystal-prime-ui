@@ -270,7 +270,7 @@ export interface ICreateLeadPayload {
   phone: string;
   other_contact: string;
   escalate_to: boolean;
-  email: string;
+  email: string[];
   location: string;
   budget?: number | null;
   requirement: string;
