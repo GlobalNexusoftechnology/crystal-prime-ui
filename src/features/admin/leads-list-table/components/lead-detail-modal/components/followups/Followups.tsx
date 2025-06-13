@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 
 // Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
+  lead_id: Yup.string().required("Lead ID is required"),
   due_date: Yup.string().required("Next follow-up date is required"),
   status: Yup.string().oneOf(
     Object.values(LeadFollowupStatus),
@@ -60,7 +61,11 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
     },
     validationSchema,
     onSubmit: async (values) => {
-      await createLeadFollowUp(values);
+      if (!leadId) {
+        toast.error("Lead ID is missing");
+        return;
+      }
+      await createLeadFollowUp({ ...values, lead_id: leadId });
     },
   });
 
