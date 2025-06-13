@@ -23,7 +23,7 @@ import {
   useAlLeadFollowUpQuery,
 } from "@/services";
 import { downloadBlobFile, formatDate, IApiError } from "@/utils";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiX } from "react-icons/fi";
 import { ImDownload2 } from "react-icons/im";
 import { usePermission } from "@/utils/hooks";
 import { LeadFollowupsList } from "@/services/apis/clients/community-client/types";
@@ -246,6 +246,11 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     setSelectedType(val);
   };
 
+  const handleClearFollowupDates = () => {
+    setFollowupFromDate("");
+    setFollowupToDate("");
+  };
+
   const filteredLeads = useMemo(() => {
     let leads = leadsList.filter((lead) => {
       const matchQuery =
@@ -325,21 +330,9 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[20vw]"
           />
-          <DatePicker
-            placeholder="Followup From"
-            value={followupFromDate}
-            onChange={setFollowupFromDate}
-            datePickerWidth="w-full md:w-fit"
-          />
-          <DatePicker
-            placeholder="Followup To"
-            value={followupToDate}
-            onChange={setFollowupToDate}
-            datePickerWidth="w-full md:w-fit"
-          />
           {setAddLeadModalOpen &&
             (cavAddLeadManagement ? (
-              <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+              <div className="w-full md:w-fit flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
                 <Button
                   title="Add Lead"
                   variant="background-white"
@@ -381,7 +374,31 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           />
         </div>
       </div>
-
+      <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw]">
+         <DatePicker
+            label="Follow Up From"
+            value={followupFromDate}
+            onChange={setFollowupFromDate}
+            datePickerWidth="w-full md:w-fit"
+          />
+          <DatePicker
+            label="Follow Up To"
+            value={followupToDate}
+            onChange={setFollowupToDate}
+            datePickerWidth="w-full md:w-fit"
+          />
+          {(followupFromDate || followupToDate) && (
+            <Button
+              variant="background-white"
+              width="w-full md:w-fit"
+              onClick={handleClearFollowupDates}
+              leftIcon={
+                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+              }
+              tooltip="Clear Dates"
+            />
+          )}
+      </div>
       {isLoading ? (
         <div className="text-center py-6 text-gray-500">Loading leads...</div>
       ) : filteredLeads.length === 0 ? (
