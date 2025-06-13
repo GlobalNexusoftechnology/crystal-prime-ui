@@ -1,4 +1,3 @@
-
 import { useQuery } from '@/services';
 import { COMMUNITY_CLIENT } from '../communityClient';
 
@@ -10,12 +9,11 @@ const LEADS_LIST_QUERY_KEY = 'lead-follow-up-query-key';
 /**
  * This hook fetches  all lead follow up.
  */
-export const useAlLeadFollowUpQuery = (leadId: string) => {
+export const useAlLeadFollowUpQuery = (leadId?: string) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
     queryKey: [LEADS_LIST_QUERY_KEY, leadId],
     queryFn: () => COMMUNITY_CLIENT.fetchAllLeadFollowUp(leadId),
-    networkMode: 'always',
-    enabled: !!leadId
+    networkMode: 'always'
   });
 
   return {
