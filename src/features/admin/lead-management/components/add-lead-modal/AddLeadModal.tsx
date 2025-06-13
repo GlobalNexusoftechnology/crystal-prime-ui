@@ -183,9 +183,9 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
-                  <div className="w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
+                  <div className={`w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative`}>
                     <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">Emails</label>
+                      <label className="text-sm font-medium text-gray-700">Emails</label>
                       {values.email.map((_, index) => (
                         <div key={index} className="flex gap-2">
                           <InputField
@@ -223,8 +223,6 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                       </button>
                     </div>
                   </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <InputField
                     label="Location"
                     placeholder="Enter Location"
@@ -234,7 +232,6 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
                     error={touched.location && errors.location}
                   />
                 </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <InputField
                     label="Budget"

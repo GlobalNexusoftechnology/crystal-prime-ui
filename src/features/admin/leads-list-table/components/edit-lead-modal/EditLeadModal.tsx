@@ -291,8 +291,6 @@ export function EditLeadModal({
                         </button>
                       </div>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                     <InputField
                       label="Location"
                       placeholder="Enter Location"

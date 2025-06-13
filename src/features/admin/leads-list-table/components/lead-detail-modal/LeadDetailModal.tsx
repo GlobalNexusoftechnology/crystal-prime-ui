@@ -78,9 +78,19 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               className="flex items-center gap-2 2xl:gap-[0.5vw] text-[1rem] 2xl:text-[1vw]"
             >
               <MailIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw]" />
-              <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
-                {data.email}
-              </p>
+              <div>
+                {data.email
+                  ?.split(",")
+                  .map((email: string, index: number, arr: string[]) => (
+                    <p
+                      key={index}
+                      className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]"
+                    >
+                      {email.trim()}
+                      {index < arr.length - 1 && ","}
+                    </p>
+                  ))}
+              </div>
             </Link>
           </div>
         </div>
