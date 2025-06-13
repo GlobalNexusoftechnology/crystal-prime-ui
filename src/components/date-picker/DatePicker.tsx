@@ -44,7 +44,7 @@ export function DatePicker({
           placeholder={placeholder}
           ref={inputRef}
           type="date"
-          className={`w-full 2xl:text-[1vw] border 2xl:border-[0.1px] ${
+          className={`w-full 2xl:text-[1vw] border 2xl:border-[0.1vw] ${
             error ? "border-red-500" : "border-gray-300"
           } ${datePickerBorderRadius} px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] pr-10 2xl:pr-[2.5vw] focus:outline-none focus:ring-1 ${
             error ? "focus:ring-red-500" : "focus:ring-primary"
