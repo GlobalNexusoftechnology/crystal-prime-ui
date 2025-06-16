@@ -103,11 +103,11 @@ export function TableCell<T extends { id: string | number }>({
   index,
 }: TableCellProps<T>) {
   const value = row[col.accessor];
-  const initials = getInitials(value as string);
+  const initials = typeof value === 'string' ? getInitials(value) : '';
   const isAssignedTo = col.accessor === "assigned_to";
   const isStatusColumn = col.accessor === "status_id";
-  const randomColor = getRandomColor(value as string);
-  const statusColor = getColorForStatus(value as string);
+  const randomColor = typeof value === 'string' ? getRandomColor(value) : '#000000';
+  const statusColor = typeof value === 'string' ? getColorForStatus(value) : '#000000';
 
   return (
     <td
