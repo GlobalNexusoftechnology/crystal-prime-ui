@@ -1,158 +1,132 @@
-import React from "react";
+'use client'
 
-// Define a type for a single Task
-type Task = {
-  id: number;
-  taskName: string;
-
-  endDate: string;
-  project: string;
-  lastUser: string;
-};
-
-// Define the shape of the tasks data
-type TasksData = {
-  openTasks: Task[];
-  inProgressTasks: Task[];
-  finalTasks: Task[];
-};
-
-// Sample data for tasks
-const tasksData: TasksData = {
-  openTasks: [
-    {
-      id: 1,
-      taskName: "UI/UX App Development",
-    
-      endDate: "22/01/2022",
-      project: "E-Commerce App Development",
-      lastUser: "Nikesh Thakre",
-    },
-  ],
-  inProgressTasks: [
-    {
-      id: 2,
-      taskName: "UI/UX App Development",
-      
-      endDate: "20/01/2022",
-      project: "E-Commerce App Development",
-      lastUser: "Nikesh Thakre",
-    },
-  ],
-  finalTasks: [
-    {
-      id: 3,
-      taskName: "UI/UX App Development",
-      
-      endDate: "22/01/2022",
-      project: "E-Commerce App Development",
-      lastUser: "Nikesh Thakre",
-    },
-  ],
-};
-
-const statusColors: Record<"open" | "inProgress" | "final", string> = {
-  open: "bg-blue-400",
-  inProgress: "bg-orange-400",
-  final: "bg-green-400",
-};
+import { analyticalCards } from "@/constants";
+import { AnalyticalCard } from "../analytical-card";
+import { Button, DatePicker, Dropdown, InputField, ModalOverlay } from "@/components";
+import { ProjectManagementCard } from "./components";
+import { useState } from "react";
 
 
-export  function ProjectManagement() {
+
+export function ProjectManagement() {
+  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
+  // const [lead, setLead] = useState("");
+
+  const [selectTo, setSelectTo] = useState("");
+  const [remark, setRemark] = useState("");
+  const [projectInformation, setProjectInformation] = useState("");
+  const [renewalDate, setRenewalDate] = useState("");
+  const [followUpDate, setFollowUpDate] = useState("");
+
+
+  const selectToOptions = [
+    { label: "User 1", value: "User 1" },
+    { label: "User 2", value: "User 2" },
+  ];
+
+ 
+
   return (
-    <div className="flex space-x-6 p-6 bg-gray-100 min-h-screen">
-      {/* Open Tasks */}
-      <div className="flex-1 bg-white rounded-lg shadow-md p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="font-semibold text-gray-700">Open Tasks</h2>
-          <button className="p-1 rounded hover:bg-gray-200">⋮</button>
-        </div>
-        {tasksData.openTasks.map((task) => (
-          <div
-            key={task.id}
-            className={`rounded-md shadow-sm ${statusColors.open} p-4 mb-4 text-white`}
-          >
-            <div className="flex justify-between items-center mb-3">
-              <p>Project Name</p>
-              <h3 className="font-bold text-lg">{task.taskName}</h3>
-           
-            </div>
-            <div className="flex justify-between items-center text-xs">
-              <div>
-                <p>End Date</p>
-                <p>{task.endDate}</p>
-              </div>
-         
-              <div>
-                <p>Lead Name</p>
-                <p>{task.lastUser}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+    <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
+      {/* Section Header */}
+      <div className="flex flex-col gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
+        <h1 className="text-xl 2xl:text-[1.25vw] font-medium">
+          Project Management
+        </h1>
       </div>
 
-      {/* In Progress Tasks */}
-      <div className="flex-1 bg-white rounded-lg shadow-md p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="font-semibold text-gray-700">In Progress Tasks</h2>
-          <button className="p-1 rounded hover:bg-gray-200">⋮</button>
-        </div>
-        {tasksData.inProgressTasks.map((task) => (
-          <div
-            key={task.id}
-            className={`rounded-md shadow-sm ${statusColors.inProgress} p-4 mb-4 text-white`}
-          >
-            <div className="flex justify-between items-center mb-3">
-              <p>Project Name</p>
-              <h3 className="font-bold text-lg">{task.taskName}</h3>
-            
-            </div>
-            <div className="flex justify-between items-center text-xs">
-              <div>
-                <p>End Date</p>
-                <p>{task.endDate}</p>
-              </div>
-           
-              <div>
-                <p>Lead Name</p>
-                <p>{task.lastUser}</p>
-              </div>
-            </div>
+      {/* Summary Cards and Add project Button */}
+      <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
+          {/* Render up to 4 analytical cards */}
+          {analyticalCards.slice(0, 4).map((card, index) => (
+            <AnalyticalCard key={index} data={card} />
+          ))}
+
+          {/* Button to open modal */}
+          <div className="flex flex-col justify-end">
+            <Button
+              type="button"
+              title="Add Project"
+              variant="primary-outline"
+              onClick={() => setIsAddProjectModalOpen(true)} // 🔑 Modal open trigger
+            />
           </div>
-        ))}
+        </div>
       </div>
 
-      {/* Final Tasks */}
-      <div className="flex-1 bg-white rounded-lg shadow-md p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="font-semibold text-gray-700">Final Tasks</h2>
-          <button className="p-1 rounded hover:bg-gray-200">⋮</button>
-        </div>
-        {tasksData.finalTasks.map((task) => (
-          <div
-            key={task.id}
-            className={`rounded-md shadow-sm ${statusColors.final} p-4 mb-4 text-white`}
-          >
-            <div className="flex justify-between items-center mb-3">
-              <p>Project Name</p>
-              <h3 className="font-bold text-lg">{task.taskName}</h3>
-           
-            </div>
-            <div className="flex justify-between items-center text-xs">
-              <div>
-                <p>End Date</p>
-                <p>{task.endDate}</p>
-              </div>
-          
-              <div>
-                <p>Lead Name</p>
-                <p>{task.lastUser}</p>
-              </div>
-            </div>
-          </div>
-        ))}
+      {/* Project Management Cards */}
+      <div className="gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
+        <ProjectManagementCard />
       </div>
-    </div>
+
+      {/* Modal */}
+      <ModalOverlay
+        modalTitle="Back to Leads"
+        isOpen={isAddProjectModalOpen}
+        onClose={() => setIsAddProjectModalOpen(false)}
+        modalClassName="w-[20rem] md:w-[34rem] xl:w-[40rem] 2xl:w-[50vw] 2xl:h-[29vw]"
+      >
+        <form className="bg-white p-6 rounded-lg overflow-y-auto max-h-[80vh] md:h-[25rem] h-[24rem] space-y-4 md:w-[38rem] 2xl:w-[49vw] 2xl:h-[26vw] border border-gray-300">
+          <h2 className="text-[1rem] 2xl:text-[1.5vw] font-semibold mb-2">
+            Project Information
+          </h2>
+
+          <div>
+            <label className="block text-[1rem] 2xl:text-[1vw]">
+              Project Information
+            </label>
+            <InputField
+              type="text"
+              value={projectInformation}
+              onChange={(e) => setProjectInformation(e.target.value)}
+              placeholder="Description"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            />
+          </div>
+
+          <Dropdown
+            label="Select Lead"
+            options={selectToOptions}
+            value={selectTo}
+            onChange={setSelectTo}
+            dropdownWidth="w-full"
+          />
+
+          <div className="grid grid-cols-2 gap-4">
+            <DatePicker
+              label="Renewal Date"
+              value={renewalDate}
+              onChange={setRenewalDate}
+              placeholder="Select Date"
+            />
+
+            <DatePicker
+              label="Set Reminder"
+              value={followUpDate}
+              onChange={setFollowUpDate}
+              placeholder="Select Date"
+            />
+          </div>
+
+          <div>
+            <label className="block text-[1rem] 2xl:text-[1vw] font-medium">
+              Description
+            </label>
+            <InputField
+              type="text"
+              value={remark}
+              onChange={(e) => setRemark(e.target.value)}
+              placeholder="Description"
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            />
+          </div>
+        </form>
+        <div className="flex justify-between pt-4 gap-5">
+          <Button title="Cancel" variant="primary-outline" type="button"/>
+          <Button title="Add Lead" />
+        </div>
+      </ModalOverlay>
+    </section>
   );
 }
