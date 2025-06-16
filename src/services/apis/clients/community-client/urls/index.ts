@@ -132,3 +132,9 @@ export const getTypeDetailByIdUrl = (id: string) => `/lead-types/${id}`;//get by
 export const updateTypeUrl = (id: string) => `/lead-types/${id}`;//put
 
 export const deleteTypeUrl = (id: string) => `/lead-types/${id}`; //delete
+
+export const getNotificationsUrl = () => "/notifications"; //Get
+
+export const markAsReadNotificationUrl = () => "/notifications/read-all"; //mark as read notification
+
+export const deleteNotificationUrl = (id: string) => `/notifications/${id}`;//delete notification url

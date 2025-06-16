@@ -11,7 +11,7 @@ import { FiPlusSquare } from "react-icons/fi";
 import { IoMdCloseCircleOutline } from "react-icons/io";
 import { Attachments, Followups, StatusHistory } from "./components";
 import Link from "next/link";
-import { formattingDate, getInitials, getRandomColor } from "@/utils";
+import { formatIndiaTime, getInitials, getRandomColor } from "@/utils";
 import Image from "next/image";
 
 interface LeadDetailsModalProps {
@@ -78,9 +78,19 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               className="flex items-center gap-2 2xl:gap-[0.5vw] text-[1rem] 2xl:text-[1vw]"
             >
               <MailIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw]" />
-              <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
-                {data.email}
-              </p>
+              <div>
+                {data.email
+                  ?.split(",")
+                  .map((email: string, index: number, arr: string[]) => (
+                    <p
+                      key={index}
+                      className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]"
+                    >
+                      {email.trim()}
+                      {index < arr.length - 1 && ","}
+                    </p>
+                  ))}
+              </div>
             </Link>
           </div>
         </div>
@@ -96,7 +106,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className=" text-sm 2xl:text-[0.875vw]">Created At</p>
             <p className=" text-textColor text-[1rem] 2xl:text-[1vw]">
-              {formattingDate(data.created_at, "toReadable")}
+              {formatIndiaTime(data.created_at, "toReadable")}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
@@ -114,7 +124,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-sm 2xl:text-[0.875vw]">Updated At</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
-              {formattingDate(data.updated_at, "toReadable")}
+              {formatIndiaTime(data.updated_at, "toReadable")}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
@@ -154,7 +164,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               </p>
             </div>
           </div>
-            <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-sm 2xl:text-[0.875vw]">Type Name</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.type.name}

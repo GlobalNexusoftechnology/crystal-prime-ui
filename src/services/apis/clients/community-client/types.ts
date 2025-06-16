@@ -138,7 +138,8 @@ export interface IStats {
   assignedToMe: number;
   profileSent: number;
   businessDone: number;
-  notInterested: 0;
+  todayFollowups: 0;
+
 }
 
 export interface IAllLeadResponse {
@@ -270,7 +271,7 @@ export interface ICreateLeadPayload {
   phone: string;
   other_contact: string;
   escalate_to: boolean;
-  email: string;
+  email: string[];
   location: string;
   budget?: number | null;
   requirement: string;
@@ -643,6 +644,35 @@ export interface IAllUsersResponse {
   data: IUsersDetails[];
 }
 
+// export interface INotification {
+//   id: string;
+//   created_at: string;
+//   updated_at: string;
+//   deleted: boolean;
+//   deleted_at: string | null;
+//   type: 'LEAD_ASSIGNED' | 'PASSWORD_CHANGE' | 'FOLLOW_UP' | string; // Add more types as needed
+//   message: string;
+//   isRead: boolean;
+//   metadata: {
+//     leadId?: string;
+//     leadName?: string;
+//     assignedBy?: string;
+//     leadContact?: string;
+//     dueDate?: string;
+//     remarks?: string;
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//     [key: string]: any; // Allow extra keys
+//   };
+//   userId: string;
+// }
+
+// export interface IGetNotificationsResponse {
+//   status: boolean;
+//   message: string;
+//   success: true;
+//   data: INotification[];
+// }
+
 //post  ...
 export interface ICreateUserPayload {
   first_name: string;
@@ -785,4 +815,50 @@ export interface IAllLeadFollowUpResponse {
   message: string;
   success: true;
   data: LeadFollowupsList[];
+}
+
+//interface for mark as read notification api response
+export interface IMarkAsReadNotificationResponse {
+  status: string;
+  message: string;
+  
+}
+
+
+export interface IDeleteNotification {
+  status: string;
+  message: string;
+ 
+}
+
+
+
+
+interface INotificationMetadata {
+  leadId: string;
+  leadName: string;
+  assignedBy?: string;
+  dueDate?: string;
+  remarks?: string;
+  followupId?: string;
+  leadContact?: string;
+  reminderDate?: string;
+}
+
+export interface INotification {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  type: 'LEAD_ASSIGNED' | 'FOLLOWUP_REMINDER' | 'FOLLOWUP_CREATED' | 'QUOTATION_SENT' | 'BUSINESS_DONE' | 'LEAD_ESCALATED';
+  message: string;
+  isRead: boolean;
+  metadata: INotificationMetadata;
+  userId: string;
+  user: IUser;
+}
+
+export interface INotificationsResponse {
+  data: INotification[];
 }

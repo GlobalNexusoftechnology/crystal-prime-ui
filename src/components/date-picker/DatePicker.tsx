@@ -15,7 +15,8 @@ export function DatePicker({
   label,
   isRequired = false,
   datePickerBorderRadius = "rounded-md 2xl:rounded-[0.5vw]",
-  name="date"
+  name="date",
+  datePickerWidth="w-full"
 }: {
   value: string;
   onChange: (val: string) => void;
@@ -24,12 +25,14 @@ export function DatePicker({
   label?: string;
   isRequired?: boolean;
   datePickerBorderRadius?: string;
-  name?: string
+  name?: string;
+  datePickerWidth?:string;
+
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="w-full">
+    <div className={`${datePickerWidth}`}>
       {label && (
         <label className="block 2xl:text-[1vw] text-gray-700 mb-2 2xl:mb-[0.5vw]">
           {label} {isRequired && <span className="text-red-500">*</span>}
@@ -41,7 +44,7 @@ export function DatePicker({
           placeholder={placeholder}
           ref={inputRef}
           type="date"
-          className={`w-full 2xl:text-[1vw] border 2xl:border-[0.1px] ${
+          className={`w-full 2xl:text-[1vw] border 2xl:border-[0.1vw] ${
             error ? "border-red-500" : "border-gray-300"
           } ${datePickerBorderRadius} px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] pr-10 2xl:pr-[2.5vw] focus:outline-none focus:ring-1 ${
             error ? "focus:ring-red-500" : "focus:ring-primary"
