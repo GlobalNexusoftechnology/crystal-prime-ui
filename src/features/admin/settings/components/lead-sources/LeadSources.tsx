@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { SearchBar, Button, Table } from "@/components";
-import { ILeadSourcesListTableColumn } from "@/constants";
+import { EAction, EModule, ILeadSourcesListTableColumn, ITableAction } from "@/constants";
 import { AddLeadSourcesModal } from "../add-lead-sources-modal";
 import {
   IAllSourcesList,
@@ -11,6 +11,7 @@ import {
 } from "@/services";
 import { formatDate, IApiError } from "@/utils";
 import toast from "react-hot-toast";
+import { usePermission } from "@/utils/hooks";
 
 export function LeadSources() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,6 +20,10 @@ export function LeadSources() {
     name: string;
   } | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const { hasPermission } = usePermission();
+  const cavAddSources = hasPermission(EModule.LEAD_SOURCES, EAction.ADD);
+  const cavEditSources = hasPermission(EModule.LEAD_SOURCES, EAction.EDIT);
+  const cavDeleteSources = hasPermission(EModule.LEAD_SOURCES, EAction.DELETE);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -58,28 +63,40 @@ export function LeadSources() {
     );
   }, [searchTerm, fullSourcesList]);
 
-  const leadSourcesAction = [
-    {
+  const leadSourcesAction: ITableAction<IAllSourcesList>[] = [];
+
+  if (cavEditSources) {
+    leadSourcesAction.push({
       label: "Edit",
       onClick: (row: IAllSourcesList) => {
-        console.log("Edit clicked", row.id);
         setSelectedSource({ id: row.id, name: row.name });
         setIsAddModalOpen(true);
       },
       className: "text-blue-500",
-    },
-    {
+    });
+  }
+
+  if (cavDeleteSources) {
+    leadSourcesAction.push({
       label: "Delete",
       onClick: (row: IAllSourcesList) => {
-        console.log("Delete clicked", row.id);
         onDeleteSources(row.id);
       },
       className: "text-red-500",
-    },
-  ];
+    });
+  }
 
+  // Called after add or edit success: refetch + clear edit state
   const handleAddSourceSuccessCallback = () => {
     fetchAllSources();
+    setSelectedSource(null); // Clear edit source after success
+    setIsAddModalOpen(false); // Close modal after success
+  };
+
+  // Clear modal and edit source when modal closes (Cancel or outside click)
+  const handleModalClose = () => {
+    setIsAddModalOpen(false);
+    setSelectedSource(null);
   };
 
   return (
@@ -94,12 +111,17 @@ export function LeadSources() {
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
-          <Button
-            title="Add Sources"
-            variant="background-white"
-            width="w-full md:w-fit"
-            onClick={() => setIsAddModalOpen(true)}
-          />
+          {cavAddSources ? (
+            <Button
+              title="Add Sources"
+              variant="background-white"
+              width="w-full md:w-fit"
+              onClick={() => {
+                setSelectedSource(null); // Clear any edit before opening
+                setIsAddModalOpen(true);
+              }}
+            />
+          ) : null}
         </div>
       </div>
 
@@ -113,10 +135,11 @@ export function LeadSources() {
       {isAddModalOpen && (
         <AddLeadSourcesModal
           isOpen={isAddModalOpen}
-          onClose={() => setIsAddModalOpen(false)}
+          onClose={handleModalClose}
           onAddSourceSuccessCallback={handleAddSourceSuccessCallback}
           sourceId={selectedSource?.id}
           sourceName={selectedSource?.name}
+          onClearEditData={() => setSelectedSource(null)}
         />
       )}
     </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { RoleManagementListTable } from "./components/role-management-list-table/RoleManagementListTable";
+import { RoleManagementListTable } from "./components";
 
 export function RoleManagement() {
   return <RoleManagementListTable />;

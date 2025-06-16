@@ -12,9 +12,11 @@ import {
   useCreateLeadFollowUpMutation,
 } from "@/services";
 import { formatDate, formattingDate, IApiError } from "@/utils";
+import toast from "react-hot-toast";
 
-// ✅ Fixing validationSchema field names to match Formik fields
+// Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
+  lead_id: Yup.string().required("Lead ID is required"),
   due_date: Yup.string().required("Next follow-up date is required"),
   status: Yup.string().oneOf(
     Object.values(LeadFollowupStatus),
@@ -31,20 +33,21 @@ interface IFollowupsProps {
 }
 
 export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
-  const { data: followupData, LeadFollowUp } = useAlLeadFollowUpQuery();
+  const { data: followupData, LeadFollowUp } = useAlLeadFollowUpQuery(leadId);
   const { allUsersData } = useAllUsersQuery();
   const { activeSession } = useAuthStore();
   const userId = activeSession?.user?.id;
 
   const { createLeadFollowUp } = useCreateLeadFollowUpMutation({
-    onSuccessCallback: (data: ICreateLeadFollowUpResponse) => {
-      console.log("Lead follow-up created successfully", data);
+    onSuccessCallback: (response: ICreateLeadFollowUpResponse) => {
+      console.log("Lead follow-up created successfully", response);
+      toast.success(response.message)
       formik.resetForm();
       setShowForm(false);
       LeadFollowUp();
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to create lead follow-up:", err);
+      toast.error(err.message)
     },
   });
 
@@ -57,8 +60,12 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
       remarks: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      createLeadFollowUp(values);
+    onSubmit: async (values) => {
+      if (!leadId) {
+        toast.error("Lead ID is missing");
+        return;
+      }
+      await createLeadFollowUp({ ...values, lead_id: leadId });
     },
   });
 
@@ -74,13 +81,13 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
     })) || [];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 2xl:gap-[1vw]">
       {showForm ? (
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
+          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
         >
-          <div className="flex items-center gap-4 2xl:gap-[1vw]">
+          <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw]">
             <Dropdown
               label="Status"
               options={statusOptions}
@@ -120,38 +127,38 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
               onClick={() => setShowForm(false)}
               width="w-full"
             />
-            <Button title="Add Next Followup" type="submit" width="w-full" />
+            <Button title="Submit followup" type="submit" width="w-full" />
           </div>
         </form>
       ) : (
         followupData?.map((followup, idx) => (
           <div
             key={idx}
-            className="flex flex-col gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md space-y-1 mb-3"
+            className="flex flex-col gap-2 md:gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
           >
             <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
               <div className="text-darkBlue flex justify-between items-center gap-4 2xl:gap-[1vw]">
-                <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
-                  <p>Assigned To:</p>
-                  <p>{`${followup?.user?.first_name} ${followup?.user?.last_name}`}</p>
+                <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
+                  <p className="text-[1rem] 2xl:text-[1vw]">Assigned To:</p>
+                  <p className="text-[1rem] 2xl:text-[1vw]">{`${followup?.user?.first_name} ${followup?.user?.last_name}`}</p>
                 </div>
-                <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
-                  <p>Status:</p>
-                  <p>{followup.status}</p>
+                <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
+                  <p className="text-[1rem] 2xl:text-[1vw]">Status:</p>
+                  <p className="text-[1rem] 2xl:text-[1vw]">{followup?.status}</p>
                 </div>
               </div>
-              <h1>{followup.remarks}</h1>
+              <h1 className="text-[1rem] 2xl:text-[1vw]">{followup?.remarks}</h1>
             </div>
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-2 2xl:gap-[0.5vw] underline">
-                <p>Due:</p>
-                <p>{formatDate(`${followup?.due_date}`)}</p>
+            <div className="flex justify-between flex-col md:flex-row gap-4">
+              <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
+                <p className="text-[1rem] 2xl:text-[1vw]">Due:</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">{formatDate(`${followup?.due_date}`)}</p>
               </div>
-              {followup.completed_date ? (
-                <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
-                  <p>Completed:</p>
-                  <p>
-                    {formattingDate(`${followup.completed_date}`, "toReadable")}
+              {followup?.completed_date ? (
+                <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
+                  <p className="text-[1rem] 2xl:text-[1vw]">Completed:</p>
+                  <p className="text-[1rem] 2xl:text-[1vw]">
+                    {formattingDate(`${followup?.completed_date}`, "toReadable")}
                   </p>
                 </div>
               ) : null}

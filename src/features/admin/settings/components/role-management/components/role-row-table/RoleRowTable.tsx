@@ -93,9 +93,9 @@ export function RoleRowTable({
       >
         <td className="p-3 2xl:p-[0.75vw] flex items-center gap-2 2xl:gap-[0.5vw]">
           {isExpanded ? (
-            <ChevronDown className="w-[3rem] h-[3rem] 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+            <ChevronDown className="w-[1.2rem] h-[1.2rem] 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
           ) : (
-            <ChevronRight className="w-[3rem] h-[3rem] 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+            <ChevronRight className="w-[1.2rem] h-[1.2rem] 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
           )}
           <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">
             {index + 1}

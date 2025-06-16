@@ -1,16 +1,28 @@
-import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
+import {
+  Button,
+  Checkbox,
+  Dropdown,
+  InputField,
+  ModalOverlay,
+} from "@/components";
 import {
   ICreateLeadPayload,
   IUpdateLeadResponse,
   useAllLeadsListQuery,
   useAllSourcesQuery,
   useAllStatusesQuery,
+  useAllTypesQuery,
   useAllUsersQuery,
+  useCreateLeadFollowUpMutation,
   useUpdateLeadMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
 import { Formik, Form } from "formik";
+import toast from "react-hot-toast";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 import * as Yup from "yup";
+import { Plus, X } from "lucide-react";
 
 interface IEditLeadModalProps {
   setIsEditLeadModalOpen: (open: boolean) => void;
@@ -20,23 +32,25 @@ interface IEditLeadModalProps {
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
-  last_name: Yup.string().required("Last Name is required"),
+  // last_name: Yup.string().required("Last Name is required"),
   company: Yup.string().required("Company is required"),
   phone: Yup.string()
-    .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
-    .required("Phone Number is required"),
-  email: Yup.string()
-    .email("Invalid email address")
-    .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
+    .min(10, "Phone must be at least 10 digits")
+    .max(15, "Phone must be at most 15 digits")
+    .required("Phone number is required"),
+  email: Yup.array()
+    .of(
+      Yup.string()
+        .email("Invalid email address")
+        .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
+    )
+    .min(1, "At least one email is required")
     .required("Email is required"),
   location: Yup.string().required("Location is required"),
-  budget: Yup.number()
-    .typeError("Budget must be a number")
-    .positive("Budget must be a positive number")
-    .required("Budget is required"),
   requirement: Yup.string().required("Requirement is required"),
   source_id: Yup.string().required("Source is required"),
   status_id: Yup.string().required("Status is required"),
+  type_id: Yup.string().required("Type is required"),
   assigned_to: Yup.string().required("Assigned To is required"),
 });
 
@@ -48,15 +62,25 @@ export function EditLeadModal({
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
   const { allUsersData } = useAllUsersQuery();
+  const { allTypesData } = useAllTypesQuery();
 
   const { onEditLead, isPending } = useUpdateLeadMutation({
-    onSuccessCallback: (data: IUpdateLeadResponse) => {
-      console.log("Lead updated successfully", data);
+    onSuccessCallback: (response: IUpdateLeadResponse) => {
+      toast.success(response.message);
       setIsEditLeadModalOpen(false);
       leadsRefetch();
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to update lead:", err?.message || err);
+      toast.error(err.message);
+    },
+  });
+
+  const { createLeadFollowUp } = useCreateLeadFollowUpMutation({
+    onSuccessCallback: () => {
+      toast.success("Follow-up created successfully.");
+    },
+    onErrorCallback: (err: IApiError) => {
+      toast.error(err.message);
     },
   });
 
@@ -68,7 +92,7 @@ export function EditLeadModal({
         isOpen={true}
         onClose={() => setIsEditLeadModalOpen(false)}
       >
-        <div className="p-4">Loading lead data...</div>
+        <div className="p-4 2xl:p-[1vw]">Loading lead data...</div>
       </ModalOverlay>
     );
   }
@@ -95,28 +119,33 @@ export function EditLeadModal({
       value: user?.id.toString(),
     })) || [];
 
+  const typeOptions =
+    allTypesData?.map((type) => ({
+      label: type?.name,
+      value: type?.id.toString(),
+    })) || [];
+
   // Normalize initialValues to handle undefined nested fields
   const initialValues: ICreateLeadPayload = {
     first_name: lead.first_name || "",
     last_name: lead.last_name || "",
     company: lead.company || "",
     phone: lead.phone || "",
-    email: lead.email || "",
+    other_contact: lead.other_contact || "",
+    escalate_to: lead.escalate_to || false,
+    email: typeof lead.email === 'string' 
+      ? lead.email.split(',').map((email: string) => email.trim()).filter((email: string) => email !== '')
+      : Array.isArray(lead.email) 
+        ? lead.email 
+        : [""],
     location: lead.location || "",
     budget: lead.budget ?? 0,
     requirement: lead.requirement || "",
-    source_id:
-      lead.source?.id?.toString() ||
-      lead.source_id?.toString() ||
-      "",
-    status_id:
-      lead.status?.id?.toString() ||
-      lead.status_id?.toString() ||
-      "",
+    source_id: lead.source?.id?.toString() || lead.source_id?.toString() || "",
+    status_id: lead.status?.id?.toString() || lead.status_id?.toString() || "",
+    type_id: lead.type?.id?.toString() || lead.type_id?.toString() || "",
     assigned_to:
-      lead.assigned_to?.id?.toString() ||
-      lead.assigned_to_id?.toString() ||
-      "",
+      lead.assigned_to?.id?.toString() || lead.assigned_to_id?.toString() || "",
   };
 
   return (
@@ -124,11 +153,10 @@ export function EditLeadModal({
       modalTitle="Back to Leads"
       isOpen={true}
       onClose={handleCancel}
-      modalClassName="w-[18rem] md:w-[30rem] 2xl:w-[39vw]"
     >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
-        <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <h2 className="text-[1rem] 2xl:text-[1vw] font-semibold">
+        <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
+          <h2 className="text-[1rem] 2xl:text-[1.3vw] font-semibold">
             Edit Lead Information
           </h2>
           <Formik<ICreateLeadPayload>
@@ -143,12 +171,33 @@ export function EditLeadModal({
                   budget: Number(values.budget),
                 },
               });
+
+              if (values.escalate_to) {
+                const newAssignee = allUsersData?.find(
+                  (user) => user.id.toString() === values.assigned_to
+                );
+
+                const previousAssigneeName = `${
+                  lead.assigned_to?.first_name || ""
+                } ${lead.assigned_to?.last_name || ""}`.trim();
+                const newAssigneeName = `${newAssignee?.first_name || ""} ${
+                  newAssignee?.last_name || ""
+                }`.trim();
+
+                createLeadFollowUp({
+                  lead_id: lead.id,
+                  user_id: values.assigned_to,
+                  remarks: `${previousAssigneeName} escalate to ${newAssigneeName}`,
+                  status: "PENDING",
+                  due_date: new Date().toISOString(),
+                });
+              }
             }}
           >
             {({ values, handleChange, setFieldValue, errors, touched }) => {
               return (
                 <Form>
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                     <InputField
                       label="First Name"
                       placeholder="Enter First Name"
@@ -163,11 +212,10 @@ export function EditLeadModal({
                       name="last_name"
                       value={values.last_name}
                       onChange={handleChange}
-                      error={touched.last_name && errors.last_name}
+                      // error={touched.last_name && errors.last_name}
                     />
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                     <InputField
                       label="Company"
                       placeholder="Enter Company Name"
@@ -176,26 +224,73 @@ export function EditLeadModal({
                       onChange={handleChange}
                       error={touched.company && errors.company}
                     />
-                    <InputField
-                      label="Phone"
-                      placeholder="Enter Phone Number"
-                      name="phone"
-                      value={values.phone}
-                      onChange={handleChange}
-                      error={touched.phone && errors.phone}
-                    />
+                    <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
+                      <label className="2xl:text-[1vw] text-gray-700 block">
+                        Phone
+                      </label>
+                      <PhoneInput
+                        country="in"
+                        value={values.phone}
+                        onChange={(value) => setFieldValue("phone", value)}
+                        inputProps={{ name: "phone" }}
+                      />
+                      {errors.phone && touched.phone && (
+                        <p className="text-red-500 text-sm 2xl:text-[0.9vw]">
+                          {errors.phone}
+                        </p>
+                      )}
+                    </div>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
+                  <div className="w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
                     <InputField
-                      label="Email"
-                      placeholder="Enter Email"
-                      name="email"
-                      type="email"
-                      value={values.email}
-                      onChange={handleChange}
-                      error={touched.email && errors.email}
-                    />
+                        label="Other Contact"
+                        placeholder="Enter Other Contact"
+                        name="other_contact"
+                        value={values?.other_contact}
+                        onChange={handleChange}
+                      />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                    <div className="w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-gray-700">Emails</label>
+                        {values.email.map((_, index) => (
+                          <div key={index} className="flex gap-2">
+                            <InputField
+                              placeholder="Enter Email"
+                              name={`email.${index}`}
+                              type="email"
+                              value={values.email[index]}
+                              onChange={handleChange}
+                              error={touched.email && Array.isArray(errors.email) && errors.email[index]}
+                            />
+                            {index > 0 && (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const newEmails = [...values.email];
+                                  newEmails.splice(index, 1);
+                                  setFieldValue("email", newEmails);
+                                }}
+                                className="p-2 text-red-500 hover:text-red-700"
+                              >
+                                <X className="w-5 h-5" />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFieldValue("email", [...values.email, ""]);
+                          }}
+                          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+                        >
+                          <Plus className="w-4 h-4" />
+                          Add Another Email
+                        </button>
+                      </div>
+                    </div>
                     <InputField
                       label="Location"
                       placeholder="Enter Location"
@@ -206,27 +301,26 @@ export function EditLeadModal({
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                     <InputField
                       label="Budget"
                       placeholder="Enter Budget"
                       name="budget"
                       type="number"
-                      value={values.budget}
+                      value={values.budget ?? 0}
                       onChange={handleChange}
-                      error={touched.budget && errors.budget}
                     />
-                    <InputField
-                      label="Requirement"
-                      placeholder="Enter Requirement"
-                      name="requirement"
-                      value={values.requirement}
-                      onChange={handleChange}
-                      error={touched.requirement && errors.requirement}
+                    <Dropdown
+                      label="Assigned To"
+                      options={userOptions}
+                      value={values.assigned_to}
+                      onChange={(val) => setFieldValue("assigned_to", val)}
+                      error={
+                        touched.assigned_to ? errors.assigned_to : undefined
+                      }
                     />
                   </div>
-
-                  <div className="grid grid-cols-2 gap-4 py-2 w-[15rem] md:w-[26rem] xl-w-[29rem] 2xl:w-[34vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                     <Dropdown
                       label="Source ID"
                       options={sourceOptions}
@@ -242,33 +336,51 @@ export function EditLeadModal({
                       error={touched.status_id ? errors.status_id : undefined}
                     />
                   </div>
-                  <div className="grid grid-cols-1 gap-4 py-2">
+                  <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                     <Dropdown
-                      label="Assigned To"
-                      options={userOptions}
-                      value={values.assigned_to}
-                      onChange={(val) => setFieldValue("assigned_to", val)}
-                      error={
-                        touched.assigned_to ? errors.assigned_to : undefined
-                      }
+                      label="Type"
+                      options={typeOptions}
+                      value={values.type_id}
+                      onChange={(val) => setFieldValue("type_id", val)}
+                      error={touched.type_id ? errors.type_id : undefined}
                     />
                   </div>
-
-                  <div className="flex justify-between mt-6 space-x-3">
-                    <Button
-                      title="Cancel"
-                      onClick={handleCancel}
-                      variant="primary-outline"
-                      type="button"
-                      width="w-full"
+                  <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                    <InputField
+                      label="Requirement"
+                      placeholder="Enter Requirement"
+                      name="requirement"
+                      type="textarea"
+                      value={values.requirement}
+                      onChange={handleChange}
+                      error={touched.requirement && errors.requirement}
                     />
-                    <Button
-                      title="Update Lead"
-                      type="submit"
-                      isLoading={isPending}
-                      width="w-full"
-                      disabled={!lead?.id}
-                    />
+                    <div className="py-2 2xl:py-[0.5vw]">
+                      <Checkbox
+                        label="Escalate To"
+                        name="escalate_to"
+                        checked={values.escalate_to}
+                        onChange={(e) =>
+                          setFieldValue("escalate_to", e.target.checked)
+                        }
+                      />
+                    </div>
+                    <div className="flex justify-between mt-2 2xl:mt-[0.5vw] space-x-3">
+                      <Button
+                        title="Cancel"
+                        onClick={handleCancel}
+                        variant="primary-outline"
+                        type="button"
+                        width="w-full"
+                      />
+                      <Button
+                        title="Update Lead"
+                        type="submit"
+                        isLoading={isPending}
+                        width="w-full"
+                        disabled={!lead?.id}
+                      />
+                    </div>
                   </div>
                 </Form>
               );

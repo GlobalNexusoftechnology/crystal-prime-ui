@@ -14,4 +14,5 @@ export * from "./date-picker"
 export * from "./table"
 export * from "./user-dropdown"
 export * from "./upload-document"
+export * from "./checkbox"
 export { RoleRedirectWrapper } from './role-redirect-wrapper';

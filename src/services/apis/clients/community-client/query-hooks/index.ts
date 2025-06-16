@@ -47,3 +47,20 @@ export { useUploadAttachmentMutation } from "./useUploadAttachmentMutation";
 export { useCreateRoleMutation } from './useCreateRoleMutation';
 export { useUpdateRoleMutation } from './useUpdateRoleMutation';
 export { useDeleteRoleMutation } from './useDeleteRoleMutation';
+export { useRoleDetailQuery } from './useRoleDetailQuery';
+
+
+// lead types
+export { useAllTypesQuery } from "./useAllTypesQuery"
+export { useCreateTypeMutation } from "./useCreateTypeMutation"
+export { useDeleteTypeMutation } from "./useDeleteTypeMutation"
+export { useUpdateTypeMutation } from "./useUpdateTypeMutation"
+
+export { useNotificationsQuery } from "./useNotificationsQuery"
+
+export { useMarkAsReadNotificationMutation } from "./useMarkAsReadNotificationMutation"
+export { useDeleteNotificationMutation } from "./useDeleteNotificationMutation"
+
+
+
+

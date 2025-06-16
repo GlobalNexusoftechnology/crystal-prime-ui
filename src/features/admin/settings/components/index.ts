@@ -4,6 +4,7 @@ export * from "./lead-status"
 export * from "./add-lead-status-modal"
 export * from "./setting-tab"
 export * from "./role-management"
+export * from "./lead-types"
 
 
 

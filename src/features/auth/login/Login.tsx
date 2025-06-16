@@ -30,7 +30,7 @@ const togglePasswordVisibility = () => {
     });
 
     toast.success(response?.message || "Login successful 🎉");
-    router.push("/admin/dashboard");
+    router.push("/admin/lead-management");
   };
 
   const handleErrorCallback = (error: IApiError) => {
@@ -39,7 +39,7 @@ const togglePasswordVisibility = () => {
       response?.data?.message ||
       error?.message ||
       "Login failed. Please try again.";
-    toast.error(errMsg); // ✅ toast error
+    toast.error(errMsg); 
   };
 
   const { submitLogin, isPending } = useLoginMutation({
@@ -65,7 +65,7 @@ const togglePasswordVisibility = () => {
 
   return (
     <div className="flex justify-center items-center">
-      <AuthCard title="Login" copyright="Copyright ©Satkar.com | 2025">
+      <AuthCard title="Login" copyright="Copyrights and developed © Islahdata.com">
         <form
           onSubmit={formik.handleSubmit}
           className="flex flex-col gap-4 2xl:gap-[1vw]"
@@ -100,7 +100,7 @@ const togglePasswordVisibility = () => {
                 : undefined
             }
             suffixIcon={
-              showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />
+              showPassword ? <FiEye className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" /> : <FiEyeOff className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
             }
             onIconClick={togglePasswordVisibility}
           />

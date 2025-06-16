@@ -16,6 +16,7 @@ import {
   IApiError,
 } from "@/utils";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 interface IAttachmentsProps {
   showForm: boolean;
@@ -33,7 +34,7 @@ export function Attachments({
   setShowForm,
 }: IAttachmentsProps) {
   const { allLeadAttachmentData, allLeadAttachment } =
-    useAllLeadAttachmentQuery();
+    useAllLeadAttachmentQuery(leadId);
   const { activeSession } = useAuthStore();
   const firstName = activeSession?.user?.first_name;
   const lastName = activeSession?.user?.last_name;
@@ -51,19 +52,21 @@ export function Attachments({
   });
 
   const { isPending, onUploadAttachment } = useUploadAttachmentMutation({
-    onSuccessCallback: (response) => {
+    onSuccessCallback: async (response) => {
       toast.success(response.message);
       setShowForm(false);
-      onCreateLeadAttachment({
+      await onCreateLeadAttachment({
         lead_id: leadId,
         uploaded_by: uploaded_by,
         file_path: response.data.docUrl,
         file_type: response.data.fileType,
+        file_name: response.data.fileName,
       });
       allLeadAttachment();
     },
     onErrorCallback: (error: IApiError) => {
       toast.error(error.message);
+      formik.resetForm()
     },
   });
 
@@ -80,19 +83,21 @@ export function Attachments({
           resetForm();
         } catch (err) {
           console.error("Upload error:", err);
+          resetForm();
         }
       } else {
         console.warn("No valid file found to upload");
+        resetForm();
       }
     },
   });
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 2xl:gap-[1vw]">
       {showForm ? (
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md"
+          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw]"
         >
           <UploadDocument
             label="Upload Document"
@@ -102,10 +107,10 @@ export function Attachments({
                 formik.setFieldValue("document", files[0]);
               }
             }}
-            error={formik.touched.document ? formik.errors.document : undefined}
+            error={formik?.touched?.document ? formik?.errors?.document : undefined}
           />
 
-          <div className="flex justify-end gap-4 2xl:gap-[1vw]">
+          <div className="flex justify-end gap-4 2xl:gap-[1vw] ">
             <Button
               title="Cancel"
               onClick={() => setShowForm(false)}
@@ -124,15 +129,15 @@ export function Attachments({
         allLeadAttachmentData?.map((attachment, idx) => (
           <div
             key={idx}
-            className="flex gap-6 2xl:gap-[2vw] text-darkBlue bg-customGray border 2xl:border-[0.1vw] p-3 rounded-md"
+            className="flex gap-6 2xl:gap-[2vw] text-darkBlue bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] flex-col md:flex-row justify-between "
           >
-            <div className="w-[70%] flex flex-col gap-4 2xl:gap-[1vw]">
+            <div className="w-[70%] flex flex-col gap-4 2xl:gap-[1vw] ">
               <div className="text-primary flex items-center underline scrollbar-hidden overflow-x-auto">
-                <p>{attachment.file_path}</p>
+                <Link className="text-[1rem] 2xl:text-[1vw]" href={attachment.file_path}>{attachment?.file_name}</Link>
               </div>
-              <div className="text-lightGreen flex items-center gap-2 2xl:gap-[0.5vw] underline">
-                <p>Created At:</p>
-                <p>{formattingDate(attachment.created_at, "toReadable")}</p>
+              <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
+                <p className="text-[1rem] 2xl:text-[1vw]">Created At:</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">{formattingDate(attachment?.created_at, "toReadable")}</p>
               </div>
             </div>
             <div>
@@ -146,8 +151,8 @@ export function Attachments({
                     ),
                   }}
                 >
-                  {getInitials(attachment?.uploaded_by.first_name)}
-                  {getInitials(attachment?.uploaded_by.last_name)}
+                  {getInitials(attachment?.uploaded_by?.first_name)}
+                  {getInitials(attachment?.uploaded_by?.last_name)}
                 </p>
                 <p className="underline font-medium text-textColor text-[1rem] 2xl:text-[1vw]">
                   {attachment?.uploaded_by?.first_name} {attachment?.uploaded_by?.last_name}

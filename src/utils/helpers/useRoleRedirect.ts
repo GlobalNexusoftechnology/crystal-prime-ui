@@ -14,7 +14,7 @@ export const useRoleRedirect = ({
 }: IUseRoleRedirectProps) => {
   const router = useRouter();
   const { activeSession } = useAuthStore();
-  const userRole = activeSession?.user?.role_id;
+  const userRole = activeSession?.user?.role.id;
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     const checkRole = async () => {

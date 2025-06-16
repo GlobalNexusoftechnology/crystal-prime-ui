@@ -4,18 +4,15 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { IAdminSidebarLink, ImageRegistry } from "@/constants";
 import { useAuthStore } from "@/services";
-import { BsBoxArrowLeft } from "react-icons/bs";
 import { CgLogOut } from "react-icons/cg";
 
 interface IAdminSidebarProps {
   adminSidebarLinks: IAdminSidebarLink[];
-  SetIsVisibleSidebar: () => void;
   isVisibleSidebar: boolean;
 }
 
 export function AdminSidebar({
   adminSidebarLinks,
-  SetIsVisibleSidebar,
   isVisibleSidebar,
 }: IAdminSidebarProps) {
   const pathName = usePathname();
@@ -41,12 +38,6 @@ export function AdminSidebar({
     <aside
       className={`relative flex flex-col items-center w-full h-full bg-white py-2 2xl:py-[1vw] overflow-hidden`}
     >
-      <div
-        className="absolute right-2 top-2 flex xl:hidden"
-        onClick={SetIsVisibleSidebar}
-      >
-        <BsBoxArrowLeft className="w-7 h-7" />
-      </div>
       <div className="flex justify-center pb-4 2xl:pb-[1vw]">
         {!isVisibleSidebar ? (
           <div className={`w-[13rem] xl:w-[15vw]`}>
@@ -58,7 +49,7 @@ export function AdminSidebar({
             />
           </div>
         ) : (
-          <div className={`w-[3rem] xl:w-[3vw]`}>
+          <div className={`w-[5rem] xl:w-[5vw]`}>
             <Image
               src={ImageRegistry.websiteLogoIcon}
               alt="website-logo"
@@ -83,7 +74,7 @@ export function AdminSidebar({
                     isActive ? "text-primary" : null
                   }`}
                 >
-                  <span className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]">
+                  <span className="w-8 2xl:w-[2vw] h-8 2xl:h-[2vw]">
                     {isActive ? link.activeIcon : link.icon}
                   </span>
                   <span

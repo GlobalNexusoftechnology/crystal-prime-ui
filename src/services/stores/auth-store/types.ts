@@ -1,3 +1,5 @@
+import { IRoleData } from "@/services/apis";
+
 /**
  * TODO: Update the IUser based on the response we get from the API.
  * This represents the user information fetched from the backend.
@@ -9,7 +11,7 @@ export interface IUser {
   email: string;
   phone_number: string;
   dob: string;
-  role_id: string;
+  role: IRoleData;
   updated_at: string;
   deleted_at: string;
   created_at: string;

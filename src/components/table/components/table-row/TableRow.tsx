@@ -51,11 +51,6 @@ export function TableRow<
       <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">
         {String(index + 1).padStart(1, "0")}
       </td>
-
-      {columns.map((col, index) => (
-        <TableCell key={index} row={row} col={col} index={index} />
-      ))}
-
       {actions.length > 0 && (
         <td className="p-3 2xl:p-[0.75vw] relative">
           <button
@@ -69,7 +64,7 @@ export function TableRow<
           {isOpen && (
             <div
               ref={actionRef}
-              className={`right-[95%] top-[-40%] absolute bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-fit min-w-[8rem] 2xl:min-w-[8vw]`}
+              className={`left-[45%] top-[50%] translate-y-[-70%]  absolute bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-fit min-w-[8rem] 2xl:min-w-[8vw]`}
             >
               {actions.map((action, actionIndex) => (
                 <button
@@ -89,6 +84,9 @@ export function TableRow<
           )}
         </td>
       )}
+      {columns.map((col, index) => (
+        <TableCell key={index} row={row} col={col} index={index} />
+      ))}
     </tr>
   );
 }
@@ -138,7 +136,7 @@ export function TableCell<T extends { id: string | number }>({
       ) : col.cell ? (
         col.cell({ row, value })
       ) : (
-        value as React.ReactNode
+        (value as React.ReactNode)
       )}
     </td>
   );

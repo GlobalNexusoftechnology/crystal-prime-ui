@@ -3,45 +3,46 @@ import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 import { COMMUNITY_CLIENT } from "../communityClient";
 
 /**
- * This is to track the change password.
+ * This is to track the useChangePasswordMutation keys in react  cache.
  */
-const CHANGE_PASSWORD_MUTATION_KEY = "change-password-mutation-key";
+const MUT_USER_CHANGE_PASSWORD = "user-change-password-mutation-key";
 
+//interface for IChangePasswordOptions
 interface IChangePasswordOptions {
   onSuccessCallback: (data: IChangePasswordResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
 
 /**
- * Hook to change password
+ * useChangePasswordMutation hook
  */
 export const useChangePasswordMutation = ({
   onSuccessCallback,
   onErrorCallback,
 }: IChangePasswordOptions) => {
   const { mutate, isPending, error } = useMutation({
-    mutationKey: [CHANGE_PASSWORD_MUTATION_KEY],
-    networkMode: "always", // Ensures the call happens even in offline mode
-    retry: false, // Do not retry failed requests
+    mutationKey: [MUT_USER_CHANGE_PASSWORD],
+    networkMode: "always", // Even make calls when offline
+    retry: false, // For login Request, do not retry failed requests.
     mutationFn: COMMUNITY_CLIENT.changePassword,
     onSuccess: (response) => {
       onSuccessCallback(response);
     },
     onError: (err: IApiError) => {
       errorLogToRemoteUtil({
-        error: err,
+        error,
         errorCode: ErrorEventsEnum.ERROR_IN_API_CALL,
-        errorTitle: "Error in uschangePasswordMutation",
-        message: err?.message,
+        errorTitle: "Error in useChangePasswordMutation",
+        message: error?.message,
       });
-
       onErrorCallback?.(err);
+      return err;
     },
   });
 
   return {
     error,
     isPending,
-    changePassword: mutate,
+    onChangePassword: mutate,
   };
 };

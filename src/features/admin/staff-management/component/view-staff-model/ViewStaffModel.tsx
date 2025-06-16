@@ -1,5 +1,4 @@
 import { ModalOverlay } from "@/components";
-import { ThreeIcon } from "@/features";
 import { IUserViewDetails } from "@/services";
 import { formatDate, formatDateToMMDDYYYY } from "@/utils";
 import { Mail, Phone } from "lucide-react";
@@ -45,18 +44,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
                 <span className="underline text-[1rem] 2xl:text-[1vw] ">
                   {selectStaff?.last_name}
                 </span>
-              </div>
-              {/* <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
-                <span className="text-sm 2xl:text-[0.875vw] text-gray-600">
-                  ID
-                </span>
-                <span className="underline text-[1rem] 2xl:text-[1vw] ">
-                  {selectStaff?.id}
-                </span>
-              </div> */}
-              <div className="border border-gray-400 2xl:border-[0.1vw] p-2 rounded-full flex items-center justify-center">
-                <ThreeIcon className="h-5 w-5 2xl:h-[1.25vw] 2xl:w-[1.25vw] text-gray-600" />
-              </div>
+              </div>  
             </div>
             <div className="flex flex-col gap-4 md:flex-row justify-between md:gap-1 2xl:gap-[0.25vw]">
               {/* Contact Info */}

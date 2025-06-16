@@ -9,5 +9,5 @@ import { Settings } from "@/features";
  * @returns JSX.Element representing the settings page.
  */
 export default function SettingPage() {
-  return <div><Settings /></div>;
+  return <Settings />;
 }

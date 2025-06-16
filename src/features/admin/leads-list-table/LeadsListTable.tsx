@@ -1,7 +1,9 @@
 "use client";
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import { Button, Dropdown, SearchBar, Table } from "@/components";
+import { Button, Dropdown, SearchBar, Table, DatePicker } from "@/components";
 import {
+  EAction,
+  EModule,
   ILeadsListDetailsProps,
   ILeadsListProps,
   ITableAction,
@@ -14,11 +16,17 @@ import {
   useAllLeadDownloadExcelQuery,
   useAllLeadsListQuery,
   useAllStatusesQuery,
+  useAllTypesQuery,
   useDeleteLeadMutation,
   useLeadDetailQuery,
   useLeadDownloadTemplateExcelQuery,
+  useAlLeadFollowUpQuery,
 } from "@/services";
 import { downloadBlobFile, formatDate, IApiError } from "@/utils";
+import { FiPlus, FiX } from "react-icons/fi";
+import { ImDownload2 } from "react-icons/im";
+import { usePermission } from "@/utils/hooks";
+import { LeadFollowupsList } from "@/services/apis/clients/community-client/types";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
@@ -29,26 +37,51 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [isEditLeadModalOpen, setIsEditLeadModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
+  const [selectedType, setSelectedType] = useState("All Type");
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
+  const [followupFromDate, setFollowupFromDate] = useState("");
+  const [followupToDate, setFollowupToDate] = useState("");
 
   const { data: allLeadList, isLoading, leadsRefetch } = useAllLeadsListQuery();
   const { allStatusesData } = useAllStatusesQuery();
-  const { onAllLeadDownloadExcel, data: allLeadDownloadExcelData } = useAllLeadDownloadExcelQuery();
+  const { allTypesData } = useAllTypesQuery();
+  const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
 
-  const { onLeadDownloadTemplateExcel, data: leadDownloadTemplateExcelData } = useLeadDownloadTemplateExcelQuery();
+  const { onLeadDownloadTemplateExcel } = useLeadDownloadTemplateExcelQuery();
 
-  useEffect(() => {
-  if (allLeadDownloadExcelData instanceof Blob) {
-      // You may want to pass filename manually or extract it from a header elsewhere
-      downloadBlobFile(allLeadDownloadExcelData, "leads"+ new Date().getTime() + ".xlsx");
+  const { hasPermission } = usePermission();
+  const cavAddLeadManagement = hasPermission(
+    EModule.LEAD_MANAGEMENT,
+    EAction.ADD
+  );
+  const cavViewLeadManagement = hasPermission(
+    EModule.LEAD_MANAGEMENT,
+    EAction.VIEW
+  );
+  const cavEditLeadManagement = hasPermission(
+    EModule.LEAD_MANAGEMENT,
+    EAction.EDIT
+  );
+  const cavDeleteLeadManagement = hasPermission(
+    EModule.LEAD_MANAGEMENT,
+    EAction.DELETE
+  );
+
+  const { data: allFollowups } = useAlLeadFollowUpQuery("");
+
+  const handleLeadDownloadExcel = async () => {
+    const { data } = await onAllLeadDownloadExcel();
+    if (data instanceof Blob) {
+      await downloadBlobFile(data, `leads_${new Date().getTime()}.xlsx`);
     }
-  }, [allLeadDownloadExcelData]);
+  };
 
-  useEffect(() => {
-    if (leadDownloadTemplateExcelData instanceof Blob) {
-      downloadBlobFile(leadDownloadTemplateExcelData, "upload_lead_template.xlsx");
+  const handleLeadDownloadTemplateExcel = async () => {
+    const { data } = await onLeadDownloadTemplateExcel();
+    if (data instanceof Blob) {
+      await downloadBlobFile(data, `upload_lead_template.xlsx`);
     }
-  }, [leadDownloadTemplateExcelData]);
+  };
 
   const {
     leadDetailById,
@@ -69,52 +102,48 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   // Fetch lead details on view/edit open
   useEffect(() => {
     if (leadId) refetchLeadDetail();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    leadId,
-    leadDetailById,
-    isEditLeadModalOpen,
-    viewLead,
-  ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leadId, leadDetailById, isEditLeadModalOpen, viewLead]);
 
-  const actions: ITableAction<ILeadsListProps>[] = [
-    {
-      label: "Edit",
-      onClick: (row) => {
-        setLeadId(row.id);
-        setIsEditLeadModalOpen(true);
-      },
-      className: "text-primary",
-    },
-    {
+  const leadLeadManagementAction: ITableAction<ILeadsListProps>[] = [];
+
+  if (cavViewLeadManagement) {
+    leadLeadManagementAction.push({
       label: "View",
-      onClick: (row) => {
+      onClick: (row: ILeadsListProps) => {
         setLeadId(row.id);
         setViewLead(row);
       },
-      className: "text-primary",
-    },
-    {
+      className: "text-blue-500",
+    });
+  }
+  if (cavEditLeadManagement) {
+    leadLeadManagementAction.push({
+      label: "Edit",
+      onClick: (row: ILeadsListProps) => {
+        setLeadId(row.id);
+        setIsEditLeadModalOpen(true);
+      },
+      className: "text-blue-500",
+    });
+  }
+
+  if (cavDeleteLeadManagement) {
+    leadLeadManagementAction.push({
       label: "Delete",
-      onClick: (row) => {
+      onClick: (row: ILeadsListProps) => {
         onDeleteLead(row.id);
       },
       className: "text-red-500",
-    },
-  ];
-
-  // const statusOptions =
-  //   allStatusesData?.map((status) => ({
-  //     label: status?.name,
-  //     value: status?.id.toString(),
-  //   })) || [];
-    
+    });
+  }
 
   const leadDetailModalData: ILeadsListDetailsProps = {
     id: leadDetailById?.id || "null",
     first_name: leadDetailById?.first_name || "null",
     last_name: leadDetailById?.last_name || "null",
     phone: leadDetailById?.phone || "null",
+    other_contact: leadDetailById?.other_contact || "null",
     email: leadDetailById?.email || "null",
     company: leadDetailById?.company || "null",
     requirement: leadDetailById?.requirement || "null",
@@ -130,6 +159,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     },
     created_at: leadDetailById?.created_at || "null",
     updated_at: leadDetailById?.updated_at || "null",
+    created_by: leadDetailById?.created_by || "null",
+    updated_by: leadDetailById?.updated_by || "null",
     deleted_at: leadDetailById?.deleted_at || "null",
     assignedTo: leadDetailById?.assigned_to || {
       id: leadDetailById?.assigned_to?.id || "",
@@ -153,6 +184,14 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       deleted: leadDetailById?.source?.deleted || false,
       deleted_at: leadDetailById?.source?.deleted_at || "null",
     },
+    type: leadDetailById?.type || {
+      id: leadDetailById?.type?.id || "null",
+      name: leadDetailById?.type?.name || "null",
+      created_at: leadDetailById?.type?.created_at || "null",
+      updated_at: leadDetailById?.type?.updated_at || "null",
+      deleted: leadDetailById?.type?.deleted || false,
+      deleted_at: leadDetailById?.type?.deleted_at || "null",
+    },
   };
 
   const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
@@ -161,6 +200,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       first_name: lead?.first_name || "N/A",
       last_name: lead?.last_name || "N/A",
       phone: lead?.phone || "N/A",
+      other_contact: lead?.other_contact || "N/A",
       email: lead?.email || "N/A",
       company: lead?.company || "N/A",
       location: lead?.location || "N/A",
@@ -168,6 +208,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       requirement: lead?.requirement || "N/A",
       source_id: lead?.source?.name || "N/A",
       status_id: lead?.status?.name || "N/A",
+      type_id: lead?.type?.name || "N/A",
       created_at: lead?.created_at || "N/A",
       updated_at: lead?.updated_at || "N/A",
       deleted_at: lead?.deleted_at || "N/A",
@@ -181,47 +222,101 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     setSearchQuery(query.toLowerCase());
   };
 
- const statusOptions = [
-  { label: "All Status", value: "All Status" },
-  ...(allStatusesData?.map((status) => ({
-    label: status?.name,
-    value: status?.id.toString(),
-  })) || []),
-];
+  const statusOptions = [
+    { label: "All Status", value: "All Status" },
+    ...(allStatusesData?.map((status) => ({
+      label: status?.name,
+      value: status?.id.toString(),
+    })) || []),
+  ];
 
-const handleChange = (val: string) => {
-  setSelectedStatus(val);
-};
+  const typeOptions = [
+    { label: "All Type", value: "All Type" },
+    ...(allTypesData?.map((type) => ({
+      label: type?.name,
+      value: type?.id.toString(),
+    })) || []),
+  ];
 
-const filteredLeads = useMemo(() => {
-  return leadsList.filter((lead) => {
-    const matchQuery =
-      lead.id?.toLowerCase().includes(searchQuery) ||
-      lead.first_name?.toLowerCase().includes(searchQuery) ||
-      lead.last_name?.toLowerCase().includes(searchQuery) ||
-      lead.phone?.toLowerCase().includes(searchQuery) ||
-      lead.company?.toLowerCase().includes(searchQuery) ||
-      lead.budget?.toLowerCase().includes(searchQuery) ||
-      lead.requirement?.toLowerCase().includes(searchQuery) ||
-      lead.email?.toLowerCase().includes(searchQuery) ||
-      lead.location?.toLowerCase().includes(searchQuery);
-
-    const matchStatus =
-      selectedStatus === "All Status" ||
-      lead.status_id?.toLowerCase() ===
-        allStatusesData?.find((status) => status.id.toString() === selectedStatus)?.name?.toLowerCase();
-
-    return matchQuery && matchStatus;
-  });
-}, [leadsList, searchQuery, selectedStatus, allStatusesData]);;
-
-  const handleLeadDownloadExcel = () => {
-    onAllLeadDownloadExcel();
+  const handleStatusChange = (val: string) => {
+    setSelectedStatus(val);
   };
 
-  const handleLeadDownloadTemplateExcel = () => {
-    onLeadDownloadTemplateExcel();
+  const handleTypeChange = (val: string) => {
+    setSelectedType(val);
   };
+
+  const handleClearFollowupDates = () => {
+    setFollowupFromDate("");
+    setFollowupToDate("");
+  };
+
+  const filteredLeads = useMemo(() => {
+    let leads = leadsList.filter((lead) => {
+      const matchQuery =
+        lead.id?.toLowerCase().includes(searchQuery) ||
+        lead.first_name?.toLowerCase().includes(searchQuery) ||
+        lead.last_name?.toLowerCase().includes(searchQuery) ||
+        lead.phone?.toLowerCase().includes(searchQuery) ||
+        lead.company?.toLowerCase().includes(searchQuery) ||
+        lead.budget?.toLowerCase().includes(searchQuery) ||
+        lead.requirement?.toLowerCase().includes(searchQuery) ||
+        lead.email?.toLowerCase().includes(searchQuery) ||
+        lead.location?.toLowerCase().includes(searchQuery);
+
+      const matchStatus =
+        selectedStatus === "All Status" ||
+        lead.status_id?.toLowerCase() ===
+          allStatusesData
+            ?.find((status) => status.id.toString() === selectedStatus)
+            ?.name?.toLowerCase();
+
+      const matchType =
+        selectedType === "All Type" ||
+        lead.type_id?.toLowerCase() ===
+          allTypesData
+            ?.find((type) => type.id.toString() === selectedType)
+            ?.name?.toLowerCase();
+
+      return matchQuery && matchStatus && matchType;
+    });
+
+    // Filter leads by followup date if dates are set
+    if (followupFromDate || followupToDate) {
+      const followupMap = new Map();
+      (allFollowups ?? []).forEach((fu: LeadFollowupsList) => {
+        if (!followupMap.has(fu.lead.id)) followupMap.set(fu.lead.id, []);
+        followupMap.get(fu.lead.id).push(fu);
+      });
+
+      leads = leads.filter((lead) => {
+        const followups = followupMap.get(lead.id) || [];
+        return followups.some((fu: LeadFollowupsList) => {
+          const due = new Date(fu.due_date);
+          const from = followupFromDate ? new Date(followupFromDate) : null;
+          const to = followupToDate ? new Date(followupToDate) : null;
+          
+          // Set time to start of day for from date and end of day for to date
+          if (from) from.setHours(0, 0, 0, 0);
+          if (to) to.setHours(23, 59, 59, 999);
+          
+          return (!from || due >= from) && (!to || due <= to);
+        });
+      });
+    }
+
+    return leads;
+  }, [
+    leadsList,
+    searchQuery,
+    selectedStatus,
+    allStatusesData,
+    selectedType,
+    allTypesData,
+    allFollowups,
+    followupFromDate,
+    followupToDate,
+  ]);
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -233,28 +328,32 @@ const filteredLeads = useMemo(() => {
           <SearchBar
             onSearch={handleSearch}
             bgColor="white"
-            width="w-full min-w-[12rem] md:w-[25vw]"
+            width="w-full min-w-[12rem] md:w-[20vw]"
           />
-          {setAddLeadModalOpen && (
-            <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
-              <Button
-                title="Add Lead"
-                variant="background-white"
-                width="w-full md:w-fit"
-                onClick={() => setAddLeadModalOpen(true)}
-              />
-              <Button
-                title="Download Template"
-                variant="background-white"
-                width="w-full md:w-fit"
-                onClick={handleLeadDownloadTemplateExcel}
-              />
-            </div>
-          )}
+          {setAddLeadModalOpen &&
+            (cavAddLeadManagement ? (
+              <div className="w-full md:w-fit flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+                <Button
+                  title="Add Lead"
+                  variant="background-white"
+                  width="w-full md:w-fit"
+                  leftIcon={
+                    <FiPlus className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                  }
+                  onClick={() => setAddLeadModalOpen(true)}
+                />
+              </div>
+            ) : null)}
           <Dropdown
             options={statusOptions}
             value={selectedStatus}
-            onChange={handleChange}
+            onChange={handleStatusChange}
+            dropdownWidth="w-full md:w-fit"
+          />
+          <Dropdown
+            options={typeOptions}
+            value={selectedType}
+            onChange={handleTypeChange}
             dropdownWidth="w-full md:w-fit"
           />
           <Button
@@ -264,9 +363,42 @@ const filteredLeads = useMemo(() => {
             width="w-full md:w-fit"
             onClick={handleLeadDownloadExcel}
           />
+          <Button
+            variant="background-white"
+            width="w-full md:w-fit"
+            onClick={handleLeadDownloadTemplateExcel}
+            leftIcon={
+              <ImDownload2 className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+            }
+            tooltip="Download Template"
+          />
         </div>
       </div>
-
+      <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw]">
+         <DatePicker
+            label="Follow Up From"
+            value={followupFromDate}
+            onChange={setFollowupFromDate}
+            datePickerWidth="w-full md:w-fit"
+          />
+          <DatePicker
+            label="Follow Up To"
+            value={followupToDate}
+            onChange={setFollowupToDate}
+            datePickerWidth="w-full md:w-fit"
+          />
+          {(followupFromDate || followupToDate) && (
+            <Button
+              variant="background-white"
+              width="w-full md:w-fit"
+              onClick={handleClearFollowupDates}
+              leftIcon={
+                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+              }
+              tooltip="Clear Dates"
+            />
+          )}
+      </div>
       {isLoading ? (
         <div className="text-center py-6 text-gray-500">Loading leads...</div>
       ) : filteredLeads.length === 0 ? (
@@ -275,7 +407,7 @@ const filteredLeads = useMemo(() => {
         <Table
           data={filteredLeads}
           columns={leadsListColumn}
-          actions={actions}
+          actions={leadLeadManagementAction}
         />
       )}
 

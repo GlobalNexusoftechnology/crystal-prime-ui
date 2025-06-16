@@ -9,6 +9,7 @@ import {
   IAllRoleResponse,
   IAllSourcesResponse,
   IAllStatusesResponse,
+  IAllTypesResponse,
   IAllUsersResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
@@ -26,23 +27,31 @@ import {
   ICreateSourcesResponse,
   ICreateStatusesPayload,
   ICreateStatusesResponse,
+  ICreateTypesPayload,
+  ICreateTypesResponse,
   ICreateUserPayload,
   ICreateUserResponse,
   IDeleteLeadFollowUpResponse,
   IDeleteLeadResponse,
+  IDeleteNotification,
   IDeleteRoleResponse,
   IDeleteSourcesResponse,
   IDeleteStatusesResponse,
+  IDeleteTypeResponse,
   IDeleteUserResponse,
+  // IGetNotificationsResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
   ILeadFollowUpDetailResponse,
   ILoginPayload,
   ILoginUserResponse,
+  IMarkAsReadNotificationResponse,
+  INotificationsResponse,
   IRegisterPayload,
   IRegisterResponse,
   IResetPasswordPayload,
   IResetPasswordResponse,
+  IRoleDetailsResponse,
   ISentOtpPayload,
   ISentOtpResponse,
   ISignupPayload,
@@ -59,6 +68,8 @@ import {
   IUpdateSourcesResponse,
   IUpdateStatusesPayload,
   IUpdateStatusesResponse,
+  IUpdateTypesPayload,
+  IUpdateTypesResponse,
   IUpdateUserPayload,
   IUpdateUserResponse,
   IUploadAttachmentResponse,
@@ -113,6 +124,14 @@ import {
   updateRoleUrl,
   deleteRoleUrl,
   uploadLeadFromExcelUrl,
+  getRoleDetailByIdUrl,
+  createTypeUrl,
+  deleteTypeUrl,
+  updateTypeUrl,
+  fetchAllTypesUrl,
+  getNotificationsUrl,
+  markAsReadNotificationUrl,
+  deleteNotificationUrl,
 } from "./urls";
 
 /**
@@ -238,7 +257,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.error
     }
     return response?.data
   }
@@ -253,7 +272,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
 
     return response?.data
@@ -303,7 +322,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.error
+      throw response.response?.data
     }
 
     return response?.data
@@ -337,7 +356,20 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response
+    }
+    return response?.data
+  }
+  // create sources
+  public createType = async (payload: ICreateTypesPayload) => {
+    const response = await this.post<ICreateTypesResponse>(
+      createTypeUrl(),
+      payload,
+      { requiresAuth: false }
+    )
+
+    if (!response?.success) {
+      throw response
     }
     return response?.data
   }
@@ -352,7 +384,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response
     }
 
     return response?.data
@@ -365,7 +397,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
     return response?.data
   }
@@ -393,7 +425,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response
     }
     return response?.data
   }
@@ -409,7 +441,23 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response
+    }
+    return response?.data
+  }
+
+  //update Sources
+  public updateType = async ({ id, payload }: IUpdateTypesPayload) => {
+    const response = await this.put<IUpdateTypesResponse>(
+      updateTypeUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    )
+
+    if (!response?.success) {
+      throw response
     }
     return response?.data
   }
@@ -498,6 +546,20 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
+  public deleteType = async (id: string) => {
+    const response = await this.del<IDeleteTypeResponse>(
+      deleteTypeUrl(id),
+      {
+        requiresAuth: false,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+    return response?.data
+  }
+
   // delete lead follow up
   public deleteLeadFollowUp = async (id: string) => {
     const response = await this.del<IDeleteLeadFollowUpResponse>(
@@ -562,6 +624,20 @@ export class CommunityClient extends ApiClient {
 
     // TODO: Remove this comment once the isMock is removed above.
     return response.data.data
+  }
+
+  // get role details by id.
+  public getRoleDetailById = async (id: string) => {
+    const response = await this.get<IRoleDetailsResponse>(
+      getRoleDetailByIdUrl(id),
+    )
+
+    if (!response?.success) {
+      throw response
+    }
+
+    // TODO: Remove this comment once the isMock is removed above.
+    return response.data;
   }
 
   // all statuses get by id
@@ -642,15 +718,8 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
-  // All lead attachment
-
-  public fetchAllLeadAttachment = async () => {
-    const response = await this.get<IAllLeadAttachmentResponse>(
-      fetchLeadAttachmentUrl(),
-      {
-        requiresAuth: false,
-      }
-    )
+  public fetchAllTypes = async () => {
+    const response = await this.get<IAllTypesResponse>(fetchAllTypesUrl())
 
     if (!response?.success) {
       throw response?.errorData
@@ -659,17 +728,34 @@ export class CommunityClient extends ApiClient {
     return response?.data.data
   }
 
-  // all lead follow ups
-  public fetchAllLeadFollowUp = async () => {
-    const response = await this.get<IAllLeadFollowUpResponse>(
-      fetchAllLeadFollowUpUrl(),
+  // All lead attachment
+
+  public fetchAllLeadAttachment = async (leadId?: string) => {
+    const response = await this.get<IAllLeadAttachmentResponse>(
+      fetchLeadAttachmentUrl(leadId),
       {
         requiresAuth: false,
       }
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.error
+    }
+
+    return response?.data.data
+  }
+
+  // all lead follow ups
+  public fetchAllLeadFollowUp = async (leadId?: string) => {
+    const response = await this.get<IAllLeadFollowUpResponse>(
+      fetchAllLeadFollowUpUrl(leadId),
+      {
+        requiresAuth: false,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.error
     }
 
     return response?.data.data
@@ -768,7 +854,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
     return response?.data
   }
@@ -802,7 +888,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
     return response?.data
   }
@@ -819,9 +905,9 @@ export class CommunityClient extends ApiClient {
   }
 
   // All lead status history
-  public fetchAllLeadStatusHistory = async () => {
+  public fetchAllLeadStatusHistory = async (leadId?: string) => {
     const response = await this.get<IAllLeadStatusHistoryResponse>(
-      fetchLeadStatusHistoryUrl(),
+      fetchLeadStatusHistoryUrl(leadId),
       {
         requiresAuth: false,
       }
@@ -850,9 +936,48 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
   
+  public getNotifications = async () => {
+    const response = await this.get<INotificationsResponse>(getNotificationsUrl(), {
+      requiresAuth: false,
+    })
 
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data.data
+  }
+
+  // mark as read notification
+  public updateMarkAsReadNotification = async () => {
+    const response = await this.patch<IMarkAsReadNotificationResponse>(
+      markAsReadNotificationUrl(),
+      {
+        requiresAuth: true,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data
+  }
   
+  //delete notification hook
+
+ //delete lead
+  public deleteNotification = async (id: string) => {
+    const response = await this.del<IDeleteNotification>(deleteNotificationUrl(id))
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+    return response?.data
+  }
+
 }
+
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.

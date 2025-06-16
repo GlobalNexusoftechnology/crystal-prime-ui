@@ -24,10 +24,11 @@ export const sentOtpUrl = () => "/auth/sentOTP";
 
 export const resetPasswordUrl = () => "/auth/resetPassword";
 
-export const changePasswordUrl = () => "/auth/changePassword";
+export const changePasswordUrl = () => "/users/change-password";
 
 // leads APIs url
 export const createLeadUrl = () => "/leads";
+
 export const createRoleUrl = () => "/roles";
 
 export const fetchAllLeadsListUrl = () => "/leads";
@@ -54,7 +55,7 @@ export const fetchAllUserDownloadExcelUrl = () => "/users/export";
 //lead followup
 export const createLeadFollowUpUrl = () => "/lead-followup";
 
-export const fetchAllLeadFollowUpUrl = () => "/lead-followup";
+export const fetchAllLeadFollowUpUrl = (leadId?: string) => `/lead-followup?leadId=${leadId}`;
 
 export const getLeadFollowUpDetailByIdUrl = (id: string) =>`/lead-followup/${id}`;
 
@@ -80,13 +81,15 @@ export const createSourcesUrl = () => "/lead-sources"; //post
 
 export const getSourcesDetailByIdUrl = (id: string) => `/lead-sources/${id}`;//get by id
 
+export const getRoleDetailByIdUrl = (id: string) => `/roles/${id}`;//get by id
+
 export const updateSourcesUrl = (id: string) => `/lead-sources/${id}`;//put
 
 export const deleteSourcesUrl = (id: string) => `/lead-sources/${id}`; //delete
 
 
 //  Lead Attachment API's hook
-export const fetchLeadAttachmentUrl = () => "/lead-attachments"; //Get
+export const fetchLeadAttachmentUrl = (leadId?: string) => `/lead-attachments?leadId=${leadId}`; //Get
 
 export const createLeadAttachmentUrl = () => "/lead-attachments"; //post
 
@@ -115,6 +118,23 @@ export const updateUserUrl = (id: string) => `/users/${id}`;//put
 export const deleteUserUrl = (id: string) => `/users/${id}`; //delete
 
 // lead status history
-export const fetchLeadStatusHistoryUrl = () => "/lead-status-history"; //Get
+export const fetchLeadStatusHistoryUrl = (leadId?: string) => `/lead-status-history?leadId=${leadId}`; //Get
 
 export const createLeadStatusHistoryUrl = () => "/lead-status-history"; //Post
+
+// Types API
+export const fetchAllTypesUrl = () => "/lead-types"; //Get
+
+export const createTypeUrl = () => "/lead-types"; //post
+
+export const getTypeDetailByIdUrl = (id: string) => `/lead-types/${id}`;//get by id
+
+export const updateTypeUrl = (id: string) => `/lead-types/${id}`;//put
+
+export const deleteTypeUrl = (id: string) => `/lead-types/${id}`; //delete
+
+export const getNotificationsUrl = () => "/notifications"; //Get
+
+export const markAsReadNotificationUrl = () => "/notifications/read-all"; //mark as read notification
+
+export const deleteNotificationUrl = (id: string) => `/notifications/${id}`;//delete notification url

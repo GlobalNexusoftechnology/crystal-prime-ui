@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, SearchBar, Table } from "@/components";
 import toast from "react-hot-toast";
-import {
-  ITableAction,
-  staffListColumn,
-} from "@/constants";
+import { EAction, EModule, ITableAction, staffListColumn } from "@/constants";
 import {
   IAllUsersListResponse,
   IUserViewDetails,
@@ -17,23 +14,44 @@ import {
 import { ExportIcon } from "@/features";
 import { AddNewStaffModel } from "../add-new-staff-model";
 import { EditStaffModel } from "../edit-staff-model";
-import { ViewStaffModel } from "../view-staff-model";
+// import { ViewStaffModel } from "../view-staff-model";
 import {
   downloadBlobFile,
   formatDate,
   formatDateToMMDDYYYY,
   IApiError,
 } from "@/utils";
+import { usePermission } from "@/utils/hooks";
 
 export function StaffListTable() {
   const { allUsersData, refetchAllUsers } = useAllUsersQuery();
   const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
   const [isEditStaffModalOpen, setIsEditStaffModalOpen] = useState(false);
-  const [isViewStaffModalOpen, setIsViewStaffModalOpen] = useState(false);
-  const [selectedStaff, setSelectedStaff] = useState<IUserViewDetails | null>(null);
+  // const [isViewStaffModalOpen, setIsViewStaffModalOpen] = useState(false);
+  const [selectedStaff, setSelectedStaff] = useState<IUserViewDetails | null>(
+    null
+  );
   const [searchQuery, setSearchQuery] = useState<string>("");
 
-  const { downloadAllUserExcel, data: downloadAllUserExcelData } = useAllUserDownloadExcelQuery();
+  const { downloadAllUserExcel } = useAllUserDownloadExcelQuery();
+
+  const { hasPermission } = usePermission();
+  const cavAddStaffManagement = hasPermission(
+    EModule.STAFF_MANAGEMENT,
+    EAction.ADD
+  );
+  // const cavViewStaffManagement = hasPermission(
+  //   EModule.STAFF_MANAGEMENT,
+  //   EAction.VIEW
+  // );
+  const cavEditStaffManagement = hasPermission(
+    EModule.STAFF_MANAGEMENT,
+    EAction.EDIT
+  );
+  const cavDeleteStaffManagement = hasPermission(
+    EModule.STAFF_MANAGEMENT,
+    EAction.DELETE
+  );
 
   const { onDeleteUser } = useDeleteUserMutation({
     onSuccessCallback: (data) => {
@@ -45,27 +63,28 @@ export function StaffListTable() {
     },
   });
 
-  // Process Excel file download
-  useEffect(() => {
-    if (downloadAllUserExcelData instanceof Blob) {
-      const filename = `staff_list_${new Date().getTime()}.xlsx`;
-      downloadBlobFile(downloadAllUserExcelData, filename);
+  const handleUserDownloadExcel = async () => {
+    const { data } = await downloadAllUserExcel();
+    if (data instanceof Blob) {
+      await downloadBlobFile(data, `staff_list_${new Date().getTime()}.xlsx`);
     }
-  }, [downloadAllUserExcelData]);
+  };
 
   // Prepare staff list data for table
-  const userList: IAllUsersListResponse[] = (allUsersData ?? []).map((user) => ({
-    id: user.id || "",
-    first_name: user?.first_name || "",
-    last_name: user?.last_name || "",
-    number: user?.phone_number || "",
-    email: user?.email || "",
-    role: user?.role?.role || "",
-    dob: formatDateToMMDDYYYY(user?.dob) || "",
-    created_at: formatDate(user?.created_at) || "",
-    updated_at: formatDate(user?.updated_at) || "",
-    role_id: user?.role?.id || "",
-  }));
+  const userList: IAllUsersListResponse[] = (allUsersData ?? []).map(
+    (user) => ({
+      id: user.id || "",
+      first_name: user?.first_name || "",
+      last_name: user?.last_name || "",
+      number: user?.phone_number || "",
+      email: user?.email || "",
+      role: user?.role?.role || "",
+      dob: formatDateToMMDDYYYY(user?.dob) || "",
+      created_at: formatDate(user?.created_at) || "",
+      updated_at: formatDate(user?.updated_at) || "",
+      role_id: user?.role?.id || "",
+    })
+  );
 
   // Filter user list based on search query
   const filteredUserList = userList.filter((user) => {
@@ -79,28 +98,31 @@ export function StaffListTable() {
     );
   });
 
-  // Table actions
-  const staffActions: ITableAction<IAllUsersListResponse>[] = [
-    {
-      label: "View",
-      onClick: (row) => {
-        setSelectedStaff({
-          id: row.id || "",
-          first_name: row.first_name || "",
-          last_name: row.last_name || "",
-          email: row.email || "",
-          phone_number: row.number || "",
-          dob: row.dob || "",
-          role: row?.role || "",
-          role_id: row.role_id || "",
-          created_at: formatDate(row.created_at) || "",
-          updated_at: formatDate(row.updated_at) || "",
-        });
-        setIsViewStaffModalOpen(true);
-      },
-      className: "text-blue-500 whitespace-nowrap",
-    },
-    {
+  const leadStaffManagementAction: ITableAction<IAllUsersListResponse>[] = [];
+
+  // if (cavViewStaffManagement) {
+  //   leadStaffManagementAction.push({
+  //     label: "View",
+  //     onClick: (row: IAllUsersListResponse) => {
+  //       setSelectedStaff({
+  //         id: row.id || "",
+  //         first_name: row.first_name || "",
+  //         last_name: row.last_name || "",
+  //         email: row.email || "",
+  //         phone_number: row.number || "",
+  //         dob: row.dob || "",
+  //         role: row?.role || "",
+  //         role_id: row.role_id || "",
+  //         created_at: formatDate(row.created_at) || "",
+  //         updated_at: formatDate(row.updated_at) || "",
+  //       });
+  //       setIsViewStaffModalOpen(true);
+  //     },
+  //     className: "text-blue-500 whitespace-nowrap",
+  //   });
+  // }
+  if (cavEditStaffManagement) {
+    leadStaffManagementAction.push({
       label: "Edit",
       onClick: (row) => {
         setSelectedStaff({
@@ -118,24 +140,23 @@ export function StaffListTable() {
         setIsEditStaffModalOpen(true);
       },
       className: "text-blue-500 whitespace-nowrap",
-    },
-    {
+    });
+  }
+
+  if (cavDeleteStaffManagement) {
+    leadStaffManagementAction.push({
       label: "Delete",
       onClick: (row) => {
         onDeleteUser(row.id);
       },
       className: "text-red-500",
-    },
-  ];
+    });
+  }
 
   // Modal close handlers
   const handleCloseAddModal = () => setIsAddStaffModalOpen(false);
   const handleCloseEditModal = () => setIsEditStaffModalOpen(false);
-  const handleCloseViewModal = () => setIsViewStaffModalOpen(false);
-
-  const handleUserDownloadExcel = () => {
-    downloadAllUserExcel();
-  };
+  // const handleCloseViewModal = () => setIsViewStaffModalOpen(false);
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -149,12 +170,14 @@ export function StaffListTable() {
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
-          <Button
-            title="Add Staff"
-            variant="background-white"
-            width="w-full md:w-fit"
-            onClick={() => setIsAddStaffModalOpen(true)}
-          />
+          {cavAddStaffManagement ? (
+            <Button
+              title="Add Staff"
+              variant="background-white"
+              width="w-full md:w-fit"
+              onClick={() => setIsAddStaffModalOpen(true)}
+            />
+          ) : null}
           <Button
             title="Export"
             variant="background-white"
@@ -165,7 +188,11 @@ export function StaffListTable() {
         </div>
       </div>
 
-      <Table data={filteredUserList} columns={staffListColumn} actions={staffActions} />
+      <Table
+        data={filteredUserList}
+        columns={staffListColumn}
+        actions={leadStaffManagementAction}
+      />
 
       {/* Modals */}
       <AddNewStaffModel
@@ -183,13 +210,13 @@ export function StaffListTable() {
         />
       )}
 
-      {isViewStaffModalOpen && selectedStaff && (
+      {/* {isViewStaffModalOpen && selectedStaff && (
         <ViewStaffModel
           isOpen={isViewStaffModalOpen}
           selectStaff={selectedStaff}
           onClose={handleCloseViewModal}
         />
-      )}
+      )} */}
     </div>
   );
 }

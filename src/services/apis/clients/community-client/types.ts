@@ -48,22 +48,88 @@ export interface IAllStatusesResponse {
   data: IAllStatusesList[];
 }
 
+// START LEAD TYPES 
+
+export interface ICreateTypesPayload {
+  name: string;
+}
+
+export interface ICreateTypesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateTypesPayload;
+}
+export interface IUpdateTypesPayload {
+  id: string;
+  payload: ICreateTypesPayload;
+}
+
+export interface IUpdateTypesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateTypesPayload;
+}
+
+export interface IType {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+}
+
+export interface IAllTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IType[];
+}
+
+export interface IAllTypesList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+}
+
+export interface IAllTypesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllTypesList[];
+}
+// delete types
+export interface IDeleteTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateTypesPayload;
+}
+// END LEAD TYPES
+
 export interface IAllLeadsList {
   id: string;
   created_at: string;
   updated_at: string;
+  created_by: string;
+  updated_by: string;
   deleted: boolean;
   deleted_at: string | null;
   first_name: string;
   last_name: string;
   company: string;
   phone: string;
+  other_contact: string;
   email: string;
   location: string;
   budget: string;
   requirement: string;
   source: ISource;
   status: IStatus;
+  type: IType;
   assigned_to: IAllUsersListResponse;
 }
 
@@ -72,7 +138,8 @@ export interface IStats {
   assignedToMe: number;
   profileSent: number;
   businessDone: number;
-  notInterested: 0;
+  todayFollowups: 0;
+
 }
 
 export interface IAllLeadResponse {
@@ -137,6 +204,13 @@ export interface ISourcesDetailResponse {
   data: ISourcesDetailList;
 }
 
+export interface IRoleDetailsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IRoleData;
+}
+
 export interface IAllSourcesList {
   id: string;
   created_at: string;
@@ -160,6 +234,7 @@ export interface IAllLeadAttachmentList {
   deleted_at: string | null;
   file_path: string;
   file_type: string;
+  file_name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lead: any | null;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -194,12 +269,15 @@ export interface ICreateLeadPayload {
   last_name: string;
   company: string;
   phone: string;
-  email: string;
+  other_contact: string;
+  escalate_to: boolean;
+  email: string[];
   location: string;
-  budget: number;
+  budget?: number | null;
   requirement: string;
   source_id: string;
   status_id: string;
+  type_id: string;
   assigned_to: string;
 }
 
@@ -246,6 +324,7 @@ export interface IUploadAttachmentResponse {
   data: {
     docUrl: string;
     fileType: string;
+    fileName: string;
   };
 }
 export interface IUploadLeadFromExcelResponse {
@@ -260,6 +339,7 @@ export interface ICreateLeadAttachmentPayload {
   uploaded_by: string;
   file_path: string;
   file_type: string;
+  file_name: string;
 }
 export interface ICreateLeadAttachmentResponse {
   status: boolean;
@@ -446,15 +526,14 @@ export interface IResetPasswordResponse {
 
 // change password
 export interface IChangePasswordPayload {
-  email: string;
   oldPassword: string;
   newPassword: string;
 }
 
 export interface IChangePasswordResponse {
-  email: string;
-  oldPassword: string;
-  newPassword: string;
+  message: string;
+  status: string;
+  data: ILoginUserResponseData;
 }
 export interface ILoginUserResponse {
   message?: string;
@@ -564,6 +643,35 @@ export interface IAllUsersResponse {
   success: true;
   data: IUsersDetails[];
 }
+
+// export interface INotification {
+//   id: string;
+//   created_at: string;
+//   updated_at: string;
+//   deleted: boolean;
+//   deleted_at: string | null;
+//   type: 'LEAD_ASSIGNED' | 'PASSWORD_CHANGE' | 'FOLLOW_UP' | string; // Add more types as needed
+//   message: string;
+//   isRead: boolean;
+//   metadata: {
+//     leadId?: string;
+//     leadName?: string;
+//     assignedBy?: string;
+//     leadContact?: string;
+//     dueDate?: string;
+//     remarks?: string;
+//     // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//     [key: string]: any; // Allow extra keys
+//   };
+//   userId: string;
+// }
+
+// export interface IGetNotificationsResponse {
+//   status: boolean;
+//   message: string;
+//   success: true;
+//   data: INotification[];
+// }
 
 //post  ...
 export interface ICreateUserPayload {
@@ -707,4 +815,50 @@ export interface IAllLeadFollowUpResponse {
   message: string;
   success: true;
   data: LeadFollowupsList[];
+}
+
+//interface for mark as read notification api response
+export interface IMarkAsReadNotificationResponse {
+  status: string;
+  message: string;
+  
+}
+
+
+export interface IDeleteNotification {
+  status: string;
+  message: string;
+ 
+}
+
+
+
+
+interface INotificationMetadata {
+  leadId: string;
+  leadName: string;
+  assignedBy?: string;
+  dueDate?: string;
+  remarks?: string;
+  followupId?: string;
+  leadContact?: string;
+  reminderDate?: string;
+}
+
+export interface INotification {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  type: 'LEAD_ASSIGNED' | 'FOLLOWUP_REMINDER' | 'FOLLOWUP_CREATED' | 'QUOTATION_SENT' | 'BUSINESS_DONE' | 'LEAD_ESCALATED';
+  message: string;
+  isRead: boolean;
+  metadata: INotificationMetadata;
+  userId: string;
+  user: IUser;
+}
+
+export interface INotificationsResponse {
+  data: INotification[];
 }

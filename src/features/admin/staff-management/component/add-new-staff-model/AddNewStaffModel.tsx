@@ -16,6 +16,8 @@ import {
 } from "@/services";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
 
 interface AddNewStaffModelProps {
   isOpen: boolean;
@@ -46,8 +48,13 @@ const initialValues: IAddStaffFormValues = {
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
-  dob: Yup.string().required("Date of Birth is required"),
-  phoneNumber: Yup.string().required("Phone number is required"),
+  dob: Yup.date()
+    .max(new Date(), "DOB cannot be in the future")
+    .required("Date of Birth is required")
+    .typeError("Invalid date format (YYYY-MM-DD)"),
+  phoneNumber: Yup.string()
+    .required("Phone number is required")
+    .matches(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits"),
   email: Yup.string()
     .email("Invalid email")
     .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
@@ -104,7 +111,6 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
         modalTitle="Back to Staffs"
         isOpen={isOpen}
         onClose={onClose}
-        modalClassName="w-full md:w-[70%] lg:w-[60%] xl:w-[40%] 2xl:w-[40vw]"
       >
         <Formik
           initialValues={initialValues}
@@ -119,12 +125,11 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
             errors,
             touched,
           }) => (
-            <Form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] bg-white rounded-xl border-gray-400">
-              <h1 className="text-md 2xl:text-[1vw] text-gray-900">
+            <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
+              <h1 className="text-lg 2xl:text-[1.125vw] font-semibold">
                 Add New Staff
               </h1>
-
-              <div className="flex flex-col md:flex-row gap-4 md:gap-8 2xl:gap-[2vw]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                 <InputField
                   label="First Name"
                   name="firstName"
@@ -144,8 +149,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   error={touched.lastName && errors.lastName}
                 />
               </div>
-
-              <div className="flex flex-col md:flex-row gap-4 md:gap-8 2xl:gap-[2vw]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                 <DatePicker
                   label="DOB"
                   name="dob"
@@ -154,18 +158,25 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   placeholder="Select DOB"
                   error={touched.dob && errors.dob}
                 />
-                <InputField
-                  label="Phone Number"
-                  name="phoneNumber"
-                  placeholder="Enter Phone Number"
-                  value={values.phoneNumber}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.phoneNumber && errors.phoneNumber}
-                />
+                <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
+                  <label className="2xl:text-[1vw] text-gray-700 block">
+                    Phone Number
+                  </label>
+                  <PhoneInput
+                    country="in"
+                    value={values.phoneNumber}
+                    onChange={(value) => setFieldValue("phoneNumber", value)}
+                    inputProps={{ name: "phoneNumber" }}
+                  />
+                  {errors.phoneNumber && touched.phoneNumber && (
+                    <p className="text-red-500 text-sm 2xl:text-[0.9vw]">
+                      {errors.phoneNumber}
+                    </p>
+                  )}
+                </div>
               </div>
 
-              <div className="flex flex-col md:flex-row gap-4 md:gap-8 2xl:gap-[2vw]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                 <InputField
                   label="Email"
                   name="email"
@@ -194,7 +205,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                 error={touched.password && errors.password}
               />
 
-              <div className="flex gap-4 2xl:gap-[1vw] w-full">
+              <div className="flex justify-between mt-6 2xl:mt-[1.5vw] space-x-4">
                 <Button
                   title="Cancel"
                   variant="primary-outline"
