@@ -79,7 +79,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             >
               <MailIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw]" />
               <div>
-                {data.email
+                {typeof data.email === 'string' && data.email
                   ?.split(",")
                   .map((email: string, index: number, arr: string[]) => (
                     <p

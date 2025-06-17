@@ -13,6 +13,9 @@ import {
 } from "@/services";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import { projectData } from "@/constants";
+import { TaskStageSection } from "./components";
 
 // Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
@@ -26,17 +29,36 @@ const validationSchema = Yup.object().shape({
   remarks: Yup.string().required("Remark is required"),
 });
 
-interface IFollowupsProps {
+interface IMilestonesProps {
   showForm: boolean;
   setShowForm: (val: boolean) => void;
   leadId: string;
 }
 
-export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
+const stageLabels = {
+  open: "Open Task",
+  inProgress: "In Progress Task",
+  completed: "Completed Task",
+};
+
+const bgColors = {
+  open: "bg-aqua",
+  inProgress: "bg-skyBlue",
+  completed: "bg-darkGreen",
+};
+
+export function Task({
+  leadId,
+  showForm,
+  setShowForm,
+}: IMilestonesProps) {
   // const { data: followupData, LeadFollowUp } = useAlLeadFollowUpQuery(leadId);
   const { allUsersData } = useAllUsersQuery();
   const { activeSession } = useAuthStore();
   const userId = activeSession?.user?.id;
+    const [projects] = useState(projectData);
+    const getProjectsByStage = (stage: "open" | "inProgress" | "completed") =>
+      projects.filter((project) => project.stage === stage);
 
   const { createLeadFollowUp } = useCreateLeadFollowUpMutation({
     onSuccessCallback: (response: ICreateLeadFollowUpResponse) => {
@@ -113,10 +135,10 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
             error={formik.touched.remarks ? formik.errors.remarks : undefined}
           />
           <DatePicker
-            label="Next Followup Date"
+            label="Next Milestone Date"
             value={`${formik.values.due_date}`}
             onChange={(date) => formik.setFieldValue("due_date", date)}
-            placeholder="Next Followup Date"
+            placeholder="Next Milestone Date"
             error={formik.touched.due_date ? formik.errors.due_date : undefined}
           />
           <div className="flex items-center gap-4 2xl:gap-[1vw]">
@@ -131,32 +153,24 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
           </div>
         </form>
       ) : (
-        <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-sm 2xl:text-[0.9vw] text-[#1D2939] w-full md:w-[70%]">
-          <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
-            <span>
-              <span className="2xl:text-[1.1vw] font-normal">
-                Assigned To:{" "}
-              </span>
-              <span className="underline 2xl:text-[1.1vw]">Meena Kapoor</span>
-            </span>
-            <span>
-              <span className="2xl:text-[1.1vw] font-normal">Status: </span>
-              <span className="underline 2xl:text-[1.1vw]">Failed</span>
-            </span>
-          </div>
-
-          <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw]">
-            We are still waiting for the team&apos;s valuable insights on the
-            proposal. Your input is essential for us to proceed. Please share
-            your thoughts at your earliest convenience.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw] font-medium">
-            <p className="2xl:text-[1.1vw] underline">Due: 26 May 2025,</p>
-            <p className="text-lightGreen 2xl:text-[1.1vw]">
-              Created At: 26 May 2025, 4:00 PM
-            </p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 2xl:gap-[2vw]">
+          {(["open", "inProgress", "completed"] as const).map((stage) => (
+            <TaskStageSection
+              key={stage}
+              projects={getProjectsByStage(stage).map((project) => ({
+                id: parseInt(project.id.replace("#", "")),
+                name: project.projectInfo.name,
+                clientName: project.clientInfo.clientName,
+                endDate: project.estimates.estimatedEnd,
+                status: 0,
+                totalTasks: 0,
+                stage: project.stage as "open" | "inProgress" | "completed",
+                slug: project.slug,
+              }))}
+              label={stageLabels[stage]}
+              bgColor={bgColors[stage]}
+            />
+          ))}
         </div>
       )}
     </div>

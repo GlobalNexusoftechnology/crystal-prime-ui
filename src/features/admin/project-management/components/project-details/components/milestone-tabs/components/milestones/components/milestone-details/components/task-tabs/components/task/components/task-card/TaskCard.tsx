@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ProjectDropdown } from "../../../../../../../project-dropdown"
+import { ProjectDropdown } from "../../../../../../../../../../../../../project-dropdown"
 
 type Project = {
   id: number;
@@ -24,7 +24,7 @@ type Props = {
 /**
  * MilestoneCard: Displays individual milestone card with dropdown for actions
  */
-export const MilestoneCard: React.FC<Props> = ({ project, bgColor }) => {
+export const TaskCard: React.FC<Props> = ({ project, bgColor }) => {
   const router = useRouter()
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);

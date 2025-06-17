@@ -32,7 +32,7 @@ interface IFollowupsProps {
   leadId: string;
 }
 
-export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
+export function Comments({ leadId, showForm, setShowForm }: IFollowupsProps) {
   // const { data: followupData, LeadFollowUp } = useAlLeadFollowUpQuery(leadId);
   const { allUsersData } = useAllUsersQuery();
   const { activeSession } = useAuthStore();

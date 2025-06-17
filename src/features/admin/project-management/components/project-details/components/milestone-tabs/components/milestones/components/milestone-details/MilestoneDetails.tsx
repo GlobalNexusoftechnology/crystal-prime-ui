@@ -1,16 +1,10 @@
 "use client";
 
 import { Breadcrumb } from "@/features";
-import {
-  ClientInfo,
-  DocumentSection,
-  MilestoneTabs,
-  ProjectEstimate,
-  ProjectInfo,
-} from "./components";
-import { HeaderDetails } from "../header-details";
+import { HeaderDetails } from "../../../../../../../header-details";
+import { MilestoneEstimates, MilestoneInfo, TaskTabs } from "./components";
 
-export function ProjectDetails() {
+export function MilestoneDetails() {
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
       <Breadcrumb />
@@ -22,15 +16,13 @@ export function ProjectDetails() {
       />
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="border-r">
-          <ProjectInfo />
-          <DocumentSection />
+          <MilestoneInfo />
         </div>
         <div>
-          <ClientInfo />
-          <ProjectEstimate />
+          <MilestoneEstimates />
         </div>
       </div>
-      <MilestoneTabs />
+      <TaskTabs />
     </section>
   );
 }
