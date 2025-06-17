@@ -4,7 +4,7 @@ import { Button } from "@/components";
 import { useEffect, useRef, useState } from "react";
 import { Followups, Milestones } from "./components";
 
-const tabs = ["Milestones", "Followup’s"];
+const tabs = ["Milestones", "Followup's"];
 
 export function MilestoneTabs() {
   const [activeTab, setActiveTab] = useState("Milestones");
@@ -25,8 +25,8 @@ export function MilestoneTabs() {
       className="flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:px-[1vw]"
     >
       {/* Tabs */}
-      <div className="flex gap-4 2xl:gap-[1vw] items-center">
-        <div className="flex space-x-4">
+      <div className="flex gap-8 2xl:gap-[2vw] items-center">
+        <div className="flex gap-8 2xl:gap-[2vw]">
           {tabs.map((tab) => (
             <button
               key={tab}
@@ -52,7 +52,13 @@ export function MilestoneTabs() {
             {showForm ? (
               "Close"
             ) : (
-              <Button title="Add Milestone" variant="primary-outline" />
+              <>
+                {activeTab === "Milestones" ? (
+                  <Button title="Add Milestone" variant="primary-outline" />
+                ) : (
+                  <Button title="Add followup" variant="primary-outline" />
+                )}
+              </>
             )}
           </span>
         </button>
@@ -67,7 +73,7 @@ export function MilestoneTabs() {
             setShowForm={setShowForm}
           />
         )}
-        {activeTab === "Attachment" && (
+        {activeTab === "Followup's" && (
           <Followups
             leadId="12345"
             showForm={showForm}

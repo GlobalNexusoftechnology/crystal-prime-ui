@@ -6,13 +6,16 @@ import {
   ICreateLeadFollowUpPayload,
   ICreateLeadFollowUpResponse,
   LeadFollowupStatus,
-  useAlLeadFollowUpQuery,
+  // useAlLeadFollowUpQuery,
   useAllUsersQuery,
   useAuthStore,
   useCreateLeadFollowUpMutation,
 } from "@/services";
-import { formatDate, formattingDate, IApiError } from "@/utils";
+import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
+import { MilestoneStageSection } from "./components";
+import { useState } from "react";
+import { projectData } from "@/constants";
 
 // Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
@@ -32,22 +35,41 @@ interface IMilestonesProps {
   leadId: string;
 }
 
-export function Milestones({ leadId, showForm, setShowForm }: IMilestonesProps) {
-  const { data: followupData, LeadFollowUp } = useAlLeadFollowUpQuery(leadId);
+const stageLabels = {
+  open: "Open Milestones",
+  inProgress: "In Progress Milestones",
+  completed: "Completed Milestones",
+};
+
+const bgColors = {
+  open: "bg-aqua",
+  inProgress: "bg-skyBlue",
+  completed: "bg-darkGreen",
+};
+
+export function Milestones({
+  leadId,
+  showForm,
+  setShowForm,
+}: IMilestonesProps) {
+  // const { data: followupData, LeadFollowUp } = useAlLeadFollowUpQuery(leadId);
   const { allUsersData } = useAllUsersQuery();
   const { activeSession } = useAuthStore();
   const userId = activeSession?.user?.id;
+    const [projects] = useState(projectData);
+    const getProjectsByStage = (stage: "open" | "inProgress" | "completed") =>
+      projects.filter((project) => project.stage === stage);
 
   const { createLeadFollowUp } = useCreateLeadFollowUpMutation({
     onSuccessCallback: (response: ICreateLeadFollowUpResponse) => {
       console.log("Lead follow-up created successfully", response);
-      toast.success(response.message)
+      toast.success(response.message);
       formik.resetForm();
       setShowForm(false);
-      LeadFollowUp();
+      // LeadFollowUp();
     },
     onErrorCallback: (err: IApiError) => {
-      toast.error(err.message)
+      toast.error(err.message);
     },
   });
 
@@ -131,40 +153,25 @@ export function Milestones({ leadId, showForm, setShowForm }: IMilestonesProps) 
           </div>
         </form>
       ) : (
-        followupData?.map((followup, idx) => (
-          <div
-            key={idx}
-            className="flex flex-col gap-2 md:gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
-          >
-            <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
-              <div className="text-darkBlue flex justify-between items-center gap-4 2xl:gap-[1vw]">
-                <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
-                  <p className="text-[1rem] 2xl:text-[1vw]">Assigned To:</p>
-                  <p className="text-[1rem] 2xl:text-[1vw]">{`${followup?.user?.first_name} ${followup?.user?.last_name}`}</p>
-                </div>
-                <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
-                  <p className="text-[1rem] 2xl:text-[1vw]">Status:</p>
-                  <p className="text-[1rem] 2xl:text-[1vw]">{followup?.status}</p>
-                </div>
-              </div>
-              <h1 className="text-[1rem] 2xl:text-[1vw]">{followup?.remarks}</h1>
-            </div>
-            <div className="flex justify-between flex-col md:flex-row gap-4">
-              <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
-                <p className="text-[1rem] 2xl:text-[1vw]">Due:</p>
-                <p className="text-[1rem] 2xl:text-[1vw]">{formatDate(`${followup?.due_date}`)}</p>
-              </div>
-              {followup?.completed_date ? (
-                <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
-                  <p className="text-[1rem] 2xl:text-[1vw]">Completed:</p>
-                  <p className="text-[1rem] 2xl:text-[1vw]">
-                    {formattingDate(`${followup?.completed_date}`, "toReadable")}
-                  </p>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        ))
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 2xl:gap-[2vw]">
+          {(["open", "inProgress", "completed"] as const).map((stage) => (
+            <MilestoneStageSection
+              key={stage}
+              projects={getProjectsByStage(stage).map((project) => ({
+                id: parseInt(project.id.replace("#", "")),
+                name: project.projectInfo.name,
+                clientName: project.clientInfo.clientName,
+                endDate: project.estimates.estimatedEnd,
+                status: 0,
+                totalTasks: 0,
+                stage: project.stage as "open" | "inProgress" | "completed",
+                slug: project.slug,
+              }))}
+              label={stageLabels[stage]}
+              bgColor={bgColors[stage]}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
