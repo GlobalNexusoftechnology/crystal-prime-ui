@@ -8,7 +8,7 @@ export interface ILeadsListProps {
   company: string;
   phone: string;
   other_contact: string;
-  email: string;
+  email: string[];
   location: string;
   budget: string;
   requirement: string;
@@ -19,8 +19,8 @@ export interface ILeadsListProps {
   created_at: string;
   updated_at: string;
   deleted_at: string;
-
 }
+
 export interface ILeadsListDetailsProps {
   id: string;
   first_name: string;
@@ -28,7 +28,7 @@ export interface ILeadsListDetailsProps {
   company: string;
   phone: string;
   other_contact: string;
-  email: string;
+  email: string[];
   location: string;
   budget: string;
   requirement: string;

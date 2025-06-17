@@ -138,13 +138,37 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     });
   }
 
+  const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
+    (lead) => ({
+      id: lead?.id || "N/A",
+      first_name: lead?.first_name || "N/A",
+      last_name: lead?.last_name || "N/A",
+      phone: lead?.phone || "N/A",
+      other_contact: lead?.other_contact || "N/A",
+      email: lead?.email ? [lead?.email] : [],
+      company: lead?.company || "N/A",
+      location: lead?.location || "N/A",
+      budget: lead?.budget || "N/A",
+      requirement: lead?.requirement || "N/A",
+      source_id: lead?.source?.name || "N/A",
+      status_id: lead?.status?.name || "N/A",
+      type_id: lead?.type?.name || "N/A",
+      created_at: lead?.created_at || "N/A",
+      updated_at: lead?.updated_at || "N/A",
+      deleted_at: lead?.deleted_at || "N/A",
+      assigned_to:
+        `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` ||
+        "Unassigned",
+    })
+  );
+
   const leadDetailModalData: ILeadsListDetailsProps = {
     id: leadDetailById?.id || "null",
     first_name: leadDetailById?.first_name || "null",
     last_name: leadDetailById?.last_name || "null",
     phone: leadDetailById?.phone || "null",
     other_contact: leadDetailById?.other_contact || "null",
-    email: leadDetailById?.email || "null",
+    email: leadDetailById?.email ? [leadDetailById?.email] : [],
     company: leadDetailById?.company || "null",
     requirement: leadDetailById?.requirement || "null",
     location: leadDetailById?.location || "null",
@@ -194,30 +218,6 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     },
   };
 
-  const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
-    (lead) => ({
-      id: lead?.id || "N/A",
-      first_name: lead?.first_name || "N/A",
-      last_name: lead?.last_name || "N/A",
-      phone: lead?.phone || "N/A",
-      other_contact: lead?.other_contact || "N/A",
-      email: lead?.email || "N/A",
-      company: lead?.company || "N/A",
-      location: lead?.location || "N/A",
-      budget: lead?.budget || "N/A",
-      requirement: lead?.requirement || "N/A",
-      source_id: lead?.source?.name || "N/A",
-      status_id: lead?.status?.name || "N/A",
-      type_id: lead?.type?.name || "N/A",
-      created_at: lead?.created_at || "N/A",
-      updated_at: lead?.updated_at || "N/A",
-      deleted_at: lead?.deleted_at || "N/A",
-      assigned_to:
-        `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` ||
-        "Unassigned",
-    })
-  );
-
   const handleSearch = (query: string) => {
     setSearchQuery(query.toLowerCase());
   };
@@ -253,7 +253,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const filteredLeads = useMemo(() => {
     let leads = leadsList.filter((lead) => {
-      const matchQuery =
+      return (
         lead.id?.toLowerCase().includes(searchQuery) ||
         lead.first_name?.toLowerCase().includes(searchQuery) ||
         lead.last_name?.toLowerCase().includes(searchQuery) ||
@@ -261,24 +261,11 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         lead.company?.toLowerCase().includes(searchQuery) ||
         lead.budget?.toLowerCase().includes(searchQuery) ||
         lead.requirement?.toLowerCase().includes(searchQuery) ||
-        lead.email?.toLowerCase().includes(searchQuery) ||
-        lead.location?.toLowerCase().includes(searchQuery);
-
-      const matchStatus =
-        selectedStatus === "All Status" ||
-        lead.status_id?.toLowerCase() ===
-          allStatusesData
-            ?.find((status) => status.id.toString() === selectedStatus)
-            ?.name?.toLowerCase();
-
-      const matchType =
-        selectedType === "All Type" ||
-        lead.type_id?.toLowerCase() ===
-          allTypesData
-            ?.find((type) => type.id.toString() === selectedType)
-            ?.name?.toLowerCase();
-
-      return matchQuery && matchStatus && matchType;
+        (Array.isArray(lead.email) 
+          ? lead.email.some((email) => String(email).toLowerCase().includes(searchQuery))
+          : String(lead.email).toLowerCase().includes(searchQuery)) ||
+        lead.location?.toLowerCase().includes(searchQuery)
+      );
     });
 
     // Filter leads by followup date if dates are set
@@ -306,17 +293,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     }
 
     return leads;
-  }, [
-    leadsList,
-    searchQuery,
-    selectedStatus,
-    allStatusesData,
-    selectedType,
-    allTypesData,
-    allFollowups,
-    followupFromDate,
-    followupToDate,
-  ]);
+  }, [leadsList, searchQuery, allFollowups, followupFromDate, followupToDate]);
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
