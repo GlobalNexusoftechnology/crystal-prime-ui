@@ -106,8 +106,42 @@ export function TableCell<T extends { id: string | number }>({
   const initials = typeof value === 'string' ? getInitials(value) : '';
   const isAssignedTo = col.accessor === "assigned_to";
   const isStatusColumn = col.accessor === "status_id";
+  const isEmailColumn = col.accessor === "email";
   const randomColor = typeof value === 'string' ? getRandomColor(value) : '#000000';
   const statusColor = typeof value === 'string' ? getColorForStatus(value) : '#000000';
+
+  const renderEmailCell = (emailValue: unknown) => {
+    if (Array.isArray(emailValue)) {
+      return (
+        <div className="flex flex-col gap-1">
+          {emailValue.map((email, idx) => (
+            <a 
+              key={idx}
+              href={`mailto:${String(email)}`}
+              className="text-[0.9rem] 2xl:text-[0.9vw]"
+            >
+              {String(email)}
+            </a>
+          ))}
+        </div>
+      );
+    }
+    
+    const emails = String(emailValue).split(',').map(email => email.trim()).filter(Boolean);
+    return (
+      <div className="flex flex-col gap-1">
+        {emails.map((email, idx) => (
+          <a 
+            key={idx}
+            href={`mailto:${email}`}
+            className="text-[0.9rem] 2xl:text-[0.9vw]"
+          >
+            {email}
+          </a>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <td
@@ -133,6 +167,8 @@ export function TableCell<T extends { id: string | number }>({
         >
           {value}
         </span>
+      ) : isEmailColumn ? (
+        renderEmailCell(value)
       ) : col.cell ? (
         col.cell({ row, value })
       ) : (
