@@ -127,7 +127,11 @@ export function TableCell<T extends { id: string | number }>({
       );
     }
     
-    const emails = String(emailValue).split(',').map(email => email.trim()).filter(Boolean);
+    const emails = String(emailValue)
+      .split(/,\s*/)  // Split by comma followed by optional whitespace
+      .map(email => email.trim())
+      .filter(Boolean);
+      
     return (
       <div className="flex flex-col gap-1">
         {emails.map((email, idx) => (

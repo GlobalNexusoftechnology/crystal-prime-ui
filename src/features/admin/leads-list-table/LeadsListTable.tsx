@@ -145,7 +145,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       last_name: lead?.last_name || "N/A",
       phone: lead?.phone || "N/A",
       other_contact: lead?.other_contact || "N/A",
-      email: lead?.email ? [lead?.email] : [],
+      email: lead?.email ? String(lead.email).split(/,\s*/).map(email => email.trim()).filter(Boolean) : [],
       company: lead?.company || "N/A",
       location: lead?.location || "N/A",
       budget: lead?.budget || "N/A",
