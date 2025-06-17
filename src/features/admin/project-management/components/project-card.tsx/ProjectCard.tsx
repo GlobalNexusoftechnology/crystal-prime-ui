@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { ProjectDropdown } from "../project-dropdown";
+import { useRouter } from "next/navigation";
 
 type Project = {
   id: number;
@@ -12,6 +13,7 @@ type Project = {
   status: number;
   totalTasks: number;
   stage: "open" | "inProgress" | "completed";
+  slug?: string
 };
 
 type Props = {
@@ -23,6 +25,7 @@ type Props = {
  * ProjectCard: Displays individual project card with dropdown for actions
  */
 export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
+  const router = useRouter()
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
@@ -64,7 +67,7 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
           </button>
           {showDropdown && (
             <ProjectDropdown
-              onView={() => alert(`Viewing ${project.name}`)}
+              onView={() => router.push(`/admin/project-management/${project.slug}`)}
               onEdit={() => alert(`Editing ${project.name}`)}
               onDelete={() => alert(`Deleting ${project.name}`)}
             />

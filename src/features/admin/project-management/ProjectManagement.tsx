@@ -3,36 +3,8 @@
 import { useState } from "react";
 import { Button, SearchBar } from "@/components";
 import { ProjectStageSection } from "./components";
-
-const sampleProjects = [
-  {
-    id: 1,
-    name: "E-Commerce App Development",
-    clientName: "Nisha Sharma",
-    endDate: "20 / 02 / 2022",
-    status: 0,
-    totalTasks: 10,
-    stage: "open",
-  },
-  {
-    id: 2,
-    name: "ERP App Development",
-    clientName: "Aman Verma",
-    endDate: "10 / 03 / 2022",
-    status: 5,
-    totalTasks: 10,
-    stage: "inProgress",
-  },
-  {
-    id: 3,
-    name: "Portfolio Website",
-    clientName: "Rina Das",
-    endDate: "05 / 01 / 2022",
-    status: 10,
-    totalTasks: 10,
-    stage: "completed",
-  },
-] as const;
+import { projectData } from "@/constants";
+import { Breadcrumb } from "../breadcrumb";
 
 const stageLabels = {
   open: "Open Projects",
@@ -47,15 +19,18 @@ const bgColors = {
 };
 
 export function ProjectManagement() {
-  const [projects] = useState(sampleProjects);
+  const [projects] = useState(projectData);
 
   const getProjectsByStage = (stage: "open" | "inProgress" | "completed") =>
     projects.filter((project) => project.stage === stage);
 
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+      <Breadcrumb />
       <div className="flex md:flex-row flex-col gap-4 2xl:gap-[1.5vw] justify-between items-start md:items-center">
-        <h1 className="text-2xl 2xl:text-[1.8vw] font-semibold">Project List</h1>
+        <h1 className="text-2xl 2xl:text-[1.8vw] font-semibold">
+          Project List
+        </h1>
         <div className="w-full md:w-auto flex gap-4 2xl:gap-[1vw] flex-col md:flex-row items-center">
           <Button
             title="Add New Project"
@@ -76,7 +51,16 @@ export function ProjectManagement() {
         {(["open", "inProgress", "completed"] as const).map((stage) => (
           <ProjectStageSection
             key={stage}
-            projects={getProjectsByStage(stage)}
+            projects={getProjectsByStage(stage).map((project) => ({
+              id: parseInt(project.id.replace("#", "")),
+              name: project.projectInfo.name,
+              clientName: project.clientInfo.clientName,
+              endDate: project.estimates.estimatedEnd,
+              status: 0,
+              totalTasks: 0,
+              stage: project.stage as "open" | "inProgress" | "completed",
+              slug: project.slug
+            }))}
             label={stageLabels[stage]}
             bgColor={bgColors[stage]}
           />

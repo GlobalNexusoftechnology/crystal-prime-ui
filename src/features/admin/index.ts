@@ -11,6 +11,7 @@ export * from "./document-management"
 export * from "./change-password"
 export * from "./task-management"
 export * from "./settings/components/role-management"
+export * from "./breadcrumb"
 
 
 
