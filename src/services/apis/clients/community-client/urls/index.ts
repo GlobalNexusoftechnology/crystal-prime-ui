@@ -138,3 +138,14 @@ export const getNotificationsUrl = () => "/notifications"; //Get
 export const markAsReadNotificationUrl = () => "/notifications/read-all"; //mark as read notification
 
 export const deleteNotificationUrl = (id: string) => `/notifications/${id}`;//delete notification url
+
+// Project APIs url
+export const createProjectUrl = () => "/projects";
+
+export const fetchAllProjectsUrl = () => "/projects";
+
+export const getProjectDetailByIdUrl = (id: string) => `/projects/${id}`;
+
+export const updateProjectUrl = (id: string) => `/projects/${id}`;
+
+export const deleteProjectUrl = (id: string) => `/projects/${id}`;

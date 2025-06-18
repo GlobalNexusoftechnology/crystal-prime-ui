@@ -6,6 +6,7 @@ import {
   IAllLeadFollowUpResponse,
   IAllLeadResponse,
   IAllLeadStatusHistoryResponse,
+  IAllProjectsResponse,
   IAllRoleResponse,
   IAllSourcesResponse,
   IAllStatusesResponse,
@@ -21,6 +22,8 @@ import {
   ICreateLeadResponse,
   ICreateLeadStatusHistoryPayload,
   ICreateLeadStatusHistoryResponse,
+  ICreateProjectPayload,
+  ICreateProjectResponse,
   ICreateRolePayload,
   ICreateRoleResponse,
   ICreateSourcesPayload,
@@ -34,6 +37,7 @@ import {
   IDeleteLeadFollowUpResponse,
   IDeleteLeadResponse,
   IDeleteNotification,
+  IDeleteProjectResponse,
   IDeleteRoleResponse,
   IDeleteSourcesResponse,
   IDeleteStatusesResponse,
@@ -47,6 +51,7 @@ import {
   ILoginUserResponse,
   IMarkAsReadNotificationResponse,
   INotificationsResponse,
+  IProjectDetailResponse,
   IRegisterPayload,
   IRegisterResponse,
   IResetPasswordPayload,
@@ -62,6 +67,8 @@ import {
   IUpdateLeadFollowUpResponse,
   IUpdateLeadPayload,
   IUpdateLeadResponse,
+  IUpdateProjectPayload,
+  IUpdateProjectResponse,
   IUpdateRolePayload,
   IUpdateRoleResponse,
   IUpdateSourcesPayload,
@@ -81,8 +88,11 @@ import {
 import {
   changePasswordUrl,
   createLeadUrl,
+  createProjectUrl,
   fetchAllLeadsListUrl,
+  fetchAllProjectsUrl,
   getLeadDetailByIdUrl,
+  getProjectDetailByIdUrl,
   registerUrl,
   resetPasswordUrl,
   loginUrl,
@@ -91,6 +101,7 @@ import {
   getLeadDownloadExcelByIdUrl,
   fetchAllLeadDownloadExcelUrl,
   deleteLeadUrl,
+  deleteProjectUrl,
   createLeadFollowUpUrl,
   fetchAllLeadFollowUpUrl,
   getLeadFollowUpDetailByIdUrl,
@@ -98,6 +109,7 @@ import {
   fetchAllSourcesUrl,
   fetchAllStatusesUrl,
   updateLeadUrl,
+  updateProjectUrl,
   updateLeadFollowUpUrl,
   fetchAllRoleListUrl,
   getStatusesDetailByIdUrl,
@@ -969,6 +981,82 @@ export class CommunityClient extends ApiClient {
  //delete lead
   public deleteNotification = async (id: string) => {
     const response = await this.del<IDeleteNotification>(deleteNotificationUrl(id))
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+    return response?.data
+  }
+
+  // Project APIs
+  // -----------------------------------------------------
+
+  public createProject = async (payload: ICreateProjectPayload) => {
+    const response = await this.post<ICreateProjectResponse>(
+      createProjectUrl(),
+      payload,
+      { requiresAuth: false }
+    )
+
+    if (!response?.success) {
+      throw response?.response?.data
+    }
+
+    return response?.data
+  }
+
+  public fetchAllProjects = async () => {
+    const response = await this.get<IAllProjectsResponse>(
+      fetchAllProjectsUrl(),
+      {
+        requiresAuth: false,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data.data
+  }
+
+  public getProjectDetailById = async (id: string) => {
+    const response = await this.get<IProjectDetailResponse>(
+      getProjectDetailByIdUrl(id),
+      {
+        requiresAuth: false,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data.data
+  }
+
+  public updateProject = async ({ id, payload }: IUpdateProjectPayload) => {
+    const response = await this.put<IUpdateProjectResponse>(
+      updateProjectUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.response?.data
+    }
+    return response?.data
+  }
+
+  public deleteProject = async (id: string) => {
+    const response = await this.del<IDeleteProjectResponse>(
+      deleteProjectUrl(id),
+      {
+        requiresAuth: false,
+      }
+    )
 
     if (!response?.success) {
       throw response?.errorData

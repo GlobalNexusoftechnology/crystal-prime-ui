@@ -862,3 +862,80 @@ export interface INotification {
 export interface INotificationsResponse {
   data: INotification[];
 }
+
+// Project APIs Types
+// -----------------------------------------------------
+
+export interface ICreateProjectPayload {
+  name: string;
+  project_type: string;
+  budget: number;
+  estimated_cost: number;
+  actual_cost?: number;
+  start_date: string;
+  end_date: string;
+  actual_start_date?: string;
+  actual_end_date?: string;
+  client_id: string;
+}
+
+export interface IProjectDetails {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+  project_type: string;
+  budget: number;
+  estimated_cost: number;
+  actual_cost?: number;
+  start_date: string;
+  end_date: string;
+  actual_start_date?: string;
+  actual_end_date?: string;
+  client_id: string;
+  status?: string;
+  progress?: number;
+  created_by?: IUsersDetails;
+}
+
+export interface ICreateProjectResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectDetails;
+}
+
+export interface IAllProjectsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectDetails[];
+}
+
+export interface IProjectDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectDetails;
+}
+
+export interface IUpdateProjectPayload {
+  id: string;
+  payload: Partial<ICreateProjectPayload>;
+}
+
+export interface IUpdateProjectResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectDetails;
+}
+
+export interface IDeleteProjectResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectDetails;
+}
