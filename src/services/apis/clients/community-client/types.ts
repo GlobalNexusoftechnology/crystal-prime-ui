@@ -862,3 +862,24 @@ export interface INotification {
 export interface INotificationsResponse {
   data: INotification[];
 }
+
+
+//client
+//post  ...
+export interface ICreateClientPayload {
+  name: string;
+  contact_number: string;
+  email: string;
+  address: string;
+  website: string;
+  company_name: string;
+  contact_person: string;
+  lead_id?: string;
+}
+
+export interface ICreateClientResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientPayload;
+}

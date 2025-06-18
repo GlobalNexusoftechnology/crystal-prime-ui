@@ -13,6 +13,8 @@ import {
   IAllUsersResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
+  ICreateClientPayload,
+  ICreateClientResponse,
   ICreateLeadAttachmentPayload,
   ICreateLeadAttachmentResponse,
   ICreateLeadFollowUpPayload,
@@ -132,6 +134,7 @@ import {
   getNotificationsUrl,
   markAsReadNotificationUrl,
   deleteNotificationUrl,
+  createClientUrl,
 } from "./urls";
 
 /**
@@ -972,6 +975,22 @@ export class CommunityClient extends ApiClient {
 
     if (!response?.success) {
       throw response?.errorData
+    }
+    return response?.data
+  }
+
+
+//client..................
+//post 
+
+  public createClient = async (payload: ICreateClientPayload) => {
+    const response = await this.post<ICreateClientResponse>(
+      createClientUrl(),
+      payload
+    )
+
+    if (!response?.success) {
+      throw response?.response?.data
     }
     return response?.data
   }
