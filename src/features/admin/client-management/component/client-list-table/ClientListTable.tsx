@@ -11,7 +11,7 @@ import {
 } from "@/constants";
 import { ExportIcon } from "@/features";
 import { AddClientModal } from "../add-client-modal";
-import { useAllClientQuery, useDeleteClientMutation } from "@/services";
+import { useAllClientQuery, useDeleteClientMutation, useUpdateClientMutation } from "@/services";
 import { usePermission } from "@/utils/hooks";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
@@ -20,29 +20,30 @@ import toast from "react-hot-toast";
  * ClientListTable component renders a section displaying the list of clients.
  */
 export function ClientListTable() {
-    const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
+  const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<IClientListProps | null>(null);
   const { allClientData, refetchClient } = useAllClientQuery();
   const { hasPermission } = usePermission();
-  // const cavEditClient = hasPermission(EModule.CLIENT_MANAGEMENT, EAction.EDIT);
-  const cavDeleteClient = hasPermission(
+  const canEditClient = hasPermission(EModule.CLIENT_MANAGEMENT, EAction.EDIT);
+  const canDeleteClient = hasPermission(
     EModule.CLIENT_MANAGEMENT,
     EAction.DELETE
   );
 
   const clientListActions: ITableAction<IClientListProps>[] = [];
 
-  // if (cavEditClient) {
-  //   clientListActions.push({
-  //     label: "Edit",
-  //     onClick: (row: IClientListProps) => {
-  //       setSelectedClient({ id: row.id, name: row.name });
-  //       setIsAddClientModalOpen(true);
-  //     },
-  //     className: "text-blue-500",
-  //   });
-  // }
+  if (canEditClient) {
+    clientListActions.push({
+      label: "Edit",
+      onClick: (row: IClientListProps) => {
+        setSelectedClient(row);
+        setIsAddClientModalOpen(true);
+      },
+      className: "text-blue-500",
+    });
+  }
 
-  if (cavDeleteClient) {
+  if (canDeleteClient) {
     clientListActions.push({
       label: "Delete",
       onClick: (row: IClientListProps) => {
@@ -62,7 +63,22 @@ export function ClientListTable() {
     },
   });
 
+  const { updateClient, isPending: isUpdatePending } = useUpdateClientMutation({
+    onSuccessCallback: (data) => {
+      toast.success(data.message);
+      refetchClient();
+      setIsAddClientModalOpen(false);
+      setSelectedClient(null);
+    },
+    onErrorCallback: (err: IApiError) => {
+      toast.error(err.message);
+    },
+  });
 
+  const handleCloseModal = () => {
+    setIsAddClientModalOpen(false);
+    setSelectedClient(null);
+  };
 
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw]">
@@ -103,7 +119,12 @@ export function ClientListTable() {
       />
 
       {isAddClientModalOpen && (
-        <AddClientModal onClose={() => setIsAddClientModalOpen(false)} />
+        <AddClientModal 
+          onClose={handleCloseModal} 
+          selectedClient={selectedClient}
+          onUpdateClient={updateClient}
+          isUpdatePending={isUpdatePending}
+        />
       )}
     </div>
   );

@@ -3,43 +3,49 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, Checkbox, InputField, ModalOverlay } from "@/components";
-import { useAllClientQuery, useCreateClientMutation } from "@/services";
+import { IUpdateClientPayload, useAllClientQuery, useCreateClientMutation } from "@/services";
 import { IApiError } from "@/utils";
+import { IClientListProps } from "@/constants";
 import toast from "react-hot-toast";
 
 type AddClientModalProps = {
   onClose: () => void;
+  selectedClient?: IClientListProps | null;
+  onUpdateClient?: (payload: IUpdateClientPayload) => void;
+  isUpdatePending?: boolean;
 };
+
 /**
- * Modal for adding a new client.
+ * Modal for adding a new client or editing an existing client.
  */
-export function AddClientModal({ onClose }: AddClientModalProps) {
+export function AddClientModal({ onClose, selectedClient, onUpdateClient, isUpdatePending }: AddClientModalProps) {
   const { refetchClient } = useAllClientQuery();
+  const isEditMode = !!selectedClient;
+
   const handleClientSuccess = () => {
-    toast.success("Client created successfully");
+    toast.success(isEditMode ? "Client updated successfully" : "Client created successfully");
     refetchClient();
+    onClose();
   };
 
   const handleClientError = (error: IApiError) => {
     toast.error(error.message || "Something went wrong");
   };
-  const { onCreateClient, isPending } = useCreateClientMutation({
+
+  const { onCreateClient, isPending: isCreatePending } = useCreateClientMutation({
     onSuccessCallback: handleClientSuccess,
     onErrorCallback: handleClientError,
   });
+
   const formik = useFormik({
     initialValues: {
-      customerName: "",
-      companyName: "",
-      address: "",
-      contactPerson1: "",
-      websiteUrl: "",
-      phoneNumber1: "",
-      email1: "",
-      // contactPerson2: "",
-      // role: "",
-      // phoneNumber2: "",
-      // email2: "",
+      customerName: selectedClient?.name || "",
+      companyName: selectedClient?.company_name || "",
+      address: selectedClient?.address || "",
+      contactPerson1: selectedClient?.contact_person || "",
+      websiteUrl: selectedClient?.website || "",
+      phoneNumber1: selectedClient?.contact_number || "",
+      email1: selectedClient?.email || "",
     },
     validationSchema: Yup.object({
       customerName: Yup.string().required("Customer name is required"),
@@ -53,17 +59,9 @@ export function AddClientModal({ onClose }: AddClientModalProps) {
       email1: Yup.string()
         .required("Email is required")
         .email("Invalid email format"),
-      // contactPerson2: Yup.string().required("Contact Person is required"),
-      // role: Yup.string().required("Role is required"),
-      // phoneNumber2: Yup.string()
-      //   .required("Phone Number is required")
-      //   .matches(/^\d{10}$/, "Number must be 10 digits"),
-      // email2: Yup.string()
-      //   .required("Email is required")
-      //   .email("Invalid email format"),
     }),
     onSubmit: (values) => {
-      onCreateClient({
+      const payload = {
         name: values.customerName,
         contact_number: values.phoneNumber1,
         email: values.email1,
@@ -71,16 +69,28 @@ export function AddClientModal({ onClose }: AddClientModalProps) {
         website: values.websiteUrl,
         company_name: values.companyName,
         contact_person: values.contactPerson1,
-      });
+      };
+
+      if (isEditMode && selectedClient && onUpdateClient) {
+        onUpdateClient({
+          id: selectedClient.id,
+          payload,
+        });
+      } else {
+        onCreateClient(payload);
+      }
     },
   });
+
   return (
     <ModalOverlay modalTitle="Back to Clients" isOpen={true} onClose={onClose}>
       <form
         onSubmit={formik.handleSubmit}
         className="flex flex-col gap-4 p-4 2xl:gap-[1vw] border 2xl:border-[0.1vw] border-lightWhite bg-white rounded-lg 2xl:rounded-[0.5vw] h-[80vh] overflow-y-auto"
       >
-        <p className="text-[1rem] 2xl:text-[1vw]">Add new Client</p>
+        <p className="text-[1rem] 2xl:text-[1vw]">
+          {isEditMode ? "Edit Client" : "Add new Client"}
+        </p>
         <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw] w-full">
           <div className="w-full md:w-[50%]">
             <InputField
@@ -181,62 +191,12 @@ export function AddClientModal({ onClose }: AddClientModalProps) {
 
         <Checkbox label="Do you want to use other contact person details?" />
 
-        {/* <div className="flex flex-col md:flex-row  gap-4 2xl:gap-[1vw] w-full">
-          <div className="w-full md:w-[50%]">
-            <InputField
-              label="Contact Person"
-              placeholder="Enter Contact Person"
-              name="contactPerson2"
-              value={formik.values.contactPerson2}
-              onChange={formik.handleChange}
-              error={
-                (formik.touched.contactPerson2 &&
-                  formik.errors.contactPerson2) ||
-                undefined
-              }
-            />
-          </div>
-          <div className="w-full md:w-[50%]">
-            <InputField
-              label="Role"
-              placeholder="Enter Role"
-              name="role"
-              value={formik.values.role}
-              onChange={formik.handleChange}
-              error={(formik.touched.role && formik.errors.role) || undefined}
-            />
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw] w-full">
-          <div className="w-full md:w-[50%]">
-            <InputField
-              label="Phone Number"
-              placeholder="Enter Phone Number"
-              name="phoneNumber2"
-              value={formik.values.phoneNumber2}
-              onChange={formik.handleChange}
-              error={
-                (formik.touched.phoneNumber2 && formik.errors.phoneNumber2) ||
-                undefined
-              }
-            />
-          </div>
-          <div className="w-full md:w-[50%]">
-            <InputField
-              label="Email"
-              placeholder="Enter Email"
-              name="email2"
-              value={formik.values.email2}
-              onChange={formik.handleChange}
-              error={
-                (formik.touched.email2 && formik.errors.email2) || undefined
-              }
-            />
-          </div>
-        </div> */}
         <div className="flex justify-between gap-4 2xl:gap-[1vw]">
           <Button title="Close" variant="primary-outline" onClick={onClose} />
-          <Button title="Submit" disabled={isPending} />
+          <Button 
+            title={isEditMode ? "Update" : "Submit"} 
+            disabled={isCreatePending || isUpdatePending} 
+          />
         </div>
       </form>
     </ModalOverlay>
