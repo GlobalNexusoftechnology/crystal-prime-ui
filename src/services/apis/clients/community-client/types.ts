@@ -939,3 +939,73 @@ export interface IDeleteProjectResponse {
   success: true;
   data: IProjectDetails;
 }
+
+// Client APIs Types
+// -----------------------------------------------------
+
+export interface ICreateClientPayload {
+  name: string;
+  contact_number: string;
+  email: string;
+  address: string;
+  website: string;
+  company_name: string;
+  contact_person: string;
+  lead_id?: string;
+}
+
+export interface ICreateClientResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientPayload;
+}
+
+export interface IAllClientList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+  email: string;
+  contact_number: string;
+  address: string;
+  website: string;
+  company_name: string;
+  contact_person: string;
+  lead_id: null; 
+}
+
+export interface IAllClientResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllClientList[];
+}
+
+export interface IClientDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllClientList;
+}
+
+export interface IUpdateClientPayload {
+  id: string;
+  payload: ICreateClientPayload;
+}
+
+export interface IUpdateClientResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateClientPayload;
+}
+
+export interface IDeleteClientResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientPayload;
+}

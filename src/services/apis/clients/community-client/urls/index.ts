@@ -149,3 +149,14 @@ export const getProjectDetailByIdUrl = (id: string) => `/projects/${id}`;
 export const updateProjectUrl = (id: string) => `/projects/${id}`;
 
 export const deleteProjectUrl = (id: string) => `/projects/${id}`;
+
+//  Client API's hook
+export const fetchAllClientUrl = () => "/clients"; //Get
+
+export const createClientUrl = () => "/clients"; //post
+
+export const getClientDetailByIdUrl = (id: string) => `/clients/${id}`;//get by id
+
+export const updateClientUrl = (id: string) => `/clients/${id}`;//put
+
+export const deleteClientUrl = (id: string) => `/clients/${id}`; //delete

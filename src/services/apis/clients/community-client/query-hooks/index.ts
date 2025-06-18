@@ -67,5 +67,9 @@ export { useMarkAsReadNotificationMutation } from "./useMarkAsReadNotificationMu
 export { useDeleteNotificationMutation } from "./useDeleteNotificationMutation"
 
 
-
-
+//client management
+export {useCreateClientMutation} from "./useCreateClientMutation";
+export {useAllClientQuery} from "./useAllClientQuery";
+export {useClientDetailQuery} from "./useClientDetailQuery";
+export {useUpdateClientMutation} from "./useUpdateClientMutation";
+export {useDeleteClientMutation} from "./useDeleteClientMutation";

@@ -2,6 +2,7 @@ import { IApiError } from "@/utils";
 import { ApiClient } from "../../api-client";
 
 import {
+  IAllClientResponse,
   IAllLeadAttachmentResponse,
   IAllLeadFollowUpResponse,
   IAllLeadResponse,
@@ -14,6 +15,9 @@ import {
   IAllUsersResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
+  IClientDetailResponse,
+  ICreateClientPayload,
+  ICreateClientResponse,
   ICreateLeadAttachmentPayload,
   ICreateLeadAttachmentResponse,
   ICreateLeadFollowUpPayload,
@@ -34,6 +38,7 @@ import {
   ICreateTypesResponse,
   ICreateUserPayload,
   ICreateUserResponse,
+  IDeleteClientResponse,
   IDeleteLeadFollowUpResponse,
   IDeleteLeadResponse,
   IDeleteNotification,
@@ -63,6 +68,8 @@ import {
   ISignupResponse,
   ISourcesDetailResponse,
   IStatusesDetailResponse,
+  IUpdateClientPayload,
+  IUpdateClientResponse,
   IUpdateLeadFollowUpPayload,
   IUpdateLeadFollowUpResponse,
   IUpdateLeadPayload,
@@ -144,6 +151,11 @@ import {
   getNotificationsUrl,
   markAsReadNotificationUrl,
   deleteNotificationUrl,
+  createClientUrl,
+  getClientDetailByIdUrl,
+  updateClientUrl,
+  deleteClientUrl,
+  fetchAllClientUrl,
 } from "./urls";
 
 /**
@@ -996,14 +1008,30 @@ export class CommunityClient extends ApiClient {
       createProjectUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
+
+  //client..................
+  //post 
+
+  public createClient = async (payload: ICreateClientPayload) => {
+    const response = await this.post<ICreateClientResponse>(
+      createClientUrl(),
+      payload
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
 
   public fetchAllProjects = async () => {
     const response = await this.get<IAllProjectsResponse>(
@@ -1011,14 +1039,31 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data.data
-  }
+    return response?.data.data;
+  };
+
+  //get
+  
+  public fetchAllClient = async () => {
+    const response = await this.get<IAllClientResponse>(
+      fetchAllClientUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
+  };
 
   public getProjectDetailById = async (id: string) => {
     const response = await this.get<IProjectDetailResponse>(
@@ -1026,14 +1071,35 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data.data
-  }
+    return response?.data?.data;
+  };
+
+  //get by id
+  /**
+   * Fetches client details using client ID.
+   * @param id - client ID
+   * @returns client details
+   */
+  public getClientDetailById = async (id: string) => {
+    const response = await this.get<IClientDetailResponse>(
+      getClientDetailByIdUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
+  };
 
   public updateProject = async ({ id, payload }: IUpdateProjectPayload) => {
     const response = await this.put<IUpdateProjectResponse>(
@@ -1042,13 +1108,30 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: true,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+
+    return response?.data;
+  };
+
+  //update client
+  public updateClient = async ({ id, payload }: IUpdateClientPayload) => {
+    const response = await this.put<IUpdateClientResponse>(
+      updateClientUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
 
   public deleteProject = async (id: string) => {
     const response = await this.del<IDeleteProjectResponse>(
@@ -1056,14 +1139,23 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
+  // delete client 
+  public deleteClient = async (id: string) => {
+    const response = await this.del<IDeleteClientResponse>(deleteClientUrl(id));
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
 }
 
 
@@ -1071,3 +1163,5 @@ export class CommunityClient extends ApiClient {
  * Exported singleton instance of the CommunityClient to be used across the app.
  */
 export const COMMUNITY_CLIENT = CommunityClient.getClientInstance();
+
+
