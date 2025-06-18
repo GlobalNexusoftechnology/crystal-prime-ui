@@ -67,7 +67,7 @@ export const TaskCard: React.FC<Props> = ({ project, bgColor }) => {
           </button>
           {showDropdown && (
             <ProjectDropdown
-              onView={() => router.push(`/admin/project-management/${project.slug}/${project.slug}`)}
+              onView={() => router.push(`/admin/project-management/${project.slug}/${project.slug}/${project.slug}`)}
               onEdit={() => alert(`Editing ${project.name}`)}
               onDelete={() => alert(`Deleting ${project.name}`)}
             />
