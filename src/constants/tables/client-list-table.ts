@@ -11,95 +11,65 @@
  * - ClientListColumn: Column definitions for rendering the document table.
  */
 
-import { ITableAction, ITableColumn } from "../table";
+import { ITableColumn } from "../table";
 
 export interface IClientListProps {
-  id: number;
-  clientId: string;
-  customerName: string;
-  companyName: string;
-  contactPerson: string;
-  phoneNumber: string;
-  contactEmail: string;
-  websiteUrl: string;
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+  email: string;
+  contact_number: string;
   address: string;
-  createdAt: string;
+  website: string;
+  company_name: string;
+  contact_person: string;
+  lead_id: null
 }
 
-export const clientList: IClientListProps[] = [
-  {
-    id: 1,
-    clientId: "001",
-    customerName: "Alice Johnson",
-    companyName: "Alice Johnson Corp",
-    contactPerson: "Alice",
-    phoneNumber: "5698745698",
-    contactEmail: "alice.johnson@example.com",
-    websiteUrl: "www.alicejohnsoncorp.com",
-    address: "123 Main St, Springfield",
-    createdAt: "2023-01-01",
-  },
-];
-
-export const clientListActions: ITableAction<IClientListProps>[] = [
-  {
-    label: "Edit",
-    onClick: (row) => {
-      console.log("Edit clicked", row.id);
-    },
-    className: "text-blue-500",
-  },
-  {
-    label: "View",
-    onClick: (row) => {
-      console.log("View clicked", row.id);
-    },
-    className: "text-blue-500",
-  },
-  {
-    label: "Delete",
-    onClick: (row) => {
-      console.log("Delete clicked", row.id);
-    },
-    className: "text-red-500",
-  },
-  {
-    label: "Explore As xlsx",
-    onClick: (row) => {
-      console.log("Explore As xlsx clicked", row.id);
-    },
-    className: "text-blue-500 whitespace-nowrap",
-  },
-];
+// export const clientListActions: ITableAction<IClientListProps>[] = [
+//   {
+//     label: "Edit",
+//     onClick: (row) => {
+//       console.log("Edit clicked", row.id);
+//     },
+//     className: "text-blue-500",
+//   },
+//   {
+//     label: "Delete",
+//     onClick: (row) => {
+//       console.log("Delete clicked", row.id);
+//     },
+//     className: "text-red-500",
+//   },
+// ];
 
 export const clientListColumn: ITableColumn<IClientListProps>[] = [
   {
-    header: "CLIENT ID",
-    accessor: "clientId",
-  },
-  {
     header: "CUSTOMER NAME",
-    accessor: "customerName",
+    accessor: "name",
   },
   {
     header: "COMPANY NAME",
-    accessor: "companyName",
+    accessor: "company_name",
   },
   {
     header: "CONTACT PERSON",
-    accessor: "contactPerson",
+    accessor: "contact_person",
   },
   {
     header: "PHONE NUMBER",
-    accessor: "phoneNumber",
+    accessor: "contact_number",
   },
   {
     header: "CONTACT EMAIl",
-    accessor: "contactEmail",
+    accessor: "email",
   },
   {
     header: "WEBSITE URL",
-    accessor: "websiteUrl",
+    accessor: "website",
   },
   {
     header: "ADDRESS",
@@ -107,6 +77,6 @@ export const clientListColumn: ITableColumn<IClientListProps>[] = [
   },
   {
     header: "CREATED AT",
-    accessor: "createdAt",
+    accessor: "created_at",
   },
 ];

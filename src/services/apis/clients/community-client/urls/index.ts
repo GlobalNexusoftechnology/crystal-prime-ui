@@ -141,12 +141,12 @@ export const deleteNotificationUrl = (id: string) => `/notifications/${id}`;//de
 
 
 //  Staff API's hook
-// export const fetchAllUsersUrl = () => "/users"; //Get
+export const fetchAllClientUrl = () => "/clients"; //Get
 
-export const createClientUrl = () => "/create-client"; //post
+export const createClientUrl = () => "/clients/create-client"; //post
 
-// export const getUserDetailByIdUrl = (id: string) => `/users/${id}`;//get by id
+export const getClientDetailByIdUrl = (id: string) => `/clients/${id}`;//get by id
 
-// export const updateUserUrl = (id: string) => `/users/${id}`;//put
+export const updateClientUrl = (id: string) => `/clients/${id}`;//put
 
-// export const deleteUserUrl = (id: string) => `/users/${id}`; //delete
+export const deleteClientUrl = (id: string) => `/clients/${id}`; //delete

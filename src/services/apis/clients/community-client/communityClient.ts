@@ -2,6 +2,7 @@ import { IApiError } from "@/utils";
 import { ApiClient } from "../../api-client";
 
 import {
+  IAllClientResponse,
   IAllLeadAttachmentResponse,
   IAllLeadFollowUpResponse,
   IAllLeadResponse,
@@ -13,6 +14,7 @@ import {
   IAllUsersResponse,
   IChangePasswordPayload,
   IChangePasswordResponse,
+  IClientDetailResponse,
   ICreateClientPayload,
   ICreateClientResponse,
   ICreateLeadAttachmentPayload,
@@ -33,6 +35,7 @@ import {
   ICreateTypesResponse,
   ICreateUserPayload,
   ICreateUserResponse,
+  IDeleteClientResponse,
   IDeleteLeadFollowUpResponse,
   IDeleteLeadResponse,
   IDeleteNotification,
@@ -60,6 +63,8 @@ import {
   ISignupResponse,
   ISourcesDetailResponse,
   IStatusesDetailResponse,
+  IUpdateClientPayload,
+  IUpdateClientResponse,
   IUpdateLeadFollowUpPayload,
   IUpdateLeadFollowUpResponse,
   IUpdateLeadPayload,
@@ -135,6 +140,10 @@ import {
   markAsReadNotificationUrl,
   deleteNotificationUrl,
   createClientUrl,
+  getClientDetailByIdUrl,
+  updateClientUrl,
+  deleteClientUrl,
+  fetchAllClientUrl,
 } from "./urls";
 
 /**
@@ -995,6 +1004,68 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
+  //get
+  
+  public fetchAllClient = async () => {
+    const response = await this.get<IAllClientResponse>(
+      fetchAllClientUrl(),
+      {
+        requiresAuth: false,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data?.data
+  }
+//get by id
+/**
+   * Fetches client details using client ID.
+   * @param id - client ID
+   * @returns client details
+   */
+  public getClientDetailById = async (id: string) => {
+    const response = await this.get<IClientDetailResponse>(
+      getClientDetailByIdUrl(id),
+      {
+        requiresAuth: false,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    // TODO: Remove this comment once the isMock is removed above.
+    return response.data.data
+  }
+
+  //update client
+  public updateClient = async ({ id, payload }: IUpdateClientPayload) => {
+    const response = await this.put<IUpdateClientResponse>(
+      updateClientUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    )
+
+    if (!response?.success) {
+      throw response
+    }
+    return response?.data
+  }
+// delete client 
+  public deleteClient = async (id: string) => {
+    const response = await this.del<IDeleteClientResponse>(deleteClientUrl(id))
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+    return response?.data
+  }
 }
 
 
@@ -1002,3 +1073,5 @@ export class CommunityClient extends ApiClient {
  * Exported singleton instance of the CommunityClient to be used across the app.
  */
 export const COMMUNITY_CLIENT = CommunityClient.getClientInstance();
+
+
