@@ -62,5 +62,5 @@ export { useMarkAsReadNotificationMutation } from "./useMarkAsReadNotificationMu
 export { useDeleteNotificationMutation } from "./useDeleteNotificationMutation"
 
 
-
-
+//client management
+export {useCreateClientMutation} from "./useCreateClientMutation";

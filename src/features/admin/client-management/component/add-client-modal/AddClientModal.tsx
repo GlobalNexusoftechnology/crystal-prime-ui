@@ -3,15 +3,28 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, Checkbox, InputField, ModalOverlay } from "@/components";
+import { useCreateClientMutation } from "@/services";
+import { IApiError } from "@/utils";
+import toast from "react-hot-toast";
 
 type AddClientModalProps = {
   onClose: () => void;
 };
+const handleClientSuccess = () => {
+  toast.success("Client created successfully");
+};
 
+const handleClientError = (error: IApiError) => {
+  toast.error(error.message || "Something went wrong");
+};
 /**
  * Modal for adding a new client.
  */
 export function AddClientModal({ onClose }: AddClientModalProps) {
+  const { onCreateClient, isPending } = useCreateClientMutation({
+    onSuccessCallback: handleClientSuccess,
+    onErrorCallback: handleClientError,
+  });
   const formik = useFormik({
     initialValues: {
       customerName: "",
@@ -21,10 +34,10 @@ export function AddClientModal({ onClose }: AddClientModalProps) {
       websiteUrl: "",
       phoneNumber1: "",
       email1: "",
-      contactPerson2: "",
-      role: "",
-      phoneNumber2: "",
-      email2: "",
+      // contactPerson2: "",
+      // role: "",
+      // phoneNumber2: "",
+      // email2: "",
     },
     validationSchema: Yup.object({
       customerName: Yup.string().required("Customer name is required"),
@@ -38,18 +51,25 @@ export function AddClientModal({ onClose }: AddClientModalProps) {
       email1: Yup.string()
         .required("Email is required")
         .email("Invalid email format"),
-      contactPerson2: Yup.string().required("Contact Person is required"),
-      role: Yup.string().required("Role is required"),
-      phoneNumber2: Yup.string()
-        .required("Phone Number is required")
-        .matches(/^\d{10}$/, "Number must be 10 digits"),
-      email2: Yup.string()
-        .required("Email is required")
-        .email("Invalid email format"),
+      // contactPerson2: Yup.string().required("Contact Person is required"),
+      // role: Yup.string().required("Role is required"),
+      // phoneNumber2: Yup.string()
+      //   .required("Phone Number is required")
+      //   .matches(/^\d{10}$/, "Number must be 10 digits"),
+      // email2: Yup.string()
+      //   .required("Email is required")
+      //   .email("Invalid email format"),
     }),
-
     onSubmit: (values) => {
-      console.log("Form Data:", values);
+      onCreateClient({
+        name: values.customerName,
+        contact_number: values.contactPerson1,
+        email: values.email1,
+        address: values.address,
+        website: values.websiteUrl,
+        company_name: values.companyName,
+        contact_person: values.contactPerson1,
+     });
     },
   });
   return (
@@ -159,7 +179,7 @@ export function AddClientModal({ onClose }: AddClientModalProps) {
 
         <Checkbox label="Do you want to use other contact person details?" />
 
-        <div className="flex flex-col md:flex-row  gap-4 2xl:gap-[1vw] w-full">
+        {/* <div className="flex flex-col md:flex-row  gap-4 2xl:gap-[1vw] w-full">
           <div className="w-full md:w-[50%]">
             <InputField
               label="Contact Person"
@@ -211,10 +231,10 @@ export function AddClientModal({ onClose }: AddClientModalProps) {
               }
             />
           </div>
-        </div>
+        </div> */}
         <div className="flex justify-between gap-4 2xl:gap-[1vw]">
           <Button title="Close" variant="primary-outline" onClick={onClose} />
-          <Button title="Submit" />
+          <Button title="Submit" disabled={isPending} />
         </div>
       </form>
     </ModalOverlay>

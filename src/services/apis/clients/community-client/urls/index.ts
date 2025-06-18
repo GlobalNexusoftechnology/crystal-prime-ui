@@ -138,3 +138,15 @@ export const getNotificationsUrl = () => "/notifications"; //Get
 export const markAsReadNotificationUrl = () => "/notifications/read-all"; //mark as read notification
 
 export const deleteNotificationUrl = (id: string) => `/notifications/${id}`;//delete notification url
+
+
+//  Staff API's hook
+// export const fetchAllUsersUrl = () => "/users"; //Get
+
+export const createClientUrl = () => "/create-client"; //post
+
+// export const getUserDetailByIdUrl = (id: string) => `/users/${id}`;//get by id
+
+// export const updateUserUrl = (id: string) => `/users/${id}`;//put
+
+// export const deleteUserUrl = (id: string) => `/users/${id}`; //delete
