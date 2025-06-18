@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import { Button, SearchBar } from "@/components";
 import { ProjectStageSection } from "./components";
-import { projectData } from "@/constants";
 import { Breadcrumb } from "../breadcrumb";
+import { useAllProjectsQuery } from "@/services";
 
 const stageLabels = {
   open: "Open Projects",
@@ -18,11 +17,80 @@ const bgColors = {
   completed: "bg-darkGreen",
 };
 
-export function ProjectManagement() {
-  const [projects] = useState(projectData);
+// Helper function to map API project status to stage
+const mapProjectStatusToStage = (status?: string): "open" | "inProgress" | "completed" => {
+  if (!status) return "open";
+  
+  const statusLower = status.toLowerCase();
+  
+  if (statusLower.includes("open") || statusLower.includes("new") || statusLower.includes("initiated")) {
+    return "open";
+  } else if (statusLower.includes("progress") || statusLower.includes("ongoing") || statusLower.includes("active")) {
+    return "inProgress";
+  } else if (statusLower.includes("completed") || statusLower.includes("finished") || statusLower.includes("done")) {
+    return "completed";
+  }
+  
+  // Default to open if status doesn't match known patterns
+  return "open";
+};
 
-  const getProjectsByStage = (stage: "open" | "inProgress" | "completed") =>
-    projects.filter((project) => project.stage === stage);
+export function ProjectManagement() {
+  const { allProjectsData, isLoading, error } = useAllProjectsQuery();
+
+  const getProjectsByStage = (stage: "open" | "inProgress" | "completed") => {
+    if (!allProjectsData) return [];
+    
+    return allProjectsData
+      .filter((project) => mapProjectStatusToStage(project.status) === stage)
+      .map((project) => ({
+        status: true,
+        message: "Project found",
+        success: true as const,
+        data: {
+          id: project.id,
+          name: project.name,
+          client_id: project.client_id,
+          end_date: project.end_date,
+          status: project.status,
+          progress: project.progress || 0,
+          project_type: project.project_type,
+          budget: project.budget,
+          estimated_cost: project.estimated_cost,
+          actual_cost: project.actual_cost,
+          start_date: project.start_date,
+          actual_start_date: project.actual_start_date,
+          actual_end_date: project.actual_end_date,
+          created_at: project.created_at,
+          updated_at: project.updated_at,
+          deleted: project.deleted,
+          deleted_at: project.deleted_at,
+          created_by: project.created_by
+        }
+      }));
+  };
+
+  if (isLoading) {
+    return (
+      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+        <Breadcrumb />
+        <div className="flex justify-center items-center h-64">
+          <div className="text-lg">Loading projects...</div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+        <Breadcrumb />
+        <div className="flex justify-center items-center h-64">
+          <div className="text-lg text-red-600">Error loading projects. Please try again.</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
@@ -51,16 +119,7 @@ export function ProjectManagement() {
         {(["open", "inProgress", "completed"] as const).map((stage) => (
           <ProjectStageSection
             key={stage}
-            projects={getProjectsByStage(stage).map((project) => ({
-              id: parseInt(project.id.replace("#", "")),
-              name: project.projectInfo.name,
-              clientName: project.clientInfo.clientName,
-              endDate: project.estimates.estimatedEnd,
-              status: 0,
-              totalTasks: 0,
-              stage: project.stage as "open" | "inProgress" | "completed",
-              slug: project.slug
-            }))}
+            projects={getProjectsByStage(stage)}
             label={stageLabels[stage]}
             bgColor={bgColors[stage]}
           />

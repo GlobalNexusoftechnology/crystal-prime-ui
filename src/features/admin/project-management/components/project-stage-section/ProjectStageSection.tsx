@@ -1,19 +1,12 @@
 "use client";
 
+import { IProjectDetailResponse } from "@/services/index.js";
 import { ProjectCard } from "../project-card.tsx";
 
-type Project = {
-  id: number;
-  name: string;
-  clientName: string;
-  endDate: string;
-  status: number;
-  totalTasks: number;
-  stage: "open" | "inProgress" | "completed";
-};
+
 
 type Props = {
-  projects: Project[];
+  projects: IProjectDetailResponse[];
   label: string;
   bgColor: string;
 };
@@ -35,8 +28,8 @@ export const ProjectStageSection: React.FC<Props> = ({
         </span>
       </div>
       <div className="space-y-4 2xl:space-y-[1vw] max-h-[70vh] overflow-y-auto">
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} bgColor={bgColor} />
+        {projects.map((project, index) => (
+          <ProjectCard key={index} project={project} bgColor={bgColor} />
         ))}
       </div>
     </div>
