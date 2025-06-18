@@ -74,27 +74,32 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               </p>
             </Link>
             <Link
-              href={`mailto:${data.email}`}
-              className="flex items-center gap-2 2xl:gap-[0.5vw] text-[1rem] 2xl:text-[1vw]"
+              href={`mailto:${
+                Array.isArray(data.email) ? data.email[0] : data.email
+              }`}
+              className="flex items-start gap-2 2xl:gap-[0.5vw] text-[1rem] 2xl:text-[1vw]"
             >
-              <MailIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw]" />
-              <div>
-                {typeof data.email === 'string' && data.email
-                  ?.split(",")
-                  .map((email: string, index: number, arr: string[]) => (
-                    <p
+              <MailIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw] mt-1" />
+              <div className="flex flex-col">
+                {data?.email ? (
+                  Array.isArray(data?.email[0]) &&
+                  data?.email[0].map((email: string, index: number) => (
+                    <div
                       key={index}
-                      className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]"
+                      className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw] mb-2"
                     >
-                      {email.trim()}
-                      {index < arr.length - 1 && ","}
-                    </p>
-                  ))}
+                      <p>{String(email).trim()}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
+                    {String(data.email || "").trim()}
+                  </p>
+                )}
               </div>
             </Link>
           </div>
         </div>
-
         {/* Lead Details Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-gray-200 p-4 2xl:p-[1vw] rounded-lg 2xl:rounded-[0.5vw] text-[1rem] 2xl:text-[1vw] text-gray-700">
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">

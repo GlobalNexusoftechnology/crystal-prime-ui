@@ -74,6 +74,13 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     permission: { module: "STAFF_MANAGEMENT", actions: "VIEW" },
   },
   {
+   path: "/admin/client-management",
+   name: "Client Management",
+   icon: <StaffManagementIcon />,
+   activeIcon: <StaffManagementIcon color="#034A9F" />,
+   permission: { module: "CLIENT_MANAGEMENT", actions: "VIEW" },
+  },
+  {
     path: "/admin/settings",
     name: "Settings",
     icon: <SettingsIcon />,
