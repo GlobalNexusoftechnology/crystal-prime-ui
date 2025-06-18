@@ -864,7 +864,7 @@ export interface INotificationsResponse {
 }
 
 
-//client
+//client......................................................................
 //post  ...
 export interface ICreateClientPayload {
   name: string;
@@ -878,6 +878,56 @@ export interface ICreateClientPayload {
 }
 
 export interface ICreateClientResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientPayload;
+}
+//get 
+export interface IAllClientList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+  email: string;
+  contact_number: string;
+  address: string;
+  website: string;
+  company_name: string;
+  contact_person: string;
+  lead_id: null; 
+}
+
+export interface IAllClientResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllClientList[];
+}
+//get by id  client
+
+export interface IClientDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllClientList;
+}
+//update client 
+export interface IUpdateClientPayload {
+  id: string;
+  payload: ICreateClientPayload;
+}
+
+export interface IUpdateClientResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateClientPayload;
+}
+//delete client 
+export interface IDeleteClientResponse {
   status: boolean;
   message: string;
   success: true;

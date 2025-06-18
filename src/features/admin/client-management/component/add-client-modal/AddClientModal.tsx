@@ -3,24 +3,26 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, Checkbox, InputField, ModalOverlay } from "@/components";
-import { useCreateClientMutation } from "@/services";
+import { useAllClientQuery, useCreateClientMutation } from "@/services";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
 
 type AddClientModalProps = {
   onClose: () => void;
 };
-const handleClientSuccess = () => {
-  toast.success("Client created successfully");
-};
-
-const handleClientError = (error: IApiError) => {
-  toast.error(error.message || "Something went wrong");
-};
 /**
  * Modal for adding a new client.
  */
 export function AddClientModal({ onClose }: AddClientModalProps) {
+  const { refetchClient } = useAllClientQuery();
+  const handleClientSuccess = () => {
+    toast.success("Client created successfully");
+    refetchClient();
+  };
+
+  const handleClientError = (error: IApiError) => {
+    toast.error(error.message || "Something went wrong");
+  };
   const { onCreateClient, isPending } = useCreateClientMutation({
     onSuccessCallback: handleClientSuccess,
     onErrorCallback: handleClientError,
@@ -63,13 +65,13 @@ export function AddClientModal({ onClose }: AddClientModalProps) {
     onSubmit: (values) => {
       onCreateClient({
         name: values.customerName,
-        contact_number: values.contactPerson1,
+        contact_number: values.phoneNumber1,
         email: values.email1,
         address: values.address,
         website: values.websiteUrl,
         company_name: values.companyName,
         contact_person: values.contactPerson1,
-     });
+      });
     },
   });
   return (
