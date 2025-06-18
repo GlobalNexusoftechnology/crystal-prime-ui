@@ -876,7 +876,7 @@ export interface ICreateProjectPayload {
   end_date: string;
   actual_start_date?: string;
   actual_end_date?: string;
-  client_id: string;
+  client_id: IClientList;
 }
 
 export interface IProjectDetails {
@@ -894,7 +894,7 @@ export interface IProjectDetails {
   end_date: string;
   actual_start_date?: string;
   actual_end_date?: string;
-  client_id: string;
+  client_id: IClientList;
   status?: string;
   progress?: number;
   created_by?: IUsersDetails;
@@ -961,7 +961,7 @@ export interface ICreateClientResponse {
   data: ICreateClientPayload;
 }
 
-export interface IAllClientList {
+export interface IClientList {
   id: string;
   created_at: string;
   updated_at: string;
@@ -981,14 +981,14 @@ export interface IAllClientResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllClientList[];
+  data: IClientList[];
 }
 
 export interface IClientDetailResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllClientList;
+  data: IClientList;
 }
 
 export interface IUpdateClientPayload {

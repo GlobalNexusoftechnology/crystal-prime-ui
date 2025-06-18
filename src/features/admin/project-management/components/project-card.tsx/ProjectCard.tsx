@@ -108,7 +108,7 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
               href="#"
               className="text-blue-700 font-medium underline 2xl:text-[1vw] 2xl:leading-[1.4vw]"
             >
-              {project.data.client_id}
+              {/* {project?.data?.client_id.name} */}
             </Link>
           </div>
           <div className="text-right">
