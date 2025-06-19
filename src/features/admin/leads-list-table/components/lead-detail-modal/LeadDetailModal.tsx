@@ -18,11 +18,12 @@ interface LeadDetailsModalProps {
   lead: ILeadsListProps;
   onClose: () => void;
   data: ILeadsListDetailsProps;
+  refetchLeads: () => void;
 }
 
 const tabs = ["Followups", "Attachment", "Status History"];
 
-export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
+export function LeadDetailModal({ onClose, data, refetchLeads }: LeadDetailsModalProps) {
   const [activeTab, setActiveTab] = useState("Followups");
   const [showForm, setShowForm] = useState(false);
 
@@ -249,6 +250,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
                 leadId={data.id}
                 showForm={showForm}
                 setShowForm={setShowForm}
+                refetchLeads={refetchLeads}
               />
             )}
           </div>

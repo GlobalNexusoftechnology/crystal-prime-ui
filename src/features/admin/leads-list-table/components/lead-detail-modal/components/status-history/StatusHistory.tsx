@@ -24,12 +24,14 @@ interface IStatusHistoryProps {
   leadId: string;
   showForm: boolean;
   setShowForm: (val: boolean) => void;
+  refetchLeads: () => void;
 }
 
 export function StatusHistory({
   leadId,
   showForm,
   setShowForm,
+  refetchLeads,
 }: IStatusHistoryProps) {
   const { allLeadStatusHistoryData, allLeadStatusHistory } = useAllLeadStatusHistoryQuery(leadId);
   const { allStatusesData } = useAllStatusesQuery();
@@ -42,7 +44,8 @@ export function StatusHistory({
       console.log("Lead status created successfully", data);
       formik.resetForm();
       setShowForm(false);
-      allLeadStatusHistory()
+      allLeadStatusHistory();
+      refetchLeads();
     },
     onErrorCallback: (err: IApiError) => {
       console.error("Failed to create lead status:", err);
