@@ -185,11 +185,12 @@ export function AddProject() {
           {(formik) => (
             <Form>
               <Step1BasicInfo {...formik} />
-              <div className="flex justify-end mt-6">
+              <div className="flex mt-6 2xl:mt-[1.5vw]">
                 <Button
                   type="submit"
                   disabled={formik.isSubmitting}
                   title="Next"
+                  width="w-fit"
                 />
               </div>
             </Form>

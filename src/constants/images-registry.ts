@@ -7,6 +7,8 @@ import onelead from "../../public/images/one-lead.png"
 import ajaxstar from "../../public/images/ajax-star.png"
 import websiteLogoIcon from "../../public/images/website-logo-icon.png"
 import googleCalendarIcon from "../../public/images/google-calendar-google-s-logo-img.png"
+import projectTemplate from "../../public/images/project-template.png"
+import addMilestone from "../../public/images/add-milestone.png"
 
 export const ImageRegistry = {
   websiteLogo,
@@ -17,5 +19,7 @@ export const ImageRegistry = {
   onelead,
   ajaxstar,
   websiteLogoIcon,
-  googleCalendarIcon
+  googleCalendarIcon,
+  projectTemplate,
+  addMilestone
 };

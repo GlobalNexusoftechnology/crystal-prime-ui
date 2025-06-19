@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Dropdown, InputField, DatePicker } from "@/components";
+import { Dropdown, InputField, DatePicker, Button } from "@/components";
 
 interface Step2MilestoneSetupProps {
   onBack: () => void;
@@ -409,9 +409,9 @@ export function Step2MilestoneSetup({ onBack, onNext }: Step2MilestoneSetupProps
         </div>
       </div>
       {/* Action Buttons */}
-      <div className="flex justify-between mt-6">
-        <button className="border border-[#4E5EFF] text-[#4E5EFF] px-6 py-2 rounded-md 2xl:rounded-[0.5vw] font-medium hover:bg-[#f0f3ff] transition" onClick={onBack}>Back</button>
-        <button className="bg-[#4E5EFF] text-white px-6 py-2 rounded-md 2xl:rounded-[0.5vw] font-medium hover:bg-[#3b47cc] transition" onClick={onNext}>Next</button>
+      <div className="flex items-center mt-6 2xl:mt-[1.5vw]">
+        <Button title="Back" variant="primary-outline" onClick={onBack}/>
+        <Button title="Next" variant="primary-outline" onClick={onNext}/>
       </div>
     </div>
   );
