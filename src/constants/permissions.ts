@@ -8,6 +8,7 @@ export enum EModule {
   ROLES = "ROLES",
   SETTINGS = "SETTINGS",
   CLIENT_MANAGEMENT = "CLIENT_MANAGEMENT",
+  PROJECT_TEMPLATE = "PROJECT_TEMPLATE",
 }
 
 export enum EAction {
@@ -42,6 +43,7 @@ export const MODULES: TOptionItem[] = [
   { key: EModule.SETTINGS, label: "Settings Module", value: "17" },
   { key: EModule.LEAD_TYPES, label: "Lead Types Module", value: "18" },
   { key: EModule.CLIENT_MANAGEMENT, label: "Client Management Module", value: "19" },
+  { key: EModule.PROJECT_TEMPLATE, label: "Project Template Module", value: "20" },
 
   // Add more as needed
 ];
