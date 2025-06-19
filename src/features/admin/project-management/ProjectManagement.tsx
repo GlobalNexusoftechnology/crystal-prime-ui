@@ -4,6 +4,7 @@ import { Button, SearchBar } from "@/components";
 import { ProjectStageSection } from "./components";
 import { Breadcrumb } from "../breadcrumb";
 import { useAllProjectsQuery } from "@/services";
+import { useRouter } from "next/navigation";
 
 const stageLabels = {
   open: "Open Projects",
@@ -37,6 +38,11 @@ const mapProjectStatusToStage = (status?: string): "open" | "inProgress" | "comp
 
 export function ProjectManagement() {
   const { allProjectsData, isLoading, error } = useAllProjectsQuery();
+  const router = useRouter();
+
+  const handleRedirectToAddProject = () => {
+    router.push("/admin/project-management/add-project")
+  }
 
   const getProjectsByStage = (stage: "open" | "inProgress" | "completed") => {
     if (!allProjectsData) return [];
@@ -104,6 +110,7 @@ export function ProjectManagement() {
             title="Add New Project"
             variant="primary-outline"
             width="w-full md:w-fit"
+            onClick={handleRedirectToAddProject}
           />
           <SearchBar
             onSearch={(query) => {

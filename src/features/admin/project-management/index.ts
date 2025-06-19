@@ -1,2 +1,2 @@
 export { ProjectManagement } from "./ProjectManagement";
-export { ProjectDetails } from "./components";
+export { ProjectDetails, AddProject } from "./components";
