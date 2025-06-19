@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Dropdown, InputField, DatePicker, Button } from "@/components";
+import { HiOutlineDotsVertical } from "react-icons/hi";
 
 interface Step2MilestoneSetupProps {
   onBack: () => void;
@@ -156,11 +157,11 @@ export function Step2MilestoneSetup({
       prev.map((m) =>
         m.id === editingTask.milestoneId
           ? {
-            ...m,
-            tasks: m.tasks.map((t) =>
-              t.id === editTask.id ? { ...editTask } : t
-            ),
-          }
+              ...m,
+              tasks: m.tasks.map((t) =>
+                t.id === editTask.id ? { ...editTask } : t
+              ),
+            }
           : m
       )
     );
@@ -225,8 +226,19 @@ export function Step2MilestoneSetup({
                     type="button"
                     onClick={handleAddMilestone}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="w-5 h-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 4v16m8-8H4"
+                      />
                     </svg>
                   </button>
                 </th>
@@ -408,17 +420,7 @@ export function Step2MilestoneSetup({
                               )
                             }
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-5 h-5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <circle cx="12" cy="12" r="1.5" />
-                              <circle cx="19.5" cy="12" r="1.5" />
-                              <circle cx="4.5" cy="12" r="1.5" />
-                            </svg>
+                            <HiOutlineDotsVertical className="w-5 h-5" />
                           </button>
                           {milestoneMenu === milestone.id && (
                             <div className="absolute right-0 mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
@@ -443,7 +445,8 @@ export function Step2MilestoneSetup({
                     )}
                   </tr>
                   {/* Tasks under milestone (editable) */}
-                  {(milestone.tasks.length > 0 || (editingId === milestone.id && editMilestone)) && (
+                  {(milestone.tasks.length > 0 ||
+                    (editingId === milestone.id && editMilestone)) && (
                     <tr className="bg-gray-50">
                       <td colSpan={6} className="p-0">
                         <table className="w-full">
@@ -457,8 +460,19 @@ export function Step2MilestoneSetup({
                                   type="button"
                                   onClick={() => handleAddTask(milestone.id)}
                                 >
-                                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="w-5 h-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth={2}
+                                      d="M12 4v16m8-8H4"
+                                    />
                                   </svg>
                                 </button>
                               </th>
@@ -476,9 +490,9 @@ export function Step2MilestoneSetup({
                                 className="border-t border-gray-200"
                               >
                                 {editingTask &&
-                                  editingTask.milestoneId === milestone.id &&
-                                  editingTask.taskId === task.id &&
-                                  editTask ? (
+                                editingTask.milestoneId === milestone.id &&
+                                editingTask.taskId === task.id &&
+                                editTask ? (
                                   <>
                                     <td className="pl-8 py-2 font-medium">
                                       <InputField
@@ -624,27 +638,17 @@ export function Step2MilestoneSetup({
                                           setTaskMenu(
                                             taskMenu &&
                                               taskMenu.milestoneId ===
-                                              milestone.id &&
+                                                milestone.id &&
                                               taskMenu.taskId === task.id
                                               ? null
                                               : {
-                                                milestoneId: milestone.id,
-                                                taskId: task.id,
-                                              }
+                                                  milestoneId: milestone.id,
+                                                  taskId: task.id,
+                                                }
                                           )
                                         }
                                       >
-                                        <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          className="w-5 h-5"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <circle cx="12" cy="12" r="1.5" />
-                                          <circle cx="19.5" cy="12" r="1.5" />
-                                          <circle cx="4.5" cy="12" r="1.5" />
-                                        </svg>
+                                        <HiOutlineDotsVertical className="w-5 h-5" />
                                       </button>
                                       {taskMenu &&
                                         taskMenu.milestoneId === milestone.id &&
