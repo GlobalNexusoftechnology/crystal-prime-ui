@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Dropdown, InputField, DatePicker, Button } from "@/components";
 import { HiOutlineDotsVertical } from "react-icons/hi";
+import { HiChevronDown, HiChevronUp } from "react-icons/hi";
 
 interface Step2MilestoneSetupProps {
   onBack: () => void;
@@ -102,6 +103,16 @@ export function Step2MilestoneSetup({
     { label: "Update Details", value: "update_details" },
   ];
   const [projectTemplate, setProjectTemplate] = useState("");
+
+  // Add expandedMilestones state
+  const [expandedMilestones, setExpandedMilestones] = useState<number[]>([]);
+
+  // Toggle expand/collapse for milestone
+  const toggleMilestone = (id: number) => {
+    setExpandedMilestones((prev) =>
+      prev.includes(id) ? prev.filter((mid) => mid !== id) : [...prev, id]
+    );
+  };
 
   // Milestone handlers
   const handleEdit = (milestone: Milestone) => {
@@ -361,6 +372,18 @@ export function Step2MilestoneSetup({
                     ) : (
                       <>
                         <td className="px-2 py-2 font-medium flex items-center gap-2">
+                          <button
+                            onClick={() => toggleMilestone(milestone.id)}
+                            className="focus:outline-none"
+                            title={expandedMilestones.includes(milestone.id) ? "Collapse" : "Expand"}
+                            type="button"
+                          >
+                            {expandedMilestones.includes(milestone.id) ? (
+                              <HiChevronUp className="w-4 h-4" />
+                            ) : (
+                              <HiChevronDown className="w-4 h-4" />
+                            )}
+                          </button>
                           <span>{milestone.name}</span>
                         </td>
                         <td className="px-2 py-2">{milestone.assignedTo}</td>
@@ -444,9 +467,8 @@ export function Step2MilestoneSetup({
                       </>
                     )}
                   </tr>
-                  {/* Tasks under milestone (editable) */}
-                  {(milestone.tasks.length > 0 ||
-                    (editingId === milestone.id && editMilestone)) && (
+                  {/* Tasks under milestone (expand/collapse or editable) */}
+                  {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
                     <tr className="bg-gray-50">
                       <td colSpan={6} className="p-0">
                         <table className="w-full">
