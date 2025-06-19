@@ -1,1 +1,2 @@
-export {Settings} from "./Settings"
+export * from "./components";
+export { Settings } from "./Settings";

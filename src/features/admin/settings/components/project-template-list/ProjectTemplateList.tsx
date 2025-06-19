@@ -1,6 +1,7 @@
 import { ProjectTemplateCard } from "./component";
 import { projectTemplates } from "@/constants";
 import { Button } from "@/components";
+import Link from "next/link";
 
 /**
  * ProjectTemplateList: Displays a list of project templates in card format.
@@ -11,16 +12,18 @@ import { Button } from "@/components";
  */
 export function ProjectTemplateList() {
   return (
-    <div className=" flex flex-col gap-4 2xl:gap-[1vw] bg-[#F8F8F8] rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.1vw] border-lightWhite p-3 sm:p-4 2xl:p-[1vw]">
+    <div className=" flex flex-col gap-4 2xl:gap-[1vw] bg-[#F8F8F8] rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.1vw] border-borderGray p-3 sm:p-4 2xl:p-[1vw]">
       <div className="flex flex-col sm:flex-row gap-4 2xl:gap-[1vw] sm:items-center">
         <p className="text-xl 2xl:text-[1.25vw] font-normal">
           Project Template List
         </p>
-        <Button
-          title="Add New Project Template"
-          width="w-full md:w-fit"
-          variant="primary-outline"
-        />
+        <Link href="/admin/settings/project-template">
+          <Button
+            title="Add New Project Template"
+            width="w-full md:w-fit"
+            variant="primary-outline"
+          />
+        </Link>
       </div>
       <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw]">
         {projectTemplates.map((template) => (

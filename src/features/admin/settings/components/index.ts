@@ -6,3 +6,4 @@ export * from "./setting-tab";
 export * from "./role-management";
 export * from "./lead-types";
 export * from "./project-template-list";
+export * from "./add-project-template";
