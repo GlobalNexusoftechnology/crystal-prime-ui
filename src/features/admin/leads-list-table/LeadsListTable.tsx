@@ -389,11 +389,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       )}
 
       {/* Conditionally render modals only when data is loaded */}
-      {viewLead && !isLeadDetailLoading && (
+      {viewLead && (
         <LeadDetailModal
-          data={leadDetailModalData}
-          lead={viewLead}
           onClose={() => setViewLead(null)}
+          data={leadDetailModalData}
+          refetchLeads={leadsRefetch}
+          lead={viewLead}
         />
       )}
       {leadDetailById && isEditLeadModalOpen && !isLeadDetailLoading && (
