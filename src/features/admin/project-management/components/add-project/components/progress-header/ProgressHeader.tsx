@@ -21,10 +21,16 @@ export function ProgressHeader({ step }: { step: number }) {
           >
             <div
               className={`w-[2vw] h-[2vw] min-w-[32px] min-h-[32px] flex items-center justify-center rounded-full border ${
-                isActive ? "border-white text-white" : "border-gray-400 text-gray-400"
+                isActive ? "border-white text-white" : step > s.id ? "border-[#4E5EFF] text-[#4E5EFF]" : "border-gray-400 text-gray-400"
               }`}
             >
-              {String(s.id).padStart(2, "0")}
+              {step > s.id ? (
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 10.5L9 14.5L15 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              ) : (
+                String(s.id).padStart(2, "0")
+              )}
             </div>
             <span>{s.title}</span>
             {i !== steps.length - 1 && (
