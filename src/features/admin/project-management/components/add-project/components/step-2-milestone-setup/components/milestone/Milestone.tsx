@@ -2,7 +2,7 @@ import React from "react";
 import { Dropdown, InputField, DatePicker } from "@/components";
 import { HiCheck, HiXMark, HiChevronDown, HiChevronUp, HiOutlineCalendar } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { AddSquareIcon, TreeStructureIcon } from "@/features";
+import { TreeStructureIcon } from "@/features";
 import { getInitials, getRandomColor } from "@/utils";
 
 interface MilestoneType {
@@ -12,6 +12,7 @@ interface MilestoneType {
     status: string;
     estimatedStart: string;
     estimatedEnd: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tasks: any[];
 }
 
