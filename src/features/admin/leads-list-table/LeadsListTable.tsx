@@ -261,12 +261,22 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         lead.company?.toLowerCase().includes(searchQuery) ||
         lead.budget?.toLowerCase().includes(searchQuery) ||
         lead.requirement?.toLowerCase().includes(searchQuery) ||
-        (Array.isArray(lead.email) 
+        (Array.isArray(lead.email)
           ? lead.email.some((email) => String(email).toLowerCase().includes(searchQuery))
           : String(lead.email).toLowerCase().includes(searchQuery)) ||
         lead.location?.toLowerCase().includes(searchQuery)
       );
     });
+
+    // Filter by status if not 'All Status'
+    if (selectedStatus !== "All Status") {
+      leads = leads.filter((lead) => lead.status_id === (allStatusesData?.find((status) => status.id.toString() === selectedStatus)?.name || selectedStatus));
+    }
+
+    // Filter by type if not 'All Type'
+    if (selectedType !== "All Type") {
+      leads = leads.filter((lead) => lead.type_id === (allTypesData?.find((type) => type.id.toString() === selectedType)?.name || selectedType));
+    }
 
     // Filter leads by followup date if dates are set
     if (followupFromDate || followupToDate) {
@@ -282,18 +292,18 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           const due = new Date(fu.due_date);
           const from = followupFromDate ? new Date(followupFromDate) : null;
           const to = followupToDate ? new Date(followupToDate) : null;
-          
+
           // Set time to start of day for from date and end of day for to date
           if (from) from.setHours(0, 0, 0, 0);
           if (to) to.setHours(23, 59, 59, 999);
-          
+
           return (!from || due >= from) && (!to || due <= to);
         });
       });
     }
 
     return leads;
-  }, [leadsList, searchQuery, allFollowups, followupFromDate, followupToDate]);
+  }, [leadsList, searchQuery, allFollowups, followupFromDate, followupToDate, selectedStatus, selectedType, allStatusesData, allTypesData]);
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -352,29 +362,29 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         </div>
       </div>
       <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw]">
-         <DatePicker
-            label="Follow Up From"
-            value={followupFromDate}
-            onChange={setFollowupFromDate}
-            datePickerWidth="w-full md:w-fit"
+        <DatePicker
+          label="Follow Up From"
+          value={followupFromDate}
+          onChange={setFollowupFromDate}
+          datePickerWidth="w-full md:w-fit"
+        />
+        <DatePicker
+          label="Follow Up To"
+          value={followupToDate}
+          onChange={setFollowupToDate}
+          datePickerWidth="w-full md:w-fit"
+        />
+        {(followupFromDate || followupToDate) && (
+          <Button
+            variant="background-white"
+            width="w-full md:w-fit"
+            onClick={handleClearFollowupDates}
+            leftIcon={
+              <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+            }
+            tooltip="Clear Dates"
           />
-          <DatePicker
-            label="Follow Up To"
-            value={followupToDate}
-            onChange={setFollowupToDate}
-            datePickerWidth="w-full md:w-fit"
-          />
-          {(followupFromDate || followupToDate) && (
-            <Button
-              variant="background-white"
-              width="w-full md:w-fit"
-              onClick={handleClearFollowupDates}
-              leftIcon={
-                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-              }
-              tooltip="Clear Dates"
-            />
-          )}
+        )}
       </div>
       {isLoading ? (
         <div className="text-center py-6 text-gray-500">Loading leads...</div>
