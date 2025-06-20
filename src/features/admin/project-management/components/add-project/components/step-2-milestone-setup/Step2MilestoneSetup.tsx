@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Dropdown, InputField, DatePicker, Button } from "@/components";
-import { HiOutlineDotsVertical } from "react-icons/hi";
-import { HiChevronDown, HiChevronUp } from "react-icons/hi";
+import { HiOutlineDotsVertical, HiChevronDown, HiChevronUp } from "react-icons/hi";
+import { AddSquareIcon } from "@/features";
+import { HiOutlineCalendar, HiCheck, HiXMark } from "react-icons/hi2";
 
 interface Step2MilestoneSetupProps {
   onBack: () => void;
@@ -168,11 +169,11 @@ export function Step2MilestoneSetup({
       prev.map((m) =>
         m.id === editingTask.milestoneId
           ? {
-              ...m,
-              tasks: m.tasks.map((t) =>
-                t.id === editTask.id ? { ...editTask } : t
-              ),
-            }
+            ...m,
+            tasks: m.tasks.map((t) =>
+              t.id === editTask.id ? { ...editTask } : t
+            ),
+          }
           : m
       )
     );
@@ -229,7 +230,7 @@ export function Step2MilestoneSetup({
           <table className="min-w-full border-separate border-spacing-y-2">
             <thead>
               <tr className="text-gray-500 text-sm">
-                <th className="text-left px-2 py-2 flex items-center gap-1">
+                <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw]">
                   <span>Milestone Name</span>
                   <button
                     className="text-purple-500 hover:text-purple-700 text-lg"
@@ -237,20 +238,7 @@ export function Step2MilestoneSetup({
                     type="button"
                     onClick={handleAddMilestone}
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="w-5 h-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 4v16m8-8H4"
-                      />
-                    </svg>
+                    <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                   </button>
                 </th>
                 <th className="text-left px-2 py-2">Assigned To</th>
@@ -326,46 +314,20 @@ export function Step2MilestoneSetup({
                             }
                           />
                         </td>
-                        <td className="px-2 py-2 text-right flex gap-2">
+                        <td className="px-2 py-4 text-right flex gap-2">
                           <button
                             onClick={handleSave}
                             className="text-green-600 hover:text-green-800"
                             title="Save"
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-5 h-5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
+                            <HiCheck className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                           </button>
                           <button
                             onClick={handleCancel}
                             className="text-red-600 hover:text-red-800"
                             title="Cancel"
                           >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-5 h-5"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 18L18 6M6 6l12 12"
-                              />
-                            </svg>
+                            <HiXMark className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                           </button>
                         </td>
                       </>
@@ -375,13 +337,17 @@ export function Step2MilestoneSetup({
                           <button
                             onClick={() => toggleMilestone(milestone.id)}
                             className="focus:outline-none"
-                            title={expandedMilestones.includes(milestone.id) ? "Collapse" : "Expand"}
+                            title={
+                              expandedMilestones.includes(milestone.id)
+                                ? "Collapse"
+                                : "Expand"
+                            }
                             type="button"
                           >
                             {expandedMilestones.includes(milestone.id) ? (
-                              <HiChevronUp className="w-4 h-4" />
+                              <HiChevronUp className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                             ) : (
-                              <HiChevronDown className="w-4 h-4" />
+                              <HiChevronDown className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                             )}
                           </button>
                           <span>{milestone.name}</span>
@@ -394,39 +360,13 @@ export function Step2MilestoneSetup({
                         </td>
                         <td className="px-2 py-2">
                           <span className="flex items-center gap-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-4 h-4 text-gray-400"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
+                            <HiOutlineCalendar className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw] text-gray-400" />
                             {milestone.estimatedStart}
                           </span>
                         </td>
                         <td className="px-2 py-2">
                           <span className="flex items-center gap-2">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="w-4 h-4 text-gray-400"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
+                            <HiOutlineCalendar className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw] text-gray-400" />
                             {milestone.estimatedEnd}
                           </span>
                         </td>
@@ -443,7 +383,7 @@ export function Step2MilestoneSetup({
                               )
                             }
                           >
-                            <HiOutlineDotsVertical className="w-5 h-5" />
+                            <HiOutlineDotsVertical className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                           </button>
                           {milestoneMenu === milestone.id && (
                             <div className="absolute right-0 mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
@@ -468,248 +408,197 @@ export function Step2MilestoneSetup({
                     )}
                   </tr>
                   {/* Tasks under milestone (expand/collapse or editable) */}
-                  {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
-                    <tr className="bg-gray-50">
-                      <td colSpan={6} className="p-0">
-                        <table className="w-full">
-                          <thead>
-                            <tr className="text-gray-500 text-sm">
-                              <th className="pl-8 py-2 text-left flex items-center gap-1">
-                                <span>Task Name</span>
-                                <button
-                                  className="text-purple-500 hover:text-purple-700 text-lg"
-                                  title="Add Task"
-                                  type="button"
-                                  onClick={() => handleAddTask(milestone.id)}
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="w-5 h-5"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
+                  {(expandedMilestones.includes(milestone.id) ||
+                    editingId === milestone.id) && (
+                      <tr className="bg-gray-50">
+                        <td colSpan={6} className="p-0">
+                          <table className="w-full">
+                            <thead>
+                              <tr className="text-gray-500 text-sm">
+                                <th className="pl-8 2xl:pl-[2vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw]">
+                                  <span>Task Name</span>
+                                  <button
+                                    className="text-purple-500 hover:text-purple-700 text-lg"
+                                    title="Add Task"
+                                    type="button"
+                                    onClick={() => handleAddTask(milestone.id)}
                                   >
-                                    <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth={2}
-                                      d="M12 4v16m8-8H4"
-                                    />
-                                  </svg>
-                                </button>
-                              </th>
-                              <th className="py-2 text-left">Description</th>
-                              <th className="py-2 text-left">Assigned To</th>
-                              <th className="py-2 text-left">Status</th>
-                              <th className="py-2 text-left">Due Date</th>
-                              <th className="py-2"></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {milestone.tasks.map((task) => (
-                              <tr
-                                key={task.id}
-                                className="border-t border-gray-200"
-                              >
-                                {editingTask &&
-                                editingTask.milestoneId === milestone.id &&
-                                editingTask.taskId === task.id &&
-                                editTask ? (
-                                  <>
-                                    <td className="pl-8 py-2 font-medium">
-                                      <InputField
-                                        value={editTask.name}
-                                        onChange={(e) =>
-                                          setEditTask({
-                                            ...editTask,
-                                            name: e.target.value,
-                                          })
-                                        }
-                                        className="w-32"
-                                      />
-                                    </td>
-                                    <td className="py-2">
-                                      <InputField
-                                        value={editTask.description}
-                                        onChange={(e) =>
-                                          setEditTask({
-                                            ...editTask,
-                                            description: e.target.value,
-                                          })
-                                        }
-                                        className="w-40"
-                                      />
-                                    </td>
-                                    <td className="py-2">
-                                      <Dropdown
-                                        options={userOptions}
-                                        value={editTask.assignedTo}
-                                        onChange={(val) =>
-                                          setEditTask({
-                                            ...editTask,
-                                            assignedTo: val,
-                                          })
-                                        }
-                                        dropdownWidth="w-32"
-                                      />
-                                    </td>
-                                    <td className="py-2">
-                                      <Dropdown
-                                        options={statusOptions}
-                                        value={editTask.status}
-                                        onChange={(val) =>
-                                          setEditTask({
-                                            ...editTask,
-                                            status: val,
-                                          })
-                                        }
-                                        dropdownWidth="w-28"
-                                      />
-                                    </td>
-                                    <td className="py-2">
-                                      <DatePicker
-                                        value={editTask.dueDate}
-                                        onChange={(val) =>
-                                          setEditTask({
-                                            ...editTask,
-                                            dueDate: val,
-                                          })
-                                        }
-                                      />
-                                    </td>
-                                    <td className="py-2 text-right flex gap-2">
-                                      <button
-                                        onClick={handleSaveTask}
-                                        className="text-green-600 hover:text-green-800"
-                                        title="Save"
-                                      >
-                                        <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          className="w-5 h-5"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
+                                    <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                                  </button>
+                                </th>
+                                <th className="py-2 text-left">Description</th>
+                                <th className="py-2 text-left">Assigned To</th>
+                                <th className="py-2 text-left">Status</th>
+                                <th className="py-2 text-left">Due Date</th>
+                                <th className="py-2"></th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {milestone.tasks.map((task) => (
+                                <tr
+                                  key={task.id}
+                                  className="border-t border-gray-200"
+                                >
+                                  {editingTask &&
+                                    editingTask.milestoneId === milestone.id &&
+                                    editingTask.taskId === task.id &&
+                                    editTask ? (
+                                    <>
+                                      <td className="pl-8 py-2 font-medium">
+                                        <InputField
+                                          value={editTask.name}
+                                          onChange={(e) =>
+                                            setEditTask({
+                                              ...editTask,
+                                              name: e.target.value,
+                                            })
+                                          }
+                                          className="w-32"
+                                        />
+                                      </td>
+                                      <td className="py-2">
+                                        <InputField
+                                          value={editTask.description}
+                                          onChange={(e) =>
+                                            setEditTask({
+                                              ...editTask,
+                                              description: e.target.value,
+                                            })
+                                          }
+                                          className="w-40"
+                                        />
+                                      </td>
+                                      <td className="py-2">
+                                        <Dropdown
+                                          options={userOptions}
+                                          value={editTask.assignedTo}
+                                          onChange={(val) =>
+                                            setEditTask({
+                                              ...editTask,
+                                              assignedTo: val,
+                                            })
+                                          }
+                                          dropdownWidth="w-32"
+                                        />
+                                      </td>
+                                      <td className="py-2">
+                                        <Dropdown
+                                          options={statusOptions}
+                                          value={editTask.status}
+                                          onChange={(val) =>
+                                            setEditTask({
+                                              ...editTask,
+                                              status: val,
+                                            })
+                                          }
+                                          dropdownWidth="w-28"
+                                        />
+                                      </td>
+                                      <td className="py-2">
+                                        <DatePicker
+                                          value={editTask.dueDate}
+                                          onChange={(val) =>
+                                            setEditTask({
+                                              ...editTask,
+                                              dueDate: val,
+                                            })
+                                          }
+                                        />
+                                      </td>
+                                      <td className="px-2 py-4 text-right flex gap-2">
+                                        <button
+                                          onClick={handleSaveTask}
+                                          className="text-green-600 hover:text-green-800"
+                                          title="Save"
                                         >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M5 13l4 4L19 7"
-                                          />
-                                        </svg>
-                                      </button>
-                                      <button
-                                        onClick={handleCancelTask}
-                                        className="text-red-600 hover:text-red-800"
-                                        title="Cancel"
-                                      >
-                                        <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          className="w-5 h-5"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
+                                          <HiCheck className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                                        </button>
+                                        <button
+                                          onClick={handleCancelTask}
+                                          className="text-red-600 hover:text-red-800"
+                                          title="Cancel"
                                         >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M6 18L18 6M6 6l12 12"
-                                          />
-                                        </svg>
-                                      </button>
-                                    </td>
-                                  </>
-                                ) : (
-                                  <>
-                                    <td className="pl-8 py-2 font-medium">
-                                      {task.name}
-                                    </td>
-                                    <td className="py-2">{task.description}</td>
-                                    <td className="py-2">{task.assignedTo}</td>
-                                    <td className="py-2">
-                                      <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
-                                        {task.status}
-                                      </span>
-                                    </td>
-                                    <td className="py-2">
-                                      <span className="flex items-center gap-2">
-                                        <svg
-                                          xmlns="http://www.w3.org/2000/svg"
-                                          className="w-4 h-4 text-gray-400"
-                                          fill="none"
-                                          viewBox="0 0 24 24"
-                                          stroke="currentColor"
-                                        >
-                                          <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                                          />
-                                        </svg>
-                                        {task.dueDate}
-                                      </span>
-                                    </td>
-                                    <td className="py-2 text-right relative">
-                                      <button
-                                        className="text-gray-400 hover:text-blue-600"
-                                        title="Menu"
-                                        type="button"
-                                        onClick={() =>
-                                          setTaskMenu(
-                                            taskMenu &&
-                                              taskMenu.milestoneId ===
+                                          <HiXMark className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                                        </button>
+                                      </td>
+                                    </>
+                                  ) : (
+                                    <>
+                                      <td className="pl-8 py-2 font-medium">
+                                        {task.name}
+                                      </td>
+                                      <td className="py-2">{task.description}</td>
+                                      <td className="py-2">{task.assignedTo}</td>
+                                      <td className="py-2">
+                                        <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
+                                          {task.status}
+                                        </span>
+                                      </td>
+                                      <td className="py-2">
+                                        <span className="flex items-center gap-2">
+                                          <HiOutlineCalendar className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw] text-gray-400" />
+                                          {task.dueDate}
+                                        </span>
+                                      </td>
+                                      <td className="py-2 text-right relative">
+                                        <button
+                                          className="text-gray-400 hover:text-blue-600"
+                                          title="Menu"
+                                          type="button"
+                                          onClick={() =>
+                                            setTaskMenu(
+                                              taskMenu &&
+                                                taskMenu.milestoneId ===
                                                 milestone.id &&
-                                              taskMenu.taskId === task.id
-                                              ? null
-                                              : {
+                                                taskMenu.taskId === task.id
+                                                ? null
+                                                : {
                                                   milestoneId: milestone.id,
                                                   taskId: task.id,
                                                 }
-                                          )
-                                        }
-                                      >
-                                        <HiOutlineDotsVertical className="w-5 h-5" />
-                                      </button>
-                                      {taskMenu &&
-                                        taskMenu.milestoneId === milestone.id &&
-                                        taskMenu.taskId === task.id && (
-                                          <div className="absolute right-0 mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
-                                            <button
-                                              className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                              onClick={() =>
-                                                handleEditTask(
-                                                  milestone.id,
-                                                  task
-                                                )
-                                              }
-                                            >
-                                              Edit
-                                            </button>
-                                            <button
-                                              className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
-                                              onClick={() =>
-                                                handleDeleteTask(
-                                                  milestone.id,
-                                                  task.id
-                                                )
-                                              }
-                                            >
-                                              Delete
-                                            </button>
-                                          </div>
-                                        )}
-                                    </td>
-                                  </>
-                                )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  )}
+                                            )
+                                          }
+                                        >
+                                          <HiOutlineDotsVertical className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                                        </button>
+                                        {taskMenu &&
+                                          taskMenu.milestoneId === milestone.id &&
+                                          taskMenu.taskId === task.id && (
+                                            <div className="absolute right-0 mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
+                                              <button
+                                                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                                onClick={() =>
+                                                  handleEditTask(
+                                                    milestone.id,
+                                                    task
+                                                  )
+                                                }
+                                              >
+                                                Edit
+                                              </button>
+                                              <button
+                                                className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+                                                onClick={() =>
+                                                  handleDeleteTask(
+                                                    milestone.id,
+                                                    task.id
+                                                  )
+                                                }
+                                              >
+                                                Delete
+                                              </button>
+                                            </div>
+                                          )}
+                                      </td>
+                                    </>
+                                  )}
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    )}
                 </React.Fragment>
               ))}
             </tbody>
