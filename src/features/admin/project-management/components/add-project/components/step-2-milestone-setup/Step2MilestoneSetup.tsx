@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Dropdown, InputField, DatePicker, Button } from "@/components";
 import { HiOutlineDotsVertical, HiChevronDown, HiChevronUp } from "react-icons/hi";
-import { AddSquareIcon } from "@/features";
+import { AddSquareIcon, TreeStructureIcon } from "@/features";
 import { HiOutlineCalendar, HiCheck, HiXMark } from "react-icons/hi2";
+import { getInitials, getRandomColor } from "@/utils";
 
 interface Step2MilestoneSetupProps {
   onBack: () => void;
@@ -351,8 +352,24 @@ export function Step2MilestoneSetup({
                             )}
                           </button>
                           <span className="text-sm 2xl:text-[0.8vw]">{milestone.name}</span>
+                          <span className="flex items-center gap-1 2xl:gap-[0.3vw]">
+                            <TreeStructureIcon className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
+                            <span className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.7vw] px-1 2xl:px-[0.3vw] text-primary">{milestone.tasks.length}</span>
+                          </span>
                         </td>
-                        <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-sm 2xl:text-[0.8vw]">{milestone.assignedTo}</td>
+                        <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-sm 2xl:text-[0.8vw]">
+                          <div className="flex items-center gap-2">
+                            <p
+                              className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
+                              style={{ backgroundColor: getRandomColor(milestone.assignedTo) }}
+                            >
+                              {getInitials(milestone.assignedTo)}
+                            </p>
+                            <p className="px-3 py-1 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw]">
+                              {milestone.assignedTo}
+                            </p>
+                          </div>
+                        </td>
                         <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">
                           <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.8vw] font-semibold">
                             {milestone.status}
@@ -528,7 +545,19 @@ export function Step2MilestoneSetup({
                                         {task.name}
                                       </td>
                                       <td className="py-2 2xl:py-[0.5vw] text-sm 2xl:text-[0.8vw]">{task.description}</td>
-                                      <td className="py-2 2xl:py-[0.5vw] text-sm 2xl:text-[0.8vw]">{task.assignedTo}</td>
+                                      <td className="py-2 2xl:py-[0.5vw] text-sm 2xl:text-[0.8vw]">
+                                        <div className="flex items-center gap-2">
+                                          <p
+                                            className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
+                                            style={{ backgroundColor: getRandomColor(task.assignedTo) }}
+                                          >
+                                            {getInitials(task.assignedTo)}
+                                          </p>
+                                          <p className="px-3 py-1 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw]">
+                                            {task.assignedTo}
+                                          </p>
+                                        </div>
+                                      </td>
                                       <td className="py-2 2xl:py-[0.5vw]">
                                         <span className="bg-blue-100 2xl:bg-blue-50 text-blue-600 px-3 2xl:px-[0.7vw] py-1 2xl:py-[0.3vw] rounded-full 2xl:rounded-[1vw] text-xs 2xl:text-[0.8vw] font-semibold">
                                           {task.status}
