@@ -1,12 +1,15 @@
+"use client"
 import { ToDoListIcon } from "@/features";
 import { MoreVertical } from "lucide-react";
 import { TbTargetArrow } from "react-icons/tb";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 /**
  * Props for the ProjectTemplateCard component.
  */
 type ProjectTemplateCardProps = {
+  id: string;
   templateName: string;
   milestoneCount: number;
   taskCount: number;
@@ -26,17 +29,22 @@ type ProjectTemplateCardProps = {
  * Responsive styling with flex and vw units for adaptive layout.
  */
 export function ProjectTemplateCard({
+  id,
   templateName,
   milestoneCount,
   taskCount,
   estimatedDays,
   projectType,
 }: ProjectTemplateCardProps) {
+  const router = useRouter();
+  const handleClickOnView = () => {
+    router.push(`/admin/settings/project-template/${id}`);
+  };
   return (
-    <div className=" flex flex-col gap-3 2xl:gap-[0.75vw] bg-[#BAD8FD] p-[1.5rem] 2xl:p-[1.5vw] rounded-2xl 2xl:rounded-[1vw] w-full md:w-[52vw] lg:w-[38vw] xl:w-[26vw] shadow-md relative">
+    <div onClick={handleClickOnView} className=" flex flex-col gap-3 2xl:gap-[0.75vw] bg-[#BAD8FD] p-[1.5rem] 2xl:p-[1.5vw] rounded-2xl 2xl:rounded-[1vw] w-full md:w-[52vw] lg:w-[38vw] xl:w-[26vw] shadow-md relative">
       {/* More options */}
       <div className="absolute top-[1vw] right-[1vw]">
-        <MoreVertical className="text-black" />
+        <MoreVertical className="text-black"  />
       </div>
 
       <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">

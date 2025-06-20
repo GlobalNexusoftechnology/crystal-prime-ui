@@ -7,3 +7,4 @@ export * from "./role-management";
 export * from "./lead-types";
 export * from "./project-template-list";
 export * from "./add-project-template";
+export * from "./project-template-detail";

@@ -34,6 +34,7 @@ export function ProjectTemplateList() {
             taskCount={template.taskCount}
             estimatedDays={template.estimatedDays}
             projectType={template.projectType}
+            id={template.id}
           />
         ))}
       </div>

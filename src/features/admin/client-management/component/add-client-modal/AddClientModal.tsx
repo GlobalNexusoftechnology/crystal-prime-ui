@@ -86,7 +86,7 @@ export function AddClientModal({ onClose, selectedClient, onUpdateClient, isUpda
     <ModalOverlay modalTitle="Back to Clients" isOpen={true} onClose={onClose}>
       <form
         onSubmit={formik.handleSubmit}
-        className="flex flex-col gap-4 p-4 2xl:gap-[1vw] border 2xl:border-[0.1vw] border-lightWhite bg-white rounded-lg 2xl:rounded-[0.5vw] h-[80vh] overflow-y-auto"
+        className="flex flex-col gap-4 p-4 2xl:gap-[1vw] border 2xl:border-[0.1vw] border-borderGray bg-white rounded-lg 2xl:rounded-[0.5vw] h-[80vh] overflow-y-auto"
       >
         <p className="text-[1rem] 2xl:text-[1vw]">
           {isEditMode ? "Edit Client" : "Add new Client"}
