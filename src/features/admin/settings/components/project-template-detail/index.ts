@@ -1,0 +1,1 @@
+export {ProjectTemplateDetail} from "./ProjectTemplateDetail";

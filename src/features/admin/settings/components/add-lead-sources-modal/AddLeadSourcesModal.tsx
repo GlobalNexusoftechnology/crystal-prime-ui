@@ -1,3 +1,4 @@
+"use client"
 import { Button, InputField, ModalOverlay } from "@/components";
 import { IApiError } from "@/utils";
 import React, { useEffect, useState } from "react";
