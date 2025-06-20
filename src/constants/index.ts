@@ -6,3 +6,5 @@ export * from "./dashboard-card-data";
 export * from "./tables";
 export * from './permissions';
 export * from './project-data';
+export * from "./project-template-data";
+export * from "./project-template-detail";

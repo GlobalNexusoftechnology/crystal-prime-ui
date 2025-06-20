@@ -20,7 +20,7 @@ const config: Config = {
         textColor: "#252F4A",
         lightYellow: "#DD7A08",
         offGreen: "#08EA79",
-        lightWhite: "#D7D7D7",
+        borderGray: "#D7D7D7",
         lightGreen: "#57B708",
         darkBlue: "#252F4A",
         aqua: '#BAFDF9',

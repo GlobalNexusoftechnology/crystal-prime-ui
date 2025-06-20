@@ -17,3 +17,5 @@ export { ThreeIcon } from "./ThreeIcon";
 export { FollowUpManagementIcon } from "./FollowUpManagementIcon";
 export { DocumentManagementIcon } from "./DocumentManagementIcon";
 export { CrossIcon } from "./CrossIcon";
+export {MilestoneIcon} from "./MilestoneIcon";
+export {ToDoListIcon} from "./TodoListIcon";

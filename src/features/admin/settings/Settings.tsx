@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LeadSources, LeadTypes } from "./components";
+import { LeadSources, LeadTypes, ProjectTemplateList, } from "./components";
 import { LeadStatus } from "./components";
 import { RoleManagement } from "./components";
 import { usePermission } from "@/utils/hooks";
@@ -9,7 +9,7 @@ import { EAction, EModule } from "@/constants";
 
 /**
  * `Settings` is the main component for managing the settings page.
- * 
+ *
  * It allows the user to toggle between different settings sections:
  * - General settings
  * - Lead sources
@@ -18,17 +18,18 @@ import { EAction, EModule } from "@/constants";
  */
 export function Settings() {
   // Tracks the currently active tab/page
-  const [activePage, setActivePage] = useState<null|string>(null);
+  const [activePage, setActivePage] = useState<null | string>(null);
   const { hasPermission } = usePermission();
   const cavViewSources = hasPermission(EModule.LEAD_SOURCES, EAction.VIEW);
   const cavViewStatuses = hasPermission(EModule.LEAD_STATUSES, EAction.VIEW);
   const cavViewRoles = hasPermission(EModule.ROLES, EAction.VIEW);
   const cavViewTypes = hasPermission(EModule.LEAD_TYPES, EAction.VIEW);
+  const cavViewProjectTemplate = hasPermission(EModule.PROJECT_TEMPLATE, EAction.VIEW);
 
   return (
     <div className="p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw]">
       {/* Navigation Buttons to switch between settings views */}
-      <div className="flex space-x-2 mb-4 2xl:mb-[1vw]">
+      <div className="flex flex-row gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
         <button
           className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw] font-semibold ${
             activePage === "settings"
@@ -50,7 +51,7 @@ export function Settings() {
           >
             Lead Types
           </button>
-        ) :  null}
+        ) : null}
         {cavViewSources ? (
           <button
             className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw]  ${
@@ -62,7 +63,7 @@ export function Settings() {
           >
             Lead Sources
           </button>
-        ) :  null}
+        ) : null}
 
         {cavViewStatuses ? (
           <button
@@ -75,7 +76,7 @@ export function Settings() {
           >
             Lead Status
           </button>
-        ) :  null}
+        ) : null}
 
         {cavViewRoles ? (
           <button
@@ -88,15 +89,28 @@ export function Settings() {
           >
             Role
           </button>
-        ) :  null}
+        ) : null}
 
+        {cavViewProjectTemplate ? (
+          <button
+            className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw] ${
+              activePage === "projectTemplate"
+                ? "border-b-[0.2rem] border-[#65558F] text-[#65558F] text-sm 2xl:text-[0.875vw]"
+                : "text-sm 2xl:text-[0.875vw]"
+            }`}
+            onClick={() => setActivePage("projectTemplate")}
+          >
+            Project Template
+          </button>
+        ) : null}
       </div>
 
       {/* Conditional Rendering of Selected Tab Content */}
       {activePage === "leadSources" && <LeadSources />}
       {activePage === "leadStatus" && <LeadStatus />}
       {activePage === "leadTypes" && <LeadTypes />}
-      {activePage === "role" && <RoleManagement/>} 
+      {activePage === "role" && <RoleManagement />}
+      {activePage === "projectTemplate" && <ProjectTemplateList/>}
     </div>
   );
 }
