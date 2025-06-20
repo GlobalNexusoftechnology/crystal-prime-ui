@@ -1,5 +1,11 @@
 import React from "react";
-import { ClientInfo, DocumentSection, ProjectEstimate, ProjectInfo } from "../../../project-details/components";
+import {
+  ClientInfo,
+  DocumentSection,
+  ProjectEstimate,
+  ProjectInfo,
+} from "../../../project-details/components";
+import { Button } from "@/components";
 
 // interface Task {
 //   id: number;
@@ -88,13 +94,12 @@ export function Step4Preview({
       {/* Milestone Table */}
 
       {/* Submit Button */}
-      <div className="flex justify-center mt-6">
-        <button
-          className="bg-[#4E5EFF] text-white px-8 py-2 rounded-md 2xl:rounded-[0.5vw] font-medium hover:bg-[#3b47cc] transition"
+      <div className="flex justify-start mt-6">
+        <Button
+          title="Submit"
           onClick={onSubmit}
-        >
-          Submit
-        </button>
+          width="w-full md:w-[10rem] 2xl:w-[10vw]"
+        />
       </div>
     </div>
   );

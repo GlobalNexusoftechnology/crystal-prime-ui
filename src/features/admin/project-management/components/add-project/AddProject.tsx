@@ -186,7 +186,7 @@ export function AddProject() {
                   type="submit"
                   disabled={formik.isSubmitting}
                   title="Next"
-                  width="w-fit"
+                  width="w-full md:w-[10rem] 2xl:w-[10vw]"
                 />
               </div>
             </Form>

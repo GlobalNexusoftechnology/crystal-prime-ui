@@ -1,3 +1,4 @@
+import { Button } from "@/components";
 import { FileAttachmentIcon } from "@/features/icons";
 import React, { useRef, useState } from "react";
 
@@ -117,21 +118,20 @@ export function Step3UploadDocument({
           {error && <span className="text-red-600 mt-2">{error}</span>}
         </div>
       </div>
-      {/* Action Buttons */}
-      <div className="flex justify-between mt-6 max-w-2xl mx-auto w-full">
-        <button
-          className="border border-[#4E5EFF] text-[#4E5EFF] px-6 py-2 rounded-md 2xl:rounded-[0.5vw] font-medium hover:bg-[#f0f3ff] transition"
+       {/* Action Buttons */}
+       <div className="flex justify-center items-center mt-6 2xl:mt-[1.5vw] gap-4 2xl:gap-[1vw]">
+        <Button
+          title="Back"
+          variant="primary-outline"
           onClick={onBack}
-        >
-          Back
-        </button>
-        <button
-          className="bg-[#0047AB] text-white px-6 py-2 rounded-md 2xl:rounded-[0.5vw] font-medium hover:bg-[#003580] transition disabled:opacity-50 disabled:cursor-not-allowed"
+          width="w-full md:w-[10rem] 2xl:w-[10vw]"
+        />
+        <Button
+          title="Next"
           onClick={() => onNext(files)}
           disabled={files.length === 0}
-        >
-          Next
-        </button>
+          width="w-full md:w-[10rem] 2xl:w-[10vw]"
+        />
       </div>
     </div>
   );
