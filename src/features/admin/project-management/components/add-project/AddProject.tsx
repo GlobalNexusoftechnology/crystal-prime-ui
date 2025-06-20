@@ -218,7 +218,7 @@ export function AddProject() {
           clientInfo={clientInfo}
           estimates={estimates}
           documents={documents}
-          milestones={milestones}
+          // milestones={milestones}
           onSubmit={() => {
             // Final submit handler
             alert("Project submitted!");

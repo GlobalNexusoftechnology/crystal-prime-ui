@@ -22,12 +22,35 @@ export function ProjectDetails() {
       />
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="border-r">
-          <ProjectInfo />
-          <DocumentSection />
+          <ProjectInfo projectInfoData={{
+            name: "",
+            type: "",
+            contactPerson: "",
+            description: "",
+            createdAt: "",
+            updatedAt: ""
+          }} />
+          <DocumentSection documentSectionData={[]} />
         </div>
         <div>
-          <ClientInfo />
-          <ProjectEstimate />
+          <ClientInfo clientInfoData={{
+            clientName: "",
+            companyName: "",
+            contactPerson: "",
+            phone: "",
+            email: ""
+          }} />
+          <ProjectEstimate projectEstimateData={{
+            estimatedStart: "",
+            actualStart: "",
+            estimatedEnd: "",
+            actualEnd: "",
+            estimatedCost: "",
+            actualCost: "",
+            labourCost: "",
+            overheadCost: "",
+            budget: ""
+          }} />
         </div>
       </div>
       <MilestoneTabs />
