@@ -63,23 +63,23 @@ const validationSchema = Yup.object({
 });
 
 // Mock milestone/task types for preview
-interface Task {
-  id: number;
-  name: string;
-  description: string;
-  assignedTo: string;
-  status: string;
-  dueDate: string;
-}
-interface Milestone {
-  id: number;
-  name: string;
-  assignedTo: string;
-  status: string;
-  estimatedStart: string;
-  estimatedEnd: string;
-  tasks: Task[];
-}
+// interface Task {
+//   id: number;
+//   name: string;
+//   description: string;
+//   assignedTo: string;
+//   status: string;
+//   dueDate: string;
+// }
+// interface Milestone {
+//   id: number;
+//   name: string;
+//   assignedTo: string;
+//   status: string;
+//   estimatedStart: string;
+//   estimatedEnd: string;
+//   tasks: Task[];
+// }
 interface ProjectInfo {
   name: string;
   type: string;
@@ -114,7 +114,7 @@ interface DocumentInfo {
 
 export function AddProject() {
   const [step, setStep] = useState(1);
-  const [milestones] = useState<Milestone[]>([]); // for Step2/Preview
+  // const [milestones] = useState<Milestone[]>([]); // for Step2/Preview
   const [uploadedFile, setUploadedFile] = useState<File | null>(null); // for Step3/Preview
 
   // Mock preview data (replace with real form state as needed)
@@ -218,7 +218,6 @@ export function AddProject() {
           clientInfo={clientInfo}
           estimates={estimates}
           documents={documents}
-          // milestones={milestones}
           onSubmit={() => {
             // Final submit handler
             alert("Project submitted!");
