@@ -115,7 +115,7 @@ interface DocumentInfo {
 export function AddProject() {
   const [step, setStep] = useState(1);
   // const [milestones] = useState<Milestone[]>([]); // for Step2/Preview
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null); // for Step3/Preview
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]); // for Step3/Preview
 
   // Mock preview data (replace with real form state as needed)
   const projectInfo: ProjectInfo = {
@@ -145,15 +145,11 @@ export function AddProject() {
     overheadCost: "$72.00",
     budget: "$72,000",
   };
-  const documents: DocumentInfo[] = uploadedFile
-    ? [
-        {
-          name: uploadedFile.name,
-          uploadedBy: "Nisha Sharma",
-          uploadedAt: "15-03-2022 10:00 AM",
-        },
-      ]
-    : [];
+  const documents: DocumentInfo[] = uploadedFiles.map((file) => ({
+    name: file.name,
+    uploadedBy: "Nisha Sharma",
+    uploadedAt: "15-03-2022 10:00 AM",
+  }));
 
   const handleSubmit = (
     values: IAddProjectFormValues,
@@ -206,8 +202,8 @@ export function AddProject() {
       {step === 3 && (
         <Step3UploadDocument
           onBack={() => setStep(2)}
-          onNext={(file) => {
-            setUploadedFile(file);
+          onNext={(files) => {
+            setUploadedFiles(files);
             setStep(4);
           }}
         />

@@ -21,3 +21,4 @@ export { MilestoneIcon } from "./MilestoneIcon";
 export { ToDoListIcon } from "./TodoListIcon";
 export { TreeStructureIcon } from "./TreeStructureIcon";
 export { AddSquareIcon } from "./AddSquareIcon";
+export { FileAttachmentIcon } from "./FileAttachmentIcon";
