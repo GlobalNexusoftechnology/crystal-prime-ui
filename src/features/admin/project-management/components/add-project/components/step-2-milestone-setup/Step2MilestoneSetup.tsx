@@ -241,10 +241,10 @@ export function Step2MilestoneSetup({
                     <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                   </button>
                 </th>
-                <th className="text-left px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Assigned To</th>
-                <th className="text-left px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Status</th>
-                <th className="text-left px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Estimated Start Date</th>
-                <th className="text-left px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Estimated End Date</th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Assigned To</th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Status</th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Estimated Start Date</th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Estimated End Date</th>
                 <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
               </tr>
             </thead>
@@ -350,18 +350,18 @@ export function Step2MilestoneSetup({
                               <HiChevronDown className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                             )}
                           </button>
-                          <span>{milestone.name}</span>
+                          <span className="text-sm 2xl:text-[0.8vw]">{milestone.name}</span>
                         </td>
-                        <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">{milestone.assignedTo}</td>
+                        <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-sm 2xl:text-[0.8vw]">{milestone.assignedTo}</td>
                         <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">
-                          <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
+                          <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.8vw] font-semibold">
                             {milestone.status}
                           </span>
                         </td>
                         <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">
                           <span className="flex items-center gap-2">
                             <HiOutlineCalendar className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw] text-gray-400" />
-                            {milestone.estimatedStart}
+                            <span className="text-sm 2xl:text-[0.8vw]">{milestone.estimatedStart}</span>
                           </span>
                         </td>
                         <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">
@@ -524,20 +524,20 @@ export function Step2MilestoneSetup({
                                     </>
                                   ) : (
                                     <>
-                                      <td className="pl-8 py-2 2xl:pl-[2vw] 2xl:py-[0.5vw] font-medium">
+                                      <td className="pl-8 py-2 2xl:pl-[2vw] 2xl:py-[0.5vw] text-sm 2xl:text-[0.8vw] font-medium">
                                         {task.name}
                                       </td>
-                                      <td className="py-2 2xl:py-[0.5vw]">{task.description}</td>
-                                      <td className="py-2 2xl:py-[0.5vw]">{task.assignedTo}</td>
+                                      <td className="py-2 2xl:py-[0.5vw] text-sm 2xl:text-[0.8vw]">{task.description}</td>
+                                      <td className="py-2 2xl:py-[0.5vw] text-sm 2xl:text-[0.8vw]">{task.assignedTo}</td>
                                       <td className="py-2 2xl:py-[0.5vw]">
                                         <span className="bg-blue-100 2xl:bg-blue-50 text-blue-600 px-3 2xl:px-[0.7vw] py-1 2xl:py-[0.3vw] rounded-full 2xl:rounded-[1vw] text-xs 2xl:text-[0.8vw] font-semibold">
                                           {task.status}
                                         </span>
                                       </td>
                                       <td className="py-2 2xl:py-[0.5vw]">
-                                        <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
+                                        <span className="flex items-center gap-2 2xl:gap-[0.5vw] ">
                                           <HiOutlineCalendar className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw] text-gray-400" />
-                                          {task.dueDate}
+                                          <span className="text-sm 2xl:text-[0.8vw]">{task.dueDate}</span>
                                         </span>
                                       </td>
                                       <td className="py-2 2xl:py-[0.5vw] text-right relative">
