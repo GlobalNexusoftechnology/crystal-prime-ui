@@ -7,6 +7,7 @@ import { Milestone, Task } from "./components";
 interface Step2MilestoneSetupProps {
   onBack: () => void;
   onNext: () => void;
+  milestoneOption: string;
 }
 
 interface Task {
@@ -43,6 +44,7 @@ const userOptions = [
 export function Step2MilestoneSetup({
   onBack,
   onNext,
+  milestoneOption,
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
   const [milestones, setMilestones] = useState<Milestone[]>([
@@ -211,19 +213,23 @@ export function Step2MilestoneSetup({
     setEditTask(newTask);
   };
 
+  const isTemplateSelected = milestoneOption === "template";
+
   return (
     <div className="flex flex-col gap-6 2xl:gap-[2vw]">
       {/* Project Template Dropdown */}
-      <div className="mb-4 2xl:mb-[1vw]">
-        <Dropdown
-          label="Project Template"
-          options={projectTemplateOptions}
-          value={projectTemplate}
-          onChange={setProjectTemplate}
-          dropdownWidth="w-full"
-          error={undefined}
-        />
-      </div>
+      {isTemplateSelected && (
+        <div className="mb-4 2xl:mb-[1vw]">
+          <Dropdown
+            label="Project Template"
+            options={projectTemplateOptions}
+            value={projectTemplate}
+            onChange={setProjectTemplate}
+            dropdownWidth="w-full"
+            error={undefined}
+          />
+        </div>
+      )}
       {/* Milestone Table */}
       <div className="mb-4 2xl:mb-[1vw]">
         <div className="overflow-x-auto">

@@ -117,6 +117,7 @@ export function AddProject() {
   const [step, setStep] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]); // for Step3/Preview
+  const [milestoneOption, setMilestoneOption] = useState("milestone");
 
   // Mock preview data (replace with real form state as needed)
   const projectInfo: ProjectInfo = {
@@ -206,6 +207,7 @@ export function AddProject() {
   ) => {
     // TODO: handle form submission
     // On successful validation, go to next step
+    setMilestoneOption(values.milestoneOption);
     setStep(2);
     actions.setSubmitting(false);
   };
@@ -246,6 +248,7 @@ export function AddProject() {
         <Step2MilestoneSetup
           onBack={() => setStep(1)}
           onNext={() => setStep(3)}
+          milestoneOption={milestoneOption}
         />
       )}
       {step === 3 && (
