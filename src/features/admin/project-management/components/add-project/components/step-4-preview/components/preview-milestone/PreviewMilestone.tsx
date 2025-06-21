@@ -39,7 +39,7 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
             title={expanded ? "Collapse" : "Expand"} 
             type="button"
           >
-            {expanded ? <HiChevronUp className="w-6 h-6" /> : <HiChevronDown className="w-6 h-6" />}
+            {expanded ? <HiChevronUp className="w-4 h-4" /> : <HiChevronDown className="w-4 h-4" />}
           </button>
           <span className="text-sm">{milestone.name}</span>
           <span className="flex items-center gap-1">

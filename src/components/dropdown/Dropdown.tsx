@@ -109,7 +109,7 @@ export function Dropdown({
       </AnimatePresence>
 
       {error && (
-        <p className="text-red-500 text-sm 2xl:text-[0.9vw] mt-1 2xl:mt-[0.25vw]">
+        <p className="text-red-500 text-sm 2xl:text-[0.9vw] mt-1 2xl:mt-[0.5vw]">
           {error}
         </p>
       )}

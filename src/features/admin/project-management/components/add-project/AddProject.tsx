@@ -211,7 +211,7 @@ export function AddProject() {
   };
 
   return (
-    <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+    <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
       <Link
         href={`/admin/project-management`}
         className="flex gap-2 2xl:gap-[0.5vw] items-center 2xl:text-[1vw] font-medium"
