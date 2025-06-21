@@ -1,3 +1,6 @@
 export { ProgressHeader } from "./progress-header"
 export { Step1BasicInfo } from "./step-1-basic-info"
 export { Step2MilestoneSetup } from "./step-2-milestone-setup"
+export { Step3UploadDocument } from "./step-3-upload-document"
+export { Step4Preview } from "./step-4-preview"
+export { ProjectCreatedModal } from "./project-created-modal"

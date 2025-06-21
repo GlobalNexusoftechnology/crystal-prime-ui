@@ -4,11 +4,12 @@ import Link from "next/link";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import {
   ProgressHeader,
+  ProjectCreatedModal,
   Step1BasicInfo,
   Step2MilestoneSetup,
+  Step3UploadDocument,
+  Step4Preview,
 } from "./components";
-import { Step3UploadDocument } from "./components/step-3-upload-document/Step3UploadDocument";
-import { Step4Preview } from "./components/step-4-preview/Step4Preview";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { Button } from "@/components";
@@ -114,7 +115,7 @@ interface DocumentInfo {
 
 export function AddProject() {
   const [step, setStep] = useState(1);
-  // const [milestones] = useState<Milestone[]>([]); // for Step2/Preview
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]); // for Step3/Preview
 
   // Mock preview data (replace with real form state as needed)
@@ -264,11 +265,11 @@ export function AddProject() {
           documents={documents}
           milestones={milestones}
           onSubmit={() => {
-            // Final submit handler
-            alert("Project submitted!");
+            setIsModalOpen(true);
           }}
         />
       )}
+      {isModalOpen && <ProjectCreatedModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
     </section>
   );
 }

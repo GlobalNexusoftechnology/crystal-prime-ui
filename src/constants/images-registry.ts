@@ -9,6 +9,7 @@ import websiteLogoIcon from "../../public/images/website-logo-icon.png"
 import googleCalendarIcon from "../../public/images/google-calendar-google-s-logo-img.png"
 import projectTemplate from "../../public/images/project-template.png"
 import addMilestone from "../../public/images/add-milestone.png"
+import projectCreated from "../../public/images/project-created.png"
 
 export const ImageRegistry = {
   websiteLogo,
@@ -21,5 +22,6 @@ export const ImageRegistry = {
   websiteLogoIcon,
   googleCalendarIcon,
   projectTemplate,
-  addMilestone
+  addMilestone,
+  projectCreated
 };
