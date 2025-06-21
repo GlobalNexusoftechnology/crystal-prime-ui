@@ -12,7 +12,7 @@ import { ClientListTable } from "./component";
 export function ClientManagement() {
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border 2xl:border-[0.1vw] border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
-      <ClientListTable/>
+      <ClientListTable />
     </section>
   );
 }
