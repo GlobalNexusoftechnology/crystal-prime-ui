@@ -63,23 +63,23 @@ const validationSchema = Yup.object({
 });
 
 // Mock milestone/task types for preview
-// interface Task {
-//   id: number;
-//   name: string;
-//   description: string;
-//   assignedTo: string;
-//   status: string;
-//   dueDate: string;
-// }
-// interface Milestone {
-//   id: number;
-//   name: string;
-//   assignedTo: string;
-//   status: string;
-//   estimatedStart: string;
-//   estimatedEnd: string;
-//   tasks: Task[];
-// }
+interface Task {
+  id: number;
+  name: string;
+  description: string;
+  assignedTo: string;
+  status: string;
+  dueDate: string;
+}
+interface Milestone {
+  id: number;
+  name: string;
+  assignedTo: string;
+  status: string;
+  estimatedStart: string;
+  estimatedEnd: string;
+  tasks: Task[];
+}
 interface ProjectInfo {
   name: string;
   type: string;
@@ -151,6 +151,54 @@ export function AddProject() {
     uploadedAt: "15-03-2022 10:00 AM",
   }));
 
+  // Mock milestone data for preview
+  const milestones: Milestone[] = [
+    {
+      id: 1,
+      name: "Dashboard For Admin",
+      assignedTo: "Ramesh Gupta",
+      status: "Open",
+      estimatedStart: "2021-02-24",
+      estimatedEnd: "2021-03-24",
+      tasks: [
+        {
+          id: 1,
+          name: "Design Dashboard",
+          description: "Create admin dashboard layout",
+          assignedTo: "Ramesh Gupta",
+          status: "In Progress",
+          dueDate: "2021-02-28",
+        },
+      ],
+    },
+    {
+      id: 2,
+      name: "Customer Section",
+      assignedTo: "Nisha Sharma",
+      status: "Open",
+      estimatedStart: "2021-03-01",
+      estimatedEnd: "2021-04-01",
+      tasks: [
+        {
+          id: 2,
+          name: "Product List",
+          description: "Implement product listing page",
+          assignedTo: "Nisha Sharma",
+          status: "Open",
+          dueDate: "2021-03-15",
+        },
+        {
+          id: 3,
+          name: "Offer List",
+          description: "Create offer management system",
+          assignedTo: "Nisha Sharma",
+          status: "Open",
+          dueDate: "2021-03-30",
+        },
+      ],
+    },
+  ];
+
   const handleSubmit = (
     values: IAddProjectFormValues,
     actions: FormikHelpers<IAddProjectFormValues>
@@ -214,6 +262,7 @@ export function AddProject() {
           clientInfo={clientInfo}
           estimates={estimates}
           documents={documents}
+          milestones={milestones}
           onSubmit={() => {
             // Final submit handler
             alert("Project submitted!");
