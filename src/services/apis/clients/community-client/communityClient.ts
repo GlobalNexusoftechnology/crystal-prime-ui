@@ -105,6 +105,13 @@ import {
   IUpdateProjectTemplateMilestonePayload,
   IUpdateProjectTemplateMilestoneResponse,
   IDeleteProjectTemplateMilestoneResponse,
+  ICreateProjectTemplateMilestoneTaskPayload,
+  ICreateProjectTemplateMilestoneTaskResponse,
+  IAllProjectTemplateMilestoneTasksResponse,
+  IProjectTemplateMilestoneTaskDetailResponse,
+  IUpdateProjectTemplateMilestoneTaskPayload,
+  IUpdateProjectTemplateMilestoneTaskResponse,
+  IDeleteProjectTemplateMilestoneTaskResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -180,6 +187,11 @@ import {
   getProjectTemplateMilestoneDetailByIdUrl,
   updateProjectTemplateMilestoneUrl,
   deleteProjectTemplateMilestoneUrl,
+  createProjectTemplateMilestoneTaskUrl,
+  fetchAllProjectTemplateMilestoneTasksUrl,
+  getProjectTemplateMilestoneTaskDetailByIdUrl,
+  updateProjectTemplateMilestoneTaskUrl,
+  deleteProjectTemplateMilestoneTaskUrl,
 } from "./urls";
 
 /**
@@ -1296,8 +1308,63 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   };
-}
 
+  public createProjectTemplateMilestoneTask = async (payload: ICreateProjectTemplateMilestoneTaskPayload) => {
+    const response = await this.post<ICreateProjectTemplateMilestoneTaskResponse>(
+      createProjectTemplateMilestoneTaskUrl(),
+      payload
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public fetchAllProjectTemplateMilestoneTasks = async (milestoneId: string) => {
+    const response = await this.get<IAllProjectTemplateMilestoneTasksResponse>(
+      fetchAllProjectTemplateMilestoneTasksUrl(milestoneId),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public getProjectTemplateMilestoneTaskDetailById = async (id: string) => {
+    const response = await this.get<IProjectTemplateMilestoneTaskDetailResponse>(
+      getProjectTemplateMilestoneTaskDetailByIdUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public updateProjectTemplateMilestoneTask = async ({ id, payload }: IUpdateProjectTemplateMilestoneTaskPayload) => {
+    const response = await this.put<IUpdateProjectTemplateMilestoneTaskResponse>(
+      updateProjectTemplateMilestoneTaskUrl(id),
+      payload,
+      { requiresAuth: true }
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteProjectTemplateMilestoneTask = async (id: string) => {
+    const response = await this.del<IDeleteProjectTemplateMilestoneTaskResponse>(
+      deleteProjectTemplateMilestoneTaskUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+}
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.

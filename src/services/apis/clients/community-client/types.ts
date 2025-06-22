@@ -1060,6 +1060,8 @@ export interface IProjectTemplateDetailResponse {
   data: ICreateProjectTemplatePayload;
 }
 
+// Project Template Milestones APIs Types
+// -----------------------------------------------------
 export interface ICreateProjectTemplateMilestonePayload {
   template_id: string;
   name: string;
@@ -1105,4 +1107,53 @@ export interface IProjectTemplateMilestoneDetailResponse {
   message: string;
   success: true;
   data: ICreateProjectTemplateMilestonePayload;
+}
+
+// Project Template Milestone Tasks APIs Types
+// -----------------------------------------------------
+export interface ICreateProjectTemplateMilestoneTaskPayload {
+  milestone_master_id: string;
+  title: string;
+  description?: string;
+  estimated_days?: number;
+}
+
+export interface ICreateProjectTemplateMilestoneTaskResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestoneTaskPayload;
+}
+
+export interface IUpdateProjectTemplateMilestoneTaskPayload {
+  id: string;
+  payload: Partial<ICreateProjectTemplateMilestoneTaskPayload>;
+}
+
+export interface IUpdateProjectTemplateMilestoneTaskResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestoneTaskPayload;
+}
+
+export interface IDeleteProjectTemplateMilestoneTaskResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestoneTaskPayload;
+}
+
+export interface IAllProjectTemplateMilestoneTasksResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestoneTaskPayload[];
+}
+
+export interface IProjectTemplateMilestoneTaskDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestoneTaskPayload;
 }
