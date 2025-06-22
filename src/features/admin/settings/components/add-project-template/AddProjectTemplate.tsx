@@ -127,6 +127,8 @@ export function AddProjectTemplate() {
               </span>
             )}
           </div>
+          <hr className="mt-8 2xl:mt-[2vw]" />
+
           <ProjectTemplateMilestone formik={formik} />
           <div className="flex justify-end items-center gap-4 2xl:gap-[1vw] mt-4">
             <Button variant="secondary" className="w-[150px] 2xl:w-[9.375vw]">

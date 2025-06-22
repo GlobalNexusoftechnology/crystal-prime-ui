@@ -13,7 +13,7 @@ const uuidv4 = () => {
   });
 }
 
-export function ProjectTemplateMilestone({ formik }: { formik: FormikProps<ProjectTemplateFormValues> }) {
+export function ProjectTemplateMilestone({ formik }: { formik: FormikProps<any> }) {
   const { values, handleChange, handleBlur } = formik;
   const [openMilestones, setOpenMilestones] = useState<{ [key: string]: boolean }>({});
   const [editingMilestoneId, setEditingMilestoneId] = useState<string | null>(null);

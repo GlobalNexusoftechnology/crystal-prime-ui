@@ -1,6 +1,20 @@
 /**
  * Interface representing the structure of a Project Template detail object.
  */
+
+export interface Task {
+  id: string;
+  name: string;
+  estimatedDays: string;
+  description: string;
+}
+export interface Milestone {
+  id: string;
+  name: string;
+  estimatedDays: string;
+  description: string;
+  tasks: Task[];
+}
 export interface IProjectTemplateDetail {
   id: string;
   templateName: string;
@@ -9,6 +23,7 @@ export interface IProjectTemplateDetail {
   createdAt: string;
   updatedAt: string;
   description: string;
+  milestones: Milestone[];
 }
 
 /**
@@ -25,6 +40,25 @@ export const projectTemplateDetails: IProjectTemplateDetail[] = [
     updatedAt: "15-03-2022 10:00 AM",
     description:
       "Nisha Sharma is an eCommerce project transforming online shopping. It focuses on user-friendly design and easy navigation, ensuring a secure and enjoyable experience.",
+    milestones: [
+      {
+        id: "m1",
+        name: "Dashboard For Admin",
+        estimatedDays: "5",
+        description: "This project belongs to...",
+        tasks: [
+          { id: "t1", name: "Product List", estimatedDays: "2", description: "Task description..." },
+          { id: "t2", name: "Offer List", estimatedDays: "3", description: "Task description..." }
+        ]
+      },
+      {
+        id: "m2",
+        name: "Customer section",
+        estimatedDays: "10",
+        description: "This project belongs to...",
+        tasks: []
+      }
+    ]
   },
   {
     id: "2",
@@ -35,6 +69,7 @@ export const projectTemplateDetails: IProjectTemplateDetail[] = [
     updatedAt: "25-04-2023 02:00 PM",
     description:
       "This mobile app project is built to provide seamless user experience on Android and iOS with offline support and intuitive navigation.",
+    milestones: []
   },
   {
     id: "3",
@@ -45,6 +80,7 @@ export const projectTemplateDetails: IProjectTemplateDetail[] = [
     updatedAt: "06-01-2024 10:45 AM",
     description:
       "An advanced CRM system to manage customer relationships, automate follow-ups, and track sales performance in real-time.",
+    milestones: []
   },
   {
     id: "4",
@@ -55,5 +91,6 @@ export const projectTemplateDetails: IProjectTemplateDetail[] = [
     updatedAt: "02-07-2022 08:00 AM",
     description:
       "A creative portfolio website for a designer to showcase projects, testimonials, and a contact form with sleek animations.",
+    milestones: []
   },
 ];

@@ -1,9 +1,30 @@
+"use client"
 import { IProjectTemplateDetail } from "@/constants";
-// import { ProjectTemplateMilestone } from "../project-template-milestone";
+import { useFormik, FormikProvider } from "formik";
+import * as Yup from "yup";
+import { ProjectTemplateMilestone } from "../project-template-milestone";
+import { Button } from "@/components";
 
 type IProjectTemplateDetailProps = {
   projectTemplateData: IProjectTemplateDetail;
 };
+
+const validationSchema = Yup.object({
+  milestones: Yup.array().of(
+    Yup.object().shape({
+      name: Yup.string().required("Milestone name is required"),
+      estimatedDays: Yup.string().required("Estimated days is required"),
+      description: Yup.string().required("Description is required"),
+      tasks: Yup.array().of(
+        Yup.object().shape({
+          name: Yup.string().required("Task name is required"),
+          estimatedDays: Yup.string().required("Estimated days is required"),
+          description: Yup.string().required("Description is required"),
+        })
+      ),
+    })
+  ),
+});
 
 /**
  * ProjectTemplateDetail Component
@@ -22,6 +43,17 @@ type IProjectTemplateDetailProps = {
 export function ProjectTemplateDetail({
   projectTemplateData,
 }: IProjectTemplateDetailProps) {
+
+  const formik = useFormik({
+    initialValues: {
+      milestones: projectTemplateData.milestones || [],
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      console.log("Milestones submitted:", values);
+    }
+  });
+
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw] justify-between bg-white rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.1vw] border-borderGray p-4 2xl:p-[1vw]">
       <h2 className="text-[1.5rem] 2xl:font-[1.5vw] font-medium">
@@ -69,7 +101,12 @@ export function ProjectTemplateDetail({
           {projectTemplateData.description}
         </p>
       </div>
-      {/* <ProjectTemplateMilestone formik={undefined} /> */}
+      <hr className="mt-4 2xl:mt-[1vw]"/>
+      <FormikProvider value={formik}>
+        <form onSubmit={formik.handleSubmit}>
+          <ProjectTemplateMilestone formik={formik} />
+        </form>
+      </FormikProvider>
     </div>
   );
 }
