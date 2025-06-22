@@ -192,7 +192,7 @@ export function CustomClientTable({
                 ))}
               </tr>
               {expandedRowId === row.id && (
-                <tr>
+                <tr key={`${row.id}-details`}>
                   <td
                     colSpan={clientListColumn.length + 2}
                     className="p-4 2xl:p-[1vw] bg-gray-50"
