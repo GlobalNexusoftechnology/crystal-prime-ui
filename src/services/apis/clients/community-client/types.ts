@@ -1009,3 +1009,53 @@ export interface IDeleteClientResponse {
   success: true;
   data: ICreateClientPayload;
 }
+
+// Project Templates APIs Types
+// -----------------------------------------------------
+
+export interface ICreateProjectTemplatePayload {
+  name: string;
+  description?: string;
+  project_type?: string;
+  estimated_days?: number;
+}
+
+export interface ICreateProjectTemplateResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplatePayload;
+}
+
+export interface IUpdateProjectTemplatePayload {
+  id: string;
+  payload: Partial<ICreateProjectTemplatePayload>;
+}
+
+export interface IUpdateProjectTemplateResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplatePayload;
+}
+
+export interface IDeleteProjectTemplateResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplatePayload;
+}
+
+export interface IAllProjectTemplatesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplatePayload[];
+}
+
+export interface IProjectTemplateDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplatePayload;
+}

@@ -160,3 +160,14 @@ export const getClientDetailByIdUrl = (id: string) => `/clients/${id}`;//get by 
 export const updateClientUrl = (id: string) => `/clients/${id}`;//put
 
 export const deleteClientUrl = (id: string) => `/clients/${id}`; //delete
+
+export const createProjectTemplateUrl = () => "/project-templates"; //post
+
+//  Project Templates API's hook
+export const fetchAllProjectTemplatesUrl = () => "/project-templates";
+
+export const getProjectTemplateDetailByIdUrl = (id: string) => `/project-templates/${id}`;
+
+export const updateProjectTemplateUrl = (id: string) => `/project-templates/${id}`;
+
+export const deleteProjectTemplateUrl = (id: string) => `/project-templates/${id}`;

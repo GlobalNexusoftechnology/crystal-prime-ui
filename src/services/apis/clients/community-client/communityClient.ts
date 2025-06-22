@@ -91,6 +91,13 @@ import {
   IUserDetailResponse,
   IVerifyEmailPayload,
   IVerifyEmailResponse,
+  ICreateProjectTemplatePayload,
+  ICreateProjectTemplateResponse,
+  IAllProjectTemplatesResponse,
+  IProjectTemplateDetailResponse,
+  IUpdateProjectTemplatePayload,
+  IUpdateProjectTemplateResponse,
+  IDeleteProjectTemplateResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -156,6 +163,11 @@ import {
   updateClientUrl,
   deleteClientUrl,
   fetchAllClientUrl,
+  createProjectTemplateUrl,
+  fetchAllProjectTemplatesUrl,
+  getProjectTemplateDetailByIdUrl,
+  updateProjectTemplateUrl,
+  deleteProjectTemplateUrl,
 } from "./urls";
 
 /**
@@ -1151,6 +1163,64 @@ export class CommunityClient extends ApiClient {
   public deleteClient = async (id: string) => {
     const response = await this.del<IDeleteClientResponse>(deleteClientUrl(id));
 
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public createProjectTemplate = async (payload: ICreateProjectTemplatePayload) => {
+    const response = await this.post<ICreateProjectTemplateResponse>(
+      createProjectTemplateUrl(),
+      payload
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  public fetchAllProjectTemplates = async () => {
+    const response = await this.get<IAllProjectTemplatesResponse>(
+      fetchAllProjectTemplatesUrl(),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public getProjectTemplateDetailById = async (id: string) => {
+    const response = await this.get<IProjectTemplateDetailResponse>(
+      getProjectTemplateDetailByIdUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public updateProjectTemplate = async ({ id, payload }: IUpdateProjectTemplatePayload) => {
+    const response = await this.put<IUpdateProjectTemplateResponse>(
+      updateProjectTemplateUrl(id),
+      payload,
+      { requiresAuth: true }
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteProjectTemplate = async (id: string) => {
+    const response = await this.del<IDeleteProjectTemplateResponse>(
+      deleteProjectTemplateUrl(id),
+      { requiresAuth: false }
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
