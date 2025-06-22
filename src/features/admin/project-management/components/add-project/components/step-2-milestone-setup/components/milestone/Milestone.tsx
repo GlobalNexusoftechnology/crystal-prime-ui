@@ -129,12 +129,12 @@ export function Milestone({
               )}
             </button>
             <span className="text-sm 2xl:text-[0.9vw]">{milestone.name}</span>
-            <span className="flex items-center gap-1">
+            <div className="flex items-center gap-1">
               <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
-              <span className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
+              <p className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
                 {milestone.tasks.length}
-              </span>
-            </span>
+              </p>
+            </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2 2xl:gap-[0.5vw]">

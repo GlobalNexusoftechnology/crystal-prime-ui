@@ -1,4 +1,5 @@
 import { IProjectTemplateDetail } from "@/constants";
+// import { ProjectTemplateMilestone } from "../project-template-milestone";
 
 type IProjectTemplateDetailProps = {
   projectTemplateData: IProjectTemplateDetail;
@@ -68,6 +69,7 @@ export function ProjectTemplateDetail({
           {projectTemplateData.description}
         </p>
       </div>
+      {/* <ProjectTemplateMilestone formik={undefined} /> */}
     </div>
   );
 }
