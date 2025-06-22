@@ -3,7 +3,7 @@
 import { AddSquareIcon } from "@/features/icons";
 import { FieldArray, FormikProps } from "formik";
 import { useState } from "react";
-import { Milestone, ProjectTemplateFormValues } from "../add-project-template/types";
+import { Milestone } from "../add-project-template/types";
 import { MilestoneRow } from "./components";
 
 const uuidv4 = () => {
@@ -13,6 +13,7 @@ const uuidv4 = () => {
   });
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ProjectTemplateMilestone({ formik }: { formik: FormikProps<any> }) {
   const { values, handleChange, handleBlur } = formik;
   const [openMilestones, setOpenMilestones] = useState<{ [key: string]: boolean }>({});

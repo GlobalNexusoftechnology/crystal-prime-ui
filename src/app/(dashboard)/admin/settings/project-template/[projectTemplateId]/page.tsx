@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 import { ProjectTemplateDetail } from "@/features";
-import { IProjectTemplateDetail, projectTemplateDetails } from "@/constants";
+import type { IProjectTemplateDetail } from "@/constants/project-template-detail";
+import { projectTemplateDetails } from "@/constants/project-template-detail";
 
 /**
  * Fetches the projectTemplate data based on the provided projectTemplate ID.

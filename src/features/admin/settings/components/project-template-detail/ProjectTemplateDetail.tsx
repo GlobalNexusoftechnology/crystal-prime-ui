@@ -1,9 +1,8 @@
 "use client"
-import { IProjectTemplateDetail } from "@/constants";
+import type { IProjectTemplateDetail } from "@/constants";
 import { useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
 import { ProjectTemplateMilestone } from "../project-template-milestone";
-import { Button } from "@/components";
 
 type IProjectTemplateDetailProps = {
   projectTemplateData: IProjectTemplateDetail;
