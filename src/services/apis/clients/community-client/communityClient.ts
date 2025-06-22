@@ -98,6 +98,13 @@ import {
   IUpdateProjectTemplatePayload,
   IUpdateProjectTemplateResponse,
   IDeleteProjectTemplateResponse,
+  ICreateProjectTemplateMilestonePayload,
+  ICreateProjectTemplateMilestoneResponse,
+  IAllProjectTemplateMilestonesResponse,
+  IProjectTemplateMilestoneDetailResponse,
+  IUpdateProjectTemplateMilestonePayload,
+  IUpdateProjectTemplateMilestoneResponse,
+  IDeleteProjectTemplateMilestoneResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -168,6 +175,11 @@ import {
   getProjectTemplateDetailByIdUrl,
   updateProjectTemplateUrl,
   deleteProjectTemplateUrl,
+  createProjectTemplateMilestoneUrl,
+  fetchAllProjectTemplateMilestonesUrl,
+  getProjectTemplateMilestoneDetailByIdUrl,
+  updateProjectTemplateMilestoneUrl,
+  deleteProjectTemplateMilestoneUrl,
 } from "./urls";
 
 /**
@@ -1219,6 +1231,64 @@ export class CommunityClient extends ApiClient {
   public deleteProjectTemplate = async (id: string) => {
     const response = await this.del<IDeleteProjectTemplateResponse>(
       deleteProjectTemplateUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public createProjectTemplateMilestone = async (payload: ICreateProjectTemplateMilestonePayload) => {
+    const response = await this.post<ICreateProjectTemplateMilestoneResponse>(
+      createProjectTemplateMilestoneUrl(),
+      payload
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  public fetchAllProjectTemplateMilestones = async (templateId: string) => {
+    const response = await this.get<IAllProjectTemplateMilestonesResponse>(
+      fetchAllProjectTemplateMilestonesUrl(templateId),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public getProjectTemplateMilestoneDetailById = async (id: string) => {
+    const response = await this.get<IProjectTemplateMilestoneDetailResponse>(
+      getProjectTemplateMilestoneDetailByIdUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public updateProjectTemplateMilestone = async ({ id, payload }: IUpdateProjectTemplateMilestonePayload) => {
+    const response = await this.put<IUpdateProjectTemplateMilestoneResponse>(
+      updateProjectTemplateMilestoneUrl(id),
+      payload,
+      { requiresAuth: true }
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteProjectTemplateMilestone = async (id: string) => {
+    const response = await this.del<IDeleteProjectTemplateMilestoneResponse>(
+      deleteProjectTemplateMilestoneUrl(id),
       { requiresAuth: false }
     );
     if (!response?.success) {

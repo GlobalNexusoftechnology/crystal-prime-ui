@@ -1059,3 +1059,50 @@ export interface IProjectTemplateDetailResponse {
   success: true;
   data: ICreateProjectTemplatePayload;
 }
+
+export interface ICreateProjectTemplateMilestonePayload {
+  template_id: string;
+  name: string;
+  description?: string;
+  estimated_days?: number;
+}
+
+export interface ICreateProjectTemplateMilestoneResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestonePayload;
+}
+
+export interface IUpdateProjectTemplateMilestonePayload {
+  id: string;
+  payload: Partial<ICreateProjectTemplateMilestonePayload>;
+}
+
+export interface IUpdateProjectTemplateMilestoneResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestonePayload;
+}
+
+export interface IDeleteProjectTemplateMilestoneResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestonePayload;
+}
+
+export interface IAllProjectTemplateMilestonesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestonePayload[];
+}
+
+export interface IProjectTemplateMilestoneDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestonePayload;
+}

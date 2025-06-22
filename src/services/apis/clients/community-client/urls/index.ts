@@ -171,3 +171,14 @@ export const getProjectTemplateDetailByIdUrl = (id: string) => `/project-templat
 export const updateProjectTemplateUrl = (id: string) => `/project-templates/${id}`;
 
 export const deleteProjectTemplateUrl = (id: string) => `/project-templates/${id}`;
+
+//  Project Template Milestones API's hook
+export const createProjectTemplateMilestoneUrl = () => "/project-template-milestones"; //post
+
+export const fetchAllProjectTemplateMilestonesUrl = (templateId: string) => `/project-template-milestones?template_id=${templateId}`;
+
+export const getProjectTemplateMilestoneDetailByIdUrl = (id: string) => `/project-template-milestones/${id}`;
+
+export const updateProjectTemplateMilestoneUrl = (id: string) => `/project-template-milestones/${id}`;
+
+export const deleteProjectTemplateMilestoneUrl = (id: string) => `/project-template-milestones/${id}`;
