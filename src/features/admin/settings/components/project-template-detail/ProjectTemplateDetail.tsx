@@ -6,6 +6,7 @@ import { ProjectTemplateMilestone } from "../project-template-milestone";
 import { Breadcrumb } from "@/features/admin/breadcrumb";
 import { useRouter } from "next/navigation";
 import { ActionDropdown } from "@/components/action-dropdown/ActionDropdown";
+import { formattingDate } from "@/utils";
 
 type IProjectTemplateDetailProps = {
   projectTemplateData: IProjectTemplateDetail;
@@ -49,7 +50,7 @@ export function ProjectTemplateDetail({
 
   const handleEdit = () => {
     // Navigate to edit page
-    router.push(`/admin/settings/project-template`);
+    router.push(`/admin/settings/project-template/edit/${projectTemplateData.id}`);
   };
 
   const handleDelete = () => {
@@ -117,13 +118,13 @@ export function ProjectTemplateDetail({
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
           <p className=" text-sm 2xl:text-[0.875vw]">Created At</p>
           <p className="text-[1rem] 2xl:text-[1vw] font-medium">
-            {projectTemplateData.createdAt}
+            {formattingDate(projectTemplateData.createdAt, "toReadable")}
           </p>
         </div>
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
           <p className=" text-sm 2xl:text-[0.875vw]">Updated At</p>
           <p className="text-[1rem] 2xl:text-[1vw] font-medium">
-            {projectTemplateData.updatedAt}
+            {formattingDate(projectTemplateData.updatedAt, "toReadable")}
           </p>
         </div>
       </div>

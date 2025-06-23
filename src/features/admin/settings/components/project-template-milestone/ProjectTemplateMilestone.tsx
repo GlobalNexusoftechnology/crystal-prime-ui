@@ -5,6 +5,7 @@ import { FieldArray, FormikProps } from "formik";
 import { useState } from "react";
 import { Milestone } from "../add-project-template/types";
 import { MilestoneRow } from "./components";
+import { v4 as uuidv4 } from "uuid";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik: FormikProps<any>; readOnly?: boolean }) {
@@ -44,7 +45,7 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                     type="button"
                     onClick={() => {
                       const newMilestone = {
-                        id: Math.random().toString(36).substr(2, 9),
+                        id: uuidv4(),
                         name: "",
                         estimatedDays: "",
                         description: "",
@@ -85,6 +86,7 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                   editingTaskId={editingTaskId}
                   setEditingTaskId={setEditingTaskId}
                   readOnly={readOnly}
+                  formik={formik}
                 />
               );
             })}

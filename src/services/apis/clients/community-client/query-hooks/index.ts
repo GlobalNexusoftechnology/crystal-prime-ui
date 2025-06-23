@@ -77,4 +77,7 @@ export {useDeleteClientMutation} from "./useDeleteClientMutation";
 // project template
 export { useAllProjectTemplatesQuery } from "./useAllProjectTemplatesQuery";
 export { useProjectTemplateDetailQuery } from "./useProjectTemplateDetailQuery";
+export { useCreateProjectTemplateMutation } from "./useCreateProjectTemplateMutation";
+export { useUpdateProjectTemplateMutation } from "./useUpdateProjectTemplateMutation";
+export { useDeleteProjectTemplateMutation } from "./useDeleteProjectTemplateMutation";
 export { useCreateProjectTemplateMilestoneMutation } from "./useCreateProjectTemplateMilestoneMutation";

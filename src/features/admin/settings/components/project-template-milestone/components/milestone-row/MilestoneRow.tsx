@@ -3,7 +3,10 @@ import { AddSquareIcon, TreeStructureIcon } from "@/features";
 import { FaChevronDown, FaChevronRight, FaRegCalendarAlt } from "react-icons/fa";
 import { FieldArray } from "formik";
 import { Milestone, Task } from "../../../add-project-template/types";
+import { ProjectTemplateFormValues } from "../../../add-project-template/types";
+import { FormikProps } from "formik";
 import { TaskRow } from "../task-row";
+import { useState, useEffect } from "react";
 
 interface MilestoneRowProps {
   milestone: Milestone;
@@ -16,10 +19,8 @@ interface MilestoneRowProps {
   onDelete: (index: number) => void;
   onSave: () => void;
   onCancel: () => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handleChange: (e: any) => void;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  handleBlur: (e: any) => void;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleBlur: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   editingTaskId: string | null;
   setEditingTaskId: (id: string | null) => void;
   readOnly?: boolean;
@@ -40,7 +41,14 @@ export function MilestoneRow({
   editingTaskId,
   setEditingTaskId,
   readOnly = false,
-}: MilestoneRowProps) {
+  formik,
+}: MilestoneRowProps & { formik: FormikProps<ProjectTemplateFormValues> }) {
+  const [localMilestone, setLocalMilestone] = useState(milestone);
+
+  useEffect(() => {
+    if (isEditing) setLocalMilestone(milestone);
+  }, [isEditing, milestone]);
+
   return (
     <div>
       <div className="grid grid-cols-4 gap-4 2xl:gap-[1vw] items-center py-2 2xl:py-[0.5vw] px-4 2xl:px-[1vw]  hover:bg-gray-50 border-b ">
@@ -54,13 +62,10 @@ export function MilestoneRow({
           </button>
           {isEditing ? (
             <InputField
-              name={`milestones[${index}].name`}
-              value={milestone.name}
-              onChange={handleChange}
-              onBlur={handleBlur}
+              value={localMilestone.name}
+              onChange={e => setLocalMilestone({ ...localMilestone, name: e.target.value })}
               placeholder="Enter Name"
               className="w-full"
-              disabled={readOnly}
             />
           ) : (
             <div className="flex items-center gap-4 2xl:gap-[1vw]">
@@ -76,25 +81,19 @@ export function MilestoneRow({
         </div>
         {isEditing ? (
           <InputField
-            name={`milestones[${index}].estimatedDays`}
-            value={milestone.estimatedDays}
-            onChange={handleChange}
-            onBlur={handleBlur}
+            value={localMilestone.estimatedDays}
+            onChange={e => setLocalMilestone({ ...localMilestone, estimatedDays: e.target.value })}
             placeholder="Enter Days"
             icon={<FaRegCalendarAlt className="text-gray-400" />}
-            disabled={readOnly}
           />
         ) : (
           <span>{milestone.estimatedDays}</span>
         )}
         {isEditing ? (
           <InputField
-            name={`milestones[${index}].description`}
-            value={milestone.description}
-            onChange={handleChange}
-            onBlur={handleBlur}
+            value={localMilestone.description}
+            onChange={e => setLocalMilestone({ ...localMilestone, description: e.target.value })}
             placeholder="Enter Description"
-            disabled={readOnly}
           />
         ) : (
           <p className="truncate">{milestone.description}</p>
@@ -102,7 +101,7 @@ export function MilestoneRow({
         <div className="flex items-center justify-end gap-2">
           {isEditing && !readOnly ? (
             <>
-              <Button title="Save" onClick={onSave} className="py-1 px-2" width="w-fit" />
+              <Button title="Save" onClick={() => { formik.setFieldValue(`milestones[${index}]`, localMilestone); onSave(); }} className="py-1 px-2" width="w-fit" />
               <Button title="Cancel" variant="secondary" onClick={onCancel} className="py-1 px-2" width="w-fit" />
             </>
           ) : (

@@ -5,9 +5,10 @@ import * as Yup from "yup";
 import { Dropdown, InputField, Button } from "@/components";
 import { ProjectTemplateMilestone } from "../project-template-milestone";
 import { ProjectTemplateFormValues } from "./types";
-import { useCreateProjectTemplateMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateProjectTemplateMutation";
+import { useCreateProjectTemplateMutation, useUpdateProjectTemplateMutation } from "@/services";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useProjectTemplateDetailQuery } from "@/services";
 
 /**
  * @file Client-side component for adding a new project template with Formik and Yup validation.
@@ -42,51 +43,88 @@ const validationSchema = Yup.object({
   ),
 });
 
-export function AddProjectTemplate() {
-  const router = useRouter()
-  const {
-    onCreateProjectTemplate
-  } = useCreateProjectTemplateMutation({
+export function AddProjectTemplate({ id }: { id?: string }) {
+  const router = useRouter();
+  const { onCreateProjectTemplate } = useCreateProjectTemplateMutation({
     onSuccessCallback: (response) => {
-      toast.success(response.message)
-      router.push("/admin/settings")
+      toast.success(response.message);
+      router.push("/admin/settings");
     },
     onErrorCallback: (err) => {
-      toast.success(err.message)
-
+      toast.error(err.message);
     },
   });
+  const { onUpdateProjectTemplate } = useUpdateProjectTemplateMutation({
+    onSuccessCallback: (response) => {
+      toast.success(response.message);
+      router.push("/admin/settings");
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message);
+    },
+  });
+  const { projectTemplateDetailData, isLoading } = useProjectTemplateDetailQuery(id ?? "");
+
+  const initialValues: ProjectTemplateFormValues = id && projectTemplateDetailData
+    ? {
+        templateName: projectTemplateDetailData.name || "",
+        projectType: projectTemplateDetailData.project_type || "",
+        estimatedDays: projectTemplateDetailData.estimated_days?.toString() || "",
+        description: projectTemplateDetailData.description || "",
+        milestones: (projectTemplateDetailData.project_milestone_master || []).map(m => ({
+          id: m.id,
+          name: m.name,
+          estimatedDays: m.estimated_days?.toString() || "",
+          description: m.description,
+          tasks: (m.project_task_master || []).map(t => ({
+            id: t.id,
+            name: t.title,
+            estimatedDays: t.estimated_days?.toString() || "",
+            description: t.description,
+          })),
+        })),
+      }
+    : {
+        templateName: "",
+        projectType: "",
+        estimatedDays: "",
+        description: "",
+        milestones: [],
+      };
 
   const formik = useFormik<ProjectTemplateFormValues>({
-    initialValues: {
-      templateName: "",
-      projectType: "",
-      estimatedDays: "",
-      description: "",
-      milestones: [],
-    },
+    enableReinitialize: true,
+    initialValues,
     validationSchema,
     onSubmit: (values) => {
-      // Map form values to API payload (including milestones and tasks)
       const payload = {
+        ...(id ? { id } : {}),
         name: values.templateName,
         project_type: values.projectType,
-        estimated_days: Number(values.estimatedDays),
+        estimated_days: values.estimatedDays ? Number(values.estimatedDays) : 0,
         description: values.description,
         milestones: values.milestones.map((milestone) => ({
+          ...(milestone.id ? { id: milestone.id } : {}),
           name: milestone.name,
           description: milestone.description,
-          estimated_days: Number(milestone.estimatedDays),
+          estimated_days: milestone.estimatedDays ? Number(milestone.estimatedDays) : 0,
           tasks: milestone.tasks?.map((task) => ({
+            ...(task.id ? { id: task.id } : {}),
             title: task.name,
             description: task.description,
-            estimated_days: Number(task.estimatedDays),
+            estimated_days: task.estimatedDays ? Number(task.estimatedDays) : 0,
           })),
         })),
       };
-      onCreateProjectTemplate(payload);
+      if (id) {
+        onUpdateProjectTemplate({id, payload});
+      } else {
+        onCreateProjectTemplate(payload);
+      }
     },
   });
+
+  if (id && isLoading) return <div>Loading...</div>;
 
   return (
     <FormikProvider value={formik}>
@@ -166,9 +204,7 @@ export function AddProjectTemplate() {
           <ProjectTemplateMilestone formik={formik} />
           <div className="flex justify-start items-center gap-4 2xl:gap-[1vw] mt-4">
             <Button variant="primary-outline" title="Cancel" width="w-fit" />
-
-            <Button type="submit" title="Save Changes" width="w-fit" />
-
+            <Button type="submit" title={id ? "Save Changes" : "Create Template"} width="w-fit" />
           </div>
         </div>
       </form>
