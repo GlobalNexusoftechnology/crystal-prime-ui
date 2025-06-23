@@ -164,11 +164,11 @@ export function AddProjectTemplate() {
           <hr className="mt-8 2xl:mt-[2vw]" />
 
           <ProjectTemplateMilestone formik={formik} />
-          <div className="flex justify-end items-center gap-4 2xl:gap-[1vw] mt-4">
-            <Button variant="primary-outline" title="Cancel"/>
-             
-            <Button type="submit" title="Save Changes"/>
-              
+          <div className="flex justify-start items-center gap-4 2xl:gap-[1vw] mt-4">
+            <Button variant="primary-outline" title="Cancel" width="w-fit" />
+
+            <Button type="submit" title="Save Changes" width="w-fit" />
+
           </div>
         </div>
       </form>
