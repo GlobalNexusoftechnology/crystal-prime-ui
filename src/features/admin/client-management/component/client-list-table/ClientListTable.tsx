@@ -14,7 +14,7 @@ import { useAllClientQuery, useDeleteClientMutation, useUpdateClientMutation } f
 import { usePermission } from "@/utils/hooks";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
-import { CustomClientTable, IExtendedClientListProps } from "..";
+import { CustomClientTable } from "..";
 
 /**
  * ClientListTable component renders a section displaying the list of clients.
@@ -84,15 +84,6 @@ export function ClientListTable() {
     setSelectedClient(null);
   };
 
-  // Dummy data for contacts - replace with real data when available
-  const clientsWithContacts: IExtendedClientListProps[] = allClientData?.map((client: IClientListProps) => ({
-    ...client,
-    contacts: [
-      { id: '1', name: 'Emily Johnson', designation: 'Developer', email: 'emily.j@example.com', contact_numbers: [{type: 'primary', number: '(332) 816-4826'}, {type: 'other', number: '(332) 816-4826'}] },
-      { id: '2', name: 'Michael Brown', designation: 'Designer', email: 'michael.b@example.com', contact_numbers: [{type: 'primary', number: '(332) 568-3633 x3522'}, {type: 'other', number: '332-568-3633 x3522'}] },
-    ]
-  })) || [];
-
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw]">
       <div className="flex flex-col lg:items-center gap-4 lg:flex-row lg:gap-0 justify-between">
@@ -126,7 +117,7 @@ export function ClientListTable() {
       </div>
 
       <CustomClientTable
-        data={clientsWithContacts}
+        data={allClientData || []}
         actions={clientListActions}
         onEdit={handleEdit}
         onDelete={handleDelete}
