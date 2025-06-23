@@ -4,7 +4,6 @@ import { useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
 import { ProjectTemplateMilestone } from "../project-template-milestone";
 import { Breadcrumb } from "@/features/admin/breadcrumb";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ActionDropdown } from "@/components/action-dropdown/ActionDropdown";
 
@@ -46,8 +45,6 @@ const validationSchema = Yup.object({
 export function ProjectTemplateDetail({
   projectTemplateData,
 }: IProjectTemplateDetailProps) {
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const router = useRouter();
 
   const handleEdit = () => {

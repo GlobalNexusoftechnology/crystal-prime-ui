@@ -22,11 +22,6 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
     setEditingMilestoneId(id);
   };
 
-  const handleEditTask = (id: string) => {
-    setEditingMilestoneId(null);
-    setEditingTaskId(id)
-  };
-
   const handleCancel = () => {
     setEditingMilestoneId(null);
     setEditingTaskId(null);
@@ -89,7 +84,6 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                   handleBlur={handleBlur}
                   editingTaskId={editingTaskId}
                   setEditingTaskId={setEditingTaskId}
-                  handleEditTask={handleEditTask}
                   readOnly={readOnly}
                 />
               );

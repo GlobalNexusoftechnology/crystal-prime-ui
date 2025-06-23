@@ -22,7 +22,6 @@ interface MilestoneRowProps {
   handleBlur: (e: any) => void;
   editingTaskId: string | null;
   setEditingTaskId: (id: string | null) => void;
-  handleEditTask: (id: string) => void;
   readOnly?: boolean;
 }
 
@@ -41,7 +40,6 @@ export function MilestoneRow({
   editingTaskId,
   setEditingTaskId,
   readOnly = false,
-  handleEditTask,
 }: MilestoneRowProps) {
   return (
     <div>
