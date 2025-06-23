@@ -1,5 +1,5 @@
 "use client"
-import type { IProjectTemplateDetail } from "@/constants";
+import type { IProjectTemplateDetail } from "@/constants/project-template-detail";
 import { useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
 import { ProjectTemplateMilestone } from "../project-template-milestone";

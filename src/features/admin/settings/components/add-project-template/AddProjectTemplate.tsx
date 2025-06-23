@@ -5,6 +5,9 @@ import * as Yup from "yup";
 import { Dropdown, InputField, Button } from "@/components";
 import { ProjectTemplateMilestone } from "../project-template-milestone";
 import { ProjectTemplateFormValues } from "./types";
+import { useCreateProjectTemplateMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateProjectTemplateMutation";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 /**
  * @file Client-side component for adding a new project template with Formik and Yup validation.
@@ -40,6 +43,20 @@ const validationSchema = Yup.object({
 });
 
 export function AddProjectTemplate() {
+  const router = useRouter()
+  const {
+    onCreateProjectTemplate
+  } = useCreateProjectTemplateMutation({
+    onSuccessCallback: (response) => {
+      toast.success(response.message)
+      router.push("/admin/settings")
+    },
+    onErrorCallback: (err) => {
+      toast.success(err.message)
+
+    },
+  });
+
   const formik = useFormik<ProjectTemplateFormValues>({
     initialValues: {
       templateName: "",
@@ -50,7 +67,24 @@ export function AddProjectTemplate() {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("Form submitted:", values);
+      // Map form values to API payload (including milestones and tasks)
+      const payload = {
+        name: values.templateName,
+        project_type: values.projectType,
+        estimated_days: Number(values.estimatedDays),
+        description: values.description,
+        milestones: values.milestones.map((milestone) => ({
+          name: milestone.name,
+          description: milestone.description,
+          estimated_days: Number(milestone.estimatedDays),
+          tasks: milestone.tasks?.map((task) => ({
+            title: task.name,
+            description: task.description,
+            estimated_days: Number(task.estimatedDays),
+          })),
+        })),
+      };
+      onCreateProjectTemplate(payload);
     },
   });
 
@@ -131,12 +165,10 @@ export function AddProjectTemplate() {
 
           <ProjectTemplateMilestone formik={formik} />
           <div className="flex justify-end items-center gap-4 2xl:gap-[1vw] mt-4">
-            <Button variant="secondary" className="w-[150px] 2xl:w-[9.375vw]">
-              Cancel
-            </Button>
-            <Button type="submit" className="w-[150px] 2xl:w-[9.375vw]">
-              Save Changes
-            </Button>
+            <Button variant="primary-outline" title="Cancel"/>
+             
+            <Button type="submit" title="Save Changes"/>
+              
           </div>
         </div>
       </form>

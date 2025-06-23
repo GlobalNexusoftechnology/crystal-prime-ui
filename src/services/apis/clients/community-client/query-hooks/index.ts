@@ -73,3 +73,8 @@ export {useAllClientQuery} from "./useAllClientQuery";
 export {useClientDetailQuery} from "./useClientDetailQuery";
 export {useUpdateClientMutation} from "./useUpdateClientMutation";
 export {useDeleteClientMutation} from "./useDeleteClientMutation";
+
+// project template
+export { useAllProjectTemplatesQuery } from "./useAllProjectTemplatesQuery";
+export { useProjectTemplateDetailQuery } from "./useProjectTemplateDetailQuery";
+export { useCreateProjectTemplateMilestoneMutation } from "./useCreateProjectTemplateMilestoneMutation";

@@ -1046,18 +1046,47 @@ export interface IDeleteProjectTemplateResponse {
   data: ICreateProjectTemplatePayload;
 }
 
+export interface IProjectTemplateTask {
+  id: string;
+  title: string;
+  description: string;
+  estimated_days: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IProjectTemplateMilestone {
+  id: string;
+  name: string;
+  description: string;
+  estimated_days: number;
+  project_task_master: IProjectTemplateTask[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IProjectTemplate extends ICreateProjectTemplatePayload {
+  id: string;
+  project_milestone_master: IProjectTemplateMilestone[];
+  created_at: string;
+  updated_at: string;
+}
+
 export interface IAllProjectTemplatesResponse {
   status: boolean;
   message: string;
   success: true;
-  data: ICreateProjectTemplatePayload[];
+  data: {
+    templates: IProjectTemplate[];
+    total: number;
+  };
 }
 
 export interface IProjectTemplateDetailResponse {
   status: boolean;
   message: string;
   success: true;
-  data: ICreateProjectTemplatePayload;
+  data: IProjectTemplate;
 }
 
 // Project Template Milestones APIs Types
