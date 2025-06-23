@@ -192,7 +192,13 @@ import {
   getProjectTemplateMilestoneTaskDetailByIdUrl,
   updateProjectTemplateMilestoneTaskUrl,
   deleteProjectTemplateMilestoneTaskUrl,
+  createClientDetailsUrl,
+  deleteClientDetailsUrl,
+  updateClientDetailsUrl,
+  getClientDetailsByIdUrl,
+  getAllClientDetailsUrl,
 } from "./urls";
+import { IClientDetails, IClientDetailsResponse } from "./types";
 
 /**
  * CommunityClient class handles all API requests related to
@@ -388,7 +394,7 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
-    public uploadLeadFromExcel = async (formData: FormData) => {
+  public uploadLeadFromExcel = async (formData: FormData) => {
     const response = await this.post<IUploadLeadFromExcelResponse>(
       uploadLeadFromExcelUrl(),
       formData,
@@ -396,7 +402,7 @@ export class CommunityClient extends ApiClient {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        requiresAuth: true, 
+        requiresAuth: true,
       }
     )
 
@@ -995,7 +1001,7 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data
   }
-  
+
   public getNotifications = async () => {
     const response = await this.get<INotificationsResponse>(getNotificationsUrl(), {
       requiresAuth: false,
@@ -1023,10 +1029,10 @@ export class CommunityClient extends ApiClient {
 
     return response?.data
   }
-  
+
   //delete notification hook
 
- //delete lead
+  //delete lead
   public deleteNotification = async (id: string) => {
     const response = await this.del<IDeleteNotification>(deleteNotificationUrl(id))
 
@@ -1085,7 +1091,7 @@ export class CommunityClient extends ApiClient {
   };
 
   //get
-  
+
   public fetchAllClient = async () => {
     const response = await this.get<IAllClientResponse>(
       fetchAllClientUrl(),
@@ -1359,6 +1365,46 @@ export class CommunityClient extends ApiClient {
       deleteProjectTemplateMilestoneTaskUrl(id),
       { requiresAuth: false }
     );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public createClientDetails = async (payload: IClientDetails) => {
+    const response = await this.post<IClientDetailsResponse>(createClientDetailsUrl(), payload);
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public getAllClientDetails = async () => {
+    const response = await this.get<IClientDetailsResponse[]>(getAllClientDetailsUrl(), { requiresAuth: false });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public getClientDetailsById = async (id: string) => {
+    const response = await this.get<IClientDetailsResponse>(getClientDetailsByIdUrl(id), { requiresAuth: false });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public updateClientDetails = async ({ id, payload }: { id: string, payload: IClientDetails }) => {
+    const response = await this.put<IClientDetailsResponse>(updateClientDetailsUrl(id), payload, { requiresAuth: true });
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteClientDetails = async (id: string) => {
+    const response = await this.del<IClientDetailsResponse>(deleteClientDetailsUrl(id), { requiresAuth: false });
     if (!response?.success) {
       throw response?.errorData;
     }

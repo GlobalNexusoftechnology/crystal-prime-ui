@@ -76,7 +76,7 @@ export function AddClientModal({
         contact_person: values.contacts[0]?.name || "",
         contact_number: values.contacts[0]?.phone_numbers[0] || "",
         email: values.contacts[0]?.email || "",
-        contacts: values.contacts.map(c => ({
+        client_details: values.contacts.map(c => ({
           ...c,
           contact_numbers: c.phone_numbers.map((phone, index) => ({
             type: index === 0 ? 'primary' : 'other',

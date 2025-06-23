@@ -975,6 +975,7 @@ export interface IClientList {
   company_name: string;
   contact_person: string;
   lead_id: null; 
+  client_details?: ICreateClientDetailResponse[]
 }
 
 export interface IAllClientResponse {
@@ -1185,4 +1186,71 @@ export interface IProjectTemplateMilestoneTaskDetailResponse {
   message: string;
   success: true;
   data: ICreateProjectTemplateMilestoneTaskPayload;
+}
+
+// Client Details APIs Types
+// -----------------------------------------------------
+export interface ICreateClientDetailPayload {
+  client_id: string;
+  client_contact: string;
+  contact_person: string;
+  email: string;
+  other_contact: string;
+  designation: string;
+}
+
+export interface ICreateClientDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientDetailPayload;
+}
+
+export interface IUpdateClientDetailPayload {
+  id: string;
+  payload: Partial<ICreateClientDetailPayload>;
+}
+
+export interface IUpdateClientDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientDetailPayload;
+}
+
+export interface IDeleteClientDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientDetailPayload;
+}
+
+export interface IAllClientDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientDetailPayload[];
+}
+
+export interface IClientDetailByIdResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientDetailPayload;
+}
+
+export interface IClientDetails {
+  client_id: string;
+  client_contact: string;
+  contact_person: string;
+  email: string;
+  other_contact: string;
+  designation: string;
+}
+
+export interface IClientDetailsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IClientDetails;
 }

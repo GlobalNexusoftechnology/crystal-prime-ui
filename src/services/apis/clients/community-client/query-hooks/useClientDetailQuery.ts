@@ -13,8 +13,8 @@ const CLIENT_DETAIL_QUERY_KEY = "client-detail-query-key";
 export const useClientDetailQuery = (id: string) => {
   const { data, isError, error, isLoading, isPending, refetch } =
     useQueryWithUserId({
-      queryKey: [CLIENT_DETAIL_QUERY_KEY],
-      queryFn: () => COMMUNITY_CLIENT.getClientDetailById(id),
+      queryKey: [CLIENT_DETAIL_QUERY_KEY, id],
+      queryFn: () => COMMUNITY_CLIENT.getClientDetailsById(id),
       networkMode: "always",
     });
 
@@ -23,7 +23,7 @@ export const useClientDetailQuery = (id: string) => {
     isError,
     isLoading,
     isPending,
-    clientDetailById: data,
-    clientDetail: refetch,
+    clientDetail: data,
+    refetchClientDetail: refetch,
   };
 };
