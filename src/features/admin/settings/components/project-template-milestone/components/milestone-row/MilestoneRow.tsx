@@ -23,6 +23,7 @@ interface MilestoneRowProps {
   editingTaskId: string | null;
   setEditingTaskId: (id: string | null) => void;
   handleEditTask: (id: string) => void;
+  readOnly?: boolean;
 }
 
 export function MilestoneRow({
@@ -39,6 +40,8 @@ export function MilestoneRow({
   handleBlur,
   editingTaskId,
   setEditingTaskId,
+  readOnly = false,
+  handleEditTask,
 }: MilestoneRowProps) {
   return (
     <div>
@@ -59,6 +62,7 @@ export function MilestoneRow({
               onBlur={handleBlur}
               placeholder="Enter Name"
               className="w-full"
+              disabled={readOnly}
             />
           ) : (
             <div className="flex items-center gap-4 2xl:gap-[1vw]">
@@ -80,6 +84,7 @@ export function MilestoneRow({
             onBlur={handleBlur}
             placeholder="Enter Days"
             icon={<FaRegCalendarAlt className="text-gray-400" />}
+            disabled={readOnly}
           />
         ) : (
           <span>{milestone.estimatedDays}</span>
@@ -91,24 +96,27 @@ export function MilestoneRow({
             onChange={handleChange}
             onBlur={handleBlur}
             placeholder="Enter Description"
+            disabled={readOnly}
           />
         ) : (
           <p className="truncate">{milestone.description}</p>
         )}
         <div className="flex items-center justify-end gap-2">
-          {isEditing ? (
+          {isEditing && !readOnly ? (
             <>
               <Button title="Save" onClick={onSave} className="py-1 px-2" width="w-fit" />
               <Button title="Cancel" variant="secondary" onClick={onCancel} className="py-1 px-2" width="w-fit" />
             </>
           ) : (
-            <ActionDropdown
-              direction="left"
-              options={[
-                { label: "Edit", onClick: () => onEdit(milestone.id) },
-                { label: "Delete", onClick: () => onDelete(index), className: "text-red-500" },
-              ]}
-            />
+            !readOnly && (
+              <ActionDropdown
+                direction="left"
+                options={[
+                  { label: "Edit", onClick: () => onEdit(milestone.id) },
+                  { label: "Delete", onClick: () => onDelete(index), className: "text-red-500" },
+                ]}
+              />
+            )
           )}
         </div>
       </div>
@@ -123,21 +131,23 @@ export function MilestoneRow({
                     <span className="text-sm 2xl:text-[0.875vw] font-medium text-gray-500">
                       Task Name
                     </span>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const newTask = {
-                          id: Math.random().toString(36).substr(2, 9),
-                          name: "New Task",
-                          estimatedDays: "",
-                          description: "",
-                        };
-                        taskArrayHelpers.push(newTask);
-                        setEditingTaskId(newTask.id);
-                      }}
-                    >
-                      <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
-                    </button>
+                    {!readOnly && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const newTask = {
+                            id: Math.random().toString(36).substr(2, 9),
+                            name: "New Task",
+                            estimatedDays: "",
+                            description: "",
+                          };
+                          taskArrayHelpers.push(newTask);
+                          setEditingTaskId(newTask.id);
+                        }}
+                      >
+                        <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                      </button>
+                    )}
                   </div>
                   <span className="text-sm 2xl:text-[0.875vw] font-medium text-gray-500">
                     Estimated Days
@@ -159,6 +169,7 @@ export function MilestoneRow({
                     onCancel={() => setEditingTaskId(null)}
                     handleChange={handleChange}
                     handleBlur={handleBlur}
+                    readOnly={readOnly}
                   />
                 ))}
               </div>

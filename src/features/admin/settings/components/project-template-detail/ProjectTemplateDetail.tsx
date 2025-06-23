@@ -3,6 +3,10 @@ import type { IProjectTemplateDetail } from "@/constants/project-template-detail
 import { useFormik, FormikProvider } from "formik";
 import * as Yup from "yup";
 import { ProjectTemplateMilestone } from "../project-template-milestone";
+import { Breadcrumb } from "@/features/admin/breadcrumb";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { ActionDropdown } from "@/components/action-dropdown/ActionDropdown";
 
 type IProjectTemplateDetailProps = {
   projectTemplateData: IProjectTemplateDetail;
@@ -42,6 +46,20 @@ const validationSchema = Yup.object({
 export function ProjectTemplateDetail({
   projectTemplateData,
 }: IProjectTemplateDetailProps) {
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const router = useRouter();
+
+  const handleEdit = () => {
+    // Navigate to edit page
+    router.push(`/admin/settings/project-template`);
+  };
+
+  const handleDelete = () => {
+    if (window.confirm("Are you sure you want to delete this project template? This action cannot be undone.")) {
+      router.push("/admin/settings/project-template");
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -55,6 +73,25 @@ export function ProjectTemplateDetail({
 
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw] justify-between bg-white rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.1vw] border-borderGray p-4 2xl:p-[1vw]">
+      <div className="flex items-start justify-between">
+        <div>
+          <Breadcrumb/>
+        </div>
+        <ActionDropdown
+        direction="bottom"
+          options={[
+            {
+              label: "Edit",
+              onClick: handleEdit,
+            },
+            {
+              label: "Delete",
+              onClick: handleDelete,
+              className: "text-red-600",
+            },
+          ]}
+        />
+      </div>
       <h2 className="text-[1.5rem] 2xl:font-[1.5vw] font-medium">
         {projectTemplateData.templateName}
       </h2>
@@ -103,7 +140,7 @@ export function ProjectTemplateDetail({
       <hr className="mt-4 2xl:mt-[1vw]"/>
       <FormikProvider value={formik}>
         <form onSubmit={formik.handleSubmit}>
-          <ProjectTemplateMilestone formik={formik} />
+          <ProjectTemplateMilestone formik={formik} readOnly={true} />
         </form>
       </FormikProvider>
     </div>

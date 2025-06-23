@@ -15,6 +15,7 @@ interface TaskRowProps {
   handleChange: (e: any) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   handleBlur: (e: any) => void;
+  readOnly?: boolean;
 }
 
 export function TaskRow({
@@ -28,6 +29,7 @@ export function TaskRow({
   onCancel,
   handleChange,
   handleBlur,
+  readOnly = false,
 }: TaskRowProps) {
   return (
     <div className="grid grid-cols-4 gap-4 2xl:gap-[1vw] items-center py-2 2xl:py-[0.5vw] px-4 2xl:px-[1vw] hover:bg-gray-50 border-b 2xl:border-b-[0.1vw]">
@@ -38,6 +40,7 @@ export function TaskRow({
           onChange={handleChange}
           onBlur={handleBlur}
           placeholder="Enter Name"
+          disabled={readOnly}
         />
       ) : (
         <span>{task.name}</span>
@@ -50,6 +53,7 @@ export function TaskRow({
           onBlur={handleBlur}
           placeholder="Enter Days"
           icon={<FaRegCalendarAlt className="text-gray-400" />}
+          disabled={readOnly}
         />
       ) : (
         <span>{task.estimatedDays}</span>
@@ -61,24 +65,27 @@ export function TaskRow({
           onChange={handleChange}
           onBlur={handleBlur}
           placeholder="Enter Description"
+          disabled={readOnly}
         />
       ) : (
         <p className="truncate">{task.description}</p>
       )}
       <div className="flex items-center justify-end gap-2">
-        {isEditing ? (
+        {isEditing && !readOnly ? (
           <>
             <Button title="Save" onClick={onSave} className="py-1 px-2" width="w-fit"/>
             <Button title="Cancel" variant="secondary" onClick={onCancel} className="py-1 px-2" width="w-fit"/>
           </>
         ) : (
-          <ActionDropdown
-            direction="left"
-            options={[
-              { label: "Edit", onClick: () => onEdit(task.id) },
-              { label: "Delete", onClick: onDelete, className: "text-red-500" },
-            ]}
-          />
+          !readOnly && (
+            <ActionDropdown
+              direction="left"
+              options={[
+                { label: "Edit", onClick: () => onEdit(task.id) },
+                { label: "Delete", onClick: onDelete, className: "text-red-500" },
+              ]}
+            />
+          )
         )}
       </div>
     </div>

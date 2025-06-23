@@ -6,15 +6,8 @@ import { useState } from "react";
 import { Milestone } from "../add-project-template/types";
 import { MilestoneRow } from "./components";
 
-const uuidv4 = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function ProjectTemplateMilestone({ formik }: { formik: FormikProps<any> }) {
+export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik: FormikProps<any>; readOnly?: boolean }) {
   const { values, handleChange, handleBlur } = formik;
   const [openMilestones, setOpenMilestones] = useState<{ [key: string]: boolean }>({});
   const [editingMilestoneId, setEditingMilestoneId] = useState<string | null>(null);
@@ -51,22 +44,24 @@ export function ProjectTemplateMilestone({ formik }: { formik: FormikProps<any> 
                 <span className="text-sm 2xl:text-[0.875vw] font-medium text-gray-500">
                   Milestone Name
                 </span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const newMilestone = {
-                      id: uuidv4(),
-                      name: "New Milestone",
-                      estimatedDays: "",
-                      description: "",
-                      tasks: [],
-                    };
-                    arrayHelpers.push(newMilestone);
-                    handleEditMilestone(newMilestone.id);
-                  }}
-                >
-                  <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
-                </button>
+                {!readOnly && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newMilestone = {
+                        id: Math.random().toString(36).substr(2, 9),
+                        name: "",
+                        estimatedDays: "",
+                        description: "",
+                        tasks: [],
+                      };
+                      arrayHelpers.push(newMilestone);
+                      handleEditMilestone(newMilestone.id);
+                    }}
+                  >
+                    <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                  </button>
+                )}
               </div>
               <span className="text-sm 2xl:text-[0.875vw] font-medium text-gray-500">
                 Estimated Days
@@ -95,6 +90,7 @@ export function ProjectTemplateMilestone({ formik }: { formik: FormikProps<any> 
                   editingTaskId={editingTaskId}
                   setEditingTaskId={setEditingTaskId}
                   handleEditTask={handleEditTask}
+                  readOnly={readOnly}
                 />
               );
             })}
