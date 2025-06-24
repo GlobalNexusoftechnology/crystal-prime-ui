@@ -43,6 +43,7 @@ interface Step2MilestoneSetupProps {
   projectTemplateLoading: boolean;
   projectTemplateError: boolean;
   allProjectTemplatesData?: AllProjectTemplatesData;
+  initialMilestones?: Milestone[];
 }
 
 interface Task {
@@ -79,9 +80,10 @@ export function Step2MilestoneSetup({
   projectTemplateLoading,
   projectTemplateError,
   allProjectTemplatesData,
+  initialMilestones,
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
-  const [milestones, setMilestones] = useState<Milestone[]>([]);
+  const [milestones, setMilestones] = useState<Milestone[]>(initialMilestones || []);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editMilestone, setEditMilestone] = useState<Milestone | null>(null);
   // Task editing state
@@ -137,6 +139,12 @@ export function Step2MilestoneSetup({
       setMilestones(mappedMilestones);
     }
   }, [projectTemplate, allProjectTemplatesData]);
+
+  useEffect(() => {
+    if (initialMilestones && initialMilestones.length > 0) {
+      setMilestones(initialMilestones);
+    }
+  }, [initialMilestones]);
 
   // Add expandedMilestones state
   const [expandedMilestones, setExpandedMilestones] = useState<number[]>([]);

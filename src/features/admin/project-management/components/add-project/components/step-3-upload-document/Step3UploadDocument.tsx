@@ -1,19 +1,27 @@
 import { Button } from "@/components";
 import { FileAttachmentIcon } from "@/features/icons";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 interface Step3UploadDocumentProps {
   onBack: () => void;
   onNext: (files: File[]) => void;
+  initialFiles?: File[];
 }
 
 export function Step3UploadDocument({
   onBack,
   onNext,
+  initialFiles,
 }: Step3UploadDocumentProps) {
-  const [files, setFiles] = useState<File[]>([]);
+  const [files, setFiles] = useState<File[]>(initialFiles || []);
   const [error, setError] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (initialFiles && initialFiles.length > 0) {
+      setFiles(initialFiles);
+    }
+  }, [initialFiles]);
 
   const validateFiles = (
     fileList: FileList | File[],

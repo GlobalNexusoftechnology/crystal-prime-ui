@@ -196,38 +196,37 @@ export function AddProject() {
     }
   };
 
-  // Mock preview data (replace with real form state as needed)
+  // Build dynamic preview data from form state
   const projectInfo: ProjectInfo = {
-    name: "E Commerce Project",
-    type: "Website",
-    contactPerson: "Nisha Sharma",
-    description:
-      "Nisha Sharma is an eCommerce project transforming online shopping. It focuses on user-friendly design and easy navigation, ensuring a secure and enjoyable experience.",
-    createdAt: "15-03-2022 10:00 AM",
-    updatedAt: "15-03-2022 10:00 AM",
+    name: basicInfo?.name || "",
+    type: basicInfo?.projectType || "",
+    contactPerson: clientOptions.find(c => c.value === basicInfo?.client)?.label || "",
+    description: basicInfo?.description || "",
+    createdAt: new Date().toLocaleString(),
+    updatedAt: new Date().toLocaleString(),
   };
   const clientInfo: ClientInfo = {
-    clientName: "Nisha Sharma",
-    companyName: "Schoenview",
-    contactPerson: "Nisha Sharma",
-    phone: "951-643-1584",
-    email: "Alia.Dibbert@hotmail.com",
+    clientName: clientOptions.find(c => c.value === basicInfo?.client)?.label || "",
+    companyName: "-", // Add real value if available
+    contactPerson: clientOptions.find(c => c.value === basicInfo?.client)?.label || "",
+    phone: "-", // Add real value if available
+    email: "-", // Add real value if available
   };
   const estimates: Estimates = {
-    estimatedStart: "24-02-2021 09:00 AM",
-    actualStart: "24-02-2021 09:00 AM",
-    estimatedEnd: "24-02-2021 09:00 AM",
-    actualEnd: "24-02-2021 09:00 AM",
-    estimatedCost: "$42,452.00",
-    actualCost: "$72.00",
-    labourCost: "$42.00",
-    overheadCost: "$72.00",
-    budget: "$72,000",
+    estimatedStart: basicInfo?.estimatedStart || "",
+    actualStart: "-", // Add real value if available
+    estimatedEnd: basicInfo?.estimatedEnd || "",
+    actualEnd: "-", // Add real value if available
+    estimatedCost: basicInfo?.estimatedCost || "",
+    actualCost: "-", // Add real value if available
+    labourCost: basicInfo?.costOfLabour || "",
+    overheadCost: basicInfo?.overHeadCost || "",
+    budget: basicInfo?.budget || "",
   };
   const documents: DocumentInfo[] = uploadedFiles.map((file) => ({
     name: file.name,
-    uploadedBy: "Nisha Sharma",
-    uploadedAt: "15-03-2022 10:00 AM",
+    uploadedBy: "-", // Add real value if available
+    uploadedAt: new Date().toLocaleString(),
   }));
 
   return (
@@ -243,7 +242,7 @@ export function AddProject() {
       <ProgressHeader step={step} />
       {step === 1 && (
         <Formik
-          initialValues={initialValues}
+          initialValues={basicInfo || initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
@@ -276,15 +275,17 @@ export function AddProject() {
           projectTemplateLoading={projectTemplateLoading}
           projectTemplateError={!!projectTemplateError}
           allProjectTemplatesData={allProjectTemplatesData}
+          initialMilestones={milestones}
         />
       )}
       {step === 3 && (
         <Step3UploadDocument
           onBack={() => setStep(2)}
-          onNext={(files) => {
+          onNext={(files: File[]) => {
             setUploadedFiles(files);
             setStep(4);
           }}
+          initialFiles={uploadedFiles}
         />
       )}
       {step === 4 && (
@@ -294,6 +295,7 @@ export function AddProject() {
           estimates={estimates}
           documents={documents}
           milestones={milestones}
+          onBack={() => setStep(3)}
           onSubmit={handleFinalSubmit}
         />
       )}

@@ -68,10 +68,12 @@ interface Step4PreviewProps {
   estimates: Estimates;
   documents: DocumentInfo[];
   milestones: Milestone[];
+  onBack: () => void;
   onSubmit: () => void;
 }
 
 export function Step4Preview({
+  onBack,
   projectInfo,
   clientInfo,
   estimates,
@@ -92,7 +94,7 @@ export function Step4Preview({
           <ProjectEstimate projectEstimateData={estimates} />
         </div>
       </div>
-      
+
       {/* Milestone Table */}
       <div className="mb-4 2xl:mb-[1vw]">
         <h3 className="text-lg 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">Milestones</h3>
@@ -116,9 +118,14 @@ export function Step4Preview({
           </table>
         </div>
       </div>
-
       {/* Submit Button */}
-      <div className="flex justify-start mt-6">
+      <div className="flex justify-start items-center mt-6 2xl:mt-[1.5vw] gap-4 2xl:gap-[1vw]">
+        <Button
+          title="Back"
+          variant="primary-outline"
+          onClick={onBack}
+          width="w-full md:w-[10rem] 2xl:w-[10vw]"
+        />
         <Button
           title="Submit"
           onClick={onSubmit}
