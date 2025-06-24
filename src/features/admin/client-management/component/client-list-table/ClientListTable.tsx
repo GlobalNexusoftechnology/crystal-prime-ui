@@ -10,11 +10,12 @@ import {
 } from "@/constants";
 import { ExportIcon } from "@/features";
 import { AddClientModal } from "../add-client-modal";
-import { useAllClientQuery, useDeleteClientMutation, useUpdateClientMutation } from "@/services";
+import { useAllClientQuery, useDeleteClientMutation, useUpdateClientMutation, useAllClientDownloadExcelQuery, useClientDownloadTemplateExcelQuery } from "@/services";
 import { usePermission } from "@/utils/hooks";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import { CustomClientTable } from "..";
+import { downloadBlobFile } from "@/utils";
 
 /**
  * ClientListTable component renders a section displaying the list of clients.
@@ -79,6 +80,23 @@ export function ClientListTable() {
     },
   });
 
+  const { onAllClientDownloadExcel } = useAllClientDownloadExcelQuery();
+  const { onClientDownloadTemplateExcel } = useClientDownloadTemplateExcelQuery();
+
+  const handleExportClients = async () => {
+    const { data } = await onAllClientDownloadExcel();
+    if (data instanceof Blob) {
+      await downloadBlobFile(data, `clients_${new Date().getTime()}.xlsx`);
+    }
+  };
+
+  const handleDownloadTemplate = async () => {
+    const { data } = await onClientDownloadTemplateExcel();
+    if (data instanceof Blob) {
+      await downloadBlobFile(data, `upload_client_template.xlsx`);
+    }
+  };
+
   const handleCloseModal = () => {
     setIsAddClientModalOpen(false);
     setSelectedClient(null);
@@ -94,12 +112,14 @@ export function ClientListTable() {
             variant="primary-outline-blue"
             rightIcon={<ExportIcon color="#034A9F" />}
             width="w-full md:w-fit"
+            onClick={handleExportClients}
           />
           <Button
             title="Import"
             variant="primary-outline-blue"
             rightIcon={<ExportIcon color="#034A9F" className="rotate-180 " />}
             width="w-full md:w-fit"
+            onClick={handleDownloadTemplate}
           />
           <Button
             title="Add New Client"

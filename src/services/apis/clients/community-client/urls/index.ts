@@ -205,3 +205,7 @@ export const getClientDetailsByIdUrl = (id: string) => `/clients-details/${id}`;
 
 export const getAllClientDetailsUrl = () => `/clients-details`;
 
+// Client Excel Export & Template Download
+export const fetchAllClientDownloadExcelUrl = () => "/clients/export/excel";
+export const fetchClientDownloadTemplateExcelUrl = () => "/clients/template/download";
+

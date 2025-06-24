@@ -197,6 +197,8 @@ import {
   updateClientDetailsUrl,
   getClientDetailsByIdUrl,
   getAllClientDetailsUrl,
+  fetchAllClientDownloadExcelUrl,
+  fetchClientDownloadTemplateExcelUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse } from "./types";
 
@@ -1410,6 +1412,36 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   };
+
+  public fetchAllClientDownloadExcel = async () => {
+    const response = await this.get<Blob>(
+      fetchAllClientDownloadExcelUrl(),
+      {
+        responseType: 'blob'
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data;
+  }
+
+  public fetchClientDownloadTemplateExcel = async () => {
+    const response = await this.get<Blob>(
+      fetchClientDownloadTemplateExcelUrl(),
+      {
+        responseType: 'blob'
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data;
+  }
 }
 
 /**

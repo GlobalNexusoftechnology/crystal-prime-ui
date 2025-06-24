@@ -81,3 +81,6 @@ export { useCreateProjectTemplateMutation } from "./useCreateProjectTemplateMuta
 export { useUpdateProjectTemplateMutation } from "./useUpdateProjectTemplateMutation";
 export { useDeleteProjectTemplateMutation } from "./useDeleteProjectTemplateMutation";
 export { useCreateProjectTemplateMilestoneMutation } from "./useCreateProjectTemplateMilestoneMutation";
+
+export { useAllClientDownloadExcelQuery } from "./useAllClientDownloadExcelQuery";
+export { useClientDownloadTemplateExcelQuery } from "./useClientDownloadTemplateExcelQuery";
