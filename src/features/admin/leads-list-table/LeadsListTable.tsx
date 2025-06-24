@@ -282,8 +282,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     if (followupFromDate || followupToDate) {
       const followupMap = new Map();
       (allFollowups ?? []).forEach((fu: LeadFollowupsList) => {
-        if (!followupMap.has(fu.lead.id)) followupMap.set(fu.lead.id, []);
-        followupMap.get(fu.lead.id).push(fu);
+        if (!followupMap.has(fu?.lead?.id)) followupMap.set(fu?.lead?.id, []);
+        followupMap.get(fu?.lead?.id).push(fu);
       });
 
       leads = leads.filter((lead) => {
