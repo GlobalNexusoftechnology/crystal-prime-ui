@@ -155,9 +155,9 @@ export function ClientListTable() {
     <div className="flex flex-col gap-8 2xl:gap-[2vw] px-4 2xl:p-[1vw] py-2 2xl:py-[0.5vw]">
       <div className="flex flex-col gap-4 2xl:gap-[1vw]">
         <Breadcrumb />
-        <div className="flex flex-col lg:items-center gap-4 lg:flex-row lg:gap-0 justify-between">
+        <div className="flex flex-col flex-wrap lg:items-center gap-4 lg:flex-row lg:gap-0 justify-between">
           <h1 className="font-medium text-2xl 2xl:text-[1.5vw]">Client List</h1>
-          <div className="flex flex-col md:flex-row justify-between gap-4 2xl:gap-[1vw]">
+          <div className="flex flex-col flex-wrap md:flex-row  gap-4 2xl:gap-[1vw]">
             <SearchBar
               width="w-full md:w-[20rem] 2xl:w-[15vw]"
               onSearch={setSearchQuery}

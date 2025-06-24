@@ -13,6 +13,7 @@ import { IClientList } from "@/services/apis/clients/community-client/types";
 import toast from "react-hot-toast";
 import { useUpdateClientDetailMutation } from "@/services/apis/clients/community-client/query-hooks/useUpdateClientDetailMutation";
 import { useDeleteClientDetailMutation } from "@/services/apis/clients/community-client/query-hooks/useDeleteClientDetailMutation";
+import { clientContactDetailsColumns, clientListColumn } from "@/constants";
 
 interface EditContactData {
   contact_person: string;
@@ -141,57 +142,6 @@ export function CustomClientTable({
     onDeleteClientDetail(contactId);
   };
 
-  const clientListColumn = [
-    {
-      header: "CUSTOMER NAME",
-      accessor: "name",
-      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
-    },
-    {
-      header: "COMPANY NAME",
-      accessor: "company_name",
-      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
-    },
-    {
-      header: "CONTACT PERSON",
-      accessor: "contact_person",
-      headerClass: "min-w-[12rem] 2xl:min-w-[12vw]",
-    },
-    {
-      header: "PHONE NUMBER",
-      accessor: "contact_number",
-      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
-    },
-    {
-      header: "CONTACT EMAIL",
-      accessor: "email",
-      headerClass: "min-w-[15rem] 2xl:min-w-[15vw]",
-    },
-    {
-      header: "WEBSITE URL",
-      accessor: "website",
-      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
-    },
-    {
-      header: "ADDRESS",
-      accessor: "address",
-      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
-    },
-    {
-      header: "CREATED AT",
-      accessor: "created_at",
-      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
-    },
-  ];
-
-  const clientContactDetailsColumns = [
-    { header: "CONTACT NAME", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
-    { header: "DESIGNATION", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
-    { header: "CONTACT NUMBER", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
-    { header: "OTHER CONTACT", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
-    { header: "EMAIL", headerClass: "min-w-[15rem] 2xl:min-w-[15vw]" },
-  ];
-
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white rounded-lg shadow-md">
@@ -223,9 +173,9 @@ export function CustomClientTable({
                   <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
                     <button onClick={() => handleRowClick(row.id)}>
                       {expandedRowId === row.id ? (
-                        <FiChevronUp className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]"/>
+                        <FiChevronUp className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
                       ) : (
-                        <FiChevronDown className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]"/>
+                        <FiChevronDown className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
                       )}
                     </button>
                     <ActionDropdown

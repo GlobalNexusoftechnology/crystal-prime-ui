@@ -29,54 +29,89 @@ export interface IClientListProps {
   lead_id: null
 }
 
-// export const clientListActions: ITableAction<IClientListProps>[] = [
+
+// export const clientListColumn: ITableColumn<IClientListProps>[] = [
 //   {
-//     label: "Edit",
-//     onClick: (row) => {
-//       console.log("Edit clicked", row.id);
-//     },
-//     className: "text-blue-500",
+//     header: "CUSTOMER NAME",
+//     accessor: "name",
 //   },
 //   {
-//     label: "Delete",
-//     onClick: (row) => {
-//       console.log("Delete clicked", row.id);
-//     },
-//     className: "text-red-500",
+//     header: "COMPANY NAME",
+//     accessor: "company_name",
+//   },
+//   {
+//     header: "CONTACT PERSON",
+//     accessor: "contact_person",
+//   },
+//   {
+//     header: "PHONE NUMBER",
+//     accessor: "contact_number",
+//   },
+//   {
+//     header: "CONTACT EMAIl",
+//     accessor: "email",
+//   },
+//   {
+//     header: "WEBSITE URL",
+//     accessor: "website",
+//   },
+//   {
+//     header: "ADDRESS",
+//     accessor: "address",
+//   },
+//   {
+//     header: "CREATED AT",
+//     accessor: "created_at",
 //   },
 // ];
 
-export const clientListColumn: ITableColumn<IClientListProps>[] = [
+export const clientListColumn = [
   {
     header: "CUSTOMER NAME",
     accessor: "name",
+    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
     header: "COMPANY NAME",
     accessor: "company_name",
+    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
     header: "CONTACT PERSON",
     accessor: "contact_person",
+    headerClass: "min-w-[12rem] 2xl:min-w-[12vw]",
   },
   {
     header: "PHONE NUMBER",
     accessor: "contact_number",
+    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "CONTACT EMAIl",
+    header: "CONTACT EMAIL",
     accessor: "email",
+    headerClass: "min-w-[15rem] 2xl:min-w-[15vw]",
   },
   {
     header: "WEBSITE URL",
     accessor: "website",
+    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
     header: "ADDRESS",
     accessor: "address",
+    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
     header: "CREATED AT",
     accessor: "created_at",
+    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
+];
+
+export const clientContactDetailsColumns = [
+  { header: "CONTACT NAME", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
+  { header: "DESIGNATION", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
+  { header: "CONTACT NUMBER", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
+  { header: "OTHER CONTACT", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
+  { header: "EMAIL", headerClass: "min-w-[15rem] 2xl:min-w-[15vw]" },
 ];
