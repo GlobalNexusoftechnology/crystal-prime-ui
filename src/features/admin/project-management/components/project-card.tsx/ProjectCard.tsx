@@ -118,7 +118,7 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
                 : "Expected End Date"}
             </p>
             <p className="font-semibold 2xl:text-[1vw] 2xl:leading-[1.4vw]">
-              {formattingDate(project.data.end_date, "toReadable")}
+              {formattingDate(project.data.end_date ?? "", "toReadable")}
             </p>
           </div>
         </div>
@@ -129,14 +129,14 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
               Project status
             </p>
             <p className="text-right 2xl:text-[1vw] 2xl:leading-[1.4vw]">
-              {project.data.progress || 0}/100
+              {project.data.milestones?.length || 0}/100
             </p>
           </div>
           <div className="w-full h-1.5 2xl:h-[0.375vw] bg-white rounded-md overflow-hidden my-1 2xl:my-[0.25vw]">
             <div
               className="h-full bg-blue-900"
               style={{
-                width: `${(project.data.progress || 0)}%`,
+                width: `${(project.data.milestones?.length || 0)}%`,
               }}
             />
           </div>

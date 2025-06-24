@@ -59,7 +59,7 @@ export function ProjectManagement() {
           client_id: project.client_id,
           end_date: project.end_date,
           status: project.status,
-          progress: project.progress || 0,
+          progress: project.milestones?.length || 0,
           project_type: project.project_type,
           budget: project.budget,
           estimated_cost: project.estimated_cost,
@@ -71,7 +71,7 @@ export function ProjectManagement() {
           updated_at: project.updated_at,
           deleted: project.deleted,
           deleted_at: project.deleted_at,
-          created_by: project.created_by
+          created_by: project.client_id
         }
       }));
   };

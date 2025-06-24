@@ -3,6 +3,37 @@ import React, { useState, useEffect } from "react";
 import { Dropdown, Button } from "@/components";
 import { AddSquareIcon } from "@/features";
 import { Milestone, Task } from "./components";
+import { useAllUsersQuery } from "@/services/apis/clients/community-client/query-hooks";
+import type { IUsersDetails } from "@/services/apis/clients/community-client/types";
+
+interface ProjectTaskMaster {
+  id: string;
+  title: string;
+  description: string;
+  assigned_to?: string;
+  status?: string;
+  due_date?: string;
+}
+
+interface ProjectMilestoneMaster {
+  id: string;
+  name: string;
+  assigned_to?: string;
+  status?: string;
+  estimated_start?: string;
+  estimated_end?: string;
+  project_task_master?: ProjectTaskMaster[];
+}
+
+interface ProjectTemplate {
+  id: string;
+  name: string;
+  project_milestone_master?: ProjectMilestoneMaster[];
+}
+
+interface AllProjectTemplatesData {
+  templates: ProjectTemplate[];
+}
 
 interface Step2MilestoneSetupProps {
   onBack: () => void;
@@ -11,7 +42,7 @@ interface Step2MilestoneSetupProps {
   projectTemplateOptions: { label: string; value: string }[];
   projectTemplateLoading: boolean;
   projectTemplateError: boolean;
-  allProjectTemplatesData?: any;
+  allProjectTemplatesData?: AllProjectTemplatesData;
 }
 
 interface Task {
@@ -38,11 +69,6 @@ const statusOptions = [
   { label: "Open", value: "Open" },
   { label: "In Progress", value: "In Progress" },
   { label: "Completed", value: "Completed" },
-];
-const userOptions = [
-  { label: "--", value: "--" },
-  { label: "Ramesh Gupta", value: "Ramesh Gupta" },
-  { label: "Nisha Sharma", value: "Nisha Sharma" },
 ];
 
 export function Step2MilestoneSetup({
@@ -74,27 +100,38 @@ export function Step2MilestoneSetup({
   // Project template options from parent
   const [projectTemplate, setProjectTemplate] = useState("");
 
+  // Fetch users for userOptions
+  const { allUsersData, isLoading: usersLoading, isError: usersError } = useAllUsersQuery();
+  const userOptions = usersLoading
+    ? [{ label: "Loading...", value: "" }]
+    : usersError || !allUsersData
+      ? [{ label: "Error loading users", value: "" }]
+      : (allUsersData as IUsersDetails[]).map((user: IUsersDetails) => ({
+          label: `${user.first_name} ${user.last_name}`,
+          value: `${user.first_name} ${user.last_name}`,
+        }));
+
   // Auto-populate milestones/tasks when a template is selected
   useEffect(() => {
     if (!projectTemplate || !allProjectTemplatesData) return;
     const selectedTemplate = (allProjectTemplatesData.templates || []).find(
-      (tpl: any) => tpl.id === projectTemplate
+      (tpl) => tpl.id === projectTemplate
     );
     if (selectedTemplate) {
-      const mappedMilestones = (selectedTemplate.project_milestone_master || []).map((m: any, idx: number) => ({
+      const mappedMilestones = (selectedTemplate.project_milestone_master || []).map((m, idx) => ({
         id: idx + 1, // or m.id if you want to keep the backend id
         name: m.name,
-        assignedTo: "", // or m.assigned_to if available
-        status: "Open", // or m.status if available
-        estimatedStart: "", // or m.estimated_start if available
-        estimatedEnd: "", // or m.estimated_end if available
-        tasks: (m.project_task_master || []).map((t: any, tIdx: number) => ({
+        assignedTo: m.assigned_to || "",
+        status: m.status || "Open",
+        estimatedStart: m.estimated_start || "",
+        estimatedEnd: m.estimated_end || "",
+        tasks: (m.project_task_master || []).map((t, tIdx) => ({
           id: tIdx + 1, // or t.id
           name: t.title,
           description: t.description,
-          assignedTo: "", // or t.assigned_to if available
-          status: "Open", // or t.status if available
-          dueDate: "", // or t.due_date if available
+          assignedTo: t.assigned_to || "",
+          status: t.status || "Open",
+          dueDate: t.due_date || "",
         })),
       }));
       setMilestones(mappedMilestones);

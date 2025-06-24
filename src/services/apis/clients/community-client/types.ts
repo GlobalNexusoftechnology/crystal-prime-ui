@@ -921,6 +921,7 @@ export interface IProjectDetails extends ICreateProjectPayload {
   updated_at: string;
   deleted: boolean;
   deleted_at: string | null;
+  status?: string;
   // You may add more fields if needed
 }
 
