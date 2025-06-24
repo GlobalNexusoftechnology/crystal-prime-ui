@@ -33,9 +33,10 @@ interface CustomClientTableProps {
   }[];
   onEdit: (client: IClientList) => void;
   onDelete: (id: string) => void;
+  refetch: () => void;
 }
 
-export function CustomClientTable({ data, actions }: CustomClientTableProps) {
+export function CustomClientTable({ data, actions, refetch }: CustomClientTableProps) {
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   const [editContact, setEditContact] = useState<{
     clientId: string;
@@ -57,6 +58,7 @@ export function CustomClientTable({ data, actions }: CustomClientTableProps) {
       onSuccessCallback: () => {
         toast.success("Contact updated successfully");
         setEditContact(null);
+        refetch();
       },
       onErrorCallback: (err) => {
         toast.error(err.message);
@@ -67,6 +69,7 @@ export function CustomClientTable({ data, actions }: CustomClientTableProps) {
     useDeleteClientDetailMutation({
       onSuccessCallback: () => {
         toast.success("Contact deleted successfully");
+        refetch();
       },
       onErrorCallback: (err) => {
         toast.error(err.message);

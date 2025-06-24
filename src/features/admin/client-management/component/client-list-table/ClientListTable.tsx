@@ -134,6 +134,22 @@ export function ClientListTable() {
     }
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter clients based on search query
+  const filteredClients = (allClientData || []).filter((client) => {
+    const q = searchQuery.toLowerCase();
+    return (
+      client.name?.toLowerCase().includes(q) ||
+      client.company_name?.toLowerCase().includes(q) ||
+      client.contact_person?.toLowerCase().includes(q) ||
+      client.contact_number?.toLowerCase().includes(q) ||
+      client.email?.toLowerCase().includes(q) ||
+      client.address?.toLowerCase().includes(q) ||
+      client.website?.toLowerCase().includes(q)
+    );
+  });
+
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw]">
       <div className="flex flex-col lg:items-center gap-4 lg:flex-row lg:gap-0 justify-between">
@@ -178,18 +194,17 @@ export function ClientListTable() {
           />
           <SearchBar
             width="w-full"
-            onSearch={function (): void {
-              throw new Error("Function not implemented.");
-            }}
+            onSearch={setSearchQuery}
           />
         </div>
       </div>
 
       <CustomClientTable
-        data={allClientData || []}
+        data={filteredClients}
         actions={clientListActions}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        refetch={refetchClient}
       />
 
       {isAddClientModalOpen && (
