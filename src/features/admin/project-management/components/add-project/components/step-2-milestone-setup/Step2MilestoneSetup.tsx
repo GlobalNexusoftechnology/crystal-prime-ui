@@ -1,13 +1,17 @@
 "use client"
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dropdown, Button } from "@/components";
 import { AddSquareIcon } from "@/features";
 import { Milestone, Task } from "./components";
 
 interface Step2MilestoneSetupProps {
   onBack: () => void;
-  onNext: () => void;
+  onNext: (milestones: Milestone[]) => void;
   milestoneOption: string;
+  projectTemplateOptions: { label: string; value: string }[];
+  projectTemplateLoading: boolean;
+  projectTemplateError: boolean;
+  allProjectTemplatesData?: any;
 }
 
 interface Task {
@@ -45,45 +49,13 @@ export function Step2MilestoneSetup({
   onBack,
   onNext,
   milestoneOption,
+  projectTemplateOptions,
+  projectTemplateLoading,
+  projectTemplateError,
+  allProjectTemplatesData,
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
-  const [milestones, setMilestones] = useState<Milestone[]>([
-    {
-      id: 1,
-      name: "Dashboard For Admin",
-      assignedTo: "--",
-      status: "Open",
-      estimatedStart: "2021-02-24",
-      estimatedEnd: "2021-02-24",
-      tasks: [],
-    },
-    {
-      id: 2,
-      name: "Customer section",
-      assignedTo: "Ramesh Gupta",
-      status: "Open",
-      estimatedStart: "2021-02-24",
-      estimatedEnd: "2021-02-24",
-      tasks: [
-        {
-          id: 1,
-          name: "Product List",
-          description: "This Project Belongs to ...",
-          assignedTo: "Ramesh Gupta",
-          status: "Open",
-          dueDate: "2021-02-24",
-        },
-        {
-          id: 2,
-          name: "Offer List",
-          description: "This Project Belongs to ...",
-          assignedTo: "Ramesh Gupta",
-          status: "Open",
-          dueDate: "2021-02-24",
-        },
-      ],
-    },
-  ]);
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editMilestone, setEditMilestone] = useState<Milestone | null>(null);
   // Task editing state
@@ -99,13 +71,35 @@ export function Step2MilestoneSetup({
     taskId: number;
   } | null>(null);
 
-  // Mock project template dropdown
-  const projectTemplateOptions = [
-    { label: "Select Project Template", value: "" },
-    { label: "Product Overview", value: "product_overview" },
-    { label: "Update Details", value: "update_details" },
-  ];
+  // Project template options from parent
   const [projectTemplate, setProjectTemplate] = useState("");
+
+  // Auto-populate milestones/tasks when a template is selected
+  useEffect(() => {
+    if (!projectTemplate || !allProjectTemplatesData) return;
+    const selectedTemplate = (allProjectTemplatesData.templates || []).find(
+      (tpl: any) => tpl.id === projectTemplate
+    );
+    if (selectedTemplate) {
+      const mappedMilestones = (selectedTemplate.project_milestone_master || []).map((m: any, idx: number) => ({
+        id: idx + 1, // or m.id if you want to keep the backend id
+        name: m.name,
+        assignedTo: "", // or m.assigned_to if available
+        status: "Open", // or m.status if available
+        estimatedStart: "", // or m.estimated_start if available
+        estimatedEnd: "", // or m.estimated_end if available
+        tasks: (m.project_task_master || []).map((t: any, tIdx: number) => ({
+          id: tIdx + 1, // or t.id
+          name: t.title,
+          description: t.description,
+          assignedTo: "", // or t.assigned_to if available
+          status: "Open", // or t.status if available
+          dueDate: "", // or t.due_date if available
+        })),
+      }));
+      setMilestones(mappedMilestones);
+    }
+  }, [projectTemplate, allProjectTemplatesData]);
 
   // Add expandedMilestones state
   const [expandedMilestones, setExpandedMilestones] = useState<number[]>([]);
@@ -215,6 +209,11 @@ export function Step2MilestoneSetup({
 
   const isTemplateSelected = milestoneOption === "template";
 
+  // When user clicks next, pass milestones to parent
+  const handleNext = () => {
+    onNext(milestones);
+  };
+
   return (
     <div className="flex flex-col gap-6 2xl:gap-[2vw]">
       {/* Project Template Dropdown */}
@@ -222,7 +221,11 @@ export function Step2MilestoneSetup({
         <div className="mb-4 2xl:mb-[1vw]">
           <Dropdown
             label="Project Template"
-            options={projectTemplateOptions}
+            options={projectTemplateLoading
+              ? [{ label: "Loading...", value: "" }]
+              : projectTemplateError
+                ? [{ label: "Error loading templates", value: "" }]
+                : projectTemplateOptions}
             value={projectTemplate}
             onChange={setProjectTemplate}
             dropdownWidth="w-full"
@@ -337,7 +340,7 @@ export function Step2MilestoneSetup({
         />
         <Button
           title="Next"
-          onClick={onNext}
+          onClick={handleNext}
           width="w-full md:w-[10rem] 2xl:w-[10vw]"
         />
       </div>

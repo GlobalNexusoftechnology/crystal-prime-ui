@@ -11,15 +11,18 @@ const projectTypeOptions = [
   { label: "Mobile App", value: "mobile_app" },
   { label: "CRM", value: "crm" },
 ];
-const clientOptions = [
-  { label: "Client A", value: "client_a" },
-  { label: "Client B", value: "client_b" },
-];
+
 const renewalTypeOptions = [
   { label: "Weekly", value: "weekly" },
   { label: "Monthly", value: "monthly" },
   { label: "Yearly", value: "yearly" },
 ];
+
+interface Step1BasicInfoProps extends FormikProps<IAddProjectFormValues> {
+  clientOptions: { label: string; value: string }[];
+  clientLoading: boolean;
+  clientError: boolean;
+}
 
 export function Step1BasicInfo({
   values,
@@ -28,7 +31,10 @@ export function Step1BasicInfo({
   handleChange,
   handleBlur,
   setFieldValue,
-}: FormikProps<IAddProjectFormValues>) {
+  clientOptions,
+  clientLoading,
+  clientError,
+}: Step1BasicInfoProps) {
   const isMilestoneSelected = values.milestoneOption === "milestone";
   const isTemplateSelected = values.milestoneOption === "template";
 
@@ -63,7 +69,11 @@ export function Step1BasicInfo({
         />
         <Dropdown
           label="Client"
-          options={clientOptions}
+          options={clientLoading
+            ? [{ label: "Loading...", value: "" }]
+            : clientError
+              ? [{ label: "Error loading clients", value: "" }]
+              : clientOptions}
           value={values.client}
           onChange={(val) => setFieldValue("client", val)}
           error={

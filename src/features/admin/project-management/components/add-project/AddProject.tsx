@@ -13,6 +13,7 @@ import {
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { Button } from "@/components";
+import { useCreateProjectMutation, useAllClientQuery, useAllProjectTemplatesQuery } from "@/services";
 
 // Define the type for the form values
 export interface IAddProjectFormValues {
@@ -118,6 +119,82 @@ export function AddProject() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]); // for Step3/Preview
   const [milestoneOption, setMilestoneOption] = useState("milestone");
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
+  const [basicInfo, setBasicInfo] = useState<IAddProjectFormValues | null>(null);
+  const { allClientData, isLoading: clientLoading, isError: clientError } = useAllClientQuery();
+  const clientOptions = (allClientData || []).map((client) => ({
+    label: client.name,
+    value: client.id,
+  }));
+  const { allProjectTemplatesData, isLoading: projectTemplateLoading, error: projectTemplateError } = useAllProjectTemplatesQuery();
+  const projectTemplateOptions = (allProjectTemplatesData?.templates || []).map((template) => ({
+    label: template.name,
+    value: template.id,
+  }));
+
+  const { onCreateProject, isPending, error } = useCreateProjectMutation({
+    onSuccessCallback: () => {
+      setIsModalOpen(true);
+    },
+    onErrorCallback: () => {
+    },
+  });
+
+  const assemblePayload = () => {
+    if (!basicInfo) return null;
+    const apiMilestones = milestones.map((m) => ({
+      name: m.name,
+      assigned_to: m.assignedTo,
+      status: m.status,
+      start_date: m.estimatedStart,
+      end_date: m.estimatedEnd,
+      tasks: m.tasks.map((t) => ({
+        title: t.name,
+        description: t.description,
+        assigned_to: t.assignedTo,
+        status: t.status,
+        due_date: t.dueDate,
+      })),
+    }));
+    const attachments = uploadedFiles.map((file) => ({
+      file_path: file.name,
+      file_type: file.type,
+      file_name: file.name,
+    }));
+    return {
+      name: basicInfo.name,
+      project_type: basicInfo.projectType,
+      client_id: basicInfo.client,
+      budget: Number(basicInfo.budget),
+      estimated_cost: Number(basicInfo.estimatedCost),
+      start_date: basicInfo.estimatedStart,
+      end_date: basicInfo.estimatedEnd,
+      milestones: apiMilestones,
+      attachments,
+    };
+  };
+
+  const handleSubmit = (
+    values: IAddProjectFormValues,
+    actions: FormikHelpers<IAddProjectFormValues>
+  ) => {
+    setBasicInfo(values);
+    setMilestoneOption(values.milestoneOption);
+    setStep(2);
+    actions.setSubmitting(false);
+  };
+
+  const handleMilestoneNext = (milestonesData: Milestone[]) => {
+    setMilestones(milestonesData);
+    setStep(3);
+  };
+
+  const handleFinalSubmit = () => {
+    const payload = assemblePayload();
+    if (payload) {
+      onCreateProject(payload);
+    }
+  };
 
   // Mock preview data (replace with real form state as needed)
   const projectInfo: ProjectInfo = {
@@ -153,65 +230,6 @@ export function AddProject() {
     uploadedAt: "15-03-2022 10:00 AM",
   }));
 
-  // Mock milestone data for preview
-  const milestones: Milestone[] = [
-    {
-      id: 1,
-      name: "Dashboard For Admin",
-      assignedTo: "Ramesh Gupta",
-      status: "Open",
-      estimatedStart: "2021-02-24",
-      estimatedEnd: "2021-03-24",
-      tasks: [
-        {
-          id: 1,
-          name: "Design Dashboard",
-          description: "Create admin dashboard layout",
-          assignedTo: "Ramesh Gupta",
-          status: "In Progress",
-          dueDate: "2021-02-28",
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "Customer Section",
-      assignedTo: "Nisha Sharma",
-      status: "Open",
-      estimatedStart: "2021-03-01",
-      estimatedEnd: "2021-04-01",
-      tasks: [
-        {
-          id: 2,
-          name: "Product List",
-          description: "Implement product listing page",
-          assignedTo: "Nisha Sharma",
-          status: "Open",
-          dueDate: "2021-03-15",
-        },
-        {
-          id: 3,
-          name: "Offer List",
-          description: "Create offer management system",
-          assignedTo: "Nisha Sharma",
-          status: "Open",
-          dueDate: "2021-03-30",
-        },
-      ],
-    },
-  ];
-
-  const handleSubmit = (
-    values: IAddProjectFormValues,
-    actions: FormikHelpers<IAddProjectFormValues>
-  ) => {
-    // TODO: handle form submission
-    // On successful validation, go to next step
-    setMilestoneOption(values.milestoneOption);
-    setStep(2);
-    actions.setSubmitting(false);
-  };
-
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
       <Link
@@ -231,7 +249,12 @@ export function AddProject() {
         >
           {(formik) => (
             <Form>
-              <Step1BasicInfo {...formik} />
+              <Step1BasicInfo
+                {...formik}
+                clientOptions={clientOptions}
+                clientLoading={clientLoading}
+                clientError={clientError}
+              />
               <div className="flex mt-6 2xl:mt-[1.5vw]">
                 <Button
                   type="submit"
@@ -247,8 +270,12 @@ export function AddProject() {
       {step === 2 && (
         <Step2MilestoneSetup
           onBack={() => setStep(1)}
-          onNext={() => setStep(3)}
+          onNext={handleMilestoneNext}
           milestoneOption={milestoneOption}
+          projectTemplateOptions={projectTemplateOptions}
+          projectTemplateLoading={projectTemplateLoading}
+          projectTemplateError={!!projectTemplateError}
+          allProjectTemplatesData={allProjectTemplatesData}
         />
       )}
       {step === 3 && (
@@ -267,12 +294,12 @@ export function AddProject() {
           estimates={estimates}
           documents={documents}
           milestones={milestones}
-          onSubmit={() => {
-            setIsModalOpen(true);
-          }}
+          onSubmit={handleFinalSubmit}
         />
       )}
       {isModalOpen && <ProjectCreatedModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
+      {isPending && <div>Creating project...</div>}
+      {error && <div className="text-red-600">Error: {error.message || "Failed to create project."}</div>}
     </section>
   );
 }

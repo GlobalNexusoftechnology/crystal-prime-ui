@@ -866,38 +866,62 @@ export interface INotificationsResponse {
 // Project APIs Types
 // -----------------------------------------------------
 
-export interface ICreateProjectPayload {
-  name: string;
-  project_type: string;
-  budget: number;
-  estimated_cost: number;
-  actual_cost?: number;
-  start_date: string;
-  end_date: string;
-  actual_start_date?: string;
-  actual_end_date?: string;
-  client_id: IClientList;
+// --- Project Schema Additions (matches backend Zod schema) ---
+
+export interface IProjectTask {
+  id?: string;
+  title: string;
+  description?: string;
+  due_date?: string; // ISO string
+  status?: string;
+  assigned_to?: string;
 }
 
-export interface IProjectDetails {
+export interface IProjectMilestone {
+  id?: string;
+  name: string;
+  start_date?: string;
+  end_date?: string;
+  actual_date?: string;
+  estimated_date?: string;
+  assigned_to?: string;
+  status: string;
+  remark?: string;
+  tasks?: IProjectTask[];
+}
+
+export interface IProjectAttachment {
+  id?: string;
+  file_path: string;
+  file_type: string;
+  file_name: string;
+  uploaded_by?: string;
+}
+
+// Updated project payload to match backend schema
+export interface ICreateProjectPayload {
+  client_id?: string; // uuid, optional
+  name: string;
+  project_type?: string;
+  budget?: number;
+  estimated_cost?: number;
+  actual_cost?: number;
+  start_date?: string;
+  end_date?: string;
+  actual_start_date?: string;
+  actual_end_date?: string;
+  milestones?: IProjectMilestone[];
+  attachments?: IProjectAttachment[];
+}
+
+// Updated project details to match backend schema
+export interface IProjectDetails extends ICreateProjectPayload {
   id: string;
   created_at: string;
   updated_at: string;
   deleted: boolean;
   deleted_at: string | null;
-  name: string;
-  project_type: string;
-  budget: number;
-  estimated_cost: number;
-  actual_cost?: number;
-  start_date: string;
-  end_date: string;
-  actual_start_date?: string;
-  actual_end_date?: string;
-  client_id: IClientList;
-  status?: string;
-  progress?: number;
-  created_by?: IUsersDetails;
+  // You may add more fields if needed
 }
 
 export interface ICreateProjectResponse {
