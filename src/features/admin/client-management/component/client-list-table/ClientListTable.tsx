@@ -3,7 +3,7 @@
 import { useState, useRef } from "react";
 import { Button, SearchBar } from "@/components";
 import { EAction, EModule, IClientListProps, ITableAction } from "@/constants";
-import { ExportIcon } from "@/features";
+import { Breadcrumb, ExportIcon } from "@/features";
 import { AddClientModal } from "../add-client-modal";
 import {
   useAllClientQuery,
@@ -110,15 +110,16 @@ export function ClientListTable() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { onUploadClientFromExcel, isPending: isUploading } = useUploadClientFromExcelMutation({
-    onSuccessCallback: (data) => {
-      toast.success(data.message || "Clients imported successfully");
-      refetchClient();
-    },
-    onErrorCallback: (err: IApiError) => {
-      toast.error(err.message || "Failed to import clients");
-    },
-  });
+  const { onUploadClientFromExcel, isPending: isUploading } =
+    useUploadClientFromExcelMutation({
+      onSuccessCallback: (data) => {
+        toast.success(data.message || "Clients imported successfully");
+        refetchClient();
+      },
+      onErrorCallback: (err: IApiError) => {
+        toast.error(err.message || "Failed to import clients");
+      },
+    });
 
   const handleImportClick = () => {
     fileInputRef.current?.click();
@@ -151,54 +152,59 @@ export function ClientListTable() {
   });
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw]">
-      <div className="flex flex-col lg:items-center gap-4 lg:flex-row lg:gap-0 justify-between">
-        <h1 className="font-medium text-2xl 2xl:text-[1.5vw]">Client List</h1>
-        <div className="flex flex-col md:flex-row justify-between gap-4 2xl:gap-[1vw]">
-          <Button
-            title="Export"
-            variant="primary-outline-blue"
-            rightIcon={<ExportIcon color="#034A9F" />}
-            width="w-full md:w-fit"
-            onClick={handleExportClients}
-          />
-          <Button
-            title="Import"
-            variant="primary-outline-blue"
-            rightIcon={<ExportIcon color="#034A9F" className="rotate-180 " />}
-            width="w-full md:w-fit"
-            onClick={handleImportClick}
-            disabled={isUploading}
-          />
-          <input
-            type="file"
-            accept=".xlsx,.xls"
-            ref={fileInputRef}
-            style={{ display: "none" }}
-            onChange={handleFileChange}
-          />
-          <Button
-            variant="background-white"
-            width="w-full md:w-fit"
-            onClick={handleDownloadTemplate}
-            leftIcon={
-              <ImDownload2 className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-            }
-            tooltip="Download Template"
-          />
-          <Button
-            title="Add New Client"
-            variant="primary-outline-blue"
-            width="w-full md:w-fit"
-            onClick={() => setIsAddClientModalOpen(true)}
-          />
-          <SearchBar
-            width="w-full"
-            onSearch={setSearchQuery}
-          />
+    <div className="flex flex-col gap-8 2xl:gap-[2vw] px-4 2xl:p-[1vw] py-2 2xl:py-[0.5vw]">
+      <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+        <Breadcrumb />
+        <div className="flex flex-col lg:items-center gap-4 lg:flex-row lg:gap-0 justify-between">
+          <h1 className="font-medium text-2xl 2xl:text-[1.5vw]">Client List</h1>
+          <div className="flex flex-col md:flex-row justify-between gap-4 2xl:gap-[1vw]">
+            <SearchBar
+              width="w-full md:w-[20rem] 2xl:w-[15vw]"
+              onSearch={setSearchQuery}
+            />
+            <Button
+              title="Add New Client"
+              variant="primary-outline-blue"
+              width="w-full md:w-fit"
+              onClick={() => setIsAddClientModalOpen(true)}
+            />
+            <Button
+              title="Export"
+              variant="primary-outline-blue"
+              rightIcon={<ExportIcon color="#034A9F" />}
+              width="w-full md:w-fit"
+              onClick={handleExportClients}
+            />
+            <Button
+              title="Import"
+              variant="primary-outline-blue"
+              rightIcon={<ExportIcon color="#034A9F" className="rotate-180 " />}
+              width="w-full md:w-fit"
+              onClick={handleImportClick}
+              disabled={isUploading}
+            />
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              ref={fileInputRef}
+              style={{ display: "none" }}
+              onChange={handleFileChange}
+            />
+            <Button
+              variant="primary-outline-blue"
+              width="w-full md:w-fit"
+              onClick={handleDownloadTemplate}
+              leftIcon={
+                <ImDownload2
+                  className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
+                  color="#034A9F"
+                />
+              }
+              tooltip="Download Template"
+            />
+          </div>
         </div>
       </div>
-
       <CustomClientTable
         data={filteredClients}
         actions={clientListActions}
@@ -206,7 +212,6 @@ export function ClientListTable() {
         onDelete={handleDelete}
         refetch={refetchClient}
       />
-
       {isAddClientModalOpen && (
         <AddClientModal
           onClose={handleCloseModal}

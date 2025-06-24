@@ -36,7 +36,11 @@ interface CustomClientTableProps {
   refetch: () => void;
 }
 
-export function CustomClientTable({ data, actions, refetch }: CustomClientTableProps) {
+export function CustomClientTable({
+  data,
+  actions,
+  refetch,
+}: CustomClientTableProps) {
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
   const [editContact, setEditContact] = useState<{
     clientId: string;
@@ -138,22 +142,54 @@ export function CustomClientTable({ data, actions, refetch }: CustomClientTableP
   };
 
   const clientListColumn = [
-    { header: "CUSTOMER NAME", accessor: "name" },
-    { header: "COMPANY NAME", accessor: "company_name" },
-    { header: "CONTACT PERSON", accessor: "contact_person" },
-    { header: "PHONE NUMBER", accessor: "contact_number" },
-    { header: "CONTACT EMAIL", accessor: "email" },
-    { header: "WEBSITE URL", accessor: "website" },
-    { header: "ADDRESS", accessor: "address" },
-    { header: "CREATED AT", accessor: "created_at" },
+    {
+      header: "CUSTOMER NAME",
+      accessor: "name",
+      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    },
+    {
+      header: "COMPANY NAME",
+      accessor: "company_name",
+      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    },
+    {
+      header: "CONTACT PERSON",
+      accessor: "contact_person",
+      headerClass: "min-w-[12rem] 2xl:min-w-[12vw]",
+    },
+    {
+      header: "PHONE NUMBER",
+      accessor: "contact_number",
+      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    },
+    {
+      header: "CONTACT EMAIL",
+      accessor: "email",
+      headerClass: "min-w-[15rem] 2xl:min-w-[15vw]",
+    },
+    {
+      header: "WEBSITE URL",
+      accessor: "website",
+      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    },
+    {
+      header: "ADDRESS",
+      accessor: "address",
+      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    },
+    {
+      header: "CREATED AT",
+      accessor: "created_at",
+      headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    },
   ];
 
   const clientContactDetailsColumns = [
-    { header: "CONTACT NAME" },
-    { header: "DESIGNATION" },
-    { header: "CONTACT NUMBER" },
-    { header: "OTHER CONTACT" },
-    { header: "EMAIL" },
+    { header: "CONTACT NAME", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
+    { header: "DESIGNATION", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
+    { header: "CONTACT NUMBER", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
+    { header: "OTHER CONTACT", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
+    { header: "EMAIL", headerClass: "min-w-[15rem] 2xl:min-w-[15vw]" },
   ];
 
   return (
@@ -161,13 +197,13 @@ export function CustomClientTable({ data, actions, refetch }: CustomClientTableP
       <table className="min-w-full bg-white rounded-lg shadow-md">
         <thead className="bg-gray-50">
           <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase">
               Actions
             </th>
             {clientListColumn.map((col) => (
               <th
                 key={col.header}
-                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase ${col.headerClass}`}
               >
                 {col.header}
               </th>
@@ -183,13 +219,13 @@ export function CustomClientTable({ data, actions, refetch }: CustomClientTableP
                   idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                 }`}
               >
-                <td className="px-6 py-4 text-sm whitespace-nowrap">
-                  <div className="flex items-center gap-2">
+                <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                  <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
                     <button onClick={() => handleRowClick(row.id)}>
                       {expandedRowId === row.id ? (
-                        <FiChevronUp />
+                        <FiChevronUp className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]"/>
                       ) : (
-                        <FiChevronDown />
+                        <FiChevronDown className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]"/>
                       )}
                     </button>
                     <ActionDropdown
@@ -198,7 +234,9 @@ export function CustomClientTable({ data, actions, refetch }: CustomClientTableP
                         onClick: () => action.onClick(row),
                         className: action.className,
                       }))}
-                      icon={<FiMoreVertical />}
+                      icon={
+                        <FiMoreVertical className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
+                      }
                     />
                   </div>
                 </td>
@@ -207,7 +245,7 @@ export function CustomClientTable({ data, actions, refetch }: CustomClientTableP
                   return (
                     <td
                       key={col.accessor}
-                      className="px-6 py-4 text-sm text-gray-900"
+                      className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]"
                     >
                       {Array.isArray(value) ? value.length : value}
                     </td>
@@ -218,21 +256,21 @@ export function CustomClientTable({ data, actions, refetch }: CustomClientTableP
                 <tr key={`${row.id}-details`}>
                   <td
                     colSpan={clientListColumn.length + 1}
-                    className="p-4 bg-gray-50 rounded-b-lg"
+                    className="p-4 2xl:p-[1vw] bg-gray-50 rounded-b-lg 2xl:rounded-b-[0.75vw]"
                   >
-                    <h3 className="mb-4 font-semibold text-blue-900">
+                    <h3 className="mb-4 2xl:mb-[1vw] 2xl:text-[1vw]">
                       Client Contact Details
                     </h3>
                     <table className="bg-white border rounded shadow-sm">
                       <thead className="bg-gray-100">
                         <tr>
-                          <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase">
                             Action
                           </th>
                           {clientContactDetailsColumns.map((col) => (
                             <th
                               key={col.header}
-                              className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                              className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase ${col.headerClass}`}
                             >
                               {col.header}
                             </th>
@@ -271,29 +309,33 @@ export function CustomClientTable({ data, actions, refetch }: CustomClientTableP
                                     </button>
                                   </div>
                                 ) : (
-                                  <ActionDropdown
-                                    options={[
-                                      {
-                                        label: "Edit",
-                                        onClick: () =>
-                                          handleEditContact(row.id, contact),
-                                      },
-                                      {
-                                        label: isDeletePending
-                                          ? "Deleting..."
-                                          : "Delete",
-                                        onClick: isDeletePending
-                                          ? () => {}
-                                          : () =>
-                                              handleDeleteContact(
-                                                row.id,
-                                                contact.id
-                                              ),
-                                        className: "text-red-500",
-                                      },
-                                    ]}
-                                    icon={<FiMoreVertical />}
-                                  />
+                                  <div className="flex justify-center">
+                                    <ActionDropdown
+                                      options={[
+                                        {
+                                          label: "Edit",
+                                          onClick: () =>
+                                            handleEditContact(row.id, contact),
+                                        },
+                                        {
+                                          label: isDeletePending
+                                            ? "Deleting..."
+                                            : "Delete",
+                                          onClick: isDeletePending
+                                            ? () => {}
+                                            : () =>
+                                                handleDeleteContact(
+                                                  row.id,
+                                                  contact.id
+                                                ),
+                                          className: "text-red-500",
+                                        },
+                                      ]}
+                                      icon={
+                                        <FiMoreVertical className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
+                                      }
+                                    />
+                                  </div>
                                 )}
                               </td>
                               {isEditing ? (
@@ -365,11 +407,21 @@ export function CustomClientTable({ data, actions, refetch }: CustomClientTableP
                                 </>
                               ) : (
                                 <>
-                                  <td className="px-6 py-4 text-sm ">{contact.contact_person}</td>
-                                  <td className="px-6 py-4 text-sm ">{contact.designation}</td>
-                                  <td className="px-6 py-4 text-sm ">{contact.client_contact}</td>
-                                  <td className="px-6 py-4 text-sm ">{contact.other_contact}</td>
-                                  <td className="px-6 py-4 text-sm ">{contact.email}</td>
+                                  <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                                    {contact.contact_person}
+                                  </td>
+                                  <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                                    {contact.designation}
+                                  </td>
+                                  <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                                    {contact.client_contact}
+                                  </td>
+                                  <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                                    {contact.other_contact}
+                                  </td>
+                                  <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                                    {contact.email}
+                                  </td>
                                 </>
                               )}
                             </tr>
