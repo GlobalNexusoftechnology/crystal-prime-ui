@@ -4,6 +4,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:
     | "primary"
     | "primary-outline"
+    | "primary-outline-blue"
     | "secondary"
     | "secondary-outline"
     | "background-white";
@@ -36,6 +37,8 @@ export const Button: React.FC<ButtonProps> = ({
     "secondary-outline":
       "border 2xl:border-[0.1vw] border-secondary text-secondary hover:text-white hover:bg-secondary",
     "background-white": "border 2xl:border-[0.1vw] bg-white border-gray-300",
+    "primary-outline-blue":
+      "border 2xl:border-[0.1vw] border-primary text-primary hover:scale-95 duration-300",
   };
   return (
     <div className={`${width} relative group inline-block`}>
@@ -51,7 +54,9 @@ export const Button: React.FC<ButtonProps> = ({
         ) : (
           <>
             {LeftIcon && (
-              <span className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.125vw] text-current">{LeftIcon}</span>
+              <span className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.125vw] text-current">
+                {LeftIcon}
+              </span>
             )}
             {title && (
               <span className="text-sm 2xl:text-[1vw] text-nowrap">
@@ -59,7 +64,9 @@ export const Button: React.FC<ButtonProps> = ({
               </span>
             )}
             {RightIcon && (
-              <span className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.125vw] text-current">{RightIcon}</span>
+              <span className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.125vw] text-current">
+                {RightIcon}
+              </span>
             )}
             {ActionIcon && ActionIcon}
           </>

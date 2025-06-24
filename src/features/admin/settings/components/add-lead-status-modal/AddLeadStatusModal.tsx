@@ -1,3 +1,4 @@
+"use client"
 import { Button, InputField, ModalOverlay } from "@/components";
 import {
   ICreateStatusesResponse,
