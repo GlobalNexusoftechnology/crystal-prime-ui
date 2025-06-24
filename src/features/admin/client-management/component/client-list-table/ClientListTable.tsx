@@ -1,28 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button, SearchBar } from "@/components";
-import {
-  EAction,
-  EModule,
-  IClientListProps,
-  ITableAction,
-} from "@/constants";
+import { EAction, EModule, IClientListProps, ITableAction } from "@/constants";
 import { ExportIcon } from "@/features";
 import { AddClientModal } from "../add-client-modal";
-import { useAllClientQuery, useDeleteClientMutation, useUpdateClientMutation, useAllClientDownloadExcelQuery, useClientDownloadTemplateExcelQuery } from "@/services";
+import {
+  useAllClientQuery,
+  useDeleteClientMutation,
+  useUpdateClientMutation,
+  useAllClientDownloadExcelQuery,
+  useClientDownloadTemplateExcelQuery,
+  useUploadClientFromExcelMutation,
+} from "@/services";
 import { usePermission } from "@/utils/hooks";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import { CustomClientTable } from "..";
 import { downloadBlobFile } from "@/utils";
+import { ImDownload2 } from "react-icons/im";
 
 /**
  * ClientListTable component renders a section displaying the list of clients.
  */
 export function ClientListTable() {
   const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<IClientListProps | null>(null);
+  const [selectedClient, setSelectedClient] = useState<IClientListProps | null>(
+    null
+  );
   const { allClientData, refetchClient } = useAllClientQuery();
   const { hasPermission } = usePermission();
   const canEditClient = hasPermission(EModule.CLIENT_MANAGEMENT, EAction.EDIT);
@@ -81,7 +86,8 @@ export function ClientListTable() {
   });
 
   const { onAllClientDownloadExcel } = useAllClientDownloadExcelQuery();
-  const { onClientDownloadTemplateExcel } = useClientDownloadTemplateExcelQuery();
+  const { onClientDownloadTemplateExcel } =
+    useClientDownloadTemplateExcelQuery();
 
   const handleExportClients = async () => {
     const { data } = await onAllClientDownloadExcel();
@@ -102,6 +108,32 @@ export function ClientListTable() {
     setSelectedClient(null);
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { onUploadClientFromExcel, isPending: isUploading } = useUploadClientFromExcelMutation({
+    onSuccessCallback: (data) => {
+      toast.success(data.message || "Clients imported successfully");
+      refetchClient();
+    },
+    onErrorCallback: (err: IApiError) => {
+      toast.error(err.message || "Failed to import clients");
+    },
+  });
+
+  const handleImportClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+      onUploadClientFromExcel(formData);
+      e.target.value = ""; // reset input
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw]">
       <div className="flex flex-col lg:items-center gap-4 lg:flex-row lg:gap-0 justify-between">
@@ -119,7 +151,24 @@ export function ClientListTable() {
             variant="primary-outline-blue"
             rightIcon={<ExportIcon color="#034A9F" className="rotate-180 " />}
             width="w-full md:w-fit"
+            onClick={handleImportClick}
+            disabled={isUploading}
+          />
+          <input
+            type="file"
+            accept=".xlsx,.xls"
+            ref={fileInputRef}
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
+          <Button
+            variant="background-white"
+            width="w-full md:w-fit"
             onClick={handleDownloadTemplate}
+            leftIcon={
+              <ImDownload2 className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+            }
+            tooltip="Download Template"
           />
           <Button
             title="Add New Client"
@@ -144,8 +193,8 @@ export function ClientListTable() {
       />
 
       {isAddClientModalOpen && (
-        <AddClientModal 
-          onClose={handleCloseModal} 
+        <AddClientModal
+          onClose={handleCloseModal}
           selectedClient={selectedClient}
           onUpdateClient={updateClient}
           isUpdatePending={isUpdatePending}

@@ -209,3 +209,5 @@ export const getAllClientDetailsUrl = () => `/clients-details`;
 export const fetchAllClientDownloadExcelUrl = () => "/clients/export/excel";
 export const fetchClientDownloadTemplateExcelUrl = () => "/clients/template/download";
 
+export const uploadClientFromExcelUrl = () => "/clients/upload-excel";
+

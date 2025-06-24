@@ -84,3 +84,5 @@ export { useCreateProjectTemplateMilestoneMutation } from "./useCreateProjectTem
 
 export { useAllClientDownloadExcelQuery } from "./useAllClientDownloadExcelQuery";
 export { useClientDownloadTemplateExcelQuery } from "./useClientDownloadTemplateExcelQuery";
+
+export { useUploadClientFromExcelMutation } from "./useUploadClientFromExcelMutation";

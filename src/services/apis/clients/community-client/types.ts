@@ -1255,3 +1255,9 @@ export interface IClientDetailsResponse {
   success: true;
   data: IClientDetails;
 }
+
+export interface IUploadClientFromExcelResponse {
+  status: string;
+  message: string;
+  data: IClientList[];
+}

@@ -112,6 +112,7 @@ import {
   IUpdateProjectTemplateMilestoneTaskPayload,
   IUpdateProjectTemplateMilestoneTaskResponse,
   IDeleteProjectTemplateMilestoneTaskResponse,
+  IUploadClientFromExcelResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -199,6 +200,7 @@ import {
   getAllClientDetailsUrl,
   fetchAllClientDownloadExcelUrl,
   fetchClientDownloadTemplateExcelUrl,
+  uploadClientFromExcelUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse } from "./types";
 
@@ -1438,6 +1440,25 @@ export class CommunityClient extends ApiClient {
 
     if (!response?.success) {
       throw response?.errorData;
+    }
+
+    return response?.data;
+  }
+
+  public uploadClientFromExcel = async (formData: FormData) => {
+    const response = await this.post<IUploadClientFromExcelResponse>(
+      uploadClientFromExcelUrl(),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response.response?.data;
     }
 
     return response?.data;
