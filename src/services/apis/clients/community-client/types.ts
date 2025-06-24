@@ -975,7 +975,7 @@ export interface IClientList {
   company_name: string;
   contact_person: string;
   lead_id: null; 
-  client_details?: ICreateClientDetailPayload[]
+  client_details?: IClientDetails[]
 }
 
 export interface IAllClientResponse {
@@ -1240,6 +1240,7 @@ export interface IClientDetailByIdResponse {
 }
 
 export interface IClientDetails {
+  id: string;
   client_id: string;
   client_contact: string;
   contact_person: string;

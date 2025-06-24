@@ -195,13 +195,13 @@ export const updateProjectTemplateMilestoneTaskUrl = (id: string) => `/project-t
 export const deleteProjectTemplateMilestoneTaskUrl = (id: string) => `/project-template-milestone-tasks/${id}`;
 
 //  Client Detail API's hook
-export const createClientDetailsUrl = () => `/clients/details`;
+export const createClientDetailsUrl = () => `/clients-details`;
 
-export const deleteClientDetailsUrl = (id: string) => `/clients/details/${id}`;
+export const deleteClientDetailsUrl = (id: string) => `/clients-details/${id}`;
 
-export const updateClientDetailsUrl = (id: string) => `/clients/details/${id}`;
+export const updateClientDetailsUrl = (id: string) => `/clients-details/${id}`;
 
-export const getClientDetailsByIdUrl = (id: string) => `/clients/details/${id}`;
+export const getClientDetailsByIdUrl = (id: string) => `/clients-details/${id}`;
 
-export const getAllClientDetailsUrl = () => `/clients/details`;
+export const getAllClientDetailsUrl = () => `/clients-details`;
 
