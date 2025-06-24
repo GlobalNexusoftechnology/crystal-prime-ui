@@ -41,6 +41,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
   const [followupFromDate, setFollowupFromDate] = useState("");
   const [followupToDate, setFollowupToDate] = useState("");
+  const [dateRangeFilter, setDateRangeFilter] = useState("All");
 
   const { data: allLeadList, isLoading, leadsRefetch } = useAllLeadsListQuery();
   const { allStatusesData } = useAllStatusesQuery();
@@ -238,12 +239,23 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     })) || []),
   ];
 
+  const dateRangeOptions = [
+    { label: "All", value: "All" },
+    { label: "Daily", value: "Daily" },
+    { label: "Weekly", value: "Weekly" },
+    { label: "Monthly", value: "Monthly" },
+  ];
+
   const handleStatusChange = (val: string) => {
     setSelectedStatus(val);
   };
 
   const handleTypeChange = (val: string) => {
     setSelectedType(val);
+  };
+
+  const handleDateRangeChange = (val: string) => {
+    setDateRangeFilter(val);
   };
 
   const handleClearFollowupDates = () => {
@@ -278,6 +290,28 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       leads = leads.filter((lead) => lead.type_id === (allTypesData?.find((type) => type.id.toString() === selectedType)?.name || selectedType));
     }
 
+    // Filter by date range (daily, weekly, monthly)
+    if (dateRangeFilter !== "All") {
+      const now = new Date();
+      leads = leads.filter((lead) => {
+        const createdAt = new Date(lead.created_at);
+        if (dateRangeFilter === "Daily") {
+          return createdAt.toDateString() === now.toDateString();
+        } else if (dateRangeFilter === "Weekly") {
+          const startOfWeek = new Date(now);
+          startOfWeek.setDate(now.getDate() - now.getDay()); // Sunday
+          startOfWeek.setHours(0, 0, 0, 0);
+          const endOfWeek = new Date(startOfWeek);
+          endOfWeek.setDate(startOfWeek.getDate() + 6);
+          endOfWeek.setHours(23, 59, 59, 999);
+          return createdAt >= startOfWeek && createdAt <= endOfWeek;
+        } else if (dateRangeFilter === "Monthly") {
+          return createdAt.getMonth() === now.getMonth() && createdAt.getFullYear() === now.getFullYear();
+        }
+        return true;
+      });
+    }
+
     // Filter leads by followup date if dates are set
     if (followupFromDate || followupToDate) {
       const followupMap = new Map();
@@ -303,7 +337,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     }
 
     return leads;
-  }, [leadsList, searchQuery, allFollowups, followupFromDate, followupToDate, selectedStatus, selectedType, allStatusesData, allTypesData]);
+  }, [leadsList, searchQuery, allFollowups, followupFromDate, followupToDate, selectedStatus, selectedType, allStatusesData, allTypesData, dateRangeFilter]);
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -341,6 +375,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             options={typeOptions}
             value={selectedType}
             onChange={handleTypeChange}
+            dropdownWidth="w-full md:w-fit"
+          />
+          <Dropdown
+            options={dateRangeOptions}
+            value={dateRangeFilter}
+            onChange={handleDateRangeChange}
             dropdownWidth="w-full md:w-fit"
           />
           <Button
