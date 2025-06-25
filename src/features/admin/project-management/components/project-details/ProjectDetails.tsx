@@ -58,7 +58,10 @@ export function ProjectDetails({ projectDetailData }: { projectDetailData: IProj
           }} />
         </div>
       </div>
-      <MilestoneTabs miletonesData={projectDetailData.milestones} projectId={projectDetailData.id} />
+      <MilestoneTabs 
+        miletonesData={projectDetailData.milestones} 
+        projectId={projectDetailData.id} 
+      />
     </section>
   );
 }

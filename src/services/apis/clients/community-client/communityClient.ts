@@ -48,7 +48,6 @@ import {
   IDeleteStatusesResponse,
   IDeleteTypeResponse,
   IDeleteUserResponse,
-  // IGetNotificationsResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
   ILeadFollowUpDetailResponse,
@@ -113,6 +112,9 @@ import {
   IUpdateProjectTemplateMilestoneTaskResponse,
   IDeleteProjectTemplateMilestoneTaskResponse,
   IUploadClientFromExcelResponse,
+  ICreateProjectFollowUpPayload,
+  ICreateProjectFollowUpResponse,
+  IAllProjectFollowUpResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -201,6 +203,8 @@ import {
   fetchAllClientDownloadExcelUrl,
   fetchClientDownloadTemplateExcelUrl,
   uploadClientFromExcelUrl,
+  fetchAllProjectFollowUpUrl,
+  createProjectFollowUpUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse } from "./types";
 
@@ -565,6 +569,21 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
+  // create client follow up
+
+  public createProjectFollowUp = async (payload: ICreateProjectFollowUpPayload) => {
+    const response = await this.post<ICreateProjectFollowUpResponse>(
+      createProjectFollowUpUrl(),
+      payload,
+      { requiresAuth: false }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+    return response?.data
+  }
+
   //delete lead
   public deleteLead = async (id: string) => {
     const response = await this.del<IDeleteLeadResponse>(deleteLeadUrl(id))
@@ -819,6 +838,22 @@ export class CommunityClient extends ApiClient {
   public fetchAllLeadFollowUp = async (leadId?: string) => {
     const response = await this.get<IAllLeadFollowUpResponse>(
       fetchAllLeadFollowUpUrl(leadId),
+      {
+        requiresAuth: false,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.error
+    }
+
+    return response?.data.data
+  }
+
+  // all client follow ups
+  public fetchAllProjectFollowUp = async (projectId?: string) => {
+    const response = await this.get<IAllProjectFollowUpResponse>(
+      fetchAllProjectFollowUpUrl(projectId),
       {
         requiresAuth: false,
       }

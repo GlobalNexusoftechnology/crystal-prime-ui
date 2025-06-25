@@ -7,10 +7,13 @@ import { PreviewMilestone } from "../../../add-project/components/step-4-preview
 
 const tabs = ["Milestones", "Followup's"];
 
-export function MilestoneTabs({ miletonesData = [], projectId }: { 
+export function MilestoneTabs({
+  miletonesData = [],
+  projectId,
+}: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  miletonesData?: any[], 
-  projectId: string 
+  miletonesData?: any[],
+  projectId: string,
 }) {
   const [activeTab, setActiveTab] = useState("Milestones");
   const [showForm, setShowForm] = useState(false);
@@ -36,8 +39,8 @@ export function MilestoneTabs({ miletonesData = [], projectId }: {
             <button
               key={tab}
               className={` 2xl:gap-[2vw] font-medium text-[1rem] 2xl:text-[1vw] ${activeTab === tab
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-gray-500"
+                ? "border-b-2 border-primary text-primary"
+                : "text-gray-500"
                 }`}
               onClick={() => {
                 setActiveTab(tab);

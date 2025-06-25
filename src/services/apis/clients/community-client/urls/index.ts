@@ -63,6 +63,11 @@ export const updateLeadFollowUpUrl = (id: string) => `/lead-followup/${id}`;
 
 export const deleteLeadFollowUpUrl = (id: string) => `/lead-followup/${id}`;
 
+//client followup
+export const createProjectFollowUpUrl = () => "/project-followup";
+
+export const fetchAllProjectFollowUpUrl = (projectId?: string) => `/client-followup?projectId=${projectId}`;
+
 // Status API hook
 export const fetchAllStatusesUrl = () => "/lead-statuses"; //Get
 

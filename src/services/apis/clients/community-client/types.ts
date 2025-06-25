@@ -817,6 +817,55 @@ export interface IAllLeadFollowUpResponse {
   data: LeadFollowupsList[];
 }
 
+// Client Followups APIs Types
+//------------------------------------------------------
+
+export interface IProjectFollowupsList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  status: ProjectFollowupStatus;
+  due_date: string;
+  completed_date: string | null;
+  remarks: string;
+  project: IAllProjectsResponse;
+  user: IUsersDetails;
+}
+
+export enum ProjectFollowupStatus {
+  PENDING = "PENDING",
+  RESCHEDULE = "RESCHEDULE",
+  AWAITING_RESPONSE = "AWAITING RESPONSE",
+  NO_RESPONSE = "NO RESPONSE",
+  FAILED = "FAILED",
+  COMPLETED = "COMPLETED",
+}
+
+export interface ICreateProjectFollowUpPayload {
+  project_id: string;
+  user_id?: string;
+  status: string;
+  due_date?: string;
+  completed_date?: string;
+  remarks?: string;
+}
+
+export interface ICreateProjectFollowUpResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectFollowupsList;
+}
+
+export interface IAllProjectFollowUpResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectFollowupsList[];
+}
+
 //interface for mark as read notification api response
 export interface IMarkAsReadNotificationResponse {
   status: string;
