@@ -7,16 +7,20 @@ import { ImageRegistry } from "@/constants";
 interface ProjectCreatedModalProps {
   onClose: () => void;
   isOpen: boolean;
+  projectId?: string | null;
 }
 
 export function ProjectCreatedModal({
   onClose,
   isOpen,
+  projectId,
 }: ProjectCreatedModalProps) {
   const router = useRouter();
 
   const handleViewProject = () => {
-    router.push("/admin/project-management");
+    if (projectId) {
+      router.push(`/admin/project-management/${projectId}`);
+    } 
   };
 
   if (!isOpen) return null;

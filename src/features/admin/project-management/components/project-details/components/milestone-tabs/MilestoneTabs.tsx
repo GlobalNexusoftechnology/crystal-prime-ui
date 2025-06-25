@@ -2,11 +2,16 @@
 
 import { Button } from "@/components";
 import { useEffect, useRef, useState } from "react";
-import { Followups, Milestones } from "./components";
+import { Followups } from "./components";
+import { PreviewMilestone } from "../../../add-project/components/step-4-preview/components";
 
 const tabs = ["Milestones", "Followup's"];
 
-export function MilestoneTabs() {
+export function MilestoneTabs({ miletonesData = [], projectId }: { 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  miletonesData?: any[], 
+  projectId: string 
+}) {
   const [activeTab, setActiveTab] = useState("Milestones");
   const [showForm, setShowForm] = useState(false);
 
@@ -30,11 +35,10 @@ export function MilestoneTabs() {
           {tabs.map((tab) => (
             <button
               key={tab}
-              className={` 2xl:gap-[2vw] font-medium text-[1rem] 2xl:text-[1vw] ${
-                activeTab === tab
+              className={` 2xl:gap-[2vw] font-medium text-[1rem] 2xl:text-[1vw] ${activeTab === tab
                   ? "border-b-2 border-primary text-primary"
                   : "text-gray-500"
-              }`}
+                }`}
               onClick={() => {
                 setActiveTab(tab);
                 setShowForm(false);
@@ -54,7 +58,7 @@ export function MilestoneTabs() {
             ) : (
               <>
                 {activeTab === "Milestones" ? (
-                  <Button title="Add Milestone" variant="primary-outline" />
+                  null
                 ) : (
                   <Button title="Add followup" variant="primary-outline" />
                 )}
@@ -67,15 +71,32 @@ export function MilestoneTabs() {
       {/* Tab Contents */}
       <div>
         {activeTab === "Milestones" && (
-          <Milestones
-            leadId="12345"
-            showForm={showForm}
-            setShowForm={setShowForm}
-          />
+          <div className="mb-4 2xl:mb-[1vw]">
+            <h3 className="text-lg 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">Milestones</h3>
+            <div className="overflow-x-auto">
+              <table className="min-w-full border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
+                <thead>
+                  <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
+                    <th className="text-left p-2 2xl:p-[0.5vw]">Milestone Name</th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Assigned To</th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Status</th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Estimated Start Date</th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Estimated End Date</th>
+                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {miletonesData.map((milestone) => (
+                    <PreviewMilestone key={milestone.id} milestone={milestone} />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
         )}
         {activeTab === "Followup's" && (
           <Followups
-            leadId="12345"
+            projectId={projectId}
             showForm={showForm}
             setShowForm={setShowForm}
           />

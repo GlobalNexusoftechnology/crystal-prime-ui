@@ -44,6 +44,8 @@ interface Step2MilestoneSetupProps {
   projectTemplateError: boolean;
   allProjectTemplatesData?: AllProjectTemplatesData;
   initialMilestones?: Milestone[];
+  projectTemplate: string;
+  setProjectTemplate: (id: string) => void;
 }
 
 interface Task {
@@ -81,6 +83,8 @@ export function Step2MilestoneSetup({
   projectTemplateError,
   allProjectTemplatesData,
   initialMilestones,
+  projectTemplate,
+  setProjectTemplate,
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
   const [milestones, setMilestones] = useState<Milestone[]>(initialMilestones || []);
@@ -98,9 +102,6 @@ export function Step2MilestoneSetup({
     milestoneId: number;
     taskId: number;
   } | null>(null);
-
-  // Project template options from parent
-  const [projectTemplate, setProjectTemplate] = useState("");
 
   // Fetch users for userOptions
   const { allUsersData, isLoading: usersLoading, isError: usersError } = useAllUsersQuery();

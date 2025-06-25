@@ -53,7 +53,7 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
           <div className="flex items-center gap-2">
             <p 
               className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" 
-              style={{ backgroundColor: getRandomColor(milestone.assignedTo) }}
+              style={{ backgroundColor: getRandomColor(milestone.assignedTo || '') }}
             >
               {getInitials(milestone.assignedTo)}
             </p>
@@ -96,28 +96,28 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
               <tbody>
                 {milestone.tasks.map((task) => (
                   <tr key={task.id} className="border-t border-gray-200">
-                    <td className="pl-8 py-2 text-sm font-medium">{task.name}</td>
-                    <td className="py-2 text-sm">{task.description}</td>
+                    <td className="pl-8 py-2 text-sm font-medium">{task?.name}</td>
+                    <td className="py-2 text-sm">{task?.description}</td>
                     <td className="py-2 text-sm">
                       <div className="flex items-center gap-2">
                         <p 
                           className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" 
-                          style={{ backgroundColor: getRandomColor(task.assignedTo) }}
+                          style={{ backgroundColor: getRandomColor(task?.assignedTo || '') }}
                         >
-                          {getInitials(task.assignedTo)}
+                          {getInitials(task?.assignedTo)}
                         </p>
-                        <p className="px-3 py-1 text-[0.9rem]">{task.assignedTo}</p>
+                        <p className="px-3 py-1 text-[0.9rem]">{task?.assignedTo}</p>
                       </div>
                     </td>
                     <td className="py-2">
                       <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
-                        {task.status}
+                        {task?.status}
                       </span>
                     </td>
                     <td className="py-2">
                       <span className="flex items-center gap-2">
                         <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-                        <span className="text-sm">{task.dueDate}</span>
+                        <span className="text-sm">{task?.dueDate}</span>
                       </span>
                     </td>
                     <td className="py-2"></td>

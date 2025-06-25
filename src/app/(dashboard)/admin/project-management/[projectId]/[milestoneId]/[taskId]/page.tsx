@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 import { projectData, IProjectData } from "@/constants";
-import { TaskDetails } from "@/features/admin/project-management/components/project-details/components/milestone-tabs/components/milestones/components/milestone-details/components/task-tabs/components/task";
 
 function fetchTaskData(taskSlug: string): IProjectData | null {
   return projectData.find((project) => project.slug === taskSlug) || null;
@@ -13,6 +12,10 @@ function fetchTaskData(taskSlug: string): IProjectData | null {
 type TBlogProjectParam = {
   taskId: string;
 };
+
+function TaskDetails() {
+  return <div>Task Details Page</div>;
+}
 
 export default function TaskDetailsPage() {
   const { taskId: taskSlug } = useParams<TBlogProjectParam>();

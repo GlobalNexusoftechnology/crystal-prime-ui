@@ -74,7 +74,7 @@ export function Task({
                     <td className="py-2 text-sm">{task.description}</td>
                     <td className="py-2 text-sm">
                         <div className="flex items-center gap-2">
-                            <p className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" style={{ backgroundColor: getRandomColor(task.assignedTo) }}>{getInitials(task.assignedTo)}</p>
+                            <p className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" style={{ backgroundColor: getRandomColor(task.assignedTo || '') }}>{getInitials(task.assignedTo)}</p>
                             <p className="px-3 py-1 text-[0.9rem]">{task.assignedTo}</p>
                         </div>
                     </td>

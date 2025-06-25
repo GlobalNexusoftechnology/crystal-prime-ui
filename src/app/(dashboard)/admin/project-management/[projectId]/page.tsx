@@ -56,5 +56,5 @@ export default function ProjectDetailsPage() {
     );
   }
 
-  return <ProjectDetails />;
+  return <ProjectDetails projectDetailData={projectDetailData} />;
 }

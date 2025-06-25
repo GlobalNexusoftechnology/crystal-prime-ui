@@ -1,7 +1,7 @@
 "use client";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, DatePicker, Dropdown, InputField } from "@/components";
+import { Button, DatePicker, Dropdown, InputField, ModalOverlay } from "@/components";
 import {
   ICreateLeadFollowUpPayload,
   ICreateLeadFollowUpResponse,
@@ -29,10 +29,10 @@ const validationSchema = Yup.object().shape({
 interface IFollowupsProps {
   showForm: boolean;
   setShowForm: (val: boolean) => void;
-  leadId: string;
+  projectId: string;
 }
 
-export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
+export function Followups({ projectId, showForm, setShowForm }: IFollowupsProps) {
   // const { data: followupData, LeadFollowUp } = useAlLeadFollowUpQuery(leadId);
   const { allUsersData } = useAllUsersQuery();
   const { activeSession } = useAuthStore();
@@ -53,7 +53,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
 
   const formik = useFormik<ICreateLeadFollowUpPayload>({
     initialValues: {
-      lead_id: leadId,
+      lead_id: projectId,
       due_date: "",
       status: "",
       user_id: userId,
@@ -61,11 +61,11 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
     },
     validationSchema,
     onSubmit: async (values) => {
-      if (!leadId) {
-        toast.error("Lead ID is missing");
+      if (!projectId) {
+        toast.error("Project ID is missing");
         return;
       }
-      await createLeadFollowUp({ ...values, lead_id: leadId });
+      await createLeadFollowUp({ ...values, lead_id: projectId });
     },
   });
 
@@ -83,10 +83,18 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw]">
       {showForm ? (
+      <ModalOverlay isOpen={showForm} onClose={()=>setShowForm(false)} modalTitle="Add Follow Up" modalClassName="w-full md:w-[31rem] 2xl:w-[31vw]">
         <form
           onSubmit={formik.handleSubmit}
           className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
         >
+            <DatePicker
+              label="Next Followup Date"
+              value={`${formik.values.due_date}`}
+              onChange={(date) => formik.setFieldValue("due_date", date)}
+              placeholder="Next Followup Date"
+              error={formik.touched.due_date ? formik.errors.due_date : undefined}
+            />
           <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw]">
             <Dropdown
               label="Status"
@@ -112,13 +120,6 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
             onBlur={formik.handleBlur}
             error={formik.touched.remarks ? formik.errors.remarks : undefined}
           />
-          <DatePicker
-            label="Next Followup Date"
-            value={`${formik.values.due_date}`}
-            onChange={(date) => formik.setFieldValue("due_date", date)}
-            placeholder="Next Followup Date"
-            error={formik.touched.due_date ? formik.errors.due_date : undefined}
-          />
           <div className="flex items-center gap-4 2xl:gap-[1vw]">
             <Button
               title="Cancel"
@@ -130,6 +131,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
             <Button title="Submit followup" type="submit" width="w-full" />
           </div>
         </form>
+      </ModalOverlay>
       ) : (
         <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-sm 2xl:text-[0.9vw] text-[#1D2939] w-full md:w-[70%]">
           <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">

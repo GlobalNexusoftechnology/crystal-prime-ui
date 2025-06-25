@@ -121,6 +121,8 @@ export function AddProject() {
   const [milestoneOption, setMilestoneOption] = useState("milestone");
   const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [basicInfo, setBasicInfo] = useState<IAddProjectFormValues | null>(null);
+  const [selectedProjectTemplate, setSelectedProjectTemplate] = useState<string>("");
+  const [createdProjectId, setCreatedProjectId] = useState<string | null>(null);
   const { allClientData, isLoading: clientLoading, isError: clientError } = useAllClientQuery();
   const clientOptions = (allClientData || []).map((client) => ({
     label: client.name,
@@ -133,7 +135,8 @@ export function AddProject() {
   }));
 
   const { onCreateProject, isPending, error } = useCreateProjectMutation({
-    onSuccessCallback: () => {
+    onSuccessCallback: (response) => {
+      setCreatedProjectId(response.data.id);
       setIsModalOpen(true);
     },
     onErrorCallback: () => {
@@ -276,6 +279,8 @@ export function AddProject() {
           projectTemplateError={!!projectTemplateError}
           allProjectTemplatesData={allProjectTemplatesData}
           initialMilestones={milestones}
+          projectTemplate={selectedProjectTemplate}
+          setProjectTemplate={setSelectedProjectTemplate}
         />
       )}
       {step === 3 && (
@@ -299,7 +304,7 @@ export function AddProject() {
           onSubmit={handleFinalSubmit}
         />
       )}
-      {isModalOpen && <ProjectCreatedModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && <ProjectCreatedModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} projectId={createdProjectId} />}
       {isPending && <div>Creating project...</div>}
       {error && <div className="text-red-600">Error: {error.message || "Failed to create project."}</div>}
     </section>

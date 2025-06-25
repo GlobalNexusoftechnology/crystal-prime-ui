@@ -141,7 +141,7 @@ export function Milestone({
               <p
                 className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
                 style={{
-                  backgroundColor: getRandomColor(milestone.assignedTo),
+                  backgroundColor: getRandomColor(milestone.assignedTo || ''),
                 }}
               >
                 {getInitials(milestone.assignedTo)}
