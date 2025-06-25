@@ -17,7 +17,6 @@ export function ProjectDetails({ projectDetailData }: { projectDetailData: IProj
       <Breadcrumb />
       <HeaderDetails
         title={projectDetailData.name}
-        projectId={projectDetailData.id}
         status={projectDetailData.status || 'N/A'}
         progress={projectDetailData.milestones ? `${projectDetailData.milestones.filter(m => m.status === 'completed').length} / ${projectDetailData.milestones.length}` : '0 / 0'}
       />

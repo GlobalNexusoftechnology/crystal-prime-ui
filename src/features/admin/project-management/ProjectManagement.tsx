@@ -56,6 +56,7 @@ export function ProjectManagement() {
         data: {
           id: project.id,
           name: project.name,
+          description: project.description,
           client_id: project.client_id,
           end_date: project.end_date,
           status: project.status,

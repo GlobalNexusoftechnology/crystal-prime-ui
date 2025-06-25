@@ -9,14 +9,9 @@ type TBlogProjectParam = {
 };
 
 export default function ProjectDetailsPage() {
-  const { projectId: projectSlug } = useParams<TBlogProjectParam>();
-  
-  // Debug logging to see what we're getting
-  console.log("ProjectSlug:", projectSlug, "Type:", typeof projectSlug);
-  
+  const { projectId: projectSlug } = useParams<TBlogProjectParam>();  
   const { projectDetailData, isLoading, error } = useProjectDetailQuery(projectSlug);
 
-  // Handle case where projectSlug might be undefined or invalid
   if (!projectSlug) {
     return (
       <div className="flex justify-center items-center h-64">

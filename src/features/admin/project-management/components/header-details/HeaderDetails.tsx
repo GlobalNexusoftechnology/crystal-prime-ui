@@ -2,7 +2,6 @@
 
 type HeaderDetailsProps = {
   title: string;
-  projectId: string | number;
   status: string;
   progress: string; // e.g., "6 / 10"
   statusBgColor?: string;
@@ -14,7 +13,6 @@ type HeaderDetailsProps = {
  */
 export function HeaderDetails({
   title,
-  projectId,
   status,
   progress,
   statusBgColor = "bg-skyBlue",
@@ -24,7 +22,6 @@ export function HeaderDetails({
     <div className="flex items-center gap-4 2xl:gap-[1vw]">
       <div>
         <h2 className="text-[1.5rem] 2xl:text-[1.5vw] font-medium">{title}</h2>
-        <p className="2xl:text-[1vw]">#{projectId}</p>
       </div>
       <div className="flex items-center gap-4 2xl:gap-[1vw]">
         <span

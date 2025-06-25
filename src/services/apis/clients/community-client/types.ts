@@ -951,6 +951,7 @@ export interface IProjectAttachment {
 export interface ICreateProjectPayload {
   client_id?: string; // uuid, optional
   name: string;
+  description: string;
   project_type?: string;
   budget?: number;
   estimated_cost?: number;
@@ -1352,6 +1353,7 @@ export interface IMilestone {
   id: string;
   project_id: string;
   name: string;
+  desciption: string;
   start_date: string;
   end_date: string;
   actual_date?: string;
