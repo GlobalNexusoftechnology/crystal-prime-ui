@@ -1335,3 +1335,67 @@ export interface IUploadClientFromExcelResponse {
   message: string;
   data: IClientList[];
 }
+
+export interface IMilestonePayload {
+  project_id: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  actual_date?: string;
+  estimated_date?: string;
+  assigned_to: string;
+  status: string;
+  remark?: string;
+}
+
+export interface IMilestone {
+  id: string;
+  project_id: string;
+  name: string;
+  start_date: string;
+  end_date: string;
+  actual_date?: string;
+  estimated_date?: string;
+  assigned_to: string;
+  status: string;
+  remark?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface IMilestoneResponse {
+  milestone: IMilestone;
+}
+
+export interface IAllMilestonesResponse {
+  milestones: IMilestone[];
+}
+
+export interface IMilestoneTaskPayload {
+  milestone_id: string;
+  title: string;
+  description: string;
+  due_date: string;
+  status: string;
+  assigned_to: string;
+}
+
+export interface IMilestoneTask {
+  id: string;
+  milestone_id: string;
+  title: string;
+  description: string;
+  due_date: string;
+  status: string;
+  assigned_to: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface IMilestoneTaskResponse {
+  task: IMilestoneTask;
+}
+
+export interface IAllMilestoneTasksResponse {
+  tasks: IMilestoneTask[];
+}

@@ -216,3 +216,17 @@ export const fetchClientDownloadTemplateExcelUrl = () => "/clients/template/down
 
 export const uploadClientFromExcelUrl = () => "/clients/upload-excel";
 
+// Project Milestones API's
+export const createMilestoneUrl = () => "/project-milestones";
+export const updateMilestoneUrl = (milestoneId: string) => `/project-milestones/${milestoneId}`;
+export const deleteMilestoneUrl = (milestoneId: string) => `/project-milestones/${milestoneId}`;
+export const getMilestoneDetailUrl = (milestoneId: string) => `/project-milestones/${milestoneId}`;
+export const getAllMilestonesUrl = (projectId: string) => `/project-milestones/${projectId}`;
+
+// Project Milestone Tasks API's
+export const createMilestoneTaskUrl = () => "/project-task";
+export const updateMilestoneTaskUrl = (taskId: string) => `/project-task/${taskId}`;
+export const deleteMilestoneTaskUrl = (taskId: string) => `/project-task/${taskId}`;
+export const getMilestoneTaskDetailUrl = (taskId: string) => `/project-task/${taskId}`;
+export const getAllMilestoneTasksUrl = (milestoneId: string) => `/project-task/${milestoneId}`;
+

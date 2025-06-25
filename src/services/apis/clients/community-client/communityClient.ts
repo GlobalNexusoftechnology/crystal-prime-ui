@@ -115,6 +115,12 @@ import {
   ICreateProjectFollowUpPayload,
   ICreateProjectFollowUpResponse,
   IAllProjectFollowUpResponse,
+  IMilestonePayload,
+  IMilestoneResponse,
+  IAllMilestonesResponse,
+  IMilestoneTaskPayload,
+  IMilestoneTaskResponse,
+  IAllMilestoneTasksResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -205,6 +211,16 @@ import {
   uploadClientFromExcelUrl,
   fetchAllProjectFollowUpUrl,
   createProjectFollowUpUrl,
+  createMilestoneUrl,
+  updateMilestoneUrl,
+  deleteMilestoneUrl,
+  getMilestoneDetailUrl,
+  getAllMilestonesUrl,
+  createMilestoneTaskUrl,
+  updateMilestoneTaskUrl,
+  deleteMilestoneTaskUrl,
+  getMilestoneTaskDetailUrl,
+  getAllMilestoneTasksUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse } from "./types";
 
@@ -1496,6 +1512,84 @@ export class CommunityClient extends ApiClient {
       throw response.response?.data;
     }
 
+    return response?.data;
+  }
+
+  public createMilestone = async (payload: IMilestonePayload): Promise<IMilestoneResponse> => {
+    const response = await this.post<IMilestoneResponse>(createMilestoneUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public updateMilestone = async (milestoneId: string, payload: IMilestonePayload): Promise<IMilestoneResponse> => {
+    const response = await this.put<IMilestoneResponse>(updateMilestoneUrl(milestoneId), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public deleteMilestone = async (milestoneId: string): Promise<void> => {
+    const response = await this.del<void>(deleteMilestoneUrl(milestoneId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+  }
+
+  public getMilestoneDetail = async (milestoneId: string): Promise<IMilestoneResponse> => {
+    const response = await this.get<IMilestoneResponse>(getMilestoneDetailUrl(milestoneId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public getAllMilestones = async (projectId: string): Promise<IAllMilestonesResponse> => {
+    const response = await this.get<IAllMilestonesResponse>(getAllMilestonesUrl(projectId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public createMilestoneTask = async (payload: IMilestoneTaskPayload): Promise<IMilestoneTaskResponse> => {
+    const response = await this.post<IMilestoneTaskResponse>(createMilestoneTaskUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public updateMilestoneTask = async (taskId: string, payload: IMilestoneTaskPayload): Promise<IMilestoneTaskResponse> => {
+    const response = await this.put<IMilestoneTaskResponse>(updateMilestoneTaskUrl(taskId), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public deleteMilestoneTask = async (taskId: string): Promise<void> => {
+    const response = await this.del<void>(deleteMilestoneTaskUrl(taskId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+  }
+
+  public getMilestoneTaskDetail = async (taskId: string): Promise<IMilestoneTaskResponse> => {
+    const response = await this.get<IMilestoneTaskResponse>(getMilestoneTaskDetailUrl(taskId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public getAllMilestoneTasks = async (milestoneId: string): Promise<IAllMilestoneTasksResponse> => {
+    const response = await this.get<IAllMilestoneTasksResponse>(getAllMilestoneTasksUrl(milestoneId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
     return response?.data;
   }
 }
