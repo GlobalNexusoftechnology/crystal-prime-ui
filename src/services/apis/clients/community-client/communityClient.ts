@@ -710,14 +710,33 @@ export class CommunityClient extends ApiClient {
    * Fetches a list of all leads.
    * @returns list of leads
    */
-  public fetchAllLeadsList = async () => {
-    const response = await this.get<IAllLeadResponse>(fetchAllLeadsListUrl())
+  public fetchAllLeadsList = async (filters: {
+    searchText?: string;
+    statusId?: string;
+    typeId?: string;
+    dateRange?: "All" | "Daily" | "Weekly" | "Monthly";
+    referenceDate?: string;
+    followupFrom?: string;
+    followupTo?: string;
+  } = {}) => {
+    // Build query string from filters
+    const params = new URLSearchParams();
+    if (filters.searchText) params.append('searchText', filters.searchText);
+    if (filters.statusId && filters.statusId !== 'All Status') params.append('statusId', filters.statusId);
+    if (filters.typeId && filters.typeId !== 'All Type') params.append('typeId', filters.typeId);
+    if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
+    if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
+    if (filters.followupFrom) params.append('followupFrom', filters.followupFrom);
+    if (filters.followupTo) params.append('followupTo', filters.followupTo);
+    const url = params.toString() ? `${fetchAllLeadsListUrl()}?${params.toString()}` : fetchAllLeadsListUrl();
+
+    const response = await this.get<IAllLeadResponse>(url);
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
+    return response?.data;
   }
 
   public fetchAllSources = async () => {
@@ -773,19 +792,30 @@ export class CommunityClient extends ApiClient {
     return response?.data.data
   }
 
-  public fetchAllLeadDownloadExcel = async () => {
-    const response = await this.get<Blob>(
-      fetchAllLeadDownloadExcelUrl(),
-      {
-        responseType: 'blob'
-      }
-    )
+  public fetchAllLeadDownloadExcel = async (filters: {
+    searchText?: string;
+    statusId?: string;
+    typeId?: string;
+    dateRange?: "All" | "Daily" | "Weekly" | "Monthly";
+    referenceDate?: string;
+    followupFrom?: string;
+    followupTo?: string;
+  } = {}) => {
+    const params = new URLSearchParams();
+    if (filters.searchText) params.append('searchText', filters.searchText);
+    if (filters.statusId && filters.statusId !== 'All Status') params.append('statusId', filters.statusId);
+    if (filters.typeId && filters.typeId !== 'All Type') params.append('typeId', filters.typeId);
+    if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
+    if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
+    if (filters.followupFrom) params.append('followupFrom', filters.followupFrom);
+    if (filters.followupTo) params.append('followupTo', filters.followupTo);
+    const url = params.toString() ? `${fetchAllLeadDownloadExcelUrl()}?${params.toString()}` : fetchAllLeadDownloadExcelUrl();
 
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-
-    return response?.data
+    return response?.data;
   }
 
   public fetchLeadDownloadTemplateExcel = async () => {
