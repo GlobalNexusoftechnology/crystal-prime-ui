@@ -40,13 +40,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
   const [followupFromDate, setFollowupFromDate] = useState("");
   const [followupToDate, setFollowupToDate] = useState("");
-  const [followupDateError, setFollowupDateError] = useState<string | null>(null);
   const [dateRangeFilter, setDateRangeFilter] = useState<"All" | "Daily" | "Weekly" | "Monthly">("All");
 
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
     delay: 500,
-    onChangeCb: () => {}, // not needed for this use case
+    onChangeCb: () => { }, // not needed for this use case
   });
 
   const { data: allLeadList, isLoading, isError, error, leadsRefetch } = useAllLeadsListQuery({
@@ -280,25 +279,20 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const handleClearFollowupDates = () => {
     setFollowupFromDate("");
     setFollowupToDate("");
-    setFollowupDateError(null);
   };
 
   const handleFollowupFromDateChange = (date: string) => {
     if (followupToDate && new Date(date) > new Date(followupToDate)) {
-      setFollowupDateError('"Follow Up From" date cannot be after "Follow Up To" date.');
       return;
     }
     setFollowupFromDate(date);
-    setFollowupDateError(null);
   };
 
   const handleFollowupToDateChange = (date: string) => {
     if (followupFromDate && new Date(date) < new Date(followupFromDate)) {
-      setFollowupDateError('"Follow Up To" date cannot be before "Follow Up From" date.');
       return;
     }
     setFollowupToDate(date);
-    setFollowupDateError(null);
   };
 
   if (isError) {
@@ -380,30 +374,26 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             datePickerWidth="w-full md:w-fit"
           />
         </div>
-        <div className="flex flex-col items-start">
-          <DatePicker
-            label="Follow Up To"
-            value={followupToDate}
-            onChange={handleFollowupToDateChange}
-            datePickerWidth="w-full md:w-fit"
-          />
-          {followupDateError && (
-            <div className="text-red-500 text-sm mt-1">{followupDateError}</div>
-          )}
-        </div>
+        <DatePicker
+          label="Follow Up To"
+          minDate={followupFromDate}
+          value={followupToDate}
+          onChange={handleFollowupToDateChange}
+          datePickerWidth="w-full md:w-fit"
+        />
         {(followupFromDate || followupToDate) && (
-        <div>
-          <Button
-            variant="background-white"
-            width="w-full md:w-fit"
-            onClick={handleClearFollowupDates}
-            leftIcon={
-              <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-            }
-            tooltip="Clear Dates"
-          />
-        </div>
-        )}   
+          <div>
+            <Button
+              variant="background-white"
+              width="w-full md:w-fit"
+              onClick={handleClearFollowupDates}
+              leftIcon={
+                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+              }
+              tooltip="Clear Dates"
+            />
+          </div>
+        )}
       </div>
       {isLoading ? (
         <div className="text-center py-6 text-gray-500">Loading leads...</div>
