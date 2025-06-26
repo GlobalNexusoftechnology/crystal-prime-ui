@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button, Dropdown, SearchBar, Table, DatePicker } from "@/components";
 import {
   EAction,
@@ -20,13 +20,12 @@ import {
   useDeleteLeadMutation,
   useLeadDetailQuery,
   useLeadDownloadTemplateExcelQuery,
-  useAlLeadFollowUpQuery,
 } from "@/services";
 import { downloadBlobFile, formatDate, IApiError } from "@/utils";
 import { FiPlus, FiX } from "react-icons/fi";
 import { ImDownload2 } from "react-icons/im";
 import { usePermission } from "@/utils/hooks";
-import { LeadFollowupsList } from "@/services/apis/clients/community-client/types";
+import { useDebounce } from "@/utils/hooks";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
@@ -35,14 +34,29 @@ interface LeadsListTableProps {
 export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [leadId, setLeadId] = useState("");
   const [isEditLeadModalOpen, setIsEditLeadModalOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [selectedType, setSelectedType] = useState("All Type");
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
   const [followupFromDate, setFollowupFromDate] = useState("");
   const [followupToDate, setFollowupToDate] = useState("");
+  const [followupDateError, setFollowupDateError] = useState<string | null>(null);
+  const [dateRangeFilter, setDateRangeFilter] = useState<"All" | "Daily" | "Weekly" | "Monthly">("All");
 
-  const { data: allLeadList, isLoading, leadsRefetch } = useAllLeadsListQuery();
+  const { debouncedValue: searchQuery } = useDebounce({
+    initialValue: searchInput,
+    delay: 500,
+    onChangeCb: () => {}, // not needed for this use case
+  });
+
+  const { data: allLeadList, isLoading, isError, error, leadsRefetch } = useAllLeadsListQuery({
+    searchText: searchQuery,
+    statusId: selectedStatus,
+    typeId: selectedType,
+    dateRange: dateRangeFilter,
+    followupFrom: followupFromDate || undefined,
+    followupTo: followupToDate || undefined,
+  });
   const { allStatusesData } = useAllStatusesQuery();
   const { allTypesData } = useAllTypesQuery();
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
@@ -67,12 +81,18 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     EAction.DELETE
   );
 
-  const { data: allFollowups } = useAlLeadFollowUpQuery("");
-
   const handleLeadDownloadExcel = async () => {
-    const { data } = await onAllLeadDownloadExcel();
-    if (data instanceof Blob) {
-      await downloadBlobFile(data, `leads_${new Date().getTime()}.xlsx`);
+    const filters = {
+      searchText: searchQuery,
+      statusId: selectedStatus,
+      typeId: selectedType,
+      dateRange: dateRangeFilter,
+      followupFrom: followupFromDate ? new Date(followupFromDate).toISOString() : undefined,
+      followupTo: followupToDate ? new Date(followupToDate).toISOString() : undefined,
+    };
+    const blob = await onAllLeadDownloadExcel(filters);
+    if (blob instanceof Blob) {
+      await downloadBlobFile(blob, `leads_data.xlsx`);
     }
   };
 
@@ -219,7 +239,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   };
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query.toLowerCase());
+    setSearchInput(query.toLowerCase());
   };
 
   const statusOptions = [
@@ -238,6 +258,13 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     })) || []),
   ];
 
+  const dateRangeOptions = [
+    { label: "All", value: "All" },
+    { label: "Daily", value: "Daily" },
+    { label: "Weekly", value: "Weekly" },
+    { label: "Monthly", value: "Monthly" },
+  ];
+
   const handleStatusChange = (val: string) => {
     setSelectedStatus(val);
   };
@@ -246,64 +273,41 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     setSelectedType(val);
   };
 
+  const handleDateRangeChange = (val: string) => {
+    setDateRangeFilter(val as "All" | "Daily" | "Weekly" | "Monthly");
+  };
+
   const handleClearFollowupDates = () => {
     setFollowupFromDate("");
     setFollowupToDate("");
+    setFollowupDateError(null);
   };
 
-  const filteredLeads = useMemo(() => {
-    let leads = leadsList.filter((lead) => {
-      return (
-        lead.id?.toLowerCase().includes(searchQuery) ||
-        lead.first_name?.toLowerCase().includes(searchQuery) ||
-        lead.last_name?.toLowerCase().includes(searchQuery) ||
-        lead.phone?.toLowerCase().includes(searchQuery) ||
-        lead.company?.toLowerCase().includes(searchQuery) ||
-        lead.budget?.toLowerCase().includes(searchQuery) ||
-        lead.requirement?.toLowerCase().includes(searchQuery) ||
-        (Array.isArray(lead.email)
-          ? lead.email.some((email) => String(email).toLowerCase().includes(searchQuery))
-          : String(lead.email).toLowerCase().includes(searchQuery)) ||
-        lead.location?.toLowerCase().includes(searchQuery)
-      );
-    });
-
-    // Filter by status if not 'All Status'
-    if (selectedStatus !== "All Status") {
-      leads = leads.filter((lead) => lead.status_id === (allStatusesData?.find((status) => status.id.toString() === selectedStatus)?.name || selectedStatus));
+  const handleFollowupFromDateChange = (date: string) => {
+    if (followupToDate && new Date(date) > new Date(followupToDate)) {
+      setFollowupDateError('"Follow Up From" date cannot be after "Follow Up To" date.');
+      return;
     }
+    setFollowupFromDate(date);
+    setFollowupDateError(null);
+  };
 
-    // Filter by type if not 'All Type'
-    if (selectedType !== "All Type") {
-      leads = leads.filter((lead) => lead.type_id === (allTypesData?.find((type) => type.id.toString() === selectedType)?.name || selectedType));
+  const handleFollowupToDateChange = (date: string) => {
+    if (followupFromDate && new Date(date) < new Date(followupFromDate)) {
+      setFollowupDateError('"Follow Up To" date cannot be before "Follow Up From" date.');
+      return;
     }
+    setFollowupToDate(date);
+    setFollowupDateError(null);
+  };
 
-    // Filter leads by followup date if dates are set
-    if (followupFromDate || followupToDate) {
-      const followupMap = new Map();
-      (allFollowups ?? []).forEach((fu: LeadFollowupsList) => {
-        if (!followupMap.has(fu?.lead?.id)) followupMap.set(fu?.lead?.id, []);
-        followupMap.get(fu?.lead?.id).push(fu);
-      });
-
-      leads = leads.filter((lead) => {
-        const followups = followupMap.get(lead.id) || [];
-        return followups.some((fu: LeadFollowupsList) => {
-          const due = new Date(fu.due_date);
-          const from = followupFromDate ? new Date(followupFromDate) : null;
-          const to = followupToDate ? new Date(followupToDate) : null;
-
-          // Set time to start of day for from date and end of day for to date
-          if (from) from.setHours(0, 0, 0, 0);
-          if (to) to.setHours(23, 59, 59, 999);
-
-          return (!from || due >= from) && (!to || due <= to);
-        });
-      });
-    }
-
-    return leads;
-  }, [leadsList, searchQuery, allFollowups, followupFromDate, followupToDate, selectedStatus, selectedType, allStatusesData, allTypesData]);
+  if (isError) {
+    return (
+      <div className="text-center py-6 text-red-500">
+        Error loading leads: {error?.message || 'Unknown error'}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -343,6 +347,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             onChange={handleTypeChange}
             dropdownWidth="w-full md:w-fit"
           />
+          <Dropdown
+            options={dateRangeOptions}
+            value={dateRangeFilter}
+            onChange={handleDateRangeChange}
+            dropdownWidth="w-full md:w-fit"
+          />
           <Button
             title="Export"
             variant="background-white"
@@ -362,19 +372,27 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         </div>
       </div>
       <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw]">
-        <DatePicker
-          label="Follow Up From"
-          value={followupFromDate}
-          onChange={setFollowupFromDate}
-          datePickerWidth="w-full md:w-fit"
-        />
-        <DatePicker
-          label="Follow Up To"
-          value={followupToDate}
-          onChange={setFollowupToDate}
-          datePickerWidth="w-full md:w-fit"
-        />
+        <div className="flex flex-col justify-start items-start">
+          <DatePicker
+            label="Follow Up From"
+            value={followupFromDate}
+            onChange={handleFollowupFromDateChange}
+            datePickerWidth="w-full md:w-fit"
+          />
+        </div>
+        <div className="flex flex-col items-start">
+          <DatePicker
+            label="Follow Up To"
+            value={followupToDate}
+            onChange={handleFollowupToDateChange}
+            datePickerWidth="w-full md:w-fit"
+          />
+          {followupDateError && (
+            <div className="text-red-500 text-sm mt-1">{followupDateError}</div>
+          )}
+        </div>
         {(followupFromDate || followupToDate) && (
+        <div>
           <Button
             variant="background-white"
             width="w-full md:w-fit"
@@ -384,15 +402,16 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             }
             tooltip="Clear Dates"
           />
-        )}
+        </div>
+        )}   
       </div>
       {isLoading ? (
         <div className="text-center py-6 text-gray-500">Loading leads...</div>
-      ) : filteredLeads.length === 0 ? (
+      ) : leadsList.length === 0 ? (
         <div className="text-center py-6 text-gray-500">No leads found.</div>
       ) : (
         <Table
-          data={filteredLeads}
+          data={leadsList}
           columns={leadsListColumn}
           actions={leadLeadManagementAction}
         />
