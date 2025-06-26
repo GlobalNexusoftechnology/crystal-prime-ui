@@ -138,3 +138,15 @@ export const getNotificationsUrl = () => "/notifications"; //Get
 export const markAsReadNotificationUrl = () => "/notifications/read-all"; //mark as read notification
 
 export const deleteNotificationUrl = (id: string) => `/notifications/${id}`;//delete notification url
+
+
+//  Staff API's hook
+export const fetchAllClientUrl = () => "/clients"; //Get
+
+export const createClientUrl = () => "/clients/create-client"; //post
+
+export const getClientDetailByIdUrl = (id: string) => `/clients/${id}`;//get by id
+
+export const updateClientUrl = (id: string) => `/clients/${id}`;//put
+
+export const deleteClientUrl = (id: string) => `/clients/${id}`; //delete
