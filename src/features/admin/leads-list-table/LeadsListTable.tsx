@@ -40,6 +40,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
   const [followupFromDate, setFollowupFromDate] = useState("");
   const [followupToDate, setFollowupToDate] = useState("");
+  const [followupDateError, setFollowupDateError] = useState<string | null>(null);
   const [dateRangeFilter, setDateRangeFilter] = useState<"All" | "Daily" | "Weekly" | "Monthly">("All");
 
   const { debouncedValue: searchQuery } = useDebounce({
@@ -279,6 +280,25 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const handleClearFollowupDates = () => {
     setFollowupFromDate("");
     setFollowupToDate("");
+    setFollowupDateError(null);
+  };
+
+  const handleFollowupFromDateChange = (date: string) => {
+    if (followupToDate && new Date(date) > new Date(followupToDate)) {
+      setFollowupDateError('"Follow Up From" date cannot be after "Follow Up To" date.');
+      return;
+    }
+    setFollowupFromDate(date);
+    setFollowupDateError(null);
+  };
+
+  const handleFollowupToDateChange = (date: string) => {
+    if (followupFromDate && new Date(date) < new Date(followupFromDate)) {
+      setFollowupDateError('"Follow Up To" date cannot be before "Follow Up From" date.');
+      return;
+    }
+    setFollowupToDate(date);
+    setFollowupDateError(null);
   };
 
   if (isError) {
@@ -352,19 +372,27 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         </div>
       </div>
       <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw]">
-        <DatePicker
-          label="Follow Up From"
-          value={followupFromDate}
-          onChange={setFollowupFromDate}
-          datePickerWidth="w-full md:w-fit"
-        />
-        <DatePicker
-          label="Follow Up To"
-          value={followupToDate}
-          onChange={setFollowupToDate}
-          datePickerWidth="w-full md:w-fit"
-        />
+        <div className="flex flex-col justify-start items-start">
+          <DatePicker
+            label="Follow Up From"
+            value={followupFromDate}
+            onChange={handleFollowupFromDateChange}
+            datePickerWidth="w-full md:w-fit"
+          />
+        </div>
+        <div className="flex flex-col items-start">
+          <DatePicker
+            label="Follow Up To"
+            value={followupToDate}
+            onChange={handleFollowupToDateChange}
+            datePickerWidth="w-full md:w-fit"
+          />
+          {followupDateError && (
+            <div className="text-red-500 text-sm mt-1">{followupDateError}</div>
+          )}
+        </div>
         {(followupFromDate || followupToDate) && (
+        <div>
           <Button
             variant="background-white"
             width="w-full md:w-fit"
@@ -374,7 +402,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             }
             tooltip="Clear Dates"
           />
-        )}
+        </div>
+        )}   
       </div>
       {isLoading ? (
         <div className="text-center py-6 text-gray-500">Loading leads...</div>
