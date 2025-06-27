@@ -119,7 +119,7 @@ export function LeadManagement() {
             <AnalyticalCard key={index} data={card} />
           ))}
         </div>
-        <LeadsListTable setAddLeadModalOpen={setAddLeadModalOpen} />
+        <LeadsListTable />
       </div>
 
       <ModalOverlay
@@ -221,7 +221,7 @@ export function LeadManagement() {
       </ModalOverlay>
 
       {activeStep === "addForm" && (
-        <AddLeadModal setAddLeadModalOpen={handleAddFormClose} />
+        <AddLeadModal setAddLeadModalOpen={handleAddFormClose} leadsRefetch={leadsRefetch}/>
       )}
     </section>
   );
