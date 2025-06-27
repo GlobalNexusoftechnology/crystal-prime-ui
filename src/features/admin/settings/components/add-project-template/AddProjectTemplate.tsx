@@ -210,7 +210,13 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
 
           <ProjectTemplateMilestone formik={formik} />
           <div className="flex justify-start items-center gap-4 2xl:gap-[1vw] mt-4">
-            <Button variant="primary-outline" title="Cancel" width="w-fit" />
+            <Button
+              type="button"
+              variant="primary-outline"
+              title="Cancel"
+              width="w-fit"
+              onClick={() => router.back()}
+            />
             <Button type="submit" title={id ? "Save Changes" : "Create Template"} width="w-fit" />
           </div>
         </div>
