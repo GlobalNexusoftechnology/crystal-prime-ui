@@ -4,12 +4,13 @@ import { useMemo } from "react";
 import { useParams } from "next/navigation";
 
 import { ProjectTemplateDetail } from "@/features";
-import { useProjectTemplateDetailQuery } from "@/services/apis/clients/community-client/query-hooks/useProjectTemplateDetailQuery";
 import {
+  useProjectTemplateDetailQuery,
   type IProjectTemplate,
   type IProjectTemplateMilestone,
   type IProjectTemplateTask,
-} from "@/services/apis/clients/community-client/types";
+} from "@/services";
+
 import {
   type IProjectTemplateDetail,
   type Milestone,
@@ -61,16 +62,15 @@ const transformProjectTemplateData = (
 export default function ProjectTemplateDetails() {
   const { projectTemplateId } = useParams<TProjectTemplateParam>();
 
-  const { projectTemplateDetailData, isLoading, refetch } = useProjectTemplateDetailQuery(
-    projectTemplateId
-  );
+  const { projectTemplateDetailData, isLoading, refetch } =
+    useProjectTemplateDetailQuery(projectTemplateId);
 
   const projectTemplateData = useMemo(() => {
     if (projectTemplateDetailData) {
       return transformProjectTemplateData(projectTemplateDetailData);
     }
     return null;
-  }, [projectTemplateDetailData, refetch]);
+  }, [projectTemplateDetailData]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -80,5 +80,10 @@ export default function ProjectTemplateDetails() {
     return <div>ProjectTemplate Data Not Found</div>;
   }
 
-  return <ProjectTemplateDetail projectTemplateData={projectTemplateData} refetchProjectTemplateDetail={refetch} />;
+  return (
+    <ProjectTemplateDetail
+      projectTemplateData={projectTemplateData}
+      refetchProjectTemplateDetail={refetch}
+    />
+  );
 }
