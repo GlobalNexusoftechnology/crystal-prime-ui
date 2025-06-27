@@ -89,3 +89,6 @@ export { useUploadClientFromExcelMutation } from "./useUploadClientFromExcelMuta
 
 export { useCreateProjectFollowUpMutation } from "./useCreateProjectFollowUpMutation";
 export { useAllClientFollowUpQuery } from "./useAllProjectFollowUpQuery";
+
+export { useUpdateClientDetailMutation } from "./useUpdateClientDetailMutation";
+export { useDeleteClientDetailMutation } from "./useDeleteClientDetailMutation";

@@ -8,12 +8,12 @@ import {
   FiSave,
   FiX,
 } from "react-icons/fi";
-import { ActionDropdown } from "@/components";
-import { IClientList } from "@/services/apis/clients/community-client/types";
 import toast from "react-hot-toast";
-import { useUpdateClientDetailMutation } from "@/services/apis/clients/community-client/query-hooks/useUpdateClientDetailMutation";
-import { useDeleteClientDetailMutation } from "@/services/apis/clients/community-client/query-hooks/useDeleteClientDetailMutation";
+
 import { clientContactDetailsColumns, clientListColumn } from "@/constants";
+import { ActionDropdown } from "@/components";
+import { useUpdateClientDetailMutation, useDeleteClientDetailMutation, IClientList } from "@/services";
+import { formatDateToMMDDYYYY } from "@/utils";
 
 interface EditContactData {
   contact_person: string;
@@ -197,7 +197,11 @@ export function CustomClientTable({
                       key={col.accessor}
                       className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]"
                     >
-                      {Array.isArray(value) ? value.length : value}
+                      {col.accessor === "created_at"
+                        ? formatDateToMMDDYYYY(value as string)
+                        : Array.isArray(value)
+                        ? value.length
+                        : value}
                     </td>
                   );
                 })}
