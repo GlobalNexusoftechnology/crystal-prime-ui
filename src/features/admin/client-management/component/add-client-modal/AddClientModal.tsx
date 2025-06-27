@@ -78,32 +78,34 @@ export function AddClientModal({
             <InputField label="Company Name" name="company_name" value={formik.values.company_name} onChange={formik.handleChange} error={formik.touched.company_name && formik.errors.company_name} />
           </div>
           <InputField label="Address" name="address" value={formik.values.address} onChange={formik.handleChange} error={formik.touched.address && formik.errors.address} />
-          <InputField label="Website URL" name="website" value={formik.values.website} onChange={formik.handleChange} error={formik.touched.website && formik.errors.website} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <InputField label="Contact Person" name="contact_person" value={formik.values.contact_person} onChange={formik.handleChange} error={formik.touched.contact_person && formik.errors.contact_person} />
-            <InputField label="Phone No" name="contact_number" value={formik.values.contact_number} onChange={formik.handleChange} error={formik.touched.contact_number && formik.errors.contact_number} />
+          <InputField label="Website URL" name="website" value={formik.values.website} onChange={formik.handleChange} error={formik.touched.website && formik.errors.website} />
           </div>
-          <InputField label="Email" name="email" value={formik.values.email} onChange={formik.handleChange} error={formik.touched.email && formik.errors.email} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <InputField label="Phone No" name="contact_number" value={formik.values.contact_number} onChange={formik.handleChange} error={formik.touched.contact_number && formik.errors.contact_number} />
+            <InputField label="Email" name="email" value={formik.values.email} onChange={formik.handleChange} error={formik.touched.email && formik.errors.email} />
+          </div>
           <FieldArray
             name="client_details"
             render={(arrayHelpers) => (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 2xl:gap-[1vw]">
                 {formik.values.client_details.map((contact, index) => (
-                  <div key={index} className="relative border p-2 rounded">
+                  <div key={index} className="flex flex-col gap-4 2xl:gap-[1vw] relative border p-2 rounded">
                     {formik.values.client_details.length > 1 && (
                       <button type="button" className="absolute top-2 right-2 text-red-500 hover:text-red-700" onClick={() => arrayHelpers.remove(index)}>
                         X
                       </button>
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <InputField label="Department" name={`client_details.${index}.client_contact`} value={contact.client_contact} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].client_contact`) && getIn(formik.errors, `client_details[${index}].client_contact`)} />
+                      <InputField label="Client Contact" name={`client_details.${index}.client_contact`} value={contact.client_contact} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].client_contact`) && getIn(formik.errors, `client_details[${index}].client_contact`)} />
                       <InputField label="Contact Person" name={`client_details.${index}.contact_person`} value={contact.contact_person} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].contact_person`) && getIn(formik.errors, `client_details[${index}].contact_person`)} />
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <InputField label="Designation" name={`client_details.${index}.designation`} value={contact.designation} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].designation`) && getIn(formik.errors, `client_details[${index}].designation`)} />
-                      <InputField label="Other Contact" name={`client_details.${index}.other_contact`} value={contact.other_contact} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].other_contact`) && getIn(formik.errors, `client_details[${index}].other_contact`)} />
-                    </div>
                     <InputField label="Email" name={`client_details.${index}.email`} value={contact.email} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].email`) && getIn(formik.errors, `client_details[${index}].email`)} />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <InputField label="Other Contact" name={`client_details.${index}.other_contact`} value={contact.other_contact} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].other_contact`) && getIn(formik.errors, `client_details[${index}].other_contact`)} />
+                      <InputField label="Designation" name={`client_details.${index}.designation`} value={contact.designation} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].designation`) && getIn(formik.errors, `client_details[${index}].designation`)} />
+                    </div>
                   </div>
                 ))}
                 <button type="button" className="flex items-center gap-2 mt-2" onClick={() => arrayHelpers.push({ client_id: "", client_contact: "", contact_person: "", designation: "", email: "", other_contact: "" })}>

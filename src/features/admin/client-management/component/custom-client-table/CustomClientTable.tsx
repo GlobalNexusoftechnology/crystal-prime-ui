@@ -94,7 +94,7 @@ export function CustomClientTable({
     clientId: string,
     contact: NonNullable<IClientList["client_details"]>[number]
   ) => {
-    setEditContact({ clientId, contactId: contact.client_id });
+    setEditContact({ clientId, contactId: contact.id });
     setEditContactData({
       contact_person: contact.contact_person,
       designation: contact.designation,
@@ -232,7 +232,7 @@ export function CustomClientTable({
                           const isEditing =
                             editContact &&
                             editContact.clientId === row.id &&
-                            editContact.contactId === contact.client_id;
+                            editContact.contactId === contact.id;
                           return (
                             <tr
                               key={`${row.id}-${contact.client_id}`}
