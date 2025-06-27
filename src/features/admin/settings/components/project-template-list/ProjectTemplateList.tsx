@@ -11,7 +11,7 @@ import { useAllProjectTemplatesQuery } from "@/services/apis/clients/community-c
  * - Uses responsive Tailwind CSS classes with `vw` units for scalable spacing and layout.
  */
 export function ProjectTemplateList() {
-  const { allProjectTemplatesData, isLoading, error } = useAllProjectTemplatesQuery();
+  const { allProjectTemplatesData, isLoading, error, refetchAllProjectTemplates } = useAllProjectTemplatesQuery();
   const templates = Array.isArray(allProjectTemplatesData?.templates) ? allProjectTemplatesData.templates : [];
 
   return (
@@ -48,15 +48,14 @@ export function ProjectTemplateList() {
               );
               return (
                 <ProjectTemplateCard
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  key={(template as any).id}
+                  key={template.id}
                   templateName={template.name || ""}
                   milestoneCount={milestoneCount}
                   taskCount={taskCount}
                   estimatedDays={template.estimated_days ?? 0}
                   projectType={template.project_type ?? ""}
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  id={(template as any).id}
+                  id={template.id}
+                  refetchAllProjectTemplates={refetchAllProjectTemplates}
                 />
               );
             })

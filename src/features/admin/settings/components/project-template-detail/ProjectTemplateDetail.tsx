@@ -7,6 +7,8 @@ import { Breadcrumb } from "@/features/admin/breadcrumb";
 import { useRouter } from "next/navigation";
 import { ActionDropdown } from "@/components/action-dropdown/ActionDropdown";
 import { formattingDate } from "@/utils";
+import { useDeleteProjectTemplateMutation } from "@/services";
+import toast from "react-hot-toast";
 
 type IProjectTemplateDetailProps = {
   projectTemplateData: IProjectTemplateDetail;
@@ -48,15 +50,23 @@ export function ProjectTemplateDetail({
 }: IProjectTemplateDetailProps) {
   const router = useRouter();
 
+  const { onDeleteProjectTemplate } = useDeleteProjectTemplateMutation({
+    onSuccessCallback: (response) => {
+      toast.success(response.message || "Project template deleted successfully");
+      router.push("/admin/settings/project-template");
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Failed to delete project template");
+    },
+  });
+
   const handleEdit = () => {
     // Navigate to edit page
     router.push(`/admin/settings/project-template/edit/${projectTemplateData.id}`);
   };
 
   const handleDelete = () => {
-    if (window.confirm("Are you sure you want to delete this project template? This action cannot be undone.")) {
-      router.push("/admin/settings/project-template");
-    }
+      onDeleteProjectTemplate(projectTemplateData.id);
   };
 
   const formik = useFormik({
