@@ -21,7 +21,6 @@ import {
   IProjectMilestoneResponse,
 } from "@/services";
 import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
-import { Checkbox } from '@/components/checkbox';
 
 export interface IAddProjectFormValues {
   client_id?: string;
