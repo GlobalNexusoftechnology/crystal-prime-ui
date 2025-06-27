@@ -1,17 +1,8 @@
+import { IEstimates } from "@/constants";
 import React from "react";
 
 export interface ProjectEstimateProps {
-  projectEstimateData: {
-    estimatedStart: string;
-    actualStart: string;
-    estimatedEnd: string;
-    actualEnd: string;
-    estimatedCost: string;
-    actualCost: string;
-    labourCost: string;
-    overheadCost: string;
-    budget: string;
-  };
+  projectEstimateData: IEstimates
 }
 
 export function ProjectEstimate({ projectEstimateData }: ProjectEstimateProps) {
@@ -23,19 +14,19 @@ export function ProjectEstimate({ projectEstimateData }: ProjectEstimateProps) {
         <div className="flex flex-wrap gap-12 2xl:gap-[3vw] items-start">
           <div className="flex flex-col">
             <p className="font-light">Estimated Start Date</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.estimatedStart}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.start_date}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Actual Start Date</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.actualStart}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.actual_start}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Estimated End Date</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.estimatedEnd}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.end_date}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Actual End Date</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.actualEnd}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.end_date}</p>
           </div>
         </div>
 
@@ -43,19 +34,19 @@ export function ProjectEstimate({ projectEstimateData }: ProjectEstimateProps) {
         <div className="flex flex-wrap gap-12 2xl:gap-[3vw] items-start">
           <div className="flex flex-col">
             <p className="font-light">Estimated Cost</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.estimatedCost}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.estimated_cost}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Actual Cost</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.actualCost}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.actual_cost}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Cost Of Labour</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.labourCost}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.labour_cost}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Over Head Cost</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.overheadCost}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectEstimateData.overhead_cost}</p>
           </div>
         </div>
       </div>

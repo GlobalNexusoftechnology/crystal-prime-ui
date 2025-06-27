@@ -3,30 +3,22 @@ import { Dropdown, InputField, DatePicker } from "@/components";
 import { HiCheck, HiXMark, HiOutlineCalendar } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { getInitials, getRandomColor } from "@/utils";
-
-interface TaskType {
-    id: number;
-    name: string;
-    description: string;
-    assignedTo: string;
-    status: string;
-    dueDate: string;
-}
+import type { Task } from '../../Step2MilestoneSetup';
 
 interface TaskProps {
-    task: TaskType;
-    editingTask: { milestoneId: number; taskId: number } | null;
-    editTask: TaskType | null;
-    onEdit: (milestoneId: number, task: TaskType) => void;
-    onDelete: (milestoneId: number, taskId: number) => void;
+    task: Task;
+    editingTask: { milestoneId: string; taskId: string } | null;
+    editTask: Task | null;
+    onEdit: (milestoneId: string, task: Task) => void;
+    onDelete: (milestoneId: string, taskId: string) => void;
     onSave: () => void;
     onCancel: () => void;
-    onChange: (task: TaskType) => void;
-    menuOpen: { milestoneId: number; taskId: number } | null;
-    setMenuOpen: (menu: { milestoneId: number; taskId: number } | null) => void;
+    onChange: (task: Task) => void;
+    menuOpen: { milestoneId: string; taskId: string } | null;
+    setMenuOpen: (menu: { milestoneId: string; taskId: string } | null) => void;
     userOptions: { label: string; value: string }[];
     statusOptions: { label: string; value: string }[];
-    milestoneId: number;
+    milestoneId: string;
 }
 
 export function Task({

@@ -3,8 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Dropdown, Button } from "@/components";
 import { AddSquareIcon } from "@/features";
 import { Milestone, Task } from "./components";
-import { useAllUsersQuery } from "@/services/apis/clients/community-client/query-hooks";
-import type { IUsersDetails } from "@/services/apis/clients/community-client/types";
+import { ICreateProjectMilestone, ICreateProjectTask, IUsersDetails, useAllUsersQuery, IProjectTaskResponse, IProjectMilestoneResponse } from "@/services";
 
 interface ProjectTaskMaster {
   id: string;
@@ -37,34 +36,15 @@ interface AllProjectTemplatesData {
 
 interface Step2MilestoneSetupProps {
   onBack: () => void;
-  onNext: (milestones: Milestone[]) => void;
+  onNext: (milestones: IProjectMilestoneResponse[]) => void;
   milestoneOption: string;
   projectTemplateOptions: { label: string; value: string }[];
   projectTemplateLoading: boolean;
   projectTemplateError: boolean;
   allProjectTemplatesData?: AllProjectTemplatesData;
-  initialMilestones?: Milestone[];
+  initialMilestones?: IProjectMilestoneResponse[];
   projectTemplate: string;
   setProjectTemplate: (id: string) => void;
-}
-
-interface Task {
-  id: number;
-  name: string;
-  description: string;
-  assignedTo: string;
-  status: string;
-  dueDate: string;
-}
-
-interface Milestone {
-  id: number;
-  name: string;
-  assignedTo: string;
-  status: string;
-  estimatedStart: string;
-  estimatedEnd: string;
-  tasks: Task[];
 }
 
 // Mock options
@@ -73,6 +53,26 @@ const statusOptions = [
   { label: "In Progress", value: "In Progress" },
   { label: "Completed", value: "Completed" },
 ];
+
+// Add local types for editing
+export interface Task {
+  id: string;
+  name: string;
+  description: string;
+  assignedTo: string;
+  status: string;
+  dueDate: string;
+}
+
+export interface Milestone {
+  id: string;
+  name: string;
+  assignedTo: string;
+  status: string;
+  estimatedStart: string;
+  estimatedEnd: string;
+  tasks: Task[];
+}
 
 export function Step2MilestoneSetup({
   onBack,
@@ -88,19 +88,19 @@ export function Step2MilestoneSetup({
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
   const [milestones, setMilestones] = useState<Milestone[]>(initialMilestones || []);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [editMilestone, setEditMilestone] = useState<Milestone | null>(null);
   // Task editing state
   const [editingTask, setEditingTask] = useState<{
-    milestoneId: number;
-    taskId: number;
+    milestoneId: string;
+    taskId: string;
   } | null>(null);
   const [editTask, setEditTask] = useState<Task | null>(null);
   // 3-dots menu state
-  const [milestoneMenu, setMilestoneMenu] = useState<number | null>(null);
+  const [milestoneMenu, setMilestoneMenu] = useState<string | null>(null);
   const [taskMenu, setTaskMenu] = useState<{
-    milestoneId: number;
-    taskId: number;
+    milestoneId: string;
+    taskId: string;
   } | null>(null);
 
   // Fetch users for userOptions
@@ -121,15 +121,15 @@ export function Step2MilestoneSetup({
       (tpl) => tpl.id === projectTemplate
     );
     if (selectedTemplate) {
-      const mappedMilestones = (selectedTemplate.project_milestone_master || []).map((m, idx) => ({
-        id: idx + 1, // or m.id if you want to keep the backend id
+      const mappedMilestones: Milestone[] = (selectedTemplate.project_milestone_master || []).map((m, idx) => ({
+        id: m.id || String(idx),
         name: m.name,
         assignedTo: m.assigned_to || "",
         status: m.status || "Open",
         estimatedStart: m.estimated_start || "",
         estimatedEnd: m.estimated_end || "",
         tasks: (m.project_task_master || []).map((t, tIdx) => ({
-          id: tIdx + 1, // or t.id
+          id: t.id || String(tIdx),
           name: t.title,
           description: t.description,
           assignedTo: t.assigned_to || "",
@@ -143,15 +143,30 @@ export function Step2MilestoneSetup({
 
   useEffect(() => {
     if (initialMilestones && initialMilestones.length > 0) {
-      setMilestones(initialMilestones);
+      setMilestones(initialMilestones.map(m => ({
+        id: m.id || "",
+        name: m.name,
+        assignedTo: m.assigned_to || "",
+        status: m.status || "Open",
+        estimatedStart: m.start_date || "",
+        estimatedEnd: m.end_date || "",
+        tasks: (m.tasks || []).map(t => ({
+          id: t.id || "",
+          name: t.title,
+          description: t.description || "",
+          assignedTo: t.assigned_to || "",
+          status: t.status || "Open",
+          dueDate: t.due_date || "",
+        })),
+      })));
     }
   }, [initialMilestones]);
 
   // Add expandedMilestones state
-  const [expandedMilestones, setExpandedMilestones] = useState<number[]>([]);
+  const [expandedMilestones, setExpandedMilestones] = useState<string[]>([]);
 
   // Toggle expand/collapse for milestone
-  const toggleMilestone = (id: number) => {
+  const toggleMilestone = (id: string) => {
     setExpandedMilestones((prev) =>
       prev.includes(id) ? prev.filter((mid) => mid !== id) : [...prev, id]
     );
@@ -159,7 +174,7 @@ export function Step2MilestoneSetup({
 
   // Milestone handlers
   const handleEdit = (milestone: Milestone) => {
-    setEditingId(milestone.id);
+    setEditingId(milestone?.id ?? null);
     setEditMilestone({ ...milestone });
     setMilestoneMenu(null);
   };
@@ -175,15 +190,14 @@ export function Step2MilestoneSetup({
     setEditingId(null);
     setEditMilestone(null);
   };
-  const handleDeleteMilestone = (id: number) => {
+  const handleDeleteMilestone = (id: string) => {
     setMilestones((prev) => prev.filter((m) => m.id !== id));
     setMilestoneMenu(null);
   };
   // Add new milestone
   const handleAddMilestone = () => {
-    const newId = Math.max(0, ...milestones.map((m) => m.id)) + 1;
     const newMilestone: Milestone = {
-      id: newId,
+      id: Date.now().toString(),
       name: "",
       assignedTo: "--",
       status: "Open",
@@ -192,11 +206,11 @@ export function Step2MilestoneSetup({
       tasks: [],
     };
     setMilestones((prev) => [...prev, newMilestone]);
-    setEditingId(newId);
+    setEditingId(newMilestone.id);
     setEditMilestone(newMilestone);
   };
   // Task handlers
-  const handleEditTask = (milestoneId: number, task: Task) => {
+  const handleEditTask = (milestoneId: string, task: Task) => {
     setEditingTask({ milestoneId, taskId: task.id });
     setEditTask({ ...task });
     setTaskMenu(null);
@@ -211,18 +225,27 @@ export function Step2MilestoneSetup({
       prev.map((m) =>
         m.id === editingTask.milestoneId
           ? {
-            ...m,
-            tasks: m.tasks.map((t) =>
-              t.id === editTask.id ? { ...editTask } : t
-            ),
-          }
+              ...m,
+              tasks: m.tasks.map((t) =>
+                t.id === editTask.id
+                  ? {
+                      ...t,
+                      name: editTask.name || "",
+                      description: editTask.description || "",
+                      assignedTo: editTask.assignedTo || "",
+                      status: editTask.status || "",
+                      dueDate: editTask.dueDate || "",
+                    }
+                  : t
+              ),
+            }
           : m
       )
     );
     setEditingTask(null);
     setEditTask(null);
   };
-  const handleDeleteTask = (milestoneId: number, taskId: number) => {
+  const handleDeleteTask = (milestoneId: string, taskId: string) => {
     setMilestones((prev) =>
       prev.map((m) =>
         m.id === milestoneId
@@ -233,11 +256,9 @@ export function Step2MilestoneSetup({
     setTaskMenu(null);
   };
   // Add new task
-  const handleAddTask = (milestoneId: number) => {
-    const newId =
-      Math.max(0, ...milestones.flatMap((m) => m.tasks.map((t) => t.id))) + 1;
+  const handleAddTask = (milestoneId: string) => {
     const newTask: Task = {
-      id: newId,
+      id: Date.now().toString(),
       name: "",
       description: "",
       assignedTo: "--",
@@ -249,7 +270,7 @@ export function Step2MilestoneSetup({
         m.id === milestoneId ? { ...m, tasks: [...m.tasks, newTask] } : m
       )
     );
-    setEditingTask({ milestoneId, taskId: newId });
+    setEditingTask({ milestoneId, taskId: newTask.id });
     setEditTask(newTask);
   };
 
@@ -257,7 +278,28 @@ export function Step2MilestoneSetup({
 
   // When user clicks next, pass milestones to parent
   const handleNext = () => {
-    onNext(milestones);
+    const backendMilestones: IProjectMilestoneResponse[] = milestones.map(m => ({
+      id: m.id,
+      name: m.name,
+      assigned_to: m.assignedTo,
+      status: m.status,
+      start_date: m.estimatedStart,
+      end_date: m.estimatedEnd,
+      project: {},
+      tasks: m.tasks.map(t => ({
+        id: t.id,
+        title: t.name,
+        description: t.description,
+        assigned_to: t.assignedTo,
+        status: t.status,
+        due_date: t.dueDate,
+        created_at: "",
+        updated_at: "",
+        deleted: false,
+        deleted_at: null,
+      })),
+    }));
+    onNext(backendMilestones);
   };
 
   return (

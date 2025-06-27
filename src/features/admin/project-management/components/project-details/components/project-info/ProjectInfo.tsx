@@ -1,14 +1,8 @@
+import { IProjectInfo } from "@/constants";
 import React from "react";
 
 export interface ProjectInfoProps {
-  projectInfoData: {
-    name: string;
-    type: string;
-    contactPerson: string;
-    description: string;
-    createdAt: string;
-    updatedAt: string;
-  };
+  projectInfoData: IProjectInfo
 }
 
 export function ProjectInfo({ projectInfoData }: ProjectInfoProps) {
@@ -23,11 +17,11 @@ export function ProjectInfo({ projectInfoData }: ProjectInfoProps) {
           </div>
           <div className="flex flex-col ">
             <p className="font-light text-sm 2xl:text-[0.875vw]">Type Of Project</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectInfoData.type}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectInfoData.project_type}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light text-sm 2xl:text-[0.875vw]">Contact Person</p>
-            <p className="underline text-[1rem] 2xl:text-[1.1vw]">{projectInfoData.contactPerson}</p>
+            <p className="underline text-[1rem] 2xl:text-[1.1vw]">{projectInfoData.contact_person}</p>
           </div>
         </div>
         <div className="flex flex-col">
@@ -37,11 +31,11 @@ export function ProjectInfo({ projectInfoData }: ProjectInfoProps) {
         <div className="flex gap-12 2xl:gap-[3vw] items-center">
           <div className="flex flex-col">
             <p className="font-light text-sm 2xl:text-[0.875vw]">Created At</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectInfoData.createdAt}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectInfoData.created_at}</p>
           </div>
           <div className="flex flex-col ">
             <p className="font-light text-sm 2xl:text-[0.875vw]">Updated At</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectInfoData.updatedAt}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{projectInfoData.updated_at}</p>
           </div>
         </div>
       </div>

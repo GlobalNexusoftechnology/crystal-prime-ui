@@ -7,67 +7,16 @@ import {
 } from "../../../project-details/components";
 import { Button } from "@/components";
 import { PreviewMilestone } from "./components";
+import { IProjectMilestoneResponse } from "@/services";
+import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
 
-interface Task {
-  id: number;
-  name: string;
-  description: string;
-  assignedTo: string;
-  status: string;
-  dueDate: string;
-}
-
-interface Milestone {
-  id: number;
-  name: string;
-  assignedTo: string;
-  status: string;
-  estimatedStart: string;
-  estimatedEnd: string;
-  tasks: Task[];
-}
-
-interface ProjectInfo {
-  name: string;
-  type: string;
-  contactPerson: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface ClientInfo {
-  clientName: string;
-  companyName: string;
-  contactPerson: string;
-  phone: string;
-  email: string;
-}
-
-interface Estimates {
-  estimatedStart: string;
-  actualStart: string;
-  estimatedEnd: string;
-  actualEnd: string;
-  estimatedCost: string;
-  actualCost: string;
-  labourCost: string;
-  overheadCost: string;
-  budget: string;
-}
-
-interface DocumentInfo {
-  name: string;
-  uploadedBy: string;
-  uploadedAt: string;
-}
 
 interface Step4PreviewProps {
-  projectInfo: ProjectInfo;
-  clientInfo: ClientInfo;
-  estimates: Estimates;
-  documents: DocumentInfo[];
-  milestones: Milestone[];
+  projectInfo: IProjectInfo;
+  clientInfo: IClientInfo;
+  estimates: IEstimates;
+  documents: IDocumentInfo[];
+  milestones: IProjectMilestoneResponse[];
   onBack: () => void;
   onSubmit: () => void;
 }

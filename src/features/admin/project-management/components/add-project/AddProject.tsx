@@ -13,150 +13,149 @@ import {
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { Button } from "@/components";
-import { useCreateProjectMutation, useAllClientQuery, useAllProjectTemplatesQuery } from "@/services";
+import {
+  useCreateProjectMutation,
+  useAllClientQuery,
+  useAllProjectTemplatesQuery,
+  ProjectRenewalType,
+  IProjectMilestoneResponse,
+} from "@/services";
+import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
 
-// Define the type for the form values
-export interface IAddProjectFormValues {
+interface IAddProjectFormValues {
+  client_id?: string;
   name: string;
-  projectType: string;
-  client: string;
-  description: string;
-  estimatedStart: string;
-  estimatedEnd: string;
-  budget: string;
-  estimatedCost: string;
-  costOfLabour: string;
-  overHeadCost: string;
-  renewalType: string;
-  renewalDate: string;
-  milestoneOption: string;
+  description?: string;
+  project_type?: string;
+  budget?: number;
+  estimated_cost?: number;
+  actual_cost?: number;
+  cost_of_labour?: number;
+  overhead_cost?: number;
+  start_date?: Date;
+  end_date?: Date;
+  actual_start_date?: Date;
+  actual_end_date?: Date;
+  template_id?: string | null;
+  renewal_type?: ProjectRenewalType | null;
+  renewal_date?: Date;
+  is_renewal?: boolean;
+  milestoneOption: string; // extra field for frontend dropdown selection
 }
 
 const initialValues: IAddProjectFormValues = {
+  client_id: "",
   name: "",
-  projectType: "",
-  client: "",
   description: "",
-  estimatedStart: "",
-  estimatedEnd: "",
-  budget: "",
-  estimatedCost: "",
-  costOfLabour: "",
-  overHeadCost: "",
-  renewalType: "",
-  renewalDate: "",
+  project_type: "",
+  budget: 0,
+  estimated_cost: 0,
+  actual_cost: 0,
+  cost_of_labour: 0,
+  overhead_cost: 0,
+  start_date: undefined,
+  end_date: undefined,
+  actual_start_date: undefined,
+  actual_end_date: undefined,
+  template_id: "",
+  renewal_type: ProjectRenewalType.NONE,
+  renewal_date: undefined,
+  is_renewal: false,
   milestoneOption: "milestone",
 };
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Project Name is required"),
-  projectType: Yup.string().required("Project Type is required"),
-  client: Yup.string().required("Client is required"),
+  project_type: Yup.string().required("Project Type is required"),
+  client_id: Yup.string().required("Client is required"),
   description: Yup.string().required("Description is required"),
-  estimatedStart: Yup.string().required("Estimated Start Date is required"),
-  estimatedEnd: Yup.string().required("Estimated End Date is required"),
-  budget: Yup.string().required("Budget is required"),
-  estimatedCost: Yup.string().required("Estimated Cost is required"),
-  costOfLabour: Yup.string().required("Cost Of Labour is required"),
-  overHeadCost: Yup.string().required("Over Head Cost is required"),
-  renewalType: Yup.string().required("Renewal Type is required"),
-  renewalDate: Yup.string().required("Renewal Date is required"),
+
+  start_date: Yup.date()
+    .typeError("Estimated Start Date is required")
+    .required("Estimated Start Date is required"),
+  end_date: Yup.date()
+    .typeError("Estimated End Date is required")
+    .required("Estimated End Date is required"),
+
+  budget: Yup.number()
+    .typeError("Budget must be a number")
+    .required("Budget is required"),
+  estimated_cost: Yup.number()
+    .typeError("Estimated Cost must be a number")
+    .required("Estimated Cost is required"),
+  cost_of_labour: Yup.number()
+    .typeError("Cost Of Labour must be a number")
+    .required("Cost Of Labour is required"),
+  overhead_cost: Yup.number()
+    .typeError("Over Head Cost must be a number")
+    .required("Over Head Cost is required"),
+
+  renewal_type: Yup.string().required("Renewal Type is required"),
+  renewal_date: Yup.date()
+    .typeError("Renewal Date is required")
+    .required("Renewal Date is required"),
+
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
-
-// Mock milestone/task types for preview
-interface Task {
-  id: number;
-  name: string;
-  description: string;
-  assignedTo: string;
-  status: string;
-  dueDate: string;
-}
-interface Milestone {
-  id: number;
-  name: string;
-  assignedTo: string;
-  status: string;
-  estimatedStart: string;
-  estimatedEnd: string;
-  tasks: Task[];
-}
-interface ProjectInfo {
-  name: string;
-  type: string;
-  contactPerson: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-}
-interface ClientInfo {
-  clientName: string;
-  companyName: string;
-  contactPerson: string;
-  phone: string;
-  email: string;
-}
-interface Estimates {
-  estimatedStart: string;
-  actualStart: string;
-  estimatedEnd: string;
-  actualEnd: string;
-  estimatedCost: string;
-  actualCost: string;
-  labourCost: string;
-  overheadCost: string;
-  budget: string;
-}
-interface DocumentInfo {
-  name: string;
-  uploadedBy: string;
-  uploadedAt: string;
-}
 
 export function AddProject() {
   const [step, setStep] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]); // for Step3/Preview
   const [milestoneOption, setMilestoneOption] = useState("milestone");
-  const [milestones, setMilestones] = useState<Milestone[]>([]);
-  const [basicInfo, setBasicInfo] = useState<IAddProjectFormValues | null>(null);
-  const [selectedProjectTemplate, setSelectedProjectTemplate] = useState<string>("");
+  const [milestones, setMilestones] = useState<IProjectMilestoneResponse[]>([]);
+  const [basicInfo, setBasicInfo] = useState<IAddProjectFormValues | null>(
+    null
+  );
+  const [selectedProjectTemplate, setSelectedProjectTemplate] =
+    useState<string>("");
   const [createdProjectId, setCreatedProjectId] = useState<string | null>(null);
-  const { allClientData, isLoading: clientLoading, isError: clientError } = useAllClientQuery();
+  const {
+    allClientData,
+    isLoading: clientLoading,
+    isError: clientError,
+  } = useAllClientQuery();
+
   const clientOptions = (allClientData || []).map((client) => ({
     label: client.name,
     value: client.id,
   }));
-  const { allProjectTemplatesData, isLoading: projectTemplateLoading, error: projectTemplateError } = useAllProjectTemplatesQuery();
-  const projectTemplateOptions = (allProjectTemplatesData?.templates || []).map((template) => ({
-    label: template.name,
-    value: template.id,
-  }));
+
+  const {
+    allProjectTemplatesData,
+    isLoading: projectTemplateLoading,
+    error: projectTemplateError,
+  } = useAllProjectTemplatesQuery();
+
+  const projectTemplateOptions = (allProjectTemplatesData?.templates || []).map(
+    (template) => ({
+      label: template.name,
+      value: template.id,
+    })
+  );
 
   const { onCreateProject, isPending, error } = useCreateProjectMutation({
     onSuccessCallback: (response) => {
       setCreatedProjectId(response.data.id);
       setIsModalOpen(true);
     },
-    onErrorCallback: () => {
-    },
+    onErrorCallback: () => {},
   });
 
   const assemblePayload = () => {
     if (!basicInfo) return null;
     const apiMilestones = milestones.map((m) => ({
       name: m.name,
-      assigned_to: m.assignedTo,
+      assigned_to: m.assigned_to,
       status: m.status,
-      start_date: m.estimatedStart,
-      end_date: m.estimatedEnd,
-      tasks: m.tasks.map((t) => ({
-        title: t.name,
+      start_date: m.start_date,
+      end_date: m.end_date,
+      tasks: (m.tasks ?? []).map((t) => ({
+        title: t.title,
         description: t.description,
-        assigned_to: t.assignedTo,
+        assigned_to: t.assigned_to,
         status: t.status,
-        due_date: t.dueDate,
+        due_date: t.due_date,
       })),
     }));
     const attachments = uploadedFiles.map((file) => ({
@@ -166,12 +165,12 @@ export function AddProject() {
     }));
     return {
       name: basicInfo.name,
-      project_type: basicInfo.projectType,
-      client_id: basicInfo.client,
+      project_type: basicInfo.project_type,
+      client_id: basicInfo.client_id,
       budget: Number(basicInfo.budget),
-      estimated_cost: Number(basicInfo.estimatedCost),
-      start_date: basicInfo.estimatedStart,
-      end_date: basicInfo.estimatedEnd,
+      estimated_cost: Number(basicInfo.estimated_cost),
+      start_date: basicInfo.start_date,
+      end_date: basicInfo.end_date,
       milestones: apiMilestones,
       attachments,
     };
@@ -187,7 +186,7 @@ export function AddProject() {
     actions.setSubmitting(false);
   };
 
-  const handleMilestoneNext = (milestonesData: Milestone[]) => {
+  const handleMilestoneNext = (milestonesData: IProjectMilestoneResponse[]) => {
     setMilestones(milestonesData);
     setStep(3);
   };
@@ -200,36 +199,39 @@ export function AddProject() {
   };
 
   // Build dynamic preview data from form state
-  const projectInfo: ProjectInfo = {
+  const projectInfo: IProjectInfo = {
     name: basicInfo?.name || "",
-    type: basicInfo?.projectType || "",
-    contactPerson: clientOptions.find(c => c.value === basicInfo?.client)?.label || "",
+    project_type: basicInfo?.project_type || "",
+    contact_person:
+      clientOptions.find((c) => c.value === basicInfo?.client_id)?.label || "",
     description: basicInfo?.description || "",
-    createdAt: new Date().toLocaleString(),
-    updatedAt: new Date().toLocaleString(),
+    created_at: new Date().toLocaleString(),
+    updated_at: new Date().toLocaleString(),
   };
-  const clientInfo: ClientInfo = {
-    clientName: clientOptions.find(c => c.value === basicInfo?.client)?.label || "",
-    companyName: "-", // Add real value if available
-    contactPerson: clientOptions.find(c => c.value === basicInfo?.client)?.label || "",
-    phone: "-", // Add real value if available
-    email: "-", // Add real value if available
+  const selectedClient = allClientData?.find((client) => client.id === basicInfo?.client_id);
+
+  const clientInfo: IClientInfo = {
+    client_name: selectedClient?.name || "",
+    company_name: selectedClient?.company_name || "",
+    contact_person: selectedClient?.contact_person || "",
+    phone: selectedClient?.contact_number || "-",
+    email: selectedClient?.email || "-",
   };
-  const estimates: Estimates = {
-    estimatedStart: basicInfo?.estimatedStart || "",
-    actualStart: "-", // Add real value if available
-    estimatedEnd: basicInfo?.estimatedEnd || "",
-    actualEnd: "-", // Add real value if available
-    estimatedCost: basicInfo?.estimatedCost || "",
-    actualCost: "-", // Add real value if available
-    labourCost: basicInfo?.costOfLabour || "",
-    overheadCost: basicInfo?.overHeadCost || "",
-    budget: basicInfo?.budget || "",
+  const estimates: IEstimates = {
+    start_date: basicInfo?.start_date ? String(basicInfo.start_date) : "",
+    end_date: basicInfo?.end_date ? String(basicInfo.end_date) : "",
+    actual_start: basicInfo?.actual_start_date ? String(basicInfo.actual_start_date) : "",
+    actual_end: basicInfo?.actual_end_date ? String(basicInfo.actual_end_date) : "",
+    estimated_cost: basicInfo?.estimated_cost !== undefined ? String(basicInfo.estimated_cost) : "",
+    actual_cost: basicInfo?.actual_cost !== undefined ? String(basicInfo.actual_cost) : "",
+    labour_cost: basicInfo?.cost_of_labour !== undefined ? String(basicInfo.cost_of_labour) : "",
+    overhead_cost: basicInfo?.overhead_cost !== undefined ? String(basicInfo.overhead_cost) : "",
+    budget: basicInfo?.budget !== undefined ? String(basicInfo.budget) : "",
   };
-  const documents: DocumentInfo[] = uploadedFiles.map((file) => ({
+  const documents: IDocumentInfo[] = uploadedFiles.map((file) => ({
     name: file.name,
-    uploadedBy: "-", // Add real value if available
-    uploadedAt: new Date().toLocaleString(),
+    uploaded_by: "",
+    created_at: new Date().toLocaleString(),
   }));
 
   return (
@@ -304,9 +306,19 @@ export function AddProject() {
           onSubmit={handleFinalSubmit}
         />
       )}
-      {isModalOpen && <ProjectCreatedModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} projectId={createdProjectId} />}
+      {isModalOpen && (
+        <ProjectCreatedModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          projectId={createdProjectId}
+        />
+      )}
       {isPending && <div>Creating project...</div>}
-      {error && <div className="text-red-600">Error: {error.message || "Failed to create project."}</div>}
+      {error && (
+        <div className="text-red-600">
+          Error: {error.message || "Failed to create project."}
+        </div>
+      )}
     </section>
   );
 }

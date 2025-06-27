@@ -10,31 +10,21 @@ import {
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TreeStructureIcon } from "@/features";
 import { getInitials, getRandomColor } from "@/utils";
-
-interface MilestoneType {
-  id: number;
-  name: string;
-  assignedTo: string;
-  status: string;
-  estimatedStart: string;
-  estimatedEnd: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tasks: any[];
-}
+import type { Milestone } from '../../Step2MilestoneSetup';
 
 interface MilestoneProps {
-  milestone: MilestoneType;
-  editingId: number | null;
-  editMilestone: MilestoneType | null;
-  onEdit: (milestone: MilestoneType) => void;
-  onDelete: (id: number) => void;
+  milestone: Milestone;
+  editingId: string | null;
+  editMilestone: Milestone | null;
+  onEdit: (milestone: Milestone) => void;
+  onDelete: (id: string) => void;
   onSave: () => void;
   onCancel: () => void;
-  onChange: (milestone: MilestoneType) => void;
-  onToggle: (id: number) => void;
+  onChange: (milestone: Milestone) => void;
+  onToggle: (id: string) => void;
   expanded: boolean;
-  menuOpen: number | null;
-  setMenuOpen: (id: number | null) => void;
+  menuOpen: string | null;
+  setMenuOpen: (id: string | null) => void;
   userOptions: { label: string; value: string }[];
   statusOptions: { label: string; value: string }[];
   children?: React.ReactNode;
@@ -73,9 +63,9 @@ export function Milestone({
           <td className="p-2 2xl:p-[0.5vw]">
             <Dropdown
               options={userOptions}
-              value={editMilestone.assignedTo}
+              value={editMilestone.assigned_to || ''}
               onChange={(val) =>
-                onChange({ ...editMilestone, assignedTo: val })
+                onChange({ ...editMilestone, assigned_to: val })
               }
               dropdownWidth="w-40 2xl:w-[10vw]"
             />
@@ -90,17 +80,17 @@ export function Milestone({
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <DatePicker
-              value={editMilestone.estimatedStart}
+              value={editMilestone.start_date || ""}
               onChange={(val) =>
-                onChange({ ...editMilestone, estimatedStart: val })
+                onChange({ ...editMilestone, start_date: val })
               }
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <DatePicker
-              value={editMilestone.estimatedEnd}
+              value={editMilestone.end_date || ""}
               onChange={(val) =>
-                onChange({ ...editMilestone, estimatedEnd: val })
+                onChange({ ...editMilestone, end_date: val })
               }
             />
           </td>
@@ -167,7 +157,7 @@ export function Milestone({
           <td className="p-2 2xl:p-[0.5vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
-              {milestone.estimatedEnd}
+              {milestone.end_date}
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-right relative">

@@ -5,7 +5,6 @@ export * from './table';
 export * from "./dashboard-card-data";
 export * from "./tables";
 export * from './permissions';
-export * from './project-data';
 export * from "./project-template-data";
 export type { Milestone as ProjectTemplateMilestone, Task as ProjectTemplateTask, IProjectTemplateDetail } from "./project-template-detail";
 

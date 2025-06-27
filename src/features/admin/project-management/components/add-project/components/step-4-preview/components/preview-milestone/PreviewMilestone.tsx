@@ -2,28 +2,11 @@ import React from "react";
 import { HiChevronDown, HiChevronUp, HiOutlineCalendar } from "react-icons/hi2";
 import { TreeStructureIcon } from "@/features";
 import { getInitials, getRandomColor } from "@/utils";
+import { IProjectMilestoneResponse } from "@/services";
 
-interface Task {
-  id: number;
-  name: string;
-  description: string;
-  assignedTo: string;
-  status: string;
-  dueDate: string;
-}
-
-interface Milestone {
-  id: number;
-  name: string;
-  assignedTo: string;
-  status: string;
-  estimatedStart: string;
-  estimatedEnd: string;
-  tasks: Task[];
-}
 
 interface PreviewMilestoneProps {
-  milestone: Milestone;
+  milestone: IProjectMilestoneResponse;
 }
 
 export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
@@ -45,7 +28,7 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
           <span className="flex items-center gap-1">
             <TreeStructureIcon className="w-4 h-4" />
             <span className="border-2 border-dotted border-primary rounded-full text-xs px-1 text-primary">
-              {milestone.tasks.length}
+              {milestone?.tasks?.length}
             </span>
           </span>
         </td>
@@ -53,11 +36,11 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
           <div className="flex items-center gap-2">
             <p 
               className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" 
-              style={{ backgroundColor: getRandomColor(milestone.assignedTo || '') }}
+              style={{ backgroundColor: getRandomColor(milestone.assigned_to || '') }}
             >
-              {getInitials(milestone.assignedTo)}
+              {getInitials(milestone?.assigned_to || "")}
             </p>
-            <p className="px-3 py-1 text-[0.9rem]">{milestone.assignedTo}</p>
+            <p className="px-3 py-1 text-[0.9rem]">{milestone.assigned_to}</p>
           </div>
         </td>
         <td className="px-2 py-2">
@@ -68,13 +51,13 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
         <td className="px-2 py-2">
           <span className="flex items-center gap-2">
             <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-            <span className="text-sm">{milestone.estimatedStart}</span>
+            <span className="text-sm">{milestone.start_date}</span>
           </span>
         </td>
         <td className="px-2 py-2">
           <span className="flex items-center gap-2">
             <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-            {milestone.estimatedEnd}
+            {milestone.end_date}
           </span>
         </td>
         <td className="px-2 py-2"></td>
@@ -94,19 +77,19 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
                 </tr>
               </thead>
               <tbody>
-                {milestone.tasks.map((task) => (
+                {milestone?.tasks?.map((task) => (
                   <tr key={task.id} className="border-t border-gray-200">
-                    <td className="pl-8 py-2 text-sm font-medium">{task?.name}</td>
+                    <td className="pl-8 py-2 text-sm font-medium">{task?.title}</td>
                     <td className="py-2 text-sm">{task?.description}</td>
                     <td className="py-2 text-sm">
                       <div className="flex items-center gap-2">
                         <p 
                           className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" 
-                          style={{ backgroundColor: getRandomColor(task?.assignedTo || '') }}
+                          style={{ backgroundColor: getRandomColor(task?.assigned_to || '') }}
                         >
-                          {getInitials(task?.assignedTo)}
+                          {getInitials(task?.assigned_to || "")}
                         </p>
-                        <p className="px-3 py-1 text-[0.9rem]">{task?.assignedTo}</p>
+                        <p className="px-3 py-1 text-[0.9rem]">{task?.assigned_to}</p>
                       </div>
                     </td>
                     <td className="py-2">
@@ -117,7 +100,7 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
                     <td className="py-2">
                       <span className="flex items-center gap-2">
                         <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-                        <span className="text-sm">{task?.dueDate}</span>
+                        <span className="text-sm">{task?.due_date}</span>
                       </span>
                     </td>
                     <td className="py-2"></td>

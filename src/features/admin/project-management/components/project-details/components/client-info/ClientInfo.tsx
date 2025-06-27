@@ -1,16 +1,11 @@
 "use client";
 
+import { IClientInfo } from "@/constants";
 import React from "react";
-import { FiPhone, FiMapPin, FiMail } from "react-icons/fi";
+import { FiPhone, FiMail } from "react-icons/fi";
 
 export interface ClientInfoProps {
-  clientInfoData: {
-    clientName: string;
-    companyName: string;
-    contactPerson: string;
-    phone: string;
-    email: string;
-  };
+  clientInfoData: IClientInfo
 }
 
 export function ClientInfo({ clientInfoData }: ClientInfoProps) {
@@ -22,15 +17,15 @@ export function ClientInfo({ clientInfoData }: ClientInfoProps) {
         <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
           <div className="flex flex-col">
             <p className="font-light">Client Name</p>
-            <p className="underline text-[1rem] 2xl:text-[1.1vw]">{clientInfoData.clientName}</p>
+            <p className="underline text-[1rem] 2xl:text-[1.1vw]">{clientInfoData.client_name}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Company Name</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{clientInfoData.companyName}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{clientInfoData.company_name}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Contact Person</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{clientInfoData.contactPerson}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{clientInfoData.contact_person}</p>
           </div>
         </div>
 
@@ -38,10 +33,6 @@ export function ClientInfo({ clientInfoData }: ClientInfoProps) {
           <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1.1vw] text-primary">
             <FiPhone className="text-[1rem] 2xl:text-[1vw]" />
             <a href={`tel:${clientInfoData.phone}`} className="underline text-textColor">{clientInfoData.phone}</a>
-          </div>
-          <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1.1vw] text-primary">
-            <FiMapPin className="text-[1rem] 2xl:text-[1vw]" />
-            <span className="underline text-textColor">{clientInfoData.companyName}</span>
           </div>
           <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1.1vw] text-primary">
             <FiMail className="text-[1rem] 2xl:text-[1vw]" />

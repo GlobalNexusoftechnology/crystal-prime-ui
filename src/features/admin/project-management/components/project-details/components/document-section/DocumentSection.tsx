@@ -1,13 +1,8 @@
+import { IDocumentInfo } from "@/constants";
 import React from "react";
 
-export interface DocumentInfo {
-  name: string;
-  uploadedBy: string;
-  uploadedAt: string;
-}
-
 export interface DocumentSectionProps {
-  documentSectionData: DocumentInfo[];
+  documentSectionData: IDocumentInfo[];
 }
 
 export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
@@ -23,11 +18,11 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
             </div>
             <div className="flex flex-col">
               <p className="font-light text-sm 2xl:text-[0.875vw]">Uploaded By</p>
-              <p className="underline text-[1rem] 2xl:text-[1.1vw]">{doc.uploadedBy}</p>
+              <p className="underline text-[1rem] 2xl:text-[1.1vw]">{doc.uploaded_by}</p>
             </div>
             <div className="flex flex-col">
               <p className="font-light text-sm 2xl:text-[0.875vw]">Uploaded At</p>
-              <p className="underline text-[1rem] 2xl:text-[1.1vw]">{doc.uploadedAt}</p>
+              <p className="underline text-[1rem] 2xl:text-[1.1vw]">{doc.uploaded_by}</p>
             </div>
           </div>
         ))}
