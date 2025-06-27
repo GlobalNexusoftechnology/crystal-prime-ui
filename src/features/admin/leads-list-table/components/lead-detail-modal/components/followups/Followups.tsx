@@ -12,6 +12,7 @@ import {
   useCreateLeadFollowUpMutation,
 } from "@/services";
 import { formatDate, formattingDate, IApiError } from "@/utils";
+import { useQueryClient } from '@tanstack/react-query';
 import toast from "react-hot-toast";
 
 // Fixing validationSchema field names to match Formik fields
@@ -33,6 +34,7 @@ interface IFollowupsProps {
 }
 
 export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
+  const queryClient = useQueryClient();
   const { data: followupData, LeadFollowUp } = useAlLeadFollowUpQuery(leadId);
   const { allUsersData } = useAllUsersQuery();
   const { activeSession } = useAuthStore();
@@ -45,6 +47,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
       formik.resetForm();
       setShowForm(false);
       LeadFollowUp();
+      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message)
