@@ -1,17 +1,17 @@
+import { JSX } from "react";
 import { ClientListTable } from "./component";
 
 /**
- * ClientManagement component displays the client management section of the application.
- * 
- * It includes:
- * - A heading with an icon labeled "Client Management"
- * - A table of clients rendered by the `ClientListTable` component
+ * Renders the Client Management section.
  *
- * This component is styled using Tailwind CSS with responsive and 2XL-specific spacing.
+ * This component displays a styled container that includes the client list table.
+ * Used in admin or dashboard panels to manage client information.
+ *
+ * @returns {JSX.Element} The ClientManagement component.
  */
-export function ClientManagement() {
+export function ClientManagement(): JSX.Element {
   return (
-    <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
+    <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border 2xl:border-[0.1vw] border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
       <ClientListTable />
     </section>
   );

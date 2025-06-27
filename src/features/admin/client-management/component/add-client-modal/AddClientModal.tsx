@@ -13,9 +13,6 @@ interface AddClientModalProps {
   isUpdatePending?: boolean;
 }
 
-/**
- * Modal for adding a new client or editing an existing client.
- */
 export function AddClientModal({
   onClose,
   selectedClient,

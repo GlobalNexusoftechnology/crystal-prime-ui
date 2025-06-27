@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, JSX } from "react";
 import { Button, SearchBar } from "@/components";
 import { EAction, EModule, IClientListProps, ITableAction } from "@/constants";
 import { Breadcrumb, ExportIcon } from "@/features";
@@ -21,28 +21,41 @@ import { downloadBlobFile } from "@/utils";
 import { ImDownload2 } from "react-icons/im";
 
 /**
- * ClientListTable component renders a section displaying the list of clients.
+ * Renders the client list table with search, import, export, and CRUD operations.
+ *
+ * This component integrates with API hooks to:
+ * - Display a table of clients
+ * - Allow adding, editing, deleting clients
+ * - Provide import/export functionality via Excel
+ * - Use permissions for conditional actions
+ *
+ * @returns {JSX.Element} ClientListTable component
  */
-export function ClientListTable() {
+export function ClientListTable(): JSX.Element {
   const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<IClientListProps | null>(
-    null
-  );
+  const [selectedClient, setSelectedClient] = useState<IClientListProps | null>(null);
+
   const { allClientData, refetchClient } = useAllClientQuery();
   const { hasPermission } = usePermission();
+
   const canEditClient = hasPermission(EModule.CLIENT_MANAGEMENT, EAction.EDIT);
-  const canDeleteClient = hasPermission(
-    EModule.CLIENT_MANAGEMENT,
-    EAction.DELETE
-  );
+  const canDeleteClient = hasPermission(EModule.CLIENT_MANAGEMENT, EAction.DELETE);
 
   const clientListActions: ITableAction<IClientListProps>[] = [];
 
+  /**
+   * Handles editing a client.
+   * @param client - The client to edit
+   */
   const handleEdit = (client: IClientListProps) => {
     setSelectedClient(client);
     setIsAddClientModalOpen(true);
   };
 
+  /**
+   * Handles deleting a client.
+   * @param id - The client ID to delete
+   */
   const handleDelete = (id: string) => {
     onDeleteClient(id);
   };
@@ -86,9 +99,11 @@ export function ClientListTable() {
   });
 
   const { onAllClientDownloadExcel } = useAllClientDownloadExcelQuery();
-  const { onClientDownloadTemplateExcel } =
-    useClientDownloadTemplateExcelQuery();
+  const { onClientDownloadTemplateExcel } = useClientDownloadTemplateExcelQuery();
 
+  /**
+   * Downloads all clients as an Excel file.
+   */
   const handleExportClients = async () => {
     const { data } = await onAllClientDownloadExcel();
     if (data instanceof Blob) {
@@ -96,6 +111,9 @@ export function ClientListTable() {
     }
   };
 
+  /**
+   * Downloads the Excel template for uploading clients.
+   */
   const handleDownloadTemplate = async () => {
     const { data } = await onClientDownloadTemplateExcel();
     if (data instanceof Blob) {
@@ -103,6 +121,9 @@ export function ClientListTable() {
     }
   };
 
+  /**
+   * Closes the Add/Edit Client modal and resets selected client.
+   */
   const handleCloseModal = () => {
     setIsAddClientModalOpen(false);
     setSelectedClient(null);
@@ -110,21 +131,27 @@ export function ClientListTable() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { onUploadClientFromExcel, isPending: isUploading } =
-    useUploadClientFromExcelMutation({
-      onSuccessCallback: (data) => {
-        toast.success(data.message || "Clients imported successfully");
-        refetchClient();
-      },
-      onErrorCallback: (err: IApiError) => {
-        toast.error(err.message || "Failed to import clients");
-      },
-    });
+  const { onUploadClientFromExcel, isPending: isUploading } = useUploadClientFromExcelMutation({
+    onSuccessCallback: (data) => {
+      toast.success(data.message || "Clients imported successfully");
+      refetchClient();
+    },
+    onErrorCallback: (err: IApiError) => {
+      toast.error(err.message || "Failed to import clients");
+    },
+  });
 
+  /**
+   * Triggers file input click for importing clients.
+   */
   const handleImportClick = () => {
     fileInputRef.current?.click();
   };
 
+  /**
+   * Handles file change and uploads the selected Excel file.
+   * @param e - File input change event
+   */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -137,7 +164,9 @@ export function ClientListTable() {
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Filter clients based on search query
+  /**
+   * Filters the client list based on the search query.
+   */
   const filteredClients = (allClientData || []).filter((client) => {
     const q = searchQuery.toLowerCase();
     return (
@@ -157,7 +186,7 @@ export function ClientListTable() {
         <Breadcrumb />
         <div className="flex flex-col flex-wrap lg:items-center gap-4 lg:flex-row lg:gap-0 justify-between">
           <h1 className="font-medium text-2xl 2xl:text-[1.5vw]">Client List</h1>
-          <div className="flex flex-col flex-wrap md:flex-row  gap-4 2xl:gap-[1vw]">
+          <div className="flex flex-col flex-wrap md:flex-row gap-4 2xl:gap-[1vw]">
             <SearchBar
               width="w-full md:w-[20rem] 2xl:w-[15vw]"
               onSearch={setSearchQuery}
@@ -178,7 +207,7 @@ export function ClientListTable() {
             <Button
               title="Import"
               variant="primary-outline-blue"
-              rightIcon={<ExportIcon color="#034A9F" className="rotate-180 " />}
+              rightIcon={<ExportIcon color="#034A9F" className="rotate-180" />}
               width="w-full md:w-fit"
               onClick={handleImportClick}
               disabled={isUploading}
