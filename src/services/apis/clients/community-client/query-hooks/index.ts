@@ -92,3 +92,6 @@ export { useAllClientFollowUpQuery } from "./useAllProjectFollowUpQuery";
 
 export { useUpdateClientDetailMutation } from "./useUpdateClientDetailMutation";
 export { useDeleteClientDetailMutation } from "./useDeleteClientDetailMutation";
+
+export { useDeleteProjectTemplateMilestoneMutation } from "./useDeleteProjectTemplateMilestoneMutation";
+export { useDeleteProjectTemplateMilestoneTaskMutation } from "./useDeleteProjectTemplateMilestoneTaskMutation";

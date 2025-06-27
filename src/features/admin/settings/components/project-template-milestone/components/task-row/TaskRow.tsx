@@ -8,7 +8,7 @@ interface TaskRowProps {
   taskIndex: number;
   isEditing: boolean;
   onEdit: (id: string) => void;
-  onDelete: () => void;
+  onDelete: (id: string) => void;
   onSave: () => void;
   onCancel: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,7 +82,7 @@ export function TaskRow({
               direction="left"
               options={[
                 { label: "Edit", onClick: () => onEdit(task?.id || "") },
-                { label: "Delete", onClick: onDelete, className: "text-red-500" },
+                { label: "Delete", onClick: () => onDelete(task?.id || ""), className: "text-red-500" },
               ]}
             />
           )

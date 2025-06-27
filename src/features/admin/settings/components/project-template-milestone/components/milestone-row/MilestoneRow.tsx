@@ -1,12 +1,19 @@
+import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
+import { FaChevronDown, FaChevronRight, FaRegCalendarAlt } from "react-icons/fa";
+
+import { FieldArray, FormikProps } from "formik";
+
 import { InputField, Button, ActionDropdown } from "@/components";
 import { AddSquareIcon, TreeStructureIcon } from "@/features";
-import { FaChevronDown, FaChevronRight, FaRegCalendarAlt } from "react-icons/fa";
-import { FieldArray } from "formik";
+import { 
+  useDeleteProjectTemplateMilestoneMutation,
+  useDeleteProjectTemplateMilestoneTaskMutation
+} from "@/services";
+
 import { Milestone, Task } from "../../../add-project-template/types";
 import { ProjectTemplateFormValues } from "../../../add-project-template/types";
-import { FormikProps } from "formik";
 import { TaskRow } from "../task-row";
-import { useState, useEffect } from "react";
 
 interface MilestoneRowProps {
   milestone: Milestone;
@@ -45,9 +52,50 @@ export function MilestoneRow({
 }: MilestoneRowProps & { formik: FormikProps<ProjectTemplateFormValues> }) {
   const [localMilestone, setLocalMilestone] = useState(milestone);
 
+  // Milestone delete mutation
+  const { onDeleteProjectTemplateMilestone, isPending: isMilestoneDeleting } = useDeleteProjectTemplateMilestoneMutation({
+    onSuccessCallback: () => {
+      toast.success("Milestone deleted successfully");
+      onDelete(index);
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Failed to delete milestone");
+    },
+  });
+
+  // Task delete mutation
+  const { onDeleteProjectTemplateMilestoneTask, isPending: isTaskDeleting } = useDeleteProjectTemplateMilestoneTaskMutation({
+    onSuccessCallback: () => {
+      toast.success("Task deleted successfully");
+      // No need to call onDelete here, handled by FieldArray remove
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Failed to delete task");
+    },
+  });
+
   useEffect(() => {
     if (isEditing) setLocalMilestone(milestone);
   }, [isEditing, milestone]);
+
+  // Handler for milestone delete
+  const handleMilestoneDelete = () => {
+    if (milestone.id) {
+      onDeleteProjectTemplateMilestone(milestone.id);
+    } else {
+      onDelete(index); // If not saved yet, just remove from UI
+    }
+  };
+
+  // Handler for task delete
+  const handleTaskDelete = (taskId: string, remove: (index: number) => void, taskIndex: number) => {
+    if (taskId) {
+      onDeleteProjectTemplateMilestoneTask(taskId);
+      remove(taskIndex); // Optimistically remove from UI
+    } else {
+      remove(taskIndex);
+    }
+  };
 
   return (
     <div>
@@ -126,7 +174,7 @@ export function MilestoneRow({
                 direction="left"
                 options={[
                   { label: "Edit", onClick: () => onEdit(milestone?.id || "") },
-                  { label: "Delete", onClick: () => onDelete(index), className: "text-red-500" },
+                  { label: isMilestoneDeleting ? "Deleting..." : "Delete", onClick: handleMilestoneDelete, className: "text-red-500" },
                 ]}
               />
             )
@@ -177,7 +225,7 @@ export function MilestoneRow({
                     taskIndex={taskIndex}
                     isEditing={editingTaskId === task.id}
                     onEdit={setEditingTaskId}
-                    onDelete={() => taskArrayHelpers.remove(taskIndex)}
+                    onDelete={() => handleTaskDelete(task.id || "", taskArrayHelpers.remove, taskIndex)}
                     onSave={() => setEditingTaskId(null)}
                     onCancel={() => setEditingTaskId(null)}
                     handleChange={handleChange}
