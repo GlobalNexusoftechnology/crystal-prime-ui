@@ -17,6 +17,7 @@ import {
 } from "@/utils";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import { useQueryClient } from '@tanstack/react-query';
 
 interface IAttachmentsProps {
   showForm: boolean;
@@ -33,6 +34,7 @@ export function Attachments({
   showForm,
   setShowForm,
 }: IAttachmentsProps) {
+  const queryClient = useQueryClient();
   const { allLeadAttachmentData, allLeadAttachment } =
     useAllLeadAttachmentQuery(leadId);
   const { activeSession } = useAuthStore();
@@ -45,6 +47,7 @@ export function Attachments({
       toast.success(response.message);
       setShowForm(false);
       allLeadAttachment();
+      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
     },
     onErrorCallback: (error: IApiError) => {
       toast.error(error.message);
@@ -63,6 +66,7 @@ export function Attachments({
         file_name: response.data.fileName,
       });
       allLeadAttachment();
+      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
     },
     onErrorCallback: (error: IApiError) => {
       toast.error(error.message);

@@ -8,7 +8,6 @@ import {
 import {
   ICreateLeadPayload,
   IUpdateLeadResponse,
-  useAllLeadsListQuery,
   useAllSourcesQuery,
   useAllStatusesQuery,
   useAllTypesQuery,
@@ -17,6 +16,7 @@ import {
   useUpdateLeadMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
+import { useQueryClient } from '@tanstack/react-query';
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
 import PhoneInput from "react-phone-input-2";
@@ -56,9 +56,9 @@ const validationSchema = Yup.object().shape({
 
 export function EditLeadModal({
   setIsEditLeadModalOpen,
-  lead,
+  lead
 }: IEditLeadModalProps) {
-  const { leadsRefetch } = useAllLeadsListQuery();
+  const queryClient = useQueryClient();
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
   const { allUsersData } = useAllUsersQuery();
@@ -66,9 +66,9 @@ export function EditLeadModal({
 
   const { onEditLead, isPending } = useUpdateLeadMutation({
     onSuccessCallback: (response: IUpdateLeadResponse) => {
+      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
       toast.success(response.message);
       setIsEditLeadModalOpen(false);
-      leadsRefetch();
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
