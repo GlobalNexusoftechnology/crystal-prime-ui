@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Milestone } from "../add-project-template/types";
 import { MilestoneRow } from "./components";
 import { v4 as uuidv4 } from "uuid";
+import toast from "react-hot-toast";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik: FormikProps<any>; readOnly?: boolean }) {
@@ -44,15 +45,24 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                   <button
                     type="button"
                     onClick={() => {
-                      const newMilestone = {
-                        id: "",
-                        name: "",
-                        estimatedDays: "",
-                        description: "",
-                        tasks: [],
-                      };
-                      arrayHelpers.push(newMilestone);
-                      handleEditMilestone(newMilestone.id);
+                      const milestones = values.milestones || [];
+                      const lastMilestone = milestones[milestones.length - 1];
+                      if (
+                        milestones.length === 0 ||
+                        (lastMilestone && lastMilestone.name && lastMilestone.estimated_days && lastMilestone.description)
+                      ) {
+                        const newMilestone = {
+                          id: "",
+                          name: "",
+                          estimated_days: "",
+                          description: "",
+                          tasks: [],
+                        };
+                        arrayHelpers.push(newMilestone);
+                        handleEditMilestone(newMilestone.id);
+                      } else {
+                        toast.error("Please complete the previous milestone before adding a new one.");
+                      }
                     }}
                   >
                     <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />

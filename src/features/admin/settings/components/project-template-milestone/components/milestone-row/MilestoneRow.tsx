@@ -50,8 +50,6 @@ export function MilestoneRow({
   readOnly = false,
   formik,
 }: MilestoneRowProps & { formik: FormikProps<ProjectTemplateFormValues> }) {
-  const [localMilestone, setLocalMilestone] = useState(milestone);
-
   // Milestone delete mutation
   const { onDeleteProjectTemplateMilestone, isPending: isMilestoneDeleting } = useDeleteProjectTemplateMilestoneMutation({
     onSuccessCallback: () => {
@@ -64,7 +62,7 @@ export function MilestoneRow({
   });
 
   // Task delete mutation
-  const { onDeleteProjectTemplateMilestoneTask, isPending: isTaskDeleting } = useDeleteProjectTemplateMilestoneTaskMutation({
+  const { onDeleteProjectTemplateMilestoneTask } = useDeleteProjectTemplateMilestoneTaskMutation({
     onSuccessCallback: () => {
       toast.success("Task deleted successfully");
       // No need to call onDelete here, handled by FieldArray remove
@@ -73,10 +71,6 @@ export function MilestoneRow({
       toast.error(err.message || "Failed to delete task");
     },
   });
-
-  useEffect(() => {
-    if (isEditing) setLocalMilestone(milestone);
-  }, [isEditing, milestone]);
 
   // Handler for milestone delete
   const handleMilestoneDelete = () => {
@@ -110,38 +104,65 @@ export function MilestoneRow({
           </button>
           {isEditing ? (
             <InputField
-              value={localMilestone.name}
-              onChange={e => setLocalMilestone({ ...localMilestone, name: e.target.value })}
+              name={`milestones[${index}].name`}
+              value={formik.values.milestones[index]?.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               placeholder="Enter Name"
               className="w-full"
+              error={
+                formik.touched.milestones?.[index]?.name &&
+                typeof formik.errors.milestones?.[index] === 'object' &&
+                formik.errors.milestones?.[index] &&
+                'name' in formik.errors.milestones[index] ?
+                  (formik.errors.milestones[index] as any).name : undefined
+              }
             />
           ) : (
             <div className="flex items-center gap-4 2xl:gap-[1vw]">
-            <span>{milestone.name}</span>
-            <div className="flex items-center gap-1">
-              <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
-              <p className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
-                {milestone.tasks.length}
-              </p>
-            </div>
+              <span>{milestone.name}</span>
+              <div className="flex items-center gap-1">
+                <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
+                <p className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
+                  {milestone.tasks.length}
+                </p>
+              </div>
             </div>
           )}
         </div>
         {isEditing ? (
           <InputField
-            value={localMilestone.estimated_days}
-            onChange={e => setLocalMilestone({ ...localMilestone, estimated_days: e.target.value })}
+            name={`milestones[${index}].estimated_days`}
+            value={formik.values.milestones[index]?.estimated_days}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             placeholder="Enter Days"
             icon={<FaRegCalendarAlt className="text-gray-400" />}
+            error={
+              formik.touched.milestones?.[index]?.estimated_days &&
+              typeof formik.errors.milestones?.[index] === 'object' &&
+              formik.errors.milestones?.[index] &&
+              'estimated_days' in formik.errors.milestones[index] ?
+                (formik.errors.milestones[index] as any).estimated_days : undefined
+            }
           />
         ) : (
           <span>{milestone.estimated_days}</span>
         )}
         {isEditing ? (
           <InputField
-            value={localMilestone.description}
-            onChange={e => setLocalMilestone({ ...localMilestone, description: e.target.value })}
+            name={`milestones[${index}].description`}
+            value={formik.values.milestones[index]?.description}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             placeholder="Enter Description"
+            error={
+              formik.touched.milestones?.[index]?.description &&
+              typeof formik.errors.milestones?.[index] === 'object' &&
+              formik.errors.milestones?.[index] &&
+              'description' in formik.errors.milestones[index] ?
+                (formik.errors.milestones[index] as any).description : undefined
+            }
           />
         ) : (
           <p className="truncate">{milestone.description}</p>
@@ -152,9 +173,27 @@ export function MilestoneRow({
               <Button
                 title="Save"
                 type="button"
-                onClick={() => {
-                  formik.setFieldValue(`milestones[${index}]`, localMilestone);
-                  onSave();
+                onClick={async () => {
+                  // Mark all milestone fields as touched
+                  await formik.setFieldTouched(`milestones[${index}].name`, true, true);
+                  await formik.setFieldTouched(`milestones[${index}].estimated_days`, true, true);
+                  await formik.setFieldTouched(`milestones[${index}].description`, true, true);
+
+                  // Validate the milestone fields
+                  await formik.validateForm();
+                  const milestoneErrors = formik.errors.milestones?.[index];
+
+                  // Only save if there are no errors for this milestone
+                  if (
+                    !milestoneErrors ||
+                    (typeof milestoneErrors === 'object' &&
+                      !milestoneErrors.name &&
+                      !milestoneErrors.estimated_days &&
+                      !milestoneErrors.description)
+                  ) {
+                    onSave();
+                  }
+                  // Otherwise, stay in edit mode and show errors
                 }}
                 className="py-1 px-2"
                 width="w-fit"
@@ -163,7 +202,15 @@ export function MilestoneRow({
                 title="Cancel"
                 type="button"
                 variant="secondary"
-                onClick={onCancel}
+                onClick={() => {
+                  if (!milestone.id) {
+                    // If new milestone (no id), remove the row
+                    onDelete(index);
+                  } else {
+                    // If existing, exit edit mode
+                    onCancel();
+                  }
+                }}
                 className="py-1 px-2"
                 width="w-fit"
               />
