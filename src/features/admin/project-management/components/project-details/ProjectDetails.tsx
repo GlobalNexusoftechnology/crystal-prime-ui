@@ -9,9 +9,9 @@ import {
   ProjectInfo,
 } from "./components";
 import { HeaderDetails } from "../header-details";
-import { IProjectDetails } from '@/services';
+import { IProjectResponse } from '@/services';
 
-export function ProjectDetails({ projectDetailData }: { projectDetailData: IProjectDetails }) {
+export function ProjectDetails({ projectDetailData }: { projectDetailData: IProjectResponse }) {
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
       <Breadcrumb />
@@ -24,35 +24,35 @@ export function ProjectDetails({ projectDetailData }: { projectDetailData: IProj
         <div className="border-r">
           <ProjectInfo projectInfoData={{
             name: projectDetailData.name,
-            type: projectDetailData.project_type || '',
-            contactPerson: '',
+            project_type: projectDetailData.project_type || '',
+            contact_person: '',
             description: '',
-            createdAt: projectDetailData.created_at,
-            updatedAt: projectDetailData.updated_at,
+            created_at: projectDetailData.created_at,
+            updated_at: projectDetailData.updated_at,
           }} />
-          <DocumentSection documentSectionData={(projectDetailData.attachments || []).map(att => ({
+          <DocumentSection documentSectionData={(projectDetailData.documents || []).map(att => ({
             name: att.file_name,
-            uploadedBy: att.uploaded_by || '',
-            uploadedAt: att.file_path || '',
+            uploaded_by: typeof att.uploaded_by === 'string' ? att.uploaded_by : att.uploaded_by?.first_name || att.uploaded_by?.email || '',
+            created_at: att.created_at ? att.created_at.toString() : '',
           }))} />
         </div>
         <div>
           <ClientInfo clientInfoData={{
-            clientName: projectDetailData.client_id || '',
-            companyName: '',
-            contactPerson: '',
+            client_name: projectDetailData.client_id || '',
+            company_name: '',
+            contact_person: '',
             phone: '',
             email: '',
           }} />
           <ProjectEstimate projectEstimateData={{
-            estimatedStart: projectDetailData.start_date || '',
-            actualStart: projectDetailData.actual_start_date || '',
-            estimatedEnd: projectDetailData.end_date || '',
-            actualEnd: projectDetailData.actual_end_date || '',
-            estimatedCost: projectDetailData.estimated_cost ? String(projectDetailData.estimated_cost) : '',
-            actualCost: projectDetailData.actual_cost ? String(projectDetailData.actual_cost) : '',
-            labourCost: '',
-            overheadCost: '',
+            start_date: projectDetailData.start_date ? projectDetailData.start_date.toString() : '',
+            actual_start: projectDetailData.actual_start_date ? projectDetailData.actual_start_date.toString() : '',
+            end_date: projectDetailData.end_date ? projectDetailData.end_date.toString() : '',
+            actual_end: projectDetailData.actual_end_date ? projectDetailData.actual_end_date.toString() : '',
+            estimated_cost: projectDetailData.estimated_cost ? String(projectDetailData.estimated_cost) : '',
+            actual_cost: projectDetailData.actual_cost ? String(projectDetailData.actual_cost) : '',
+            labour_cost: '',
+            overhead_cost: '',
             budget: projectDetailData.budget ? String(projectDetailData.budget) : '',
           }} />
         </div>

@@ -12,37 +12,47 @@ import { TreeStructureIcon } from "@/features";
 import { getInitials, getRandomColor } from "@/utils";
 import { useRouter } from "next/navigation";
 
-interface MilestoneType {
-  id: number;
-  name: string;
-  assignedTo: string;
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  assigned_to: string;
   status: string;
-  estimatedStart: string;
-  estimatedEnd: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tasks: any[];
+  due_date: string;
+}
+
+export interface Milestone {
+  id: string;
+  name: string;
+  assigned_to: string;
+  status: string;
+  start_date: string;
+  end_date: string;
+  projectId: string;
+  tasks: Task[];
 }
 
 interface MilestoneProps {
-  milestone: MilestoneType;
-  editingId: number | null;
-  editMilestone: MilestoneType | null;
-  onEdit: (milestone: MilestoneType) => void;
-  onDelete: (id: number) => void;
+  milestone: Milestone;
+  projectId: string;
+  editingId: string | null;
+  editMilestone: Milestone | null;
+  onEdit: (milestone: Milestone) => void;
+  onDelete: (id: string) => void;
   onSave: () => void;
   onCancel: () => void;
-  onChange: (milestone: MilestoneType) => void;
-  onToggle: (id: number) => void;
+  onChange: (milestone: Milestone) => void;
+  onToggle: (id: string) => void;
   expanded: boolean;
-  menuOpen: number | null;
-  setMenuOpen: (id: number | null) => void;
+  menuOpen: string | null;
+  setMenuOpen: (id: string | null) => void;
   userOptions: { label: string; value: string }[];
   statusOptions: { label: string; value: string }[];
   children?: React.ReactNode;
-  projectId?: string;
 }
 
 export function Milestone({
+  projectId,
   milestone,
   editingId,
   editMilestone,
@@ -58,12 +68,11 @@ export function Milestone({
   userOptions,
   statusOptions,
   children,
-  projectId
 }: MilestoneProps) {
   const router = useRouter()
 
-  const handleRedirect = (id: string) => {
-    router.push(`/admin/project-managemet/${projectId}/${id}`)
+  const handleRedirectView = (milestoneId: string) => {
+    router.push(`/admin/project-management/${projectId}/${milestoneId}`)
   }
   return (
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
@@ -81,9 +90,9 @@ export function Milestone({
           <td className="p-2 2xl:p-[0.5vw]">
             <Dropdown
               options={userOptions}
-              value={editMilestone.assignedTo}
+              value={editMilestone.assigned_to || ''}
               onChange={(val) =>
-                onChange({ ...editMilestone, assignedTo: val })
+                onChange({ ...editMilestone, assigned_to: val })
               }
               dropdownWidth="w-40 2xl:w-[10vw]"
             />
@@ -98,17 +107,17 @@ export function Milestone({
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <DatePicker
-              value={editMilestone.estimatedStart}
+              value={editMilestone.start_date || ""}
               onChange={(val) =>
-                onChange({ ...editMilestone, estimatedStart: val })
+                onChange({ ...editMilestone, start_date: val })
               }
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <DatePicker
-              value={editMilestone.estimatedEnd}
+              value={editMilestone.end_date || ""}
               onChange={(val) =>
-                onChange({ ...editMilestone, estimatedEnd: val })
+                onChange({ ...editMilestone, end_date: val })
               }
             />
           </td>
@@ -149,13 +158,13 @@ export function Milestone({
               <p
                 className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
                 style={{
-                  backgroundColor: getRandomColor(milestone.assignedTo || ''),
+                  backgroundColor: getRandomColor(milestone?.assigned_to || ''),
                 }}
               >
-                {getInitials(milestone.assignedTo)}
+                {getInitials(milestone.assigned_to || "")}
               </p>
               <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
-                {milestone.assignedTo}
+                {milestone.assigned_to || ""}
               </p>
             </div>
           </td>
@@ -168,14 +177,14 @@ export function Milestone({
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-sm 2xl:text-[0.9vw]">
-                {milestone.estimatedStart}
+                {milestone.start_date}
               </span>
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
-              {milestone.estimatedEnd}
+              {milestone.end_date}
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-right relative">
@@ -191,12 +200,7 @@ export function Milestone({
             </button>
             {menuOpen === milestone.id && (
               <div className="absolute right-0 mt-2 2xl:mt-[0.5vw] bg-white border rounded 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px]">
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100"
-                  onClick={() => handleRedirect(String(milestone?.id))}
-                >
-                  View
-                </button>
+                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => handleRedirectView(milestone.id)}>View</button>
                 <button
                   className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100"
                   onClick={() => onEdit(milestone)}

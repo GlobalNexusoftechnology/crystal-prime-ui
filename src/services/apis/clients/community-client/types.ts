@@ -975,6 +975,7 @@ export interface IProjectAttachmentResponse {
   file_type: string;
   file_name: string;
   uploaded_by?: IUser;
+  created_at?: string;
   project: IProjectAttachmentResponse
 }
 

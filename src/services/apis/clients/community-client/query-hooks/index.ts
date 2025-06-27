@@ -95,3 +95,6 @@ export { useDeleteClientDetailMutation } from "./useDeleteClientDetailMutation";
 
 export { useDeleteProjectTemplateMilestoneMutation } from "./useDeleteProjectTemplateMilestoneMutation";
 export { useDeleteProjectTemplateMilestoneTaskMutation } from "./useDeleteProjectTemplateMilestoneTaskMutation";
+
+export { useDeleteMilestoneMutation } from "./useDeleteMilestoneMutation";
+export { useDeleteMilestoneTaskMutation } from "./useDeleteMilestoneTaskMutation";

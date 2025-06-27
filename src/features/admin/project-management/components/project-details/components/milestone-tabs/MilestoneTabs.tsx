@@ -1,11 +1,12 @@
 "use client";
 
 import { Button } from "@/components";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Followups, Milestone, Task } from "./components";
 import { AddSquareIcon } from "@/features";
-import React from "react";
-import { useAllUsersQuery } from "@/services";
+import { useDeleteMilestoneMutation, useDeleteMilestoneTaskMutation, useAllUsersQuery } from "@/services";
+
+type LocalTask = { id: string; title: string; description: string; assigned_to: string; status: string; due_date: string };
 
 const tabs = ["Milestones", "Followup's"];
 
@@ -19,13 +20,13 @@ export function MilestoneTabs({
 }) {
   // Milestone/task state
   const [milestones, setMilestones] = useState(miletonesData || []);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [editMilestone, setEditMilestone] = useState<any>(null);
   const [editingTask, setEditingTask] = useState<any>(null);
   const [editTask, setEditTask] = useState<any>(null);
-  const [milestoneMenu, setMilestoneMenu] = useState<number | null>(null);
+  const [milestoneMenu, setMilestoneMenu] = useState<string | null>(null);
   const [taskMenu, setTaskMenu] = useState<any>(null);
-  const [expandedMilestones, setExpandedMilestones] = useState<number[]>([]);
+  const [expandedMilestones, setExpandedMilestones] = useState<string[]>([]);
 
   // User options
   const { allUsersData, isLoading: usersLoading, isError: usersError } = useAllUsersQuery();
@@ -44,8 +45,39 @@ export function MilestoneTabs({
     { label: "Completed", value: "Completed" },
   ];
 
+  // Delete milestone mutation
+  const { onDeleteMilestone, isPending: isMilestoneDeleting } = useDeleteMilestoneMutation({
+    onSuccessCallback: () => {
+      setMilestones((prev) => prev.filter((m) => m.id !== deletingMilestoneId));
+      setMilestoneMenu(null);
+    },
+    onErrorCallback: (err) => {
+      // Optionally show error toast
+    },
+  });
+  // Delete task mutation
+  const { onDeleteMilestoneTask } = useDeleteMilestoneTaskMutation({
+    onSuccessCallback: () => {
+      setMilestones((prev) =>
+        prev.map((m) =>
+          m.id === deletingTaskMilestoneId
+            ? { ...m, tasks: m.tasks.filter((t: LocalTask) => t.id !== deletingTaskId) }
+            : m
+        )
+      );
+      setTaskMenu(null);
+    },
+    onErrorCallback: (err) => {
+      // Optionally show error toast
+    },
+  });
+  // Track which milestone/task is being deleted
+  const [deletingMilestoneId, setDeletingMilestoneId] = useState<string | null>(null);
+  const [deletingTaskMilestoneId, setDeletingTaskMilestoneId] = useState<string | null>(null);
+  const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
+
   // Handlers
-  const toggleMilestone = (id: number) => {
+  const toggleMilestone = (id: string) => {
     setExpandedMilestones((prev) =>
       prev.includes(id) ? prev.filter((mid) => mid !== id) : [...prev, id]
     );
@@ -67,19 +99,19 @@ export function MilestoneTabs({
     setEditingId(null);
     setEditMilestone(null);
   };
-  const handleDeleteMilestone = (id: number) => {
-    setMilestones((prev) => prev.filter((m) => m.id !== id));
-    setMilestoneMenu(null);
+  const handleDeleteMilestone = (id: string) => {
+    setDeletingMilestoneId(id);
+    onDeleteMilestone(id);
   };
   const handleAddMilestone = () => {
-    const newId = Math.max(0, ...milestones.map((m) => m.id)) + 1;
+    const newId = (Math.max(0, ...milestones.map((m) => Number(m.id) || 0)) + 1).toString();
     const newMilestone = {
       id: newId,
       name: "",
-      assignedTo: "--",
+      assigned_to: "--",
       status: "Open",
-      estimatedStart: new Date().toISOString().slice(0, 10),
-      estimatedEnd: new Date().toISOString().slice(0, 10),
+      start_date: new Date().toISOString().slice(0, 10),
+      end_date: new Date().toISOString().slice(0, 10),
       tasks: [],
     };
     setMilestones((prev) => [...prev, newMilestone]);
@@ -87,7 +119,7 @@ export function MilestoneTabs({
     setEditMilestone(newMilestone);
   };
   // Task handlers
-  const handleEditTask = (milestoneId: number, task: any) => {
+  const handleEditTask = (milestoneId: string, task: any) => {
     setEditingTask({ milestoneId, taskId: task.id });
     setEditTask({ ...task });
     setTaskMenu(null);
@@ -103,7 +135,7 @@ export function MilestoneTabs({
         m.id === editingTask.milestoneId
           ? {
               ...m,
-              tasks: m.tasks.map((t: any) =>
+              tasks: m.tasks.map((t: LocalTask) =>
                 t.id === editTask.id ? { ...editTask } : t
               ),
             }
@@ -113,26 +145,22 @@ export function MilestoneTabs({
     setEditingTask(null);
     setEditTask(null);
   };
-  const handleDeleteTask = (milestoneId: number, taskId: number) => {
-    setMilestones((prev) =>
-      prev.map((m) =>
-        m.id === milestoneId
-          ? { ...m, tasks: m.tasks.filter((t: any) => t.id !== taskId) }
-          : m
-      )
-    );
-    setTaskMenu(null);
+  const handleDeleteTask = (milestoneId: string, taskId: string) => {
+    setDeletingTaskMilestoneId(milestoneId);
+    setDeletingTaskId(taskId);
+    onDeleteMilestoneTask(taskId);
   };
-  const handleAddTask = (milestoneId: number) => {
-    const newId =
-      Math.max(0, ...milestones.flatMap((m) => m.tasks.map((t: any) => t.id))) + 1;
+  const handleAddTask = (milestoneId: string) => {
+    const newId = (
+      Math.max(0, ...milestones.flatMap((m) => m.tasks.map((t: LocalTask) => Number(t.id) || 0))) + 1
+    ).toString();
     const newTask = {
       id: newId,
-      name: "",
+      title: "",
       description: "",
-      assignedTo: "--",
+      assigned_to: "--",
       status: "Open",
-      dueDate: new Date().toISOString().slice(0, 10),
+      due_date: new Date().toISOString().slice(0, 10),
     };
     setMilestones((prev) =>
       prev.map((m) =>
@@ -286,6 +314,7 @@ export function MilestoneTabs({
                                     userOptions={userOptions}
                                     statusOptions={statusOptions}
                                     milestoneId={milestone.id}
+                                    projectId={projectId}
                                   />
                                 ))}
                               </tbody>
