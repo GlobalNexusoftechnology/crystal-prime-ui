@@ -9,6 +9,7 @@ import { ActionDropdown } from "@/components/action-dropdown/ActionDropdown";
 import { formattingDate } from "@/utils";
 import { useDeleteProjectTemplateMutation } from "@/services";
 import toast from "react-hot-toast";
+import { useAllTypesQuery } from "@/services";
 
 type IProjectTemplateDetailProps = {
   projectTemplateData: IProjectTemplateDetail;
@@ -49,6 +50,10 @@ export function ProjectTemplateDetail({
   projectTemplateData,
 }: IProjectTemplateDetailProps) {
   const router = useRouter();
+  
+  const { allTypesData } = useAllTypesQuery();
+
+  const projectTypeName = allTypesData?.find(type => type.id?.toString() === projectTemplateData.project_type)?.name || projectTemplateData.project_type;
 
   const { onDeleteProjectTemplate } = useDeleteProjectTemplateMutation({
     onSuccessCallback: (response) => {
@@ -116,7 +121,7 @@ export function ProjectTemplateDetail({
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
           <p className=" text-sm 2xl:text-[0.875vw]">Type Of Project</p>
           <p className="text-[1rem] 2xl:text-[1vw] font-medium">
-            {projectTemplateData.project_type}
+            {projectTypeName}
           </p>
         </div>
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">

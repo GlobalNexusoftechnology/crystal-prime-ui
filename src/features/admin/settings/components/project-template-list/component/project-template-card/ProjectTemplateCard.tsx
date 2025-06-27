@@ -5,7 +5,7 @@ import { TbTargetArrow } from "react-icons/tb";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ActionDropdown } from "@/components/action-dropdown";
-import { useDeleteProjectTemplateMutation } from "@/services";
+import { useAllTypesQuery, useDeleteProjectTemplateMutation } from "@/services";
 import toast from "react-hot-toast";
 
 /**
@@ -42,6 +42,11 @@ export function ProjectTemplateCard({
   refetchAllProjectTemplates
 }: ProjectTemplateCardProps) {
   const router = useRouter();
+  
+  const { allTypesData } = useAllTypesQuery();
+
+  const projectTypeName = allTypesData?.find(type => type.id?.toString() === projectType)?.name || projectType;
+
   const { onDeleteProjectTemplate } = useDeleteProjectTemplateMutation({
     onSuccessCallback: (response) => {
       toast.success(response.message || "Project template deleted successfully");
@@ -140,7 +145,7 @@ export function ProjectTemplateCard({
             href="#"
             className="text-[1rem] 2xl:text-[1vw] underline text-black"
           >
-            {projectType}
+            {projectTypeName}
           </Link>
         </div>
       </div>
