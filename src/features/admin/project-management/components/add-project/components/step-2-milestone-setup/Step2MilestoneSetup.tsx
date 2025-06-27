@@ -19,8 +19,8 @@ interface ProjectMilestoneMaster {
   name: string;
   assigned_to?: string;
   status?: string;
-  estimated_start?: string;
-  estimated_end?: string;
+  start_date?: string;
+  end_date?: string;
   project_task_master?: ProjectTaskMaster[];
 }
 
@@ -34,15 +34,35 @@ interface AllProjectTemplatesData {
   templates: ProjectTemplate[];
 }
 
+// Add local types for editing
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  assigned_to: string;
+  status: string;
+  due_date: string;
+}
+
+export interface Milestone {
+  id: string;
+  name: string;
+  assigned_to: string;
+  status: string;
+  start_date: string;
+  end_date: string;
+  tasks: Task[];
+}
+
 interface Step2MilestoneSetupProps {
   onBack: () => void;
-  onNext: (milestones: IProjectMilestoneResponse[]) => void;
+  onNext: (milestones: Milestone[]) => void;
   milestoneOption: string;
   projectTemplateOptions: { label: string; value: string }[];
   projectTemplateLoading: boolean;
   projectTemplateError: boolean;
   allProjectTemplatesData?: AllProjectTemplatesData;
-  initialMilestones?: IProjectMilestoneResponse[];
+  initialMilestones?: Milestone[];
   projectTemplate: string;
   setProjectTemplate: (id: string) => void;
 }
@@ -53,26 +73,6 @@ const statusOptions = [
   { label: "In Progress", value: "In Progress" },
   { label: "Completed", value: "Completed" },
 ];
-
-// Add local types for editing
-export interface Task {
-  id: string;
-  name: string;
-  description: string;
-  assignedTo: string;
-  status: string;
-  dueDate: string;
-}
-
-export interface Milestone {
-  id: string;
-  name: string;
-  assignedTo: string;
-  status: string;
-  estimatedStart: string;
-  estimatedEnd: string;
-  tasks: Task[];
-}
 
 export function Step2MilestoneSetup({
   onBack,
@@ -124,17 +124,17 @@ export function Step2MilestoneSetup({
       const mappedMilestones: Milestone[] = (selectedTemplate.project_milestone_master || []).map((m, idx) => ({
         id: m.id || String(idx),
         name: m.name,
-        assignedTo: m.assigned_to || "",
+        assigned_to: m.assigned_to || "",
         status: m.status || "Open",
-        estimatedStart: m.estimated_start || "",
-        estimatedEnd: m.estimated_end || "",
+        start_date: m.start_date || "",
+        end_date: m.end_date || "",
         tasks: (m.project_task_master || []).map((t, tIdx) => ({
           id: t.id || String(tIdx),
-          name: t.title,
+          title: t.title,
           description: t.description,
-          assignedTo: t.assigned_to || "",
+          assigned_to: t.assigned_to || "",
           status: t.status || "Open",
-          dueDate: t.due_date || "",
+          due_date: t.due_date || "",
         })),
       }));
       setMilestones(mappedMilestones);
@@ -146,17 +146,17 @@ export function Step2MilestoneSetup({
       setMilestones(initialMilestones.map(m => ({
         id: m.id || "",
         name: m.name,
-        assignedTo: m.assigned_to || "",
+        assigned_to: m.assigned_to || "",
         status: m.status || "Open",
-        estimatedStart: m.start_date || "",
-        estimatedEnd: m.end_date || "",
+        start_date: m.start_date || "",
+        end_date: m.end_date || "",
         tasks: (m.tasks || []).map(t => ({
           id: t.id || "",
-          name: t.title,
+          title: t.title,
           description: t.description || "",
-          assignedTo: t.assigned_to || "",
+          assigned_to: t.assigned_to || "",
           status: t.status || "Open",
-          dueDate: t.due_date || "",
+          due_date: t.due_date || "",
         })),
       })));
     }
@@ -199,10 +199,10 @@ export function Step2MilestoneSetup({
     const newMilestone: Milestone = {
       id: Date.now().toString(),
       name: "",
-      assignedTo: "--",
+      assigned_to: "--",
       status: "Open",
-      estimatedStart: new Date().toISOString().slice(0, 10),
-      estimatedEnd: new Date().toISOString().slice(0, 10),
+      start_date: new Date().toISOString().slice(0, 10),
+      end_date: new Date().toISOString().slice(0, 10),
       tasks: [],
     };
     setMilestones((prev) => [...prev, newMilestone]);
@@ -230,11 +230,11 @@ export function Step2MilestoneSetup({
                 t.id === editTask.id
                   ? {
                       ...t,
-                      name: editTask.name || "",
+                      title: editTask.title || "",
                       description: editTask.description || "",
-                      assignedTo: editTask.assignedTo || "",
+                      assigned_to: editTask.assigned_to || "",
                       status: editTask.status || "",
-                      dueDate: editTask.dueDate || "",
+                      due_date: editTask.due_date || "",
                     }
                   : t
               ),
@@ -259,11 +259,11 @@ export function Step2MilestoneSetup({
   const handleAddTask = (milestoneId: string) => {
     const newTask: Task = {
       id: Date.now().toString(),
-      name: "",
+      title: "",
       description: "",
-      assignedTo: "--",
+      assigned_to: "--",
       status: "Open",
-      dueDate: new Date().toISOString().slice(0, 10),
+      due_date: new Date().toISOString().slice(0, 10),
     };
     setMilestones((prev) =>
       prev.map((m) =>
@@ -281,25 +281,51 @@ export function Step2MilestoneSetup({
     const backendMilestones: IProjectMilestoneResponse[] = milestones.map(m => ({
       id: m.id,
       name: m.name,
-      assigned_to: m.assignedTo,
+      assigned_to: m.assigned_to,
       status: m.status,
-      start_date: m.estimatedStart,
-      end_date: m.estimatedEnd,
-      project: {},
+      start_date: m.start_date,
+      end_date: m.end_date,
+      project: {
+        id: "dummy_project_id",
+        name: "dummy_project_name",
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        deleted: false,
+        deleted_at: null,
+        status: "Active",
+        client: {
+          id: "dummy_client_id",
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          deleted: false,
+          deleted_at: null,
+          name: "dummy_client_name",
+          email: "dummy@email.com",
+          contact_number: "0000000000",
+          address: "dummy address",
+          website: "dummy.com",
+          company_name: "dummy company",
+          contact_person: "dummy person",
+          lead_id: null,
+          client_details: []
+        },
+        milestones: [],
+        documents: [],
+      },
       tasks: m.tasks.map(t => ({
         id: t.id,
-        title: t.name,
+        title: t.title,
         description: t.description,
-        assigned_to: t.assignedTo,
+        assigned_to: t.assigned_to,
         status: t.status,
-        due_date: t.dueDate,
+        due_date: t.due_date,
         created_at: "",
         updated_at: "",
         deleted: false,
         deleted_at: null,
       })),
     }));
-    onNext(backendMilestones);
+    onNext(backendMilestones as any); // Cast if needed for type compatibility
   };
 
   return (

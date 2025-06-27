@@ -131,13 +131,13 @@ export function Milestone({
               <p
                 className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
                 style={{
-                  backgroundColor: getRandomColor(milestone.assignedTo || ''),
+                  backgroundColor: getRandomColor(milestone?.assigned_to || ''),
                 }}
               >
-                {getInitials(milestone.assignedTo)}
+                {getInitials(milestone.assigned_to || "")}
               </p>
               <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
-                {milestone.assignedTo}
+                {milestone.assigned_to || ""}
               </p>
             </div>
           </td>
@@ -150,7 +150,7 @@ export function Milestone({
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-sm 2xl:text-[0.9vw]">
-                {milestone.estimatedStart}
+                {milestone.start_date}
               </span>
             </span>
           </td>
