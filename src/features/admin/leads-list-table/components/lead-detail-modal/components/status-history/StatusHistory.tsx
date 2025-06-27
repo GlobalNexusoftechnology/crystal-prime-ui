@@ -11,6 +11,7 @@ import {
   useCreateLeadStatusHistoryMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
+import { useQueryClient } from '@tanstack/react-query';
 
 // ✅ Validation schema
 const validationSchema = Yup.object().shape({
@@ -24,15 +25,14 @@ interface IStatusHistoryProps {
   leadId: string;
   showForm: boolean;
   setShowForm: (val: boolean) => void;
-  refetchLeads: () => void;
 }
 
 export function StatusHistory({
   leadId,
   showForm,
   setShowForm,
-  refetchLeads,
 }: IStatusHistoryProps) {
+  const queryClient = useQueryClient();
   const { allLeadStatusHistoryData, allLeadStatusHistory } = useAllLeadStatusHistoryQuery(leadId);
   const { allStatusesData } = useAllStatusesQuery();
   const { activeSession } = useAuthStore();
@@ -45,7 +45,7 @@ export function StatusHistory({
       formik.resetForm();
       setShowForm(false);
       allLeadStatusHistory();
-      refetchLeads();
+      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
     },
     onErrorCallback: (err: IApiError) => {
       console.error("Failed to create lead status:", err);

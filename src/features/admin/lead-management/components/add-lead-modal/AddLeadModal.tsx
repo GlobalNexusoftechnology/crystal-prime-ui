@@ -8,7 +8,6 @@ import {
 import {
   ICreateLeadPayload,
   ICreateLeadResponse,
-  useAllLeadsListQuery,
   useAllSourcesQuery,
   useAllStatusesQuery,
   useAllTypesQuery,
@@ -22,9 +21,11 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import * as Yup from "yup";
 import { Plus, X } from "lucide-react";
+import { useQueryClient } from '@tanstack/react-query';
 
 interface IAddLeadModalProps {
   setAddLeadModalOpen: (open: boolean) => void;
+  leadsRefetch?: () => void;
 }
 
 const validationSchema = Yup.object().shape({
@@ -50,8 +51,8 @@ const validationSchema = Yup.object().shape({
   assigned_to: Yup.string().required("Assigned To is required"),
 });
 
-export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
-  const { leadsRefetch } = useAllLeadsListQuery();
+export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModalProps) {
+  const queryClient = useQueryClient();
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
   const { allUsersData } = useAllUsersQuery();
@@ -59,9 +60,12 @@ export function AddLeadModal({ setAddLeadModalOpen }: IAddLeadModalProps) {
 
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (response: ICreateLeadResponse) => {
+      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
+      if (leadsRefetch) {
+        leadsRefetch();
+      }
       toast.success(response.message);
       setAddLeadModalOpen(false);
-      leadsRefetch();
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);

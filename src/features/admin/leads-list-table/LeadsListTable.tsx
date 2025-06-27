@@ -1,5 +1,5 @@
 "use client";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { Button, Dropdown, SearchBar, Table, DatePicker } from "@/components";
 import {
   EAction,
@@ -10,7 +10,7 @@ import {
   leadsListColumn,
 } from "@/constants";
 import { ExportIcon } from "@/features";
-import { EditLeadModal, LeadDetailModal } from "./components";
+import { EditLeadModal, LeadDetailModal, AddLeadModal } from "./components";
 import {
   IDeleteLeadResponse,
   useAllLeadDownloadExcelQuery,
@@ -26,37 +26,38 @@ import { FiPlus, FiX } from "react-icons/fi";
 import { ImDownload2 } from "react-icons/im";
 import { usePermission } from "@/utils/hooks";
 import { useDebounce } from "@/utils/hooks";
+import toast from "react-hot-toast";
+import { useQueryClient } from '@tanstack/react-query';
 
-interface LeadsListTableProps {
-  setAddLeadModalOpen?: Dispatch<SetStateAction<boolean>>;
-}
-
-export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
+export function LeadsListTable() {
+  const queryClient = useQueryClient();
   const [leadId, setLeadId] = useState("");
   const [isEditLeadModalOpen, setIsEditLeadModalOpen] = useState(false);
+  const [isAddLeadModalOpen, setAddLeadModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [selectedType, setSelectedType] = useState("All Type");
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
   const [followupFromDate, setFollowupFromDate] = useState("");
   const [followupToDate, setFollowupToDate] = useState("");
-  const [followupDateError, setFollowupDateError] = useState<string | null>(null);
   const [dateRangeFilter, setDateRangeFilter] = useState<"All" | "Daily" | "Weekly" | "Monthly">("All");
 
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
     delay: 500,
-    onChangeCb: () => {}, // not needed for this use case
+    onChangeCb: () => { }, // not needed for this use case
   });
 
-  const { data: allLeadList, isLoading, isError, error, leadsRefetch } = useAllLeadsListQuery({
+  const filters = useMemo(() => ({
     searchText: searchQuery,
     statusId: selectedStatus,
     typeId: selectedType,
     dateRange: dateRangeFilter,
     followupFrom: followupFromDate || undefined,
     followupTo: followupToDate || undefined,
-  });
+  }), [searchQuery, selectedStatus, selectedType, dateRangeFilter, followupFromDate, followupToDate]);
+
+  const { data: allLeadList, isLoading, isError, error, leadsRefetch } = useAllLeadsListQuery(filters);
   const { allStatusesData } = useAllStatusesQuery();
   const { allTypesData } = useAllTypesQuery();
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
@@ -110,12 +111,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   } = useLeadDetailQuery(leadId);
 
   const { onDeleteLead } = useDeleteLeadMutation({
-    onSuccessCallback: (data: IDeleteLeadResponse) => {
-      console.log("Lead deleted successfully", data);
-      leadsRefetch();
+    onSuccessCallback: (response: IDeleteLeadResponse) => {
+      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
+      toast.success(response?.message);
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to delete lead:", err);
+      toast.error(err?.message)
     },
   });
 
@@ -280,25 +281,20 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const handleClearFollowupDates = () => {
     setFollowupFromDate("");
     setFollowupToDate("");
-    setFollowupDateError(null);
   };
 
   const handleFollowupFromDateChange = (date: string) => {
     if (followupToDate && new Date(date) > new Date(followupToDate)) {
-      setFollowupDateError('"Follow Up From" date cannot be after "Follow Up To" date.');
       return;
     }
     setFollowupFromDate(date);
-    setFollowupDateError(null);
   };
 
   const handleFollowupToDateChange = (date: string) => {
     if (followupFromDate && new Date(date) < new Date(followupFromDate)) {
-      setFollowupDateError('"Follow Up To" date cannot be before "Follow Up From" date.');
       return;
     }
     setFollowupToDate(date);
-    setFollowupDateError(null);
   };
 
   if (isError) {
@@ -321,20 +317,19 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[20vw]"
           />
-          {setAddLeadModalOpen &&
-            (cavAddLeadManagement ? (
-              <div className="w-full md:w-fit flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
-                <Button
-                  title="Add Lead"
-                  variant="background-white"
-                  width="w-full md:w-fit"
-                  leftIcon={
-                    <FiPlus className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-                  }
-                  onClick={() => setAddLeadModalOpen(true)}
-                />
-              </div>
-            ) : null)}
+          {cavAddLeadManagement && (
+            <div className="w-full md:w-fit flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+              <Button
+                title="Add Lead"
+                variant="background-white"
+                width="w-full md:w-fit"
+                leftIcon={
+                  <FiPlus className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                }
+                onClick={() => setAddLeadModalOpen(true)}
+              />
+            </div>
+          )}
           <Dropdown
             options={statusOptions}
             value={selectedStatus}
@@ -380,30 +375,26 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             datePickerWidth="w-full md:w-fit"
           />
         </div>
-        <div className="flex flex-col items-start">
-          <DatePicker
-            label="Follow Up To"
-            value={followupToDate}
-            onChange={handleFollowupToDateChange}
-            datePickerWidth="w-full md:w-fit"
-          />
-          {followupDateError && (
-            <div className="text-red-500 text-sm mt-1">{followupDateError}</div>
-          )}
-        </div>
+        <DatePicker
+          label="Follow Up To"
+          minDate={followupFromDate}
+          value={followupToDate}
+          onChange={handleFollowupToDateChange}
+          datePickerWidth="w-full md:w-fit"
+        />
         {(followupFromDate || followupToDate) && (
-        <div>
-          <Button
-            variant="background-white"
-            width="w-full md:w-fit"
-            onClick={handleClearFollowupDates}
-            leftIcon={
-              <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-            }
-            tooltip="Clear Dates"
-          />
-        </div>
-        )}   
+          <div>
+            <Button
+              variant="background-white"
+              width="w-full md:w-fit"
+              onClick={handleClearFollowupDates}
+              leftIcon={
+                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+              }
+              tooltip="Clear Dates"
+            />
+          </div>
+        )}
       </div>
       {isLoading ? (
         <div className="text-center py-6 text-gray-500">Loading leads...</div>
@@ -422,7 +413,6 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         <LeadDetailModal
           onClose={() => setViewLead(null)}
           data={leadDetailModalData}
-          refetchLeads={leadsRefetch}
           lead={viewLead}
         />
       )}
@@ -431,6 +421,9 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           setIsEditLeadModalOpen={setIsEditLeadModalOpen}
           lead={leadDetailById}
         />
+      )}
+      {isAddLeadModalOpen && (
+        <AddLeadModal setAddLeadModalOpen={setAddLeadModalOpen} leadsRefetch={leadsRefetch} />
       )}
     </div>
   );
