@@ -35,20 +35,20 @@ export function TaskRow({
     <div className="grid grid-cols-4 gap-4 2xl:gap-[1vw] items-center py-2 2xl:py-[0.5vw] px-4 2xl:px-[1vw] hover:bg-gray-50 border-b 2xl:border-b-[0.1vw]">
       {isEditing ? (
         <InputField
-          name={`milestones[${milestoneIndex}].tasks[${taskIndex}].name`}
-          value={task.name}
+          name={`milestones[${milestoneIndex}].tasks[${taskIndex}].title`}
+          value={task.title}
           onChange={handleChange}
           onBlur={handleBlur}
           placeholder="Enter Name"
           disabled={readOnly}
         />
       ) : (
-        <span>{task.name}</span>
+        <span>{task.title}</span>
       )}
       {isEditing ? (
         <InputField
-          name={`milestones[${milestoneIndex}].tasks[${taskIndex}].estimatedDays`}
-          value={task.estimatedDays}
+          name={`milestones[${milestoneIndex}].tasks[${taskIndex}].estimated_days`}
+          value={task.estimated_days}
           onChange={handleChange}
           onBlur={handleBlur}
           placeholder="Enter Days"
@@ -56,7 +56,7 @@ export function TaskRow({
           disabled={readOnly}
         />
       ) : (
-        <span>{task.estimatedDays}</span>
+        <span>{task.estimated_days}</span>
       )}
       {isEditing ? (
         <InputField
@@ -81,7 +81,7 @@ export function TaskRow({
             <ActionDropdown
               direction="left"
               options={[
-                { label: "Edit", onClick: () => onEdit(task.id) },
+                { label: "Edit", onClick: () => onEdit(task?.id || "") },
                 { label: "Delete", onClick: onDelete, className: "text-red-500" },
               ]}
             />

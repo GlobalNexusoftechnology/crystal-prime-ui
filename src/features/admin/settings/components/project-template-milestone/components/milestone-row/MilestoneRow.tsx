@@ -55,7 +55,7 @@ export function MilestoneRow({
         <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
           <button
             type="button"
-            onClick={() => onToggle(milestone.id)}
+            onClick={() => onToggle(milestone?.id || "")}
             className="p-1"
           >
             {expanded ? <FaChevronDown /> : <FaChevronRight />}
@@ -81,13 +81,13 @@ export function MilestoneRow({
         </div>
         {isEditing ? (
           <InputField
-            value={localMilestone.estimatedDays}
-            onChange={e => setLocalMilestone({ ...localMilestone, estimatedDays: e.target.value })}
+            value={localMilestone.estimated_days}
+            onChange={e => setLocalMilestone({ ...localMilestone, estimated_days: e.target.value })}
             placeholder="Enter Days"
             icon={<FaRegCalendarAlt className="text-gray-400" />}
           />
         ) : (
-          <span>{milestone.estimatedDays}</span>
+          <span>{milestone.estimated_days}</span>
         )}
         {isEditing ? (
           <InputField
@@ -109,7 +109,7 @@ export function MilestoneRow({
               <ActionDropdown
                 direction="left"
                 options={[
-                  { label: "Edit", onClick: () => onEdit(milestone.id) },
+                  { label: "Edit", onClick: () => onEdit(milestone?.id || "") },
                   { label: "Delete", onClick: () => onDelete(index), className: "text-red-500" },
                 ]}
               />
@@ -134,8 +134,8 @@ export function MilestoneRow({
                         onClick={() => {
                           const newTask = {
                             id: Math.random().toString(36).substr(2, 9),
-                            name: "New Task",
-                            estimatedDays: "",
+                            title: "",
+                            estimated_days: "",
                             description: "",
                           };
                           taskArrayHelpers.push(newTask);

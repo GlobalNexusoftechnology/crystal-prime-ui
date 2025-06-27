@@ -25,8 +25,8 @@ type TProjectTemplateParam = {
 
 const transformTask = (task: IProjectTemplateTask): Task => ({
   id: task.id,
-  name: task.title,
-  estimatedDays: String(task.estimated_days),
+  title: task.title,
+  estimated_days: String(task.estimated_days),
   description: task.description,
 });
 
@@ -35,7 +35,7 @@ const transformMilestone = (
 ): Milestone => ({
   id: milestone.id,
   name: milestone.name,
-  estimatedDays: String(milestone.estimated_days),
+  estimated_days: String(milestone.estimated_days),
   description: milestone.description,
   tasks: milestone.project_task_master?.map(transformTask) ?? [],
 });
@@ -44,11 +44,11 @@ const transformProjectTemplateData = (
   projectTemplate: IProjectTemplate
 ): IProjectTemplateDetail => ({
   id: projectTemplate.id,
-  templateName: projectTemplate.name,
-  typeOfProject: projectTemplate.project_type ?? "",
-  estimatedDays: projectTemplate.estimated_days ?? 0,
-  createdAt: projectTemplate.created_at,
-  updatedAt: projectTemplate.updated_at,
+  name: projectTemplate.name,
+  project_type: projectTemplate.project_type ?? "",
+  estimated_days: projectTemplate.estimated_days ?? 0,
+  created_at: projectTemplate.created_at,
+  updated_at: projectTemplate.updated_at,
   description: projectTemplate.description ?? "",
   milestones:
     projectTemplate.project_milestone_master?.map(transformMilestone) ?? [],

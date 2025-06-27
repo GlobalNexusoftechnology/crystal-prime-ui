@@ -8,34 +8,26 @@ import { ProjectTemplateFormValues } from "./types";
 import { useCreateProjectTemplateMutation, useUpdateProjectTemplateMutation } from "@/services";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useProjectTemplateDetailQuery } from "@/services";
+import { useProjectTemplateDetailQuery, useAllTypesQuery } from "@/services";
 
-/**
- * @file Client-side component for adding a new project template with Formik and Yup validation.
- *
- */
-const options = [
-  { label: "Website", value: "website" },
-  { label: "Application", value: "application" },
-];
 
 // Validation schema using Yup
 const validationSchema = Yup.object({
-  templateName: Yup.string().required("Template Name is required"),
-  projectType: Yup.string().required("Type of Project is required"),
-  estimatedDays: Yup.number()
+  name: Yup.string().required("Template Name is required"),
+  project_type: Yup.string().required("Type of Project is required"),
+  estimated_days: Yup.number()
     .typeError("Must be a number")
     .required("Estimated Days is required"),
   description: Yup.string().required("Description is required"),
   milestones: Yup.array().of(
     Yup.object().shape({
       name: Yup.string().required("Milestone name is required"),
-      estimatedDays: Yup.string().required("Estimated days is required"),
+      estimated_days: Yup.string().required("Estimated days is required"),
       description: Yup.string().required("Description is required"),
       tasks: Yup.array().of(
         Yup.object().shape({
-          name: Yup.string().required("Task name is required"),
-          estimatedDays: Yup.string().required("Estimated days is required"),
+          title: Yup.string().required("Task name is required"),
+          estimated_days: Yup.string().required("Estimated days is required"),
           description: Yup.string().required("Description is required"),
         })
       ),
@@ -65,29 +57,37 @@ export function AddProjectTemplate({ id }: { id?: string }) {
   });
   const { projectTemplateDetailData, isLoading } = useProjectTemplateDetailQuery(id ?? "");
 
+  const { allTypesData } = useAllTypesQuery();
+
+  const projectTypeOptions =
+    allTypesData?.map((type) => ({
+      label: type?.name,
+      value: type?.id.toString(),
+    })) || [];
+
   const initialValues: ProjectTemplateFormValues = id && projectTemplateDetailData
     ? {
-        templateName: projectTemplateDetailData.name || "",
-        projectType: projectTemplateDetailData.project_type || "",
-        estimatedDays: projectTemplateDetailData.estimated_days?.toString() || "",
+        name: projectTemplateDetailData.name || "",
+        project_type: projectTemplateDetailData.project_type || "",
+        estimated_days: projectTemplateDetailData.estimated_days?.toString() || "",
         description: projectTemplateDetailData.description || "",
         milestones: (projectTemplateDetailData.project_milestone_master || []).map(m => ({
           id: m.id,
           name: m.name,
-          estimatedDays: m.estimated_days?.toString() || "",
+          estimated_days: m.estimated_days?.toString() || "",
           description: m.description,
           tasks: (m.project_task_master || []).map(t => ({
             id: t.id,
-            name: t.title,
-            estimatedDays: t.estimated_days?.toString() || "",
+            title: t.title,
+            estimated_days: t.estimated_days?.toString() || "",
             description: t.description,
           })),
         })),
       }
     : {
-        templateName: "",
-        projectType: "",
-        estimatedDays: "",
+        name: "",
+        project_type: "",
+        estimated_days: "",
         description: "",
         milestones: [],
       };
@@ -99,20 +99,20 @@ export function AddProjectTemplate({ id }: { id?: string }) {
     onSubmit: (values) => {
       const payload = {
         ...(id ? { id } : {}),
-        name: values.templateName,
-        project_type: values.projectType,
-        estimated_days: values.estimatedDays ? Number(values.estimatedDays) : 0,
+        name: values.name,
+        project_type: values.project_type,
+        estimated_days: values.estimated_days ? Number(values.estimated_days) : 0,
         description: values.description,
         milestones: values.milestones.map((milestone) => ({
           ...(milestone.id ? { id: milestone.id } : {}),
           name: milestone.name,
           description: milestone.description,
-          estimated_days: milestone.estimatedDays ? Number(milestone.estimatedDays) : 0,
+          estimated_days: milestone.estimated_days ? Number(milestone.estimated_days) : 0,
           tasks: milestone.tasks?.map((task) => ({
             ...(task.id ? { id: task.id } : {}),
-            title: task.name,
+            title: task.title,
             description: task.description,
-            estimated_days: task.estimatedDays ? Number(task.estimatedDays) : 0,
+            estimated_days: task.estimated_days ? Number(task.estimated_days) : 0,
           })),
         })),
       };
@@ -140,42 +140,42 @@ export function AddProjectTemplate({ id }: { id?: string }) {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 2xl:gap-[1vw]">
             <InputField
               label="Template Name"
-              name="templateName"
+              name="name"
               placeholder="Enter Template Name"
-              value={formik.values.templateName}
+              value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={
-                formik.touched.templateName
-                  ? formik.errors.templateName
+                formik.touched.name
+                  ? formik.errors.name
                   : undefined
               }
             />
 
             <Dropdown
               label="Type of Project"
-              options={options}
-              value={formik.values.projectType}
+              options={projectTypeOptions}
+              value={formik.values.project_type}
               onChange={(val: string) =>
-                formik.setFieldValue("projectType", val)
+                formik.setFieldValue("project_type", val)
               }
               error={
-                formik.touched.projectType
-                  ? formik.errors.projectType
+                formik.touched.project_type
+                  ? formik.errors.project_type
                   : undefined
               }
             />
 
             <InputField
               label="Estimated Days"
-              name="estimatedDays"
+              name="estimated_days"
               placeholder="Enter Estimated Days"
-              value={formik.values.estimatedDays}
+              value={formik.values.estimated_days}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={
-                formik.touched.estimatedDays
-                  ? formik.errors.estimatedDays
+                formik.touched.estimated_days
+                  ? formik.errors.estimated_days
                   : undefined
               }
             />
