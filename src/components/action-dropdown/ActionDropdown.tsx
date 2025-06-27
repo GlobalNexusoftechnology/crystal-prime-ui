@@ -43,6 +43,7 @@ export function ActionDropdown({ options, icon, direction = "right" }: ActionDro
   return (
     <div className="relative" ref={dropdownRef}>
       <button
+        type="button"
         ref={buttonRef}
         onClick={toggleDropdown}
         className="p-1 2xl:p-[0.25vw] rounded hover:bg-gray-200"
@@ -56,6 +57,7 @@ export function ActionDropdown({ options, icon, direction = "right" }: ActionDro
         >
           {options.map((action, actionIndex) => (
             <button
+              type="button"
               key={actionIndex}
               className={`block w-full px-4 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left hover:bg-gray-100 ${action.className || ""
                 }`}

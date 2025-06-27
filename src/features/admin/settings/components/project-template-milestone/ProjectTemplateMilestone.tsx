@@ -45,7 +45,7 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                     type="button"
                     onClick={() => {
                       const newMilestone = {
-                        id: uuidv4(),
+                        id: "",
                         name: "",
                         estimatedDays: "",
                         description: "",

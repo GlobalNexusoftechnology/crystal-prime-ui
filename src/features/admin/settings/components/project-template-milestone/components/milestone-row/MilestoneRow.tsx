@@ -101,8 +101,24 @@ export function MilestoneRow({
         <div className="flex items-center justify-end gap-2">
           {isEditing && !readOnly ? (
             <>
-              <Button title="Save" onClick={() => { formik.setFieldValue(`milestones[${index}]`, localMilestone); onSave(); }} className="py-1 px-2" width="w-fit" />
-              <Button title="Cancel" variant="secondary" onClick={onCancel} className="py-1 px-2" width="w-fit" />
+              <Button
+                title="Save"
+                type="button"
+                onClick={() => {
+                  formik.setFieldValue(`milestones[${index}]`, localMilestone);
+                  onSave();
+                }}
+                className="py-1 px-2"
+                width="w-fit"
+              />
+              <Button
+                title="Cancel"
+                type="button"
+                variant="secondary"
+                onClick={onCancel}
+                className="py-1 px-2"
+                width="w-fit"
+              />
             </>
           ) : (
             !readOnly && (
@@ -133,7 +149,7 @@ export function MilestoneRow({
                         type="button"
                         onClick={() => {
                           const newTask = {
-                            id: Math.random().toString(36).substr(2, 9),
+                            id: "",
                             title: "",
                             estimated_days: "",
                             description: "",
