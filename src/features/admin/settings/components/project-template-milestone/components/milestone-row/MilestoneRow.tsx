@@ -243,14 +243,23 @@ export function MilestoneRow({
                       <button
                         type="button"
                         onClick={() => {
-                          const newTask = {
-                            id: "",
-                            title: "",
-                            estimated_days: "",
-                            description: "",
-                          };
-                          taskArrayHelpers.push(newTask);
-                          setEditingTaskId(newTask.id);
+                          const tasks = formik.values.milestones[index]?.tasks || [];
+                          const lastTask = tasks[tasks.length - 1];
+                          if (
+                            tasks.length === 0 ||
+                            (lastTask && lastTask.title && lastTask.estimated_days && lastTask.description)
+                          ) {
+                            const newTask = {
+                              id: "",
+                              title: "",
+                              estimated_days: "",
+                              description: "",
+                            };
+                            taskArrayHelpers.push(newTask);
+                            setEditingTaskId(newTask.id);
+                          } else {
+                            toast.error("Please complete the previous task before adding a new one.");
+                          }
                         }}
                       >
                         <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
@@ -272,12 +281,11 @@ export function MilestoneRow({
                     taskIndex={taskIndex}
                     isEditing={editingTaskId === task.id}
                     onEdit={setEditingTaskId}
-                    onDelete={() => handleTaskDelete(task.id || "", taskArrayHelpers.remove, taskIndex)}
+                    onDelete={taskArrayHelpers.remove}
                     onSave={() => setEditingTaskId(null)}
                     onCancel={() => setEditingTaskId(null)}
-                    handleChange={handleChange}
-                    handleBlur={handleBlur}
                     readOnly={readOnly}
+                    formik={formik}
                   />
                 ))}
               </div>
