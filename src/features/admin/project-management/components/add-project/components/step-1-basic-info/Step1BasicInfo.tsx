@@ -5,17 +5,15 @@ import { FormikProps } from "formik";
 import { IAddProjectFormValues } from "../../AddProject";
 import { ImageRegistry } from "@/constants";
 import Image from "next/image";
+import { Checkbox } from '@/components';
+import { useAllTypesQuery } from "@/services";
 
-const projectTypeOptions = [
-  { label: "Website", value: "website" },
-  { label: "Mobile App", value: "mobile_app" },
-  { label: "CRM", value: "crm" },
-];
 
 const renewalTypeOptions = [
-  { label: "Weekly", value: "weekly" },
-  { label: "Monthly", value: "monthly" },
-  { label: "Yearly", value: "yearly" },
+  { label: "Monthly", value: "MONTHLY" },
+  { label: "Quarterly", value: "QUARTERLY" },
+  { label: "Yearly", value: "YEARLY" },
+  { label: "Custom", value: "CUSTOM" },
 ];
 
 interface Step1BasicInfoProps extends FormikProps<IAddProjectFormValues> {
@@ -38,6 +36,14 @@ export function Step1BasicInfo({
   const isMilestoneSelected = values.milestoneOption === "milestone";
   const isTemplateSelected = values.milestoneOption === "template";
 
+  // Fetch lead/project types
+  const { allTypesData } = useAllTypesQuery();
+  const projectTypeOptions =
+    allTypesData?.map((type) => ({
+      label: type?.name,
+      value: type?.id.toString(),
+    })) || [];
+
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
@@ -58,13 +64,9 @@ export function Step1BasicInfo({
         <Dropdown
           label="Type Of Project"
           options={projectTypeOptions}
-          value={values.projectType}
-          onChange={(val) => setFieldValue("projectType", val)}
-          error={
-            touched.projectType && typeof errors.projectType === "string"
-              ? errors.projectType
-              : undefined
-          }
+          value={values.project_type || ''}
+          onChange={(val) => setFieldValue("project_type", val)}
+          error={touched.project_type && typeof errors.project_type === "string" ? errors.project_type : undefined}
           dropdownWidth="w-full"
         />
         <Dropdown
@@ -74,13 +76,9 @@ export function Step1BasicInfo({
             : clientError
               ? [{ label: "Error loading clients", value: "" }]
               : clientOptions}
-          value={values.client}
-          onChange={(val) => setFieldValue("client", val)}
-          error={
-            touched.client && typeof errors.client === "string"
-              ? errors.client
-              : undefined
-          }
+          value={values.client_id || ''}
+          onChange={(val) => setFieldValue("client_id", val)}
+          error={touched.client_id && typeof errors.client_id === "string" ? errors.client_id : undefined}
           dropdownWidth="w-full"
         />
       </div>
@@ -102,25 +100,17 @@ export function Step1BasicInfo({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
         <DatePicker
           label="Estimated Start Date"
-          value={values.estimatedStart}
-          onChange={(val) => setFieldValue("estimatedStart", val)}
+          value={values.start_date ? (typeof values.start_date === 'string' ? values.start_date : values.start_date.toISOString().slice(0, 10)) : ''}
+          onChange={(val) => setFieldValue("start_date", val)}
           placeholder="Estimated Start Date"
-          error={
-            touched.estimatedStart && typeof errors.estimatedStart === "string"
-              ? errors.estimatedStart
-              : undefined
-          }
+          error={touched.start_date && typeof errors.start_date === "string" ? errors.start_date : undefined}
         />
         <DatePicker
           label="Estimated End Date"
-          value={values.estimatedEnd}
-          onChange={(val) => setFieldValue("estimatedEnd", val)}
+          value={values.end_date ? (typeof values.end_date === 'string' ? values.end_date : values.end_date.toISOString().slice(0, 10)) : ''}
+          onChange={(val) => setFieldValue("end_date", val)}
           placeholder="Estimated End Date"
-          error={
-            touched.estimatedEnd && typeof errors.estimatedEnd === "string"
-              ? errors.estimatedEnd
-              : undefined
-          }
+          error={touched.end_date && typeof errors.end_date === "string" ? errors.end_date : undefined}
         />
         <InputField
           label="Budget"
@@ -141,14 +131,14 @@ export function Step1BasicInfo({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
         <InputField
           label="Estimated Cost"
-          name="estimatedCost"
+          name="estimated_cost"
           placeholder="Estimated Cost"
-          value={values.estimatedCost}
+          value={values.estimated_cost}
           onChange={handleChange}
           onBlur={handleBlur}
           error={
-            touched.estimatedCost && typeof errors.estimatedCost === "string"
-              ? errors.estimatedCost
+            touched.estimated_cost && typeof errors.estimated_cost === "string"
+              ? errors.estimated_cost
               : undefined
           }
           type="number"
@@ -156,14 +146,14 @@ export function Step1BasicInfo({
         />
         <InputField
           label="Cost Of Labour"
-          name="costOfLabour"
+          name="cost_of_labour"
           placeholder="Cost Of Labour"
-          value={values.costOfLabour}
+          value={values.cost_of_labour}
           onChange={handleChange}
           onBlur={handleBlur}
           error={
-            touched.costOfLabour && typeof errors.costOfLabour === "string"
-              ? errors.costOfLabour
+            touched.cost_of_labour && typeof errors.cost_of_labour === "string"
+              ? errors.cost_of_labour
               : undefined
           }
           type="number"
@@ -171,52 +161,58 @@ export function Step1BasicInfo({
         />
         <InputField
           label="Over Head Cost"
-          name="overHeadCost"
+          name="overhead_cost"
           placeholder="Over Head Cost"
-          value={values.overHeadCost}
+          value={values.overhead_cost}
           onChange={handleChange}
           onBlur={handleBlur}
           error={
-            touched.overHeadCost && typeof errors.overHeadCost === "string"
-              ? errors.overHeadCost
+            touched.overhead_cost && typeof errors.overhead_cost === "string"
+              ? errors.overhead_cost
               : undefined
           }
           type="number"
           className="2xl:text-[1vw]"
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw]">
-        <Dropdown
-          label="Project Renewal Type"
-          options={renewalTypeOptions}
-          value={values.renewalType}
-          onChange={(val) => setFieldValue("renewalType", val)}
-          error={
-            touched.renewalType && typeof errors.renewalType === "string"
-              ? errors.renewalType
-              : undefined
-          }
-          dropdownWidth="w-full"
-        />
-        <DatePicker
-          label="Renewal Date"
-          value={values.renewalDate}
-          onChange={(val) => setFieldValue("renewalDate", val)}
-          placeholder="Select Renewal Date"
-          error={
-            touched.renewalDate && typeof errors.renewalDate === "string"
-              ? errors.renewalDate
-              : undefined
-          }
+
+      <div className="mt-4">
+        <Checkbox
+          label="Is Renewal?"
+          checked={values.is_renewal}
+          onChange={e => setFieldValue('is_renewal', e.target.checked)}
+          name="is_renewal"
         />
       </div>
+      {values.is_renewal && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Dropdown
+              label="Renewal Type"
+              options={renewalTypeOptions}
+              value={values.renewal_type || ''}
+              onChange={val => setFieldValue('renewal_type', val)}
+              error={touched.renewal_type && typeof errors.renewal_type === 'string' ? errors.renewal_type : undefined}
+              dropdownWidth="w-full"
+            />
+          </div>
+          <div>
+            <DatePicker
+              label="Renewal Date"
+              value={values.renewal_date ? (typeof values.renewal_date === 'string' ? values.renewal_date : values.renewal_date.toISOString().slice(0, 10)) : ''}
+              onChange={val => setFieldValue('renewal_date', val)}
+              placeholder="Select Renewal Date"
+              error={touched.renewal_date && typeof errors.renewal_date === 'string' ? errors.renewal_date : undefined}
+            />
+          </div>
+        </div>
+      )}
       <div className="flex gap-6 2xl:gap-[1.5vw] mt-6 2xl:mt-[1vw]">
         <div
-          className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${
-            isMilestoneSelected
-              ? "border-primary bg-blue-50"
-              : "border-gray-300 bg-white"
-          }`}
+          className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${isMilestoneSelected
+            ? "border-primary bg-blue-50"
+            : "border-gray-300 bg-white"
+            }`}
           onClick={() => setFieldValue("milestoneOption", "milestone")}
         >
           <div className="w-[8rem] 2xl:w-[8vw] h-[10rem] 2xl:h-[10vw]">
@@ -233,11 +229,10 @@ export function Step1BasicInfo({
           </span>
         </div>
         <div
-          className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${
-            isTemplateSelected
-              ? "border-primary bg-blue-50"
-              : "border-gray-300 bg-white"
-          }`}
+          className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${isTemplateSelected
+            ? "border-primary bg-blue-50"
+            : "border-gray-300 bg-white"
+            }`}
           onClick={() => setFieldValue("milestoneOption", "template")}
         >
           <div className="w-[18rem] 2xl:w-[18vw] h-[10rem] 2xl:h-[10vw]">

@@ -21,8 +21,9 @@ import {
   IProjectMilestoneResponse,
 } from "@/services";
 import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
+import { Checkbox } from '@/components/checkbox';
 
-interface IAddProjectFormValues {
+export interface IAddProjectFormValues {
   client_id?: string;
   name: string;
   description?: string;
@@ -139,7 +140,7 @@ export function AddProject() {
       setCreatedProjectId(response.data.id);
       setIsModalOpen(true);
     },
-    onErrorCallback: () => {},
+    onErrorCallback: () => { },
   });
 
   const assemblePayload = () => {

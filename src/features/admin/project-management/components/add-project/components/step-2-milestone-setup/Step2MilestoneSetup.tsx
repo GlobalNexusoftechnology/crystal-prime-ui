@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Dropdown, Button } from "@/components";
 import { AddSquareIcon } from "@/features";
 import { Milestone, Task } from "./components";
-import { ICreateProjectMilestone, ICreateProjectTask, IUsersDetails, useAllUsersQuery, IProjectTaskResponse, IProjectMilestoneResponse } from "@/services";
+import { IUsersDetails, useAllUsersQuery, IProjectMilestoneResponse } from "@/services";
 
 interface ProjectTaskMaster {
   id: string;
