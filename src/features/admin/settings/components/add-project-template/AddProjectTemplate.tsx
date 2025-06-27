@@ -9,6 +9,7 @@ import { useCreateProjectTemplateMutation, useUpdateProjectTemplateMutation } fr
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useProjectTemplateDetailQuery, useAllTypesQuery } from "@/services";
+import { useQueryClient } from '@tanstack/react-query';
 
 
 // Validation schema using Yup
@@ -35,11 +36,13 @@ const validationSchema = Yup.object({
   ),
 });
 
-export function AddProjectTemplate({ id }: { id?: string }) {
+export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: string, refetchAllProjectTemplates: () => void }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { onCreateProjectTemplate } = useCreateProjectTemplateMutation({
     onSuccessCallback: (response) => {
       toast.success(response.message);
+      refetchAllProjectTemplates();
       router.push("/admin/settings");
     },
     onErrorCallback: (err) => {
@@ -49,6 +52,10 @@ export function AddProjectTemplate({ id }: { id?: string }) {
   const { onUpdateProjectTemplate } = useUpdateProjectTemplateMutation({
     onSuccessCallback: (response) => {
       toast.success(response.message);
+      refetchAllProjectTemplates();
+      if (id) {
+        queryClient.invalidateQueries({ queryKey: ['project-template-detail-query-key', id] });
+      }
       router.push("/admin/settings");
     },
     onErrorCallback: (err) => {

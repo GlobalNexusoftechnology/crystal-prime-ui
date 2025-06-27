@@ -61,7 +61,7 @@ const transformProjectTemplateData = (
 export default function ProjectTemplateDetails() {
   const { projectTemplateId } = useParams<TProjectTemplateParam>();
 
-  const { projectTemplateDetailData, isLoading } = useProjectTemplateDetailQuery(
+  const { projectTemplateDetailData, isLoading, refetch } = useProjectTemplateDetailQuery(
     projectTemplateId
   );
 
@@ -70,7 +70,7 @@ export default function ProjectTemplateDetails() {
       return transformProjectTemplateData(projectTemplateDetailData);
     }
     return null;
-  }, [projectTemplateDetailData]);
+  }, [projectTemplateDetailData, refetch]);
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -80,5 +80,5 @@ export default function ProjectTemplateDetails() {
     return <div>ProjectTemplate Data Not Found</div>;
   }
 
-  return <ProjectTemplateDetail projectTemplateData={projectTemplateData} />;
+  return <ProjectTemplateDetail projectTemplateData={projectTemplateData} refetchProjectTemplateDetail={refetch} />;
 }

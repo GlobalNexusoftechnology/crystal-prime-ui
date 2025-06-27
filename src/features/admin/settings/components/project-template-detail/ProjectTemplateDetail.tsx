@@ -7,12 +7,13 @@ import { Breadcrumb } from "@/features/admin/breadcrumb";
 import { useRouter } from "next/navigation";
 import { ActionDropdown } from "@/components/action-dropdown/ActionDropdown";
 import { formattingDate } from "@/utils";
-import { useDeleteProjectTemplateMutation } from "@/services";
+import { useAllProjectTemplatesQuery, useDeleteProjectTemplateMutation } from "@/services";
 import toast from "react-hot-toast";
 import { useAllTypesQuery } from "@/services";
 
 type IProjectTemplateDetailProps = {
   projectTemplateData: IProjectTemplateDetail;
+  refetchProjectTemplateDetail?: () => void;
 };
 
 const validationSchema = Yup.object({
@@ -48,17 +49,21 @@ const validationSchema = Yup.object({
  */
 export function ProjectTemplateDetail({
   projectTemplateData,
+  refetchProjectTemplateDetail,
 }: IProjectTemplateDetailProps) {
   const router = useRouter();
   
   const { allTypesData } = useAllTypesQuery();
+  const { refetchAllProjectTemplates } = useAllProjectTemplatesQuery();
 
   const projectTypeName = allTypesData?.find(type => type.id?.toString() === projectTemplateData.project_type)?.name || projectTemplateData.project_type;
 
   const { onDeleteProjectTemplate } = useDeleteProjectTemplateMutation({
     onSuccessCallback: (response) => {
       toast.success(response.message || "Project template deleted successfully");
+      if (refetchProjectTemplateDetail) refetchProjectTemplateDetail();
       router.push("/admin/settings/project-template");
+      refetchAllProjectTemplates();
     },
     onErrorCallback: (err) => {
       toast.error(err.message || "Failed to delete project template");

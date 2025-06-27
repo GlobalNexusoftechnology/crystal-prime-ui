@@ -50,7 +50,7 @@ export function ProjectTemplateCard({
   const { onDeleteProjectTemplate } = useDeleteProjectTemplateMutation({
     onSuccessCallback: (response) => {
       toast.success(response.message || "Project template deleted successfully");
-      refetchAllProjectTemplates()
+      refetchAllProjectTemplates();
     },
     onErrorCallback: (err) => {
       toast.error(err.message || "Failed to delete project template");
