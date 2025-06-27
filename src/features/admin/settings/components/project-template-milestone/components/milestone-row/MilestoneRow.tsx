@@ -97,7 +97,7 @@ export function MilestoneRow({
         <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
           <button
             type="button"
-            onClick={() => onToggle(milestone?.id || "")}
+            onClick={() => onToggle(milestone.id || String(index))}
             className="p-1"
           >
             {expanded ? <FaChevronDown /> : <FaChevronRight />}
@@ -220,7 +220,7 @@ export function MilestoneRow({
               <ActionDropdown
                 direction="left"
                 options={[
-                  { label: "Edit", onClick: () => onEdit(milestone?.id || "") },
+                  { label: "Edit", onClick: () => onEdit(milestone.id || String(index)) },
                   { label: isMilestoneDeleting ? "Deleting..." : "Delete", onClick: handleMilestoneDelete, className: "text-red-500" },
                 ]}
               />

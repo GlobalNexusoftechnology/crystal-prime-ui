@@ -59,7 +59,8 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                           tasks: [],
                         };
                         arrayHelpers.push(newMilestone);
-                        handleEditMilestone(newMilestone.id);
+                        const newKey = String(milestones.length);
+                        setEditingMilestoneId(newKey);
                       } else {
                         toast.error("Please complete the previous milestone before adding a new one.");
                       }
@@ -77,14 +78,15 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
               </span>
             </div>
             {values.milestones?.map((milestone: Milestone, index: number) => {
-              const isEditing = editingMilestoneId === milestone.id;
+              const milestoneKey = milestone.id || String(index);
+              const isEditing = editingMilestoneId === milestoneKey;
               return (
                 <MilestoneRow
-                  key={milestone.id}
+                  key={milestoneKey}
                   milestone={milestone}
                   index={index}
                   isEditing={isEditing}
-                  expanded={!!(milestone.id && openMilestones[milestone.id])}
+                  expanded={!!openMilestones[milestoneKey]}
                   openMilestones={openMilestones}
                   onToggle={toggleMilestone}
                   onEdit={handleEditMilestone}
