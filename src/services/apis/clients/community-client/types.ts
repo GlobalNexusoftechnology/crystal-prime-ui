@@ -880,9 +880,6 @@ export interface IDeleteNotification {
  
 }
 
-
-
-
 interface INotificationMetadata {
   leadId: string;
   leadName: string;
@@ -917,17 +914,29 @@ export interface INotificationsResponse {
 
 // --- Project Schema Additions (matches backend Zod schema) ---
 
-export interface IProjectTask {
-  id?: string;
+export interface ICreateProjectTask {
   title: string;
   description?: string;
-  due_date?: string; // ISO string
+  due_date?: string; 
   status?: string;
   assigned_to?: string;
+  milestone_id: string;
 }
 
-export interface IProjectMilestone {
-  id?: string;
+export interface IProjectTaskResponse  {
+  id: string;
+  title: string;
+  description?: string;
+  due_date?: string; 
+  status?: string;
+  assigned_to?: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+}
+
+export interface ICreateProjectMilestone {
   name: string;
   start_date?: string;
   end_date?: string;
@@ -936,64 +945,98 @@ export interface IProjectMilestone {
   assigned_to?: string;
   status: string;
   remark?: string;
-  tasks?: IProjectTask[];
+  project_id: string;
 }
 
-export interface IProjectAttachment {
+export interface IProjectMilestoneResponse {
   id?: string;
+  project: IProjectResponse
+  name: string;
+  start_date?: string;
+  end_date?: string;
+  actual_date?: string;
+  estimated_date?: string;
+  assigned_to?: string;
+  status: string;
+  remark?: string;
+  tasks?: IProjectTaskResponse[];
+}
+
+export interface ICreateProjectAttachment {
   file_path: string;
   file_type: string;
   file_name: string;
   uploaded_by?: string;
 }
 
-// Updated project payload to match backend schema
+export interface IProjectAttachmentResponse {
+  id?: string;
+  file_path: string;
+  file_type: string;
+  file_name: string;
+  uploaded_by?: IUser;
+  project: IProjectAttachmentResponse
+}
+
+export enum ProjectRenewalType {
+  NONE = "NONE",
+  MONTHLY = "RESCHEDULE",
+  QUARTERLY = "QUARTERLY",
+  YEARLY = "YEARLY",
+  CUSTOM = "CUSTOM",
+}
+
 export interface ICreateProjectPayload {
-  client_id?: string; // uuid, optional
+  client_id?: string;
   name: string;
-  description: string;
+  description?: string;
   project_type?: string;
   budget?: number;
   estimated_cost?: number;
   actual_cost?: number;
-  start_date?: string;
-  end_date?: string;
-  actual_start_date?: string;
-  actual_end_date?: string;
-  milestones?: IProjectMilestone[];
-  attachments?: IProjectAttachment[];
+  cost_of_labour?: number;
+  overhead_cost?: number;
+  start_date?: Date;
+  end_date?: Date;
+  actual_start_date?: Date;
+  actual_end_date?: Date;
+  template_id?: string | null;
+  renewal_type?: ProjectRenewalType | null;
+  renewal_date?: Date;
+  is_renewal?: boolean;
 }
 
-// Updated project details to match backend schema
-export interface IProjectDetails extends ICreateProjectPayload {
+export interface IProjectResponse extends ICreateProjectPayload {
   id: string;
   created_at: string;
   updated_at: string;
   deleted: boolean;
   deleted_at: string | null;
-  status?: string;
-  // You may add more fields if needed
+  status: string;
+  client: IClientList
+  milestones: IProjectMilestoneResponse[]
+  documents: IProjectAttachmentResponse[]
 }
 
 export interface ICreateProjectResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IProjectDetails;
+  data: IProjectResponse;
 }
 
 export interface IAllProjectsResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IProjectDetails[];
+  data: IProjectResponse[];
 }
 
 export interface IProjectDetailResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IProjectDetails;
+  data: IProjectResponse;
 }
 
 export interface IUpdateProjectPayload {
@@ -1001,18 +1044,19 @@ export interface IUpdateProjectPayload {
   payload: Partial<ICreateProjectPayload>;
 }
 
+
 export interface IUpdateProjectResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IProjectDetails;
+  data: IProjectResponse;
 }
 
 export interface IDeleteProjectResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IProjectDetails;
+  data: IProjectResponse;
 }
 
 // Client APIs Types
