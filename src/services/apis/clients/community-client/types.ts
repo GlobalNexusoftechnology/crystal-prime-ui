@@ -1001,7 +1001,7 @@ export interface IProjectAttachmentResponse {
 
 export enum ProjectRenewalType {
   NONE = "NONE",
-  MONTHLY = "RESCHEDULE",
+  MONTHLY = "MONTHLY",
   QUARTERLY = "QUARTERLY",
   YEARLY = "YEARLY",
   CUSTOM = "CUSTOM",
@@ -1017,13 +1017,13 @@ export interface ICreateProjectPayload {
   actual_cost?: number;
   cost_of_labour?: number;
   overhead_cost?: number;
-  start_date?: Date;
-  end_date?: Date;
-  actual_start_date?: Date;
-  actual_end_date?: Date;
+  start_date?: string;
+  end_date?: string;
+  actual_start_date?: string;
+  actual_end_date?: string;
   template_id?: string | null;
   renewal_type?: ProjectRenewalType | null;
-  renewal_date?: Date;
+  renewal_date?: string;
   is_renewal?: boolean;
 }
 

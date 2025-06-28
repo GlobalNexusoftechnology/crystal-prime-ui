@@ -103,6 +103,9 @@ export function Step2MilestoneSetup({
     taskId: string;
   } | null>(null);
 
+  // Flag to prevent multiple template applications
+  const [templateApplied, setTemplateApplied] = useState(false);
+
   // Fetch users for userOptions
   const { allUsersData, isLoading: usersLoading, isError: usersError } = useAllUsersQuery();
   const userOptions = usersLoading
@@ -116,11 +119,14 @@ export function Step2MilestoneSetup({
 
   // Auto-populate milestones/tasks when a template is selected
   useEffect(() => {
-    if (!projectTemplate || !allProjectTemplatesData) return;
+    if (!projectTemplate || !allProjectTemplatesData || templateApplied) return;
+    console.log("Template selected:", projectTemplate);
+    console.log("Available templates:", allProjectTemplatesData.templates);
     const selectedTemplate = (allProjectTemplatesData.templates || []).find(
       (tpl) => tpl.id === projectTemplate
     );
     if (selectedTemplate) {
+      console.log("Selected template found:", selectedTemplate);
       const mappedMilestones: Milestone[] = (selectedTemplate.project_milestone_master || []).map((m, idx) => ({
         id: m.id || String(idx),
         name: m.name,
@@ -137,12 +143,18 @@ export function Step2MilestoneSetup({
           due_date: t.due_date || "",
         })),
       }));
+      console.log("Setting milestones from template:", mappedMilestones);
       setMilestones(mappedMilestones);
+      setTemplateApplied(true);
+    } else {
+      console.log("Template not found for ID:", projectTemplate);
     }
-  }, [projectTemplate, allProjectTemplatesData]);
+  }, [projectTemplate, allProjectTemplatesData, templateApplied]);
 
+  // Initialize milestones from existing data (for edit mode)
   useEffect(() => {
-    if (initialMilestones && initialMilestones.length > 0) {
+    if (initialMilestones && initialMilestones.length > 0 && milestones.length === 0 && !templateApplied) {
+      console.log("Setting initial milestones:", initialMilestones);
       setMilestones(initialMilestones.map(m => ({
         id: m.id || "",
         name: m.name,
@@ -160,7 +172,12 @@ export function Step2MilestoneSetup({
         })),
       })));
     }
-  }, [initialMilestones]);
+  }, [initialMilestones, milestones.length, templateApplied]);
+
+  // Reset template applied flag when template changes
+  useEffect(() => {
+    setTemplateApplied(false);
+  }, [projectTemplate]);
 
   // Add expandedMilestones state
   const [expandedMilestones, setExpandedMilestones] = useState<string[]>([]);
@@ -341,7 +358,12 @@ export function Step2MilestoneSetup({
                 ? [{ label: "Error loading templates", value: "" }]
                 : projectTemplateOptions}
             value={projectTemplate}
-            onChange={setProjectTemplate}
+            onChange={(value) => {
+              console.log("Template dropdown onChange:", value);
+              console.log("Previous template:", projectTemplate);
+              console.log("Milestone option:", milestoneOption);
+              setProjectTemplate(value);
+            }}
             dropdownWidth="w-full"
             error={undefined}
           />

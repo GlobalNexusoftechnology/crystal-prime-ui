@@ -8,12 +8,14 @@ interface ProjectCreatedModalProps {
   onClose: () => void;
   isOpen: boolean;
   projectId?: string | null;
+  mode?: "create" | "edit";
 }
 
 export function ProjectCreatedModal({
   onClose,
   isOpen,
   projectId,
+  mode = "create",
 }: ProjectCreatedModalProps) {
   const router = useRouter();
 
@@ -43,7 +45,7 @@ export function ProjectCreatedModal({
             />
           </div>
           <p className="text-lg 2xl:[1.2vw] text-gray-600">
-            Project created successfully. View it in project management.
+            Project {mode === "edit" ? "updated" : "created"} successfully. View it in project management.
           </p>
         </div>
         <div className="flex gap-4 w-full justify-center">

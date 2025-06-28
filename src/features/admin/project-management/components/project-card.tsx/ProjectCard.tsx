@@ -92,7 +92,7 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
             {showDropdown && (
               <ProjectDropdown
                 onView={() => router.push(`/admin/project-management/${project.data.id}`)}
-                onEdit={() => alert(`Editing ${project.data.name}`)}
+                onEdit={() => router.push(`/admin/project-management/edit/${project.data.id}`)}
                 onDelete={handleDelete}
               />
             )}

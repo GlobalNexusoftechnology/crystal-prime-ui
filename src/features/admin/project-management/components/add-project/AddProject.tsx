@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import { Button } from "@/components";
 import {
   useCreateProjectMutation,
+  useUpdateProjectMutation,
   useAllClientQuery,
   useAllProjectTemplatesQuery,
   ProjectRenewalType,
@@ -40,6 +41,13 @@ export interface IAddProjectFormValues {
   renewal_date?: Date;
   is_renewal?: boolean;
   milestoneOption: string; // extra field for frontend dropdown selection
+}
+
+interface AddProjectProps {
+  mode?: "create" | "edit";
+  projectId?: string;
+  initialFormValues?: IAddProjectFormValues;
+  existingMilestones?: Milestone[];
 }
 
 const initialValues: IAddProjectFormValues = {
@@ -68,14 +76,12 @@ const validationSchema = Yup.object({
   project_type: Yup.string().required("Project Type is required"),
   client_id: Yup.string().required("Client is required"),
   description: Yup.string().required("Description is required"),
-
   start_date: Yup.date()
     .typeError("Estimated Start Date is required")
     .required("Estimated Start Date is required"),
   end_date: Yup.date()
     .typeError("Estimated End Date is required")
     .required("Estimated End Date is required"),
-
   budget: Yup.number()
     .typeError("Budget must be a number")
     .required("Budget is required"),
@@ -88,12 +94,6 @@ const validationSchema = Yup.object({
   overhead_cost: Yup.number()
     .typeError("Over Head Cost must be a number")
     .required("Over Head Cost is required"),
-
-  renewal_type: Yup.string().required("Renewal Type is required"),
-  renewal_date: Yup.date()
-    .typeError("Renewal Date is required")
-    .required("Renewal Date is required"),
-
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
 
@@ -117,17 +117,22 @@ export interface Milestone {
   tasks: Task[];
 }
 
-export function AddProject() {
+export function AddProject({ 
+  mode = "create", 
+  projectId, 
+  initialFormValues: propInitialFormValues,
+  existingMilestones = []
+}: AddProjectProps) {
   const [step, setStep] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]); // for Step3/Preview
   const [milestoneOption, setMilestoneOption] = useState("milestone");
-  const [milestones, setMilestones] = useState<Milestone[]>([]);
+  const [milestones, setMilestones] = useState<Milestone[]>(existingMilestones);
   const [basicInfo, setBasicInfo] = useState<IAddProjectFormValues | null>(
-    null
+    propInitialFormValues || null
   );
   const [selectedProjectTemplate, setSelectedProjectTemplate] =
-    useState<string>("");
+    useState<string>(propInitialFormValues?.template_id || "");
   const [createdProjectId, setCreatedProjectId] = useState<string | null>(null);
   const {
     allClientData,
@@ -153,13 +158,24 @@ export function AddProject() {
     })
   );
 
-  const { onCreateProject, isPending, error } = useCreateProjectMutation({
+  const { onCreateProject, isPending: isCreatePending, error: createError } = useCreateProjectMutation({
     onSuccessCallback: (response) => {
       setCreatedProjectId(response.data.id);
       setIsModalOpen(true);
     },
     onErrorCallback: () => { },
   });
+
+  const { onUpdateProject, isPending: isUpdatePending, error: updateError } = useUpdateProjectMutation({
+    onSuccessCallback: (response) => {
+      setCreatedProjectId(response.data.id);
+      setIsModalOpen(true);
+    },
+    onErrorCallback: () => { },
+  });
+
+  const isPending = isCreatePending || isUpdatePending;
+  const error = createError || updateError;
 
   const assemblePayload = () => {
     if (!basicInfo) return null;
@@ -182,14 +198,42 @@ export function AddProject() {
       file_type: file.type,
       file_name: file.name,
     }));
+
+    // Determine template_id
+    let finalTemplateId = undefined;
+    if (selectedProjectTemplate && selectedProjectTemplate.trim() !== "") {
+      finalTemplateId = selectedProjectTemplate;
+    } else if (basicInfo.template_id && basicInfo.template_id.trim() !== "") {
+      finalTemplateId = basicInfo.template_id;
+    }
+
+    console.log("Template ID Debug:", {
+      selectedProjectTemplate,
+      basicInfoTemplateId: basicInfo.template_id,
+      finalTemplateId,
+      milestoneOption
+    });
+
+    console.log("Renewal Fields Debug:", {
+      is_renewal: basicInfo.is_renewal,
+      renewal_date: basicInfo.renewal_date,
+      renewal_type: basicInfo.renewal_type,
+      description: basicInfo.description
+    });
+
     return {
       name: basicInfo.name,
+      description: basicInfo.description,
       project_type: basicInfo.project_type,
       client_id: basicInfo.client_id,
       budget: Number(basicInfo.budget),
+      is_renewal: basicInfo.is_renewal,
+      renewal_date: basicInfo.is_renewal === true ? (basicInfo.renewal_date ? (basicInfo.renewal_date instanceof Date ? basicInfo.renewal_date.toISOString() : basicInfo.renewal_date) : undefined) : undefined,
+      renewal_type: basicInfo.is_renewal === true ? basicInfo.renewal_type : undefined,
+      template_id: finalTemplateId,
       estimated_cost: Number(basicInfo.estimated_cost),
-      start_date: basicInfo.start_date,
-      end_date: basicInfo.end_date,
+      start_date: basicInfo.start_date ? (basicInfo.start_date instanceof Date ? basicInfo.start_date.toISOString() : basicInfo.start_date) : undefined,
+      end_date: basicInfo.end_date ? (basicInfo.end_date instanceof Date ? basicInfo.end_date.toISOString() : basicInfo.end_date) : undefined,
       milestones: apiMilestones,
       attachments,
     };
@@ -212,8 +256,42 @@ export function AddProject() {
 
   const handleFinalSubmit = () => {
     const payload = assemblePayload();
+    console.log("Final Submit Debug:", {
+      mode,
+      projectId,
+      milestoneOption,
+      selectedProjectTemplate,
+      basicInfoTemplateId: basicInfo?.template_id,
+      milestonesCount: milestones.length,
+      milestones: milestones.map(m => ({ name: m.name, id: m.id })),
+      finalTemplateId: payload?.template_id
+    });
+    
+    console.log("Full Payload Structure:", {
+      name: payload?.name,
+      description: payload?.description,
+      project_type: payload?.project_type,
+      client_id: payload?.client_id,
+      budget: payload?.budget,
+      is_renewal: payload?.is_renewal,
+      renewal_date: payload?.renewal_date,
+      renewal_type: payload?.renewal_type,
+      template_id: payload?.template_id,
+      estimated_cost: payload?.estimated_cost,
+      start_date: payload?.start_date,
+      end_date: payload?.end_date,
+      start_date_type: typeof payload?.start_date,
+      end_date_type: typeof payload?.end_date,
+      renewal_date_type: typeof payload?.renewal_date
+    });
+    
+    console.log(payload, "payload$$$")
     if (payload) {
-      onCreateProject(payload);
+      if (mode === "create") {
+        onCreateProject(payload);
+      } else if (mode === "edit" && projectId) {
+        onUpdateProject({ id: projectId, payload });
+      }
     }
   };
 
@@ -262,11 +340,13 @@ export function AddProject() {
         <FaArrowLeftLong className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
         <span>Back</span>
       </Link>
-      <h1 className="text-2xl 2xl:text-[1.8vw] font-medium">Create Project</h1>
+      <h1 className="text-2xl 2xl:text-[1.8vw] font-medium">
+        {mode === "edit" ? "Edit Project" : "Create Project"}
+      </h1>
       <ProgressHeader step={step} />
       {step === 1 && (
         <Formik
-          initialValues={basicInfo || initialValues}
+          initialValues={basicInfo || propInitialFormValues || initialValues}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
@@ -330,12 +410,13 @@ export function AddProject() {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           projectId={createdProjectId}
+          mode={mode}
         />
       )}
-      {isPending && <div>Creating project...</div>}
+      {isPending && <div>{mode === "edit" ? "Updating project..." : "Creating project..."}</div>}
       {error && (
         <div className="text-red-600">
-          Error: {error.message || "Failed to create project."}
+          Error: {error.message || `Failed to ${mode} project.`}
         </div>
       )}
     </section>
