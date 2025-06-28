@@ -52,6 +52,19 @@ export function Task({
     const handleRedirectView = (taskId: string) => {
         router.push(`/admin/project-management/${projectId}/${milestoneId}/${taskId}`)
     }
+
+    // Helper function to get user name from user ID
+    const getUserName = (userId: string) => {
+        const user = userOptions.find(option => option.value === userId);
+        return user ? user.label : userId;
+    }
+
+    // Helper function to get user initials from user ID
+    const getUserInitials = (userId: string) => {
+        const userName = getUserName(userId);
+        return getInitials(userName);
+    }
+
     return (
         <tr className="border-t border-gray-200">
             {editingTask && editingTask.milestoneId === milestoneId && editingTask.taskId === task.id && editTask ? (
@@ -82,8 +95,8 @@ export function Task({
                     <td className="py-2 text-sm">{task.description}</td>
                     <td className="py-2 text-sm">
                         <div className="flex items-center gap-2">
-                            <p className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" style={{ backgroundColor: getRandomColor(task.assigned_to || '') }}>{getInitials(task.assigned_to || "")}</p>
-                            <p className="px-3 py-1 text-[0.9rem]">{task.assigned_to}</p>
+                            <p className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" style={{ backgroundColor: getRandomColor(task.assigned_to || '') }}>{getUserInitials(task.assigned_to || "")}</p>
+                            <p className="px-3 py-1 text-[0.9rem]">{getUserName(task.assigned_to || "")}</p>
                         </div>
                     </td>
                     <td className="py-2"><span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">{task.status}</span></td>

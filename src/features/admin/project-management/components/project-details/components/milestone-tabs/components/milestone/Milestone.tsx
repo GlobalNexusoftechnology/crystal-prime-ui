@@ -74,6 +74,19 @@ export function Milestone({
   const handleRedirectView = (milestoneId: string) => {
     router.push(`/admin/project-management/${projectId}/${milestoneId}`)
   }
+
+  // Helper function to get user name from user ID
+  const getUserName = (userId: string) => {
+    const user = userOptions.find(option => option.value === userId);
+    return user ? user.label : userId;
+  }
+
+  // Helper function to get user initials from user ID
+  const getUserInitials = (userId: string) => {
+    const userName = getUserName(userId);
+    return getInitials(userName);
+  }
+
   return (
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
       {editingId === milestone.id && editMilestone ? (
@@ -161,10 +174,10 @@ export function Milestone({
                   backgroundColor: getRandomColor(milestone?.assigned_to || ''),
                 }}
               >
-                {getInitials(milestone.assigned_to || "")}
+                {getUserInitials(milestone.assigned_to || "")}
               </p>
               <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
-                {milestone.assigned_to || ""}
+                {getUserName(milestone.assigned_to || "")}
               </p>
             </div>
           </td>

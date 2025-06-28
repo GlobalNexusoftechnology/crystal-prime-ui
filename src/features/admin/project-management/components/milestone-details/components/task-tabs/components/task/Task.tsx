@@ -55,6 +55,19 @@ export function Task({
       `/admin/project-management/${projectId}/${milestoneId}/${taskId}`
     );
   };
+
+  // Helper function to get user name from user ID
+  const getUserName = (userId: string) => {
+    const user = userOptions.find(option => option.value === userId);
+    return user ? user.label : userId;
+  };
+
+  // Helper function to get user initials from user ID
+  const getUserInitials = (userId: string) => {
+    const userName = getUserName(userId);
+    return getInitials(userName);
+  };
+
   return (
     <tr className="border-t border-gray-200">
       {editingTask === task.id && editTask ? (
@@ -118,9 +131,9 @@ export function Task({
                   backgroundColor: getRandomColor(task.assigned_to || ""),
                 }}
               >
-                {getInitials(task.assigned_to)}
+                {getUserInitials(task.assigned_to)}
               </p>
-              <p className="px-3 py-1 text-[0.9rem]">{task.assigned_to}</p>
+              <p className="px-3 py-1 text-[0.9rem]">{getUserName(task.assigned_to)}</p>
             </div>
           </td>
           <td className="py-2">
