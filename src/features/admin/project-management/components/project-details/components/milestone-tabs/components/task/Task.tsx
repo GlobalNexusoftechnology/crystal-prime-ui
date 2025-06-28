@@ -30,6 +30,7 @@ interface TaskProps {
     userOptions: { label: string; value: string }[];
     statusOptions: { label: string; value: string }[];
     milestoneId: string;
+    errors?: {[key: string]: string};
 }
 
 export function Task({
@@ -47,6 +48,7 @@ export function Task({
     userOptions,
     statusOptions,
     milestoneId,
+    errors = {},
 }: TaskProps) {
     const router = useRouter()
     const handleRedirectView = (taskId: string) => {
@@ -70,19 +72,55 @@ export function Task({
             {editingTask && editingTask.milestoneId === milestoneId && editingTask.taskId === task.id && editTask ? (
                 <>
                     <td className="pl-8 py-2 font-medium">
-                        <InputField value={editTask.title} onChange={e => onChange({ ...editTask, title: e.target.value })} className="w-32" />
+                        <div className="flex flex-col">
+                            <InputField 
+                                value={editTask.title} 
+                                onChange={e => onChange({ ...editTask, title: e.target.value })} 
+                                className="w-32"
+                                error={errors.title}
+                            />
+                        </div>
                     </td>
                     <td className="py-2">
-                        <InputField value={editTask.description} onChange={e => onChange({ ...editTask, description: e.target.value })} className="w-40" />
+                        <div className="flex flex-col">
+                            <InputField 
+                                value={editTask.description} 
+                                onChange={e => onChange({ ...editTask, description: e.target.value })} 
+                                className="w-40"
+                                error={errors.description}
+                            />
+                        </div>
                     </td>
                     <td className="py-2">
-                        <Dropdown options={userOptions} value={editTask.assigned_to} onChange={val => onChange({ ...editTask, assigned_to: val })} dropdownWidth="w-32" />
+                        <div className="flex flex-col">
+                            <Dropdown 
+                                options={userOptions} 
+                                value={editTask.assigned_to} 
+                                onChange={val => onChange({ ...editTask, assigned_to: val })} 
+                                dropdownWidth="w-32"
+                                error={errors.assigned_to}
+                            />
+                        </div>
                     </td>
                     <td className="py-2">
-                        <Dropdown options={statusOptions} value={editTask.status} onChange={val => onChange({ ...editTask, status: val })} dropdownWidth="w-28" />
+                        <div className="flex flex-col">
+                            <Dropdown 
+                                options={statusOptions} 
+                                value={editTask.status} 
+                                onChange={val => onChange({ ...editTask, status: val })} 
+                                dropdownWidth="w-28"
+                                error={errors.status}
+                            />
+                        </div>
                     </td>
                     <td className="py-2">
-                        <DatePicker value={editTask.due_date} onChange={val => onChange({ ...editTask, due_date: val })} />
+                        <div className="flex flex-col">
+                            <DatePicker 
+                                value={editTask.due_date} 
+                                onChange={val => onChange({ ...editTask, due_date: val })}
+                                error={errors.due_date}
+                            />
+                        </div>
                     </td>
                     <td className="px-2 py-4 text-right flex gap-2">
                         <button onClick={onSave} className="text-green-600" title="Save"><HiCheck className="w-6 h-6" /></button>

@@ -49,6 +49,7 @@ interface MilestoneProps {
   userOptions: { label: string; value: string }[];
   statusOptions: { label: string; value: string }[];
   children?: React.ReactNode;
+  errors?: {[key: string]: string};
 }
 
 export function Milestone({
@@ -68,6 +69,7 @@ export function Milestone({
   userOptions,
   statusOptions,
   children,
+  errors = {},
 }: MilestoneProps) {
   const router = useRouter()
 
@@ -92,47 +94,64 @@ export function Milestone({
       {editingId === milestone.id && editMilestone ? (
         <>
           <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw]">
-            <InputField
-              value={editMilestone.name}
-              onChange={(e) =>
-                onChange({ ...editMilestone, name: e.target.value })
-              }
-              className="w-40"
-            />
+            <div className="flex flex-col">
+              <InputField
+                value={editMilestone.name}
+                onChange={(e) =>
+                  onChange({ ...editMilestone, name: e.target.value })
+                }
+                className={`w-40 ${errors.name ? 'border-red-500' : ''}`}
+              />
+              {errors.name && (
+                <span className="text-red-500 text-xs mt-1">{errors.name}</span>
+              )}
+            </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
-            <Dropdown
-              options={userOptions}
-              value={editMilestone.assigned_to || ''}
-              onChange={(val) =>
-                onChange({ ...editMilestone, assigned_to: val })
-              }
-              dropdownWidth="w-40 2xl:w-[10vw]"
-            />
+            <div className="flex flex-col">
+              <Dropdown
+                options={userOptions}
+                value={editMilestone.assigned_to || ''}
+                onChange={(val) =>
+                  onChange({ ...editMilestone, assigned_to: val })
+                }
+                dropdownWidth="w-40 2xl:w-[10vw]"
+                error={errors.assigned_to}
+              />
+            </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
-            <Dropdown
-              options={statusOptions}
-              value={editMilestone.status}
-              onChange={(val) => onChange({ ...editMilestone, status: val })}
-              dropdownWidth="w-32 2xl:w-[8vw]"
-            />
+            <div className="flex flex-col">
+              <Dropdown
+                options={statusOptions}
+                value={editMilestone.status}
+                onChange={(val) => onChange({ ...editMilestone, status: val })}
+                dropdownWidth="w-32 2xl:w-[8vw]"
+                error={errors.status}
+              />
+            </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
-            <DatePicker
-              value={editMilestone.start_date || ""}
-              onChange={(val) =>
-                onChange({ ...editMilestone, start_date: val })
-              }
-            />
+            <div className="flex flex-col">
+              <DatePicker
+                value={editMilestone.start_date || ""}
+                onChange={(val) =>
+                  onChange({ ...editMilestone, start_date: val })
+                }
+                error={errors.start_date}
+              />
+            </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
-            <DatePicker
-              value={editMilestone.end_date || ""}
-              onChange={(val) =>
-                onChange({ ...editMilestone, end_date: val })
-              }
-            />
+            <div className="flex flex-col">
+              <DatePicker
+                value={editMilestone.end_date || ""}
+                onChange={(val) =>
+                  onChange({ ...editMilestone, end_date: val })
+                }
+                error={errors.end_date}
+              />
+            </div>
           </td>
           <td className="px-2 py-4 text-right flex gap-2">
             <button onClick={onSave} className="text-green-600" title="Save">

@@ -35,6 +35,9 @@ export function TaskTabs({
   const [editTask, setEditTask] = useState<TaskType | null>(null);
   const [taskMenu, setTaskMenu] = useState<string | null>(null);
 
+  // Error states for validation
+  const [taskErrors, setTaskErrors] = useState<{[key: string]: string}>({});
+
   // User options
   const { allUsersData, isLoading: usersLoading, isError: usersError } = useAllUsersQuery();
   const userOptions = usersLoading
@@ -57,9 +60,15 @@ export function TaskTabs({
     onSuccessCallback: () => {
       setTasks((prev) => prev.filter((t) => t.id !== deletingTaskId));
       setTaskMenu(null);
+      toast.success("Task deleted successfully");
+      
+      // Refetch data to ensure consistency
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
     },
     onErrorCallback: (err) => {
-      console.log(err)
+      toast.error(err.message || "Failed to delete task");
     },
   });
 
@@ -78,7 +87,13 @@ export function TaskTabs({
       }]);
       setEditingTask(null);
       setEditTask(null);
+      setTaskErrors({});
       toast.success("Task created successfully");
+      
+      // Refetch data to ensure consistency
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
     },
     onErrorCallback: (err) => {
       toast.error(err.message || "Failed to create task");
@@ -106,7 +121,13 @@ export function TaskTabs({
       );
       setEditingTask(null);
       setEditTask(null);
+      setTaskErrors({});
       toast.success("Task updated successfully");
+      
+      // Refetch data to ensure consistency
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
     },
     onErrorCallback: (err) => {
       toast.error(err.message || "Failed to update task");
@@ -115,20 +136,70 @@ export function TaskTabs({
 
   const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
+  // Validation functions
+  const validateTask = (task: TaskType) => {
+    const errors: {[key: string]: string} = {};
+    
+    if (!task.name || task.name.trim() === "") {
+      errors.name = "Task name is required";
+    }
+    if (!task.description || task.description.trim() === "") {
+      errors.description = "Task description is required";
+    }
+    if (!task.assigned_to || task.assigned_to === "--") {
+      errors.assigned_to = "Please assign to someone";
+    }
+    if (!task.status) {
+      errors.status = "Status is required";
+    }
+    if (!task.due_date) {
+      errors.due_date = "Due date is required";
+    }
+    
+    setTaskErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const isTaskValid = (task: TaskType) => {
+    return task.name && 
+           task.name.trim() !== "" && 
+           task.description && 
+           task.description.trim() !== "" &&
+           task.assigned_to && 
+           task.assigned_to !== "--" &&
+           task.status &&
+           task.due_date;
+  };
+
+  const hasIncompleteTask = () => {
+    return tasks.some(t => t.id.startsWith('temp_') && !isTaskValid(t));
+  };
+
   // Task handlers
   const handleEditTask = (task: TaskType) => {
     setEditingTask(task.id);
     setEditTask({ ...task });
     setTaskMenu(null);
+    setTaskErrors({});
   };
 
   const handleCancelTask = () => {
+    // If this is a temporary task (new one being created), remove it
+    if (editTask && editTask.id && editTask.id.startsWith('temp_')) {
+      setTasks((prev) => prev.filter((t) => t.id !== editTask.id));
+    }
     setEditingTask(null);
     setEditTask(null);
+    setTaskErrors({});
   };
 
   const handleSaveTask = () => {
     if (!editTask || !editingTask) return;
+    
+    // Validate task before saving
+    if (!validateTask(editTask)) {
+      return; // Don't show toast, validation errors are shown in fields
+    }
     
     // Check if this is a new task (temporary ID) or existing one
     const isNewTask = editTask.id && editTask.id.startsWith('temp_');
@@ -164,6 +235,12 @@ export function TaskTabs({
   };
 
   const handleAddTask = () => {
+    // Check if there's an incomplete task
+    if (hasIncompleteTask()) {
+      toast.error("Please complete the current task before adding a new one");
+      return;
+    }
+
     const newId = `temp_${Date.now()}`;
     const newTask: TaskType = {
       id: newId,
@@ -177,6 +254,28 @@ export function TaskTabs({
     setTasks((prev) => [...prev, newTask]);
     setEditingTask(newId);
     setEditTask(newTask);
+    setTaskErrors({});
+  };
+
+  const handleTaskChange = (updatedTask: TaskType) => {
+    setEditTask(updatedTask);
+    
+    // Clear specific field errors when user makes changes
+    if (taskErrors.name && updatedTask.name && updatedTask.name.trim() !== "") {
+      setTaskErrors(prev => ({ ...prev, name: "" }));
+    }
+    if (taskErrors.description && updatedTask.description && updatedTask.description.trim() !== "") {
+      setTaskErrors(prev => ({ ...prev, description: "" }));
+    }
+    if (taskErrors.assigned_to && updatedTask.assigned_to && updatedTask.assigned_to !== "--") {
+      setTaskErrors(prev => ({ ...prev, assigned_to: "" }));
+    }
+    if (taskErrors.status && updatedTask.status) {
+      setTaskErrors(prev => ({ ...prev, status: "" }));
+    }
+    if (taskErrors.due_date && updatedTask.due_date) {
+      setTaskErrors(prev => ({ ...prev, due_date: "" }));
+    }
   };
 
   return (
@@ -216,11 +315,12 @@ export function TaskTabs({
                   onDelete={handleDeleteTask}
                   onSave={handleSaveTask}
                   onCancel={handleCancelTask}
-                  onChange={setEditTask}
+                  onChange={handleTaskChange}
                   menuOpen={taskMenu}
                   setMenuOpen={setTaskMenu}
                   userOptions={userOptions}
                   statusOptions={statusOptions}
+                  errors={taskErrors}
                 />
               ))}
             </tbody>
