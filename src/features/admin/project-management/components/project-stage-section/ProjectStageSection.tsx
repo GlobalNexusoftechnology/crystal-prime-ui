@@ -1,6 +1,6 @@
 "use client";
 
-import { IProjectDetailResponse } from "@/services/index.js";
+import { IProjectDetailResponse } from "@/services";
 import { ProjectCard } from "../project-card.tsx";
 
 

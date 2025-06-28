@@ -75,7 +75,7 @@ export function ProjectManagement() {
           created_by: project.client.name,
           client: project.client || null,
           milestones: project.milestones || [],
-          documents: project.documents || [],
+          attachments: project.attachments || [],
         }
       }));
   };
