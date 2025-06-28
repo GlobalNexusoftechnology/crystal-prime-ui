@@ -91,7 +91,7 @@ export function Task({
                     <td className="py-2 text-right relative">
                         <button className="text-gray-400 hover:text-blue-600" title="Menu" type="button" onClick={() => setMenuOpen(menuOpen && menuOpen.taskId === task.id ? null : { milestoneId, taskId: task.id })}><HiOutlineDotsVertical className="w-6 h-6" /></button>
                         {menuOpen && menuOpen.taskId === task.id && (
-                            <div className="absolute right-0 mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
+                            <div className="absolute right-[80%] bottom-[10%] mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
                                 <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => handleRedirectView(task.id)}>View</button>
                                 <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => onEdit(milestoneId, {
                                     id: task.id,

@@ -9,18 +9,18 @@ import toast from "react-hot-toast";
 
 type LocalTask = { id: string; title: string; description: string; assigned_to: string; status: string; due_date: string };
 
-const tabs = ["Milestones", "Followup's"];
+const tabs = ["Milestones"];
 
 export function MilestoneTabs({
-  miletonesData = [],
+  milestoneData = [],
   projectId,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  miletonesData?: any[],
+  milestoneData?: any[],
   projectId: string,
 }) {
   // Milestone/task state
-  const [milestones, setMilestones] = useState(miletonesData || []);
+  const [milestones, setMilestones] = useState(milestoneData || []);
   const [editingId, setEditingId] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [editMilestone, setEditMilestone] = useState<any>(null);
@@ -201,8 +201,8 @@ export function MilestoneTabs({
           {tabs.map((tab) => (
             <button
               key={tab}
-              className={` 2xl:gap-[2vw] font-medium text-[1rem] 2xl:text-[1vw] ${activeTab === tab
-                ? "border-b-2 border-primary text-primary"
+              className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${activeTab === tab
+                ? ""
                 : "text-gray-500"
                 }`}
               onClick={() => {

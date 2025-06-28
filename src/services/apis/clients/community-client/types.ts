@@ -1021,7 +1021,7 @@ export interface IProjectResponse extends ICreateProjectPayload {
   status: string;
   client: IClientList
   milestones: IProjectMilestoneResponse[]
-  documents: IProjectAttachmentResponse[]
+  attachments: IProjectAttachmentResponse[]
 }
 
 export interface ICreateProjectResponse {

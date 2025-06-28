@@ -9,7 +9,7 @@ import {
 } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TreeStructureIcon } from "@/features";
-import { getInitials, getRandomColor } from "@/utils";
+import { formatDateToMMDDYYYY, getInitials, getRandomColor } from "@/utils";
 import { useRouter } from "next/navigation";
 
 export interface Task {
@@ -177,14 +177,14 @@ export function Milestone({
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-sm 2xl:text-[0.9vw]">
-                {milestone.start_date}
+                {formatDateToMMDDYYYY(milestone.start_date)}
               </span>
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
-              {milestone.end_date}
+              {formatDateToMMDDYYYY(milestone.end_date)}
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-right relative">
@@ -199,16 +199,16 @@ export function Milestone({
               <HiOutlineDotsVertical className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
             {menuOpen === milestone.id && (
-              <div className="absolute right-0 mt-2 2xl:mt-[0.5vw] bg-white border rounded 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px]">
+              <div className="absolute right-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px]">
                 <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => handleRedirectView(milestone.id)}>View</button>
                 <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100"
+                  className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100"
                   onClick={() => onEdit(milestone)}
                 >
                   Edit
                 </button>
                 <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100 text-red-600"
+                  className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100 text-red-600"
                   onClick={() => onDelete(milestone.id)}
                 >
                   Delete

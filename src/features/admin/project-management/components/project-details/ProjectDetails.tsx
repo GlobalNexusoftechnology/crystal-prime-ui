@@ -9,57 +9,121 @@ import {
   ProjectInfo,
 } from "./components";
 import { HeaderDetails } from "../header-details";
-import { IProjectResponse } from '@/services';
+import { IProjectResponse } from "@/services";
+import { formattingDate } from "@/utils";
 
-export function ProjectDetails({ projectDetailData }: { projectDetailData: IProjectResponse }) {
+export function ProjectDetails({
+  projectDetailData,
+}: {
+  projectDetailData: IProjectResponse;
+}) {
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
       <Breadcrumb />
       <HeaderDetails
         title={projectDetailData.name}
-        status={projectDetailData.status || 'N/A'}
-        progress={projectDetailData.milestones ? `${projectDetailData.milestones.filter(m => m.status === 'completed').length} / ${projectDetailData.milestones.length}` : '0 / 0'}
+        status={projectDetailData.status || "N/A"}
+        progress={
+          projectDetailData.milestones
+            ? `${
+                projectDetailData.milestones.filter(
+                  (m) => m.status === "completed"
+                ).length
+              } / ${projectDetailData.milestones.length}`
+            : "0 / 0"
+        }
       />
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="border-r">
-          <ProjectInfo projectInfoData={{
-            name: projectDetailData.name,
-            project_type: projectDetailData.project_type || '',
-            contact_person: '',
-            description: '',
-            created_at: projectDetailData.created_at,
-            updated_at: projectDetailData.updated_at,
-          }} />
-          <DocumentSection documentSectionData={(projectDetailData.documents || []).map(att => ({
-            name: att.file_name,
-            uploaded_by: typeof att.uploaded_by === 'string' ? att.uploaded_by : att.uploaded_by?.first_name || att.uploaded_by?.email || '',
-            created_at: att.created_at ? att.created_at.toString() : '',
-          }))} />
+          <ProjectInfo
+            projectInfoData={{
+              name: projectDetailData.name,
+              project_type: projectDetailData.project_type || "",
+              contact_person: projectDetailData.client.contact_person,
+              description: projectDetailData.description || "",
+              created_at: formattingDate(
+                projectDetailData.created_at,
+                "toReadable"
+              ),
+              updated_at: formattingDate(
+                projectDetailData.updated_at,
+                "toReadable"
+              ),
+            }}
+          />
+          <DocumentSection
+            documentSectionData={(projectDetailData.attachments || []).map(
+              (att) => ({
+                name: att.file_name,
+                uploaded_by:
+                  typeof att.uploaded_by === "string"
+                    ? att.uploaded_by
+                    : att.uploaded_by?.first_name ||
+                      att.uploaded_by?.email ||
+                      "",
+                created_at: formattingDate(`${att.created_at}`, "toReadable"),
+              })
+            )}
+          />
         </div>
         <div>
-          <ClientInfo clientInfoData={{
-            client_name: projectDetailData.client_id || '',
-            company_name: '',
-            contact_person: '',
-            phone: '',
-            email: '',
-          }} />
-          <ProjectEstimate projectEstimateData={{
-            start_date: projectDetailData.start_date ? projectDetailData.start_date.toString() : '',
-            actual_start: projectDetailData.actual_start_date ? projectDetailData.actual_start_date.toString() : '',
-            end_date: projectDetailData.end_date ? projectDetailData.end_date.toString() : '',
-            actual_end: projectDetailData.actual_end_date ? projectDetailData.actual_end_date.toString() : '',
-            estimated_cost: projectDetailData.estimated_cost ? String(projectDetailData.estimated_cost) : '',
-            actual_cost: projectDetailData.actual_cost ? String(projectDetailData.actual_cost) : '',
-            labour_cost: '',
-            overhead_cost: '',
-            budget: projectDetailData.budget ? String(projectDetailData.budget) : '',
-          }} />
+          <ClientInfo
+            clientInfoData={{
+              client_name: projectDetailData.client.name || "",
+              company_name: projectDetailData.client.company_name,
+              contact_person: projectDetailData.client.contact_person,
+              phone: projectDetailData.client.contact_number,
+              email: projectDetailData.client.email,
+            }}
+          />
+          <ProjectEstimate
+            projectEstimateData={{
+              start_date: projectDetailData.start_date
+                ? formattingDate(
+                    projectDetailData.start_date.toString(),
+                    "toReadable"
+                  )
+                : "",
+              actual_start: projectDetailData.actual_start_date
+                ? formattingDate(
+                    projectDetailData.actual_start_date.toString(),
+                    "toReadable"
+                  )
+                : "",
+              end_date: projectDetailData.end_date
+                ? formattingDate(
+                    projectDetailData.end_date.toString(),
+                    "toReadable"
+                  )
+                : "",
+              actual_end: projectDetailData.actual_end_date
+                ? formattingDate(
+                    projectDetailData.actual_end_date.toString(),
+                    "toReadable"
+                  )
+                : "",
+              estimated_cost: projectDetailData.estimated_cost
+                ? String(projectDetailData.estimated_cost)
+                : "",
+              actual_cost: projectDetailData.actual_cost
+                ? String(projectDetailData.actual_cost)
+                : "",
+              labour_cost: projectDetailData.cost_of_labour
+                ? String(projectDetailData.cost_of_labour)
+                : "",
+              overhead_cost: projectDetailData.overhead_cost
+                ? String(projectDetailData.overhead_cost)
+                : "",
+              budget: projectDetailData.budget
+                ? String(projectDetailData.budget)
+                : "",
+            }}
+          />
         </div>
       </div>
-      <MilestoneTabs 
-        miletonesData={projectDetailData.milestones} 
-        projectId={projectDetailData.id} 
+      <MilestoneTabs
+        milestoneData={projectDetailData.milestones}
+        projectId={projectDetailData.id}
       />
     </section>
   );
