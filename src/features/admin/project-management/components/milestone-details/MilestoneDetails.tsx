@@ -36,12 +36,13 @@ export function MilestoneDetails({ milestoneData }: { milestoneData: IProjectMil
           id: String(task.id),
           name: task.title,
           description: task.description || "",
-          assignedTo: task.assigned_to || "",
+          assigned_to: task.assigned_to || "",
           status: task.status || "",
-          dueDate: task.due_date || "",
+          due_date: task.due_date || "",
           milestoneId: milestoneData.id,
           projectId: milestoneData.project.id || ""
         }))}
+        milestoneId={milestoneData.id}
       />
     </section>
   );

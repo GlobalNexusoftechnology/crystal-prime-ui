@@ -933,6 +933,7 @@ export interface IProjectTaskResponse  {
   created_at: string;
   updated_at: string;
   deleted: boolean;
+  milestone: IProjectMilestoneResponse
   deleted_at: string | null;
 }
 

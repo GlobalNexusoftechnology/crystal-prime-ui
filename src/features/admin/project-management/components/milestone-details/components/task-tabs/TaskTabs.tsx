@@ -3,23 +3,31 @@
 import React, { useState } from "react";
 import { Task } from "./components";
 import { AddSquareIcon } from "@/features";
-import { useDeleteMilestoneTaskMutation, useAllUsersQuery } from "@/services";
+import { 
+  useDeleteMilestoneTaskMutation, 
+  useCreateMilestoneTaskMutation,
+  useUpdateMilestoneTaskMutation,
+  useAllUsersQuery 
+} from "@/services";
+import toast from "react-hot-toast";
 
 interface TaskType {
     id: string;
     name: string;
     description: string;
-    assignedTo: string;
+    assigned_to: string;
     status: string;
-    dueDate: string;
+    due_date: string;
     projectId?: string;
     milestoneId?: string;
 }
 
 export function TaskTabs({
   tasksData = [],
+  milestoneId,
 }: {
   tasksData?: TaskType[],
+  milestoneId?: string,
 }) {
   // Task state
   const [tasks, setTasks] = useState(tasksData || []);
@@ -55,6 +63,56 @@ export function TaskTabs({
     },
   });
 
+  // Create task mutation
+  const { onCreateMilestoneTask } = useCreateMilestoneTaskMutation({
+    onSuccessCallback: (data) => {
+      setTasks((prev) => [...prev, {
+        id: data.id,
+        name: data.title,
+        description: data.description || '',
+        assigned_to: data.assigned_to || '',
+        status: data.status || 'Open',
+        due_date: data.due_date || '',
+        projectId: undefined,
+        milestoneId: milestoneId,
+      }]);
+      setEditingTask(null);
+      setEditTask(null);
+      toast.success("Task created successfully");
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Failed to create task");
+    },
+  });
+
+  // Update task mutation
+  const { onUpdateMilestoneTask } = useUpdateMilestoneTaskMutation({
+    onSuccessCallback: (data) => {
+      setTasks((prev) =>
+        prev.map((t) => 
+          t.id === data.id
+            ? {
+                id: data.id,
+                name: data.title,
+                description: data.description || '',
+                assigned_to: data.assigned_to || '',
+                status: data.status || 'Open',
+                due_date: data.due_date || '',
+                projectId: t.projectId,
+                milestoneId: t.milestoneId,
+              }
+            : t
+        )
+      );
+      setEditingTask(null);
+      setEditTask(null);
+      toast.success("Task updated successfully");
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Failed to update task");
+    },
+  });
+
   const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
   // Task handlers
@@ -71,11 +129,33 @@ export function TaskTabs({
 
   const handleSaveTask = () => {
     if (!editTask || !editingTask) return;
-    setTasks((prev) =>
-      prev.map((t) => (t.id === editTask.id ? { ...editTask } : t))
-    );
-    setEditingTask(null);
-    setEditTask(null);
+    
+    // Check if this is a new task (temporary ID) or existing one
+    const isNewTask = editTask.id && editTask.id.startsWith('temp_');
+    
+    if (isNewTask) {
+      // Create new task
+      const payload = {
+        title: editTask.name,
+        description: editTask.description,
+        assigned_to: editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
+        status: editTask.status,
+        due_date: editTask.due_date,
+        milestone_id: milestoneId || editTask.milestoneId || '',
+      };
+      onCreateMilestoneTask(payload);
+    } else {
+      // Update existing task
+      const payload = {
+        title: editTask.name,
+        description: editTask.description,
+        assigned_to: editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
+        status: editTask.status,
+        due_date: editTask.due_date,
+        milestone_id: milestoneId || editTask.milestoneId || '',
+      };
+      onUpdateMilestoneTask({ taskId: editTask.id, payload });
+    }
   };
 
   const handleDeleteTask = (taskId: string) => {
@@ -84,14 +164,15 @@ export function TaskTabs({
   };
 
   const handleAddTask = () => {
-    const newId = Math.random().toString(36).substr(2, 9);
+    const newId = `temp_${Date.now()}`;
     const newTask: TaskType = {
       id: newId,
       name: "",
       description: "",
-      assignedTo: "--",
+      assigned_to: "--",
       status: "Open",
-      dueDate: new Date().toISOString().slice(0, 10),
+      due_date: new Date().toISOString().slice(0, 10),
+      milestoneId: milestoneId,
     };
     setTasks((prev) => [...prev, newTask]);
     setEditingTask(newId);

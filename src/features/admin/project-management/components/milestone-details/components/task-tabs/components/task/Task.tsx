@@ -9,9 +9,9 @@ interface TaskType {
   id: string;
   name: string;
   description: string;
-  assignedTo: string;
+  assigned_to: string;
   status: string;
-  dueDate: string;
+  due_date: string;
   projectId?: string;
   milestoneId?: string;
 }
@@ -78,8 +78,8 @@ export function Task({
           <td className="py-2">
             <Dropdown
               options={userOptions}
-              value={editTask.assignedTo}
-              onChange={(val) => onChange({ ...editTask, assignedTo: val })}
+              value={editTask.assigned_to}
+              onChange={(val) => onChange({ ...editTask, assigned_to: val })}
               dropdownWidth="w-32"
             />
           </td>
@@ -93,8 +93,8 @@ export function Task({
           </td>
           <td className="py-2">
             <DatePicker
-              value={editTask.dueDate}
-              onChange={(val) => onChange({ ...editTask, dueDate: val })}
+              value={editTask.due_date}
+              onChange={(val) => onChange({ ...editTask, due_date: val })}
             />
           </td>
           <td className="px-2 py-4 text-right flex gap-2">
@@ -115,12 +115,12 @@ export function Task({
               <p
                 className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full"
                 style={{
-                  backgroundColor: getRandomColor(task.assignedTo || ""),
+                  backgroundColor: getRandomColor(task.assigned_to || ""),
                 }}
               >
-                {getInitials(task.assignedTo)}
+                {getInitials(task.assigned_to)}
               </p>
-              <p className="px-3 py-1 text-[0.9rem]">{task.assignedTo}</p>
+              <p className="px-3 py-1 text-[0.9rem]">{task.assigned_to}</p>
             </div>
           </td>
           <td className="py-2">
@@ -131,7 +131,7 @@ export function Task({
           <td className="py-2">
             <span className="flex items-center gap-2">
               <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-              <span className="text-sm">{task.dueDate}</span>
+              <span className="text-sm">{task.due_date}</span>
             </span>
           </td>
           <td className="py-2 text-right relative">
