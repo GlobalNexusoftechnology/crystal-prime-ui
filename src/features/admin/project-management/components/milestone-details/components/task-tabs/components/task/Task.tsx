@@ -144,9 +144,9 @@ export function Task({
               <HiOutlineDotsVertical className="w-6 h-6" />
             </button>
             {menuOpen === task.id && (
-              <div className="absolute right-0 mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
+              <div className="absolute right-[80%] bottom-[20%] mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
                 <button
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                  className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100"
                   onClick={() =>
                     handleRedirectView(
                       task.projectId || "",
@@ -158,13 +158,13 @@ export function Task({
                   View
                 </button>
                 <button
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                  className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100"
                   onClick={() => onEdit(task)}
                 >
                   Edit
                 </button>
                 <button
-                  className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600"
+                  className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100 text-red-600"
                   onClick={() => onDelete(task.id)}
                 >
                   Delete

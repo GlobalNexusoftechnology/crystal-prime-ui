@@ -98,6 +98,10 @@ export { useDeleteProjectTemplateMilestoneTaskMutation } from "./useDeleteProjec
 
 export { useMilestoneDetailQuery } from "./useMilestoneDetailQuery";
 export { useDeleteMilestoneMutation } from "./useDeleteMilestoneMutation";
+export { useCreateMilestoneMutation } from "./useCreateMilestoneMutation";
+export { useUpdateMilestoneMutation } from "./useUpdateMilestoneMutation";
 
 export { useMilestoneTaskDetailQuery } from "./useMilestoneTaskDetailQuery";
 export { useDeleteMilestoneTaskMutation } from "./useDeleteMilestoneTaskMutation";
+export { useCreateMilestoneTaskMutation } from "./useCreateMilestoneTaskMutation";
+export { useUpdateMilestoneTaskMutation } from "./useUpdateMilestoneTaskMutation";

@@ -4,7 +4,16 @@ import { Button } from "@/components";
 import React, { useEffect, useRef, useState } from "react";
 import { Followups, Milestone, Task } from "./components";
 import { AddSquareIcon } from "@/features";
-import { useDeleteMilestoneMutation, useDeleteMilestoneTaskMutation, useAllUsersQuery, IProjectTaskResponse } from "@/services";
+import { 
+  useDeleteMilestoneMutation, 
+  useDeleteMilestoneTaskMutation, 
+  useCreateMilestoneMutation,
+  useUpdateMilestoneMutation,
+  useCreateMilestoneTaskMutation,
+  useUpdateMilestoneTaskMutation,
+  useAllUsersQuery, 
+  IProjectTaskResponse 
+} from "@/services";
 import toast from "react-hot-toast";
 
 type LocalTask = { id: string; title: string; description: string; assigned_to: string; status: string; due_date: string };
@@ -76,6 +85,78 @@ export function MilestoneTabs({
       console.log(err)
     },
   });
+
+  // Create milestone mutation
+  const { onCreateMilestone } = useCreateMilestoneMutation({
+    onSuccessCallback: (data) => {
+      setMilestones((prev) => [...prev, data]);
+      setEditingId(null);
+      setEditMilestone(null);
+      toast.success("Milestone created successfully");
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Failed to create milestone");
+    },
+  });
+
+  // Update milestone mutation
+  const { onUpdateMilestone } = useUpdateMilestoneMutation({
+    onSuccessCallback: (data) => {
+      setMilestones((prev) =>
+        prev.map((m) => (m.id === data.id ? data : m))
+      );
+      setEditingId(null);
+      setEditMilestone(null);
+      toast.success("Milestone updated successfully");
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Failed to update milestone");
+    },
+  });
+
+  // Create milestone task mutation
+  const { onCreateMilestoneTask } = useCreateMilestoneTaskMutation({
+    onSuccessCallback: (data) => {
+      setMilestones((prev) =>
+        prev.map((m) =>
+          m.id === editingTask?.milestoneId
+            ? { ...m, tasks: [...m.tasks, data] }
+            : m
+        )
+      );
+      setEditingTask(null);
+      setEditTask(null);
+      toast.success("Task created successfully");
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Failed to create task");
+    },
+  });
+
+  // Update milestone task mutation
+  const { onUpdateMilestoneTask } = useUpdateMilestoneTaskMutation({
+    onSuccessCallback: (data) => {
+      setMilestones((prev) =>
+        prev.map((m) =>
+          m.id === editingTask?.milestoneId
+            ? {
+              ...m,
+              tasks: m.tasks.map((t: LocalTask) =>
+                t.id === data.id ? data : t
+              ),
+            }
+            : m
+        )
+      );
+      setEditingTask(null);
+      setEditTask(null);
+      toast.success("Task updated successfully");
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Failed to update task");
+    },
+  });
+
   // Track which milestone/task is being deleted
   const [deletingMilestoneId, setDeletingMilestoneId] = useState<string | null>(null);
   const [deletingTaskMilestoneId, setDeletingTaskMilestoneId] = useState<string | null>(null);
@@ -99,18 +180,40 @@ export function MilestoneTabs({
   };
   const handleSave = () => {
     if (!editMilestone) return;
-    setMilestones((prev) =>
-      prev.map((m) => (m.id === editMilestone.id ? { ...editMilestone } : m))
-    );
-    setEditingId(null);
-    setEditMilestone(null);
+    
+    // Check if this is a new milestone (temporary ID) or existing one
+    const isNewMilestone = editMilestone.id && editMilestone.id.startsWith('temp_');
+    
+    if (isNewMilestone) {
+      // Create new milestone
+      const payload = {
+        name: editMilestone.name,
+        assigned_to: editMilestone.assigned_to === "--" ? undefined : editMilestone.assigned_to,
+        status: editMilestone.status,
+        start_date: editMilestone.start_date,
+        end_date: editMilestone.end_date,
+        project_id: projectId,
+      };
+      onCreateMilestone(payload);
+    } else {
+      // Update existing milestone
+      const payload = {
+        name: editMilestone.name,
+        assigned_to: editMilestone.assigned_to === "--" ? undefined : editMilestone.assigned_to,
+        status: editMilestone.status,
+        start_date: editMilestone.start_date,
+        end_date: editMilestone.end_date,
+        project_id: projectId,
+      };
+      onUpdateMilestone({ milestoneId: editMilestone.id, payload });
+    }
   };
   const handleDeleteMilestone = (id: string) => {
     setDeletingMilestoneId(id);
     onDeleteMilestone(id);
   };
   const handleAddMilestone = () => {
-    const newId = (Math.max(0, ...milestones.map((m) => Number(m.id) || 0)) + 1).toString();
+    const newId = `temp_${Date.now()}`;
     const newMilestone = {
       id: newId,
       name: "",
@@ -137,20 +240,33 @@ export function MilestoneTabs({
   };
   const handleSaveTask = () => {
     if (!editTask || !editingTask) return;
-    setMilestones((prev) =>
-      prev.map((m) =>
-        m.id === editingTask.milestoneId
-          ? {
-            ...m,
-            tasks: m.tasks.map((t: LocalTask) =>
-              t.id === editTask.id ? { ...editTask } : t
-            ),
-          }
-          : m
-      )
-    );
-    setEditingTask(null);
-    setEditTask(null);
+    
+    // Check if this is a new task (temporary ID) or existing one
+    const isNewTask = editTask.id && editTask.id.startsWith('temp_');
+    
+    if (isNewTask) {
+      // Create new task
+      const payload = {
+        title: editTask.title,
+        description: editTask.description,
+        assigned_to: editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
+        status: editTask.status,
+        due_date: editTask.due_date,
+        milestone_id: editingTask.milestoneId,
+      };
+      onCreateMilestoneTask(payload);
+    } else {
+      // Update existing task
+      const payload = {
+        title: editTask.title,
+        description: editTask.description,
+        assigned_to: editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
+        status: editTask.status,
+        due_date: editTask.due_date,
+        milestone_id: editingTask.milestoneId,
+      };
+      onUpdateMilestoneTask({ taskId: editTask.id, payload });
+    }
   };
   const handleDeleteTask = (milestoneId: string, taskId: string) => {
     setDeletingTaskMilestoneId(milestoneId);
@@ -158,9 +274,7 @@ export function MilestoneTabs({
     onDeleteMilestoneTask(taskId);
   };
   const handleAddTask = (milestoneId: string) => {
-    const newId = (
-      Math.max(0, ...milestones.flatMap((m) => m.tasks.map((t: LocalTask) => Number(t.id) || 0))) + 1
-    ).toString();
+    const newId = `temp_${Date.now()}`;
     const newTask = {
       id: newId,
       title: "",
