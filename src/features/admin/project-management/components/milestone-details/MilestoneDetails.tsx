@@ -33,12 +33,14 @@ export function MilestoneDetails({ milestoneData }: { milestoneData: IProjectMil
       </div>
       <TaskTabs
         tasksData={(milestoneData.tasks || []).map(task => ({
-          id: Number(task.id),
+          id: String(task.id),
           name: task.title,
           description: task.description || "",
           assignedTo: task.assigned_to || "",
           status: task.status || "",
           dueDate: task.due_date || "",
+          milestoneId: milestoneData.id,
+          projectId: milestoneData.project.id || ""
         }))}
       />
     </section>

@@ -6,12 +6,14 @@ import { AddSquareIcon } from "@/features";
 import { useDeleteMilestoneTaskMutation, useAllUsersQuery } from "@/services";
 
 interface TaskType {
-    id: number;
+    id: string;
     name: string;
     description: string;
     assignedTo: string;
     status: string;
     dueDate: string;
+    projectId?: string;
+    milestoneId?: string;
 }
 
 export function TaskTabs({
@@ -21,9 +23,9 @@ export function TaskTabs({
 }) {
   // Task state
   const [tasks, setTasks] = useState(tasksData || []);
-  const [editingTask, setEditingTask] = useState<number | null>(null);
+  const [editingTask, setEditingTask] = useState<string | null>(null);
   const [editTask, setEditTask] = useState<TaskType | null>(null);
-  const [taskMenu, setTaskMenu] = useState<number | null>(null);
+  const [taskMenu, setTaskMenu] = useState<string | null>(null);
 
   // User options
   const { allUsersData, isLoading: usersLoading, isError: usersError } = useAllUsersQuery();
@@ -53,7 +55,7 @@ export function TaskTabs({
     },
   });
 
-  const [deletingTaskId, setDeletingTaskId] = useState<number | null>(null);
+  const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
   // Task handlers
   const handleEditTask = (task: TaskType) => {
@@ -76,13 +78,13 @@ export function TaskTabs({
     setEditTask(null);
   };
 
-  const handleDeleteTask = (taskId: number) => {
+  const handleDeleteTask = (taskId: string) => {
     setDeletingTaskId(taskId);
-    onDeleteMilestoneTask(taskId.toString());
+    onDeleteMilestoneTask(taskId);
   };
 
   const handleAddTask = () => {
-    const newId = (Math.max(0, ...tasks.map((t) => t.id)) + 1);
+    const newId = Math.random().toString(36).substr(2, 9);
     const newTask: TaskType = {
       id: newId,
       name: "",

@@ -936,6 +936,13 @@ export interface IProjectTaskResponse  {
   deleted_at: string | null;
 }
 
+export interface IProjectTaskDetailResponse  {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectTaskResponse;
+}
+
 export interface ICreateProjectMilestone {
   name: string;
   start_date?: string;

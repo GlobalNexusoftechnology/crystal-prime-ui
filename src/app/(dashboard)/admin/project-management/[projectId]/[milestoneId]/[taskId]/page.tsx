@@ -19,7 +19,7 @@ export default function TaskDetailsPage() {
       </div>
     );
   }
-  
+
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -46,5 +46,5 @@ export default function TaskDetailsPage() {
     );
   }
 
-  return <TaskDetails taskData={milestoneTaskDetailData} />;
+  return <TaskDetails taskData={milestoneTaskDetailData.data} />;
 }

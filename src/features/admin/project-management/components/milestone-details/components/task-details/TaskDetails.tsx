@@ -2,7 +2,7 @@
 
 import { Breadcrumb } from "@/features";
 import { IProjectTaskResponse } from '@/services';
-import { formatDate } from "@/utils";
+import { formattingDate } from "@/utils";
 import { HeaderDetails } from "../../../header-details";
 import { DailyTask, TaskEstimate, TaskInfo } from "./components";
 
@@ -21,19 +21,19 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
             title: taskData.title,
             assigned_to: taskData.assigned_to || '',
             description: taskData.description || '',
-            created_at: formatDate(`${taskData.created_at}`),
-            updated_at: formatDate(`${taskData.updated_at}`),
+            created_at: formattingDate(`${taskData.created_at}`, "toReadable"),
+            updated_at: formattingDate(`${taskData.updated_at}`, "toReadable"),
           }} />
+        </div>
           <div>
             <TaskEstimate taskEstimateData={{
-              due_date: taskData.due_date || '',
+              due_date: formattingDate(`${taskData.due_date}`, "toReadable") || '',
             }} />
           </div>
-        </div>
+      </div>
         <DailyTask
           taskId={taskData?.id || ""}
         />
-      </div>
     </section>
   );
 }

@@ -32,7 +32,11 @@ interface IFollowupsProps {
 }
 
 export function DailyTask({ taskId }: IFollowupsProps) {
-  const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery(taskId);
+  const {
+    data: followupData,
+    ProjectFollowUp,
+    isLoading,
+  } = useAllClientFollowUpQuery(taskId);
   const { activeSession } = useAuthStore();
   const userId = activeSession?.user?.id;
   const [showForm, setShowForm] = useState(false);
@@ -78,6 +82,7 @@ export function DailyTask({ taskId }: IFollowupsProps) {
 
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+      <h1 className="text-[1.2rem] 2xl:text-[1.2vw]">Daily Task</h1>
       {showForm ? (
         <ModalOverlay
           isOpen={showForm}
@@ -130,13 +135,15 @@ export function DailyTask({ taskId }: IFollowupsProps) {
                         Assigned To:{" "}
                       </span>
                       <span className="underline 2xl:text-[1.1vw]">
-                        {followup.user ? `${followup.user.first_name} ${followup.user.last_name}` : 'Unassigned'}
+                        {followup.user
+                          ? `${followup.user.first_name} ${followup.user.last_name}`
+                          : "Unassigned"}
                       </span>
                     </span>
                   </div>
 
                   <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw]">
-                    {followup.remarks || 'No remarks provided'}
+                    {followup.remarks || "No remarks provided"}
                   </p>
 
                   <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw] font-medium">
