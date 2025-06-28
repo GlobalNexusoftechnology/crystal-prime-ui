@@ -967,6 +967,13 @@ export interface IProjectMilestoneResponse {
   deleted_at: string | null;
 }
 
+export interface IProjectMilestoneDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectMilestoneResponse;
+}
+
 export interface ICreateProjectAttachment {
   file_path: string;
   file_type: string;

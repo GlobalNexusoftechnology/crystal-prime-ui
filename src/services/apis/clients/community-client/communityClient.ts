@@ -119,6 +119,7 @@ import {
   IProjectMilestoneResponse,
   ICreateProjectTask,
   IProjectTaskResponse,
+  IProjectMilestoneDetailResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -1565,8 +1566,8 @@ export class CommunityClient extends ApiClient {
     }
   }
 
-  public getMilestoneDetail = async (milestoneId: string): Promise<IProjectMilestoneResponse> => {
-    const response = await this.get<IProjectMilestoneResponse>(getMilestoneDetailUrl(milestoneId));
+  public getMilestoneDetail = async (milestoneId: string): Promise<IProjectMilestoneDetailResponse> => {
+    const response = await this.get<IProjectMilestoneDetailResponse>(getMilestoneDetailUrl(milestoneId));
     if (!response?.success) {
       throw response?.errorData;
     }

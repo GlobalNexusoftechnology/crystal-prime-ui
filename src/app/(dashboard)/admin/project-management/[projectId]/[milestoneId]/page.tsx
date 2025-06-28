@@ -46,5 +46,5 @@ export default function MilestoneDetailsPage() {
     );
   }
 
-  return <MilestoneDetails milestoneData={milestoneDetailData} />;
+  return <MilestoneDetails milestoneData={milestoneDetailData.data} />;
 }

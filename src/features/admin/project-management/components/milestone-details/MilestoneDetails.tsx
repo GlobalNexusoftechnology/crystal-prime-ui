@@ -26,9 +26,9 @@ export function MilestoneDetails({ milestoneData }: { milestoneData: IProjectMil
           }} />
         </div>
         <MilestoneEstimate milestoneEstimateData={{
-          start_date: milestoneData.start_date || '',
-          end_date: milestoneData.end_date || '',
-          actual_start: milestoneData.actual_date || '',
+          start_date: formatDate(`${milestoneData.start_date}`) || '',
+          end_date: formatDate(`${milestoneData.end_date}`) || '',
+          actual_start: milestoneData.actual_date ? formatDate(`${milestoneData.actual_date}`) : '--',
         }} />
       </div>
       <TaskTabs
