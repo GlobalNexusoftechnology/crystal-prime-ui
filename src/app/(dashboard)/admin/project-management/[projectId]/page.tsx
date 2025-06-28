@@ -4,12 +4,12 @@ import { useParams } from "next/navigation";
 import { ProjectDetails } from "@/features";
 import { useProjectDetailQuery } from "@/services";
 
-type TBlogProjectParam = {
+type TProjectParam = {
   projectId: string;
 };
 
 export default function ProjectDetailsPage() {
-  const { projectId: projectSlug } = useParams<TBlogProjectParam>();  
+  const { projectId: projectSlug } = useParams<TProjectParam>();  
   const { projectDetailData, isLoading, error } = useProjectDetailQuery(projectSlug);
 
   if (!projectSlug) {
@@ -19,12 +19,7 @@ export default function ProjectDetailsPage() {
       </div>
     );
   }
-
-  // Debug logging for the query result
-  console.log("ProjectDetailData:", projectDetailData);
-  console.log("IsLoading:", isLoading);
-  console.log("Error:", error);
-
+  
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">

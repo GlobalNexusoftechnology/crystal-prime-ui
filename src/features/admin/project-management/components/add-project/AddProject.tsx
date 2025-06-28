@@ -18,7 +18,6 @@ import {
   useAllClientQuery,
   useAllProjectTemplatesQuery,
   ProjectRenewalType,
-  IProjectMilestoneResponse,
 } from "@/services";
 import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
 
@@ -98,12 +97,32 @@ const validationSchema = Yup.object({
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
 
+// Add local types for editing
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  assigned_to: string;
+  status: string;
+  due_date: string;
+}
+
+export interface Milestone {
+  id: string;
+  name: string;
+  assigned_to: string;
+  status: string;
+  start_date: string;
+  end_date: string;
+  tasks: Task[];
+}
+
 export function AddProject() {
   const [step, setStep] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]); // for Step3/Preview
   const [milestoneOption, setMilestoneOption] = useState("milestone");
-  const [milestones, setMilestones] = useState<IProjectMilestoneResponse[]>([]);
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
   const [basicInfo, setBasicInfo] = useState<IAddProjectFormValues | null>(
     null
   );
@@ -186,7 +205,7 @@ export function AddProject() {
     actions.setSubmitting(false);
   };
 
-  const handleMilestoneNext = (milestonesData: IProjectMilestoneResponse[]) => {
+  const handleMilestoneNext = (milestonesData: Milestone[]) => {
     setMilestones(milestonesData);
     setStep(3);
   };

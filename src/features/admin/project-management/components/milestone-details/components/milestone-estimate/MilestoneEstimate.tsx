@@ -2,9 +2,9 @@ import React from "react";
 
 export interface MilestoneEstimateProps {
   milestoneEstimateData: {
-    estimatedStart: string;
-    actualStart: string;
-    estimatedEnd: string;
+    start_date: string;
+    actual_start: string;
+    end_date: string;
   };
 }
 
@@ -17,15 +17,15 @@ export function MilestoneEstimate({ milestoneEstimateData }: MilestoneEstimatePr
         <div className="flex flex-wrap gap-12 2xl:gap-[3vw] items-start">
           <div className="flex flex-col">
             <p className="font-light">Estimated Start Date</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{milestoneEstimateData.estimatedStart}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{milestoneEstimateData.start_date}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Actual Start Date</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{milestoneEstimateData.actualStart}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{milestoneEstimateData.actual_start}</p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Estimated End Date</p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">{milestoneEstimateData.estimatedEnd}</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">{milestoneEstimateData.end_date}</p>
           </div>
         </div>
       </div>

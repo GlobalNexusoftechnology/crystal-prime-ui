@@ -8,6 +8,14 @@ export interface IProjectInfo {
   updated_at: string;
 }
 
+export interface ITaskInfo {
+  title: string;
+  assigned_to: string;
+  description: string;
+  created_at: string; 
+  updated_at: string;
+}
+
 // Client information
 export interface IClientInfo {
   client_name: string;

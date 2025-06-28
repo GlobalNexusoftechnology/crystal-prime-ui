@@ -1,12 +1,12 @@
 import { useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 import { COMMUNITY_CLIENT } from "../communityClient";
-import { IMilestonePayload, IMilestoneResponse } from "../types";
+import { ICreateProjectMilestone, IProjectMilestoneResponse } from "../types";
 
 const UPDATE_MILESTONE_MUTATION_KEY = "update-milestone-mutation-key";
 
 interface IUpdateMilestoneOptions {
-  onSuccessCallback: (data: IMilestoneResponse) => void;
+  onSuccessCallback: (data: IProjectMilestoneResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
 
@@ -18,7 +18,7 @@ export const useUpdateMilestoneMutation = ({
     mutationKey: [UPDATE_MILESTONE_MUTATION_KEY],
     networkMode: "always",
     retry: false,
-    mutationFn: ({ milestoneId, payload }: { milestoneId: string; payload: IMilestonePayload }) =>
+    mutationFn: ({ milestoneId, payload }: { milestoneId: string; payload: ICreateProjectMilestone }) =>
       COMMUNITY_CLIENT.updateMilestone(milestoneId, payload),
     onSuccess: (response) => {
       onSuccessCallback(response);

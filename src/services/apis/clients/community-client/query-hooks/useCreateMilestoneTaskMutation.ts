@@ -1,12 +1,12 @@
 import { useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 import { COMMUNITY_CLIENT } from "../communityClient";
-import { IMilestoneTaskPayload, IMilestoneTaskResponse } from "../types";
+import { IProjectTaskResponse } from "../types";
 
 const CREATE_MILESTONE_TASK_MUTATION_KEY = "create-milestone-task-mutation-key";
 
 interface ICreateMilestoneTaskOptions {
-  onSuccessCallback: (data: IMilestoneTaskResponse) => void;
+  onSuccessCallback: (data: IProjectTaskResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
 

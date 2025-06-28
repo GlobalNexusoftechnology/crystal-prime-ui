@@ -1,25 +1,29 @@
 "use client";
 
-import { Button } from "@/components";
-import { useEffect, useRef, useState } from "react";
-import { Comments, Task } from "./components";
+import React, { useState } from "react";
+import { Task } from "./components";
 import { AddSquareIcon } from "@/features";
-import React from "react";
-import { useAllUsersQuery } from "@/services";
+import { useDeleteMilestoneTaskMutation, useAllUsersQuery } from "@/services";
+
+interface TaskType {
+    id: number;
+    name: string;
+    description: string;
+    assignedTo: string;
+    status: string;
+    dueDate: string;
+}
 
 export function TaskTabs({
   tasksData = [],
-  projectId,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  tasksData?: any[],
-  projectId: string,
+  tasksData?: TaskType[],
 }) {
   // Task state
   const [tasks, setTasks] = useState(tasksData || []);
-  const [editingTask, setEditingTask] = useState<any>(null);
-  const [editTask, setEditTask] = useState<any>(null);
-  const [taskMenu, setTaskMenu] = useState<any>(null);
+  const [editingTask, setEditingTask] = useState<number | null>(null);
+  const [editTask, setEditTask] = useState<TaskType | null>(null);
+  const [taskMenu, setTaskMenu] = useState<number | null>(null);
 
   // User options
   const { allUsersData, isLoading: usersLoading, isError: usersError } = useAllUsersQuery();
@@ -38,31 +42,48 @@ export function TaskTabs({
     { label: "Completed", value: "Completed" },
   ];
 
+  // Delete task mutation
+  const { onDeleteMilestoneTask } = useDeleteMilestoneTaskMutation({
+    onSuccessCallback: () => {
+      setTasks((prev) => prev.filter((t) => t.id !== deletingTaskId));
+      setTaskMenu(null);
+    },
+    onErrorCallback: (err) => {
+      console.log(err)
+    },
+  });
+
+  const [deletingTaskId, setDeletingTaskId] = useState<number | null>(null);
+
   // Task handlers
-  const handleEditTask = (task: any) => {
+  const handleEditTask = (task: TaskType) => {
     setEditingTask(task.id);
     setEditTask({ ...task });
     setTaskMenu(null);
   };
+
   const handleCancelTask = () => {
     setEditingTask(null);
     setEditTask(null);
   };
+
   const handleSaveTask = () => {
-    if (!editTask || editingTask === null) return;
+    if (!editTask || !editingTask) return;
     setTasks((prev) =>
-      prev.map((t: any) => (t.id === editTask.id ? { ...editTask } : t))
+      prev.map((t) => (t.id === editTask.id ? { ...editTask } : t))
     );
     setEditingTask(null);
     setEditTask(null);
   };
+
   const handleDeleteTask = (taskId: number) => {
-    setTasks((prev) => prev.filter((t: any) => t.id !== taskId));
-    setTaskMenu(null);
+    setDeletingTaskId(taskId);
+    onDeleteMilestoneTask(taskId.toString());
   };
+
   const handleAddTask = () => {
-    const newId = Math.max(0, ...tasks.map((t: any) => t.id)) + 1;
-    const newTask = {
+    const newId = (Math.max(0, ...tasks.map((t) => t.id)) + 1);
+    const newTask: TaskType = {
       id: newId,
       name: "",
       description: "",
@@ -75,30 +96,15 @@ export function TaskTabs({
     setEditTask(newTask);
   };
 
-  const [activeTab, setActiveTab] = useState("Tasks");
-  const [showForm, setShowForm] = useState(false);
-
-  const containerRef = useRef<HTMLDivElement>(null);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (showForm && bottomRef.current) {
-      bottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
-    }
-  }, [showForm]);
-
   return (
-    <div
-      ref={containerRef}
-      className="flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:px-[1vw]"
-    >
-      {/* Tab Contents */}
+    <div className="flex flex-col gap-6 2xl:gap-[2vw] p-4 2xl:px-[1vw]">
+      {/* Task Table */}
       <div className="mb-4 2xl:mb-[1vw]">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="min-w-full border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
             <thead>
               <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
-                <th className="pl-8 2xl:pl-[2vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw]">
+                <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw]">
                   <span>Task Name</span>
                   <button
                     className="text-purple-500 hover:text-purple-700 text-lg"
@@ -117,7 +123,7 @@ export function TaskTabs({
               </tr>
             </thead>
             <tbody>
-              {tasks.map((task: any) => (
+              {tasks.map((task) => (
                 <Task
                   key={task.id}
                   task={task}
@@ -138,7 +144,6 @@ export function TaskTabs({
           </table>
         </div>
       </div>
-      <div ref={bottomRef} />
     </div>
   );
 }

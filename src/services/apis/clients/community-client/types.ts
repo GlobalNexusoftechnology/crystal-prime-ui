@@ -952,6 +952,7 @@ export interface IProjectMilestoneResponse {
   id?: string;
   project: IProjectResponse
   name: string;
+  description: string;
   start_date?: string;
   end_date?: string;
   actual_date?: string;
@@ -960,6 +961,10 @@ export interface IProjectMilestoneResponse {
   status: string;
   remark?: string;
   tasks?: IProjectTaskResponse[];
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
 }
 
 export interface ICreateProjectAttachment {

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Dropdown, Button } from "@/components";
 import { AddSquareIcon } from "@/features";
 import { Milestone, Task } from "./components";
-import { IUsersDetails, useAllUsersQuery, IProjectMilestoneResponse } from "@/services";
+import { IUsersDetails, useAllUsersQuery } from "@/services";
 
 interface ProjectTaskMaster {
   id: string;
@@ -278,7 +278,7 @@ export function Step2MilestoneSetup({
 
   // When user clicks next, pass milestones to parent
   const handleNext = () => {
-    const backendMilestones: IProjectMilestoneResponse[] = milestones.map(m => ({
+    const backendMilestones: Milestone[] = milestones.map(m => ({
       id: m.id,
       name: m.name,
       assigned_to: m.assigned_to,
@@ -325,7 +325,7 @@ export function Step2MilestoneSetup({
         deleted_at: null,
       })),
     }));
-    onNext(backendMilestones as any); // Cast if needed for type compatibility
+    onNext(backendMilestones); // Cast if needed for type compatibility
   };
 
   return (

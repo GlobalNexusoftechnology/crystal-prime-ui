@@ -115,12 +115,10 @@ import {
   ICreateProjectFollowUpPayload,
   ICreateProjectFollowUpResponse,
   IAllProjectFollowUpResponse,
-  IMilestonePayload,
-  IMilestoneResponse,
-  IAllMilestonesResponse,
-  IMilestoneTaskPayload,
-  IMilestoneTaskResponse,
-  IAllMilestoneTasksResponse,
+  ICreateProjectMilestone,
+  IProjectMilestoneResponse,
+  ICreateProjectTask,
+  IProjectTaskResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -1544,16 +1542,16 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   }
 
-  public createMilestone = async (payload: IMilestonePayload): Promise<IMilestoneResponse> => {
-    const response = await this.post<IMilestoneResponse>(createMilestoneUrl(), payload);
+  public createMilestone = async (payload: ICreateProjectMilestone): Promise<IProjectMilestoneResponse> => {
+    const response = await this.post<IProjectMilestoneResponse>(createMilestoneUrl(), payload);
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
   }
 
-  public updateMilestone = async (milestoneId: string, payload: IMilestonePayload): Promise<IMilestoneResponse> => {
-    const response = await this.put<IMilestoneResponse>(updateMilestoneUrl(milestoneId), payload);
+  public updateMilestone = async (milestoneId: string, payload: ICreateProjectMilestone): Promise<IProjectMilestoneResponse> => {
+    const response = await this.put<IProjectMilestoneResponse>(updateMilestoneUrl(milestoneId), payload);
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -1567,32 +1565,32 @@ export class CommunityClient extends ApiClient {
     }
   }
 
-  public getMilestoneDetail = async (milestoneId: string): Promise<IMilestoneResponse> => {
-    const response = await this.get<IMilestoneResponse>(getMilestoneDetailUrl(milestoneId));
+  public getMilestoneDetail = async (milestoneId: string): Promise<IProjectMilestoneResponse> => {
+    const response = await this.get<IProjectMilestoneResponse>(getMilestoneDetailUrl(milestoneId));
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
   }
 
-  public getAllMilestones = async (projectId: string): Promise<IAllMilestonesResponse> => {
-    const response = await this.get<IAllMilestonesResponse>(getAllMilestonesUrl(projectId));
+  public getAllMilestones = async (projectId: string): Promise<IProjectMilestoneResponse> => {
+    const response = await this.get<IProjectMilestoneResponse>(getAllMilestonesUrl(projectId));
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
   }
 
-  public createMilestoneTask = async (payload: IMilestoneTaskPayload): Promise<IMilestoneTaskResponse> => {
-    const response = await this.post<IMilestoneTaskResponse>(createMilestoneTaskUrl(), payload);
+  public createMilestoneTask = async (payload: ICreateProjectTask): Promise<IProjectTaskResponse> => {
+    const response = await this.post<IProjectTaskResponse>(createMilestoneTaskUrl(), payload);
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
   }
 
-  public updateMilestoneTask = async (taskId: string, payload: IMilestoneTaskPayload): Promise<IMilestoneTaskResponse> => {
-    const response = await this.put<IMilestoneTaskResponse>(updateMilestoneTaskUrl(taskId), payload);
+  public updateMilestoneTask = async (taskId: string, payload: ICreateProjectTask): Promise<IProjectTaskResponse> => {
+    const response = await this.put<IProjectTaskResponse>(updateMilestoneTaskUrl(taskId), payload);
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -1606,16 +1604,16 @@ export class CommunityClient extends ApiClient {
     }
   }
 
-  public getMilestoneTaskDetail = async (taskId: string): Promise<IMilestoneTaskResponse> => {
-    const response = await this.get<IMilestoneTaskResponse>(getMilestoneTaskDetailUrl(taskId));
+  public getMilestoneTaskDetail = async (taskId: string): Promise<IProjectTaskResponse> => {
+    const response = await this.get<IProjectTaskResponse>(getMilestoneTaskDetailUrl(taskId));
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
   }
 
-  public getAllMilestoneTasks = async (milestoneId: string): Promise<IAllMilestoneTasksResponse> => {
-    const response = await this.get<IAllMilestoneTasksResponse>(getAllMilestoneTasksUrl(milestoneId));
+  public getAllMilestoneTasks = async (milestoneId: string): Promise<IProjectTaskResponse> => {
+    const response = await this.get<IProjectTaskResponse>(getAllMilestoneTasksUrl(milestoneId));
     if (!response?.success) {
       throw response?.errorData;
     }

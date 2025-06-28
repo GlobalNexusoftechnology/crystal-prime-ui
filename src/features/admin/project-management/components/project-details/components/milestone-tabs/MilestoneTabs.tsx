@@ -4,7 +4,8 @@ import { Button } from "@/components";
 import React, { useEffect, useRef, useState } from "react";
 import { Followups, Milestone, Task } from "./components";
 import { AddSquareIcon } from "@/features";
-import { useDeleteMilestoneMutation, useDeleteMilestoneTaskMutation, useAllUsersQuery } from "@/services";
+import { useDeleteMilestoneMutation, useDeleteMilestoneTaskMutation, useAllUsersQuery, IProjectTaskResponse } from "@/services";
+import toast from "react-hot-toast";
 
 type LocalTask = { id: string; title: string; description: string; assigned_to: string; status: string; due_date: string };
 
@@ -21,10 +22,14 @@ export function MilestoneTabs({
   // Milestone/task state
   const [milestones, setMilestones] = useState(miletonesData || []);
   const [editingId, setEditingId] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [editMilestone, setEditMilestone] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [editingTask, setEditingTask] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [editTask, setEditTask] = useState<any>(null);
   const [milestoneMenu, setMilestoneMenu] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [taskMenu, setTaskMenu] = useState<any>(null);
   const [expandedMilestones, setExpandedMilestones] = useState<string[]>([]);
 
@@ -35,9 +40,9 @@ export function MilestoneTabs({
     : usersError || !allUsersData
       ? [{ label: "Error loading users", value: "" }]
       : allUsersData.map((user) => ({
-          label: `${user.first_name} ${user.last_name}`,
-          value: user.id,
-        }));
+        label: `${user.first_name} ${user.last_name}`,
+        value: user.id,
+      }));
 
   const statusOptions = [
     { label: "Open", value: "Open" },
@@ -46,13 +51,13 @@ export function MilestoneTabs({
   ];
 
   // Delete milestone mutation
-  const { onDeleteMilestone, isPending: isMilestoneDeleting } = useDeleteMilestoneMutation({
+  const { onDeleteMilestone } = useDeleteMilestoneMutation({
     onSuccessCallback: () => {
       setMilestones((prev) => prev.filter((m) => m.id !== deletingMilestoneId));
       setMilestoneMenu(null);
     },
     onErrorCallback: (err) => {
-      // Optionally show error toast
+      toast.error(err.message)
     },
   });
   // Delete task mutation
@@ -68,7 +73,7 @@ export function MilestoneTabs({
       setTaskMenu(null);
     },
     onErrorCallback: (err) => {
-      // Optionally show error toast
+      console.log(err)
     },
   });
   // Track which milestone/task is being deleted
@@ -82,6 +87,7 @@ export function MilestoneTabs({
       prev.includes(id) ? prev.filter((mid) => mid !== id) : [...prev, id]
     );
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEdit = (milestone: any) => {
     setEditingId(milestone.id);
     setEditMilestone({ ...milestone });
@@ -119,6 +125,7 @@ export function MilestoneTabs({
     setEditMilestone(newMilestone);
   };
   // Task handlers
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEditTask = (milestoneId: string, task: any) => {
     setEditingTask({ milestoneId, taskId: task.id });
     setEditTask({ ...task });
@@ -134,11 +141,11 @@ export function MilestoneTabs({
       prev.map((m) =>
         m.id === editingTask.milestoneId
           ? {
-              ...m,
-              tasks: m.tasks.map((t: LocalTask) =>
-                t.id === editTask.id ? { ...editTask } : t
-              ),
-            }
+            ...m,
+            tasks: m.tasks.map((t: LocalTask) =>
+              t.id === editTask.id ? { ...editTask } : t
+            ),
+          }
           : m
       )
     );
@@ -298,7 +305,7 @@ export function MilestoneTabs({
                                 </tr>
                               </thead>
                               <tbody>
-                                {milestone.tasks.map((task: any) => (
+                                {milestone.tasks.map((task: IProjectTaskResponse) => (
                                   <Task
                                     key={task.id}
                                     task={task}

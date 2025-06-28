@@ -4,6 +4,7 @@ import { HiCheck, HiXMark, HiOutlineCalendar } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { getInitials, getRandomColor } from "@/utils";
 import { useRouter } from "next/navigation";
+import { IProjectTaskResponse } from "@/services";
 
 export interface Task {
     id: string;
@@ -15,7 +16,7 @@ export interface Task {
 }
 
 interface TaskProps {
-    task: Task;
+    task: IProjectTaskResponse;
     projectId: string;
     editingTask: { milestoneId: string; taskId: string } | null;
     editTask: Task | null;
@@ -81,7 +82,7 @@ export function Task({
                     <td className="py-2 text-sm">{task.description}</td>
                     <td className="py-2 text-sm">
                         <div className="flex items-center gap-2">
-                            <p className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" style={{ backgroundColor: getRandomColor(task.assigned_to || '') }}>{getInitials(task.assigned_to)}</p>
+                            <p className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" style={{ backgroundColor: getRandomColor(task.assigned_to || '') }}>{getInitials(task.assigned_to || "")}</p>
                             <p className="px-3 py-1 text-[0.9rem]">{task.assigned_to}</p>
                         </div>
                     </td>
@@ -92,7 +93,14 @@ export function Task({
                         {menuOpen && menuOpen.taskId === task.id && (
                             <div className="absolute right-0 mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
                                 <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => handleRedirectView(task.id)}>View</button>
-                                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => onEdit(milestoneId, task)}>Edit</button>
+                                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => onEdit(milestoneId, {
+                                    id: task.id,
+                                    title: task.title,
+                                    description: task.description || "",
+                                    assigned_to: task.assigned_to || "",
+                                    status: task.status || "",
+                                    due_date: task.due_date || ""
+                                })}>Edit</button>
                                 <button className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-red-600" onClick={() => onDelete(milestoneId, task.id)}>Delete</button>
                             </div>
                         )}

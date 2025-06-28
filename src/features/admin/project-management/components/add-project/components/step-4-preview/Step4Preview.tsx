@@ -7,16 +7,33 @@ import {
 } from "../../../project-details/components";
 import { Button } from "@/components";
 import { PreviewMilestone } from "./components";
-import { IProjectMilestoneResponse } from "@/services";
 import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
+// Add local types for editing
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  assigned_to: string;
+  status: string;
+  due_date: string;
+}
 
+export interface Milestone {
+  id: string;
+  name: string;
+  assigned_to: string;
+  status: string;
+  start_date: string;
+  end_date: string;
+  tasks: Task[];
+}
 
 interface Step4PreviewProps {
   projectInfo: IProjectInfo;
   clientInfo: IClientInfo;
   estimates: IEstimates;
   documents: IDocumentInfo[];
-  milestones: IProjectMilestoneResponse[];
+  milestones: Milestone[];
   onBack: () => void;
   onSubmit: () => void;
 }

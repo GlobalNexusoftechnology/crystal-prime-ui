@@ -5,7 +5,6 @@ import { FieldArray, FormikProps } from "formik";
 import { useState } from "react";
 import { Milestone } from "../add-project-template/types";
 import { MilestoneRow } from "./components";
-import { v4 as uuidv4 } from "uuid";
 import toast from "react-hot-toast";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -72,7 +72,10 @@ export function ProjectManagement() {
           updated_at: project.updated_at,
           deleted: project.deleted,
           deleted_at: project.deleted_at,
-          created_by: project.client_id
+          created_by: project.client.name,
+          client: project.client || null,
+          milestones: project.milestones || [],
+          documents: project.documents || [],
         }
       }));
   };

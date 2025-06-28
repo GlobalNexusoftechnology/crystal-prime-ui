@@ -44,10 +44,10 @@ export function TaskRow({
             typeof formik.errors.milestones?.[milestoneIndex] === 'object' &&
             formik.errors.milestones?.[milestoneIndex] &&
             'tasks' in formik.errors.milestones[milestoneIndex] &&
-            typeof (formik.errors.milestones[milestoneIndex] as any).tasks?.[taskIndex] === 'object' &&
-            (formik.errors.milestones[milestoneIndex] as any).tasks?.[taskIndex] &&
-            'title' in (formik.errors.milestones[milestoneIndex] as any).tasks[taskIndex] ?
-              (formik.errors.milestones[milestoneIndex] as any).tasks[taskIndex].title : undefined
+            typeof (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] === 'object' &&
+            (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] &&
+            'title' in (formik.errors.milestones[milestoneIndex]).tasks[taskIndex] ?
+              (formik.errors.milestones[milestoneIndex]).tasks[taskIndex].title : undefined
           }
         />
       ) : (
@@ -67,10 +67,10 @@ export function TaskRow({
             typeof formik.errors.milestones?.[milestoneIndex] === 'object' &&
             formik.errors.milestones?.[milestoneIndex] &&
             'tasks' in formik.errors.milestones[milestoneIndex] &&
-            typeof (formik.errors.milestones[milestoneIndex] as any).tasks?.[taskIndex] === 'object' &&
-            (formik.errors.milestones[milestoneIndex] as any).tasks?.[taskIndex] &&
-            'estimated_days' in (formik.errors.milestones[milestoneIndex] as any).tasks[taskIndex] ?
-              (formik.errors.milestones[milestoneIndex] as any).tasks[taskIndex].estimated_days : undefined
+            typeof (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] === 'object' &&
+            (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] &&
+            'estimated_days' in (formik.errors.milestones[milestoneIndex]).tasks[taskIndex] ?
+              (formik.errors.milestones[milestoneIndex]).tasks[taskIndex].estimated_days : undefined
           }
         />
       ) : (
@@ -89,10 +89,10 @@ export function TaskRow({
             typeof formik.errors.milestones?.[milestoneIndex] === 'object' &&
             formik.errors.milestones?.[milestoneIndex] &&
             'tasks' in formik.errors.milestones[milestoneIndex] &&
-            typeof (formik.errors.milestones[milestoneIndex] as any).tasks?.[taskIndex] === 'object' &&
-            (formik.errors.milestones[milestoneIndex] as any).tasks?.[taskIndex] &&
-            'description' in (formik.errors.milestones[milestoneIndex] as any).tasks[taskIndex] ?
-              (formik.errors.milestones[milestoneIndex] as any).tasks[taskIndex].description : undefined
+            typeof (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] === 'object' &&
+            (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] &&
+            'description' in (formik.errors.milestones[milestoneIndex]).tasks[taskIndex] ?
+              (formik.errors.milestones[milestoneIndex]).tasks[taskIndex].description : undefined
           }
         />
       ) : (
@@ -117,7 +117,7 @@ export function TaskRow({
                   formik.errors.milestones?.[milestoneIndex] &&
                   'tasks' in formik.errors.milestones[milestoneIndex]
                 ) {
-                  taskErrors = (formik.errors.milestones[milestoneIndex] as any).tasks?.[taskIndex];
+                  taskErrors = (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex];
                 }
 
                 // Only save if there are no errors for this task

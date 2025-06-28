@@ -2,11 +2,29 @@ import React from "react";
 import { HiChevronDown, HiChevronUp, HiOutlineCalendar } from "react-icons/hi2";
 import { TreeStructureIcon } from "@/features";
 import { getInitials, getRandomColor } from "@/utils";
-import { IProjectMilestoneResponse } from "@/services";
 
+// Add local types for editing
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  assigned_to: string;
+  status: string;
+  due_date: string;
+}
+
+export interface Milestone {
+  id: string;
+  name: string;
+  assigned_to: string;
+  status: string;
+  start_date: string;
+  end_date: string;
+  tasks: Task[];
+}
 
 interface PreviewMilestoneProps {
-  milestone: IProjectMilestoneResponse;
+  milestone: Milestone;
 }
 
 export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {

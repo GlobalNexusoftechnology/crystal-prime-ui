@@ -1,34 +1,50 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-
-import { projectData, IProjectData } from "@/constants";
 import { MilestoneDetails } from "@/features";
+import { useMilestoneDetailQuery } from "@/services";
 
-function fetchMilestoneData(milestoneSlug: string): IProjectData | null {
-  return projectData.find((project) => project.slug === milestoneSlug) || null;
-}
-
-type TBlogProjectParam = {
+type TMilestoneParam = {
   milestoneId: string;
 };
 
 export default function MilestoneDetailsPage() {
-  const { milestoneId: milestoneSlug } = useParams<TBlogProjectParam>();
-  const [milestoneData, setMilestoneData] = useState<IProjectData | null>(null);
+  const { milestoneId: milestoneSlug } = useParams<TMilestoneParam>();  
+  const { milestoneDetailData, isLoading, error } = useMilestoneDetailQuery(milestoneSlug);
 
-  useEffect(() => {
-    if (milestoneSlug) {
-      const data = fetchMilestoneData(milestoneSlug);
-      console.log({ data });
-      setMilestoneData(data);
-    }
-  }, [milestoneSlug]);
-
-  if (!milestoneData) {
-    return <div>Page Data Found</div>;
+  if (!milestoneSlug) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg text-red-600">Invalid project ID</div>
+      </div>
+    );
+  }
+  
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg">Loading project details...</div>
+      </div>
+    );
   }
 
-  return <MilestoneDetails />;
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg text-red-600">Error loading project details. Please try again.</div>
+        <div className="text-sm text-gray-600 mt-2">Error: {error.message}</div>
+      </div>
+    );
+  }
+
+  if (!milestoneDetailData) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg">Project not found</div>
+        <div className="text-sm text-gray-600 mt-2">Project ID: {milestoneSlug}</div>
+      </div>
+    );
+  }
+
+  return <MilestoneDetails milestoneData={milestoneDetailData} />;
 }

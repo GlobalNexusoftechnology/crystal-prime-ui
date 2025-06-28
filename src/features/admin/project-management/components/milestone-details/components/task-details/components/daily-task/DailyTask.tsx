@@ -1,4 +1,5 @@
 "use client";
+
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, InputField, ModalOverlay } from "@/components";
@@ -12,6 +13,7 @@ import {
 } from "@/services";
 import { IApiError, formatDate } from "@/utils";
 import toast from "react-hot-toast";
+import { useState } from "react";
 
 // Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
@@ -26,15 +28,14 @@ const validationSchema = Yup.object().shape({
 });
 
 interface IFollowupsProps {
-  showForm: boolean;
-  setShowForm: (val: boolean) => void;
-  projectId: string;
+  taskId: string;
 }
 
-export function Comments({ projectId, showForm, setShowForm }: IFollowupsProps) {
-  const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery(projectId);
+export function DailyTask({ taskId }: IFollowupsProps) {
+  const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery(taskId);
   const { activeSession } = useAuthStore();
   const userId = activeSession?.user?.id;
+  const [showForm, setShowForm] = useState(false);
 
   const { createClientFollowUp, isPending } = useCreateProjectFollowUpMutation({
     onSuccessCallback: (response: ICreateProjectFollowUpResponse) => {
@@ -51,7 +52,7 @@ export function Comments({ projectId, showForm, setShowForm }: IFollowupsProps) 
 
   const formik = useFormik<ICreateProjectFollowUpPayload>({
     initialValues: {
-      project_id: projectId,
+      project_id: taskId,
       due_date: "",
       status: "",
       user_id: userId,
@@ -59,11 +60,11 @@ export function Comments({ projectId, showForm, setShowForm }: IFollowupsProps) 
     },
     validationSchema,
     onSubmit: async (values) => {
-      if (!projectId) {
+      if (!taskId) {
         toast.error("Client ID is missing");
         return;
       }
-      await createClientFollowUp({ ...values, project_id: projectId });
+      await createClientFollowUp({ ...values, project_id: taskId });
     },
   });
 

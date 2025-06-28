@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
-import { FaChevronDown, FaChevronRight, FaRegCalendarAlt } from "react-icons/fa";
+import {
+  FaChevronDown,
+  FaChevronRight,
+  FaRegCalendarAlt,
+} from "react-icons/fa";
 
 import { FieldArray, FormikProps } from "formik";
 
 import { InputField, Button, ActionDropdown } from "@/components";
 import { AddSquareIcon, TreeStructureIcon } from "@/features";
-import { 
-  useDeleteProjectTemplateMilestoneMutation,
-  useDeleteProjectTemplateMilestoneTaskMutation
-} from "@/services";
+import { useDeleteProjectTemplateMilestoneMutation } from "@/services";
 
 import { Milestone, Task } from "../../../add-project-template/types";
 import { ProjectTemplateFormValues } from "../../../add-project-template/types";
@@ -26,8 +26,12 @@ interface MilestoneRowProps {
   onDelete: (index: number) => void;
   onSave: () => void;
   onCancel: () => void;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  handleBlur: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  handleChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
+  handleBlur: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => void;
   editingTaskId: string | null;
   setEditingTaskId: (id: string | null) => void;
   readOnly?: boolean;
@@ -43,34 +47,22 @@ export function MilestoneRow({
   onDelete,
   onSave,
   onCancel,
-  handleChange,
-  handleBlur,
   editingTaskId,
   setEditingTaskId,
   readOnly = false,
   formik,
 }: MilestoneRowProps & { formik: FormikProps<ProjectTemplateFormValues> }) {
   // Milestone delete mutation
-  const { onDeleteProjectTemplateMilestone, isPending: isMilestoneDeleting } = useDeleteProjectTemplateMilestoneMutation({
-    onSuccessCallback: () => {
-      toast.success("Milestone deleted successfully");
-      onDelete(index);
-    },
-    onErrorCallback: (err) => {
-      toast.error(err.message || "Failed to delete milestone");
-    },
-  });
-
-  // Task delete mutation
-  const { onDeleteProjectTemplateMilestoneTask } = useDeleteProjectTemplateMilestoneTaskMutation({
-    onSuccessCallback: () => {
-      toast.success("Task deleted successfully");
-      // No need to call onDelete here, handled by FieldArray remove
-    },
-    onErrorCallback: (err) => {
-      toast.error(err.message || "Failed to delete task");
-    },
-  });
+  const { onDeleteProjectTemplateMilestone, isPending: isMilestoneDeleting } =
+    useDeleteProjectTemplateMilestoneMutation({
+      onSuccessCallback: () => {
+        toast.success("Milestone deleted successfully");
+        onDelete(index);
+      },
+      onErrorCallback: (err) => {
+        toast.error(err.message || "Failed to delete milestone");
+      },
+    });
 
   // Handler for milestone delete
   const handleMilestoneDelete = () => {
@@ -78,16 +70,6 @@ export function MilestoneRow({
       onDeleteProjectTemplateMilestone(milestone.id);
     } else {
       onDelete(index); // If not saved yet, just remove from UI
-    }
-  };
-
-  // Handler for task delete
-  const handleTaskDelete = (taskId: string, remove: (index: number) => void, taskIndex: number) => {
-    if (taskId) {
-      onDeleteProjectTemplateMilestoneTask(taskId);
-      remove(taskIndex); // Optimistically remove from UI
-    } else {
-      remove(taskIndex);
     }
   };
 
@@ -112,10 +94,11 @@ export function MilestoneRow({
               className="w-full"
               error={
                 formik.touched.milestones?.[index]?.name &&
-                typeof formik.errors.milestones?.[index] === 'object' &&
+                typeof formik.errors.milestones?.[index] === "object" &&
                 formik.errors.milestones?.[index] &&
-                'name' in formik.errors.milestones[index] ?
-                  (formik.errors.milestones[index] as any).name : undefined
+                "name" in formik.errors.milestones[index]
+                  ? formik.errors.milestones[index].name
+                  : undefined
               }
             />
           ) : (
@@ -140,10 +123,11 @@ export function MilestoneRow({
             icon={<FaRegCalendarAlt className="text-gray-400" />}
             error={
               formik.touched.milestones?.[index]?.estimated_days &&
-              typeof formik.errors.milestones?.[index] === 'object' &&
+              typeof formik.errors.milestones?.[index] === "object" &&
               formik.errors.milestones?.[index] &&
-              'estimated_days' in formik.errors.milestones[index] ?
-                (formik.errors.milestones[index] as any).estimated_days : undefined
+              "estimated_days" in formik.errors.milestones[index]
+                ? formik.errors.milestones[index].estimated_days
+                : undefined
             }
           />
         ) : (
@@ -158,10 +142,11 @@ export function MilestoneRow({
             placeholder="Enter Description"
             error={
               formik.touched.milestones?.[index]?.description &&
-              typeof formik.errors.milestones?.[index] === 'object' &&
+              typeof formik.errors.milestones?.[index] === "object" &&
               formik.errors.milestones?.[index] &&
-              'description' in formik.errors.milestones[index] ?
-                (formik.errors.milestones[index] as any).description : undefined
+              "description" in formik.errors.milestones[index]
+                ? formik.errors.milestones[index].description
+                : undefined
             }
           />
         ) : (
@@ -175,9 +160,21 @@ export function MilestoneRow({
                 type="button"
                 onClick={async () => {
                   // Mark all milestone fields as touched
-                  await formik.setFieldTouched(`milestones[${index}].name`, true, true);
-                  await formik.setFieldTouched(`milestones[${index}].estimated_days`, true, true);
-                  await formik.setFieldTouched(`milestones[${index}].description`, true, true);
+                  await formik.setFieldTouched(
+                    `milestones[${index}].name`,
+                    true,
+                    true
+                  );
+                  await formik.setFieldTouched(
+                    `milestones[${index}].estimated_days`,
+                    true,
+                    true
+                  );
+                  await formik.setFieldTouched(
+                    `milestones[${index}].description`,
+                    true,
+                    true
+                  );
 
                   // Validate the milestone fields
                   await formik.validateForm();
@@ -186,7 +183,7 @@ export function MilestoneRow({
                   // Only save if there are no errors for this milestone
                   if (
                     !milestoneErrors ||
-                    (typeof milestoneErrors === 'object' &&
+                    (typeof milestoneErrors === "object" &&
                       !milestoneErrors.name &&
                       !milestoneErrors.estimated_days &&
                       !milestoneErrors.description)
@@ -220,8 +217,15 @@ export function MilestoneRow({
               <ActionDropdown
                 direction="left"
                 options={[
-                  { label: "Edit", onClick: () => onEdit(milestone.id || String(index)) },
-                  { label: isMilestoneDeleting ? "Deleting..." : "Delete", onClick: handleMilestoneDelete, className: "text-red-500" },
+                  {
+                    label: "Edit",
+                    onClick: () => onEdit(milestone.id || String(index)),
+                  },
+                  {
+                    label: isMilestoneDeleting ? "Deleting..." : "Delete",
+                    onClick: handleMilestoneDelete,
+                    className: "text-red-500",
+                  },
                 ]}
               />
             )
@@ -243,11 +247,15 @@ export function MilestoneRow({
                       <button
                         type="button"
                         onClick={() => {
-                          const tasks = formik.values.milestones[index]?.tasks || [];
+                          const tasks =
+                            formik.values.milestones[index]?.tasks || [];
                           const lastTask = tasks[tasks.length - 1];
                           if (
                             tasks.length === 0 ||
-                            (lastTask && lastTask.title && lastTask.estimated_days && lastTask.description)
+                            (lastTask &&
+                              lastTask.title &&
+                              lastTask.estimated_days &&
+                              lastTask.description)
                           ) {
                             const newTask = {
                               id: "",
@@ -258,7 +266,9 @@ export function MilestoneRow({
                             taskArrayHelpers.push(newTask);
                             setEditingTaskId(newTask.id);
                           } else {
-                            toast.error("Please complete the previous task before adding a new one.");
+                            toast.error(
+                              "Please complete the previous task before adding a new one."
+                            );
                           }
                         }}
                       >
@@ -295,4 +305,4 @@ export function MilestoneRow({
       )}
     </div>
   );
-} 
+}

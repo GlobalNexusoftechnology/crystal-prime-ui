@@ -1,12 +1,12 @@
 import { useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 import { COMMUNITY_CLIENT } from "../communityClient";
-import { IMilestonePayload, IMilestoneResponse } from "../types";
+import { IProjectMilestoneResponse } from "../types";
 
 const CREATE_MILESTONE_MUTATION_KEY = "create-milestone-mutation-key";
 
 interface ICreateMilestoneOptions {
-  onSuccessCallback: (data: IMilestoneResponse) => void;
+  onSuccessCallback: (data: IProjectMilestoneResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
 
