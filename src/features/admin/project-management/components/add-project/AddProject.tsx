@@ -110,6 +110,7 @@ export interface Task {
 export interface Milestone {
   id: string;
   name: string;
+  description: string;
   assigned_to: string;
   status: string;
   start_date: string;
@@ -181,6 +182,7 @@ export function AddProject({
     if (!basicInfo) return null;
     const apiMilestones = milestones.map((m) => ({
       name: m.name,
+      description: m.description,
       assigned_to: m.assigned_to,
       status: m.status,
       start_date: m.start_date,
@@ -267,25 +269,6 @@ export function AddProject({
       finalTemplateId: payload?.template_id
     });
     
-    console.log("Full Payload Structure:", {
-      name: payload?.name,
-      description: payload?.description,
-      project_type: payload?.project_type,
-      client_id: payload?.client_id,
-      budget: payload?.budget,
-      is_renewal: payload?.is_renewal,
-      renewal_date: payload?.renewal_date,
-      renewal_type: payload?.renewal_type,
-      template_id: payload?.template_id,
-      estimated_cost: payload?.estimated_cost,
-      start_date: payload?.start_date,
-      end_date: payload?.end_date,
-      start_date_type: typeof payload?.start_date,
-      end_date_type: typeof payload?.end_date,
-      renewal_date_type: typeof payload?.renewal_date
-    });
-    
-    console.log(payload, "payload$$$")
     if (payload) {
       if (mode === "create") {
         onCreateProject(payload);

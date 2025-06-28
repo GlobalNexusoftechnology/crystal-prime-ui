@@ -42,6 +42,7 @@ export function EditProject({ projectId }: EditProjectProps) {
       const milestones: Milestone[] = (projectDetailData.milestones || []).map((milestone) => ({
         id: milestone.id || "",
         name: milestone.name || "",
+        description: milestone.description || "",
         assigned_to: milestone.assigned_to || "",
         status: milestone.status || "",
         start_date: milestone.start_date || "",

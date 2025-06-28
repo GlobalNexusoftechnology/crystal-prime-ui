@@ -17,6 +17,7 @@ interface ProjectTaskMaster {
 interface ProjectMilestoneMaster {
   id: string;
   name: string;
+  description?: string;
   assigned_to?: string;
   status?: string;
   start_date?: string;
@@ -47,6 +48,7 @@ export interface Task {
 export interface Milestone {
   id: string;
   name: string;
+  description: string;
   assigned_to: string;
   status: string;
   start_date: string;
@@ -130,6 +132,7 @@ export function Step2MilestoneSetup({
       const mappedMilestones: Milestone[] = (selectedTemplate.project_milestone_master || []).map((m, idx) => ({
         id: m.id || String(idx),
         name: m.name,
+        description: m.description || "",
         assigned_to: m.assigned_to || "",
         status: m.status || "Open",
         start_date: m.start_date || "",
@@ -158,6 +161,7 @@ export function Step2MilestoneSetup({
       setMilestones(initialMilestones.map(m => ({
         id: m.id || "",
         name: m.name,
+        description: m.description || "",
         assigned_to: m.assigned_to || "",
         status: m.status || "Open",
         start_date: m.start_date || "",
@@ -216,6 +220,7 @@ export function Step2MilestoneSetup({
     const newMilestone: Milestone = {
       id: Date.now().toString(),
       name: "",
+      description: "",
       assigned_to: "--",
       status: "Open",
       start_date: new Date().toISOString().slice(0, 10),
@@ -298,37 +303,11 @@ export function Step2MilestoneSetup({
     const backendMilestones: Milestone[] = milestones.map(m => ({
       id: m.id,
       name: m.name,
+      description: m.description,
       assigned_to: m.assigned_to,
       status: m.status,
       start_date: m.start_date,
       end_date: m.end_date,
-      project: {
-        id: "dummy_project_id",
-        name: "dummy_project_name",
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        deleted: false,
-        deleted_at: null,
-        status: "Active",
-        client: {
-          id: "dummy_client_id",
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          deleted: false,
-          deleted_at: null,
-          name: "dummy_client_name",
-          email: "dummy@email.com",
-          contact_number: "0000000000",
-          address: "dummy address",
-          website: "dummy.com",
-          company_name: "dummy company",
-          contact_person: "dummy person",
-          lead_id: null,
-          client_details: []
-        },
-        milestones: [],
-        documents: [],
-      },
       tasks: m.tasks.map(t => ({
         id: t.id,
         title: t.title,
@@ -336,13 +315,9 @@ export function Step2MilestoneSetup({
         assigned_to: t.assigned_to,
         status: t.status,
         due_date: t.due_date,
-        created_at: "",
-        updated_at: "",
-        deleted: false,
-        deleted_at: null,
       })),
     }));
-    onNext(backendMilestones); // Cast if needed for type compatibility
+    onNext(backendMilestones);
   };
 
   return (
@@ -386,6 +361,7 @@ export function Step2MilestoneSetup({
                     <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                   </button>
                 </th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Description</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Assigned To</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Status</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Estimated Start Date</th>
@@ -414,7 +390,7 @@ export function Step2MilestoneSetup({
                   />
                   {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
                     <tr className="bg-gray-50 2xl:bg-gray-100">
-                      <td colSpan={6} className="p-0">
+                      <td colSpan={7} className="p-0">
                         <table className="w-full">
                           <thead>
                             <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">

@@ -61,6 +61,16 @@ export function Milestone({
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
+            <InputField
+              value={editMilestone.description}
+              onChange={(e) =>
+                onChange({ ...editMilestone, description: e.target.value })
+              }
+              placeholder="Description"
+              className="w-40"
+            />
+          </td>
+          <td className="p-2 2xl:p-[0.5vw]">
             <Dropdown
               options={userOptions}
               value={editMilestone.assigned_to || ''}
@@ -125,6 +135,9 @@ export function Milestone({
                 {milestone.tasks.length}
               </p>
             </div>
+          </td>
+          <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw]">
+            <span className="text-gray-600">{milestone.description || "No description"}</span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
