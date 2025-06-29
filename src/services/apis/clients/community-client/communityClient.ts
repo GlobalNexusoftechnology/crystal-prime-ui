@@ -121,6 +121,9 @@ import {
   IProjectTaskResponse,
   IProjectMilestoneDetailResponse,
   IProjectTaskDetailResponse,
+  ICreateTaskCommentPayload,
+  ITaskCommentResponse,
+  IAllTaskCommentsResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -221,6 +224,11 @@ import {
   deleteMilestoneTaskUrl,
   getMilestoneTaskDetailUrl,
   getAllMilestoneTasksUrl,
+  createTaskCommentUrl,
+  updateTaskCommentUrl,
+  deleteTaskCommentUrl,
+  getTaskCommentDetailUrl,
+  getAllTaskCommentsUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse } from "./types";
 
@@ -1620,6 +1628,46 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
     return response?.data;
+  }
+
+  // Task Comments API methods
+  public createTaskComment = async (payload: ICreateTaskCommentPayload): Promise<ITaskCommentResponse> => {
+    const response = await this.post<ITaskCommentResponse>(createTaskCommentUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public updateTaskComment = async (commentId: string, payload: Partial<ICreateTaskCommentPayload>): Promise<ITaskCommentResponse> => {
+    const response = await this.put<ITaskCommentResponse>(updateTaskCommentUrl(commentId), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public deleteTaskComment = async (commentId: string): Promise<void> => {
+    const response = await this.del<void>(deleteTaskCommentUrl(commentId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+  }
+
+  public getTaskCommentDetail = async (commentId: string): Promise<ITaskCommentResponse> => {
+    const response = await this.get<ITaskCommentResponse>(getTaskCommentDetailUrl(commentId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public getAllTaskComments = async (taskId: string): Promise<ITaskCommentResponse[]> => {
+    const response = await this.get<IAllTaskCommentsResponse>(getAllTaskCommentsUrl(taskId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
   }
 }
 

@@ -1422,3 +1422,56 @@ export interface IUploadClientFromExcelResponse {
   message: string;
   data: IClientList[];
 }
+
+// Task Comment APIs Types
+// -----------------------------------------------------
+
+export interface ICreateTaskCommentPayload {
+  task_id: string;
+  assigned_to: string;
+  remarks: string;
+}
+
+export interface ITaskCommentResponse {
+  id: string;
+  remarks: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  task: IProjectTaskResponse;
+  assignedTo: IUsersDetails;
+}
+
+export interface ICreateTaskCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITaskCommentResponse;
+}
+
+export interface IAllTaskCommentsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITaskCommentResponse[];
+}
+
+export interface IUpdateTaskCommentPayload {
+  id: string;
+  payload: Partial<ICreateTaskCommentPayload>;
+}
+
+export interface IUpdateTaskCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITaskCommentResponse;
+}
+
+export interface IDeleteTaskCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITaskCommentResponse;
+}

@@ -105,3 +105,7 @@ export { useMilestoneTaskDetailQuery } from "./useMilestoneTaskDetailQuery";
 export { useDeleteMilestoneTaskMutation } from "./useDeleteMilestoneTaskMutation";
 export { useCreateMilestoneTaskMutation } from "./useCreateMilestoneTaskMutation";
 export { useUpdateMilestoneTaskMutation } from "./useUpdateMilestoneTaskMutation";
+
+// task comments
+export { useCreateTaskCommentMutation } from "./useCreateTaskCommentMutation";
+export { useGetAllTaskCommentsQuery } from "./useGetAllTaskCommentsQuery";

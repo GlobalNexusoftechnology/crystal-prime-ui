@@ -230,3 +230,10 @@ export const deleteMilestoneTaskUrl = (taskId: string) => `/project-task/${taskI
 export const getMilestoneTaskDetailUrl = (taskId: string) => `/project-task/${taskId}`;
 export const getAllMilestoneTasksUrl = (milestoneId: string) => `/project-task/${milestoneId}`;
 
+// Task Comments API's
+export const createTaskCommentUrl = () => "/task-comments";
+export const updateTaskCommentUrl = (commentId: string) => `/task-comments/${commentId}`;
+export const deleteTaskCommentUrl = (commentId: string) => `/task-comments/${commentId}`;
+export const getTaskCommentDetailUrl = (commentId: string) => `/task-comments/${commentId}`;
+export const getAllTaskCommentsUrl = (taskId: string) => `/task-comments/task/${taskId}`;
+
