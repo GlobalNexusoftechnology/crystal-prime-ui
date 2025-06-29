@@ -31,6 +31,8 @@ interface IFollowupsProps {
   taskId: string;
 }
 
+const tabs = ["Comments"];
+
 export function DailyTask({ taskId }: IFollowupsProps) {
   const {
     data: followupData,
@@ -40,6 +42,7 @@ export function DailyTask({ taskId }: IFollowupsProps) {
   const { activeSession } = useAuthStore();
   const userId = activeSession?.user?.id;
   const [showForm, setShowForm] = useState(false);
+  const [activeTab, setActiveTab] = useState("Comments");
 
   const { createClientFollowUp, isPending } = useCreateProjectFollowUpMutation({
     onSuccessCallback: (response: ICreateProjectFollowUpResponse) => {
@@ -81,93 +84,138 @@ export function DailyTask({ taskId }: IFollowupsProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw]">
-      <h1 className="text-[1.2rem] 2xl:text-[1.2vw]">Daily Task</h1>
-      {showForm ? (
-        <ModalOverlay
-          isOpen={showForm}
-          onClose={() => setShowForm(false)}
-          modalTitle="Add Follow Up"
-          modalClassName="w-full md:w-[31rem] 2xl:w-[31vw]"
+    <div className="flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:px-[1vw]">
+      {/* Tabs */}
+      <div className="flex gap-8 2xl:gap-[2vw] items-center">
+        <div className="flex gap-8 2xl:gap-[2vw]">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${activeTab === tab
+                ? ""
+                : "text-gray-500"
+                }`}
+              onClick={() => {
+                setActiveTab(tab);
+                setShowForm(false);
+              }}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={() => setShowForm((prev) => !prev)}
+          className="flex items-center gap-2 2xl:gap-[0.5vw] text-primary text-[1rem] 2xl:text-[1vw]"
         >
-          <form
-            onSubmit={formik.handleSubmit}
-            className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
-          >
-            <InputField
-              label="Remarks"
-              name="remarks"
-              placeholder="Enter remarks"
-              value={formik.values.remarks}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.remarks ? formik.errors.remarks : undefined}
-            />
-            <div className="flex items-center gap-4 2xl:gap-[1vw]">
-              <Button
-                title="Cancel"
-                variant="primary-outline"
-                type="button"
-                onClick={() => setShowForm(false)}
-                width="w-full"
-              />
-              <Button
-                title={isPending ? "Creating..." : "Submit Comment"}
-                type="submit"
-                width="w-full"
-                disabled={isPending}
-              />
-            </div>
-          </form>
-        </ModalOverlay>
-      ) : (
-        <div className="flex flex-col gap-4 2xl:gap-[1vw]">
-          {followupData && followupData.length > 0 ? (
-            <div className="space-y-4 2xl:space-y-[1vw]">
-              {followupData.map((followup) => (
-                <div
-                  key={followup.id}
-                  className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-sm 2xl:text-[0.9vw] text-[#1D2939] w-full"
+          <span>
+            {showForm ? (
+              "Close"
+            ) : (
+              <>
+                {activeTab === "Comments" ? (
+                  <Button title="Add followup" variant="primary-outline" />
+                ) : (
+                  null
+                )}
+              </>
+            )}
+          </span>
+        </button>
+      </div>
+
+      {/* Tab Contents */}
+      <div>
+        {activeTab === "Comments" && (
+          <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+            {showForm ? (
+              <ModalOverlay
+                isOpen={showForm}
+                onClose={() => setShowForm(false)}
+                modalTitle="Add Follow Up"
+                modalClassName="w-full md:w-[31rem] 2xl:w-[31vw]"
+              >
+                <form
+                  onSubmit={formik.handleSubmit}
+                  className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
                 >
-                  <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
-                    <span>
-                      <span className="2xl:text-[1.1vw] font-normal">
-                        Assigned To:{" "}
-                      </span>
-                      <span className="underline 2xl:text-[1.1vw]">
-                        {followup.user
-                          ? `${followup.user.first_name} ${followup.user.last_name}`
-                          : "Unassigned"}
-                      </span>
-                    </span>
+                  <InputField
+                    label="Remarks"
+                    name="remarks"
+                    placeholder="Enter remarks"
+                    value={formik.values.remarks}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.remarks ? formik.errors.remarks : undefined}
+                  />
+                  <div className="flex items-center gap-4 2xl:gap-[1vw]">
+                    <Button
+                      title="Cancel"
+                      variant="primary-outline"
+                      type="button"
+                      onClick={() => setShowForm(false)}
+                      width="w-full"
+                    />
+                    <Button
+                      title={isPending ? "Creating..." : "Submit Comment"}
+                      type="submit"
+                      width="w-full"
+                      disabled={isPending}
+                    />
                   </div>
+                </form>
+              </ModalOverlay>
+            ) : (
+              <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+                {followupData && followupData.length > 0 ? (
+                  <div className="space-y-4 2xl:space-y-[1vw]">
+                    {followupData.map((followup) => (
+                      <div
+                        key={followup.id}
+                        className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-sm 2xl:text-[0.9vw] text-[#1D2939] w-full"
+                      >
+                        <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
+                          <span>
+                            <span className="2xl:text-[1.1vw] font-normal">
+                              Assigned To:{" "}
+                            </span>
+                            <span className="underline 2xl:text-[1.1vw]">
+                              {followup.user
+                                ? `${followup.user.first_name} ${followup.user.last_name}`
+                                : "Unassigned"}
+                            </span>
+                          </span>
+                        </div>
 
-                  <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw]">
-                    {followup.remarks || "No remarks provided"}
-                  </p>
+                        <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw]">
+                          {followup.remarks || "No remarks provided"}
+                        </p>
 
-                  <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw] font-medium">
-                    {followup.completed_date && (
-                      <p className="text-green-600 2xl:text-[1.1vw]">
-                        Completed: {formatDate(followup.completed_date)},
-                      </p>
-                    )}
-                    <p className="text-lightGreen 2xl:text-[1.1vw]">
-                      Created: {formatDate(followup.created_at)}
+                        <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw] font-medium">
+                          {followup.completed_date && (
+                            <p className="text-green-600 2xl:text-[1.1vw]">
+                              Completed: {formatDate(followup.completed_date)},
+                            </p>
+                          )}
+                          <p className="text-lightGreen 2xl:text-[1.1vw]">
+                            Created: {formatDate(followup.created_at)}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="py-4 2xl:py-[1vw]">
+                    <p className="text-gray-500 2xl:text-[1.1vw]">
+                      No follow-ups found for this client
                     </p>
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="py-4 2xl:py-[1vw]">
-              <p className="text-gray-500 2xl:text-[1.1vw]">
-                No follow-ups found for this client
-              </p>
-            </div>
-          )}
-        </div>
-      )}
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
