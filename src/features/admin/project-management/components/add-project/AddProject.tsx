@@ -162,6 +162,7 @@ export function AddProject({
   const { onCreateProject, isPending: isCreatePending, error: createError } = useCreateProjectMutation({
     onSuccessCallback: (response) => {
       // Use type assertion to handle the actual response structure
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const responseData = response.data as any;
       
       // Try different possible locations for the project ID
@@ -182,6 +183,7 @@ export function AddProject({
   const { onUpdateProject, isPending: isUpdatePending, error: updateError } = useUpdateProjectMutation({
     onSuccessCallback: (response) => {
       // Use type assertion to handle the actual response structure
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const responseData = response.data as any;
       
       // Try different possible locations for the project ID
