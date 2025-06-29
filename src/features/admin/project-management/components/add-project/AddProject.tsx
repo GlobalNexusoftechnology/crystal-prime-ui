@@ -30,13 +30,10 @@ export interface IAddProjectFormValues {
   project_type?: string;
   budget?: number;
   estimated_cost?: number;
-  actual_cost?: number;
   cost_of_labour?: number;
   overhead_cost?: number;
   start_date?: Date;
   end_date?: Date;
-  actual_start_date?: Date;
-  actual_end_date?: Date;
   template_id?: string | null;
   renewal_type?: ProjectRenewalType | null;
   renewal_date?: Date;
@@ -59,13 +56,10 @@ const initialValues: IAddProjectFormValues = {
   project_type: "",
   budget: 0,
   estimated_cost: 0,
-  actual_cost: 0,
   cost_of_labour: 0,
   overhead_cost: 0,
   start_date: undefined,
   end_date: undefined,
-  actual_start_date: undefined,
-  actual_end_date: undefined,
   template_id: "",
   renewal_type: ProjectRenewalType.NONE,
   renewal_date: undefined,
@@ -95,15 +89,6 @@ const validationSchema = Yup.object({
     .optional(),
   overhead_cost: Yup.number()
     .typeError("Over Head Cost must be a number")
-    .optional(),
-  actual_cost: Yup.number()
-    .typeError("Actual Cost must be a number")
-    .optional(),
-  actual_start_date: Yup.date()
-    .typeError("Actual Start Date must be a valid date")
-    .optional(),
-  actual_end_date: Yup.date()
-    .typeError("Actual End Date must be a valid date")
     .optional(),
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
@@ -306,13 +291,10 @@ export function AddProject({
       renewal_type: basicInfo.is_renewal === true ? basicInfo.renewal_type : undefined,
       template_id: finalTemplateId,
       estimated_cost: Number(basicInfo.estimated_cost),
-      actual_cost: basicInfo.actual_cost !== undefined ? Number(basicInfo.actual_cost) : undefined,
       cost_of_labour: basicInfo.cost_of_labour !== undefined ? Number(basicInfo.cost_of_labour) : undefined,
       overhead_cost: basicInfo.overhead_cost !== undefined ? Number(basicInfo.overhead_cost) : undefined,
       start_date: basicInfo.start_date ? (basicInfo.start_date instanceof Date ? basicInfo.start_date.toISOString() : basicInfo.start_date) : undefined,
       end_date: basicInfo.end_date ? (basicInfo.end_date instanceof Date ? basicInfo.end_date.toISOString() : basicInfo.end_date) : undefined,
-      actual_start_date: basicInfo.actual_start_date ? (basicInfo.actual_start_date instanceof Date ? basicInfo.actual_start_date.toISOString() : basicInfo.actual_start_date) : undefined,
-      actual_end_date: basicInfo.actual_end_date ? (basicInfo.actual_end_date instanceof Date ? basicInfo.actual_end_date.toISOString() : basicInfo.actual_end_date) : undefined,
       milestones: apiMilestones,
       attachments,
     };
@@ -367,10 +349,7 @@ export function AddProject({
   const estimates: IEstimates = {
     start_date: basicInfo?.start_date ? String(basicInfo.start_date) : "",
     end_date: basicInfo?.end_date ? String(basicInfo.end_date) : "",
-    actual_start: basicInfo?.actual_start_date ? String(basicInfo.actual_start_date) : "",
-    actual_end: basicInfo?.actual_end_date ? String(basicInfo.actual_end_date) : "",
     estimated_cost: basicInfo?.estimated_cost !== undefined ? String(basicInfo.estimated_cost) : "",
-    actual_cost: basicInfo?.actual_cost !== undefined ? String(basicInfo.actual_cost) : "",
     labour_cost: basicInfo?.cost_of_labour !== undefined ? String(basicInfo.cost_of_labour) : "",
     overhead_cost: basicInfo?.overhead_cost !== undefined ? String(basicInfo.overhead_cost) : "",
     budget: basicInfo?.budget !== undefined ? String(basicInfo.budget) : "",

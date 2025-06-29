@@ -29,10 +29,10 @@ export interface IClientInfo {
 export interface IEstimates {
   start_date: string;
   end_date: string;
-  actual_start: string;
-  actual_end: string;
+  actual_start?: string;
+  actual_end?: string;
   estimated_cost: string;
-  actual_cost: string;
+  actual_cost?: string;
   labour_cost: string;
   overhead_cost: string;
   budget: string;

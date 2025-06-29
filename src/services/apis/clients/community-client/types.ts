@@ -1015,13 +1015,10 @@ export interface ICreateProjectPayload {
   project_type?: string;
   budget?: number;
   estimated_cost?: number;
-  actual_cost?: number;
   cost_of_labour?: number;
   overhead_cost?: number;
   start_date?: string;
   end_date?: string;
-  actual_start_date?: string;
-  actual_end_date?: string;
   template_id?: string | null;
   renewal_type?: ProjectRenewalType | null;
   renewal_date?: string;
@@ -1055,9 +1052,12 @@ export interface IProjectResponse extends ICreateProjectPayload {
   deleted: boolean;
   deleted_at: string | null;
   status: string;
-  client: IClientList
-  milestones: IProjectMilestoneResponse[]
-  attachments: IProjectAttachmentResponse[]
+  client: IClientList;
+  milestones: IProjectMilestoneResponse[];
+  attachments: IProjectAttachmentResponse[];
+  actual_cost?: number;
+  actual_start_date?: string;
+  actual_end_date?: string;
 }
 
 export interface ICreateProjectResponse {

@@ -176,38 +176,6 @@ export function Step1BasicInfo({
         />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
-        <InputField
-          label="Actual Cost"
-          name="actual_cost"
-          placeholder="Actual Cost"
-          value={values.actual_cost}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={
-            touched.actual_cost && typeof errors.actual_cost === "string"
-              ? errors.actual_cost
-              : undefined
-          }
-          type="number"
-          className="2xl:text-[1vw]"
-        />
-        <DatePicker
-          label="Actual Start Date"
-          value={values.actual_start_date ? (typeof values.actual_start_date === 'string' ? values.actual_start_date : values.actual_start_date.toISOString().slice(0, 10)) : ''}
-          onChange={(val) => setFieldValue("actual_start_date", val)}
-          placeholder="Actual Start Date"
-          error={touched.actual_start_date && typeof errors.actual_start_date === "string" ? errors.actual_start_date : undefined}
-        />
-        <DatePicker
-          label="Actual End Date"
-          value={values.actual_end_date ? (typeof values.actual_end_date === 'string' ? values.actual_end_date : values.actual_end_date.toISOString().slice(0, 10)) : ''}
-          onChange={(val) => setFieldValue("actual_end_date", val)}
-          placeholder="Actual End Date"
-          error={touched.actual_end_date && typeof errors.actual_end_date === "string" ? errors.actual_end_date : undefined}
-        />
-      </div>
-
       <div className="mt-4">
         <Checkbox
           label="Is Renewal?"
