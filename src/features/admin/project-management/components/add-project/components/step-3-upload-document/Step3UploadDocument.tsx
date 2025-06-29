@@ -77,6 +77,7 @@ export function Step3UploadDocument({
   const handleRemoveFile = (index: number) => {
     const fileToRemove = files[index];
     // Check if this is an existing attachment with an ID
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const originalAttachment = (fileToRemove as any)?.originalAttachment;
     if (originalAttachment?.id) {
       setRemovedAttachmentIds((prev) => [...prev, originalAttachment.id]);
