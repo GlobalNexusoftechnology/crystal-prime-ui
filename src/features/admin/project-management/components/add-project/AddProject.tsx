@@ -19,6 +19,7 @@ import {
   useAllClientQuery,
   useAllProjectTemplatesQuery,
   ProjectRenewalType,
+  useAuthStore,
 } from "@/services";
 import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
 
@@ -141,6 +142,11 @@ export function AddProject({
     isError: clientError,
   } = useAllClientQuery();
 
+  // Get current user from auth store
+  const { activeSession } = useAuthStore();
+  const currentUser = activeSession?.user;
+  const userId = currentUser?.id || "";
+
   const clientOptions = (allClientData || []).map((client) => ({
     label: client.name,
     value: client.id,
@@ -222,6 +228,7 @@ export function AddProject({
       file_path: file.name,
       file_type: file.type,
       file_name: file.name,
+      uploaded_by: userId,
     }));
 
     // Determine template_id
@@ -309,7 +316,7 @@ export function AddProject({
   };
   const documents: IDocumentInfo[] = uploadedFiles.map((file) => ({
     name: file.name,
-    uploaded_by: "",
+    uploaded_by: userId,
     created_at: new Date().toLocaleString(),
   }));
 

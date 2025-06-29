@@ -55,12 +55,7 @@ export function ProjectDetails({
             documentSectionData={(projectDetailData.attachments || []).map(
               (att) => ({
                 name: att.file_name,
-                uploaded_by:
-                  typeof att.uploaded_by === "string"
-                    ? att.uploaded_by
-                    : att.uploaded_by?.first_name ||
-                      att.uploaded_by?.email ||
-                      "",
+                uploaded_by: `${att.uploaded_by?.id}`,
                 created_at: formattingDate(`${att.created_at}`, "toReadable"),
               })
             )}
@@ -91,16 +86,10 @@ export function ProjectDetails({
                   )
                 : "",
               end_date: projectDetailData.end_date
-                ? formattingDate(
-                    projectDetailData.end_date.toString(),
-                    "toReadable"
-                  )
+                ? formattingDate(projectDetailData.end_date.toString(), "toReadable")
                 : "",
               actual_end: projectDetailData.actual_end_date
-                ? formattingDate(
-                    projectDetailData.actual_end_date.toString(),
-                    "toReadable"
-                  )
+                ? formattingDate(projectDetailData.actual_end_date.toString(), "toReadable")
                 : "",
               estimated_cost: projectDetailData.estimated_cost
                 ? String(projectDetailData.estimated_cost)

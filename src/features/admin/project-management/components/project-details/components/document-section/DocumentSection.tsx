@@ -1,11 +1,22 @@
-import { IDocumentInfo } from "@/constants";
 import React from "react";
+import { useAllUsersQuery } from "@/services";
+import { IDocumentInfo } from "@/constants";
 
 export interface DocumentSectionProps {
   documentSectionData: IDocumentInfo[];
 }
 
 export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
+  // Fetch all users to map user IDs to names
+  const { allUsersData } = useAllUsersQuery();
+
+  // Function to get user name by ID
+  const getUserNameById = (userId: string) => {
+    if (!allUsersData || !userId) return "---";
+    const user = allUsersData.find((user) => user.id === userId);
+    return user ? `${user.first_name} ${user.last_name}`.trim() : "---";
+  };
+
   return (
     <div className="border-b 2xl:border-[0.1vw] p-4 2xl:p-[1vw]">
       <h3 className="text-[1.2rem] 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">
@@ -34,7 +45,7 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
                   doc.uploaded_by && "underline"
                 } text-[1rem] 2xl:text-[1.1vw]`}
               >
-                {doc?.uploaded_by || "---"}
+                {getUserNameById(doc.uploaded_by)}
               </p>
             </div>
             <div className="flex flex-col">

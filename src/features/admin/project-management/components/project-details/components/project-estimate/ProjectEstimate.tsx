@@ -1,4 +1,5 @@
 import { IEstimates } from "@/constants";
+import { formattingDate } from "@/utils";
 import React from "react";
 
 export interface ProjectEstimateProps {
@@ -17,25 +18,25 @@ export function ProjectEstimate({ projectEstimateData }: ProjectEstimateProps) {
           <div className="flex flex-col">
             <p className="font-light">Estimated Start Date</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
-              {projectEstimateData.start_date}
+              {projectEstimateData.start_date ? formattingDate(projectEstimateData.start_date, "toReadable") : "---"}
             </p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Actual Start Date</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
-              {projectEstimateData.actual_start}
+              {projectEstimateData.actual_start ? formattingDate(projectEstimateData.actual_start, "toReadable") : "---"}
             </p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Estimated End Date</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
-              {projectEstimateData.end_date}
+              {projectEstimateData.end_date ? formattingDate(projectEstimateData.end_date, "toReadable") : "---"}
             </p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Actual End Date</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
-              {projectEstimateData.end_date}
+              {projectEstimateData.actual_end ? formattingDate(projectEstimateData.actual_end, "toReadable") : "---"}
             </p>
           </div>
         </div>
