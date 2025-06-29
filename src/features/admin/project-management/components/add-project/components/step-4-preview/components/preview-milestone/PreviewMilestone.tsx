@@ -16,6 +16,7 @@ export interface Task {
 export interface Milestone {
   id: string;
   name: string;
+  description: string;
   assigned_to: string;
   status: string;
   start_date: string;
@@ -51,6 +52,9 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
           </span>
         </td>
         <td className="px-2 py-2 text-sm">
+          <span className="text-gray-600">{milestone.description || "No description"}</span>
+        </td>
+        <td className="px-2 py-2 text-sm">
           <div className="flex items-center gap-2">
             <p 
               className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" 
@@ -82,7 +86,7 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
       </tr>
       {expanded && (
         <tr className="bg-gray-50 2xl:bg-gray-100">
-          <td colSpan={6} className="p-0">
+          <td colSpan={7} className="p-0">
             <table className="w-full">
               <thead>
                 <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">

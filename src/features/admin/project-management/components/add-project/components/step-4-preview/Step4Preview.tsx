@@ -21,6 +21,7 @@ export interface Task {
 export interface Milestone {
   id: string;
   name: string;
+  description: string;
   assigned_to: string;
   status: string;
   start_date: string;
@@ -69,6 +70,7 @@ export function Step4Preview({
             <thead>
               <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
                 <th className="text-left p-2 2xl:p-[0.5vw]">Milestone Name</th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Description</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Assigned To</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Status</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Estimated Start Date</th>

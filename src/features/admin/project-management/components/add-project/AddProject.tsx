@@ -269,6 +269,10 @@ export function AddProject({
       finalTemplateId: payload?.template_id
     });
     
+    // Add detailed payload logging
+    console.log("Full Payload Being Sent:", JSON.stringify(payload, null, 2));
+    console.log("Milestones in Payload:", payload?.milestones);
+    
     if (payload) {
       if (mode === "create") {
         onCreateProject(payload);

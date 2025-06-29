@@ -51,44 +51,40 @@ export function Milestone({
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
       {editingId === milestone.id && editMilestone ? (
         <>
-          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
             <InputField
               value={editMilestone.name}
               onChange={(e) =>
                 onChange({ ...editMilestone, name: e.target.value })
               }
-              className="w-40"
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
             <InputField
               value={editMilestone.description}
               onChange={(e) =>
                 onChange({ ...editMilestone, description: e.target.value })
               }
               placeholder="Description"
-              className="w-40"
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
             <Dropdown
               options={userOptions}
               value={editMilestone.assigned_to || ''}
               onChange={(val) =>
                 onChange({ ...editMilestone, assigned_to: val })
               }
-              dropdownWidth="w-40 2xl:w-[10vw]"
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
             <Dropdown
               options={statusOptions}
               value={editMilestone.status}
               onChange={(val) => onChange({ ...editMilestone, status: val })}
-              dropdownWidth="w-32 2xl:w-[8vw]"
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
             <DatePicker
               value={editMilestone.start_date || ""}
               onChange={(val) =>
@@ -96,7 +92,7 @@ export function Milestone({
               }
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
             <DatePicker
               value={editMilestone.end_date || ""}
               onChange={(val) =>
@@ -115,7 +111,7 @@ export function Milestone({
         </>
       ) : (
         <>
-          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw] pt-4 2xl:pt-[1vw]">
             <button
               onClick={() => onToggle(milestone.id)}
               className="focus:outline-none"
@@ -128,6 +124,8 @@ export function Milestone({
                 <HiChevronDown className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
               )}
             </button>
+            <div className="flex items-center gap-4 2xl-gap-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+
             <span className="text-sm 2xl:text-[0.9vw]">{milestone.name}</span>
             <div className="flex items-center gap-1">
               <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
@@ -135,11 +133,12 @@ export function Milestone({
                 {milestone.tasks.length}
               </p>
             </div>
+            </div>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw]">
+          <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw] min-w-[10rem] 2xl:min-w-[10vw]">
             <span className="text-gray-600">{milestone.description || "No description"}</span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw]">
+          <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw] min-w-[14rem] 2xl:min-w-[14vw]">
             <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <p
                 className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
@@ -154,12 +153,12 @@ export function Milestone({
               </p>
             </div>
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
-            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
+            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm 2xl:text-[0.9vw] font-semibold">
               {milestone.status}
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-sm 2xl:text-[0.9vw]">
@@ -167,7 +166,7 @@ export function Milestone({
               </span>
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               {milestone.end_date}
@@ -185,7 +184,7 @@ export function Milestone({
               <HiOutlineDotsVertical className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
             {menuOpen === milestone.id && (
-              <div className="absolute right-0 mt-2 2xl:mt-[0.5vw] bg-white border rounded 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px]">
+              <div className="absolute right-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px]">
                 <button
                   className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100"
                   onClick={() => onEdit(milestone)}

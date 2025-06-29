@@ -946,6 +946,7 @@ export interface IProjectTaskDetailResponse  {
 
 export interface ICreateProjectMilestone {
   name: string;
+  description: string;
   start_date?: string;
   end_date?: string;
   actual_date?: string;
@@ -1025,6 +1026,26 @@ export interface ICreateProjectPayload {
   renewal_type?: ProjectRenewalType | null;
   renewal_date?: string;
   is_renewal?: boolean;
+  milestones?: Array<{
+    name: string;
+    description?: string;
+    assigned_to?: string;
+    status?: string;
+    start_date?: string;
+    end_date?: string;
+    tasks?: Array<{
+      title: string;
+      description?: string;
+      assigned_to?: string;
+      status?: string;
+      due_date?: string;
+    }>;
+  }>;
+  attachments?: Array<{
+    file_path: string;
+    file_type: string;
+    file_name: string;
+  }>;
 }
 
 export interface IProjectResponse extends ICreateProjectPayload {

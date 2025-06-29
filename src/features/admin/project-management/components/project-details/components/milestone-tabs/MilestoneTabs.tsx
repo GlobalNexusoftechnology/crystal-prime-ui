@@ -111,6 +111,7 @@ export function MilestoneTabs({
       setMilestones((prev) => [...prev, {
         id: data.id,
         name: data.name,
+        description: data.description || '',
         assigned_to: data.assigned_to || '',
         status: data.status || 'Open',
         start_date: data.start_date || '',
@@ -142,6 +143,7 @@ export function MilestoneTabs({
             ? {
                 id: data.id,
                 name: data.name,
+                description: data.description || '',
                 assigned_to: data.assigned_to || '',
                 status: data.status || 'Open',
                 start_date: data.start_date || '',
@@ -248,11 +250,14 @@ export function MilestoneTabs({
   const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
   // Validation functions
-  const validateMilestone = (milestone: { name: string; assigned_to: string; status: string; start_date: string; end_date: string }) => {
+  const validateMilestone = (milestone: { name: string; description: string; assigned_to: string; status: string; start_date: string; end_date: string }) => {
     const errors: {[key: string]: string} = {};
     
     if (!milestone.name || milestone.name.trim() === "") {
       errors.name = "Milestone name is required";
+    }
+    if (!milestone.description || milestone.description.trim() === "") {
+      errors.description = "Milestone description is required";
     }
     if (!milestone.assigned_to || milestone.assigned_to === "--") {
       errors.assigned_to = "Please assign to someone";
@@ -294,9 +299,11 @@ export function MilestoneTabs({
     return Object.keys(errors).length === 0;
   };
 
-  const isMilestoneValid = (milestone: { name: string; assigned_to: string; status: string; start_date: string; end_date: string }) => {
+  const isMilestoneValid = (milestone: { name: string; description: string; assigned_to: string; status: string; start_date: string; end_date: string }) => {
     return milestone.name && 
            milestone.name.trim() !== "" && 
+           milestone.description &&
+           milestone.description.trim() !== "" &&
            milestone.assigned_to && 
            milestone.assigned_to !== "--" &&
            milestone.status &&
@@ -361,6 +368,7 @@ export function MilestoneTabs({
       // Create new milestone
       const payload = {
         name: editMilestone.name,
+        description: editMilestone.description,
         assigned_to: editMilestone.assigned_to === "--" ? undefined : editMilestone.assigned_to,
         status: editMilestone.status,
         start_date: editMilestone.start_date,
@@ -372,6 +380,7 @@ export function MilestoneTabs({
       // Update existing milestone
       const payload = {
         name: editMilestone.name,
+        description: editMilestone.description,
         assigned_to: editMilestone.assigned_to === "--" ? undefined : editMilestone.assigned_to,
         status: editMilestone.status,
         start_date: editMilestone.start_date,
@@ -396,6 +405,7 @@ export function MilestoneTabs({
     const newMilestone = {
       id: newId,
       name: "",
+      description: "",
       assigned_to: "--",
       status: "Open",
       start_date: new Date().toISOString().slice(0, 10),
@@ -507,12 +517,14 @@ export function MilestoneTabs({
     }
   }, [showForm]);
 
-  const handleMilestoneChange = (updatedMilestone: { name: string; assigned_to: string; status: string; start_date: string; end_date: string }) => {
+  const handleMilestoneChange = (updatedMilestone: { name: string; description: string; assigned_to: string; status: string; start_date: string; end_date: string }) => {
     setEditMilestone(updatedMilestone);
-    
     // Clear specific field errors when user makes changes
     if (milestoneErrors.name && updatedMilestone.name && updatedMilestone.name.trim() !== "") {
       setMilestoneErrors(prev => ({ ...prev, name: "" }));
+    }
+    if (milestoneErrors.description && updatedMilestone.description && updatedMilestone.description.trim() !== "") {
+      setMilestoneErrors(prev => ({ ...prev, description: "" }));
     }
     if (milestoneErrors.assigned_to && updatedMilestone.assigned_to && updatedMilestone.assigned_to !== "--") {
       setMilestoneErrors(prev => ({ ...prev, assigned_to: "" }));
@@ -612,6 +624,7 @@ export function MilestoneTabs({
                         <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                       </button>
                     </th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Description</th>
                     <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Assigned To</th>
                     <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Status</th>
                     <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">Estimated Start Date</th>
@@ -642,7 +655,7 @@ export function MilestoneTabs({
                       />
                       {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
                         <tr className="bg-gray-50 2xl:bg-gray-100">
-                          <td colSpan={6} className="p-0">
+                          <td colSpan={7} className="p-0">
                             <table className="w-full">
                               <thead>
                                 <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
