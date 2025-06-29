@@ -130,6 +130,7 @@ export function AddProject({
   const [step, setStep] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>(existingAttachments); // Initialize with existing attachments
+  const [removedAttachmentIds, setRemovedAttachmentIds] = useState<string[]>([]); // Track removed existing attachments
   const [milestoneOption, setMilestoneOption] = useState("milestone");
   const [milestones, setMilestones] = useState<Milestone[]>(existingMilestones);
   const [basicInfo, setBasicInfo] = useState<IAddProjectFormValues | null>(
@@ -227,33 +228,55 @@ export function AddProject({
       })),
     }));
     
-    const attachments = uploadedFiles.map((file) => {
-      // Check if this is an existing attachment (has originalAttachment metadata)
-      const originalAttachment = (file as File & { originalAttachment?: {
-        file_path?: string;
-        file_type?: string;
-        file_name?: string;
-        uploaded_by?: { id?: string; first_name?: string; last_name?: string };
-      } }).originalAttachment;
-      
-      if (originalAttachment && mode === "edit") {
-        // For existing attachments, preserve the original file_path
-        return {
-          file_path: originalAttachment.file_path || file.name,
-          file_type: originalAttachment.file_type || file.type,
-          file_name: originalAttachment.file_name || file.name,
-          uploaded_by: originalAttachment.uploaded_by?.id || userId,
-        };
-      } else {
-        // For new files, use the file object properties
-        return {
-          file_path: file.name,
-          file_type: file.type,
-          file_name: file.name,
-          uploaded_by: userId,
-        };
-      }
-    });
+    const attachments = uploadedFiles
+      .filter((file) => {
+        // Check if this is an existing attachment that was removed
+        const originalAttachment = (file as File & { originalAttachment?: {
+          file_path?: string;
+          file_type?: string;
+          file_name?: string;
+          uploaded_by?: { id?: string; first_name?: string; last_name?: string };
+          created_at?: string;
+          id?: string;
+        } }).originalAttachment;
+        
+        // If it's an existing attachment, check if it was removed
+        if (originalAttachment?.id) {
+          return !removedAttachmentIds.includes(originalAttachment.id);
+        }
+        
+        // If it's a new file, include it
+        return true;
+      })
+      .map((file) => {
+        // Check if this is an existing attachment (has originalAttachment metadata)
+        const originalAttachment = (file as File & { originalAttachment?: {
+          file_path?: string;
+          file_type?: string;
+          file_name?: string;
+          uploaded_by?: { id?: string; first_name?: string; last_name?: string };
+          created_at?: string;
+          id?: string;
+        } }).originalAttachment;
+        
+        if (originalAttachment && mode === "edit") {
+          // For existing attachments, preserve the original file_path
+          return {
+            file_path: originalAttachment.file_path || file.name,
+            file_type: originalAttachment.file_type || file.type,
+            file_name: originalAttachment.file_name || file.name,
+            uploaded_by: originalAttachment.uploaded_by?.id || userId,
+          };
+        } else {
+          // For new files, use the file object properties
+          return {
+            file_path: file.name,
+            file_type: file.type,
+            file_name: file.name,
+            uploaded_by: userId,
+          };
+        }
+      });
 
     // Determine template_id
     let finalTemplateId = undefined;
@@ -427,8 +450,9 @@ export function AddProject({
       {step === 3 && (
         <Step3UploadDocument
           onBack={() => setStep(2)}
-          onNext={(files: File[]) => {
+          onNext={(files: File[], removedIds: string[]) => {
             setUploadedFiles(files);
+            setRemovedAttachmentIds(removedIds);
             setStep(4);
           }}
           initialFiles={uploadedFiles}

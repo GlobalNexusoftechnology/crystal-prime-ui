@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect } from "react";
 
 interface Step3UploadDocumentProps {
   onBack: () => void;
-  onNext: (files: File[]) => void;
+  onNext: (files: File[], removedIds: string[]) => void;
   initialFiles?: File[];
 }
 
@@ -14,6 +14,7 @@ export function Step3UploadDocument({
   initialFiles,
 }: Step3UploadDocumentProps) {
   const [files, setFiles] = useState<File[]>(initialFiles || []);
+  const [removedAttachmentIds, setRemovedAttachmentIds] = useState<string[]>([]);
   const [error, setError] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -74,6 +75,12 @@ export function Step3UploadDocument({
 
   // Remove a file by index
   const handleRemoveFile = (index: number) => {
+    const fileToRemove = files[index];
+    // Check if this is an existing attachment with an ID
+    const originalAttachment = (fileToRemove as any)?.originalAttachment;
+    if (originalAttachment?.id) {
+      setRemovedAttachmentIds((prev) => [...prev, originalAttachment.id]);
+    }
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -136,7 +143,7 @@ export function Step3UploadDocument({
         />
         <Button
           title="Next"
-          onClick={() => onNext(files)}
+          onClick={() => onNext(files, removedAttachmentIds)}
           disabled={files.length === 0}
           width="w-full md:w-[10rem] 2xl:w-[10vw]"
         />

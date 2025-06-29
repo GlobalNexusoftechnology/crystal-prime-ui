@@ -10,6 +10,7 @@ interface EditProjectProps {
 
 // Helper function to convert attachment data to File object
 const createFileFromAttachment = (attachment: {
+  id?: string;
   file_type?: string;
   file_name: string;
   created_at?: string;
