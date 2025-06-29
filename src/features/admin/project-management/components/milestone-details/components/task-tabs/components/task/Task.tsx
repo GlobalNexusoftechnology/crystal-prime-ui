@@ -74,7 +74,7 @@ export function Task({
     <tr className="border-t border-gray-200">
       {editingTask === task.id && editTask ? (
         <>
-          <td className="pl-8 py-2 font-medium">
+          <td className="pl-8 px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium">
             <div className="flex flex-col">
               <InputField
                 value={editTask.name}
@@ -83,7 +83,7 @@ export function Task({
               />
             </div>
           </td>
-          <td className="py-2">
+          <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">
             <div className="flex flex-col">
               <InputField
                 value={editTask.description}
@@ -94,7 +94,7 @@ export function Task({
               />
             </div>
           </td>
-          <td className="py-2">
+          <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">
             <div className="flex flex-col">
               <Dropdown
                 options={userOptions}
@@ -104,14 +104,14 @@ export function Task({
               />
             </div>
           </td>
-          <td className="py-2">
+          <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">
             <div className="flex flex-col">
               <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
               {task.status}
             </span>
             </div>
           </td>
-          <td className="py-2">
+          <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">
             <div className="flex flex-col">
               <DatePicker
                 value={editTask.due_date}

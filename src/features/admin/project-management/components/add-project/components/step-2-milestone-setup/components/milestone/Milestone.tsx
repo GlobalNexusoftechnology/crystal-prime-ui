@@ -11,6 +11,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TreeStructureIcon } from "@/features";
 import { getInitials, getRandomColor } from "@/utils";
 import type { Milestone } from "../../Step2MilestoneSetup";
+import { LuUserPlus } from "react-icons/lu";
 
 interface MilestoneProps {
   milestone: Milestone;
@@ -53,7 +54,7 @@ export function Milestone({
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
       {editingId === milestone.id && editMilestone ? (
         <>
-          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
+          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw] mb-1 2xl:mb-[0.25vw]">
             <InputField
               value={editMilestone.name}
               onChange={(e) =>
@@ -62,7 +63,7 @@ export function Milestone({
               error={errors?.name}
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
+          <td className="p-2 2xl:p-[0.5vw]">
             <InputField
               value={editMilestone.description}
               onChange={(e) =>
@@ -72,7 +73,7 @@ export function Milestone({
               error={errors?.description}
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
+          <td className="p-2 2xl:p-[0.5vw]">
             <Dropdown
               options={userOptions}
               value={editMilestone.assigned_to || ""}
@@ -82,12 +83,12 @@ export function Milestone({
               error={errors?.assigned_to}
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw]">
             <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
               {milestone.status}
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw]">
             <DatePicker
               value={editMilestone.start_date || ""}
               onChange={(val) =>
@@ -96,7 +97,7 @@ export function Milestone({
               error={errors?.start_date}
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw]">
             <DatePicker
               value={editMilestone.end_date || ""}
               onChange={(val) => onChange({ ...editMilestone, end_date: val })}
@@ -114,7 +115,7 @@ export function Milestone({
         </>
       ) : (
         <>
-          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw] pt-3 2xl:pt-[0.75vw]">
             <button
               onClick={() => onToggle(milestone.id)}
               className="focus:outline-none"
@@ -144,16 +145,22 @@ export function Milestone({
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw] min-w-[14rem] 2xl:min-w-[14vw]">
             <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
-              <p
-                className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
-                style={{
-                  backgroundColor: getRandomColor(milestone?.assigned_to || ""),
-                }}
-              >
-                {getInitials(milestone.assigned_to || "")}
-              </p>
+              {milestone.assigned_to ? (
+                <p
+                  className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
+                  style={{
+                    backgroundColor: getRandomColor(
+                      milestone?.assigned_to || ""
+                    ),
+                  }}
+                >
+                  {getInitials(milestone.assigned_to || "")}
+                </p>
+              ) : (
+                <LuUserPlus className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw] mb-2 2xl:mb-[0.5vw]" />
+              )}
               <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
-                {milestone.assigned_to || ""}
+                {milestone.assigned_to || "---"}
               </p>
             </div>
           </td>
@@ -166,14 +173,14 @@ export function Milestone({
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-sm 2xl:text-[0.9vw]">
-                {milestone.start_date}
+                {milestone.start_date || "---"}
               </span>
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
-              {milestone.end_date}
+              {milestone.end_date || "---"}
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-right relative">

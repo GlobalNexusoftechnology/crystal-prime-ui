@@ -612,10 +612,10 @@ export function MilestoneTabs({
         {activeTab === "Milestones" && (
           <div className="mb-4 2xl:mb-[1vw]">
             <div className="overflow-x-auto">
-              <table className="min-w-full border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
+              <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
                 <thead>
                   <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
-                    <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                    <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
                       <span>Milestone Name</span>
                       <button
                         className="text-purple-500 hover:text-purple-700 text-lg"
@@ -626,10 +626,10 @@ export function MilestoneTabs({
                         <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                       </button>
                     </th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">Description</th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">Assigned To</th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">Estimated Start Date</th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[8rem] 2xl:min-w-[8vw]">Status</th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">Estimated Start Date</th>
                     <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Estimated End Date</th>
                     <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                   </tr>
@@ -658,10 +658,10 @@ export function MilestoneTabs({
                       {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
                         <tr className="bg-gray-50 2xl:bg-gray-100">
                           <td colSpan={7} className="p-0">
-                            <table className="w-full">
+                            <table>
                               <thead>
                                 <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
-                                  <th className="pl-8 2xl:pl-[2vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw]">
+                                  <th className=" px-2 2xl:px-[0.5vw] pl-8 2xl:pl-[2vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
                                     <span>Task Name</span>
                                     <button
                                       className="text-purple-500 hover:text-purple-700 text-lg"
@@ -672,11 +672,11 @@ export function MilestoneTabs({
                                       <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                                     </button>
                                   </th>
-                                  <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Description</th>
-                                  <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Assigned To</th>
-                                  <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Status</th>
-                                  <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Due Date</th>
-                                  <th className="py-2 2xl:py-[0.5vw]"></th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">Status</th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                                 </tr>
                               </thead>
                               <tbody>

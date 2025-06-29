@@ -34,7 +34,7 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
   return (
     <React.Fragment>
       <tr className="bg-white rounded-lg shadow">
-        <td className="px-2 py-2 font-medium flex items-center gap-2">
+        <td className="px-2 py-2 font-medium flex items-center gap-2 pt-4 2xl:pt-[1vw]">
           <button 
             onClick={() => setExpanded(!expanded)} 
             className="focus:outline-none" 
@@ -87,15 +87,15 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
       {expanded && (
         <tr className="bg-gray-50 2xl:bg-gray-100">
           <td colSpan={7} className="p-0">
-            <table className="w-full">
+            <table>
               <thead>
                 <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
-                  <th className="pl-8 2xl:pl-[2vw] py-2 2xl:py-[0.5vw] text-left">Task Name</th>
-                  <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Description</th>
-                  <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Assigned To</th>
-                  <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Status</th>
-                  <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Due Date</th>
-                  <th className="py-2 2xl:py-[0.5vw]"></th>
+                  <th className="px-2 2xl:px-[0.5vw] px-8 2xl:px-[2vw] py-2 2xl:py-[0.5vw] text-left min-w-[10rem] 2xl:min-w-[10vw]">Task Name</th>
+                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
+                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
+                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
+                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
+                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                 </tr>
               </thead>
               <tbody>

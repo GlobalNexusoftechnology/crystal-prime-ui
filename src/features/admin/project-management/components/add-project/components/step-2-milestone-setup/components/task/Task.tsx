@@ -4,6 +4,7 @@ import { HiCheck, HiXMark, HiOutlineCalendar } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { getInitials, getRandomColor } from "@/utils";
 import type { Task } from "../../Step2MilestoneSetup";
+import { LuUserPlus } from "react-icons/lu";
 
 interface TaskProps {
   task: Task;
@@ -34,7 +35,6 @@ export function Task({
   menuOpen,
   setMenuOpen,
   userOptions,
-  statusOptions,
   milestoneId,
   errors = {},
 }: TaskProps) {
@@ -45,14 +45,14 @@ export function Task({
       editingTask.taskId === task.id &&
       editTask ? (
         <>
-          <td className="pl-8 py-2 font-medium min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw] pl-8 font-medium">
             <InputField
               value={editTask.title}
               onChange={(e) => onChange({ ...editTask, title: e.target.value })}
               error={errors.title}
             />
           </td>
-          <td className="py-2 min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw]">
             <InputField
               value={editTask.description}
               onChange={(e) =>
@@ -61,7 +61,7 @@ export function Task({
               error={errors.description}
             />
           </td>
-          <td className="py-2 min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw]">
             <Dropdown
               options={userOptions}
               value={editTask.assigned_to}
@@ -69,12 +69,12 @@ export function Task({
               error={errors.assigned_to}
             />
           </td>
-          <td className="py-2 min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw]">
             <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
               {task.status}
             </span>
           </td>
-          <td className="py-2 min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw]">
             <DatePicker
               value={editTask.due_date}
               onChange={(val) => onChange({ ...editTask, due_date: val })}
@@ -92,23 +92,29 @@ export function Task({
         </>
       ) : (
         <>
-          <td className="pl-8 py-2 text-sm 2xl:text-[0.9vw] font-medium min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="pl-8 py-2 text-sm 2xl:text-[0.9vw] font-medium">
             {task.title}
           </td>
-          <td className="py-2 text-sm 2xl:text-[0.9vw] min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="py-2 text-sm 2xl:text-[0.9vw]">
             {task.description}
           </td>
-          <td className="py-2 text-sm 2xl:text-[0.9vw] min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="py-2 text-sm 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2">
-              <p
-                className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full"
-                style={{
-                  backgroundColor: getRandomColor(task.assigned_to || ""),
-                }}
-              >
-                {getInitials(task.assigned_to)}
-              </p>
-              <p className="px-3 py-1 text-[0.9rem]">{task.assigned_to}</p>
+              {task.assigned_to ? (
+                <p
+                  className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
+                  style={{
+                    backgroundColor: getRandomColor(
+                      task?.assigned_to || ""
+                    ),
+                  }}
+                >
+                  {getInitials(task.assigned_to || "")}
+                </p>
+              ) : (
+                <LuUserPlus className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw] mb-2 2xl:mb-[0.5vw]" />
+              )}
+              <p className="px-3 py-1 text-[0.9rem]">{task.assigned_to || "---"}</p>
             </div>
           </td>
           <td className="py-2">
@@ -119,7 +125,7 @@ export function Task({
           <td className="py-2">
             <span className="flex items-center gap-2">
               <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-              <span className="text-sm 2xl:text-[0.9vw]">{task.due_date}</span>
+              <span className="text-sm 2xl:text-[0.9vw]">{task.due_date || "---"}</span>
             </span>
           </td>
           <td className="py-2 text-right relative">
