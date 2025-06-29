@@ -92,10 +92,19 @@ const validationSchema = Yup.object({
     .required("Estimated Cost is required"),
   cost_of_labour: Yup.number()
     .typeError("Cost Of Labour must be a number")
-    .required("Cost Of Labour is required"),
+    .optional(),
   overhead_cost: Yup.number()
     .typeError("Over Head Cost must be a number")
-    .required("Over Head Cost is required"),
+    .optional(),
+  actual_cost: Yup.number()
+    .typeError("Actual Cost must be a number")
+    .optional(),
+  actual_start_date: Yup.date()
+    .typeError("Actual Start Date must be a valid date")
+    .optional(),
+  actual_end_date: Yup.date()
+    .typeError("Actual End Date must be a valid date")
+    .optional(),
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
 
@@ -297,8 +306,13 @@ export function AddProject({
       renewal_type: basicInfo.is_renewal === true ? basicInfo.renewal_type : undefined,
       template_id: finalTemplateId,
       estimated_cost: Number(basicInfo.estimated_cost),
+      actual_cost: basicInfo.actual_cost !== undefined ? Number(basicInfo.actual_cost) : undefined,
+      cost_of_labour: basicInfo.cost_of_labour !== undefined ? Number(basicInfo.cost_of_labour) : undefined,
+      overhead_cost: basicInfo.overhead_cost !== undefined ? Number(basicInfo.overhead_cost) : undefined,
       start_date: basicInfo.start_date ? (basicInfo.start_date instanceof Date ? basicInfo.start_date.toISOString() : basicInfo.start_date) : undefined,
       end_date: basicInfo.end_date ? (basicInfo.end_date instanceof Date ? basicInfo.end_date.toISOString() : basicInfo.end_date) : undefined,
+      actual_start_date: basicInfo.actual_start_date ? (basicInfo.actual_start_date instanceof Date ? basicInfo.actual_start_date.toISOString() : basicInfo.actual_start_date) : undefined,
+      actual_end_date: basicInfo.actual_end_date ? (basicInfo.actual_end_date instanceof Date ? basicInfo.actual_end_date.toISOString() : basicInfo.actual_end_date) : undefined,
       milestones: apiMilestones,
       attachments,
     };
