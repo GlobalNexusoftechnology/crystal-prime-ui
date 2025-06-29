@@ -300,7 +300,7 @@ export function TaskTabs({
                 </th>
                 <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Description</th>
                 <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Assigned To</th>
-                <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[5rem] 2xl:min-w-[5vw]">Status</th>
+                <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
                 <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Due Date</th>
                 <th className="py-2 2xl:py-[0.5vw]"></th>
               </tr>
