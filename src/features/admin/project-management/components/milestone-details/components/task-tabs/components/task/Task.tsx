@@ -79,7 +79,6 @@ export function Task({
               <InputField
                 value={editTask.name}
                 onChange={(e) => onChange({ ...editTask, name: e.target.value })}
-                className="w-32"
                 error={errors.name}
               />
             </div>
@@ -91,7 +90,6 @@ export function Task({
                 onChange={(e) =>
                   onChange({ ...editTask, description: e.target.value })
                 }
-                className="w-40"
                 error={errors.description}
               />
             </div>
@@ -102,7 +100,6 @@ export function Task({
                 options={userOptions}
                 value={editTask.assigned_to}
                 onChange={(val) => onChange({ ...editTask, assigned_to: val })}
-                dropdownWidth="w-32"
                 error={errors.assigned_to}
               />
             </div>
@@ -113,7 +110,6 @@ export function Task({
                 options={statusOptions}
                 value={editTask.status}
                 onChange={(val) => onChange({ ...editTask, status: val })}
-                dropdownWidth="w-28"
                 error={errors.status}
               />
             </div>

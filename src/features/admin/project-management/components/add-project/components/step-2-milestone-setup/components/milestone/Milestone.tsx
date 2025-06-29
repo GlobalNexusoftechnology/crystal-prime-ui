@@ -119,7 +119,7 @@ export function Milestone({
         </>
       ) : (
         <>
-          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw] pt-4 2xl:pt-[1vw]">
+          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw]">
             <button
               onClick={() => onToggle(milestone.id)}
               className="focus:outline-none"

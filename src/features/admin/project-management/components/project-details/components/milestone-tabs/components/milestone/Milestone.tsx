@@ -94,14 +94,14 @@ export function Milestone({
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
       {editingId === milestone.id && editMilestone ? (
         <>
-          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw] pt-4 2xl:pt-[1vw]">
             <div className="flex flex-col">
               <InputField
                 value={editMilestone.name}
                 onChange={(e) =>
                   onChange({ ...editMilestone, name: e.target.value })
                 }
-                className={`w-40 ${errors.name ? 'border-red-500' : ''}`}
+                className={`${errors.name ? 'border-red-500' : ''}`}
               />
               {errors.name && (
                 <span className="text-red-500 text-xs mt-1">{errors.name}</span>
@@ -115,7 +115,6 @@ export function Milestone({
                 onChange({ ...editMilestone, description: e.target.value })
               }
               placeholder="Description"
-              className="w-40"
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
@@ -126,7 +125,6 @@ export function Milestone({
                 onChange={(val) =>
                   onChange({ ...editMilestone, assigned_to: val })
                 }
-                dropdownWidth="w-40 2xl:w-[10vw]"
                 error={errors.assigned_to}
               />
             </div>
@@ -137,7 +135,6 @@ export function Milestone({
                 options={statusOptions}
                 value={editMilestone.status}
                 onChange={(val) => onChange({ ...editMilestone, status: val })}
-                dropdownWidth="w-32 2xl:w-[8vw]"
                 error={errors.status}
               />
             </div>
@@ -175,7 +172,7 @@ export function Milestone({
         </>
       ) : (
         <>
-          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw]">
+          <td className={`p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw] ${editingId === milestone.id ? "": "pt-4 2xl:pt-[1vw]"}`}>
             <button
               onClick={() => onToggle(milestone.id)}
               className="focus:outline-none"

@@ -286,7 +286,7 @@ export function TaskTabs({
           <table className="min-w-full border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
             <thead>
               <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
-                <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw]">
+                <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
                   <span>Task Name</span>
                   <button
                     className="text-purple-500 hover:text-purple-700 text-lg"
@@ -297,10 +297,10 @@ export function TaskTabs({
                     <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                   </button>
                 </th>
-                <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Description</th>
-                <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Assigned To</th>
-                <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Status</th>
-                <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw]">Due Date</th>
+                <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Description</th>
+                <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Assigned To</th>
+                <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[5rem] 2xl:min-w-[5vw]">Status</th>
+                <th className="py-2 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Due Date</th>
                 <th className="py-2 2xl:py-[0.5vw]"></th>
               </tr>
             </thead>
