@@ -545,6 +545,7 @@ export function Step2MilestoneSetup({
       )}
       {/* Milestone Table */}
       <div className="mb-4 2xl:mb-[1vw]">
+        <h1 className="text-[1.2rem] 2xl:text-[1.2vw]">Milestone</h1>
         <div className="overflow-x-auto">
           <table className="min-w-full border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
             <thead>

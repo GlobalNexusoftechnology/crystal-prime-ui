@@ -280,6 +280,7 @@ export function TaskTabs({
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[2vw] p-4 2xl:px-[1vw]">
+      <h1 className="text-[1.2rem] 2xl:text-[1.2vw]">Task</h1>
       {/* Task Table */}
       <div className="mb-4 2xl:mb-[1vw]">
         <div className="overflow-x-auto">
