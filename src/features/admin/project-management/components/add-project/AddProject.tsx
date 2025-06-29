@@ -49,6 +49,7 @@ interface AddProjectProps {
   projectId?: string;
   initialFormValues?: IAddProjectFormValues;
   existingMilestones?: Milestone[];
+  existingAttachments?: File[];
 }
 
 const initialValues: IAddProjectFormValues = {
@@ -123,11 +124,12 @@ export function AddProject({
   mode = "create", 
   projectId, 
   initialFormValues: propInitialFormValues,
-  existingMilestones = []
+  existingMilestones = [],
+  existingAttachments = []
 }: AddProjectProps) {
   const [step, setStep] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]); // for Step3/Preview
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>(existingAttachments); // Initialize with existing attachments
   const [milestoneOption, setMilestoneOption] = useState("milestone");
   const [milestones, setMilestones] = useState<Milestone[]>(existingMilestones);
   const [basicInfo, setBasicInfo] = useState<IAddProjectFormValues | null>(
@@ -224,12 +226,34 @@ export function AddProject({
         due_date: t.due_date,
       })),
     }));
-    const attachments = uploadedFiles.map((file) => ({
-      file_path: file.name,
-      file_type: file.type,
-      file_name: file.name,
-      uploaded_by: userId,
-    }));
+    
+    const attachments = uploadedFiles.map((file) => {
+      // Check if this is an existing attachment (has originalAttachment metadata)
+      const originalAttachment = (file as File & { originalAttachment?: {
+        file_path?: string;
+        file_type?: string;
+        file_name?: string;
+        uploaded_by?: { id?: string; first_name?: string; last_name?: string };
+      } }).originalAttachment;
+      
+      if (originalAttachment && mode === "edit") {
+        // For existing attachments, preserve the original file_path
+        return {
+          file_path: originalAttachment.file_path || file.name,
+          file_type: originalAttachment.file_type || file.type,
+          file_name: originalAttachment.file_name || file.name,
+          uploaded_by: originalAttachment.uploaded_by?.id || userId,
+        };
+      } else {
+        // For new files, use the file object properties
+        return {
+          file_path: file.name,
+          file_type: file.type,
+          file_name: file.name,
+          uploaded_by: userId,
+        };
+      }
+    });
 
     // Determine template_id
     let finalTemplateId = undefined;
@@ -314,11 +338,34 @@ export function AddProject({
     overhead_cost: basicInfo?.overhead_cost !== undefined ? String(basicInfo.overhead_cost) : "",
     budget: basicInfo?.budget !== undefined ? String(basicInfo.budget) : "",
   };
-  const documents: IDocumentInfo[] = uploadedFiles.map((file) => ({
-    name: file.name,
-    uploaded_by: userId,
-    created_at: new Date().toLocaleString(),
-  }));
+  const documents: IDocumentInfo[] = uploadedFiles.map((file) => {
+    // Check if this is an existing attachment (has originalAttachment metadata)
+    const originalAttachment = (file as File & { originalAttachment?: {
+      file_path?: string;
+      file_type?: string;
+      file_name?: string;
+      uploaded_by?: { id?: string; first_name?: string; last_name?: string };
+      created_at?: string;
+    } }).originalAttachment;
+    
+    if (originalAttachment && mode === "edit") {
+      // For existing attachments, use the original uploaded_by information
+      return {
+        name: file.name,
+        uploaded_by: originalAttachment.uploaded_by?.first_name 
+          ? `${originalAttachment.uploaded_by.first_name} ${originalAttachment.uploaded_by.last_name || ''}`
+          : userId,
+        created_at: originalAttachment.created_at || new Date().toLocaleString(),
+      };
+    } else {
+      // For new files, use current user
+      return {
+        name: file.name,
+        uploaded_by: userId,
+        created_at: new Date().toLocaleString(),
+      };
+    }
+  });
 
   useEffect(() => {
     // Modal state and created project ID are now handled silently

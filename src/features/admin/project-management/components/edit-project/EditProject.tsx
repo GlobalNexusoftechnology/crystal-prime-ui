@@ -8,16 +8,40 @@ interface EditProjectProps {
   projectId: string;
 }
 
+// Helper function to convert attachment data to File object
+const createFileFromAttachment = (attachment: {
+  file_type?: string;
+  file_name: string;
+  created_at?: string;
+  uploaded_by?: { id?: string; first_name?: string; last_name?: string };
+  file_path?: string;
+}): File => {
+  // Create a blob from the file path or use a placeholder
+  const blob = new Blob([''], { type: attachment.file_type || 'application/octet-stream' });
+  
+  // Create a File object with the attachment data
+  const file = new File([blob], attachment.file_name, {
+    type: attachment.file_type || 'application/octet-stream',
+    lastModified: attachment.created_at ? new Date(attachment.created_at).getTime() : Date.now(),
+  });
+  
+  // Add metadata to the file object to preserve original data
+  (file as File & { originalAttachment: typeof attachment }).originalAttachment = attachment;
+  
+  return file;
+};
+
 export function EditProject({ projectId }: EditProjectProps) {
   const { projectDetailData, isLoading, error } = useProjectDetailQuery(projectId);
   const [initialFormValues, setInitialFormValues] = useState<IAddProjectFormValues | null>(null);
   const [transformedMilestones, setTransformedMilestones] = useState<Milestone[]>([]);
+  const [existingAttachments, setExistingAttachments] = useState<File[]>([]);
 
   useEffect(() => {
     if (projectDetailData) {
       // Transform project detail data to form values
       const formValues: IAddProjectFormValues = {
-        client_id: projectDetailData.client_id || "",
+        client_id: projectDetailData.client?.id || "",
         name: projectDetailData.name || "",
         description: projectDetailData.description || "",
         project_type: projectDetailData.project_type || "",
@@ -57,6 +81,12 @@ export function EditProject({ projectId }: EditProjectProps) {
         })),
       }));
       setTransformedMilestones(milestones);
+
+      // Transform existing attachments to File objects
+      const attachments: File[] = (projectDetailData.attachments || []).map((attachment) => 
+        createFileFromAttachment(attachment)
+      );
+      setExistingAttachments(attachments);
     }
   }, [projectDetailData]);
 
@@ -98,6 +128,7 @@ export function EditProject({ projectId }: EditProjectProps) {
       projectId={projectId}
       initialFormValues={initialFormValues}
       existingMilestones={transformedMilestones}
+      existingAttachments={existingAttachments}
     />
   );
 } 
