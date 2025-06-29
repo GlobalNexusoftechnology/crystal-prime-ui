@@ -9,6 +9,7 @@ type HeaderDetailsProps = {
   progress: string; // e.g., "6 / 10"
   statusBgColor?: string;
   progressBgColor?: string;
+  onStatusChange?: (status: string) => void;
 };
 
 /**
@@ -20,6 +21,7 @@ export function HeaderDetails({
   progress,
   statusBgColor = "bg-skyBlue",
   progressBgColor = "bg-darkGreen",
+  onStatusChange,
 }: HeaderDetailsProps) {
   const pathname = usePathname();
   const isTaskView = /^\/admin\/project-management\/[^/]+\/[^/]+\/[^/]+$/.test(
@@ -40,7 +42,7 @@ export function HeaderDetails({
               { label: "Completed", value: "Completed" },
             ]}
             value={status}
-            onChange={(val) => console.log("Status changed to:", val)}
+            onChange={onStatusChange || (() => {})}
           />
         ) : (
           <span

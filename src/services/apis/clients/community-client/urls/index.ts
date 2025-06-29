@@ -237,3 +237,5 @@ export const deleteTaskCommentUrl = (commentId: string) => `/task-comments/${com
 export const getTaskCommentDetailUrl = (commentId: string) => `/task-comments/${commentId}`;
 export const getAllTaskCommentsUrl = (taskId: string) => `/task-comments/task/${taskId}`;
 
+export const updateTaskStatusUrl = (taskId: string) => `/task-status/tasks/${taskId}/status`;
+

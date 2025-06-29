@@ -61,6 +61,8 @@ export function MilestoneTabs({
     { label: "Open", value: "Open" },
     { label: "In Progress", value: "In Progress" },
     { label: "Completed", value: "Completed" },
+    { label: "Cancelled", value: "Cancelled" },
+    { label: "On Hold", value: "On Hold" },
   ];
 
   // Delete milestone mutation

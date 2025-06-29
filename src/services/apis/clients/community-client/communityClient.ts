@@ -229,6 +229,7 @@ import {
   deleteTaskCommentUrl,
   getTaskCommentDetailUrl,
   getAllTaskCommentsUrl,
+  updateTaskStatusUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse } from "./types";
 
@@ -1669,6 +1670,17 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data.data;
   }
+
+  public updateTaskStatus = async (taskId: string, status: string) => {
+    const response = await this.put<{ status: string }>(
+      updateTaskStatusUrl(taskId),
+      { status }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
 }
 
 /**
