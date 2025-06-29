@@ -28,6 +28,7 @@ interface MilestoneProps {
   userOptions: { label: string; value: string }[];
   statusOptions: { label: string; value: string }[];
   children?: React.ReactNode;
+  errors?: {[key: string]: string};
 }
 
 export function Milestone({
@@ -46,6 +47,7 @@ export function Milestone({
   userOptions,
   statusOptions,
   children,
+  errors,
 }: MilestoneProps) {
   return (
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
@@ -57,6 +59,7 @@ export function Milestone({
               onChange={(e) =>
                 onChange({ ...editMilestone, name: e.target.value })
               }
+              error={errors?.name}
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
@@ -66,6 +69,7 @@ export function Milestone({
                 onChange({ ...editMilestone, description: e.target.value })
               }
               placeholder="Description"
+              error={errors?.description}
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
@@ -75,6 +79,7 @@ export function Milestone({
               onChange={(val) =>
                 onChange({ ...editMilestone, assigned_to: val })
               }
+              error={errors?.assigned_to}
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
@@ -82,6 +87,7 @@ export function Milestone({
               options={statusOptions}
               value={editMilestone.status}
               onChange={(val) => onChange({ ...editMilestone, status: val })}
+              error={errors?.status}
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
@@ -90,6 +96,7 @@ export function Milestone({
               onChange={(val) =>
                 onChange({ ...editMilestone, start_date: val })
               }
+              error={errors?.start_date}
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
@@ -98,6 +105,7 @@ export function Milestone({
               onChange={(val) =>
                 onChange({ ...editMilestone, end_date: val })
               }
+              error={errors?.end_date}
             />
           </td>
           <td className="px-2 py-4 text-right flex gap-2">

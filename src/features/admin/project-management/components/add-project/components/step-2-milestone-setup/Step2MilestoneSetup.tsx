@@ -4,6 +4,7 @@ import { Dropdown, Button } from "@/components";
 import { AddSquareIcon } from "@/features";
 import { Milestone, Task } from "./components";
 import { IUsersDetails, useAllUsersQuery } from "@/services";
+import toast from "react-hot-toast";
 
 interface ProjectTaskMaster {
   id: string;
@@ -108,6 +109,11 @@ export function Step2MilestoneSetup({
   // Flag to prevent multiple template applications
   const [templateApplied, setTemplateApplied] = useState(false);
 
+  // Validation state
+  const [milestoneErrors, setMilestoneErrors] = useState<{[key: string]: string}>({});
+  // taskErrors: { [milestoneId_taskId]: { title: string, ... } }
+  const [taskErrors, setTaskErrors] = useState<{[key: string]: {[key: string]: string}}>({});
+
   // Fetch users for userOptions
   const { allUsersData, isLoading: usersLoading, isError: usersError } = useAllUsersQuery();
   const userOptions = usersLoading
@@ -118,6 +124,87 @@ export function Step2MilestoneSetup({
           label: `${user.first_name} ${user.last_name}`,
           value: `${user.first_name} ${user.last_name}`,
         }));
+
+  // Validation functions
+  const validateMilestone = (milestone: Milestone) => {
+    const errors: {[key: string]: string} = {};
+    
+    if (!milestone.name || milestone.name.trim() === "") {
+      errors.name = "Milestone name is required";
+    }
+    if (!milestone.description || milestone.description.trim() === "") {
+      errors.description = "Milestone description is required";
+    }
+    if (!milestone.assigned_to || milestone.assigned_to === "--") {
+      errors.assigned_to = "Please assign to someone";
+    }
+    if (!milestone.status) {
+      errors.status = "Status is required";
+    }
+    if (!milestone.start_date) {
+      errors.start_date = "Start date is required";
+    }
+    if (!milestone.end_date) {
+      errors.end_date = "End date is required";
+    }
+    
+    setMilestoneErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const validateTask = (task: Task, milestoneId: string) => {
+    const errors: {[key: string]: string} = {};
+    if (!task.title || task.title.trim() === "") {
+      errors.title = "Task title is required";
+    }
+    if (!task.description || task.description.trim() === "") {
+      errors.description = "Task description is required";
+    }
+    if (!task.assigned_to || task.assigned_to === "--") {
+      errors.assigned_to = "Please assign to someone";
+    }
+    if (!task.status) {
+      errors.status = "Status is required";
+    }
+    if (!task.due_date) {
+      errors.due_date = "Due date is required";
+    }
+    setTaskErrors(prev => ({ ...prev, [`${milestoneId}_${task.id}`]: errors }));
+    return Object.keys(errors).length === 0;
+  };
+
+  const isMilestoneValid = (milestone: Milestone) => {
+    return milestone.name && 
+           milestone.name.trim() !== "" && 
+           milestone.description &&
+           milestone.description.trim() !== "" &&
+           milestone.assigned_to && 
+           milestone.assigned_to !== "--" &&
+           milestone.status &&
+           milestone.start_date &&
+           milestone.end_date;
+  };
+
+  const isTaskValid = (task: Task) => {
+    return task.title && 
+           task.title.trim() !== "" && 
+           task.description && 
+           task.description.trim() !== "" &&
+           task.assigned_to && 
+           task.assigned_to !== "--" &&
+           task.status &&
+           task.due_date;
+  };
+
+  const hasIncompleteMilestone = () => {
+    return milestones.some(m => !isMilestoneValid(m));
+  };
+
+  const hasIncompleteTask = (milestoneId: string) => {
+    const milestone = milestones.find(m => m.id === milestoneId);
+    if (!milestone) return false;
+    return milestone.tasks.some(t => !isTaskValid(t));
+  };
 
   // Auto-populate milestones/tasks when a template is selected
   useEffect(() => {
@@ -198,18 +285,31 @@ export function Step2MilestoneSetup({
     setEditingId(milestone?.id ?? null);
     setEditMilestone({ ...milestone });
     setMilestoneMenu(null);
+    setMilestoneErrors({});
   };
   const handleCancel = () => {
+    // If this is a new milestone (empty name), remove it from the list
+    if (editMilestone && (!editMilestone.name || editMilestone.name.trim() === "")) {
+      setMilestones((prev) => prev.filter((m) => m.id !== editMilestone.id));
+    }
     setEditingId(null);
     setEditMilestone(null);
+    setMilestoneErrors({});
   };
   const handleSave = () => {
     if (!editMilestone) return;
+    
+    // Validate milestone before saving
+    if (!validateMilestone(editMilestone)) {
+      return; // Don't save if validation fails, errors are already displayed
+    }
+    
     setMilestones((prev) =>
       prev.map((m) => (m.id === editMilestone.id ? { ...editMilestone } : m))
     );
     setEditingId(null);
     setEditMilestone(null);
+    setMilestoneErrors({});
   };
   const handleDeleteMilestone = (id: string) => {
     setMilestones((prev) => prev.filter((m) => m.id !== id));
@@ -217,6 +317,12 @@ export function Step2MilestoneSetup({
   };
   // Add new milestone
   const handleAddMilestone = () => {
+    // Check if there's an incomplete milestone
+    if (hasIncompleteMilestone()) {
+      toast.error("Please complete the current milestone before adding a new one.");
+      return;
+    }
+    
     const newMilestone: Milestone = {
       id: Date.now().toString(),
       name: "",
@@ -230,19 +336,43 @@ export function Step2MilestoneSetup({
     setMilestones((prev) => [...prev, newMilestone]);
     setEditingId(newMilestone.id);
     setEditMilestone(newMilestone);
+    setMilestoneErrors({});
   };
   // Task handlers
   const handleEditTask = (milestoneId: string, task: Task) => {
     setEditingTask({ milestoneId, taskId: task.id });
     setEditTask({ ...task });
     setTaskMenu(null);
+    setTaskErrors({});
   };
   const handleCancelTask = () => {
+    // If this is a new task (empty title), remove it from the list
+    if (editTask && (!editTask.title || editTask.title.trim() === "") && editingTask) {
+      setMilestones((prev) =>
+        prev.map((m) =>
+          m.id === editingTask.milestoneId
+            ? { ...m, tasks: m.tasks.filter((t) => t.id !== editTask.id) }
+            : m
+        )
+      );
+    }
+    // Remove errors for this task
+    if (editingTask) {
+      setTaskErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[`${editingTask.milestoneId}_${editTask?.id}`];
+        return newErrors;
+      });
+    }
     setEditingTask(null);
     setEditTask(null);
   };
   const handleSaveTask = () => {
     if (!editTask || !editingTask) return;
+    // Validate task before saving
+    if (!validateTask(editTask, editingTask.milestoneId)) {
+      return; // Don't save if validation fails, errors are already displayed
+    }
     setMilestones((prev) =>
       prev.map((m) =>
         m.id === editingTask.milestoneId
@@ -266,6 +396,12 @@ export function Step2MilestoneSetup({
     );
     setEditingTask(null);
     setEditTask(null);
+    // Remove errors for this task
+    setTaskErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[`${editingTask.milestoneId}_${editTask.id}`];
+      return newErrors;
+    });
   };
   const handleDeleteTask = (milestoneId: string, taskId: string) => {
     setMilestones((prev) =>
@@ -279,6 +415,12 @@ export function Step2MilestoneSetup({
   };
   // Add new task
   const handleAddTask = (milestoneId: string) => {
+    // Check if there's an incomplete task in this milestone
+    if (hasIncompleteTask(milestoneId)) {
+      toast.error("Please complete the current task before adding a new one.");
+      return;
+    }
+    
     const newTask: Task = {
       id: Date.now().toString(),
       title: "",
@@ -294,12 +436,69 @@ export function Step2MilestoneSetup({
     );
     setEditingTask({ milestoneId, taskId: newTask.id });
     setEditTask(newTask);
+    setTaskErrors({});
+  };
+
+  // Handle milestone change with error clearing
+  const handleMilestoneChange = (updatedMilestone: Milestone) => {
+    setEditMilestone(updatedMilestone);
+    
+    // Clear specific field errors when user makes changes
+    if (milestoneErrors.name && updatedMilestone.name && updatedMilestone.name.trim() !== "") {
+      setMilestoneErrors(prev => ({ ...prev, name: "" }));
+    }
+    if (milestoneErrors.description && updatedMilestone.description && updatedMilestone.description.trim() !== "") {
+      setMilestoneErrors(prev => ({ ...prev, description: "" }));
+    }
+    if (milestoneErrors.assigned_to && updatedMilestone.assigned_to && updatedMilestone.assigned_to !== "--") {
+      setMilestoneErrors(prev => ({ ...prev, assigned_to: "" }));
+    }
+    if (milestoneErrors.status && updatedMilestone.status) {
+      setMilestoneErrors(prev => ({ ...prev, status: "" }));
+    }
+    if (milestoneErrors.start_date && updatedMilestone.start_date) {
+      setMilestoneErrors(prev => ({ ...prev, start_date: "" }));
+    }
+    if (milestoneErrors.end_date && updatedMilestone.end_date) {
+      setMilestoneErrors(prev => ({ ...prev, end_date: "" }));
+    }
+  };
+
+  // Handle task change with error clearing
+  const handleTaskChange = (updatedTask: Task, milestoneId?: string) => {
+    setEditTask(updatedTask);
+    const key = `${milestoneId || editingTask?.milestoneId || ''}_${updatedTask.id}`;
+    if (taskErrors[key]) {
+      const newErrors = { ...taskErrors[key] };
+      if (newErrors.title && updatedTask.title && updatedTask.title.trim() !== "") newErrors.title = "";
+      if (newErrors.description && updatedTask.description && updatedTask.description.trim() !== "") newErrors.description = "";
+      if (newErrors.assigned_to && updatedTask.assigned_to && updatedTask.assigned_to !== "--") newErrors.assigned_to = "";
+      if (newErrors.status && updatedTask.status) newErrors.status = "";
+      if (newErrors.due_date && updatedTask.due_date) newErrors.due_date = "";
+      setTaskErrors(prev => ({ ...prev, [key]: newErrors }));
+    }
   };
 
   const isTemplateSelected = milestoneOption === "template";
 
   // When user clicks next, pass milestones to parent
   const handleNext = () => {
+    // Validate all milestones and tasks before proceeding
+    const incompleteMilestones = milestones.filter(m => !isMilestoneValid(m));
+    const incompleteTasks = milestones.flatMap(m => 
+      m.tasks.filter(t => !isTaskValid(t))
+    );
+
+    if (incompleteMilestones.length > 0) {
+      toast.error(`Please complete ${incompleteMilestones.length} milestone(s) before proceeding.`);
+      return;
+    }
+
+    if (incompleteTasks.length > 0) {
+      toast.error(`Please complete ${incompleteTasks.length} task(s) before proceeding.`);
+      return;
+    }
+
     const backendMilestones: Milestone[] = milestones.map(m => ({
       id: m.id,
       name: m.name,
@@ -380,13 +579,14 @@ export function Step2MilestoneSetup({
                     onDelete={handleDeleteMilestone}
                     onSave={handleSave}
                     onCancel={handleCancel}
-                    onChange={setEditMilestone}
+                    onChange={handleMilestoneChange}
                     onToggle={toggleMilestone}
                     expanded={expandedMilestones.includes(milestone.id)}
                     menuOpen={milestoneMenu}
                     setMenuOpen={setMilestoneMenu}
                     userOptions={userOptions}
                     statusOptions={statusOptions}
+                    errors={milestoneErrors}
                   />
                   {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
                     <tr className="bg-gray-50 2xl:bg-gray-100">
@@ -423,12 +623,13 @@ export function Step2MilestoneSetup({
                                 onDelete={handleDeleteTask}
                                 onSave={handleSaveTask}
                                 onCancel={handleCancelTask}
-                                onChange={setEditTask}
+                                onChange={(t) => handleTaskChange(t, milestone.id)}
                                 menuOpen={taskMenu}
                                 setMenuOpen={setTaskMenu}
                                 userOptions={userOptions}
                                 statusOptions={statusOptions}
                                 milestoneId={milestone.id}
+                                errors={editingTask && editingTask.milestoneId === milestone.id && editingTask.taskId === task.id ? (taskErrors[`${milestone.id}_${task.id}`] || {}) : {}}
                               />
                             ))}
                           </tbody>

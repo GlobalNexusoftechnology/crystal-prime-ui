@@ -19,6 +19,7 @@ interface TaskProps {
     userOptions: { label: string; value: string }[];
     statusOptions: { label: string; value: string }[];
     milestoneId: string;
+    errors?: {[key: string]: string};
 }
 
 export function Task({
@@ -35,25 +36,48 @@ export function Task({
     userOptions,
     statusOptions,
     milestoneId,
+    errors = {},
 }: TaskProps) {
     return (
         <tr className="border-t border-gray-200">
             {editingTask && editingTask.milestoneId === milestoneId && editingTask.taskId === task.id && editTask ? (
                 <>
                     <td className="pl-8 py-2 font-medium min-w-[10rem] 2xl:min-w-[10vw]">
-                        <InputField value={editTask.title} onChange={e => onChange({ ...editTask, title: e.target.value })} />
+                        <InputField 
+                            value={editTask.title} 
+                            onChange={e => onChange({ ...editTask, title: e.target.value })} 
+                            error={errors.title}
+                        />
                     </td>
                     <td className="py-2 min-w-[10rem] 2xl:min-w-[10vw]">
-                        <InputField value={editTask.description} onChange={e => onChange({ ...editTask, description: e.target.value })} />
+                        <InputField 
+                            value={editTask.description} 
+                            onChange={e => onChange({ ...editTask, description: e.target.value })} 
+                            error={errors.description}
+                        />
                     </td>
                     <td className="py-2 min-w-[10rem] 2xl:min-w-[10vw]">
-                        <Dropdown options={userOptions} value={editTask.assigned_to} onChange={val => onChange({ ...editTask, assigned_to: val })}  />
+                        <Dropdown 
+                            options={userOptions} 
+                            value={editTask.assigned_to} 
+                            onChange={val => onChange({ ...editTask, assigned_to: val })} 
+                            error={errors.assigned_to}
+                        />
                     </td>
                     <td className="py-2 min-w-[10rem] 2xl:min-w-[10vw]">
-                        <Dropdown options={statusOptions} value={editTask.status} onChange={val => onChange({ ...editTask, status: val })} />
+                        <Dropdown 
+                            options={statusOptions} 
+                            value={editTask.status} 
+                            onChange={val => onChange({ ...editTask, status: val })} 
+                            error={errors.status}
+                        />
                     </td>
                     <td className="py-2 min-w-[10rem] 2xl:min-w-[10vw]">
-                        <DatePicker value={editTask.due_date} onChange={val => onChange({ ...editTask, due_date: val })} />
+                        <DatePicker 
+                            value={editTask.due_date} 
+                            onChange={val => onChange({ ...editTask, due_date: val })} 
+                            error={errors.due_date}
+                        />
                     </td>
                     <td className="px-2 py-4 text-right flex gap-2">
                         <button onClick={onSave} className="text-green-600" title="Save"><HiCheck className="w-6 h-6" /></button>
