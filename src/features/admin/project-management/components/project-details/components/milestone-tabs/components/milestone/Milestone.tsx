@@ -131,18 +131,15 @@ export function Milestone({
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <div className="flex flex-col">
-              <Dropdown
-                options={statusOptions}
-                value={editMilestone.status}
-                onChange={(val) => onChange({ ...editMilestone, status: val })}
-                error={errors.status}
-              />
+            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
+              {milestone.status}
+            </span>
             </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <div className="flex flex-col">
               <DatePicker
-                value={editMilestone.start_date || ""}
+                value={editMilestone.start_date}
                 onChange={(val) =>
                   onChange({ ...editMilestone, start_date: val })
                 }
@@ -153,7 +150,7 @@ export function Milestone({
           <td className="p-2 2xl:p-[0.5vw]">
             <div className="flex flex-col">
               <DatePicker
-                value={editMilestone.end_date || ""}
+                value={editMilestone.end_date}
                 onChange={(val) =>
                   onChange({ ...editMilestone, end_date: val })
                 }

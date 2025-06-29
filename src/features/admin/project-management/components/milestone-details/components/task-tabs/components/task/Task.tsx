@@ -106,12 +106,9 @@ export function Task({
           </td>
           <td className="py-2">
             <div className="flex flex-col">
-              <Dropdown
-                options={statusOptions}
-                value={editTask.status}
-                onChange={(val) => onChange({ ...editTask, status: val })}
-                error={errors.status}
-              />
+              <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
+              {task.status}
+            </span>
             </div>
           </td>
           <td className="py-2">

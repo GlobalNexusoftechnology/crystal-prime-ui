@@ -10,7 +10,7 @@ import {
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TreeStructureIcon } from "@/features";
 import { getInitials, getRandomColor } from "@/utils";
-import type { Milestone } from '../../Step2MilestoneSetup';
+import type { Milestone } from "../../Step2MilestoneSetup";
 
 interface MilestoneProps {
   milestone: Milestone;
@@ -28,7 +28,7 @@ interface MilestoneProps {
   userOptions: { label: string; value: string }[];
   statusOptions: { label: string; value: string }[];
   children?: React.ReactNode;
-  errors?: {[key: string]: string};
+  errors?: { [key: string]: string };
 }
 
 export function Milestone({
@@ -75,7 +75,7 @@ export function Milestone({
           <td className="p-2 2xl:p-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
             <Dropdown
               options={userOptions}
-              value={editMilestone.assigned_to || ''}
+              value={editMilestone.assigned_to || ""}
               onChange={(val) =>
                 onChange({ ...editMilestone, assigned_to: val })
               }
@@ -83,12 +83,9 @@ export function Milestone({
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
-            <Dropdown
-              options={statusOptions}
-              value={editMilestone.status}
-              onChange={(val) => onChange({ ...editMilestone, status: val })}
-              error={errors?.status}
-            />
+            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
+              {milestone.status}
+            </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
             <DatePicker
@@ -102,9 +99,7 @@ export function Milestone({
           <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
             <DatePicker
               value={editMilestone.end_date || ""}
-              onChange={(val) =>
-                onChange({ ...editMilestone, end_date: val })
-              }
+              onChange={(val) => onChange({ ...editMilestone, end_date: val })}
               error={errors?.end_date}
             />
           </td>
@@ -133,25 +128,26 @@ export function Milestone({
               )}
             </button>
             <div className="flex items-center gap-4 2xl-gap-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
-
-            <span className="text-sm 2xl:text-[0.9vw]">{milestone.name}</span>
-            <div className="flex items-center gap-1">
-              <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
-              <p className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
-                {milestone.tasks.length}
-              </p>
-            </div>
+              <span className="text-sm 2xl:text-[0.9vw]">{milestone.name}</span>
+              <div className="flex items-center gap-1">
+                <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
+                <p className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
+                  {milestone.tasks.length}
+                </p>
+              </div>
             </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw] min-w-[10rem] 2xl:min-w-[10vw]">
-            <span className="text-gray-600">{milestone.description || "No description"}</span>
+            <span className="text-gray-600">
+              {milestone.description || "No description"}
+            </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw] min-w-[14rem] 2xl:min-w-[14vw]">
             <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <p
                 className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
                 style={{
-                  backgroundColor: getRandomColor(milestone?.assigned_to || ''),
+                  backgroundColor: getRandomColor(milestone?.assigned_to || ""),
                 }}
               >
                 {getInitials(milestone.assigned_to || "")}
