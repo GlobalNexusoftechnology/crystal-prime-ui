@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import {
@@ -161,16 +161,37 @@ export function AddProject({
 
   const { onCreateProject, isPending: isCreatePending, error: createError } = useCreateProjectMutation({
     onSuccessCallback: (response) => {
-      setCreatedProjectId(response.data.id);
-      setIsModalOpen(true);
+      // Use type assertion to handle the actual response structure
+      const responseData = response.data as any;
+      
+      // Try different possible locations for the project ID
+      const responseProjectId = responseData?.project?.id || responseData?.id || responseData?.project_id;
+      const projectIdToUse = responseProjectId || projectId;
+      
+      if (projectIdToUse) {
+        setCreatedProjectId(projectIdToUse);
+        setIsModalOpen(true);
+      } else {
+        console.error("No project ID in response");
+        console.error("Full response structure:", JSON.stringify(response, null, 2));
+      }
     },
     onErrorCallback: () => { },
   });
 
   const { onUpdateProject, isPending: isUpdatePending, error: updateError } = useUpdateProjectMutation({
     onSuccessCallback: (response) => {
-      setCreatedProjectId(response.data.id);
-      setIsModalOpen(true);
+      // Use type assertion to handle the actual response structure
+      const responseData = response.data as any;
+      
+      // Try different possible locations for the project ID
+      const responseProjectId = responseData?.project?.id || responseData?.id || responseData?.project_id;
+      const projectIdToUse = responseProjectId || projectId;
+      
+      if (projectIdToUse) {
+        setCreatedProjectId(projectIdToUse);
+        setIsModalOpen(true);
+      }
     },
     onErrorCallback: () => { },
   });
@@ -209,20 +230,6 @@ export function AddProject({
       finalTemplateId = basicInfo.template_id;
     }
 
-    console.log("Template ID Debug:", {
-      selectedProjectTemplate,
-      basicInfoTemplateId: basicInfo.template_id,
-      finalTemplateId,
-      milestoneOption
-    });
-
-    console.log("Renewal Fields Debug:", {
-      is_renewal: basicInfo.is_renewal,
-      renewal_date: basicInfo.renewal_date,
-      renewal_type: basicInfo.renewal_type,
-      description: basicInfo.description
-    });
-
     return {
       name: basicInfo.name,
       description: basicInfo.description,
@@ -258,20 +265,6 @@ export function AddProject({
 
   const handleFinalSubmit = () => {
     const payload = assemblePayload();
-    console.log("Final Submit Debug:", {
-      mode,
-      projectId,
-      milestoneOption,
-      selectedProjectTemplate,
-      basicInfoTemplateId: basicInfo?.template_id,
-      milestonesCount: milestones.length,
-      milestones: milestones.map(m => ({ name: m.name, id: m.id })),
-      finalTemplateId: payload?.template_id
-    });
-    
-    // Add detailed payload logging
-    console.log("Full Payload Being Sent:", JSON.stringify(payload, null, 2));
-    console.log("Milestones in Payload:", payload?.milestones);
     
     if (payload) {
       if (mode === "create") {
@@ -317,6 +310,10 @@ export function AddProject({
     uploaded_by: "",
     created_at: new Date().toLocaleString(),
   }));
+
+  useEffect(() => {
+    // Modal state and created project ID are now handled silently
+  }, [isModalOpen, createdProjectId]);
 
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">

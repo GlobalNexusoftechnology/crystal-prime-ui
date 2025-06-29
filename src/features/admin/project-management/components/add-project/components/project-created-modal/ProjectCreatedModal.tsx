@@ -20,8 +20,14 @@ export function ProjectCreatedModal({
   const router = useRouter();
 
   const handleViewProject = () => {
+    console.log("View Project clicked, projectId:", projectId);
     if (projectId) {
-      router.push(`/admin/project-management/${projectId}`);
+      const redirectUrl = `/admin/project-management/${projectId}`;
+      console.log("Redirecting to:", redirectUrl);
+      router.push(redirectUrl);
+      onClose(); // Close the modal after redirecting
+    } else {
+      console.error("No projectId provided for redirect");
     } 
   };
 
