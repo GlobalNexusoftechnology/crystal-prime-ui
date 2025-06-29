@@ -44,7 +44,6 @@ export function Task({
   menuOpen,
   setMenuOpen,
   userOptions,
-  statusOptions,
   errors = {},
 }: TaskProps) {
   const router = useRouter();

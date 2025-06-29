@@ -46,7 +46,6 @@ export function Task({
   menuOpen,
   setMenuOpen,
   userOptions,
-  statusOptions,
   milestoneId,
   errors = {},
 }: TaskProps) {

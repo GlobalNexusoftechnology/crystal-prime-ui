@@ -46,7 +46,6 @@ export function Milestone({
   menuOpen,
   setMenuOpen,
   userOptions,
-  statusOptions,
   children,
   errors,
 }: MilestoneProps) {
