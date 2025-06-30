@@ -11,6 +11,7 @@ interface AddClientModalProps {
   selectedClient?: IClientList | null;
   onUpdateClient?: (payload: IUpdateClientPayload) => void;
   isUpdatePending?: boolean;
+  clientRefech: () => void
 }
 
 export function AddClientModal({
@@ -18,10 +19,11 @@ export function AddClientModal({
   selectedClient,
   onUpdateClient,
   isUpdatePending,
+  clientRefech
 }: AddClientModalProps) {
   const isEditMode = !!selectedClient;
   const { onCreateClient, isPending: isCreatePending } = useCreateClientMutation({
-    onSuccessCallback: () => { onClose(); },
+    onSuccessCallback: () => { onClose(); clientRefech() },
     onErrorCallback: () => {},
   });
 

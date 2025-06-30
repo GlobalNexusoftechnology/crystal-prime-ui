@@ -413,6 +413,7 @@ export function AddProject({
                 clientOptions={clientOptions}
                 clientLoading={clientLoading}
                 clientError={clientError}
+                hideMilestoneTemplateOption={mode === 'edit'}
               />
               <div className="flex mt-6 2xl:mt-[1.5vw]">
                 <Button
