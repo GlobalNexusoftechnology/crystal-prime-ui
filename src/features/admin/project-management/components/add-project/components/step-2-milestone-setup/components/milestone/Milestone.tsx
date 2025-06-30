@@ -9,7 +9,7 @@ import {
 } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TreeStructureIcon } from "@/features";
-import { getInitials, getRandomColor } from "@/utils";
+import { formatDateToMMDDYYYY, getInitials, getRandomColor } from "@/utils";
 import type { Milestone } from "../../Step2MilestoneSetup";
 import { LuUserPlus } from "react-icons/lu";
 
@@ -172,14 +172,14 @@ export function Milestone({
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-sm 2xl:text-[0.9vw]">
-                {milestone.start_date || "---"}
+              {editingId === milestone.id ? formatDateToMMDDYYYY(milestone.start_date): milestone.start_date || "---"}
               </span>
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
-              {milestone.end_date || "---"}
+              {editingId === milestone.id ? formatDateToMMDDYYYY(milestone.end_date): milestone.end_date || "---"}
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-right relative">

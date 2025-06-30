@@ -1,7 +1,7 @@
 import React from "react";
 import { HiChevronDown, HiChevronUp, HiOutlineCalendar } from "react-icons/hi2";
 import { TreeStructureIcon } from "@/features";
-import { getInitials, getRandomColor } from "@/utils";
+import { formatDateToMMDDYYYY, getInitials, getRandomColor } from "@/utils";
 
 // Add local types for editing
 export interface Task {
@@ -73,13 +73,13 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
         <td className="px-2 py-2">
           <span className="flex items-center gap-2">
             <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-            <span className="text-sm">{milestone.start_date}</span>
+            <span className="text-sm">{formatDateToMMDDYYYY(milestone.start_date)}</span>
           </span>
         </td>
         <td className="px-2 py-2">
           <span className="flex items-center gap-2">
             <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-            {milestone.end_date}
+            {formatDateToMMDDYYYY(milestone.end_date)}
           </span>
         </td>
         <td className="px-2 py-2"></td>
