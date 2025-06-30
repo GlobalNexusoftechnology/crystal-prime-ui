@@ -160,27 +160,31 @@ export function LeadsListTable() {
   }
 
   const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
-    (lead) => ({
-      id: lead?.id || "N/A",
-      first_name: lead?.first_name || "N/A",
-      last_name: lead?.last_name || "N/A",
-      phone: lead?.phone || "N/A",
-      other_contact: lead?.other_contact || "N/A",
-      email: lead?.email ? String(lead.email).split(/,\s*/).map(email => email.trim()).filter(Boolean) : [],
-      company: lead?.company || "N/A",
-      location: lead?.location || "N/A",
-      budget: lead?.budget || "N/A",
-      requirement: lead?.requirement || "N/A",
-      source_id: lead?.source?.name || "N/A",
-      status_id: lead?.status?.name || "N/A",
-      type_id: lead?.type?.name || "N/A",
-      created_at: lead?.created_at || "N/A",
-      updated_at: lead?.updated_at || "N/A",
-      deleted_at: lead?.deleted_at || "N/A",
-      assigned_to:
-        `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` ||
-        "Unassigned",
-    })
+    (lead) => {
+      const status = allStatusesData?.find(s => s.id === lead?.status?.id);
+      return {
+        id: lead?.id || "N/A",
+        first_name: lead?.first_name || "N/A",
+        last_name: lead?.last_name || "N/A",
+        phone: lead?.phone || "N/A",
+        other_contact: lead?.other_contact || "N/A",
+        email: lead?.email ? String(lead.email).split(/,\s*/).map(email => email.trim()).filter(Boolean) : [],
+        company: lead?.company || "N/A",
+        location: lead?.location || "N/A",
+        budget: lead?.budget || "N/A",
+        requirement: lead?.requirement || "N/A",
+        source_id: lead?.source?.name || "N/A",
+        status_id: status?.name || "N/A",
+        status_color: status?.color || "#888888",
+        type_id: lead?.type?.name || "N/A",
+        created_at: lead?.created_at || "N/A",
+        updated_at: lead?.updated_at || "N/A",
+        deleted_at: lead?.deleted_at || "N/A",
+        assigned_to:
+          `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` ||
+          "Unassigned",
+      }
+    }
   );
 
   const leadDetailModalData: ILeadsListDetailsProps = {

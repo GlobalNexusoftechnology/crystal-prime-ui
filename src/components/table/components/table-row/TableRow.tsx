@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ITableColumn, ITableRowProps } from "@/constants"; // Adjust path if needed
-import { getInitials, getRandomColor, getColorForStatus } from "@/utils";
+import { getInitials, getRandomColor } from "@/utils";
 import { FiMoreVertical } from "react-icons/fi";
 
 export function TableRow<
@@ -109,7 +109,7 @@ export function TableCell<T extends { id: string | number }>({
   const isEmailColumn = col.accessor === "email";
   const isColorColumn = col.accessor === "color";
   const randomColor = typeof value === 'string' ? getRandomColor(value) : '#000000';
-  const statusColor = typeof value === 'string' ? getColorForStatus(value) : '#000000';
+  const statusColor = isStatusColumn && (row as { color?: string })?.color ? String((row as { color?: string }).color) : '#888888';
 
   const renderEmailCell = (emailValue: unknown) => {
     if (Array.isArray(emailValue)) {
@@ -153,7 +153,9 @@ export function TableCell<T extends { id: string | number }>({
       key={index}
       className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700"
     >
-      {isAssignedTo && typeof value === "string" ? (
+      {col.cell ? (
+        col.cell({ row, value })
+      ) : isAssignedTo && typeof value === "string" ? (
         <div className="flex items-center gap-2">
           <p
             className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
@@ -186,8 +188,6 @@ export function TableCell<T extends { id: string | number }>({
         )
       ) : isEmailColumn ? (
         renderEmailCell(value)
-      ) : col.cell ? (
-        col.cell({ row, value })
       ) : (
         (value as React.ReactNode)
       )}

@@ -14,6 +14,7 @@ export interface ILeadsListProps {
   requirement: string;
   source_id: string;
   status_id: string;
+  status_color?: string;
   type_id: string;
   assigned_to: string;
   created_at: string;
@@ -48,6 +49,14 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
     header: "STATUS",
     accessor: "status_id",
     headerClassName: "min-w-[13rem] 2xl:min-w-[13vw]",
+    cell: ({ row }) => (
+      <span
+        className="inline-block px-4 py-1 rounded-full text-white"
+        style={{ backgroundColor: row.status_color }}
+      >
+        {row.status_id}
+      </span>
+    ),
   },
   {
     header: "FIRST NAME",
