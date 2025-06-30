@@ -7,7 +7,7 @@ export interface ITaskEstimateProps {
 export function TaskEstimate({ taskEstimateData }: ITaskEstimateProps) {
     return (
         <div className="border-b p-4 2xl:p-[1vw]">
-            <h3 className="text-[1.2vw] mb-4 2xl:mb-[1vw]">Task Estimates</h3>
+            <h3 className="text-[1.2rem] 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">Task Estimates</h3>
             <div className="flex flex-col gap-8 2xl:gap-[2vw] text-sm 2xl:text-[0.875vw]">
                 <div className="flex flex-wrap gap-12 2xl:gap-[3vw] items-start">
                     <div className="flex flex-col">

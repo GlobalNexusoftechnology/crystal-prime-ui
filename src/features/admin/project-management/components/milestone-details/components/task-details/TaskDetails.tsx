@@ -13,20 +13,12 @@ import {
 
 export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
   const [status, setStatus] = useState(taskData.status || "Open");
-  const [milestoneStatus, setMilestoneStatus] = useState(
-    taskData.milestone?.status || "Open"
-  );
-  const [projectStatus, setProjectStatus] = useState(
-    taskData.milestone?.project?.status || "Open"
-  );
   const { refetchMilestoneTaskDetail } = useMilestoneTaskDetailQuery(
     taskData.id
   );
   const { onUpdateTaskStatus } = useUpdateTaskStatusMutation({
     onSuccessCallback: (response) => {
       setStatus(response.data.task.status);
-      setMilestoneStatus(response.data.milestone.status);
-      setProjectStatus(response.data.project.status);
       refetchMilestoneTaskDetail();
     },
     onErrorCallback: (err) => {
@@ -53,15 +45,6 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
         progress={"0 / 0"}
         onStatusChange={handleStatusChange}
       />
-      <div className="flex gap-4 mb-2">
-        <div>
-          Milestone Status:{" "}
-          <span className="font-semibold">{milestoneStatus}</span>
-        </div>
-        <div>
-          Project Status: <span className="font-semibold">{projectStatus}</span>
-        </div>
-      </div>
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="border-r">
           <TaskInfo

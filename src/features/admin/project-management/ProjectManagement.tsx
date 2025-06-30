@@ -102,7 +102,7 @@ export function ProjectManagement() {
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
       <Breadcrumb />
-      <div className="flex md:flex-row flex-col gap-4 2xl:gap-[1.5vw] justify-between items-start md:items-center">
+      <div className="flex flex-wrap md:flex-row flex-col gap-4 2xl:gap-[1.5vw] justify-between items-start md:items-center">
         <h1 className="text-2xl 2xl:text-[1.8vw] font-semibold">
           Project List
         </h1>
@@ -123,7 +123,7 @@ export function ProjectManagement() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 2xl:gap-[2vw]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 2xl:gap-[2vw]">
         {(["open", "inProgress", "completed"] as const).map((stage) => (
           <ProjectStageSection
             key={stage}
