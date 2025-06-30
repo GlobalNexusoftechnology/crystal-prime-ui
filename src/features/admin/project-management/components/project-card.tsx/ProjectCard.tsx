@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ProjectDropdown } from "../project-dropdown";
 import { useRouter } from "next/navigation";
 import { IProjectDetailResponse, useAllProjectsQuery, useDeleteProjectMutation } from "@/services";
-import { formattingDate } from "@/utils";
+import { formatIndiaTime } from "@/utils";
 import { DeleteModal } from "@/components";
 
 type Props = {
@@ -118,7 +118,7 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
                 : "Expected End Date"}
             </p>
             <p className="font-semibold 2xl:text-[1vw] 2xl:leading-[1.4vw]">
-              {formattingDate(project.data.end_date?.toString() ?? "", "toReadable")}
+              {formatIndiaTime(project.data.end_date?.toString() ?? "", "toReadable")}
             </p>
           </div>
         </div>

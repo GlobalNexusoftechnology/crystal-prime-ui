@@ -10,7 +10,7 @@ import {
   useUploadAttachmentMutation,
 } from "@/services";
 import {
-  formattingDate,
+  formatIndiaTime,
   getInitials,
   getRandomColor,
   IApiError,
@@ -141,7 +141,7 @@ export function Attachments({
               </div>
               <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                 <p className="text-[1rem] 2xl:text-[1vw]">Created At:</p>
-                <p className="text-[1rem] 2xl:text-[1vw]">{formattingDate(attachment?.created_at, "toReadable")}</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">{formatIndiaTime(attachment?.created_at, "toReadable")}</p>
               </div>
             </div>
             <div>
