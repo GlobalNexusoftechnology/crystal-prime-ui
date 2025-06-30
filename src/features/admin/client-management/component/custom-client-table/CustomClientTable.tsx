@@ -9,6 +9,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import toast from "react-hot-toast";
+import React from "react";
 
 import { clientContactDetailsColumns, clientListColumn } from "@/constants";
 import { ActionDropdown } from "@/components";
@@ -162,9 +163,8 @@ export function CustomClientTable({
         </thead>
         <tbody className="bg-white divide-y divide-gray-200">
           {tableData.map((row, idx) => (
-            <>
+            <React.Fragment key={row.id}>
               <tr
-                key={row.id}
                 className={`hover:bg-blue-50 transition-colors duration-150 ${
                   idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                 }`}
@@ -386,7 +386,7 @@ export function CustomClientTable({
                   </td>
                 </tr>
               )}
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>
