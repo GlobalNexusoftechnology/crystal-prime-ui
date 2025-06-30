@@ -124,6 +124,11 @@ import {
   ICreateTaskCommentPayload,
   ITaskCommentResponse,
   IAllTaskCommentsResponse,
+  ICreateDailyTaskEntryPayload,
+  ICreateDailyTaskEntryResponse,
+  IUpdateDailyTaskEntryPayload,
+  IDailyTaskEntryResponse,
+  IAllDailyTaskEntriesResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -230,6 +235,11 @@ import {
   getTaskCommentDetailUrl,
   getAllTaskCommentsUrl,
   updateTaskStatusUrl,
+  createDailyTaskEntryUrl,
+  updateDailyTaskEntryUrl,
+  deleteDailyTaskEntryUrl,
+  getDailyTaskEntryDetailUrl,
+  getAllDailyTaskEntriesUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse } from "./types";
 
@@ -1680,6 +1690,46 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
     return response?.data;
+  };
+
+  // Daily Task Entries API methods
+  public createDailyTaskEntry = async (payload: ICreateDailyTaskEntryPayload): Promise<ICreateDailyTaskEntryResponse> => {
+    const response = await this.post<ICreateDailyTaskEntryResponse>(createDailyTaskEntryUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public updateDailyTaskEntry = async ({ id, payload }: IUpdateDailyTaskEntryPayload): Promise<IDailyTaskEntryResponse> => {
+    const response = await this.put<ICreateDailyTaskEntryResponse>(updateDailyTaskEntryUrl(id), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public deleteDailyTaskEntry = async (id: string): Promise<void> => {
+    const response = await this.del<void>(deleteDailyTaskEntryUrl(id));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+  };
+
+  public getDailyTaskEntryDetail = async (id: string): Promise<IDailyTaskEntryResponse> => {
+    const response = await this.get<ICreateDailyTaskEntryResponse>(getDailyTaskEntryDetailUrl(id));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public getAllDailyTaskEntries = async (projectId?: string): Promise<IDailyTaskEntryResponse[]> => {
+    const response = await this.get<IAllDailyTaskEntriesResponse>(getAllDailyTaskEntriesUrl(projectId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
   };
 }
 

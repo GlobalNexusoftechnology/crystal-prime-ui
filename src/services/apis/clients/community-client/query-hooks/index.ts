@@ -111,3 +111,6 @@ export { useCreateTaskCommentMutation } from "./useCreateTaskCommentMutation";
 export { useGetAllTaskCommentsQuery } from "./useGetAllTaskCommentsQuery";
 
 export { useUpdateTaskStatusMutation } from "./useUpdateTaskStatusMutation";
+
+export { useCreateDailyTaskMutation } from "./useCreateDailyTaskMutation";
+export { useAllDailyTaskQuery } from "./useAllDailyTaskQuery";

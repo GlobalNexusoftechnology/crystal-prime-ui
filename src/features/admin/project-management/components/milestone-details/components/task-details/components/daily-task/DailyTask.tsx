@@ -3,68 +3,79 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, InputField, ModalOverlay } from "@/components";
-import {
-  useAuthStore,
-  useCreateTaskCommentMutation,
-  useGetAllTaskCommentsQuery,
-  ICreateTaskCommentPayload,
-} from "@/services";
 import { IApiError, formatDate } from "@/utils";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import { useAllDailyTaskQuery, useCreateDailyTaskMutation } from '@/services/apis/clients/community-client/query-hooks';
+import { ICreateDailyTaskEntryPayload } from '@/services/apis/clients/community-client/types';
+import { HoursSpentInput } from '@/components/hours-spent-input';
+import { Dropdown } from '@/components';
 
-// Comment validation schema
-const commentValidationSchema = Yup.object().shape({
-  remarks: Yup.string().required("Comment is required"),
+
+const dailyTaskValidationSchema = Yup.object().shape({
+  hours_spent: Yup.number().positive('Must be a positive number').required('Hours spent is required'),
+  status: Yup.string().required('Status is required'),
+  remarks: Yup.string().required('Remark is required'),
 });
 
-interface IFollowupsProps {
-  taskId: string;
+interface IDailyTaskProps {
+  projectId: string;
+  userId: string;
 }
 
-const tabs = ["Comments"];
+const tabs = ["Daily Tasks"];
 
-export function DailyTask({ taskId }: IFollowupsProps) {
+const statusOptions = [
+  { label: 'Pending', value: 'Pending' },
+  { label: 'In Progress', value: 'In Progress' },
+  { label: 'Completed', value: 'Completed' },
+];
+
+export function DailyTask({ projectId, userId }: IDailyTaskProps) {
   const {
-    allTaskCommentsData: commentData,
-    getAllTaskComments,
+    data: dailyTasks,
+    refetchDailyTasks,
     isError,
     error,
-  } = useGetAllTaskCommentsQuery({ taskId });
-  const { activeSession } = useAuthStore();
-  const userId = activeSession?.user?.id;
+    isLoading,
+  } = useAllDailyTaskQuery(projectId);
   const [showForm, setShowForm] = useState(false);
-  const [activeTab, setActiveTab] = useState("Comments");
+  const [activeTab, setActiveTab] = useState("Daily Tasks");
 
-  const { onCreateTaskComment, isPending } = useCreateTaskCommentMutation({
+  const { createDailyTask, isPending } = useCreateDailyTaskMutation({
     onSuccessCallback: () => {
-      toast.success("Comment added successfully");
+      toast.success("Daily task entry added successfully");
       formik.resetForm();
       setShowForm(false);
-      getAllTaskComments();
+      refetchDailyTasks();
     },
     onErrorCallback: (err: IApiError) => {
-      if (err.message.includes("Task not found")) {
-        toast.error("Task not found. Please check if the task exists.");
-      } else {
-        toast.error(err.message);
-      }
+      toast.error(err.message);
     },
   });
 
-  const formik = useFormik<ICreateTaskCommentPayload>({
+  const formik = useFormik<ICreateDailyTaskEntryPayload & { remarks: string }>({
     initialValues: {
-      task_id: taskId,
-      assigned_to: userId || "",
-      remarks: "",
+      project_id: projectId,
+      user_id: userId,
+      task_title: '',
+      entry_date: new Date().toISOString().slice(0, 10),
+      description: '',
+      hours_spent: undefined,
+      status: '',
+      remarks: '',
     },
-    validationSchema: commentValidationSchema,
+    validationSchema: dailyTaskValidationSchema,
     onSubmit: async (values) => {
-      if (!taskId) {
-        toast.error("Task ID is missing");
-        return;
-      }
-      await onCreateTaskComment({ ...values, task_id: taskId });
+      await createDailyTask({
+        project_id: projectId,
+        user_id: userId,
+        task_title: values.task_title,
+        entry_date: values.entry_date,
+        description: values.description,
+        hours_spent: values.hours_spent,
+        status: values.status,
+      });
     },
   });
 
@@ -97,7 +108,7 @@ export function DailyTask({ taskId }: IFollowupsProps) {
               Task Not Found
             </div>
             <div className="text-sm 2xl:text-[0.9vw] text-gray-600 mb-4 2xl:mb-[1vw]">
-              The task with ID <code className="bg-gray-100 px-2 py-1 rounded">{taskId}</code> could not be found.
+              The task with ID <code className="bg-gray-100 px-2 py-1 rounded">{projectId}</code> could not be found.
             </div>
             <div className="text-sm 2xl:text-[0.9vw] text-gray-500">
               This might happen if the task was deleted or the URL contains an invalid task ID.
@@ -137,13 +148,7 @@ export function DailyTask({ taskId }: IFollowupsProps) {
             {showForm ? (
               "Close"
             ) : (
-              <>
-                {activeTab === "Comments" ? (
-                  <Button title="Add followup" variant="primary-outline" />
-                ) : (
-                  null
-                )}
-              </>
+              <Button title="Add Daily Task Comment" variant="primary-outline" />
             )}
           </span>
         </button>
@@ -151,29 +156,44 @@ export function DailyTask({ taskId }: IFollowupsProps) {
 
       {/* Tab Contents */}
       <div>
-        {activeTab === "Comments" && (
+        {activeTab === "Daily Tasks" && (
           <div className="flex flex-col gap-4 2xl:gap-[1vw]">
             {showForm ? (
               <ModalOverlay
                 isOpen={showForm}
                 onClose={() => setShowForm(false)}
-                modalTitle="Add Comment"
+                modalTitle="Add Daily Task Comment"
                 modalClassName="w-full md:w-[31rem] 2xl:w-[31vw]"
               >
                 <form
                   onSubmit={formik.handleSubmit}
                   className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
                 >
+                  <div className="grid grid-cols-2 gap-4">
+                    <HoursSpentInput
+                      value={formik.values.hours_spent || ''}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      error={formik.touched.hours_spent ? formik.errors.hours_spent : undefined}
+                    />
+                    <Dropdown
+                      label="Status"
+                      options={statusOptions}
+                      value={formik.values.status || ""}
+                      onChange={value => formik.setFieldValue('status', value)}
+                      error={formik.touched.status ? formik.errors.status : undefined}
+                    />
+                  </div>
                   <InputField
-                    label="Comment"
+                    label="Remark"
                     name="remarks"
-                    placeholder="Enter your comment"
+                    placeholder="Enter Remark"
                     value={formik.values.remarks}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     error={formik.touched.remarks ? formik.errors.remarks : undefined}
                   />
-                  <div className="flex items-center gap-4 2xl:gap-[1vw]">
+                  <div className="flex gap-4">
                     <Button
                       title="Cancel"
                       variant="primary-outline"
@@ -182,7 +202,7 @@ export function DailyTask({ taskId }: IFollowupsProps) {
                       width="w-full"
                     />
                     <Button
-                      title={isPending ? "Adding..." : "Add Comment"}
+                      title={isPending ? "Adding..." : "Add Daily Task Comment"}
                       type="submit"
                       width="w-full"
                       disabled={isPending}
@@ -192,34 +212,45 @@ export function DailyTask({ taskId }: IFollowupsProps) {
               </ModalOverlay>
             ) : (
               <div className="flex flex-col gap-4 2xl:gap-[1vw]">
-                {commentData && commentData.length > 0 ? (
+                {isLoading ? (
+                  <div>Loading...</div>
+                ) : dailyTasks && dailyTasks.length > 0 ? (
                   <div className="space-y-4 2xl:space-y-[1vw]">
-                    {commentData.map((comment) => (
+                    {dailyTasks.map((task) => (
                       <div
-                        key={comment.id}
+                        key={task.id}
                         className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-sm 2xl:text-[0.9vw] text-[#1D2939] w-full"
                       >
                         <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
                           <span>
                             <span className="2xl:text-[1.1vw] font-normal">
-                              Assigned To:{" "}
-                            </span>
-                            <span className="underline 2xl:text-[1.1vw]">
-                              {comment.assignedTo
-                                ? `${comment.assignedTo.first_name} ${comment.assignedTo.last_name}`
-                                : "Unassigned"}
+                              Project: {task.project?.name || '-'}
                             </span>
                           </span>
+                          <span>
+                            <span className="2xl:text-[1.1vw] font-normal">
+                              User: {task.user?.first_name} {task.user?.last_name}
+                            </span>
+                          </span>
+                          <span>
+                            <span className="2xl:text-[1.1vw] font-normal">
+                              Hours Spent: {task.hours_spent}
+                            </span>
+                          </span>
+                          <span>
+                            <span className="2xl:text-[1.1vw] font-normal">
+                              Status: {task.status}
+                            </span>
+                          </span>
+                          <span className="text-lightGreen 2xl:text-[1.1vw]">
+                            Created At: {formatDate(task.created_at)}
+                          </span>
                         </div>
-
-                        <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw]">
-                          {comment.remarks || "No comment provided"}
-                        </p>
-
-                        <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw] font-medium">
-                          <p className="text-lightGreen 2xl:text-[1.1vw]">
-                            Created: {formatDate(comment.created_at)}
-                          </p>
+                        <div className="mb-2 2xl:mb-[0.5vw]">
+                          <strong>Title:</strong> {task.task_title}
+                        </div>
+                        <div className="mb-2 2xl:mb-[0.5vw]">
+                          <strong>Description:</strong> {task.description || 'No description'}
                         </div>
                       </div>
                     ))}
@@ -227,7 +258,7 @@ export function DailyTask({ taskId }: IFollowupsProps) {
                 ) : (
                   <div className="py-4 2xl:py-[1vw]">
                     <p className="text-gray-500 2xl:text-[1.1vw]">
-                      No comments found for this task
+                      No daily task entries found for this project
                     </p>
                   </div>
                 )}
