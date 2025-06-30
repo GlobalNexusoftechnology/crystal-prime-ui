@@ -2,6 +2,11 @@ export { useAllLeadsListQuery } from "./useAllLeadsListQuery";
 export { useVerifyEmailMutation } from "./useVerifyEmailMutation";
 export { useSentOtpMutation } from "./useSentOtpMutation";
 export { useCreateLeadMutation } from "./useCreateLeadMutation";
+export { useCreateProjectMutation } from "./useCreateProjectMutation";
+export { useAllProjectsQuery } from "./useAllProjectsQuery";
+export { useProjectDetailQuery } from "./useProjectDetailQuery";
+export { useDeleteProjectMutation } from "./useDeleteProjectMutation";
+export { useUpdateProjectMutation } from "./useUpdateProjectMutation";
 export { useRegisterMutation } from "./useRegisterMutation";
 export { useResetPasswordMutation } from "./useResetPasswordMutation";
 export { useChangePasswordMutation } from "./useChangePasswordMutation";
@@ -68,3 +73,41 @@ export {useAllClientQuery} from "./useAllClientQuery";
 export {useClientDetailQuery} from "./useClientDetailQuery";
 export {useUpdateClientMutation} from "./useUpdateClientMutation";
 export {useDeleteClientMutation} from "./useDeleteClientMutation";
+
+// project template
+export { useAllProjectTemplatesQuery } from "./useAllProjectTemplatesQuery";
+export { useProjectTemplateDetailQuery } from "./useProjectTemplateDetailQuery";
+export { useCreateProjectTemplateMutation } from "./useCreateProjectTemplateMutation";
+export { useUpdateProjectTemplateMutation } from "./useUpdateProjectTemplateMutation";
+export { useDeleteProjectTemplateMutation } from "./useDeleteProjectTemplateMutation";
+export { useCreateProjectTemplateMilestoneMutation } from "./useCreateProjectTemplateMilestoneMutation";
+
+export { useAllClientDownloadExcelQuery } from "./useAllClientDownloadExcelQuery";
+export { useClientDownloadTemplateExcelQuery } from "./useClientDownloadTemplateExcelQuery";
+
+export { useUploadClientFromExcelMutation } from "./useUploadClientFromExcelMutation";
+
+export { useCreateProjectFollowUpMutation } from "./useCreateProjectFollowUpMutation";
+export { useAllClientFollowUpQuery } from "./useAllProjectFollowUpQuery";
+
+export { useUpdateClientDetailMutation } from "./useUpdateClientDetailMutation";
+export { useDeleteClientDetailMutation } from "./useDeleteClientDetailMutation";
+
+export { useDeleteProjectTemplateMilestoneMutation } from "./useDeleteProjectTemplateMilestoneMutation";
+export { useDeleteProjectTemplateMilestoneTaskMutation } from "./useDeleteProjectTemplateMilestoneTaskMutation";
+
+export { useMilestoneDetailQuery } from "./useMilestoneDetailQuery";
+export { useDeleteMilestoneMutation } from "./useDeleteMilestoneMutation";
+export { useCreateMilestoneMutation } from "./useCreateMilestoneMutation";
+export { useUpdateMilestoneMutation } from "./useUpdateMilestoneMutation";
+
+export { useMilestoneTaskDetailQuery } from "./useMilestoneTaskDetailQuery";
+export { useDeleteMilestoneTaskMutation } from "./useDeleteMilestoneTaskMutation";
+export { useCreateMilestoneTaskMutation } from "./useCreateMilestoneTaskMutation";
+export { useUpdateMilestoneTaskMutation } from "./useUpdateMilestoneTaskMutation";
+
+// task comments
+export { useCreateTaskCommentMutation } from "./useCreateTaskCommentMutation";
+export { useGetAllTaskCommentsQuery } from "./useGetAllTaskCommentsQuery";
+
+export { useUpdateTaskStatusMutation } from "./useUpdateTaskStatusMutation";

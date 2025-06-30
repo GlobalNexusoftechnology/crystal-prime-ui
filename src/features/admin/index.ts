@@ -12,3 +12,4 @@ export * from "./change-password";
 export * from "./task-management";
 export * from "./settings/components/role-management";
 export * from "./client-management";
+export * from "./breadcrumb"

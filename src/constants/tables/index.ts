@@ -7,3 +7,4 @@ export * from "./lead-sources-list-table";
 export * from "./lead-status-list-table";
 export * from "./lead-types-list-table";
 export * from "./client-list-table";
+export * from "./project-management-list";

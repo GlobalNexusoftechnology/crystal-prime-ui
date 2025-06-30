@@ -7,6 +7,7 @@ import {
   IAllLeadFollowUpResponse,
   IAllLeadResponse,
   IAllLeadStatusHistoryResponse,
+  IAllProjectsResponse,
   IAllRoleResponse,
   IAllSourcesResponse,
   IAllStatusesResponse,
@@ -25,6 +26,8 @@ import {
   ICreateLeadResponse,
   ICreateLeadStatusHistoryPayload,
   ICreateLeadStatusHistoryResponse,
+  ICreateProjectPayload,
+  ICreateProjectResponse,
   ICreateRolePayload,
   ICreateRoleResponse,
   ICreateSourcesPayload,
@@ -39,12 +42,12 @@ import {
   IDeleteLeadFollowUpResponse,
   IDeleteLeadResponse,
   IDeleteNotification,
+  IDeleteProjectResponse,
   IDeleteRoleResponse,
   IDeleteSourcesResponse,
   IDeleteStatusesResponse,
   IDeleteTypeResponse,
   IDeleteUserResponse,
-  // IGetNotificationsResponse,
   ILeadDetailResponse,
   ILeadDownloadExcelResponse,
   ILeadFollowUpDetailResponse,
@@ -52,6 +55,7 @@ import {
   ILoginUserResponse,
   IMarkAsReadNotificationResponse,
   INotificationsResponse,
+  IProjectDetailResponse,
   IRegisterPayload,
   IRegisterResponse,
   IResetPasswordPayload,
@@ -69,6 +73,8 @@ import {
   IUpdateLeadFollowUpResponse,
   IUpdateLeadPayload,
   IUpdateLeadResponse,
+  IUpdateProjectPayload,
+  IUpdateProjectResponse,
   IUpdateRolePayload,
   IUpdateRoleResponse,
   IUpdateSourcesPayload,
@@ -84,12 +90,49 @@ import {
   IUserDetailResponse,
   IVerifyEmailPayload,
   IVerifyEmailResponse,
+  ICreateProjectTemplatePayload,
+  ICreateProjectTemplateResponse,
+  IAllProjectTemplatesResponse,
+  IProjectTemplateDetailResponse,
+  IUpdateProjectTemplatePayload,
+  IUpdateProjectTemplateResponse,
+  IDeleteProjectTemplateResponse,
+  ICreateProjectTemplateMilestonePayload,
+  ICreateProjectTemplateMilestoneResponse,
+  IAllProjectTemplateMilestonesResponse,
+  IProjectTemplateMilestoneDetailResponse,
+  IUpdateProjectTemplateMilestonePayload,
+  IUpdateProjectTemplateMilestoneResponse,
+  IDeleteProjectTemplateMilestoneResponse,
+  ICreateProjectTemplateMilestoneTaskPayload,
+  ICreateProjectTemplateMilestoneTaskResponse,
+  IAllProjectTemplateMilestoneTasksResponse,
+  IProjectTemplateMilestoneTaskDetailResponse,
+  IUpdateProjectTemplateMilestoneTaskPayload,
+  IUpdateProjectTemplateMilestoneTaskResponse,
+  IDeleteProjectTemplateMilestoneTaskResponse,
+  IUploadClientFromExcelResponse,
+  ICreateProjectFollowUpPayload,
+  ICreateProjectFollowUpResponse,
+  IAllProjectFollowUpResponse,
+  ICreateProjectMilestone,
+  IProjectMilestoneResponse,
+  ICreateProjectTask,
+  IProjectTaskResponse,
+  IProjectMilestoneDetailResponse,
+  IProjectTaskDetailResponse,
+  ICreateTaskCommentPayload,
+  ITaskCommentResponse,
+  IAllTaskCommentsResponse,
 } from "./types";
 import {
   changePasswordUrl,
   createLeadUrl,
+  createProjectUrl,
   fetchAllLeadsListUrl,
+  fetchAllProjectsUrl,
   getLeadDetailByIdUrl,
+  getProjectDetailByIdUrl,
   registerUrl,
   resetPasswordUrl,
   loginUrl,
@@ -98,6 +141,7 @@ import {
   getLeadDownloadExcelByIdUrl,
   fetchAllLeadDownloadExcelUrl,
   deleteLeadUrl,
+  deleteProjectUrl,
   createLeadFollowUpUrl,
   fetchAllLeadFollowUpUrl,
   getLeadFollowUpDetailByIdUrl,
@@ -105,6 +149,7 @@ import {
   fetchAllSourcesUrl,
   fetchAllStatusesUrl,
   updateLeadUrl,
+  updateProjectUrl,
   updateLeadFollowUpUrl,
   fetchAllRoleListUrl,
   getStatusesDetailByIdUrl,
@@ -144,7 +189,49 @@ import {
   updateClientUrl,
   deleteClientUrl,
   fetchAllClientUrl,
+  createProjectTemplateUrl,
+  fetchAllProjectTemplatesUrl,
+  getProjectTemplateDetailByIdUrl,
+  updateProjectTemplateUrl,
+  deleteProjectTemplateUrl,
+  createProjectTemplateMilestoneUrl,
+  fetchAllProjectTemplateMilestonesUrl,
+  getProjectTemplateMilestoneDetailByIdUrl,
+  updateProjectTemplateMilestoneUrl,
+  deleteProjectTemplateMilestoneUrl,
+  createProjectTemplateMilestoneTaskUrl,
+  fetchAllProjectTemplateMilestoneTasksUrl,
+  getProjectTemplateMilestoneTaskDetailByIdUrl,
+  updateProjectTemplateMilestoneTaskUrl,
+  deleteProjectTemplateMilestoneTaskUrl,
+  createClientDetailsUrl,
+  deleteClientDetailsUrl,
+  updateClientDetailsUrl,
+  getClientDetailsByIdUrl,
+  getAllClientDetailsUrl,
+  fetchAllClientDownloadExcelUrl,
+  fetchClientDownloadTemplateExcelUrl,
+  uploadClientFromExcelUrl,
+  fetchAllProjectFollowUpUrl,
+  createProjectFollowUpUrl,
+  createMilestoneUrl,
+  updateMilestoneUrl,
+  deleteMilestoneUrl,
+  getMilestoneDetailUrl,
+  getAllMilestonesUrl,
+  createMilestoneTaskUrl,
+  updateMilestoneTaskUrl,
+  deleteMilestoneTaskUrl,
+  getMilestoneTaskDetailUrl,
+  getAllMilestoneTasksUrl,
+  createTaskCommentUrl,
+  updateTaskCommentUrl,
+  deleteTaskCommentUrl,
+  getTaskCommentDetailUrl,
+  getAllTaskCommentsUrl,
+  updateTaskStatusUrl,
 } from "./urls";
+import { IClientDetails, IClientDetailsResponse } from "./types";
 
 /**
  * CommunityClient class handles all API requests related to
@@ -340,7 +427,7 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
-    public uploadLeadFromExcel = async (formData: FormData) => {
+  public uploadLeadFromExcel = async (formData: FormData) => {
     const response = await this.post<IUploadLeadFromExcelResponse>(
       uploadLeadFromExcelUrl(),
       formData,
@@ -348,7 +435,7 @@ export class CommunityClient extends ApiClient {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        requiresAuth: true, 
+        requiresAuth: true,
       }
     )
 
@@ -497,6 +584,21 @@ export class CommunityClient extends ApiClient {
   public createLeadFollowUp = async (payload: ICreateLeadFollowUpPayload) => {
     const response = await this.post<ICreateLeadFollowUpResponse>(
       createLeadFollowUpUrl(),
+      payload,
+      { requiresAuth: false }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+    return response?.data
+  }
+
+  // create client follow up
+
+  public createProjectFollowUp = async (payload: ICreateProjectFollowUpPayload) => {
+    const response = await this.post<ICreateProjectFollowUpResponse>(
+      createProjectFollowUpUrl(),
       payload,
       { requiresAuth: false }
     )
@@ -706,6 +808,21 @@ export class CommunityClient extends ApiClient {
     return response
   }
 
+    // all client follow ups
+  public fetchAllProjectFollowUp = async (projectId?: string) => {
+    const response = await this.get<IAllProjectFollowUpResponse>(
+      fetchAllProjectFollowUpUrl(projectId),
+      {
+        requiresAuth: false,
+      }
+    )
+
+    if (!response?.success) {
+      throw response?.error
+    }
+
+    return response?.data.data
+  }
   /**
    * Fetches a list of all leads.
    * @returns list of leads
@@ -977,7 +1094,7 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data
   }
-  
+
   public getNotifications = async () => {
     const response = await this.get<INotificationsResponse>(getNotificationsUrl(), {
       requiresAuth: false,
@@ -1005,10 +1122,10 @@ export class CommunityClient extends ApiClient {
 
     return response?.data
   }
-  
+
   //delete notification hook
 
- //delete lead
+  //delete lead
   public deleteNotification = async (id: string) => {
     const response = await this.del<IDeleteNotification>(deleteNotificationUrl(id))
 
@@ -1018,40 +1135,88 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
+  // Project APIs
+  // -----------------------------------------------------
 
-//client..................
-//post 
+  public createProject = async (payload: ICreateProjectPayload) => {
+    const response = await this.post<ICreateProjectResponse>(
+      createProjectUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  //client..................
+  //post 
 
   public createClient = async (payload: ICreateClientPayload) => {
     const response = await this.post<ICreateClientResponse>(
       createClientUrl(),
       payload
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+
+    return response?.data;
+  };
+
+  public fetchAllProjects = async () => {
+    const response = await this.get<IAllProjectsResponse>(
+      fetchAllProjectsUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data;
+  };
 
   //get
-  
+
   public fetchAllClient = async () => {
     const response = await this.get<IAllClientResponse>(
       fetchAllClientUrl(),
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data?.data
-  }
-//get by id
-/**
+    return response?.data.data;
+  };
+
+  public getProjectDetailById = async (id: string) => {
+    const response = await this.get<IProjectDetailResponse>(
+      getProjectDetailByIdUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data?.data;
+  };
+
+  //get by id
+  /**
    * Fetches client details using client ID.
    * @param id - client ID
    * @returns client details
@@ -1062,15 +1227,30 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    // TODO: Remove this comment once the isMock is removed above.
-    return response.data.data
-  }
+    return response?.data.data;
+  };
+
+  public updateProject = async ({ id, payload }: IUpdateProjectPayload) => {
+    const response = await this.put<IUpdateProjectResponse>(
+      updateProjectUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
 
   //update client
   public updateClient = async ({ id, payload }: IUpdateClientPayload) => {
@@ -1080,24 +1260,428 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: true,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response
+      throw response?.response?.data;
     }
-    return response?.data
-  }
-// delete client 
+    return response?.data;
+  };
+
+  public deleteProject = async (id: string) => {
+    const response = await this.del<IDeleteProjectResponse>(
+      deleteProjectUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  // delete client 
   public deleteClient = async (id: string) => {
-    const response = await this.del<IDeleteClientResponse>(deleteClientUrl(id))
+    const response = await this.del<IDeleteClientResponse>(deleteClientUrl(id));
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
-}
+    return response?.data;
+  };
 
+  public createProjectTemplate = async (payload: ICreateProjectTemplatePayload) => {
+    const response = await this.post<ICreateProjectTemplateResponse>(
+      createProjectTemplateUrl(),
+      payload
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  public fetchAllProjectTemplates = async () => {
+    const response = await this.get<IAllProjectTemplatesResponse>(
+      fetchAllProjectTemplatesUrl(),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public getProjectTemplateDetailById = async (id: string) => {
+    const response = await this.get<IProjectTemplateDetailResponse>(
+      getProjectTemplateDetailByIdUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public updateProjectTemplate = async ({ id, payload }: IUpdateProjectTemplatePayload) => {
+    const response = await this.put<IUpdateProjectTemplateResponse>(
+      updateProjectTemplateUrl(id),
+      payload,
+      { requiresAuth: true }
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteProjectTemplate = async (id: string) => {
+    const response = await this.del<IDeleteProjectTemplateResponse>(
+      deleteProjectTemplateUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public createProjectTemplateMilestone = async (payload: ICreateProjectTemplateMilestonePayload) => {
+    const response = await this.post<ICreateProjectTemplateMilestoneResponse>(
+      createProjectTemplateMilestoneUrl(),
+      payload
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  public fetchAllProjectTemplateMilestones = async (templateId: string) => {
+    const response = await this.get<IAllProjectTemplateMilestonesResponse>(
+      fetchAllProjectTemplateMilestonesUrl(templateId),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public getProjectTemplateMilestoneDetailById = async (id: string) => {
+    const response = await this.get<IProjectTemplateMilestoneDetailResponse>(
+      getProjectTemplateMilestoneDetailByIdUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public updateProjectTemplateMilestone = async ({ id, payload }: IUpdateProjectTemplateMilestonePayload) => {
+    const response = await this.put<IUpdateProjectTemplateMilestoneResponse>(
+      updateProjectTemplateMilestoneUrl(id),
+      payload,
+      { requiresAuth: true }
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteProjectTemplateMilestone = async (id: string) => {
+    const response = await this.del<IDeleteProjectTemplateMilestoneResponse>(
+      deleteProjectTemplateMilestoneUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public createProjectTemplateMilestoneTask = async (payload: ICreateProjectTemplateMilestoneTaskPayload) => {
+    const response = await this.post<ICreateProjectTemplateMilestoneTaskResponse>(
+      createProjectTemplateMilestoneTaskUrl(),
+      payload
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public fetchAllProjectTemplateMilestoneTasks = async (milestoneId: string) => {
+    const response = await this.get<IAllProjectTemplateMilestoneTasksResponse>(
+      fetchAllProjectTemplateMilestoneTasksUrl(milestoneId),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public getProjectTemplateMilestoneTaskDetailById = async (id: string) => {
+    const response = await this.get<IProjectTemplateMilestoneTaskDetailResponse>(
+      getProjectTemplateMilestoneTaskDetailByIdUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  };
+
+  public updateProjectTemplateMilestoneTask = async ({ id, payload }: IUpdateProjectTemplateMilestoneTaskPayload) => {
+    const response = await this.put<IUpdateProjectTemplateMilestoneTaskResponse>(
+      updateProjectTemplateMilestoneTaskUrl(id),
+      payload,
+      { requiresAuth: true }
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteProjectTemplateMilestoneTask = async (id: string) => {
+    const response = await this.del<IDeleteProjectTemplateMilestoneTaskResponse>(
+      deleteProjectTemplateMilestoneTaskUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public createClientDetails = async (payload: IClientDetails) => {
+    const response = await this.post<IClientDetailsResponse>(createClientDetailsUrl(), payload);
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public getAllClientDetails = async () => {
+    const response = await this.get<IClientDetailsResponse[]>(getAllClientDetailsUrl(), { requiresAuth: false });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public getClientDetailsById = async (id: string) => {
+    const response = await this.get<IClientDetailsResponse>(getClientDetailsByIdUrl(id), { requiresAuth: false });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public updateClientDetails = async ({ id, payload }: { id: string, payload: IClientDetails }) => {
+    const response = await this.put<IClientDetailsResponse>(updateClientDetailsUrl(id), payload, { requiresAuth: true });
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteClientDetails = async (id: string) => {
+    const response = await this.del<IClientDetailsResponse>(deleteClientDetailsUrl(id), { requiresAuth: false });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchAllClientDownloadExcel = async () => {
+    const response = await this.get<Blob>(
+      fetchAllClientDownloadExcelUrl(),
+      {
+        responseType: 'blob'
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data;
+  }
+
+  public fetchClientDownloadTemplateExcel = async () => {
+    const response = await this.get<Blob>(
+      fetchClientDownloadTemplateExcelUrl(),
+      {
+        responseType: 'blob'
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data;
+  }
+
+  public uploadClientFromExcel = async (formData: FormData) => {
+    const response = await this.post<IUploadClientFromExcelResponse>(
+      uploadClientFromExcelUrl(),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response.response?.data;
+    }
+
+    return response?.data;
+  }
+
+  public createMilestone = async (payload: ICreateProjectMilestone): Promise<IProjectMilestoneResponse> => {
+    const response = await this.post<IProjectMilestoneResponse>(createMilestoneUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public updateMilestone = async (milestoneId: string, payload: ICreateProjectMilestone): Promise<IProjectMilestoneResponse> => {
+    const response = await this.put<IProjectMilestoneResponse>(updateMilestoneUrl(milestoneId), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public deleteMilestone = async (milestoneId: string): Promise<void> => {
+    const response = await this.del<void>(deleteMilestoneUrl(milestoneId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+  }
+
+  public getMilestoneDetail = async (milestoneId: string): Promise<IProjectMilestoneDetailResponse> => {
+    const response = await this.get<IProjectMilestoneDetailResponse>(getMilestoneDetailUrl(milestoneId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public getAllMilestones = async (projectId: string): Promise<IProjectMilestoneResponse> => {
+    const response = await this.get<IProjectMilestoneResponse>(getAllMilestonesUrl(projectId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public createMilestoneTask = async (payload: ICreateProjectTask): Promise<IProjectTaskResponse> => {
+    const response = await this.post<IProjectTaskResponse>(createMilestoneTaskUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public updateMilestoneTask = async (taskId: string, payload: ICreateProjectTask): Promise<IProjectTaskResponse> => {
+    const response = await this.put<IProjectTaskResponse>(updateMilestoneTaskUrl(taskId), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public deleteMilestoneTask = async (taskId: string): Promise<void> => {
+    const response = await this.del<void>(deleteMilestoneTaskUrl(taskId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+  }
+
+  public getMilestoneTaskDetail = async (taskId: string): Promise<IProjectTaskDetailResponse> => {
+    const response = await this.get<IProjectTaskDetailResponse>(getMilestoneTaskDetailUrl(taskId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public getAllMilestoneTasks = async (milestoneId: string): Promise<IProjectTaskResponse> => {
+    const response = await this.get<IProjectTaskResponse>(getAllMilestoneTasksUrl(milestoneId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  // Task Comments API methods
+  public createTaskComment = async (payload: ICreateTaskCommentPayload): Promise<ITaskCommentResponse> => {
+    const response = await this.post<ITaskCommentResponse>(createTaskCommentUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public updateTaskComment = async (commentId: string, payload: Partial<ICreateTaskCommentPayload>): Promise<ITaskCommentResponse> => {
+    const response = await this.put<ITaskCommentResponse>(updateTaskCommentUrl(commentId), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public deleteTaskComment = async (commentId: string): Promise<void> => {
+    const response = await this.del<void>(deleteTaskCommentUrl(commentId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+  }
+
+  public getTaskCommentDetail = async (commentId: string): Promise<ITaskCommentResponse> => {
+    const response = await this.get<ITaskCommentResponse>(getTaskCommentDetailUrl(commentId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public getAllTaskComments = async (taskId: string): Promise<ITaskCommentResponse[]> => {
+    const response = await this.get<IAllTaskCommentsResponse>(getAllTaskCommentsUrl(taskId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  }
+
+  public updateTaskStatus = async (taskId: string, status: string) => {
+    const response = await this.put<{ status: string }>(
+      updateTaskStatusUrl(taskId),
+      { status }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+}
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.

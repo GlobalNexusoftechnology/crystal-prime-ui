@@ -23,6 +23,9 @@ const config: Config = {
         borderGray: "#D7D7D7",
         lightGreen: "#57B708",
         darkBlue: "#252F4A",
+        aqua: '#BAFDF9',
+        skyBlue: "#BAD8FD",
+        darkGreen: "#A7F782"
       },
     },
   },

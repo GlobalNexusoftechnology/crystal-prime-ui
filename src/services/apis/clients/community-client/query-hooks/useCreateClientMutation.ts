@@ -1,4 +1,4 @@
-import {  ICreateClientResponse, useMutation } from "@/services";
+import { ICreateClientResponse, useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 import { COMMUNITY_CLIENT } from "../communityClient";
 

@@ -1,132 +1,138 @@
-'use client'
+"use client";
 
-import { analyticalCards } from "@/constants";
-import { AnalyticalCard } from "../analytical-card";
-import { Button, DatePicker, Dropdown, InputField, ModalOverlay } from "@/components";
-import { ProjectManagementCard } from "./components";
-import { useState } from "react";
+import { Button, SearchBar } from "@/components";
+import { ProjectStageSection } from "./components";
+import { Breadcrumb } from "../breadcrumb";
+import { useAllProjectsQuery } from "@/services";
+import { useRouter } from "next/navigation";
 
+const stageLabels = {
+  open: "Open Projects",
+  inProgress: "In Progress Projects",
+  completed: "Completed Projects",
+};
 
+const bgColors = {
+  open: "bg-aqua",
+  inProgress: "bg-skyBlue",
+  completed: "bg-darkGreen",
+};
+
+// Helper function to map API project status to stage
+const mapProjectStatusToStage = (status?: string): "open" | "inProgress" | "completed" => {
+  if (!status) return "open";
+  
+  const statusLower = status.toLowerCase();
+  
+  if (statusLower.includes("open") || statusLower.includes("new") || statusLower.includes("initiated")) {
+    return "open";
+  } else if (statusLower.includes("progress") || statusLower.includes("ongoing") || statusLower.includes("active")) {
+    return "inProgress";
+  } else if (statusLower.includes("completed") || statusLower.includes("finished") || statusLower.includes("done")) {
+    return "completed";
+  }
+  
+  // Default to open if status doesn't match known patterns
+  return "open";
+};
 
 export function ProjectManagement() {
-  const [isAddProjectModalOpen, setIsAddProjectModalOpen] = useState(false);
-  // const [lead, setLead] = useState("");
+  const { allProjectsData, isLoading, error } = useAllProjectsQuery();
+  const router = useRouter();
 
-  const [selectTo, setSelectTo] = useState("");
-  const [remark, setRemark] = useState("");
-  const [projectInformation, setProjectInformation] = useState("");
-  const [renewalDate, setRenewalDate] = useState("");
-  const [followUpDate, setFollowUpDate] = useState("");
+  const handleRedirectToAddProject = () => {
+    router.push("/admin/project-management/add-project")
+  }
 
+  const getProjectsByStage = (stage: "open" | "inProgress" | "completed") => {
+    if (!allProjectsData) return [];
+    
+    return allProjectsData
+      .filter((project) => mapProjectStatusToStage(project.status) === stage)
+      .map((project) => ({
+        status: true,
+        message: "Project found",
+        success: true as const,
+        data: {
+          id: project.id,
+          name: project.name,
+          description: project.description,
+          client_id: project.client_id,
+          end_date: project.end_date,
+          status: project.status,
+          progress: project.milestones?.length || 0,
+          project_type: project.project_type,
+          budget: project.budget,
+          estimated_cost: project.estimated_cost,
+          start_date: project.start_date,
+          created_at: project.created_at,
+          updated_at: project.updated_at,
+          deleted: project.deleted,
+          deleted_at: project.deleted_at,
+          created_by: project.client.name,
+          client: project.client || null,
+          milestones: project.milestones || [],
+          attachments: project.attachments || [],
+        }
+      }));
+  };
 
-  const selectToOptions = [
-    { label: "User 1", value: "User 1" },
-    { label: "User 2", value: "User 2" },
-  ];
+  if (isLoading) {
+    return (
+      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+        <Breadcrumb />
+        <div className="flex justify-center items-center h-64">
+          <div className="text-lg">Loading projects...</div>
+        </div>
+      </section>
+    );
+  }
 
- 
+  if (error) {
+    return (
+      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+        <Breadcrumb />
+        <div className="flex justify-center items-center h-64">
+          <div className="text-lg text-red-600">Error loading projects. Please try again.</div>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
-      {/* Section Header */}
-      <div className="flex flex-col gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
-        <h1 className="text-xl 2xl:text-[1.25vw] font-medium">
-          Project Management
+    <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+      <Breadcrumb />
+      <div className="flex flex-wrap md:flex-row flex-col gap-4 2xl:gap-[1.5vw] justify-between items-start md:items-center">
+        <h1 className="text-2xl 2xl:text-[1.8vw] font-semibold">
+          Project List
         </h1>
-      </div>
-
-      {/* Summary Cards and Add project Button */}
-      <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
-          {/* Render up to 4 analytical cards */}
-          {analyticalCards.slice(0, 4).map((card, index) => (
-            <AnalyticalCard key={index} data={card} />
-          ))}
-
-          {/* Button to open modal */}
-          <div className="flex flex-col justify-end">
-            <Button
-              type="button"
-              title="Add Project"
-              variant="primary-outline"
-              onClick={() => setIsAddProjectModalOpen(true)} // 🔑 Modal open trigger
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Project Management Cards */}
-      <div className="gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
-        <ProjectManagementCard />
-      </div>
-
-      {/* Modal */}
-      <ModalOverlay
-        modalTitle="Back to Leads"
-        isOpen={isAddProjectModalOpen}
-        onClose={() => setIsAddProjectModalOpen(false)}
-        modalClassName="w-[20rem] md:w-[34rem] xl:w-[40rem] 2xl:w-[50vw] 2xl:h-[29vw]"
-      >
-        <form className="bg-white p-6 rounded-lg overflow-y-auto max-h-[80vh] md:h-[25rem] h-[24rem] space-y-4 md:w-[38rem] 2xl:w-[49vw] 2xl:h-[26vw] border border-gray-300">
-          <h2 className="text-[1rem] 2xl:text-[1.5vw] font-semibold mb-2">
-            Project Information
-          </h2>
-
-          <div>
-            <label className="block text-[1rem] 2xl:text-[1vw]">
-              Project Information
-            </label>
-            <InputField
-              type="text"
-              value={projectInformation}
-              onChange={(e) => setProjectInformation(e.target.value)}
-              placeholder="Description"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-
-          <Dropdown
-            label="Select Lead"
-            options={selectToOptions}
-            value={selectTo}
-            onChange={setSelectTo}
-            dropdownWidth="w-full"
+        <div className="w-full md:w-auto flex gap-4 2xl:gap-[1vw] flex-col md:flex-row items-center">
+          <Button
+            title="Add New Project"
+            variant="primary-outline"
+            width="w-full md:w-fit"
+            onClick={handleRedirectToAddProject}
           />
-
-          <div className="grid grid-cols-2 gap-4">
-            <DatePicker
-              label="Renewal Date"
-              value={renewalDate}
-              onChange={setRenewalDate}
-              placeholder="Select Date"
-            />
-
-            <DatePicker
-              label="Set Reminder"
-              value={followUpDate}
-              onChange={setFollowUpDate}
-              placeholder="Select Date"
-            />
-          </div>
-
-          <div>
-            <label className="block text-[1rem] 2xl:text-[1vw] font-medium">
-              Description
-            </label>
-            <InputField
-              type="text"
-              value={remark}
-              onChange={(e) => setRemark(e.target.value)}
-              placeholder="Description"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-        </form>
-        <div className="flex justify-between pt-4 gap-5">
-          <Button title="Cancel" variant="primary-outline" type="button"/>
-          <Button title="Add Lead" />
+          <SearchBar
+            onSearch={(query) => {
+              console.log("Searching:", query);
+            }}
+            bgColor="white"
+            width="w-full min-w-[12rem] md:w-[25vw] 2xl:w-[20vw]"
+          />
         </div>
-      </ModalOverlay>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 2xl:gap-[2vw]">
+        {(["open", "inProgress", "completed"] as const).map((stage) => (
+          <ProjectStageSection
+            key={stage}
+            projects={getProjectsByStage(stage)}
+            label={stageLabels[stage]}
+            bgColor={bgColors[stage]}
+          />
+        ))}
+      </div>
     </section>
   );
 }

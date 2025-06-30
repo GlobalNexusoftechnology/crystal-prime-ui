@@ -1,3 +1,7 @@
-export { ProjectDailyTaskCard } from "./ProjectDailyTaskCard";
-export { ProjectManagementCard } from "./ProjectManagementCard";
-export { ProjectEdit } from "./ProjectEdit";
+export { ProjectStageSection } from ".//project-stage-section"
+export { ProjectDetails } from "./project-details"
+export { ProjectDropdown } from "./project-dropdown"
+export { HeaderDetails } from "./header-details"
+export { AddProject } from "./add-project"
+export { EditProject } from "./edit-project"
+export { MilestoneDetails, TaskDetails } from "./milestone-details"
