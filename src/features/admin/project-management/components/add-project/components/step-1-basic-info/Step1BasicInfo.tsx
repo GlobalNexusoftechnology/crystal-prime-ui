@@ -20,6 +20,7 @@ interface Step1BasicInfoProps extends FormikProps<IAddProjectFormValues> {
   clientOptions: { label: string; value: string }[];
   clientLoading: boolean;
   clientError: boolean;
+  hideMilestoneTemplateOption?: boolean;
 }
 
 export function Step1BasicInfo({
@@ -32,6 +33,7 @@ export function Step1BasicInfo({
   clientOptions,
   clientLoading,
   clientError,
+  hideMilestoneTemplateOption = false,
 }: Step1BasicInfoProps) {
   const isMilestoneSelected = values.milestoneOption === "milestone";
   const isTemplateSelected = values.milestoneOption === "template";
@@ -207,48 +209,50 @@ export function Step1BasicInfo({
           </div>
         </div>
       )}
-      <div className="flex gap-6 2xl:gap-[1.5vw] mt-6 2xl:mt-[1vw]">
-        <div
-          className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${isMilestoneSelected
-            ? "border-primary bg-blue-50"
-            : "border-gray-300 bg-white"
-            }`}
-          onClick={() => setFieldValue("milestoneOption", "milestone")}
-        >
-          <div className="w-[8rem] 2xl:w-[8vw] h-[10rem] 2xl:h-[10vw]">
-            <Image
-              src={ImageRegistry.addMilestone}
-              width={500}
-              height={500}
-              alt="Milestone"
-              className="w-full h-full mb-2 2xl:mb-[0.5vw]"
-            />
+      {!hideMilestoneTemplateOption && (
+        <div className="flex gap-6 2xl:gap-[1.5vw] mt-6 2xl:mt-[1vw]">
+          <div
+            className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${isMilestoneSelected
+              ? "border-primary bg-blue-50"
+              : "border-gray-300 bg-white"
+              }`}
+            onClick={() => setFieldValue("milestoneOption", "milestone")}
+          >
+            <div className="w-[8rem] 2xl:w-[8vw] h-[10rem] 2xl:h-[10vw]">
+              <Image
+                src={ImageRegistry.addMilestone}
+                width={500}
+                height={500}
+                alt="Milestone"
+                className="w-full h-full mb-2 2xl:mb-[0.5vw]"
+              />
+            </div>
+            <span className="font-semibold text-center mb-2 2xl:mb-[0.5vw] 2xl:text-[1vw] 2xl:leading-[1.4vw]">
+              Do you want to add Milestones?
+            </span>
           </div>
-          <span className="font-semibold text-center mb-2 2xl:mb-[0.5vw] 2xl:text-[1vw] 2xl:leading-[1.4vw]">
-            Do you want to add Milestones?
-          </span>
-        </div>
-        <div
-          className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${isTemplateSelected
-            ? "border-primary bg-blue-50"
-            : "border-gray-300 bg-white"
-            }`}
-          onClick={() => setFieldValue("milestoneOption", "template")}
-        >
-          <div className="w-[18rem] 2xl:w-[18vw] h-[10rem] 2xl:h-[10vw]">
-            <Image
-              src={ImageRegistry.projectTemplate}
-              width={500}
-              height={500}
-              alt="Template"
-              className="w-full h-full mb-2 2xl:mb-[0.5vw]"
-            />
+          <div
+            className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${isTemplateSelected
+              ? "border-primary bg-blue-50"
+              : "border-gray-300 bg-white"
+              }`}
+            onClick={() => setFieldValue("milestoneOption", "template")}
+          >
+            <div className="w-[18rem] 2xl:w-[18vw] h-[10rem] 2xl:h-[10vw]">
+              <Image
+                src={ImageRegistry.projectTemplate}
+                width={500}
+                height={500}
+                alt="Template"
+                className="w-full h-full mb-2 2xl:mb-[0.5vw]"
+              />
+            </div>
+            <span className="font-semibold text-center mb-2 2xl:mb-[0.5vw] 2xl:text-[1vw] 2xl:leading-[1.4vw]">
+              Use Project Template
+            </span>
           </div>
-          <span className="font-semibold text-center mb-2 2xl:mb-[0.5vw] 2xl:text-[1vw] 2xl:leading-[1.4vw]">
-            Use Project Template
-          </span>
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -243,6 +243,7 @@ export function ClientListTable(): JSX.Element {
       />
       {isAddClientModalOpen && (
         <AddClientModal
+          clientRefech={refetchClient}
           onClose={handleCloseModal}
           selectedClient={selectedClient}
           onUpdateClient={updateClient}
