@@ -107,6 +107,7 @@ export function TableCell<T extends { id: string | number }>({
   const isAssignedTo = col.accessor === "assigned_to";
   const isStatusColumn = col.accessor === "status_id";
   const isEmailColumn = col.accessor === "email";
+  const isColorColumn = col.accessor === "color";
   const randomColor = typeof value === 'string' ? getRandomColor(value) : '#000000';
   const statusColor = typeof value === 'string' ? getColorForStatus(value) : '#000000';
 
@@ -171,6 +172,18 @@ export function TableCell<T extends { id: string | number }>({
         >
           {value}
         </span>
+      ) : isColorColumn ? (
+        value ? (
+          <div className="flex items-center gap-2">
+            <span
+              className="inline-block w-6 h-6 rounded-full border border-gray-300"
+              style={{ backgroundColor: String(value) }}
+            />
+            <span className="font-mono text-xs">{String(value)}</span>
+          </div>
+        ) : (
+          <span className="text-gray-400">-</span>
+        )
       ) : isEmailColumn ? (
         renderEmailCell(value)
       ) : col.cell ? (

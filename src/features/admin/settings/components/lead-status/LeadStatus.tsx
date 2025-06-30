@@ -41,6 +41,7 @@ export function LeadStatus() {
     (lead) => ({
       id: lead?.id || "N/A",
       name: lead?.name || "N/A",
+      color: lead?.color ?? undefined,
       created_at: `${formatDate(lead?.created_at)}` || "N/A",
       updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
     })

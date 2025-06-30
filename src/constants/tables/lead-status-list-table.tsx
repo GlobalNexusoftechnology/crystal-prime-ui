@@ -13,6 +13,11 @@ export const ILeadStatusListTableColumn: ITableColumn<IAllStatusesList>[] =
       headerClassName: "min-w-[10rem] 2xl:min-w-[10vw] ",
     },
     {
+      header: "Color",
+      accessor: "color",
+      headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
+    },
+    {
       header: "CREATED AT",
       accessor: "created_at",
       headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",

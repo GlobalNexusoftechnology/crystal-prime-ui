@@ -21,6 +21,8 @@ const dailyTaskValidationSchema = Yup.object().shape({
 interface IDailyTaskProps {
   projectId: string;
   userId: string;
+  taskTitle: string;
+  description: string;
 }
 
 const tabs = ["Daily Tasks"];
@@ -31,7 +33,7 @@ const statusOptions = [
   { label: 'Completed', value: 'Completed' },
 ];
 
-export function DailyTask({ projectId, userId }: IDailyTaskProps) {
+export function DailyTask({ projectId, userId, taskTitle, description }: IDailyTaskProps) {
   const {
     data: dailyTasks,
     refetchDailyTasks,
@@ -58,9 +60,9 @@ export function DailyTask({ projectId, userId }: IDailyTaskProps) {
     initialValues: {
       project_id: projectId,
       user_id: userId,
-      task_title: '',
+      task_title: taskTitle,
       entry_date: new Date().toISOString().slice(0, 10),
-      description: '',
+      description: description,
       hours_spent: undefined,
       status: '',
       remarks: '',
@@ -70,9 +72,9 @@ export function DailyTask({ projectId, userId }: IDailyTaskProps) {
       await createDailyTask({
         project_id: projectId,
         user_id: userId,
-        task_title: values.task_title,
+        task_title: taskTitle,
         entry_date: values.entry_date,
-        description: values.description,
+        description: description,
         hours_spent: values.hours_spent,
         status: values.status,
       });

@@ -63,27 +63,30 @@ export function AddLeadStatusModal({
           </h2>
 
           <Formik
-            initialValues={{ name: statusName || "" }}
+            initialValues={{ name: statusName || "", color: "#000000" }}
             enableReinitialize
             validationSchema={Yup.object({
               name: Yup.string()
                 .required("Lead status is required")
                 .max(50, "Must be 50 characters or less"),
+              color: Yup.string()
+                .matches(/^#([0-9A-Fa-f]{3}){1,2}$/, "Invalid color code")
+                .required("Color is required"),
             })}
             onSubmit={(values, { resetForm }) => {
               const lowerCaseName = values.name.toLowerCase().trim();
               if (statusId) {
                 onEditStatuses({
                   id: statusId,
-                  payload: { name: lowerCaseName },
+                  payload: { name: lowerCaseName, color: values.color },
                 });
               } else {
-                onAllStatusMutation({ name: lowerCaseName });
+                onAllStatusMutation({ name: lowerCaseName, color: values.color });
               }
               resetForm();
             }}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, values }) => (
               <Form className="space-y-4">
                 <div>
                   <label className="text-sm font-medium text-gray-700 block mb-2">
@@ -97,6 +100,34 @@ export function AddLeadStatusModal({
                   />
                   <div className="text-red-500 text-sm mt-1">
                     <ErrorMessage name="name" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium text-gray-700 block mb-2">
+                    Status Color
+                  </label>
+                  <div className="flex items-center border border-gray-300 rounded-md 2xl:rounded-[0.375vw] relative px-4 ">
+                    <div
+                      className="w-14 h-6 rounded-full"
+                      style={{ backgroundColor: values.color }}
+                    />
+                    <Field
+                      name="color"
+                      as={InputField}
+                      type="text"
+                      className="border-none bg-transparent border-none ring-none focus:none"
+                      placeholder="#000000"
+                    />
+                    <Field
+                      name="color"
+                      as={InputField}
+                      type="color"
+                      className="absolute w-full left-0 top-0 opacity-0"
+                    />
+                  </div>
+                  <div className="text-red-500 text-sm mt-1">
+                    <ErrorMessage name="color" />
                   </div>
                 </div>
 

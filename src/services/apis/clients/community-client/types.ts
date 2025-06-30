@@ -39,6 +39,7 @@ export interface IAllStatusesList {
   created_at: string;
   updated_at: string;
   name: string;
+  color?: string;
 }
 
 export interface IAllStatusesResponse {
@@ -351,6 +352,7 @@ export interface ICreateLeadAttachmentResponse {
 // all status
 export interface ICreateStatusesPayload {
   name: string;
+  color?: string;
 }
 export interface ICreateStatusesResponse {
   status: boolean;
