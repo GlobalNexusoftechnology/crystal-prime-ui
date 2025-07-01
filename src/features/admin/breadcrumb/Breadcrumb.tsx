@@ -1,18 +1,20 @@
 // components/shared/Breadcrumb.tsx
 "use client";
 
+import React from "react";
 import { usePathname } from "next/navigation";
 import { HiChevronRight } from "react-icons/hi";
 import { TbFolder } from "react-icons/tb";
 import Link from "next/link";
 
-export function Breadcrumb() {
+export function Breadcrumb({ idToName = {} }: { idToName?: Record<string, string> }) {
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean).slice(1); // Remove the first segment
 
   const breadcrumbItems = segments.map((segment, index) => {
     const href = "/" + segments.slice(0, index + 1).join("/");
-    const name = decodeURIComponent(segment).replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+    const name = idToName[segment] ||
+      decodeURIComponent(segment).replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
     return {
       name,
       href: index === segments.length - 1 ? undefined : href,

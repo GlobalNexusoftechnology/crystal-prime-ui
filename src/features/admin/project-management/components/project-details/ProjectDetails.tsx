@@ -11,15 +11,34 @@ import {
 import { HeaderDetails } from "../header-details";
 import { IProjectResponse } from "@/services";
 import { formatIndiaTime } from "@/utils";
+import { buildIdToNameMapping } from "@/utils/helpers/buildIdToNameMapping";
 
 export function ProjectDetails({
   projectDetailData,
 }: {
   projectDetailData: IProjectResponse;
 }) {
+  const safeProject = {
+    ...projectDetailData,
+    milestones: (projectDetailData.milestones || []).map(m => ({
+      ...m,
+      id: m.id || "",
+      name: m.name || "",
+      tasks: (m.tasks || []).map(t => ({
+        ...t,
+        id: t.id || "",
+        title: t.title || "",
+      })),
+    })),
+  };
+
+  const idToName = buildIdToNameMapping(
+    projectDetailData.client ? [projectDetailData.client] : [],
+    [safeProject]
+  );
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
-      <Breadcrumb />
+      <Breadcrumb idToName={idToName} />
       <HeaderDetails
         title={projectDetailData.name}
         status={projectDetailData.status || "N/A"}
