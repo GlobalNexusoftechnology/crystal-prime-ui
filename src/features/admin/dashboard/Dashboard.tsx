@@ -1,8 +1,8 @@
 import { analyticalCards } from "@/constants";
 import {
-  DailyTasksSlider,
   LeadAnalyticsBarChart,
   ProjectSnapshotDonutChart,
+  LeadTypeDonutChart,
 } from "./components";
 import { AnalyticalCard } from "../analytical-card";
 import { LeadsListTable } from "../leads-list-table";
@@ -26,10 +26,10 @@ export function Dashboard() {
             <AnalyticalCard key={index} data={card} />
           ))}
         </div>
-        <div className="flex flex-row flex-wrap gap-6 2xl:gap-[1.5vw] px-4 2xl:px-[1vw]">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 2xl:gap-[1.5vw] px-4 2xl:px-[1vw]">
           <ProjectSnapshotDonutChart />
           <LeadAnalyticsBarChart />
-          <DailyTasksSlider />
+          <LeadTypeDonutChart />
         </div>
         <LeadsListTable />
       </div>

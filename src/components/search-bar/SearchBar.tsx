@@ -14,8 +14,7 @@ interface SearchBarProps {
 
   bgColor?: string;
   width?: string;
-
-
+  value?: string; // Add value prop for controlled input
 }
 
 /**
@@ -30,9 +29,12 @@ export function SearchBar({
   placeholder = "Search",
   onSearch,
   bgColor = "transparent",
-  width = "min-w-[12rem] w-[25vw]"
+  width = "min-w-[12rem] w-[25vw]",
+  value,
 }: SearchBarProps): JSX.Element {
   const [query, setQuery] = useState(""); // State to store the search query
+
+  const inputValue = value !== undefined ? value : query;
 
   return (
     <div className={`bg-${bgColor} relative flex items-center border 2xl:border-[0.1vw] border-gray-300 px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] rounded-xl 2xl:rounded-[0.75vw] ${width}`}>
@@ -42,9 +44,9 @@ export function SearchBar({
       {/* Search Input Field */}
       <input
         type="text"
-        value={query}
+        value={inputValue}
         onChange={(e) => {
-          setQuery(e.target.value); // Update the query state
+          if (value === undefined) setQuery(e.target.value); // Only update local state if uncontrolled
           onSearch(e.target.value); // Trigger the search function
         }}
         placeholder={placeholder}

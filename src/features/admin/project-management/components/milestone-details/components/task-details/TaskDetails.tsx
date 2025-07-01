@@ -2,7 +2,7 @@
 
 import { Breadcrumb } from "@/features";
 import { IProjectTaskResponse } from "@/services";
-import { formattingDate } from "@/utils";
+import { formatIndiaTime } from "@/utils";
 import { HeaderDetails } from "../../../header-details";
 import { DailyTask, TaskEstimate, TaskInfo } from "./components";
 import { useState } from "react";
@@ -52,11 +52,11 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
               title: taskData.title,
               assigned_to: taskData.assigned_to || "",
               description: taskData.description || "",
-              created_at: formattingDate(
+              created_at: formatIndiaTime(
                 `${taskData.created_at}`,
                 "toReadable"
               ),
-              updated_at: formattingDate(
+              updated_at: formatIndiaTime(
                 `${taskData.updated_at}`,
                 "toReadable"
               ),
@@ -67,12 +67,17 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
           <TaskEstimate
             taskEstimateData={{
               due_date:
-                formattingDate(`${taskData.due_date}`, "toReadable") || "",
+                formatIndiaTime(`${taskData.due_date}`, "toReadable") || "",
             }}
           />
         </div>
       </div>
-      <DailyTask taskId={taskData?.id || ""} />
+      <DailyTask
+        projectId={taskData?.milestone?.project?.id}
+        userId={taskData?.assigned_to || ""}
+        taskTitle={taskData.title}
+        description={taskData.description || ""}
+      />
     </section>
   );
 }

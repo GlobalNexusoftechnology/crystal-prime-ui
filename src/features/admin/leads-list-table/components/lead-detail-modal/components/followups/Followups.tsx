@@ -11,7 +11,7 @@ import {
   useAuthStore,
   useCreateLeadFollowUpMutation,
 } from "@/services";
-import { formatDate, formattingDate, IApiError } from "@/utils";
+import { formatDate, formatIndiaTime, IApiError } from "@/utils";
 import { useQueryClient } from '@tanstack/react-query';
 import toast from "react-hot-toast";
 
@@ -161,7 +161,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
                 <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                   <p className="text-[1rem] 2xl:text-[1vw]">Completed:</p>
                   <p className="text-[1rem] 2xl:text-[1vw]">
-                    {formattingDate(`${followup?.completed_date}`, "toReadable")}
+                    {formatIndiaTime(`${followup?.completed_date}`, "toReadable")}
                   </p>
                 </div>
               ) : null}

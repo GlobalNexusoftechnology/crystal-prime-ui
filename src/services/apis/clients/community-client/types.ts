@@ -39,6 +39,7 @@ export interface IAllStatusesList {
   created_at: string;
   updated_at: string;
   name: string;
+  color?: string;
 }
 
 export interface IAllStatusesResponse {
@@ -351,6 +352,7 @@ export interface ICreateLeadAttachmentResponse {
 // all status
 export interface ICreateStatusesPayload {
   name: string;
+  color?: string;
 }
 export interface ICreateStatusesResponse {
   status: boolean;
@@ -1474,4 +1476,50 @@ export interface IDeleteTaskCommentResponse {
   message: string;
   success: true;
   data: ITaskCommentResponse;
+}
+
+// Daily Task Entries APIs Types
+// -----------------------------------------------------
+export interface ICreateDailyTaskEntryPayload {
+  project_id: string;
+  user_id: string;
+  task_title: string;
+  entry_date: string; // ISO string
+  description?: string;
+  hours_spent?: number;
+  status?: string;
+}
+
+export interface IUpdateDailyTaskEntryPayload {
+  id: string;
+  payload: Partial<ICreateDailyTaskEntryPayload>;
+}
+
+export interface IDailyTaskEntryResponse {
+  id: string;
+  project: IProjectResponse;
+  user: IUsersDetails;
+  task_title: string;
+  entry_date: string;
+  description?: string;
+  hours_spent?: number;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+}
+
+export interface ICreateDailyTaskEntryResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IDailyTaskEntryResponse;
+}
+
+export interface IAllDailyTaskEntriesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IDailyTaskEntryResponse[];
 }

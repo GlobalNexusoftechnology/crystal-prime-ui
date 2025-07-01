@@ -1,4 +1,4 @@
-export function formattingDate(inputDate: string, mode: string) {
+export function formatIndiaTime(inputDate: string, mode: string) {
   const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
                       "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 

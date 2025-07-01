@@ -6,7 +6,7 @@ import { ProjectTemplateMilestone } from "../project-template-milestone";
 import { Breadcrumb } from "@/features/admin/breadcrumb";
 import { useRouter } from "next/navigation";
 import { ActionDropdown } from "@/components/action-dropdown/ActionDropdown";
-import { formattingDate } from "@/utils";
+import { formatIndiaTime } from "@/utils";
 import { useAllProjectTemplatesQuery, useDeleteProjectTemplateMutation } from "@/services";
 import toast from "react-hot-toast";
 import { useAllTypesQuery } from "@/services";
@@ -138,13 +138,13 @@ export function ProjectTemplateDetail({
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
           <p className=" text-sm 2xl:text-[0.875vw]">Created At</p>
           <p className="text-[1rem] 2xl:text-[1vw] font-medium">
-            {formattingDate(projectTemplateData.created_at, "toReadable")}
+            {formatIndiaTime(projectTemplateData.created_at, "toReadable")}
           </p>
         </div>
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
           <p className=" text-sm 2xl:text-[0.875vw]">Updated At</p>
           <p className="text-[1rem] 2xl:text-[1vw] font-medium">
-            {formattingDate(projectTemplateData.updated_at, "toReadable")}
+            {formatIndiaTime(projectTemplateData.updated_at, "toReadable")}
           </p>
         </div>
       </div>

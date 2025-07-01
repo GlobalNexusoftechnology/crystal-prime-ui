@@ -5,6 +5,7 @@ import { ProjectStageSection } from "./components";
 import { Breadcrumb } from "../breadcrumb";
 import { useAllProjectsQuery } from "@/services";
 import { useRouter } from "next/navigation";
+import { useState, useMemo } from "react";
 
 const stageLabels = {
   open: "Open Projects",
@@ -39,15 +40,32 @@ const mapProjectStatusToStage = (status?: string): "open" | "inProgress" | "comp
 export function ProjectManagement() {
   const { allProjectsData, isLoading, error } = useAllProjectsQuery();
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleRedirectToAddProject = () => {
     router.push("/admin/project-management/add-project")
   }
 
-  const getProjectsByStage = (stage: "open" | "inProgress" | "completed") => {
+  // Filter projects by search query
+  const filteredProjects = useMemo(() => {
     if (!allProjectsData) return [];
-    
-    return allProjectsData
+    if (!searchQuery.trim()) return allProjectsData;
+    const query = searchQuery.toLowerCase();
+    return allProjectsData.filter((project) => {
+      const name = project.name?.toLowerCase() || "";
+      const description = project.description?.toLowerCase() || "";
+      const clientName = project.client?.name?.toLowerCase() || "";
+      return (
+        name.includes(query) ||
+        description.includes(query) ||
+        clientName.includes(query)
+      );
+    });
+  }, [allProjectsData, searchQuery]);
+
+  const getProjectsByStage = (stage: "open" | "inProgress" | "completed") => {
+    if (!filteredProjects) return [];
+    return filteredProjects
       .filter((project) => mapProjectStatusToStage(project.status) === stage)
       .map((project) => ({
         status: true,
@@ -115,8 +133,9 @@ export function ProjectManagement() {
           />
           <SearchBar
             onSearch={(query) => {
-              console.log("Searching:", query);
+              setSearchQuery(query);
             }}
+            value={searchQuery}
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw] 2xl:w-[20vw]"
           />

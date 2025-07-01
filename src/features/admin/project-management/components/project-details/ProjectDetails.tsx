@@ -10,7 +10,7 @@ import {
 } from "./components";
 import { HeaderDetails } from "../header-details";
 import { IProjectResponse } from "@/services";
-import { formattingDate } from "@/utils";
+import { formatIndiaTime } from "@/utils";
 
 export function ProjectDetails({
   projectDetailData,
@@ -41,11 +41,11 @@ export function ProjectDetails({
               project_type: projectDetailData.project_type || "",
               contact_person: projectDetailData.client.contact_person,
               description: projectDetailData.description || "",
-              created_at: formattingDate(
+              created_at: formatIndiaTime(
                 projectDetailData.created_at,
                 "toReadable"
               ),
-              updated_at: formattingDate(
+              updated_at: formatIndiaTime(
                 projectDetailData.updated_at,
                 "toReadable"
               ),
@@ -56,7 +56,7 @@ export function ProjectDetails({
               (att) => ({
                 name: att.file_name,
                 uploaded_by: `${att.uploaded_by?.id}`,
-                created_at: formattingDate(`${att.created_at}`, "toReadable"),
+                created_at: formatIndiaTime(`${att.created_at}`, "toReadable"),
               })
             )}
           />
@@ -74,22 +74,22 @@ export function ProjectDetails({
           <ProjectEstimate
             projectEstimateData={{
               start_date: projectDetailData.start_date
-                ? formattingDate(
+                ? formatIndiaTime(
                     projectDetailData.start_date.toString(),
                     "toReadable"
                   )
                 : "",
               actual_start: projectDetailData.actual_start_date
-                ? formattingDate(
+                ? formatIndiaTime(
                     projectDetailData.actual_start_date.toString(),
                     "toReadable"
                   )
                 : "",
               end_date: projectDetailData.end_date
-                ? formattingDate(projectDetailData.end_date.toString(), "toReadable")
+                ? formatIndiaTime(projectDetailData.end_date.toString(), "toReadable")
                 : "",
               actual_end: projectDetailData.actual_end_date
-                ? formattingDate(projectDetailData.actual_end_date.toString(), "toReadable")
+                ? formatIndiaTime(projectDetailData.actual_end_date.toString(), "toReadable")
                 : "",
               estimated_cost: projectDetailData.estimated_cost
                 ? String(projectDetailData.estimated_cost)

@@ -239,3 +239,10 @@ export const getAllTaskCommentsUrl = (taskId: string) => `/task-comments/task/${
 
 export const updateTaskStatusUrl = (taskId: string) => `/task-status/tasks/${taskId}/status`;
 
+// Daily Task Entries API's
+export const createDailyTaskEntryUrl = () => "/daily-task";
+export const updateDailyTaskEntryUrl = (id: string) => `/daily-task/${id}`;
+export const deleteDailyTaskEntryUrl = (id: string) => `/daily-task/${id}`;
+export const getDailyTaskEntryDetailUrl = (id: string) => `/daily-task/${id}`;
+export const getAllDailyTaskEntriesUrl = (projectId?: string) => projectId ? `/daily-task?projectId=${projectId}` : "/daily-task";
+

@@ -18,6 +18,7 @@ export function LeadStatus() {
   const [selectedStatus, setSelectedStatus] = useState<{
     id: string;
     name: string;
+    color: string;
   } | null>(null);
 
   const handleSearch = (value: string) => {
@@ -41,6 +42,7 @@ export function LeadStatus() {
     (lead) => ({
       id: lead?.id || "N/A",
       name: lead?.name || "N/A",
+      color: lead?.color ?? undefined,
       created_at: `${formatDate(lead?.created_at)}` || "N/A",
       updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
     })
@@ -63,7 +65,7 @@ export function LeadStatus() {
       label: "Edit",
       onClick: (row: IAllStatusesList) => {
         console.log("Edit clicked", row.id);
-        setSelectedStatus({ id: row.id, name: row.name });
+        setSelectedStatus({ id: row.id, name: row.name, color: row.color || "" });
         setIsAddModalOpen(true);
       },
       className: "text-blue-500",
@@ -129,6 +131,7 @@ export function LeadStatus() {
           onAddStatusSuccessCallback={handleAddStatusSuccessCallback}
           statusId={selectedStatus?.id}
           statusName={selectedStatus?.name}
+          statusColor={selectedStatus?.color}
           onClearEditData={() => setSelectedStatus(null)}
         />
       )}
