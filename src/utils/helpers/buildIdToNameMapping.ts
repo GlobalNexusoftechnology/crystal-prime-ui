@@ -38,6 +38,7 @@ export function buildIdToNameMapping(
  * Universal helper: Given a project, milestone, or task object, extract all related entities and build the idToName mapping.
  * Pass the object you have (project, milestone, or task) and it will build the mapping for you.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function buildUniversalIdToNameMapping(entity: any): Record<string, string> {
   // If it's a project
   if (entity?.milestones && entity?.name && entity?.id) {

@@ -120,6 +120,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
             value={`${formik.values.due_date}`}
             onChange={(date) => formik.setFieldValue("due_date", date)}
             placeholder="Next Followup Date"
+            minDate={new Date().toISOString().slice(0, 10)}
             error={formik.touched.due_date ? formik.errors.due_date : undefined}
           />
           <div className="flex items-center gap-4 2xl:gap-[1vw]">
