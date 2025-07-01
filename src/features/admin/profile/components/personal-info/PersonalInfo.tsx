@@ -41,7 +41,7 @@ export function PersonalInfo() {
     last_name: user?.last_name || "",
     email: user?.email || "",
     dob: user?.dob || "",
-    phone_number: user?.phone_number || "",
+    phone_number: user?.phone_number ? String(user.phone_number) : "",
   };
 
   const validationSchema = Yup.object({
@@ -62,12 +62,12 @@ export function PersonalInfo() {
             updateActiveSession({
               access_token: activeSession?.access_token || '',
               refresh_token: activeSession?.refresh_token || '',
-              user: { ...result.data},
+              user: { ...result.data },
             });
           }
         });
       }
-      setTimeout(() => router.push("/admin/dashboard"), 1000);
+      // setTimeout(() => router.push("/admin/dashboard"), 1000);
     },
     onErrorCallback: (err) => {
       toast.error(err?.message || "Failed to update profile");
@@ -135,6 +135,7 @@ export function PersonalInfo() {
                     label="Date of Birth"
                     value={values.dob ? (values.dob.length > 10 ? values.dob.slice(0, 10) : values.dob) : ""}
                     onChange={(val) => setFieldValue("dob", val)}
+                    maxDate={new Date().toISOString().slice(0, 10)}
                     error={touched.dob && errors.dob}
                   />
                 </div>
@@ -143,8 +144,13 @@ export function PersonalInfo() {
                     label="Phone Number"
                     placeholder="Enter phone number"
                     name="phone_number"
+                    type="tel"
+                    pattern="[0-9]*"
                     value={values.phone_number}
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                      setFieldValue("phone_number", onlyNums);
+                    }}
                     error={touched.phone_number && errors.phone_number}
                   />
                 </div>

@@ -17,7 +17,8 @@ export function DatePicker({
   datePickerBorderRadius = "rounded-md 2xl:rounded-[0.5vw]",
   name="date",
   datePickerWidth="w-full",
-  minDate
+  minDate,
+  maxDate
 }: {
   value: string;
   onChange: (val: string) => void;
@@ -29,6 +30,7 @@ export function DatePicker({
   name?: string;
   datePickerWidth?:string;
   minDate?: string;
+  maxDate?: string;
 
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -54,6 +56,7 @@ export function DatePicker({
           value={value}
           name={name}
           min={minDate}
+          max={maxDate}
           onChange={(e) => onChange(e.target.value)}
         />
         {/* Custom Calendar Icon (Now Works on All Browsers) */}
