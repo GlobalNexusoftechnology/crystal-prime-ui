@@ -18,6 +18,7 @@ interface AddLeadStatusModalProps {
   onClearEditData?: () => void; // NEW: Callback to clear edit mode
   statusId?: string;
   statusName?: string;
+  statusColor?: string;
 }
 
 export function AddLeadStatusModal({
@@ -27,6 +28,7 @@ export function AddLeadStatusModal({
   isOpen,
   statusId,
   statusName,
+  statusColor,
 }: AddLeadStatusModalProps) {
   const { onAllStatusMutation } = useCreateStatusesMutation({
     onSuccessCallback: (response: ICreateStatusesResponse) => {
@@ -49,7 +51,6 @@ export function AddLeadStatusModal({
       toast.success(response.message);
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to update lead status:", err);
       toast.error(err.message);
     },
   });
@@ -63,7 +64,7 @@ export function AddLeadStatusModal({
           </h2>
 
           <Formik
-            initialValues={{ name: statusName || "", color: "#000000" }}
+            initialValues={{ name: statusName || "", color: statusColor || "#000000" }}
             enableReinitialize
             validationSchema={Yup.object({
               name: Yup.string()

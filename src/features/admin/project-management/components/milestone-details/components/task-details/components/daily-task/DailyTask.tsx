@@ -142,7 +142,7 @@ export function DailyTask({ projectId, userId, taskTitle, description }: IDailyT
             </button>
           ))}
         </div>
-        <button
+        <div
           onClick={() => setShowForm((prev) => !prev)}
           className="flex items-center gap-2 2xl:gap-[0.5vw] text-primary text-[1rem] 2xl:text-[1vw]"
         >
@@ -153,7 +153,7 @@ export function DailyTask({ projectId, userId, taskTitle, description }: IDailyT
               <Button title="Add Daily Task Comment" variant="primary-outline" />
             )}
           </span>
-        </button>
+        </div>
       </div>
 
       {/* Tab Contents */}
