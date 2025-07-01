@@ -1482,11 +1482,12 @@ export interface IDeleteTaskCommentResponse {
 // -----------------------------------------------------
 export interface ICreateDailyTaskEntryPayload {
   project_id: string;
-  user_id: string;
+  assigned_to: string;
   task_title: string;
   entry_date: string; // ISO string
   description?: string;
   hours_spent?: number;
+  remarks?: string;
   status?: string;
 }
 
@@ -1502,6 +1503,7 @@ export interface IDailyTaskEntryResponse {
   task_title: string;
   entry_date: string;
   description?: string;
+  remarks?: string;
   hours_spent?: number;
   status: string;
   created_at: string;

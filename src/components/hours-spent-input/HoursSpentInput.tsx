@@ -33,5 +33,11 @@ export const HoursSpentInput: React.FC<HoursSpentInputProps> = ({
     onChange={onChange}
     onBlur={onBlur}
     error={error}
+    onKeyDown={e => {
+      // Prevent: e, E, +, - and any non-numeric except navigation and control keys
+      if (["e", "E", "+", "-", "."].includes(e.key)) {
+        e.preventDefault();
+      }
+    }}
   />
 ); 

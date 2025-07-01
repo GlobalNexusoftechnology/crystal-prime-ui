@@ -20,7 +20,7 @@ const dailyTaskValidationSchema = Yup.object().shape({
 
 interface IDailyTaskProps {
   projectId: string;
-  userId: string;
+  assignedTo: string;
   taskTitle: string;
   description: string;
 }
@@ -33,7 +33,7 @@ const statusOptions = [
   { label: 'Completed', value: 'Completed' },
 ];
 
-export function DailyTask({ projectId, userId, taskTitle, description }: IDailyTaskProps) {
+export function DailyTask({ projectId, assignedTo, taskTitle, description }: IDailyTaskProps) {
   const {
     data: dailyTasks,
     refetchDailyTasks,
@@ -59,7 +59,7 @@ export function DailyTask({ projectId, userId, taskTitle, description }: IDailyT
   const formik = useFormik<ICreateDailyTaskEntryPayload & { remarks: string }>({
     initialValues: {
       project_id: projectId,
-      user_id: userId,
+      assigned_to: assignedTo,
       task_title: taskTitle,
       entry_date: new Date().toISOString().slice(0, 10),
       description: description,
@@ -71,12 +71,13 @@ export function DailyTask({ projectId, userId, taskTitle, description }: IDailyT
     onSubmit: async (values) => {
       await createDailyTask({
         project_id: projectId,
-        user_id: userId,
+        assigned_to: assignedTo,
         task_title: taskTitle,
         entry_date: values.entry_date,
         description: description,
         hours_spent: values.hours_spent,
         status: values.status,
+        remarks: values.remarks
       });
     },
   });
@@ -225,13 +226,13 @@ export function DailyTask({ projectId, userId, taskTitle, description }: IDailyT
                       >
                         <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
                           <span>
-                            <span className="2xl:text-[1.1vw] font-normal">
-                              Project: {task.project?.name || '-'}
+                            <span className="text-[1.1rem] 2xl:text-[1.1vw] font-normal">
+                              {task.task_title || '-'}
                             </span>
                           </span>
                           <span>
                             <span className="2xl:text-[1.1vw] font-normal">
-                              User: {task.user?.first_name} {task.user?.last_name}
+                              User: {assignedTo}
                             </span>
                           </span>
                           <span>
@@ -249,10 +250,10 @@ export function DailyTask({ projectId, userId, taskTitle, description }: IDailyT
                           </span>
                         </div>
                         <div className="mb-2 2xl:mb-[0.5vw]">
-                          <strong>Title:</strong> {task.task_title}
+                           {task.description}
                         </div>
                         <div className="mb-2 2xl:mb-[0.5vw]">
-                          <strong>Description:</strong> {task.description || 'No description'}
+                          <strong>Remark:</strong> <p>{task.remarks || 'No description'}</p>
                         </div>
                       </div>
                     ))}
