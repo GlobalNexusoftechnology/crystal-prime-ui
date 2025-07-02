@@ -483,12 +483,17 @@ export function MilestoneTabs({
     onDeleteMilestoneTask(taskId);
   };
   const handleAddTask = (milestoneId: string) => {
+    // Check if milestone is valid before allowing task add
+    const milestone = milestones.find(m => m.id === milestoneId);
+    if (!milestone || !isMilestoneValid(milestone)) {
+      toast.error("Please complete and save the milestone before adding a task.");
+      return;
+    }
     // Check if there's an incomplete task in this milestone
     if (hasIncompleteTask(milestoneId)) {
       toast.error("Please complete the current task before adding a new one");
       return;
     }
-
     const newId = `temp_${Date.now()}`;
     const newTask = {
       id: newId,
