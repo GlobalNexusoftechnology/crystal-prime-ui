@@ -129,14 +129,23 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
               Project status
             </p>
             <p className="text-right 2xl:text-[1vw] 2xl:leading-[1.4vw]">
-              {project.data.milestones?.length || 0}/100
+              {(() => {
+                const milestones = project.data.milestones || [];
+                const completed = milestones.filter(m => m.status?.toLowerCase() === "completed").length;
+                return `${completed}/${milestones.length}`;
+              })()}
             </p>
           </div>
           <div className="w-full h-1.5 2xl:h-[0.375vw] bg-white rounded-md overflow-hidden my-1 2xl:my-[0.25vw]">
             <div
               className="h-full bg-blue-900"
               style={{
-                width: `${(project.data.milestones?.length || 0)}%`,
+                width: `${(() => {
+                  const milestones = project.data.milestones || [];
+                  if (milestones.length === 0) return 0;
+                  const completed = milestones.filter(m => m.status?.toLowerCase() === "completed").length;
+                  return (completed / milestones.length) * 100;
+                })()}%`,
               }}
             />
           </div>
