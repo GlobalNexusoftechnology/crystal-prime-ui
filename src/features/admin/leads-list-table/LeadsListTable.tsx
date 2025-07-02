@@ -10,7 +10,7 @@ import {
   leadsListColumn,
 } from "@/constants";
 import { ExportIcon } from "@/features";
-import { EditLeadModal, LeadDetailModal, AddLeadModal } from "./components";
+import { EditLeadModal, LeadDetailModal } from "./components";
 import {
   IDeleteLeadResponse,
   useAllLeadDownloadExcelQuery,
@@ -29,11 +29,14 @@ import { useDebounce } from "@/utils/hooks";
 import toast from "react-hot-toast";
 import { useQueryClient } from '@tanstack/react-query';
 
-export function LeadsListTable() {
+interface LeadsListTableProps {
+  setAddLeadModalOpen: (arg0: boolean) => void
+}
+
+export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const queryClient = useQueryClient();
   const [leadId, setLeadId] = useState("");
   const [isEditLeadModalOpen, setIsEditLeadModalOpen] = useState(false);
-  const [isAddLeadModalOpen, setAddLeadModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [selectedType, setSelectedType] = useState("All Type");
@@ -57,7 +60,7 @@ export function LeadsListTable() {
     followupTo: followupToDate || undefined,
   }), [searchQuery, selectedStatus, selectedType, dateRangeFilter, followupFromDate, followupToDate]);
 
-  const { data: allLeadList, isLoading, isError, error, leadsRefetch } = useAllLeadsListQuery(filters);
+  const { data: allLeadList, isLoading, isError, error } = useAllLeadsListQuery(filters);
   const { allStatusesData } = useAllStatusesQuery();
   const { allTypesData } = useAllTypesQuery();
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
@@ -425,9 +428,6 @@ export function LeadsListTable() {
           setIsEditLeadModalOpen={setIsEditLeadModalOpen}
           lead={leadDetailById}
         />
-      )}
-      {isAddLeadModalOpen && (
-        <AddLeadModal setAddLeadModalOpen={setAddLeadModalOpen} leadsRefetch={leadsRefetch} />
       )}
     </div>
   );

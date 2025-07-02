@@ -119,7 +119,7 @@ export function LeadManagement() {
             <AnalyticalCard key={index} data={card} />
           ))}
         </div>
-        <LeadsListTable />
+        <LeadsListTable setAddLeadModalOpen={setAddLeadModalOpen} />
       </div>
 
       <ModalOverlay
