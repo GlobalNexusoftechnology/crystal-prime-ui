@@ -656,12 +656,12 @@ export function MilestoneTabs({
                         errors={milestoneErrors}
                       />
                       {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
-                        <tr className="bg-gray-50 2xl:bg-gray-100">
+                        <tr className="bg-gray-50 2xl:bg-gray-100]">
                           <td colSpan={7} className="p-0">
                             <table>
                               <thead>
                                 <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
-                                  <th className=" px-2 2xl:px-[0.5vw] pl-8 2xl:pl-[2vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                                  <th className=" px-2 2xl:px-[0.5vw] pl-16 2xl:pl-[4vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
                                     <span>Task Name</span>
                                     <button
                                       className="text-purple-500 hover:text-purple-700 text-lg"
@@ -673,7 +673,7 @@ export function MilestoneTabs({
                                     </button>
                                   </th>
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Assigned To</th>
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">Status</th>
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
