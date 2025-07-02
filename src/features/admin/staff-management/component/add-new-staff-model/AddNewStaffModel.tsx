@@ -18,6 +18,7 @@ import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
 interface AddNewStaffModelProps {
   isOpen: boolean;
@@ -62,6 +63,7 @@ const validationSchema = Yup.object({
   role: Yup.string().required("Role is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
+    .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/, "Password must contain at least one letter and one number")
     .required("Password is required"),
 });
 
@@ -71,6 +73,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
   onNewStaffSuccessCallback,
 }) => {
   const { data: rolesList } = useAllRoleListQuery();
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const roleOptions =
     rolesList?.map((roleData) => ({
@@ -203,8 +206,14 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                 onChange={handleChange}
                 onBlur={handleBlur}
                 error={touched.password && errors.password}
+                type={showPassword ? "text" : "password"}
+                suffixIcon={
+                  <span style={{ userSelect: "none" }}>
+                    {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+                  </span>
+                }
+                onIconClick={() => setShowPassword((prev) => !prev)}
               />
-
               <div className="flex justify-between mt-6 2xl:mt-[1.5vw] space-x-4">
                 <Button
                   title="Cancel"
