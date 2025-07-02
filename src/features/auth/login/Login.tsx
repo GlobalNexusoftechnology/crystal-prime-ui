@@ -30,7 +30,7 @@ const togglePasswordVisibility = () => {
     });
 
     toast.success(response?.message || "Login successful 🎉");
-    router.push("/admin/lead-management");
+    router.push("/admin/dashboard");
   };
 
   const handleErrorCallback = (error: IApiError) => {

@@ -22,6 +22,7 @@ import {
   useAuthStore,
 } from "@/services";
 import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
+import { useUploadMultipleAttachmentsMutation } from "@/services/apis/clients/community-client/query-hooks/useUploadMultipleAttachmentsMutation";
 
 export interface IAddProjectFormValues {
   client_id?: string;
@@ -124,7 +125,7 @@ export function AddProject({
   const [step, setStep] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>(existingAttachments); // Initialize with existing attachments
-  const [removedAttachmentIds, setRemovedAttachmentIds] = useState<string[]>([]); // Track removed existing attachments
+  const [, setRemovedAttachmentIds] = useState<string[]>([]); // Track removed existing attachments
   const [milestoneOption, setMilestoneOption] = useState("milestone");
   const [milestones, setMilestones] = useState<Milestone[]>(existingMilestones);
   const [basicInfo, setBasicInfo] = useState<IAddProjectFormValues | null>(
@@ -133,6 +134,7 @@ export function AddProject({
   const [selectedProjectTemplate, setSelectedProjectTemplate] =
     useState<string>(propInitialFormValues?.template_id || "");
   const [createdProjectId, setCreatedProjectId] = useState<string | null>(null);
+  const [uploadedFileUrls, setUploadedFileUrls] = useState<string[]>([]); // Store uploaded file URLs
   const {
     allClientData,
     isLoading: clientLoading,
@@ -201,8 +203,18 @@ export function AddProject({
     onErrorCallback: () => { },
   });
 
-  const isPending = isCreatePending || isUpdatePending;
-  const error = createError || updateError;
+  const { onUploadMultipleAttachments, isPending: isUploading, error: uploadError } = useUploadMultipleAttachmentsMutation({
+    onSuccessCallback: (data) => {
+      setUploadedFileUrls(data.data || []);
+      setStep(4); // Move to preview step after upload
+    },
+    onErrorCallback: (err) => {
+      console.error("Upload failed", err);
+    },
+  });
+
+  const isPending = isCreatePending || isUpdatePending || isUploading;
+  const error = createError || updateError || uploadError;
 
   const assemblePayload = () => {
     if (!basicInfo) return null;
@@ -222,55 +234,36 @@ export function AddProject({
       })),
     }));
     
-    const attachments = uploadedFiles
-      .filter((file) => {
-        // Check if this is an existing attachment that was removed
-        const originalAttachment = (file as File & { originalAttachment?: {
-          file_path?: string;
-          file_type?: string;
-          file_name?: string;
-          uploaded_by?: { id?: string; first_name?: string; last_name?: string };
-          created_at?: string;
-          id?: string;
-        } }).originalAttachment;
-        
-        // If it's an existing attachment, check if it was removed
-        if (originalAttachment?.id) {
-          return !removedAttachmentIds.includes(originalAttachment.id);
-        }
-        
-        // If it's a new file, include it
-        return true;
-      })
-      .map((file) => {
-        // Check if this is an existing attachment (has originalAttachment metadata)
-        const originalAttachment = (file as File & { originalAttachment?: {
-          file_path?: string;
-          file_type?: string;
-          file_name?: string;
-          uploaded_by?: { id?: string; first_name?: string; last_name?: string };
-          created_at?: string;
-          id?: string;
-        } }).originalAttachment;
-        
-        if (originalAttachment && mode === "edit") {
-          // For existing attachments, preserve the original file_path
-          return {
-            file_path: originalAttachment.file_path || file.name,
-            file_type: originalAttachment.file_type || file.type,
-            file_name: originalAttachment.file_name || file.name,
-            uploaded_by: originalAttachment.uploaded_by?.id || userId,
-          };
-        } else {
-          // For new files, use the file object properties
-          return {
-            file_path: file.name,
-            file_type: file.type,
-            file_name: file.name,
-            uploaded_by: userId,
-          };
-        }
-      });
+    // Map attachments: use Cloudinary URL for new files, original info for existing
+    const attachments = uploadedFiles.map((file, idx) => {
+      // Check if this is an existing attachment (has originalAttachment metadata)
+      const originalAttachment = (file as File & { originalAttachment?: {
+        file_path?: string;
+        file_type?: string;
+        file_name?: string;
+        uploaded_by?: { id?: string; first_name?: string; last_name?: string };
+        created_at?: string;
+        id?: string;
+      } }).originalAttachment;
+      
+      if (originalAttachment && mode === "edit") {
+        // For existing attachments, preserve the original file_path
+        return {
+          file_path: originalAttachment.file_path || file.name,
+          file_type: originalAttachment.file_type || file.type,
+          file_name: originalAttachment.file_name || file.name,
+          uploaded_by: originalAttachment.uploaded_by?.id || userId,
+        };
+      } else {
+        // For new files, use the Cloudinary URL
+        return {
+          file_path: uploadedFileUrls[idx] || file.name, // fallback to file name if URL missing
+          file_type: file.type,
+          file_name: file.name,
+          uploaded_by: userId,
+        };
+      }
+    });
 
     // Determine template_id
     let finalTemplateId = undefined;
@@ -354,7 +347,7 @@ export function AddProject({
     overhead_cost: basicInfo?.overhead_cost !== undefined ? String(basicInfo.overhead_cost) : "",
     budget: basicInfo?.budget !== undefined ? String(basicInfo.budget) : "",
   };
-  const documents: IDocumentInfo[] = uploadedFiles.map((file) => {
+  const documents: IDocumentInfo[] = uploadedFiles.map((file, idx) => {
     // Check if this is an existing attachment (has originalAttachment metadata)
     const originalAttachment = (file as File & { originalAttachment?: {
       file_path?: string;
@@ -372,6 +365,7 @@ export function AddProject({
           ? `${originalAttachment.uploaded_by.first_name} ${originalAttachment.uploaded_by.last_name || ''}`
           : userId,
         created_at: originalAttachment.created_at || new Date().toLocaleString(),
+        file_path: originalAttachment.file_path || file.name,
       };
     } else {
       // For new files, use current user
@@ -379,6 +373,7 @@ export function AddProject({
         name: file.name,
         uploaded_by: userId,
         created_at: new Date().toLocaleString(),
+        file_path: uploadedFileUrls[idx] || file.name,
       };
     }
   });
@@ -445,9 +440,13 @@ export function AddProject({
         <Step3UploadDocument
           onBack={() => setStep(2)}
           onNext={(files: File[], removedIds: string[]) => {
+            // Prepare FormData for upload
+            const formData = new FormData();
+            files.forEach((file) => formData.append("image", file));
             setUploadedFiles(files);
             setRemovedAttachmentIds(removedIds);
-            setStep(4);
+            onUploadMultipleAttachments(formData);
+            // Do NOT setStep(4) here; move to step 4 in onSuccessCallback above
           }}
           initialFiles={uploadedFiles}
         />
@@ -477,6 +476,8 @@ export function AddProject({
           Error: {error.message || `Failed to ${mode} project.`}
         </div>
       )}
+      {isUploading && <div>Uploading attachments...</div>}
+      {uploadError && <div className="text-red-600">Error: {uploadError.message}</div>}
     </section>
   );
 }

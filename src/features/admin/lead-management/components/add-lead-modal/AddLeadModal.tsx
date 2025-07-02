@@ -1,6 +1,5 @@
 import {
   Button,
-  Checkbox,
   Dropdown,
   InputField,
   ModalOverlay,
@@ -289,16 +288,6 @@ export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModa
                     value={values.requirement}
                     onChange={handleChange}
                     error={touched.requirement && errors.requirement}
-                  />
-                </div>
-                <div className="py-2 2xl:py-[0.5vw]">
-                  <Checkbox
-                    label="Escalate To"
-                    name="escalate_to"
-                    checked={values.escalate_to}
-                    onChange={(e) =>
-                      setFieldValue("escalate_to", e.target.checked)
-                    }
                   />
                 </div>
                 <div className="flex justify-between mt-6 2xl:mt-[1.5vw] space-x-4">

@@ -45,7 +45,6 @@ export function AdminSidebar({
               src={ImageRegistry.websiteLogo}
               alt="website-logo"
               className="w-full h-full cursor-pointer"
-              onClick={() => router.push("/")}
             />
           </div>
         ) : (

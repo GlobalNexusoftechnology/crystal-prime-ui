@@ -1,6 +1,6 @@
-import { Button } from "@/components";
-import { FileAttachmentIcon } from "@/features/icons";
 import React, { useRef, useState, useEffect } from "react";
+import { Button, DeleteModal } from "@/components";
+import { FileAttachmentIcon } from "@/features";
 
 interface Step3UploadDocumentProps {
   onBack: () => void;
@@ -17,6 +17,8 @@ export function Step3UploadDocument({
   const [removedAttachmentIds, setRemovedAttachmentIds] = useState<string[]>([]);
   const [error, setError] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [fileToDeleteIdx, setFileToDeleteIdx] = useState<number | null>(null);
 
   useEffect(() => {
     if (initialFiles && initialFiles.length > 0) {
@@ -97,7 +99,8 @@ export function Step3UploadDocument({
                 className="text-red-500 hover:text-red-700 text-xs px-2 py-0.5 border border-red-200 rounded"
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleRemoveFile(idx);
+                  setFileToDeleteIdx(idx);
+                  setDeleteModalOpen(true);
                 }}
                 aria-label={`Remove ${f.name}`}
               >
@@ -149,6 +152,26 @@ export function Step3UploadDocument({
           width="w-full md:w-[10rem] 2xl:w-[10vw]"
         />
       </div>
+      {/* Render DeleteModal for file removal confirmation */}
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setFileToDeleteIdx(null);
+        }}
+        onConfirm={() => {
+          if (fileToDeleteIdx !== null) {
+            handleRemoveFile(fileToDeleteIdx);
+            setDeleteModalOpen(false);
+            setFileToDeleteIdx(null);
+          }
+        }}
+        itemName={fileToDeleteIdx !== null ? files[fileToDeleteIdx]?.name : ""}
+        title="Remove File"
+        message="Are you sure you want to remove this file"
+        confirmText="Remove"
+        cancelText="Cancel"
+      />
     </div>
   );
 }

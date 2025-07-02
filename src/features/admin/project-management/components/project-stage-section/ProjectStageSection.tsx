@@ -27,7 +27,7 @@ export const ProjectStageSection: React.FC<Props> = ({
           {projects.length}
         </span>
       </div>
-      <div className="space-y-4 2xl:space-y-[1vw] max-h-[70vh] overflow-y-auto">
+      <div className="space-y-4 2xl:space-y-[1vw]">
         {projects.map((project, index) => (
           <ProjectCard key={index} project={project} bgColor={bgColor} />
         ))}

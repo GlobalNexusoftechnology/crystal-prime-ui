@@ -155,6 +155,8 @@ export const updateProjectUrl = (id: string) => `/projects/${id}`;
 
 export const deleteProjectUrl = (id: string) => `/projects/${id}`;
 
+export const uploadMultipleAttachmentUrl = () => "/project-attachments/uploadMultipleAttachments";
+
 //  Client API's hook
 export const fetchAllClientUrl = () => "/clients"; //Get
 

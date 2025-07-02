@@ -5,7 +5,6 @@ import {
   LeadTypeDonutChart,
 } from "./components";
 import { AnalyticalCard } from "../analytical-card";
-import { LeadsListTable } from "../leads-list-table";
 
 /**
  * Renders the Dashboard section including a welcome message and
@@ -31,7 +30,6 @@ export function Dashboard() {
           <LeadAnalyticsBarChart />
           <LeadTypeDonutChart />
         </div>
-        <LeadsListTable />
       </div>
     </section>
   );
