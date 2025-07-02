@@ -592,7 +592,7 @@ export function Step2MilestoneSetup({
                         <table className="w-fit">
                           <thead>
                             <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
-                              <th className="px-8 2xl:px-[2vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[13rem] 2xl:min-w-[13vw]">
+                              <th className="px-8 2xl:px-[2vw] pl-16 2xl:pl-[4vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[13rem] 2xl:min-w-[13vw]">
                                 <span>Task Name</span>
                                 <button
                                   className="text-purple-500 hover:text-purple-700 text-lg"
