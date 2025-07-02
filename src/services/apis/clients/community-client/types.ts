@@ -1,4 +1,5 @@
 import { IUser } from "@/services/stores";
+import { IApiError } from "@/utils";
 
 export interface ILoginPayload {
   email: string;
@@ -327,6 +328,12 @@ export interface IUploadAttachmentResponse {
     fileType: string;
     fileName: string;
   };
+}
+
+export interface IUploadMultipleAttachmentResponse {
+  status: string;
+  message: string;
+  data: string[]
 }
 export interface IUploadLeadFromExcelResponse {
   status: string;
@@ -1524,4 +1531,9 @@ export interface IAllDailyTaskEntriesResponse {
   message: string;
   success: true;
   data: IDailyTaskEntryResponse[];
+}
+
+export interface IUploadMultipleAttachmentsOptions {
+  onSuccessCallback: (data: IUploadMultipleAttachmentResponse) => void;
+  onErrorCallback?: (err: IApiError) => void;
 }

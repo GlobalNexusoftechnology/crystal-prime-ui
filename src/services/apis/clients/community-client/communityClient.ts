@@ -240,6 +240,7 @@ import {
   deleteDailyTaskEntryUrl,
   getDailyTaskEntryDetailUrl,
   getAllDailyTaskEntriesUrl,
+  uploadMultipleAttachmentUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse } from "./types";
 
@@ -1730,6 +1731,18 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
     return response?.data.data;
+  };
+
+  public uploadMultipleAttachments = async (formData: FormData) => {
+    const response = await this.post<unknown>(
+      uploadMultipleAttachmentUrl(),
+      formData,
+      { headers: { 'Content-Type': 'multipart/form-data' }, requiresAuth: true }
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
   };
 }
 
