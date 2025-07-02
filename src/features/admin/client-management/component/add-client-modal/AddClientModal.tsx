@@ -44,16 +44,17 @@ export function AddClientModal({
       name: Yup.string().required("Customer name is required"),
       company_name: Yup.string().required("Company name is required"),
       address: Yup.string().required("Address is required"),
+      website: Yup.string().required("Website URL is required"),
       contact_person: Yup.string().required("Contact person is required"),
       contact_number: Yup.string().required("Phone number is required"),
       email: Yup.string().email("Invalid email").required("Email is required"),
       client_details: Yup.array().of(
         Yup.object().shape({
-          client_contact: Yup.string().required("Department is required"),
+          client_contact: Yup.string().required("Client contact number is required"),
           contact_person: Yup.string().required("Contact name is required"),
           designation: Yup.string().required("Designation is required"),
           email: Yup.string().email("Invalid email").required("Email is required"),
-          other_contact: Yup.string().required("Other contact is required"),
+          // other_contact: Yup.string().required("Other contact is required"),
         })
       ),
     }),
@@ -96,12 +97,12 @@ export function AddClientModal({
                       </button>
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <InputField label="Client Contact" name={`client_details.${index}.client_contact`} value={contact.client_contact} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].client_contact`) && getIn(formik.errors, `client_details[${index}].client_contact`)} placeholder="Enter department" />
+                      <InputField label="Client Contact No" name={`client_details.${index}.client_contact`} value={contact.client_contact} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].client_contact`) && getIn(formik.errors, `client_details[${index}].client_contact`)} placeholder="Enter contact number" />
                       <InputField label="Contact Person" name={`client_details.${index}.contact_person`} value={contact.contact_person} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].contact_person`) && getIn(formik.errors, `client_details[${index}].contact_person`)} placeholder="Enter contact name" />
                     </div>
                     <InputField label="Email" name={`client_details.${index}.email`} value={contact.email} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].email`) && getIn(formik.errors, `client_details[${index}].email`)} placeholder="Enter email address" />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <InputField label="Other Contact" name={`client_details.${index}.other_contact`} value={contact.other_contact} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].other_contact`) && getIn(formik.errors, `client_details[${index}].other_contact`)} placeholder="Enter other contact" />
+                      <InputField label="Other Contact No" name={`client_details.${index}.other_contact`} value={contact.other_contact} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].other_contact`) && getIn(formik.errors, `client_details[${index}].other_contact`)} placeholder="Enter other contact" />
                       <InputField label="Designation" name={`client_details.${index}.designation`} value={contact.designation} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].designation`) && getIn(formik.errors, `client_details[${index}].designation`)} placeholder="Enter designation" />
                     </div>
                   </div>
