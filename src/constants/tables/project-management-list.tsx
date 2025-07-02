@@ -43,4 +43,5 @@ export interface IDocumentInfo {
   name: string;
   uploaded_by: string;
   created_at: string;
+  file_path: string;
 }

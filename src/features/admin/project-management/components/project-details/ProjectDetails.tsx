@@ -73,6 +73,7 @@ export function ProjectDetails({
           <DocumentSection
             documentSectionData={(projectDetailData.attachments || []).map(
               (att) => ({
+                file_path: att.file_path,
                 name: att.file_name,
                 uploaded_by: `${att.uploaded_by?.id}`,
                 created_at: formatIndiaTime(`${att.created_at}`, "toReadable"),

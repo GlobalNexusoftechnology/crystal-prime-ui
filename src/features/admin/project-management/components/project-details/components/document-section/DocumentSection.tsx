@@ -1,6 +1,7 @@
 import React from "react";
 import { useAllUsersQuery } from "@/services";
 import { IDocumentInfo } from "@/constants";
+import Link from "next/link";
 
 export interface DocumentSectionProps {
   documentSectionData: IDocumentInfo[];
@@ -32,9 +33,14 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
               <p className="font-light text-sm 2xl:text-[0.875vw]">
                 Document Name
               </p>
-              <p className="text-[1rem] 2xl:text-[1.1vw]">
+              <Link
+                href={`${doc?.file_path}`}
+                target="_blank"
+                // rel="noopener noreferrer"
+                className="text-[1rem] 2xl:text-[1.1vw] underline hover:text-blue-600 transition-colors duration-200"
+              >
                 {doc?.name || "---"}
-              </p>
+              </Link>
             </div>
             <div className="flex flex-col">
               <p className="font-light text-sm 2xl:text-[0.875vw]">
