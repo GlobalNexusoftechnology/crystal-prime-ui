@@ -106,7 +106,13 @@ export function Step1BasicInfo({
           onChange={(val) => setFieldValue("start_date", val)}
           placeholder="Estimated Start Date"
           maxDate={`${values.end_date}`}
-          minDate={new Date().toISOString().slice(0, 10)}
+          minDate={
+            values.start_date
+              ? (typeof values.start_date === 'string'
+                  ? values.start_date
+                  : values.start_date.toISOString().slice(0, 10))
+              : new Date().toISOString().slice(0, 10)
+          }
           error={touched.start_date && typeof errors.start_date === "string" ? errors.start_date : undefined}
         />
         <DatePicker
@@ -114,7 +120,13 @@ export function Step1BasicInfo({
           value={values.end_date ? (typeof values.end_date === 'string' ? values.end_date : values.end_date.toISOString().slice(0, 10)) : ''}
           onChange={(val) => setFieldValue("end_date", val)}
           placeholder="Estimated End Date"
-          minDate={`${values.start_date}`}
+          minDate={
+            values.end_date
+              ? (typeof values.start_date === 'string'
+                  ? values.start_date
+                  : values.start_date?.toISOString().slice(0, 10))
+              : new Date().toISOString().slice(0, 10)
+          }
           error={touched.end_date && typeof errors.end_date === "string" ? errors.end_date : undefined}
         />
         <InputField
