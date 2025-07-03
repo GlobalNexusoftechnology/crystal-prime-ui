@@ -18,12 +18,10 @@ const dailyTaskValidationSchema = Yup.object().shape({
   remarks: Yup.string().required('Remark is required'),
 });
 
-interface IDailyTaskProps {
+type IDailyTaskProps = {
   projectId: string;
   assignedTo: string;
-  taskTitle: string;
-  description: string;
-}
+};
 
 const tabs = ["Daily Tasks"];
 
@@ -33,7 +31,7 @@ const statusOptions = [
   { label: 'Completed', value: 'Completed' },
 ];
 
-export function DailyTask({ projectId, assignedTo, taskTitle, description }: IDailyTaskProps) {
+export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
   const {
     data: dailyTasks,
     refetchDailyTasks,
@@ -60,9 +58,9 @@ export function DailyTask({ projectId, assignedTo, taskTitle, description }: IDa
     initialValues: {
       project_id: projectId,
       assigned_to: assignedTo,
-      task_title: taskTitle,
+      task_title: '',
       entry_date: new Date().toISOString().slice(0, 10),
-      description: description,
+      description: '',
       hours_spent: undefined,
       status: '',
       remarks: '',
@@ -72,9 +70,9 @@ export function DailyTask({ projectId, assignedTo, taskTitle, description }: IDa
       await createDailyTask({
         project_id: projectId,
         assigned_to: assignedTo,
-        task_title: taskTitle,
+        task_title: values.task_title,
         entry_date: values.entry_date,
-        description: description,
+        description: values.description,
         hours_spent: values.hours_spent,
         status: values.status,
         remarks: values.remarks
@@ -172,6 +170,24 @@ export function DailyTask({ projectId, assignedTo, taskTitle, description }: IDa
                   onSubmit={formik.handleSubmit}
                   className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
                 >
+                  <InputField
+                    label="Task Title"
+                    name="task_title"
+                    placeholder="Enter Task Title"
+                    value={formik.values.task_title}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.task_title ? formik.errors.task_title : undefined}
+                  />
+                  <InputField
+                    label="Description"
+                    name="description"
+                    placeholder="Enter Description"
+                    value={formik.values.description}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    error={formik.touched.description ? formik.errors.description : undefined}
+                  />
                   <div className="grid grid-cols-2 gap-4">
                     <HoursSpentInput
                       value={formik.values.hours_spent || ''}
