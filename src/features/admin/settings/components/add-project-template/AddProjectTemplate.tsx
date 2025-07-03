@@ -124,8 +124,34 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
         })),
       };
       if (id) {
+        const milestoneSum = payload.milestones.reduce((acc, m) => acc + Number(m.estimated_days || 0), 0);
+        if (payload.estimated_days !== milestoneSum) {
+          toast.error("Project estimated days must equal the sum of its milestones' estimated days.");
+          return;
+        }
+        for (let i = 0; i < payload.milestones.length; i++) {
+          const milestone = payload.milestones[i];
+          const taskSum = (milestone.tasks || []).reduce((acc, t) => acc + Number(t.estimated_days || 0), 0);
+          if (Number(milestone.estimated_days) !== taskSum) {
+            toast.error(`Milestone "${milestone.name}" estimated days must equal the sum of its tasks' estimated days.`);
+            return;
+          }
+        }
         onUpdateProjectTemplate({id, payload});
       } else {
+        const milestoneSum = payload.milestones.reduce((acc, m) => acc + Number(m.estimated_days || 0), 0);
+        if (payload.estimated_days !== milestoneSum) {
+          toast.error("Project estimated days must equal the sum of its milestones' estimated days.");
+          return;
+        }
+        for (let i = 0; i < payload.milestones.length; i++) {
+          const milestone = payload.milestones[i];
+          const taskSum = (milestone.tasks || []).reduce((acc, t) => acc + Number(t.estimated_days || 0), 0);
+          if (Number(milestone.estimated_days) !== taskSum) {
+            toast.error(`Milestone "${milestone.name}" estimated days must equal the sum of its tasks' estimated days.`);
+            return;
+          }
+        }
         onCreateProjectTemplate(payload);
       }
     },

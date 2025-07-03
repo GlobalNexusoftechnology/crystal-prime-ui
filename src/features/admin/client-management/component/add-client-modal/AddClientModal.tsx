@@ -68,10 +68,10 @@ export function AddClientModal({
   });
 
   return (
-    <ModalOverlay modalTitle="Back to Clients" isOpen={true} onClose={onClose}>
+    <ModalOverlay modalTitle="Back to Clients" isOpen={true} onClose={onClose} modalClassName="w-auto md:w-[40rem] 2xl:w-[45vw]">
       <FormikProvider value={formik}>
         <form onSubmit={formik.handleSubmit} className="max-h-[80vh] flex flex-col gap-4 p-4 border bg-white rounded-lg h-full overflow-y-auto">
-          <p className="text-[1.2rem] font-semibold">{isEditMode ? "Edit Client" : "Add New Client"}</p>
+          <p className="text-[1.2rem] 2xl:text-[1.2vw] font-semibold">{isEditMode ? "Edit Client" : "Add New Client"}</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <InputField label="Customer Name" name="name" value={formik.values.name} onChange={formik.handleChange} error={formik.touched.name && formik.errors.name} placeholder="Enter customer name" />
             <InputField label="Company Name" name="company_name" value={formik.values.company_name} onChange={formik.handleChange} error={formik.touched.company_name && formik.errors.company_name} placeholder="Enter company name" />
@@ -98,7 +98,7 @@ export function AddClientModal({
                     )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <InputField label="Client Contact No" name={`client_details.${index}.client_contact`} value={contact.client_contact} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].client_contact`) && getIn(formik.errors, `client_details[${index}].client_contact`)} placeholder="Enter contact number" />
-                      <InputField label="Contact Person" name={`client_details.${index}.contact_person`} value={contact.contact_person} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].contact_person`) && getIn(formik.errors, `client_details[${index}].contact_person`)} placeholder="Enter contact name" />
+                      <InputField label="Contact Person Name" name={`client_details.${index}.contact_person`} value={contact.contact_person} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].contact_person`) && getIn(formik.errors, `client_details[${index}].contact_person`)} placeholder="Enter contact name" />
                     </div>
                     <InputField label="Email" name={`client_details.${index}.email`} value={contact.email} onChange={formik.handleChange} error={getIn(formik.touched, `client_details[${index}].email`) && getIn(formik.errors, `client_details[${index}].email`)} placeholder="Enter email address" />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

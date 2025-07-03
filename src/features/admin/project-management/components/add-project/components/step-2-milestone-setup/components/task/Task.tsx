@@ -45,7 +45,7 @@ export function Task({
       editingTask.taskId === task.id &&
       editTask ? (
         <>
-          <td className="p-2 2xl:p-[0.5vw] pl-8 font-medium">
+          <td className="p-2 2xl:p-[0.5vw] pl-16 2xl:pl-[4vw] font-medium">
             <InputField
               value={editTask.title}
               onChange={(e) => onChange({ ...editTask, title: e.target.value })}
@@ -92,7 +92,7 @@ export function Task({
         </>
       ) : (
         <>
-          <td className="pl-8 py-2 text-sm 2xl:text-[0.9vw] font-medium">
+          <td className="pl-16 2xl:pl-[4vw] py-2 text-sm 2xl:text-[0.9vw] font-medium">
             {task.title}
           </td>
           <td className="py-2 text-sm 2xl:text-[0.9vw]">

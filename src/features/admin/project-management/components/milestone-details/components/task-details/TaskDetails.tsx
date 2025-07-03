@@ -75,8 +75,6 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
       <DailyTask
         projectId={taskData?.milestone?.project?.id}
         assignedTo={taskData?.assigned_to || ""}
-        taskTitle={taskData.title}
-        description={taskData.description || ""}
       />
     </section>
   );
