@@ -414,7 +414,8 @@ export function MilestoneTabs({
       end_date: new Date().toISOString().slice(0, 10),
       tasks: [],
     };
-    setMilestones((prev) => [...prev, newMilestone]);
+    // Add to the top
+    setMilestones((prev) => [newMilestone, ...prev]);
     setEditingId(newId);
     setEditMilestone(newMilestone);
     setMilestoneErrors({});

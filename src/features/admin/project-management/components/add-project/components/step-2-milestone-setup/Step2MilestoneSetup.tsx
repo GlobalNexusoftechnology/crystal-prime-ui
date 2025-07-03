@@ -333,7 +333,8 @@ export function Step2MilestoneSetup({
       end_date: new Date().toISOString().slice(0, 10),
       tasks: [],
     };
-    setMilestones((prev) => [...prev, newMilestone]);
+    // setMilestones((prev) => [...prev, newMilestone]);
+    setMilestones((prev) => [newMilestone, ...prev]);
     setEditingId(newMilestone.id);
     setEditMilestone(newMilestone);
     setMilestoneErrors({});
