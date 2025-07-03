@@ -100,9 +100,14 @@ function validate(values: IAddProjectFormValues) {
   // Let Yup handle most errors
   try {
     validationSchema.validateSync(values, { abortEarly: false });
-  } catch (yupError: any) {
-    if (yupError.inner) {
-      yupError.inner.forEach((err: any) => {
+  } catch (yupError) {
+    if (
+      typeof yupError === "object" &&
+      yupError !== null &&
+      "inner" in yupError &&
+      Array.isArray((yupError as { inner: unknown }).inner)
+    ) {
+      (yupError as { inner: Array<{ path?: string; message: string }> }).inner.forEach((err) => {
         if (err.path && !errors[err.path as keyof IAddProjectFormValues]) {
           errors[err.path as keyof IAddProjectFormValues] = err.message;
         }
