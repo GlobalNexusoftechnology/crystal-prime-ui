@@ -94,6 +94,41 @@ const validationSchema = Yup.object({
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
 
+// Custom validation function for Formik to show sum error under both fields
+function validate(values: IAddProjectFormValues) {
+  const errors: Partial<Record<keyof IAddProjectFormValues, string>> = {};
+  // Let Yup handle most errors
+  try {
+    validationSchema.validateSync(values, { abortEarly: false });
+  } catch (yupError: any) {
+    if (yupError.inner) {
+      yupError.inner.forEach((err: any) => {
+        if (err.path && !errors[err.path as keyof IAddProjectFormValues]) {
+          errors[err.path as keyof IAddProjectFormValues] = err.message;
+        }
+      });
+    }
+  }
+  // Custom: Estimated Cost vs Budget
+  if (
+    values.estimated_cost !== undefined &&
+    values.budget !== undefined &&
+    Number(values.estimated_cost) > Number(values.budget)
+  ) {
+    errors.estimated_cost = "Estimated Cost cannot be greater than Budget";
+  }
+  // Custom: Cost of Labour + Overhead Cost vs Estimated Cost
+  const sum = (Number(values.cost_of_labour) || 0) + (Number(values.overhead_cost) || 0);
+  if (
+    values.estimated_cost !== undefined &&
+    sum > Number(values.estimated_cost)
+  ) {
+    errors.cost_of_labour = "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
+    errors.overhead_cost = "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
+  }
+  return errors;
+}
+
 // Add local types for editing
 export interface Task {
   id: string;
@@ -399,7 +434,10 @@ export function AddProject({
         <Formik
           initialValues={basicInfo || propInitialFormValues || initialValues}
           validationSchema={validationSchema}
+          validate={validate}
           onSubmit={handleSubmit}
+          validateOnChange={true}
+          validateOnBlur={true}
         >
           {(formik) => (
             <Form>
