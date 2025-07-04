@@ -14,6 +14,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   rightIcon?: ReactNode;
   actionIcon?: ReactNode;
   width?: string;
+  hover?: boolean;
   tooltip?: string;
 }
 
@@ -27,6 +28,7 @@ export const Button: React.FC<ButtonProps> = ({
   actionIcon: ActionIcon,
   tooltip,
   width = "w-full",
+  hover,
   ...props
 }) => {
   const variantClasses = {
@@ -36,7 +38,7 @@ export const Button: React.FC<ButtonProps> = ({
     secondary: "bg-secondary text-white hover:bg-secondary",
     "secondary-outline":
       "border 2xl:border-[0.1vw] border-secondary text-secondary hover:text-white hover:bg-secondary",
-    "background-white": "border 2xl:border-[0.1vw] bg-white border-gray-300",
+    "background-white": `border 2xl:border-[0.1vw] bg-white border-gray-300 ${hover ? "hover:border-primary hover:text-primary" : ""}  duration-300`,
     "primary-outline-blue":
       "border 2xl:border-[0.1vw] border-primary text-primary hover:scale-95 duration-300",
   };

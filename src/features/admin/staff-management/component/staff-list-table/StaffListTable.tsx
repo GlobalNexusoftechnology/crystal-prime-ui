@@ -175,6 +175,7 @@ export function StaffListTable() {
               title="Add Staff"
               variant="background-white"
               width="w-full md:w-fit"
+              hover={true}
               onClick={() => setIsAddStaffModalOpen(true)}
             />
           ) : null}
