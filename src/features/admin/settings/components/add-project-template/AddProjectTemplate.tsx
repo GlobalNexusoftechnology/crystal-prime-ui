@@ -227,7 +227,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               className="w-full p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-borderGray rounded-md 2xl:rounded-[0.375vw]"
             />
             {formik.touched.description && formik.errors.description && (
-              <span className="text-red-500 text-sm 2xl:text-[0.875vw]">
+              <span className="text-red-500 text-[0.9rem] 2xl:text-[0.875vw]">
                 {formik.errors.description}
               </span>
             )}

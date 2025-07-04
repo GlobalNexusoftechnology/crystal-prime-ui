@@ -212,7 +212,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
                   inputProps={{ name: "phoneNumber" }}
                 />
                 {errors.phoneNumber && touched.phoneNumber && (
-                  <p className="text-red-500 text-sm 2xl:text-[0.9vw]">
+                  <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw]">
                     {errors.phoneNumber}
                   </p>
                 )}

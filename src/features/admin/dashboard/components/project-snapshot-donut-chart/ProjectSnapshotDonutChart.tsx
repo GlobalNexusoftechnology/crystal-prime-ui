@@ -53,7 +53,7 @@ export function ProjectSnapshotDonutChart() {
               className="w-3 2xl:w-[0.75vw] h-3 2xl:h-[0.75vw] rounded-full inline-block"
               style={{ backgroundColor: COLORS[index] }}
             ></span>
-            <span className="text-sm 2xl:text-[0.875vw] text-[#054B9E]">
+            <span className="text-[0.9rem] 2xl:text-[0.875vw] text-[#054B9E]">
               {entry.name}
             </span>
           </div>

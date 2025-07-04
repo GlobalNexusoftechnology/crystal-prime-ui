@@ -181,7 +181,7 @@ export function Milestone({
                 <HiChevronDown className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
               )}
             </button>
-            <span className="text-sm 2xl:text-[0.9vw]">{milestone.name}</span>
+            <span className="text-[0.9rem] 2xl:text-[0.9vw]">{milestone.name}</span>
             <div className="flex items-center gap-1">
               <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
               <p className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
@@ -189,10 +189,10 @@ export function Milestone({
               </p>
             </div>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw]">
+          <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
             <span className="text-gray-600">{milestone.description || "No description"}</span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] text-sm 2xl:text-[0.9vw]">
+          <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <p
                 className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
@@ -215,7 +215,7 @@ export function Milestone({
           <td className="p-2 2xl:p-[0.5vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
-              <span className="text-sm 2xl:text-[0.9vw]">
+              <span className="text-[0.9rem] 2xl:text-[0.9vw]">
                 {formatDateToMMDDYYYY(milestone.start_date)}
               </span>
             </span>

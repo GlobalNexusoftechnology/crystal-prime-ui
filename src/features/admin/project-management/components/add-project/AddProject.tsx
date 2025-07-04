@@ -477,6 +477,8 @@ export function AddProject({
           initialMilestones={milestones}
           projectTemplate={selectedProjectTemplate}
           setProjectTemplate={setSelectedProjectTemplate}
+          projectStartDate={basicInfo?.start_date ? (typeof basicInfo.start_date === 'string' ? basicInfo.start_date : basicInfo.start_date.toISOString().slice(0, 10)) : ''}
+          projectEndDate={basicInfo?.end_date ? (typeof basicInfo.end_date === 'string' ? basicInfo.end_date : basicInfo.end_date.toISOString().slice(0, 10)) : ''}
         />
       )}
       {step === 3 && (

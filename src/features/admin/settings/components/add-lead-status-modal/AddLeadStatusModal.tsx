@@ -90,7 +90,7 @@ export function AddLeadStatusModal({
             {({ isSubmitting, values }) => (
               <Form className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-2">
+                  <label className="text-[0.9rem] font-medium text-gray-700 block mb-2">
                     Lead Status
                   </label>
                   <Field
@@ -99,13 +99,13 @@ export function AddLeadStatusModal({
                     type="text"
                     placeholder="Enter New Lead Status"
                   />
-                  <div className="text-red-500 text-sm mt-1">
+                  <div className="text-red-500 text-[0.9rem] mt-1">
                     <ErrorMessage name="name" />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-2">
+                  <label className="text-[0.9rem] font-medium text-gray-700 block mb-2">
                     Status Color
                   </label>
                   <div className="flex items-center border border-gray-300 rounded-md 2xl:rounded-[0.375vw] relative px-4 ">
@@ -127,7 +127,7 @@ export function AddLeadStatusModal({
                       className="absolute w-full left-0 top-0 opacity-0"
                     />
                   </div>
-                  <div className="text-red-500 text-sm mt-1">
+                  <div className="text-red-500 text-[0.9rem] mt-1">
                     <ErrorMessage name="color" />
                   </div>
                 </div>

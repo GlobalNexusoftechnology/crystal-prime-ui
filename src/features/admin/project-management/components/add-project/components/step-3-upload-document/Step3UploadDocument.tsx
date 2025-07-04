@@ -130,7 +130,7 @@ export function Step3UploadDocument({
           <span className="font-semibold text-lg 2xl:text-[1.2vw] text-gray-700">
             Upload Document(s)
           </span>
-          <span className="text-sm text-red-400">
+          <span className="text-[0.9rem] text-red-400">
             Supported: XLS, XLSX – Max 2MB each
           </span>
 

@@ -108,10 +108,10 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
             <div className="text-lg 2xl:text-[1.1vw] font-semibold text-red-600 mb-2 2xl:mb-[0.5vw]">
               Task Not Found
             </div>
-            <div className="text-sm 2xl:text-[0.9vw] text-gray-600 mb-4 2xl:mb-[1vw]">
+            <div className="text-[0.9rem] 2xl:text-[0.9vw] text-gray-600 mb-4 2xl:mb-[1vw]">
               The task with ID <code className="bg-gray-100 px-2 py-1 rounded">{projectId}</code> could not be found.
             </div>
-            <div className="text-sm 2xl:text-[0.9vw] text-gray-500">
+            <div className="text-[0.9rem] 2xl:text-[0.9vw] text-gray-500">
               This might happen if the task was deleted or the URL contains an invalid task ID.
             </div>
           </div>
@@ -238,7 +238,7 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
                     {dailyTasks.map((task) => (
                       <div
                         key={task.id}
-                        className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-sm 2xl:text-[0.9vw] text-[#1D2939] w-full"
+                        className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
                       >
                         <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
                           <span>

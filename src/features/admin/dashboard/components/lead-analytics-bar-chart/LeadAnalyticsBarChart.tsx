@@ -55,11 +55,11 @@ export function LeadAnalyticsBarChart() {
       {/* Header */}
       <div className="flex justify-between items-center mb-2 2xl:mb-[0.5vw] px-8 2xl:px-[2vw]">
         <h2 className="text-[1rem] 2xl:text-[1vw] font-semibold">Lead Analytics</h2>
-        <div className="flex items-center space-x-2 text-sm 2xl:text-[0.875vw] text-gray-600">
+        <div className="flex items-center space-x-2 text-[0.9rem] 2xl:text-[0.875vw] text-gray-600">
           <div className="w-3 2xl:w-[0.75vw] h-3 2xl:h-[0.75vw] rounded-full bg-[#75B2FB]"></div>
           <span>Content</span>
         </div>
-        <span className="text-sm 2xl:text-[0.875vw] text-gray-500">This Week</span>
+        <span className="text-[0.9rem] 2xl:text-[0.875vw] text-gray-500">This Week</span>
       </div>
 
       {/* Bar Chart */}

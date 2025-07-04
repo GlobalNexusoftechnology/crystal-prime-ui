@@ -159,7 +159,7 @@ export function Task({
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw]">
             <span className="flex items-center gap-2">
               <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-              <span className="text-sm">{task.due_date}</span>
+              <span className="text-[0.9rem]">{task.due_date}</span>
             </span>
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-right relative">

@@ -55,7 +55,7 @@ export function Settings() {
             key={tab.key}
             className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw] font-medium ${activePage === tab.key
                 ? "border-b-4 border-[#65558F] text-[1rem] 2xl:text-[1vw]"
-                : "text-sm 2xl:text-[0.875vw]"
+                : "text-[0.9rem] 2xl:text-[0.875vw]"
               }`}
             onClick={() => setActivePage(tab.key)}
           >

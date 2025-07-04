@@ -235,7 +235,7 @@ export function EditLeadModal({
                         inputProps={{ name: "phone" }}
                       />
                       {errors.phone && touched.phone && (
-                        <p className="text-red-500 text-sm 2xl:text-[0.9vw]">
+                        <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw]">
                           {errors.phone}
                         </p>
                       )}
@@ -253,7 +253,7 @@ export function EditLeadModal({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                     <div className="w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
                       <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">Emails</label>
+                        <label className="block text-[0.9rem] font-medium text-gray-700">Emails</label>
                         {values.email.map((_, index) => (
                           <div key={index} className="flex gap-2">
                             <InputField
@@ -284,7 +284,7 @@ export function EditLeadModal({
                           onClick={() => {
                             setFieldValue("email", [...values.email, ""]);
                           }}
-                          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+                          className="flex items-center gap-1 text-[0.9rem] text-blue-600 hover:text-blue-800"
                         >
                           <Plus className="w-4 h-4" />
                           Add Another Email

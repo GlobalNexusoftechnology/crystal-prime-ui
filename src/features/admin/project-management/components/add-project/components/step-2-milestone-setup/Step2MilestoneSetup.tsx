@@ -68,6 +68,8 @@ interface Step2MilestoneSetupProps {
   initialMilestones?: Milestone[];
   projectTemplate: string;
   setProjectTemplate: (id: string) => void;
+  projectStartDate: string;
+  projectEndDate: string;
 }
 
 // Mock options
@@ -88,6 +90,8 @@ export function Step2MilestoneSetup({
   initialMilestones,
   projectTemplate,
   setProjectTemplate,
+  projectStartDate,
+  projectEndDate,
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
   const [milestones, setMilestones] = useState<Milestone[]>(initialMilestones || []);
@@ -143,9 +147,21 @@ export function Step2MilestoneSetup({
     }
     if (!milestone.start_date) {
       errors.start_date = "Start date is required";
+    } else if (projectStartDate && milestone.start_date < projectStartDate) {
+      errors.start_date = `Milestone start date cannot be before project start date (${projectStartDate})`;
     }
     if (!milestone.end_date) {
       errors.end_date = "End date is required";
+    } else if (projectEndDate && milestone.end_date > projectEndDate) {
+      errors.end_date = `Milestone end date cannot be after project end date (${projectEndDate})`;
+    }
+    if (
+      milestone.start_date &&
+      milestone.end_date &&
+      milestone.start_date > milestone.end_date
+    ) {
+      errors.start_date = "Milestone start date cannot be after end date";
+      errors.end_date = "Milestone end date cannot be before start date";
     }
     
     setMilestoneErrors(errors);
@@ -333,7 +349,6 @@ export function Step2MilestoneSetup({
       end_date: new Date().toISOString().slice(0, 10),
       tasks: [],
     };
-    // setMilestones((prev) => [...prev, newMilestone]);
     setMilestones((prev) => [newMilestone, ...prev]);
     setEditingId(newMilestone.id);
     setEditMilestone(newMilestone);
@@ -552,7 +567,8 @@ export function Step2MilestoneSetup({
         <div className="overflow-x-auto">
           <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
             <thead>
-              <tr className="text-gray-500 text-sm 2xl:text-[0.9vw] min-w-[10rem] 2xl:min-w-[10vw]">
+              <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
+                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                 <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
                   <span>Milestone Name</span>
                   <button
@@ -567,9 +583,8 @@ export function Step2MilestoneSetup({
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Estimated Start Date</th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[10vw]">Estimated Start Date</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Estimated End Date</th>
-                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
               </tr>
             </thead>
             <tbody>
@@ -591,13 +606,16 @@ export function Step2MilestoneSetup({
                     userOptions={userOptions}
                     statusOptions={statusOptions}
                     errors={milestoneErrors}
+                    projectStartDate={projectStartDate}
+                    projectEndDate={projectEndDate}
                   />
                   {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
                     <tr className="bg-gray-50 2xl:bg-gray-100">
                       <td colSpan={7} className="p-0">
                         <table className="w-fit">
                           <thead>
-                            <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
+                            <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
+                            <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                               <th className="px-8 2xl:px-[2vw] pl-16 2xl:pl-[4vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[13rem] 2xl:min-w-[13vw]">
                                 <span>Task Name</span>
                                 <button
@@ -613,7 +631,6 @@ export function Step2MilestoneSetup({
                               <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
                               <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
                               <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
-                              <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                             </tr>
                           </thead>
                           <tbody>

@@ -82,7 +82,7 @@ export function PersonalInfo() {
         <h1 className="text-lg 2xl:text-[1.125vw] text-[#414651] font-medium 2xl:mb-[0.5vw]">
           Personal Info
         </h1>
-        <span className="text-sm 2xl:text-[0.875vw]">
+        <span className="text-[0.9rem] 2xl:text-[0.875vw]">
           Update your photo and personal details.
         </span>
       </div>

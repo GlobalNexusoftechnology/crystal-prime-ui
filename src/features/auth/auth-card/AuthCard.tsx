@@ -56,7 +56,7 @@ export const AuthCard: React.FC<IAuthCardProps> = ({
             {children}
           </div>
         </div>
-        <div className="text-sm 2xl:text-[0.875vw] text-white">{copyright}</div>
+        <div className="text-[0.9rem] 2xl:text-[0.875vw] text-white">{copyright}</div>
       </div>
     </section>
   );

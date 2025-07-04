@@ -96,7 +96,7 @@ export const AddLeadTypesModal: React.FC<AddLeadTypesModalProps> = ({
 
             <div className="flex flex-col gap-4 md:gap-8 2xl:gap-[2vw] md:flex-row justify-between items-center w-full">
               <div className="w-full">
-                <label className="block mb-1 text-sm font-medium text-gray-700">
+                <label className="block mb-1 text-[0.9rem] font-medium text-gray-700">
                   Name
                 </label>
                 <Field
@@ -104,7 +104,7 @@ export const AddLeadTypesModal: React.FC<AddLeadTypesModalProps> = ({
                   as={InputField}
                   placeholder="Enter Lead Type Name"
                 />
-                <div className="text-red-500 text-sm mt-1">
+                <div className="text-red-500 text-[0.9rem] mt-1">
                   <ErrorMessage name="name" />
                 </div>
               </div>

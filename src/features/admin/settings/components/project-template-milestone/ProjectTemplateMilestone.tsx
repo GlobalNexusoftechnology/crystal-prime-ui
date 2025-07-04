@@ -37,7 +37,7 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
           <div className="mt-4">
             <div className="grid grid-cols-4 gap-4 2xl:gap-[1vw] items-center p-4 2xl:p-[1vw] border-b 2xl:border-b-[0.1vw]">
               <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
-                <span className="text-sm 2xl:text-[0.875vw] font-medium text-gray-500">
+                <span className="text-[0.9rem] 2xl:text-[0.875vw] font-medium text-gray-500">
                   Milestone Name
                 </span>
                 {!readOnly && (
@@ -69,10 +69,10 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                   </button>
                 )}
               </div>
-              <span className="text-sm 2xl:text-[0.875vw] font-medium text-gray-500">
+              <span className="text-[0.9rem] 2xl:text-[0.875vw] font-medium text-gray-500">
                 Estimated Days
               </span>
-              <span className="text-sm 2xl:text-[0.875vw] font-medium text-gray-500">
+              <span className="text-[0.9rem] 2xl:text-[0.875vw] font-medium text-gray-500">
                 Description
               </span>
             </div>

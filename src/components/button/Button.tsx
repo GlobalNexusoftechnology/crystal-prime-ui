@@ -61,7 +61,7 @@ export const Button: React.FC<ButtonProps> = ({
               </span>
             )}
             {title && (
-              <span className="text-sm 2xl:text-[1vw] text-nowrap">
+              <span className="text-[0.9rem] 2xl:text-[1vw] text-nowrap">
                 {title}
               </span>
             )}

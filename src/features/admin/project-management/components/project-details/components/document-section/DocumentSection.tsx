@@ -23,14 +23,14 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
       <h3 className="text-[1.2rem] 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">
         Documents
       </h3>
-      <div className="flex flex-col gap-8 2xl:gap-[2vw] text-sm 2xl:text-[0.875vw]">
+      <div className="flex flex-col gap-8 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
         {documentSectionData.map((doc, idx) => (
           <div
             key={idx}
             className="flex flex-wrap gap-12 2xl:gap-[3vw] items-center"
           >
             <div className="flex flex-col">
-              <p className="font-light text-sm 2xl:text-[0.875vw]">
+              <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
                 Document Name
               </p>
               <Link
@@ -43,7 +43,7 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
               </Link>
             </div>
             <div className="flex flex-col">
-              <p className="font-light text-sm 2xl:text-[0.875vw]">
+              <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
                 Uploaded By
               </p>
               <p
@@ -55,7 +55,7 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
               </p>
             </div>
             <div className="flex flex-col">
-              <p className="font-light text-sm 2xl:text-[0.875vw]">
+              <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
                 Uploaded At
               </p>
               <p

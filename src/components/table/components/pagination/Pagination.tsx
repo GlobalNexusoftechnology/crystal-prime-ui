@@ -32,7 +32,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       <button
         onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`flex items-center gap-1 px-3 py-1 text-sm rounded ${
+        className={`flex items-center gap-1 px-3 py-1 text-[0.9rem] rounded ${
           currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-gray-700 hover:text-primary"
         }`}
       >
@@ -49,7 +49,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
           <button
             key={page}
             onClick={() => onPageChange(Number(page))}
-            className={`w-8 h-8 rounded flex items-center justify-center text-sm ${
+            className={`w-8 h-8 rounded flex items-center justify-center text-[0.9rem] ${
               page === currentPage ? "bg-primary text-white" : "text-gray-700 hover:text-primary"
             }`}
           >
@@ -61,7 +61,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       <button
         onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`flex items-center gap-1 px-3 py-1 text-sm rounded ${
+        className={`flex items-center gap-1 px-3 py-1 text-[0.9rem] rounded ${
           currentPage === totalPages
             ? "text-gray-400 cursor-not-allowed"
             : "text-gray-700 hover:text-primary"

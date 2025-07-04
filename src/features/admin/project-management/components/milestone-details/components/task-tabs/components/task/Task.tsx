@@ -130,9 +130,9 @@ export function Task({
         </>
       ) : (
         <>
-          <td className="pl-8 py-2 text-sm font-medium">{task.name}</td>
-          <td className="py-2 text-sm">{task.description}</td>
-          <td className="py-2 text-sm">
+          <td className="pl-8 py-2 text-[0.9rem] font-medium">{task.name}</td>
+          <td className="py-2 text-[0.9rem]">{task.description}</td>
+          <td className="py-2 text-[0.9rem]">
             <div className="flex items-center gap-2">
               <p
                 className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full"
@@ -153,7 +153,7 @@ export function Task({
           <td className="py-2">
             <span className="flex items-center gap-2">
               <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-              <span className="text-sm">{task.due_date}</span>
+              <span className="text-[0.9rem]">{task.due_date}</span>
             </span>
           </td>
           <td className="py-2 text-right relative">
