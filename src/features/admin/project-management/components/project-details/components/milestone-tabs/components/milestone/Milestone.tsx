@@ -93,7 +93,15 @@ export function Milestone({
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
       {editingId === milestone.id && editMilestone ? (
         <>
-          <td className="p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw] pt-4 2xl:pt-[1vw]">
+        <td className="px-2 py-4 text-right flex gap-2">
+            <button onClick={onSave} className="text-green-600" title="Save">
+              <HiCheck className="w-6 h-6" />
+            </button>
+            <button onClick={onCancel} className="text-red-600" title="Cancel">
+              <HiXMark className="w-6 h-6" />
+            </button>
+          </td>
+          <td className="p-2 2xl:p-[0.5vw]">
             <div className="flex flex-col">
               <InputField
                 value={editMilestone.name}
@@ -157,18 +165,42 @@ export function Milestone({
               />
             </div>
           </td>
-          <td className="px-2 py-4 text-right flex gap-2">
-            <button onClick={onSave} className="text-green-600" title="Save">
-              <HiCheck className="w-6 h-6" />
-            </button>
-            <button onClick={onCancel} className="text-red-600" title="Cancel">
-              <HiXMark className="w-6 h-6" />
-            </button>
-          </td>
+          
         </>
       ) : (
         <>
-          <td className={`p-2 2xl:p-[0.5vw] font-medium flex items-center gap-2 2xl:gap-[0.5vw] ${editingId === milestone.id ? "": "pt-4 2xl:pt-[1vw]"}`}>
+         <td className="p-2 2xl:p-[0.5vw] text-right relative">
+            <button
+              className="text-gray-400 hover:text-blue-600"
+              title="Menu"
+              type="button"
+              onClick={() =>
+                setMenuOpen(menuOpen === milestone.id ? null : milestone.id)
+              }
+            >
+              <HiOutlineDotsVertical className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+            </button>
+            {menuOpen === milestone.id && (
+              <div className="absolute left-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px]">
+                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => handleRedirectView(milestone.id)}>View</button>
+                <button
+                  className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100"
+                  onClick={() => onEdit(milestone)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100 text-red-600"
+                  onClick={() => onDelete(milestone.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            )}
+          </td>
+          <td className={`p-2 2xl:p-[0.5vw]`}>
+            <div className="flex items-center gap-4 2xl:gap-[1vw]">
+
             <button
               onClick={() => onToggle(milestone.id)}
               className="focus:outline-none"
@@ -187,6 +219,7 @@ export function Milestone({
               <p className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
                 {milestone.tasks.length}
               </p>
+            </div>
             </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
@@ -226,35 +259,7 @@ export function Milestone({
               {formatDateToMMDDYYYY(milestone.end_date)}
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] text-right relative">
-            <button
-              className="text-gray-400 hover:text-blue-600"
-              title="Menu"
-              type="button"
-              onClick={() =>
-                setMenuOpen(menuOpen === milestone.id ? null : milestone.id)
-              }
-            >
-              <HiOutlineDotsVertical className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
-            </button>
-            {menuOpen === milestone.id && (
-              <div className="absolute right-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px]">
-                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => handleRedirectView(milestone.id)}>View</button>
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100"
-                  onClick={() => onEdit(milestone)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100 text-red-600"
-                  onClick={() => onDelete(milestone.id)}
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </td>
+        
         </>
       )}
       {children}

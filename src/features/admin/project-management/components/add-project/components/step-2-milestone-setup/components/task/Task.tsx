@@ -92,7 +92,7 @@ export function Task({
         </>
       ) : (
         <>
-          <td className="py-2 2xl:py-[0.5vw] text-right relative">
+          <td className="pl-2 2xl:pl-[0.5vw] py-2 2xl:py-[0.5vw] text-left relative">
             <button
               className="text-gray-400 hover:text-blue-600"
               title="Menu"
@@ -116,7 +116,7 @@ export function Task({
                   Edit
                 </button>
                 <button
-                  className="block w-full text-left px-4 py-2 2xl:py-[0.5vw] hover:bg-gray-100 text-red-600 text-[0.9rem] 2xl:text-[0.9vw]"
+                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100 text-red-600 text-[0.9rem] 2xl:text-[0.9vw]"
                   onClick={() => onDelete(milestoneId, task.id)}
                 >
                   Delete
@@ -127,8 +127,8 @@ export function Task({
           <td className="pl-16 2xl:pl-[4vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
             {task.title}
           </td>
-          <td className="py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">{task.description}</td>
-          <td className="py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
+          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">{task.description}</td>
+          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2">
               {task.assigned_to ? (
                 <p
@@ -147,12 +147,12 @@ export function Task({
               </p>
             </div>
           </td>
-          <td className="py-2 2xl:py-[0.5vw]">
+          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
             <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold">
               {task.status}
             </span>
           </td>
-          <td className="py-2 2xl:py-[0.5vw]">
+          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
             <span className="flex items-center gap-2">
               <HiOutlineCalendar className=" 2xl:w-[1.5vw] text-gray-400" />
               <span className="text-[0.9rem] 2xl:text-[0.9vw]">
