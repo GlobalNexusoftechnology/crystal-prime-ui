@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Dropdown, InputField, DatePicker } from "@/components";
 import { HiCheck, HiXMark, HiOutlineCalendar } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
@@ -50,6 +50,23 @@ export function Task({
   errors = {},
 }: TaskProps) {
   const router = useRouter();
+
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuOpen && menuOpen.taskId === task.id && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(null);
+      }
+    }
+    if (menuOpen && menuOpen.taskId === task.id) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen, task.id, setMenuOpen]);
+
   const handleRedirectView = (taskId: string) => {
     router.push(
       `/admin/project-management/${projectId}/${milestoneId}/${taskId}`
@@ -151,7 +168,7 @@ export function Task({
               <HiOutlineDotsVertical className="w-6 h-6" />
             </button>
             {menuOpen && menuOpen.taskId === task.id && (
-              <div className="absolute left-[80%] bottom-[10%] mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
+              <div ref={menuRef} className="absolute left-[80%] bottom-[10%] mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
                 <button
                   className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
                   onClick={() => handleRedirectView(task.id)}

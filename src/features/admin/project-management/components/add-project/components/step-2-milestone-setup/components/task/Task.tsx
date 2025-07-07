@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Dropdown, InputField, DatePicker } from "@/components";
 import { HiCheck, HiXMark, HiOutlineCalendar } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
@@ -50,6 +50,22 @@ export function Task({
   milestoneId,
   errors = {},
 }: TaskProps) {
+  const menuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuOpen && menuOpen.taskId === task.id && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setMenuOpen(null);
+      }
+    }
+    if (menuOpen && menuOpen.taskId === task.id) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuOpen, task.id, setMenuOpen]);
+
   return (
     <tr className="border-t border-gray-200">
       {editingTask &&
@@ -120,7 +136,7 @@ export function Task({
               <HiOutlineDotsVertical className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
             {menuOpen && menuOpen.taskId === task.id && (
-              <div className="absolute left-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded shadow z-10 min-w-[100px]">
+              <div ref={menuRef} className="absolute left-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded shadow z-10 min-w-[100px]">
                 <button
                   className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100 text-[0.9rem] 2xl:text-[0.9vw]"
                   onClick={() => onEdit(milestoneId, task)}
