@@ -43,7 +43,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
     onSuccessCallback: (response) => {
       toast.success(response.message);
       refetchAllProjectTemplates();
-      router.push("/admin/settings");
+      router.push("/admin/settings?tab=projectTemplate");
     },
     onErrorCallback: (err) => {
       toast.error(err.message);
@@ -56,7 +56,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
       if (id) {
         queryClient.invalidateQueries({ queryKey: ['project-template-detail-query-key', id] });
       }
-      router.push("/admin/settings");
+      router.push("/admin/settings?tab=projectTemplate");
     },
     onErrorCallback: (err) => {
       toast.error(err.message);
@@ -241,7 +241,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               variant="primary-outline"
               title="Cancel"
               width="w-fit"
-              onClick={() => router.back()}
+              onClick={() => router.push("/admin/settings?tab=projectTemplate")}
             />
             <Button type="submit" title={id ? "Save Changes" : "Create Template"} width="w-fit" />
           </div>
