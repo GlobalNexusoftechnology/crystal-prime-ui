@@ -218,6 +218,7 @@ export function Step1BasicInfo({
               onChange={val => setFieldValue('renewal_date', val)}
               placeholder="Select Renewal Date"
               error={touched.renewal_date && typeof errors.renewal_date === 'string' ? errors.renewal_date : undefined}
+              minDate={new Date().toISOString().slice(0, 10)}
             />
           </div>
         </div>

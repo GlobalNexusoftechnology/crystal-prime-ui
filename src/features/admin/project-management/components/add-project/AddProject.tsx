@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import {
   ProgressHeader,
@@ -20,10 +19,16 @@ import {
   useAllProjectTemplatesQuery,
   ProjectRenewalType,
   useAuthStore,
-  useUploadMultipleAttachmentsMutation
+  useUploadMultipleAttachmentsMutation,
 } from "@/services";
-import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
-import toast from 'react-hot-toast';
+import {
+  IClientInfo,
+  IDocumentInfo,
+  IEstimates,
+  IProjectInfo,
+} from "@/constants";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export interface IAddProjectFormValues {
   client_id?: string;
@@ -93,11 +98,15 @@ const validationSchema = Yup.object({
   cost_of_labour: Yup.number()
     .typeError("Cost Of Labour must be a number")
     .optional()
-    .transform((value, originalValue) => originalValue === '' ? undefined : value),
+    .transform((value, originalValue) =>
+      originalValue === "" ? undefined : value
+    ),
   overhead_cost: Yup.number()
     .typeError("Over Head Cost must be a number")
     .optional()
-    .transform((value, originalValue) => originalValue === '' ? undefined : value),
+    .transform((value, originalValue) =>
+      originalValue === "" ? undefined : value
+    ),
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
 
@@ -114,7 +123,9 @@ function validate(values: IAddProjectFormValues) {
       "inner" in yupError &&
       Array.isArray((yupError as { inner: unknown }).inner)
     ) {
-      (yupError as { inner: Array<{ path?: string; message: string }> }).inner.forEach((err) => {
+      (
+        yupError as { inner: Array<{ path?: string; message: string }> }
+      ).inner.forEach((err) => {
         if (err.path && !errors[err.path as keyof IAddProjectFormValues]) {
           errors[err.path as keyof IAddProjectFormValues] = err.message;
         }
@@ -132,14 +143,17 @@ function validate(values: IAddProjectFormValues) {
     errors.estimated_cost = "Estimated Cost cannot be greater than Budget";
   }
   // Custom: Cost of Labour + Overhead Cost vs Estimated Cost
-  const sum = (Number(values.cost_of_labour) || 0) + (Number(values.overhead_cost) || 0);
+  const sum =
+    (Number(values.cost_of_labour) || 0) + (Number(values.overhead_cost) || 0);
   if (
     values.estimated_cost !== undefined &&
     values.estimated_cost !== "" &&
     sum > Number(values.estimated_cost)
   ) {
-    errors.cost_of_labour = "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
-    errors.overhead_cost = "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
+    errors.cost_of_labour =
+      "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
+    errors.overhead_cost =
+      "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
   }
   // Custom: Renewal validation
   if (values.is_renewal) {
@@ -174,16 +188,18 @@ export interface Milestone {
   tasks: Task[];
 }
 
-export function AddProject({ 
-  mode = "create", 
-  projectId, 
+export function AddProject({
+  mode = "create",
+  projectId,
   initialFormValues: propInitialFormValues,
   existingMilestones = [],
-  existingAttachments = []
+  existingAttachments = [],
 }: AddProjectProps) {
+  const router = useRouter()
   const [step, setStep] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>(existingAttachments); // Initialize with existing attachments
+  const [uploadedFiles, setUploadedFiles] =
+    useState<File[]>(existingAttachments); // Initialize with existing attachments
   const [, setRemovedAttachmentIds] = useState<string[]>([]); // Track removed existing attachments
   const [milestoneOption, setMilestoneOption] = useState("milestone");
   const [milestones, setMilestones] = useState<Milestone[]>(existingMilestones);
@@ -228,20 +244,26 @@ export function AddProject({
       // Use type assertion to handle the actual response structure
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const responseData = response.data as any;
-      
+
       // Try different possible locations for the project ID
-      const responseProjectId = responseData?.project?.id || responseData?.id || responseData?.project_id;
+      const responseProjectId =
+        responseData?.project?.id ||
+        responseData?.id ||
+        responseData?.project_id;
       const projectIdToUse = responseProjectId || projectId;
-      
+
       if (projectIdToUse) {
         setCreatedProjectId(projectIdToUse);
         setIsModalOpen(true);
       } else {
         console.error("No project ID in response");
-        console.error("Full response structure:", JSON.stringify(response, null, 2));
+        console.error(
+          "Full response structure:",
+          JSON.stringify(response, null, 2)
+        );
       }
     },
-    onErrorCallback: () => { },
+    onErrorCallback: () => {},
   });
 
   const { onUpdateProject } = useUpdateProjectMutation({
@@ -249,31 +271,34 @@ export function AddProject({
       // Use type assertion to handle the actual response structure
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const responseData = response.data as any;
-      
+
       // Try different possible locations for the project ID
-      const responseProjectId = responseData?.project?.id || responseData?.id || responseData?.project_id;
+      const responseProjectId =
+        responseData?.project?.id ||
+        responseData?.id ||
+        responseData?.project_id;
       const projectIdToUse = responseProjectId || projectId;
-      
+
       if (projectIdToUse) {
         setCreatedProjectId(projectIdToUse);
         setIsModalOpen(true);
       }
     },
-    onErrorCallback: () => { },
+    onErrorCallback: () => {},
   });
 
-  const { onUploadMultipleAttachments, isPending } = useUploadMultipleAttachmentsMutation({
-    onSuccessCallback: (data) => {
-      setUploadedFileUrls(data.data || []);
-      toast.success('Attachment(s) uploaded successfully.');
-      setStep(4); // Move to preview step after upload
-    },
-    onErrorCallback: (err) => {
-      console.error("Upload failed", err);
-      toast.error('Failed to upload attachment(s). Please try again.');
-    }
-  });
-
+  const { onUploadMultipleAttachments, isPending } =
+    useUploadMultipleAttachmentsMutation({
+      onSuccessCallback: (data) => {
+        setUploadedFileUrls(data.data || []);
+        toast.success("Attachment(s) uploaded successfully.");
+        setStep(4); // Move to preview step after upload
+      },
+      onErrorCallback: (err) => {
+        console.error("Upload failed", err);
+        toast.error("Failed to upload attachment(s). Please try again.");
+      },
+    });
 
   const assemblePayload = () => {
     if (!basicInfo) return null;
@@ -292,19 +317,27 @@ export function AddProject({
         due_date: t.due_date,
       })),
     }));
-    
+
     // Map attachments: use Cloudinary URL for new files, original info for existing
     const attachments = uploadedFiles.map((file, idx) => {
       // Check if this is an existing attachment (has originalAttachment metadata)
-      const originalAttachment = (file as File & { originalAttachment?: {
-        file_path?: string;
-        file_type?: string;
-        file_name?: string;
-        uploaded_by?: { id?: string; first_name?: string; last_name?: string };
-        created_at?: string;
-        id?: string;
-      } }).originalAttachment;
-      
+      const originalAttachment = (
+        file as File & {
+          originalAttachment?: {
+            file_path?: string;
+            file_type?: string;
+            file_name?: string;
+            uploaded_by?: {
+              id?: string;
+              first_name?: string;
+              last_name?: string;
+            };
+            created_at?: string;
+            id?: string;
+          };
+        }
+      ).originalAttachment;
+
       if (originalAttachment && mode === "edit") {
         // For existing attachments, preserve the original file_path
         return {
@@ -339,14 +372,39 @@ export function AddProject({
       client_id: basicInfo.client_id,
       budget: basicInfo.budget !== "" ? Number(basicInfo.budget) : undefined,
       is_renewal: basicInfo.is_renewal,
-      renewal_date: basicInfo.is_renewal === true ? (basicInfo.renewal_date ? (basicInfo.renewal_date ? basicInfo.renewal_date : basicInfo.renewal_date) : "") : "",
-      renewal_type: basicInfo.is_renewal === true ? basicInfo.renewal_type : undefined,
+      renewal_date:
+        basicInfo.is_renewal === true
+          ? basicInfo.renewal_date
+            ? basicInfo.renewal_date
+              ? basicInfo.renewal_date
+              : basicInfo.renewal_date
+            : ""
+          : "",
+      renewal_type:
+        basicInfo.is_renewal === true ? basicInfo.renewal_type : undefined,
       template_id: finalTemplateId,
-      estimated_cost: basicInfo.estimated_cost !== "" ? Number(basicInfo.estimated_cost) : undefined,
-      cost_of_labour: basicInfo.cost_of_labour !== "" ? Number(basicInfo.cost_of_labour) : undefined,
-      overhead_cost: basicInfo.overhead_cost !== "" ? Number(basicInfo.overhead_cost) : undefined,
-      start_date: basicInfo.start_date ? (basicInfo.start_date ? basicInfo.start_date : basicInfo.start_date) : "",
-      end_date: basicInfo.end_date ? (basicInfo.end_date ? basicInfo.end_date : basicInfo.end_date) : "",
+      estimated_cost:
+        basicInfo.estimated_cost !== ""
+          ? Number(basicInfo.estimated_cost)
+          : undefined,
+      cost_of_labour:
+        basicInfo.cost_of_labour !== ""
+          ? Number(basicInfo.cost_of_labour)
+          : undefined,
+      overhead_cost:
+        basicInfo.overhead_cost !== ""
+          ? Number(basicInfo.overhead_cost)
+          : undefined,
+      start_date: basicInfo.start_date
+        ? basicInfo.start_date
+          ? basicInfo.start_date
+          : basicInfo.start_date
+        : "",
+      end_date: basicInfo.end_date
+        ? basicInfo.end_date
+          ? basicInfo.end_date
+          : basicInfo.end_date
+        : "",
       milestones: apiMilestones,
       attachments,
     };
@@ -369,7 +427,7 @@ export function AddProject({
 
   const handleFinalSubmit = () => {
     const payload = assemblePayload();
-    
+
     if (payload) {
       if (mode === "create") {
         onCreateProject(payload);
@@ -389,7 +447,9 @@ export function AddProject({
     created_at: new Date().toLocaleString(),
     updated_at: new Date().toLocaleString(),
   };
-  const selectedClient = allClientData?.find((client) => client.id === basicInfo?.client_id);
+  const selectedClient = allClientData?.find(
+    (client) => client.id === basicInfo?.client_id
+  );
 
   const clientInfo: IClientInfo = {
     client_name: selectedClient?.name || "",
@@ -401,29 +461,49 @@ export function AddProject({
   const estimates: IEstimates = {
     start_date: basicInfo?.start_date ? String(basicInfo.start_date) : "",
     end_date: basicInfo?.end_date ? String(basicInfo.end_date) : "",
-    estimated_cost: basicInfo?.estimated_cost !== undefined ? String(basicInfo.estimated_cost) : "",
-    labour_cost: basicInfo?.cost_of_labour !== undefined ? String(basicInfo.cost_of_labour) : "",
-    overhead_cost: basicInfo?.overhead_cost !== undefined ? String(basicInfo.overhead_cost) : "",
+    estimated_cost:
+      basicInfo?.estimated_cost !== undefined
+        ? String(basicInfo.estimated_cost)
+        : "",
+    labour_cost:
+      basicInfo?.cost_of_labour !== undefined
+        ? String(basicInfo.cost_of_labour)
+        : "",
+    overhead_cost:
+      basicInfo?.overhead_cost !== undefined
+        ? String(basicInfo.overhead_cost)
+        : "",
     budget: basicInfo?.budget !== undefined ? String(basicInfo.budget) : "",
   };
   const documents: IDocumentInfo[] = uploadedFiles.map((file, idx) => {
     // Check if this is an existing attachment (has originalAttachment metadata)
-    const originalAttachment = (file as File & { originalAttachment?: {
-      file_path?: string;
-      file_type?: string;
-      file_name?: string;
-      uploaded_by?: { id?: string; first_name?: string; last_name?: string };
-      created_at?: string;
-    } }).originalAttachment;
-    
+    const originalAttachment = (
+      file as File & {
+        originalAttachment?: {
+          file_path?: string;
+          file_type?: string;
+          file_name?: string;
+          uploaded_by?: {
+            id?: string;
+            first_name?: string;
+            last_name?: string;
+          };
+          created_at?: string;
+        };
+      }
+    ).originalAttachment;
+
     if (originalAttachment && mode === "edit") {
       // For existing attachments, use the original uploaded_by information
       return {
         name: file.name,
-        uploaded_by: originalAttachment.uploaded_by?.first_name 
-          ? `${originalAttachment.uploaded_by.first_name} ${originalAttachment.uploaded_by.last_name || ''}`
+        uploaded_by: originalAttachment.uploaded_by?.first_name
+          ? `${originalAttachment.uploaded_by.first_name} ${
+              originalAttachment.uploaded_by.last_name || ""
+            }`
           : userId,
-        created_at: originalAttachment.created_at || new Date().toLocaleString(),
+        created_at:
+          originalAttachment.created_at || new Date().toLocaleString(),
         file_path: originalAttachment.file_path || file.name,
       };
     } else {
@@ -437,28 +517,27 @@ export function AddProject({
     }
   });
 
-  useEffect(() => {
-  }, [isModalOpen, createdProjectId]);
+  useEffect(() => {}, [isModalOpen, createdProjectId]);
 
   const onRemoveAttachments = (removedIds: string[]) => {
     if (removedIds.length > 0) {
-      toast.success('Attachment(s) removed successfully.');
+      toast.success("Attachment(s) removed successfully.");
     }
   };
 
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
-      <Link
-        href={`/admin/project-management`}
-        className="flex gap-2 2xl:gap-[0.5vw] items-center 2xl:text-[1vw] font-medium"
+      <div
+        onClick={() => router.back()}
+        className="flex gap-2 2xl:gap-[0.5vw] items-center 2xl:text-[1vw] font-medium cursor-pointer"
       >
         <FaArrowLeftLong className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
         <span>Back</span>
-      </Link>
+      </div>
       <h1 className="text-2xl 2xl:text-[1.8vw] font-medium">
         {mode === "edit" ? "Edit Project" : "Create Project"}
       </h1>
-      <ProgressHeader  step={step} />
+      <ProgressHeader step={step} />
       {step === 1 && (
         <Formik
           initialValues={basicInfo || propInitialFormValues || initialValues}
@@ -475,7 +554,7 @@ export function AddProject({
                 clientOptions={clientOptions}
                 clientLoading={clientLoading}
                 clientError={clientError}
-                hideMilestoneTemplateOption={mode === 'edit'}
+                hideMilestoneTemplateOption={mode === "edit"}
               />
               <div className="flex mt-6 2xl:mt-[1.5vw]">
                 <Button
@@ -501,8 +580,20 @@ export function AddProject({
           initialMilestones={milestones}
           projectTemplate={selectedProjectTemplate}
           setProjectTemplate={setSelectedProjectTemplate}
-          projectStartDate={basicInfo?.start_date ? (typeof basicInfo.start_date === 'string' ? basicInfo.start_date : basicInfo.start_date) : ''}
-          projectEndDate={basicInfo?.end_date ? (typeof basicInfo.end_date === 'string' ? basicInfo.end_date : basicInfo.end_date) : ''}
+          projectStartDate={
+            basicInfo?.start_date
+              ? typeof basicInfo.start_date === "string"
+                ? basicInfo.start_date
+                : basicInfo.start_date
+              : ""
+          }
+          projectEndDate={
+            basicInfo?.end_date
+              ? typeof basicInfo.end_date === "string"
+                ? basicInfo.end_date
+                : basicInfo.end_date
+              : ""
+          }
           mode={mode}
         />
       )}
@@ -516,7 +607,9 @@ export function AddProject({
               onRemoveAttachments(removedIds);
             }
             // Only upload new files (no originalAttachment property)
-            const newFiles = files.filter(f => !(f as FileWithAttachment).originalAttachment);
+            const newFiles = files.filter(
+              (f) => !(f as FileWithAttachment).originalAttachment
+            );
             if (newFiles.length > 0) {
               const formData = new FormData();
               newFiles.forEach((file) => formData.append("image", file));
