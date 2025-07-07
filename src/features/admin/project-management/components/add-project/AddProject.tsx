@@ -253,7 +253,7 @@ export function AddProject({
     onErrorCallback: () => { },
   });
 
-  const { onUploadMultipleAttachments } = useUploadMultipleAttachmentsMutation({
+  const { onUploadMultipleAttachments, isPending } = useUploadMultipleAttachmentsMutation({
     onSuccessCallback: (data) => {
       setUploadedFileUrls(data.data || []);
       toast.success('Attachment(s) uploaded successfully.');
@@ -500,6 +500,7 @@ export function AddProject({
       {step === 3 && (
         <Step3UploadDocument
           onBack={() => setStep(2)}
+          isPending={isPending}
           onNext={(files: File[], removedIds: string[]) => {
             // Remove files if any were deleted
             if (removedIds.length > 0) {

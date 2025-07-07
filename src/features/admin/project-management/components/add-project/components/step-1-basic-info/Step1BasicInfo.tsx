@@ -46,6 +46,16 @@ export function Step1BasicInfo({
       value: type?.id.toString(),
     })) || [];
 
+  // Helper to ensure string for DatePicker
+  const toDateString = (val: string | Date | undefined) =>
+    val
+      ? typeof val === 'string'
+        ? val
+        : val instanceof Date && !isNaN(val.getTime())
+          ? val.toISOString().slice(0, 10)
+          : ''
+      : '';
+
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
@@ -102,31 +112,19 @@ export function Step1BasicInfo({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
         <DatePicker
           label="Estimated Start Date"
-          value={values.start_date ? (typeof values.start_date === 'string' ? values.start_date : values.start_date.toISOString().slice(0, 10)) : ''}
+          value={toDateString(values.start_date)}
           onChange={(val) => setFieldValue("start_date", val)}
           placeholder="Estimated Start Date"
-          maxDate={`${values.end_date}`}
-          minDate={
-            values.start_date
-              ? (typeof values.start_date === 'string'
-                  ? values.start_date
-                  : values.start_date.toISOString().slice(0, 10))
-              : new Date().toISOString().slice(0, 10)
-          }
+          maxDate={toDateString(values.end_date)}
+          minDate={toDateString(values.start_date) || new Date().toISOString().slice(0, 10)}
           error={touched.start_date && typeof errors.start_date === "string" ? errors.start_date : undefined}
         />
         <DatePicker
           label="Estimated End Date"
-          value={values.end_date ? (typeof values.end_date === 'string' ? values.end_date : values.end_date.toISOString().slice(0, 10)) : ''}
+          value={toDateString(values.end_date)}
           onChange={(val) => setFieldValue("end_date", val)}
           placeholder="Estimated End Date"
-          minDate={
-            values.end_date
-              ? (typeof values.start_date === 'string'
-                  ? values.start_date
-                  : values.start_date?.toISOString().slice(0, 10))
-              : new Date().toISOString().slice(0, 10)
-          }
+          minDate={toDateString(values.start_date) || new Date().toISOString().slice(0, 10)}
           error={touched.end_date && typeof errors.end_date === "string" ? errors.end_date : undefined}
         />
         <InputField
@@ -216,7 +214,7 @@ export function Step1BasicInfo({
           <div>
             <DatePicker
               label="Renewal Date"
-              value={values.renewal_date ? (typeof values.renewal_date === 'string' ? values.renewal_date : values.renewal_date.toISOString().slice(0, 10)) : ''}
+              value={toDateString(values.renewal_date)}
               onChange={val => setFieldValue('renewal_date', val)}
               placeholder="Select Renewal Date"
               error={touched.renewal_date && typeof errors.renewal_date === 'string' ? errors.renewal_date : undefined}
