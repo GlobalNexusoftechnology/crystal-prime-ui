@@ -434,7 +434,7 @@ export function AddProject({
       <h1 className="text-2xl 2xl:text-[1.8vw] font-medium">
         {mode === "edit" ? "Edit Project" : "Create Project"}
       </h1>
-      <ProgressHeader step={step} />
+      <ProgressHeader  step={step} />
       {step === 1 && (
         <Formik
           initialValues={basicInfo || propInitialFormValues || initialValues}
