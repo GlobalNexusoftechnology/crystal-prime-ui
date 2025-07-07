@@ -141,6 +141,15 @@ function validate(values: IAddProjectFormValues) {
     errors.cost_of_labour = "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
     errors.overhead_cost = "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
   }
+  // Custom: Renewal validation
+  if (values.is_renewal) {
+    if (!values.renewal_type || values.renewal_type === "NONE") {
+      errors.renewal_type = "Renewal Type is required";
+    }
+    if (!values.renewal_date) {
+      errors.renewal_date = "Renewal Date is required";
+    }
+  }
   return errors;
 }
 
