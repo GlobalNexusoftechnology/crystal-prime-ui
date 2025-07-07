@@ -30,15 +30,15 @@ export interface IAddProjectFormValues {
   name: string;
   description?: string;
   project_type?: string;
-  budget?: number;
-  estimated_cost?: number;
-  cost_of_labour?: number;
-  overhead_cost?: number;
-  start_date?: Date;
-  end_date?: Date;
+  budget?: number | string;
+  estimated_cost?: number | string;
+  cost_of_labour?: number | string;
+  overhead_cost?: number | string;
+  start_date?: string;
+  end_date?: string;
   template_id?: string | null;
   renewal_type?: ProjectRenewalType | null;
-  renewal_date?: Date;
+  renewal_date?: string;
   is_renewal?: boolean;
   milestoneOption: string; // extra field for frontend dropdown selection
 }
@@ -60,10 +60,10 @@ const initialValues: IAddProjectFormValues = {
   name: "",
   description: "",
   project_type: "",
-  budget: 0,
-  estimated_cost: 0,
-  cost_of_labour: 0,
-  overhead_cost: 0,
+  budget: "",
+  estimated_cost: "",
+  cost_of_labour: "",
+  overhead_cost: "",
   start_date: undefined,
   end_date: undefined,
   template_id: "",
@@ -92,10 +92,12 @@ const validationSchema = Yup.object({
     .required("Estimated Cost is required"),
   cost_of_labour: Yup.number()
     .typeError("Cost Of Labour must be a number")
-    .optional(),
+    .optional()
+    .transform((value, originalValue) => originalValue === '' ? undefined : value),
   overhead_cost: Yup.number()
     .typeError("Over Head Cost must be a number")
-    .optional(),
+    .optional()
+    .transform((value, originalValue) => originalValue === '' ? undefined : value),
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
 
@@ -122,7 +124,9 @@ function validate(values: IAddProjectFormValues) {
   // Custom: Estimated Cost vs Budget
   if (
     values.estimated_cost !== undefined &&
+    values.estimated_cost !== "" &&
     values.budget !== undefined &&
+    values.budget !== "" &&
     Number(values.estimated_cost) > Number(values.budget)
   ) {
     errors.estimated_cost = "Estimated Cost cannot be greater than Budget";
@@ -131,6 +135,7 @@ function validate(values: IAddProjectFormValues) {
   const sum = (Number(values.cost_of_labour) || 0) + (Number(values.overhead_cost) || 0);
   if (
     values.estimated_cost !== undefined &&
+    values.estimated_cost !== "" &&
     sum > Number(values.estimated_cost)
   ) {
     errors.cost_of_labour = "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
@@ -323,16 +328,16 @@ export function AddProject({
       description: basicInfo.description,
       project_type: basicInfo.project_type,
       client_id: basicInfo.client_id,
-      budget: Number(basicInfo.budget),
+      budget: basicInfo.budget !== "" ? Number(basicInfo.budget) : undefined,
       is_renewal: basicInfo.is_renewal,
-      renewal_date: basicInfo.is_renewal === true ? (basicInfo.renewal_date ? (basicInfo.renewal_date instanceof Date ? basicInfo.renewal_date.toISOString() : basicInfo.renewal_date) : undefined) : undefined,
+      renewal_date: basicInfo.is_renewal === true ? (basicInfo.renewal_date ? (basicInfo.renewal_date ? basicInfo.renewal_date : basicInfo.renewal_date) : "") : "",
       renewal_type: basicInfo.is_renewal === true ? basicInfo.renewal_type : undefined,
       template_id: finalTemplateId,
-      estimated_cost: Number(basicInfo.estimated_cost),
-      cost_of_labour: basicInfo.cost_of_labour !== undefined ? Number(basicInfo.cost_of_labour) : undefined,
-      overhead_cost: basicInfo.overhead_cost !== undefined ? Number(basicInfo.overhead_cost) : undefined,
-      start_date: basicInfo.start_date ? (basicInfo.start_date instanceof Date ? basicInfo.start_date.toISOString() : basicInfo.start_date) : undefined,
-      end_date: basicInfo.end_date ? (basicInfo.end_date instanceof Date ? basicInfo.end_date.toISOString() : basicInfo.end_date) : undefined,
+      estimated_cost: basicInfo.estimated_cost !== "" ? Number(basicInfo.estimated_cost) : undefined,
+      cost_of_labour: basicInfo.cost_of_labour !== "" ? Number(basicInfo.cost_of_labour) : undefined,
+      overhead_cost: basicInfo.overhead_cost !== "" ? Number(basicInfo.overhead_cost) : undefined,
+      start_date: basicInfo.start_date ? (basicInfo.start_date ? basicInfo.start_date : basicInfo.start_date) : "",
+      end_date: basicInfo.end_date ? (basicInfo.end_date ? basicInfo.end_date : basicInfo.end_date) : "",
       milestones: apiMilestones,
       attachments,
     };
@@ -487,8 +492,8 @@ export function AddProject({
           initialMilestones={milestones}
           projectTemplate={selectedProjectTemplate}
           setProjectTemplate={setSelectedProjectTemplate}
-          projectStartDate={basicInfo?.start_date ? (typeof basicInfo.start_date === 'string' ? basicInfo.start_date : basicInfo.start_date.toISOString().slice(0, 10)) : ''}
-          projectEndDate={basicInfo?.end_date ? (typeof basicInfo.end_date === 'string' ? basicInfo.end_date : basicInfo.end_date.toISOString().slice(0, 10)) : ''}
+          projectStartDate={basicInfo?.start_date ? (typeof basicInfo.start_date === 'string' ? basicInfo.start_date : basicInfo.start_date) : ''}
+          projectEndDate={basicInfo?.end_date ? (typeof basicInfo.end_date === 'string' ? basicInfo.end_date : basicInfo.end_date) : ''}
           mode={mode}
         />
       )}
@@ -536,7 +541,6 @@ export function AddProject({
           mode={mode}
         />
       )}
-      
     </section>
   );
 }
