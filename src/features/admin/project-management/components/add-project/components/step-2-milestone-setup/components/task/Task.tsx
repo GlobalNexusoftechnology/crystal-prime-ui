@@ -66,6 +66,11 @@ export function Task({
     };
   }, [menuOpen, task.id, setMenuOpen]);
 
+  const getUserName = (userId: string) => {
+    const user = userOptions.find((u) => u.value === userId);
+    return user ? user.label : userId;
+  };
+
   return (
     <tr className="border-t border-gray-200">
       {editingTask &&
@@ -171,7 +176,7 @@ export function Task({
                 <LuUserPlus className=" 2xl:w-[1.5vw] 2xl:w-[1.5vw] 2xl:h-[1.5vw] mb-2 2xl:mb-[0.5vw]" />
               )}
               <p className="px-3 py-1 text-[0.9rem]">
-                {task.assigned_to || "---"}
+                {getUserName(task.assigned_to) || "---"}
               </p>
             </div>
           </td>

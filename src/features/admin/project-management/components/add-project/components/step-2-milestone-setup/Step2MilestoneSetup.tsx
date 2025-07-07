@@ -133,7 +133,7 @@ export function Step2MilestoneSetup({
       ? [{ label: "Error loading users", value: "" }]
       : (allUsersData as IUsersDetails[]).map((user: IUsersDetails) => ({
           label: `${user.first_name} ${user.last_name}`,
-          value: `${user.first_name} ${user.last_name}`,
+          value: user.id,
         }));
 
   // Add counters for deterministic IDs

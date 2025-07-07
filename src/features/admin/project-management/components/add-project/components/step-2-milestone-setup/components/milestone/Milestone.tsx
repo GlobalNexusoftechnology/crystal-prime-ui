@@ -80,6 +80,11 @@ export function Milestone({
     };
   }, [menuOpen, milestone.id, setMenuOpen]);
 
+  const getUserName = (userId: string) => {
+    const user = userOptions.find((u) => u.value === userId);
+    return user ? user.label : userId;
+  };
+
   return (
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
       {editingId === milestone.id && editMilestone ? (
@@ -223,7 +228,7 @@ export function Milestone({
                 <LuUserPlus className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw] mb-2 2xl:mb-[0.5vw]" />
               )}
               <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
-                {milestone.assigned_to || "---"}
+                {getUserName(milestone.assigned_to) || "---"}
               </p>
             </div>
           </td>
