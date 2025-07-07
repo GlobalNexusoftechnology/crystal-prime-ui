@@ -2,6 +2,7 @@ import React from "react";
 import { useAllUsersQuery } from "@/services";
 import { IDocumentInfo } from "@/constants";
 import Link from "next/link";
+import { formatIndiaTime } from "@/utils";
 
 export interface DocumentSectionProps {
   documentSectionData: IDocumentInfo[];
@@ -63,7 +64,7 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
                   doc.created_at && "underline"
                 } text-[1rem] 2xl:text-[1.1vw]`}
               >
-                {doc?.created_at || "---"}
+                {formatIndiaTime(doc?.created_at, "toReadable") || "---"}
               </p>
             </div>
           </div>
