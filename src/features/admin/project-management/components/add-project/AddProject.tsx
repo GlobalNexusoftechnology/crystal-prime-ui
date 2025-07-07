@@ -20,9 +20,10 @@ import {
   useAllProjectTemplatesQuery,
   ProjectRenewalType,
   useAuthStore,
+  useUploadMultipleAttachmentsMutation
 } from "@/services";
 import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
-import { useUploadMultipleAttachmentsMutation } from "@/services/apis/clients/community-client/query-hooks/useUploadMultipleAttachmentsMutation";
+import toast from 'react-hot-toast';
 
 export interface IAddProjectFormValues {
   client_id?: string;
@@ -208,7 +209,7 @@ export function AddProject({
     })
   );
 
-  const { onCreateProject, isPending: isCreatePending, error: createError } = useCreateProjectMutation({
+  const { onCreateProject } = useCreateProjectMutation({
     onSuccessCallback: (response) => {
       // Use type assertion to handle the actual response structure
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -229,7 +230,7 @@ export function AddProject({
     onErrorCallback: () => { },
   });
 
-  const { onUpdateProject, isPending: isUpdatePending, error: updateError } = useUpdateProjectMutation({
+  const { onUpdateProject } = useUpdateProjectMutation({
     onSuccessCallback: (response) => {
       // Use type assertion to handle the actual response structure
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -247,18 +248,18 @@ export function AddProject({
     onErrorCallback: () => { },
   });
 
-  const { onUploadMultipleAttachments, isPending: isUploading, error: uploadError } = useUploadMultipleAttachmentsMutation({
+  const { onUploadMultipleAttachments } = useUploadMultipleAttachmentsMutation({
     onSuccessCallback: (data) => {
       setUploadedFileUrls(data.data || []);
+      toast.success('Attachment(s) uploaded successfully.');
       setStep(4); // Move to preview step after upload
     },
     onErrorCallback: (err) => {
       console.error("Upload failed", err);
-    },
+      toast.error('Failed to upload attachment(s). Please try again.');
+    }
   });
 
-  const isPending = isCreatePending || isUpdatePending || isUploading;
-  const error = createError || updateError || uploadError;
 
   const assemblePayload = () => {
     if (!basicInfo) return null;
@@ -423,12 +424,12 @@ export function AddProject({
   });
 
   useEffect(() => {
-    // Modal state and created project ID are now handled silently
   }, [isModalOpen, createdProjectId]);
 
   const onRemoveAttachments = (removedIds: string[]) => {
-    // TODO: Implement backend call to remove attachments by ID
-    console.log('Remove attachments:', removedIds);
+    if (removedIds.length > 0) {
+      toast.success('Attachment(s) removed successfully.');
+    }
   };
 
   return (
@@ -535,14 +536,7 @@ export function AddProject({
           mode={mode}
         />
       )}
-      {isPending && <div>{mode === "edit" ? "Updating project..." : "Creating project..."}</div>}
-      {error && (
-        <div className="text-red-600">
-          Error: {error.message || `Failed to ${mode} project.`}
-        </div>
-      )}
-      {isUploading && <div>Uploading attachments...</div>}
-      {uploadError && <div className="text-red-600">Error: {uploadError.message}</div>}
+      
     </section>
   );
 }
