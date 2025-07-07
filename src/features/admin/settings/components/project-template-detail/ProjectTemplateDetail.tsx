@@ -6,7 +6,7 @@ import { ProjectTemplateMilestone } from "../project-template-milestone";
 import { Breadcrumb } from "@/features/admin/breadcrumb";
 import { useRouter } from "next/navigation";
 import { ActionDropdown } from "@/components/action-dropdown/ActionDropdown";
-import { formatIndiaTime } from "@/utils";
+import { buildUniversalIdToNameMapping, formatIndiaTime } from "@/utils";
 import { useAllProjectTemplatesQuery, useDeleteProjectTemplateMutation } from "@/services";
 import toast from "react-hot-toast";
 import { useAllTypesQuery } from "@/services";
@@ -88,12 +88,14 @@ export function ProjectTemplateDetail({
       console.log("Milestones submitted:", values);
     }
   });
+  const idToName = buildUniversalIdToNameMapping(projectTemplateData);
+
 
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw] justify-between bg-white rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.1vw] border-borderGray p-4 2xl:p-[1vw]">
       <div className="flex items-start justify-between">
         <div>
-          <Breadcrumb/>
+        <Breadcrumb idToName={idToName} />
         </div>
         <ActionDropdown
         direction="bottom"
