@@ -50,6 +50,10 @@ interface AddProjectProps {
   existingAttachments?: File[];
 }
 
+interface FileWithAttachment extends File {
+  originalAttachment?: unknown;
+}
+
 const initialValues: IAddProjectFormValues = {
   client_id: "",
   name: "",
@@ -422,6 +426,11 @@ export function AddProject({
     // Modal state and created project ID are now handled silently
   }, [isModalOpen, createdProjectId]);
 
+  const onRemoveAttachments = (removedIds: string[]) => {
+    // TODO: Implement backend call to remove attachments by ID
+    console.log('Remove attachments:', removedIds);
+  };
+
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
       <Link
@@ -479,19 +488,30 @@ export function AddProject({
           setProjectTemplate={setSelectedProjectTemplate}
           projectStartDate={basicInfo?.start_date ? (typeof basicInfo.start_date === 'string' ? basicInfo.start_date : basicInfo.start_date.toISOString().slice(0, 10)) : ''}
           projectEndDate={basicInfo?.end_date ? (typeof basicInfo.end_date === 'string' ? basicInfo.end_date : basicInfo.end_date.toISOString().slice(0, 10)) : ''}
+          mode={mode}
         />
       )}
       {step === 3 && (
         <Step3UploadDocument
           onBack={() => setStep(2)}
           onNext={(files: File[], removedIds: string[]) => {
-            // Prepare FormData for upload
-            const formData = new FormData();
-            files.forEach((file) => formData.append("image", file));
-            setUploadedFiles(files);
-            setRemovedAttachmentIds(removedIds);
-            onUploadMultipleAttachments(formData);
-            // Do NOT setStep(4) here; move to step 4 in onSuccessCallback above
+            // Remove files if any were deleted
+            if (removedIds.length > 0) {
+              onRemoveAttachments(removedIds);
+            }
+            // Only upload new files (no originalAttachment property)
+            const newFiles = files.filter(f => !(f as FileWithAttachment).originalAttachment);
+            if (newFiles.length > 0) {
+              const formData = new FormData();
+              newFiles.forEach((file) => formData.append("image", file));
+              setUploadedFiles(files);
+              setRemovedAttachmentIds(removedIds);
+              onUploadMultipleAttachments(formData);
+              // Do NOT setStep(4) here; move to step 4 in onSuccessCallback above
+            } else if (removedIds.length === 0) {
+              // No files to upload or remove, just proceed to next step
+              setStep(4);
+            }
           }}
           initialFiles={uploadedFiles}
         />

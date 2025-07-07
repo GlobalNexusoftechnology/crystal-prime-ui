@@ -34,6 +34,17 @@ interface MilestoneProps {
   projectEndDate: string;
 }
 
+// Utility to sanitize date for DatePicker
+function sanitizeDateForPicker(date: string | undefined | null): string {
+  if (!date) return '';
+  // Accept only YYYY-MM-DD
+  const match = date.match(/^\d{4}-\d{2}-\d{2}$/);
+  if (match) return date;
+  // Try to extract from ISO string
+  if (date.length >= 10) return date.slice(0, 10);
+  return '';
+}
+
 export function Milestone({
   milestone,
   editingId,
@@ -101,10 +112,8 @@ export function Milestone({
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <DatePicker
-              value={editMilestone.start_date || ""}
-              onChange={(val) =>
-                onChange({ ...editMilestone, start_date: val })
-              }
+              value={sanitizeDateForPicker(editMilestone.start_date)}
+              onChange={(val) => onChange({ ...editMilestone, start_date: val })}
               error={errors?.start_date}
               minDate={projectStartDate}
               maxDate={projectEndDate}
@@ -112,7 +121,7 @@ export function Milestone({
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <DatePicker
-              value={editMilestone.end_date || ""}
+              value={sanitizeDateForPicker(editMilestone.end_date)}
               onChange={(val) => onChange({ ...editMilestone, end_date: val })}
               error={errors?.end_date}
               minDate={projectStartDate}
@@ -211,18 +220,16 @@ export function Milestone({
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-[0.9rem] 2xl:text-[0.9vw]">
-                {editingId === milestone.id
-                  ? formatDateToMMDDYYYY(milestone.start_date)
-                  : milestone.start_date || "---"}
+                {milestone.start_date ? formatDateToMMDDYYYY(milestone.start_date) : "---"}
               </span>
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
-              {editingId === milestone.id
-                ? formatDateToMMDDYYYY(milestone.end_date)
-                : milestone.end_date || "---"}
+              <span className="text-[0.9rem] 2xl:text-[0.9vw]">
+                {milestone.end_date ? formatDateToMMDDYYYY(milestone.end_date) : "---"}
+              </span>
             </span>
           </td>
         </>

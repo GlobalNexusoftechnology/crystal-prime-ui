@@ -3,6 +3,7 @@ import { Dropdown, InputField, DatePicker } from "@/components";
 import { HiCheck, HiXMark, HiOutlineCalendar } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { getInitials, getRandomColor } from "@/utils";
+import { formatDateToMMDDYYYY } from "@/utils/helpers/formatDateToMMDDYYYY";
 import type { Task } from "../../Step2MilestoneSetup";
 import { LuUserPlus } from "react-icons/lu";
 
@@ -21,6 +22,17 @@ interface TaskProps {
   statusOptions: { label: string; value: string }[];
   milestoneId: string;
   errors?: { [key: string]: string };
+}
+
+// Utility to sanitize date for DatePicker
+function sanitizeDateForPicker(date: string | undefined | null): string {
+  if (!date) return '';
+  // Accept only YYYY-MM-DD
+  const match = date.match(/^\d{4}-\d{2}-\d{2}$/);
+  if (match) return date;
+  // Try to extract from ISO string
+  if (date.length >= 10) return date.slice(0, 10);
+  return '';
 }
 
 export function Task({
@@ -84,7 +96,7 @@ export function Task({
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <DatePicker
-              value={editTask.due_date}
+              value={sanitizeDateForPicker(editTask.due_date)}
               onChange={(val) => onChange({ ...editTask, due_date: val })}
               error={errors.due_date}
             />
@@ -156,7 +168,7 @@ export function Task({
             <span className="flex items-center gap-2">
               <HiOutlineCalendar className=" 2xl:w-[1.5vw] text-gray-400" />
               <span className="text-[0.9rem] 2xl:text-[0.9vw]">
-                {task.due_date || "---"}
+                {task.due_date ? formatDateToMMDDYYYY(task.due_date) : "---"}
               </span>
             </span>
           </td>

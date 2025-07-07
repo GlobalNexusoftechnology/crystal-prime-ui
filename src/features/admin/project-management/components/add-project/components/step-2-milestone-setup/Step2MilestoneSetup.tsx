@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Dropdown, Button } from "@/components";
 import { AddSquareIcon } from "@/features";
 import { Milestone, Task } from "./components";
@@ -70,6 +70,7 @@ interface Step2MilestoneSetupProps {
   setProjectTemplate: (id: string) => void;
   projectStartDate: string;
   projectEndDate: string;
+  mode?: 'create' | 'edit';
 }
 
 // Mock options
@@ -78,6 +79,11 @@ const statusOptions = [
   { label: "In Progress", value: "In Progress" },
   { label: "Completed", value: "Completed" },
 ];
+
+// No-op: leave date fields empty by default
+function getEmptyDate() {
+  return '';
+}
 
 export function Step2MilestoneSetup({
   onBack,
@@ -92,6 +98,7 @@ export function Step2MilestoneSetup({
   setProjectTemplate,
   projectStartDate,
   projectEndDate,
+  mode = 'create',
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
   const [milestones, setMilestones] = useState<Milestone[]>(initialMilestones || []);
@@ -128,6 +135,10 @@ export function Step2MilestoneSetup({
           label: `${user.first_name} ${user.last_name}`,
           value: `${user.first_name} ${user.last_name}`,
         }));
+
+  // Add counters for deterministic IDs
+  const milestoneIdCounter = useRef(1);
+  const taskIdCounter = useRef(1);
 
   // Validation functions
   const validateMilestone = (milestone: Milestone) => {
@@ -288,6 +299,62 @@ export function Step2MilestoneSetup({
 
   // Add expandedMilestones state
   const [expandedMilestones, setExpandedMilestones] = useState<string[]>([]);
+  const [autoMilestoneCreated, setAutoMilestoneCreated] = useState(false);
+
+  // Default open logic for milestone and task, and auto-create if none exist
+  useEffect(() => {
+    if (mode !== 'create') return; // Only run auto-create/auto-edit in create mode
+    if (milestoneOption === 'milestone') {
+      if (milestones.length === 0 && !autoMilestoneCreated) {
+        const emptyDate = getEmptyDate();
+        const newTask = {
+          id: `task-${taskIdCounter.current++}`,
+          title: '',
+          description: '',
+          assigned_to: '--',
+          status: 'Open',
+          due_date: emptyDate,
+        };
+        const newMilestone = {
+          id: `milestone-${milestoneIdCounter.current++}`,
+          name: '',
+          description: '',
+          assigned_to: '--',
+          status: 'Open',
+          start_date: emptyDate,
+          end_date: emptyDate,
+          tasks: [newTask],
+        };
+        setMilestones([newMilestone]);
+        setExpandedMilestones([newMilestone.id]);
+        setEditingId(newMilestone.id);
+        setEditMilestone({ ...newMilestone });
+        setEditingTask({ milestoneId: newMilestone.id, taskId: newTask.id });
+        setEditTask({ ...newTask });
+        setAutoMilestoneCreated(true);
+      } else if (milestones.length > 0) {
+        setExpandedMilestones([milestones[0].id]);
+        setEditingId(milestones[0].id);
+        setEditMilestone({ ...milestones[0] });
+        if (milestones[0].tasks && milestones[0].tasks.length > 0) {
+          setEditingTask({ milestoneId: milestones[0].id, taskId: milestones[0].tasks[0].id });
+          setEditTask({ ...milestones[0].tasks[0] });
+        } else {
+          setEditingTask(null);
+          setEditTask(null);
+        }
+      }
+    }
+    // Only run when milestoneOption or milestones change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [milestoneOption, milestones.length, mode]);
+
+  // Reset autoMilestoneCreated when leaving milestoneOption
+  useEffect(() => {
+    if (milestoneOption !== 'milestone') {
+      setAutoMilestoneCreated(false);
+    }
+  }, [milestoneOption]);
 
   // Toggle expand/collapse for milestone
   const toggleMilestone = (id: string) => {
@@ -338,15 +405,15 @@ export function Step2MilestoneSetup({
       toast.error("Please complete the current milestone before adding a new one.");
       return;
     }
-    
-    const newMilestone: Milestone = {
-      id: Date.now().toString(),
+    const emptyDate = getEmptyDate();
+    const newMilestone = {
+      id: `milestone-${milestoneIdCounter.current++}`,
       name: "",
       description: "",
       assigned_to: "--",
       status: "Open",
-      start_date: new Date().toISOString().slice(0, 10),
-      end_date: new Date().toISOString().slice(0, 10),
+      start_date: emptyDate,
+      end_date: emptyDate,
       tasks: [],
     };
     setMilestones((prev) => [newMilestone, ...prev]);
@@ -442,13 +509,14 @@ export function Step2MilestoneSetup({
       toast.error("Please complete the current task before adding a new one.");
       return;
     }
-    const newTask: Task = {
-      id: Date.now().toString(),
+    const emptyDate = getEmptyDate();
+    const newTask = {
+      id: `task-${taskIdCounter.current++}`,
       title: "",
       description: "",
       assigned_to: "--",
       status: "Open",
-      due_date: new Date().toISOString().slice(0, 10),
+      due_date: emptyDate,
     };
     setMilestones((prev) =>
       prev.map((m) =>
