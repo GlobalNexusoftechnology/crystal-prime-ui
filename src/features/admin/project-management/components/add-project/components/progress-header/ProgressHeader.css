@@ -15,7 +15,7 @@
   display: flex;
   align-items: center;
   position: relative;
-  padding: 18px 0 18px 32px;
+  padding: 16px 0 16px 32px;
   background: #fff;
   color: #bdbdbd;
   font-size: 1.1rem;
@@ -46,8 +46,8 @@
 
 .progress li.active .circle {
   border: 1px solid #fff;
-  background: #fff;
-  color: #4e5eff;
+  background: #4e5eff;
+  color: #fff;
 }
 
 .progress li.before .circle {
@@ -59,14 +59,14 @@
 .progress li .label {
   z-index: 2;
   position: relative;
-  font-size: 1.1rem;
+  font-size: clamp(0.9rem, 1vw, 0.9vw);
 }
 
 .progress li.active .label {
   color: #fff;
 }
 
-.progress li:not(:last-child) .chevron {
+.progress li .chevron {
   position: absolute;
   right: -16px;
   top: 50%;
@@ -82,7 +82,7 @@
 .progress li .chevron {
   width: 32px;
   height: 100%;
-  background: #e5e7eb;
+  background: #fff;
   clip-path: polygon(0 -45%, 100% 50%, 51% 100%);
 }
 
