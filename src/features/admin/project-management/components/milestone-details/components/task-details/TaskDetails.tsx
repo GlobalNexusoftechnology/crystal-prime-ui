@@ -1,15 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { Breadcrumb } from "@/features";
 import { IProjectTaskResponse } from "@/services";
-import { formatIndiaTime } from "@/utils";
+import { formatIndiaTime, buildUniversalIdToNameMapping } from "@/utils";
 import { HeaderDetails } from "../../../header-details";
 import { DailyTask, TaskEstimate, TaskInfo } from "./components";
-import { useState } from "react";
 import {
   useUpdateTaskStatusMutation,
   useMilestoneTaskDetailQuery,
 } from "@/services";
+
 
 export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
   const [status, setStatus] = useState(taskData.status || "Open");
@@ -36,9 +37,11 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
   const validOptions = ["Open", "In Progress", "Completed"];
   const safeStatus = validOptions.includes(status) ? status : "Open";
 
+  const idToName = buildUniversalIdToNameMapping(taskData);
+
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
-      <Breadcrumb />
+      <Breadcrumb idToName={idToName} />
       <HeaderDetails
         title={taskData.title}
         status={safeStatus}

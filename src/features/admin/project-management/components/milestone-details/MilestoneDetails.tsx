@@ -3,9 +3,8 @@
 import { Breadcrumb } from "@/features";
 import { HeaderDetails } from "../header-details";
 import { IProjectMilestoneResponse } from '@/services';
-import { formatIndiaTime } from "@/utils";
+import { formatIndiaTime, buildUniversalIdToNameMapping } from "@/utils";
 import { MilestoneEstimate, MilestoneInfo, TaskTabs } from "./components";
-import { buildUniversalIdToNameMapping } from "@/utils/helpers/buildIdToNameMapping";
 
 export function MilestoneDetails({ milestoneData }: { milestoneData: IProjectMilestoneResponse }) {
   const idToName = buildUniversalIdToNameMapping(milestoneData);
