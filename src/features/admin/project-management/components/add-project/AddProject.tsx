@@ -115,7 +115,13 @@ function validate(values: IAddProjectFormValues) {
   const errors: Partial<Record<keyof IAddProjectFormValues, string>> = {};
   // Let Yup handle most errors
   try {
-    validationSchema.validateSync(values, { abortEarly: false });
+    // If is_renewal is false, temporarily remove renewal_date and renewal_type for validation
+    const valuesForValidation = { ...values };
+    if (!values.is_renewal) {
+      valuesForValidation.renewal_date = undefined;
+      valuesForValidation.renewal_type = undefined;
+    }
+    validationSchema.validateSync(valuesForValidation, { abortEarly: false });
   } catch (yupError) {
     if (
       typeof yupError === "object" &&
@@ -126,8 +132,13 @@ function validate(values: IAddProjectFormValues) {
       (
         yupError as { inner: Array<{ path?: string; message: string }> }
       ).inner.forEach((err) => {
+        // Only set renewal_date/renewal_type errors if is_renewal is true
         if (err.path && !errors[err.path as keyof IAddProjectFormValues]) {
-          errors[err.path as keyof IAddProjectFormValues] = err.message;
+          if ((err.path === 'renewal_date' || err.path === 'renewal_type') && !values.is_renewal) {
+            // skip
+          } else {
+            errors[err.path as keyof IAddProjectFormValues] = err.message;
+          }
         }
       });
     }
@@ -162,6 +173,13 @@ function validate(values: IAddProjectFormValues) {
     }
     if (!values.renewal_date) {
       errors.renewal_date = "Renewal Date is required";
+    }
+    // Also check for valid date if present
+    if (values.renewal_date) {
+      const renewalDate = new Date(values.renewal_date);
+      if (isNaN(renewalDate.getTime())) {
+        errors.renewal_date = "Invalid date";
+      }
     }
   }
   return errors;
@@ -372,16 +390,12 @@ export function AddProject({
       client_id: basicInfo.client_id,
       budget: basicInfo.budget !== "" ? Number(basicInfo.budget) : undefined,
       is_renewal: basicInfo.is_renewal,
-      renewal_date:
-        basicInfo.is_renewal === true
-          ? basicInfo.renewal_date
-            ? basicInfo.renewal_date
-              ? basicInfo.renewal_date
-              : basicInfo.renewal_date
-            : ""
-          : "",
-      renewal_type:
-        basicInfo.is_renewal === true ? basicInfo.renewal_type : undefined,
+      ...(basicInfo.is_renewal && basicInfo.renewal_date && !isNaN(new Date(basicInfo.renewal_date).getTime())
+        ? { renewal_date: basicInfo.renewal_date }
+        : {}),
+      ...(basicInfo.is_renewal && basicInfo.renewal_type
+        ? { renewal_type: basicInfo.renewal_type }
+        : {}),
       template_id: finalTemplateId,
       estimated_cost:
         basicInfo.estimated_cost !== ""

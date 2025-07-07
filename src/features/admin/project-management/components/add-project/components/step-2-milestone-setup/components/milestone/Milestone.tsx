@@ -89,7 +89,7 @@ export function Milestone({
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
       {editingId === milestone.id && editMilestone ? (
         <>
-          <td className="px-2 py-4 text-right flex gap-2">
+          <td className="px-2 py-4 text-left flex gap-2">
             <button onClick={onSave} className="text-green-600" title="Save">
               <HiCheck className="w-6 h-6" />
             </button>
@@ -152,7 +152,7 @@ export function Milestone({
         </>
       ) : (
         <>
-          <td className="p-2 2xl:p-[0.5vw] text-right relative">
+          <td className="p-2 2xl:p-[0.5vw] text-left relative">
             <button
               className="text-gray-400 hover:text-blue-600"
               title="Menu"
