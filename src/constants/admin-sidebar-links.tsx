@@ -6,6 +6,7 @@ import {
   ProjectManagementIcon,  
   SettingsIcon,
   StaffManagementIcon,
+  UserListRoundedIcon,
 } from "@/features";
 
 type TSidebarPermission = {
@@ -76,8 +77,8 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   {
    path: "/admin/client-management",
    name: "Client Management",
-   icon: <StaffManagementIcon />,
-   activeIcon: <StaffManagementIcon color="#034A9F" />,
+   icon: <UserListRoundedIcon />,
+   activeIcon: <UserListRoundedIcon color="#034A9F" />,
    permission: { module: "CLIENT_MANAGEMENT", actions: "VIEW" },
   },
   {
