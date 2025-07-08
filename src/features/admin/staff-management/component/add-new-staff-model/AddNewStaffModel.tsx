@@ -160,6 +160,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   onChange={(value) => setFieldValue("dob", value)}
                   placeholder="Select DOB"
                   error={touched.dob && errors.dob}
+                  maxDate={new Date().toISOString().split("T")[0]}
                 />
                 <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
                   <label className="2xl:text-[1vw] text-gray-700 block">
@@ -172,7 +173,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                     inputProps={{ name: "phoneNumber" }}
                   />
                   {errors.phoneNumber && touched.phoneNumber && (
-                    <p className="text-red-500 text-sm 2xl:text-[0.9vw]">
+                    <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw]">
                       {errors.phoneNumber}
                     </p>
                   )}

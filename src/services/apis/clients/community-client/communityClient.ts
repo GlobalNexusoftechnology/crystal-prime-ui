@@ -241,8 +241,9 @@ import {
   getDailyTaskEntryDetailUrl,
   getAllDailyTaskEntriesUrl,
   uploadMultipleAttachmentUrl,
+  dashboardSummaryUrl,
 } from "./urls";
-import { IClientDetails, IClientDetailsResponse } from "./types";
+import { IClientDetails, IClientDetailsResponse, DashboardSummary } from "./types";
 
 /**
  * CommunityClient class handles all API requests related to
@@ -1744,7 +1745,16 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   };
+
+  public fetchDashboardSummary = async (): Promise<DashboardSummary> => {
+    const response = await this.get<DashboardSummary>(dashboardSummaryUrl());
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
 }
+
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.

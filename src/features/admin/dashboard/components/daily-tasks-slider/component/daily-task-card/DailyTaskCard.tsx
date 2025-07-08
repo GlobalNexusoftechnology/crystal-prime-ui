@@ -23,12 +23,12 @@ export const DailyTaskCard = ({
       className={`relative flex flex-col items-center justify-between w-full rounded-xl shadow-xl p-4 2xl:p-[1vw] ${color} text-gray-900`}
     >
       <div className="flex flex-col items-start">
-        <p className="text-sm 2xl:text-[0.875vw] font-medium">Task Name</p>
+        <p className="text-[0.9rem] 2xl:text-[0.875vw] font-medium">Task Name</p>
         <h2 className="2xl:text-[1vw]">{task}</h2>
       </div>
-      <div className="flex flex-wrap justify-between items-center gap-4 2xl:gap-[1vw] mt-4 2xl:mt-[1vw] text-sm 2xl:text-[0.875vw]">
+      <div className="flex flex-wrap justify-between items-center gap-4 2xl:gap-[1vw] mt-4 2xl:mt-[1vw] text-[0.9rem] 2xl:text-[0.875vw]">
         <div>
-          <button className="bg-blue-500 text-white text-sm 2xl:text-[0.875vw] px-2 py-1 rounded-md">
+          <button className="bg-blue-500 text-white text-[0.9rem] 2xl:text-[0.875vw] px-2 py-1 rounded-md">
             {priority}
           </button>
         </div>

@@ -1,0 +1,93 @@
+.progress {
+  display: flex;
+  width: 100%;
+  border-radius: 10px;
+  border: 1.5px solid #e5e7eb;
+  overflow: hidden;
+  background: #fff;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.progress li {
+  flex: 1 1 0;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 16px 0 16px 32px;
+  background: #fff;
+  color: #bdbdbd;
+  font-size: 1.1rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.progress li.active {
+  background: #4e5eff;
+  color: #fff;
+}
+
+.progress li .circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: 50%;
+  border: 2.5px solid #e5e7eb;
+  background: #fff;
+  color: #bdbdbd;
+  font-size: 1.1rem;
+  margin-right: 16px;
+  transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.progress li.active .circle {
+  border: 1px solid #fff;
+  background: #4e5eff;
+  color: #fff;
+}
+
+.progress li.before .circle {
+  border: 1px solid #e5e7eb;
+  background: #4e5eff;
+  color: #fff;
+}
+
+.progress li .label {
+  z-index: 2;
+  position: relative;
+  font-size: clamp(0.9rem, 1vw, 0.9vw);
+}
+
+.progress li.active .label {
+  color: #fff;
+}
+
+.progress li .chevron {
+  position: absolute;
+  right: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  background: transparent;
+}
+
+.progress li .chevron {
+  width: 32px;
+  height: 100%;
+  background: #fff;
+  clip-path: polygon(0 -45%, 100% 50%, 51% 100%);
+}
+
+.progress li.active .chevron {
+  background: #4e5eff;
+  clip-path: polygon(0 -45%, 100% 50%, 51% 100%);
+
+}

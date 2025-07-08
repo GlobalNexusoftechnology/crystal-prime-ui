@@ -59,7 +59,7 @@ export function LeadTypeDonutChart() {
                 className="w-3 h-3 rounded-full inline-block"
                 style={{ backgroundColor: COLORS[index] }}
               ></span>
-              <span className="text-sm text-gray-700">{entry.name}</span>
+              <span className="text-[0.9rem] text-gray-700">{entry.name}</span>
             </div>
           ))}
         </div>

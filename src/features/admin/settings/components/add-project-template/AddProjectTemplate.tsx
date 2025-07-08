@@ -43,7 +43,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
     onSuccessCallback: (response) => {
       toast.success(response.message);
       refetchAllProjectTemplates();
-      router.push("/admin/settings");
+      router.push("/admin/settings?tab=projectTemplate");
     },
     onErrorCallback: (err) => {
       toast.error(err.message);
@@ -56,7 +56,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
       if (id) {
         queryClient.invalidateQueries({ queryKey: ['project-template-detail-query-key', id] });
       }
-      router.push("/admin/settings");
+      router.push("/admin/settings?tab=projectTemplate");
     },
     onErrorCallback: (err) => {
       toast.error(err.message);
@@ -227,7 +227,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               className="w-full p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-borderGray rounded-md 2xl:rounded-[0.375vw]"
             />
             {formik.touched.description && formik.errors.description && (
-              <span className="text-red-500 text-sm 2xl:text-[0.875vw]">
+              <span className="text-red-500 text-[0.9rem] 2xl:text-[0.875vw]">
                 {formik.errors.description}
               </span>
             )}
@@ -241,7 +241,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               variant="primary-outline"
               title="Cancel"
               width="w-fit"
-              onClick={() => router.back()}
+              onClick={() => router.push("/admin/settings?tab=projectTemplate")}
             />
             <Button type="submit" title={id ? "Save Changes" : "Create Template"} width="w-fit" />
           </div>

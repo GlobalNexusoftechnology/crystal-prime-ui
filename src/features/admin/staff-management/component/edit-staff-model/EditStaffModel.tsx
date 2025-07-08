@@ -199,6 +199,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
                 value={values.dob}
                 onChange={(value) => setFieldValue("dob", value)}
                 placeholder="Select DOB"
+                maxDate={new Date().toISOString().split("T")[0]}
                 error={touched.dob && errors.dob}
               />
               <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
@@ -212,7 +213,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
                   inputProps={{ name: "phoneNumber" }}
                 />
                 {errors.phoneNumber && touched.phoneNumber && (
-                  <p className="text-red-500 text-sm 2xl:text-[0.9vw]">
+                  <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw]">
                     {errors.phoneNumber}
                   </p>
                 )}

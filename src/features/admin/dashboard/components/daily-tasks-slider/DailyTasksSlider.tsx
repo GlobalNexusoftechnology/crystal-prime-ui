@@ -43,10 +43,10 @@ export function DailyTasksSlider() {
     <div className="flex flex-col gap-10 2xl:gap-[2.5vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw]">
       {/* Header */}
       <div className="flex justify-between items-center">
-        <span className="text-sm 2xl:text-[0.875vw] font-semibold">
+        <span className="text-[0.9rem] 2xl:text-[0.875vw] font-semibold">
           Daily Task
         </span>
-        <div className="flex gap-4 2xl:gap-[1vw] items-center text-sm 2xl:text-[0.875vw] font-medium">
+        <div className="flex gap-4 2xl:gap-[1vw] items-center text-[0.9rem] 2xl:text-[0.875vw] font-medium">
           <button
             className={`pb-1 2xl:pb-[0.25vw] ${
               activeTab === "today"

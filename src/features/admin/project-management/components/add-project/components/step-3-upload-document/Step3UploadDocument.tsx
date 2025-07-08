@@ -4,6 +4,7 @@ import { FileAttachmentIcon } from "@/features";
 
 interface Step3UploadDocumentProps {
   onBack: () => void;
+  isPending: boolean,
   onNext: (files: File[], removedIds: string[]) => void;
   initialFiles?: File[];
 }
@@ -12,6 +13,7 @@ export function Step3UploadDocument({
   onBack,
   onNext,
   initialFiles,
+  isPending,
 }: Step3UploadDocumentProps) {
   const [files, setFiles] = useState<File[]>(initialFiles || []);
   const [removedAttachmentIds, setRemovedAttachmentIds] = useState<string[]>([]);
@@ -130,7 +132,7 @@ export function Step3UploadDocument({
           <span className="font-semibold text-lg 2xl:text-[1.2vw] text-gray-700">
             Upload Document(s)
           </span>
-          <span className="text-sm text-red-400">
+          <span className="text-[0.9rem] text-red-400">
             Supported: XLS, XLSX – Max 2MB each
           </span>
 
@@ -147,8 +149,9 @@ export function Step3UploadDocument({
         />
         <Button
           title="Next"
+          
           onClick={() => onNext(files, removedAttachmentIds)}
-          disabled={files.length === 0}
+          disabled={files.length === 0 || isPending}
           width="w-full md:w-[10rem] 2xl:w-[10vw]"
         />
       </div>

@@ -286,7 +286,7 @@ export function TaskTabs({
         <div className="overflow-x-auto">
           <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
             <thead>
-              <tr className="text-gray-500 text-sm 2xl:text-[0.9vw] ">
+              <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw] ">
                 <th className="text-left px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
                   <span>Task Name</span>
                   <button

@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { FaArrowLeftLong } from "react-icons/fa6";
 import {
   ProgressHeader,
@@ -20,24 +19,31 @@ import {
   useAllProjectTemplatesQuery,
   ProjectRenewalType,
   useAuthStore,
+  useUploadMultipleAttachmentsMutation,
 } from "@/services";
-import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
-import { useUploadMultipleAttachmentsMutation } from "@/services/apis/clients/community-client/query-hooks/useUploadMultipleAttachmentsMutation";
+import {
+  IClientInfo,
+  IDocumentInfo,
+  IEstimates,
+  IProjectInfo,
+} from "@/constants";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export interface IAddProjectFormValues {
   client_id?: string;
   name: string;
   description?: string;
   project_type?: string;
-  budget?: number;
-  estimated_cost?: number;
-  cost_of_labour?: number;
-  overhead_cost?: number;
-  start_date?: Date;
-  end_date?: Date;
+  budget?: number | string;
+  estimated_cost?: number | string;
+  cost_of_labour?: number | string;
+  overhead_cost?: number | string;
+  start_date?: string;
+  end_date?: string;
   template_id?: string | null;
   renewal_type?: ProjectRenewalType | null;
-  renewal_date?: Date;
+  renewal_date?: string;
   is_renewal?: boolean;
   milestoneOption: string; // extra field for frontend dropdown selection
 }
@@ -50,15 +56,19 @@ interface AddProjectProps {
   existingAttachments?: File[];
 }
 
+interface FileWithAttachment extends File {
+  originalAttachment?: unknown;
+}
+
 const initialValues: IAddProjectFormValues = {
   client_id: "",
   name: "",
   description: "",
   project_type: "",
-  budget: 0,
-  estimated_cost: 0,
-  cost_of_labour: 0,
-  overhead_cost: 0,
+  budget: "",
+  estimated_cost: "",
+  cost_of_labour: "",
+  overhead_cost: "",
   start_date: undefined,
   end_date: undefined,
   template_id: "",
@@ -87,12 +97,93 @@ const validationSchema = Yup.object({
     .required("Estimated Cost is required"),
   cost_of_labour: Yup.number()
     .typeError("Cost Of Labour must be a number")
-    .optional(),
+    .optional()
+    .transform((value, originalValue) =>
+      originalValue === "" ? undefined : value
+    ),
   overhead_cost: Yup.number()
     .typeError("Over Head Cost must be a number")
-    .optional(),
+    .optional()
+    .transform((value, originalValue) =>
+      originalValue === "" ? undefined : value
+    ),
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
+
+// Custom validation function for Formik to show sum error under both fields
+function validate(values: IAddProjectFormValues) {
+  const errors: Partial<Record<keyof IAddProjectFormValues, string>> = {};
+  // Let Yup handle most errors
+  try {
+    // If is_renewal is false, temporarily remove renewal_date and renewal_type for validation
+    const valuesForValidation = { ...values };
+    if (!values.is_renewal) {
+      valuesForValidation.renewal_date = undefined;
+      valuesForValidation.renewal_type = undefined;
+    }
+    validationSchema.validateSync(valuesForValidation, { abortEarly: false });
+  } catch (yupError) {
+    if (
+      typeof yupError === "object" &&
+      yupError !== null &&
+      "inner" in yupError &&
+      Array.isArray((yupError as { inner: unknown }).inner)
+    ) {
+      (
+        yupError as { inner: Array<{ path?: string; message: string }> }
+      ).inner.forEach((err) => {
+        // Only set renewal_date/renewal_type errors if is_renewal is true
+        if (err.path && !errors[err.path as keyof IAddProjectFormValues]) {
+          if ((err.path === 'renewal_date' || err.path === 'renewal_type') && !values.is_renewal) {
+            // skip
+          } else {
+            errors[err.path as keyof IAddProjectFormValues] = err.message;
+          }
+        }
+      });
+    }
+  }
+  // Custom: Estimated Cost vs Budget
+  if (
+    values.estimated_cost !== undefined &&
+    values.estimated_cost !== "" &&
+    values.budget !== undefined &&
+    values.budget !== "" &&
+    Number(values.estimated_cost) > Number(values.budget)
+  ) {
+    errors.estimated_cost = "Estimated Cost cannot be greater than Budget";
+  }
+  // Custom: Cost of Labour + Overhead Cost vs Estimated Cost
+  const sum =
+    (Number(values.cost_of_labour) || 0) + (Number(values.overhead_cost) || 0);
+  if (
+    values.estimated_cost !== undefined &&
+    values.estimated_cost !== "" &&
+    sum > Number(values.estimated_cost)
+  ) {
+    errors.cost_of_labour =
+      "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
+    errors.overhead_cost =
+      "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
+  }
+  // Custom: Renewal validation
+  if (values.is_renewal) {
+    if (!values.renewal_type || values.renewal_type === "NONE") {
+      errors.renewal_type = "Renewal Type is required";
+    }
+    if (!values.renewal_date) {
+      errors.renewal_date = "Renewal Date is required";
+    }
+    // Also check for valid date if present
+    if (values.renewal_date) {
+      const renewalDate = new Date(values.renewal_date);
+      if (isNaN(renewalDate.getTime())) {
+        errors.renewal_date = "Invalid date";
+      }
+    }
+  }
+  return errors;
+}
 
 // Add local types for editing
 export interface Task {
@@ -115,16 +206,18 @@ export interface Milestone {
   tasks: Task[];
 }
 
-export function AddProject({ 
-  mode = "create", 
-  projectId, 
+export function AddProject({
+  mode = "create",
+  projectId,
   initialFormValues: propInitialFormValues,
   existingMilestones = [],
-  existingAttachments = []
+  existingAttachments = [],
 }: AddProjectProps) {
+  const router = useRouter()
   const [step, setStep] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>(existingAttachments); // Initialize with existing attachments
+  const [uploadedFiles, setUploadedFiles] =
+    useState<File[]>(existingAttachments); // Initialize with existing attachments
   const [, setRemovedAttachmentIds] = useState<string[]>([]); // Track removed existing attachments
   const [milestoneOption, setMilestoneOption] = useState("milestone");
   const [milestones, setMilestones] = useState<Milestone[]>(existingMilestones);
@@ -164,57 +257,66 @@ export function AddProject({
     })
   );
 
-  const { onCreateProject, isPending: isCreatePending, error: createError } = useCreateProjectMutation({
+  const { onCreateProject } = useCreateProjectMutation({
     onSuccessCallback: (response) => {
       // Use type assertion to handle the actual response structure
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const responseData = response.data as any;
-      
+
       // Try different possible locations for the project ID
-      const responseProjectId = responseData?.project?.id || responseData?.id || responseData?.project_id;
+      const responseProjectId =
+        responseData?.project?.id ||
+        responseData?.id ||
+        responseData?.project_id;
       const projectIdToUse = responseProjectId || projectId;
-      
+
       if (projectIdToUse) {
         setCreatedProjectId(projectIdToUse);
         setIsModalOpen(true);
       } else {
         console.error("No project ID in response");
-        console.error("Full response structure:", JSON.stringify(response, null, 2));
+        console.error(
+          "Full response structure:",
+          JSON.stringify(response, null, 2)
+        );
       }
     },
-    onErrorCallback: () => { },
+    onErrorCallback: () => {},
   });
 
-  const { onUpdateProject, isPending: isUpdatePending, error: updateError } = useUpdateProjectMutation({
+  const { onUpdateProject } = useUpdateProjectMutation({
     onSuccessCallback: (response) => {
       // Use type assertion to handle the actual response structure
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const responseData = response.data as any;
-      
+
       // Try different possible locations for the project ID
-      const responseProjectId = responseData?.project?.id || responseData?.id || responseData?.project_id;
+      const responseProjectId =
+        responseData?.project?.id ||
+        responseData?.id ||
+        responseData?.project_id;
       const projectIdToUse = responseProjectId || projectId;
-      
+
       if (projectIdToUse) {
         setCreatedProjectId(projectIdToUse);
         setIsModalOpen(true);
       }
     },
-    onErrorCallback: () => { },
+    onErrorCallback: () => {},
   });
 
-  const { onUploadMultipleAttachments, isPending: isUploading, error: uploadError } = useUploadMultipleAttachmentsMutation({
-    onSuccessCallback: (data) => {
-      setUploadedFileUrls(data.data || []);
-      setStep(4); // Move to preview step after upload
-    },
-    onErrorCallback: (err) => {
-      console.error("Upload failed", err);
-    },
-  });
-
-  const isPending = isCreatePending || isUpdatePending || isUploading;
-  const error = createError || updateError || uploadError;
+  const { onUploadMultipleAttachments, isPending } =
+    useUploadMultipleAttachmentsMutation({
+      onSuccessCallback: (data) => {
+        setUploadedFileUrls(data.data || []);
+        toast.success("Attachment(s) uploaded successfully.");
+        setStep(4); // Move to preview step after upload
+      },
+      onErrorCallback: (err) => {
+        console.error("Upload failed", err);
+        toast.error("Failed to upload attachment(s). Please try again.");
+      },
+    });
 
   const assemblePayload = () => {
     if (!basicInfo) return null;
@@ -233,19 +335,27 @@ export function AddProject({
         due_date: t.due_date,
       })),
     }));
-    
+
     // Map attachments: use Cloudinary URL for new files, original info for existing
     const attachments = uploadedFiles.map((file, idx) => {
       // Check if this is an existing attachment (has originalAttachment metadata)
-      const originalAttachment = (file as File & { originalAttachment?: {
-        file_path?: string;
-        file_type?: string;
-        file_name?: string;
-        uploaded_by?: { id?: string; first_name?: string; last_name?: string };
-        created_at?: string;
-        id?: string;
-      } }).originalAttachment;
-      
+      const originalAttachment = (
+        file as File & {
+          originalAttachment?: {
+            file_path?: string;
+            file_type?: string;
+            file_name?: string;
+            uploaded_by?: {
+              id?: string;
+              first_name?: string;
+              last_name?: string;
+            };
+            created_at?: string;
+            id?: string;
+          };
+        }
+      ).originalAttachment;
+
       if (originalAttachment && mode === "edit") {
         // For existing attachments, preserve the original file_path
         return {
@@ -278,16 +388,37 @@ export function AddProject({
       description: basicInfo.description,
       project_type: basicInfo.project_type,
       client_id: basicInfo.client_id,
-      budget: Number(basicInfo.budget),
+      budget: basicInfo.budget !== "" ? Number(basicInfo.budget) : undefined,
       is_renewal: basicInfo.is_renewal,
-      renewal_date: basicInfo.is_renewal === true ? (basicInfo.renewal_date ? (basicInfo.renewal_date instanceof Date ? basicInfo.renewal_date.toISOString() : basicInfo.renewal_date) : undefined) : undefined,
-      renewal_type: basicInfo.is_renewal === true ? basicInfo.renewal_type : undefined,
+      ...(basicInfo.is_renewal && basicInfo.renewal_date && !isNaN(new Date(basicInfo.renewal_date).getTime())
+        ? { renewal_date: basicInfo.renewal_date }
+        : {}),
+      ...(basicInfo.is_renewal && basicInfo.renewal_type
+        ? { renewal_type: basicInfo.renewal_type }
+        : {}),
       template_id: finalTemplateId,
-      estimated_cost: Number(basicInfo.estimated_cost),
-      cost_of_labour: basicInfo.cost_of_labour !== undefined ? Number(basicInfo.cost_of_labour) : undefined,
-      overhead_cost: basicInfo.overhead_cost !== undefined ? Number(basicInfo.overhead_cost) : undefined,
-      start_date: basicInfo.start_date ? (basicInfo.start_date instanceof Date ? basicInfo.start_date.toISOString() : basicInfo.start_date) : undefined,
-      end_date: basicInfo.end_date ? (basicInfo.end_date instanceof Date ? basicInfo.end_date.toISOString() : basicInfo.end_date) : undefined,
+      estimated_cost:
+        basicInfo.estimated_cost !== ""
+          ? Number(basicInfo.estimated_cost)
+          : undefined,
+      cost_of_labour:
+        basicInfo.cost_of_labour !== ""
+          ? Number(basicInfo.cost_of_labour)
+          : undefined,
+      overhead_cost:
+        basicInfo.overhead_cost !== ""
+          ? Number(basicInfo.overhead_cost)
+          : undefined,
+      start_date: basicInfo.start_date
+        ? basicInfo.start_date
+          ? basicInfo.start_date
+          : basicInfo.start_date
+        : "",
+      end_date: basicInfo.end_date
+        ? basicInfo.end_date
+          ? basicInfo.end_date
+          : basicInfo.end_date
+        : "",
       milestones: apiMilestones,
       attachments,
     };
@@ -310,7 +441,7 @@ export function AddProject({
 
   const handleFinalSubmit = () => {
     const payload = assemblePayload();
-    
+
     if (payload) {
       if (mode === "create") {
         onCreateProject(payload);
@@ -330,7 +461,9 @@ export function AddProject({
     created_at: new Date().toLocaleString(),
     updated_at: new Date().toLocaleString(),
   };
-  const selectedClient = allClientData?.find((client) => client.id === basicInfo?.client_id);
+  const selectedClient = allClientData?.find(
+    (client) => client.id === basicInfo?.client_id
+  );
 
   const clientInfo: IClientInfo = {
     client_name: selectedClient?.name || "",
@@ -342,29 +475,49 @@ export function AddProject({
   const estimates: IEstimates = {
     start_date: basicInfo?.start_date ? String(basicInfo.start_date) : "",
     end_date: basicInfo?.end_date ? String(basicInfo.end_date) : "",
-    estimated_cost: basicInfo?.estimated_cost !== undefined ? String(basicInfo.estimated_cost) : "",
-    labour_cost: basicInfo?.cost_of_labour !== undefined ? String(basicInfo.cost_of_labour) : "",
-    overhead_cost: basicInfo?.overhead_cost !== undefined ? String(basicInfo.overhead_cost) : "",
+    estimated_cost:
+      basicInfo?.estimated_cost !== undefined
+        ? String(basicInfo.estimated_cost)
+        : "",
+    labour_cost:
+      basicInfo?.cost_of_labour !== undefined
+        ? String(basicInfo.cost_of_labour)
+        : "",
+    overhead_cost:
+      basicInfo?.overhead_cost !== undefined
+        ? String(basicInfo.overhead_cost)
+        : "",
     budget: basicInfo?.budget !== undefined ? String(basicInfo.budget) : "",
   };
   const documents: IDocumentInfo[] = uploadedFiles.map((file, idx) => {
     // Check if this is an existing attachment (has originalAttachment metadata)
-    const originalAttachment = (file as File & { originalAttachment?: {
-      file_path?: string;
-      file_type?: string;
-      file_name?: string;
-      uploaded_by?: { id?: string; first_name?: string; last_name?: string };
-      created_at?: string;
-    } }).originalAttachment;
-    
+    const originalAttachment = (
+      file as File & {
+        originalAttachment?: {
+          file_path?: string;
+          file_type?: string;
+          file_name?: string;
+          uploaded_by?: {
+            id?: string;
+            first_name?: string;
+            last_name?: string;
+          };
+          created_at?: string;
+        };
+      }
+    ).originalAttachment;
+
     if (originalAttachment && mode === "edit") {
       // For existing attachments, use the original uploaded_by information
       return {
         name: file.name,
-        uploaded_by: originalAttachment.uploaded_by?.first_name 
-          ? `${originalAttachment.uploaded_by.first_name} ${originalAttachment.uploaded_by.last_name || ''}`
+        uploaded_by: originalAttachment.uploaded_by?.first_name
+          ? `${originalAttachment.uploaded_by.first_name} ${
+              originalAttachment.uploaded_by.last_name || ""
+            }`
           : userId,
-        created_at: originalAttachment.created_at || new Date().toLocaleString(),
+        created_at:
+          originalAttachment.created_at || new Date().toLocaleString(),
         file_path: originalAttachment.file_path || file.name,
       };
     } else {
@@ -378,19 +531,23 @@ export function AddProject({
     }
   });
 
-  useEffect(() => {
-    // Modal state and created project ID are now handled silently
-  }, [isModalOpen, createdProjectId]);
+  useEffect(() => {}, [isModalOpen, createdProjectId]);
+
+  const onRemoveAttachments = (removedIds: string[]) => {
+    if (removedIds.length > 0) {
+      toast.success("Attachment(s) removed successfully.");
+    }
+  };
 
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
-      <Link
-        href={`/admin/project-management`}
-        className="flex gap-2 2xl:gap-[0.5vw] items-center 2xl:text-[1vw] font-medium"
+      <div
+        onClick={() => router.back()}
+        className="flex gap-2 2xl:gap-[0.5vw] items-center 2xl:text-[1vw] font-medium cursor-pointer"
       >
         <FaArrowLeftLong className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
         <span>Back</span>
-      </Link>
+      </div>
       <h1 className="text-2xl 2xl:text-[1.8vw] font-medium">
         {mode === "edit" ? "Edit Project" : "Create Project"}
       </h1>
@@ -399,7 +556,10 @@ export function AddProject({
         <Formik
           initialValues={basicInfo || propInitialFormValues || initialValues}
           validationSchema={validationSchema}
+          validate={validate}
           onSubmit={handleSubmit}
+          validateOnChange={true}
+          validateOnBlur={true}
         >
           {(formik) => (
             <Form>
@@ -408,7 +568,7 @@ export function AddProject({
                 clientOptions={clientOptions}
                 clientLoading={clientLoading}
                 clientError={clientError}
-                hideMilestoneTemplateOption={mode === 'edit'}
+                hideMilestoneTemplateOption={mode === "edit"}
               />
               <div className="flex mt-6 2xl:mt-[1.5vw]">
                 <Button
@@ -434,19 +594,47 @@ export function AddProject({
           initialMilestones={milestones}
           projectTemplate={selectedProjectTemplate}
           setProjectTemplate={setSelectedProjectTemplate}
+          projectStartDate={
+            basicInfo?.start_date
+              ? typeof basicInfo.start_date === "string"
+                ? basicInfo.start_date
+                : basicInfo.start_date
+              : ""
+          }
+          projectEndDate={
+            basicInfo?.end_date
+              ? typeof basicInfo.end_date === "string"
+                ? basicInfo.end_date
+                : basicInfo.end_date
+              : ""
+          }
+          mode={mode}
         />
       )}
       {step === 3 && (
         <Step3UploadDocument
           onBack={() => setStep(2)}
+          isPending={isPending}
           onNext={(files: File[], removedIds: string[]) => {
-            // Prepare FormData for upload
-            const formData = new FormData();
-            files.forEach((file) => formData.append("image", file));
-            setUploadedFiles(files);
-            setRemovedAttachmentIds(removedIds);
-            onUploadMultipleAttachments(formData);
-            // Do NOT setStep(4) here; move to step 4 in onSuccessCallback above
+            // Remove files if any were deleted
+            if (removedIds.length > 0) {
+              onRemoveAttachments(removedIds);
+            }
+            // Only upload new files (no originalAttachment property)
+            const newFiles = files.filter(
+              (f) => !(f as FileWithAttachment).originalAttachment
+            );
+            if (newFiles.length > 0) {
+              const formData = new FormData();
+              newFiles.forEach((file) => formData.append("image", file));
+              setUploadedFiles(files);
+              setRemovedAttachmentIds(removedIds);
+              onUploadMultipleAttachments(formData);
+              // Do NOT setStep(4) here; move to step 4 in onSuccessCallback above
+            } else if (removedIds.length === 0) {
+              // No files to upload or remove, just proceed to next step
+              setStep(4);
+            }
           }}
           initialFiles={uploadedFiles}
         />
@@ -470,14 +658,6 @@ export function AddProject({
           mode={mode}
         />
       )}
-      {isPending && <div>{mode === "edit" ? "Updating project..." : "Creating project..."}</div>}
-      {error && (
-        <div className="text-red-600">
-          Error: {error.message || `Failed to ${mode} project.`}
-        </div>
-      )}
-      {isUploading && <div>Uploading attachments...</div>}
-      {uploadError && <div className="text-red-600">Error: {uploadError.message}</div>}
     </section>
   );
 }

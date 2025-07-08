@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Dropdown, Button } from "@/components";
 import { AddSquareIcon } from "@/features";
 import { Milestone, Task } from "./components";
@@ -68,6 +68,9 @@ interface Step2MilestoneSetupProps {
   initialMilestones?: Milestone[];
   projectTemplate: string;
   setProjectTemplate: (id: string) => void;
+  projectStartDate: string;
+  projectEndDate: string;
+  mode?: 'create' | 'edit';
 }
 
 // Mock options
@@ -76,6 +79,11 @@ const statusOptions = [
   { label: "In Progress", value: "In Progress" },
   { label: "Completed", value: "Completed" },
 ];
+
+// No-op: leave date fields empty by default
+function getEmptyDate() {
+  return '';
+}
 
 export function Step2MilestoneSetup({
   onBack,
@@ -88,6 +96,9 @@ export function Step2MilestoneSetup({
   initialMilestones,
   projectTemplate,
   setProjectTemplate,
+  projectStartDate,
+  projectEndDate,
+  mode = 'create',
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
   const [milestones, setMilestones] = useState<Milestone[]>(initialMilestones || []);
@@ -122,8 +133,12 @@ export function Step2MilestoneSetup({
       ? [{ label: "Error loading users", value: "" }]
       : (allUsersData as IUsersDetails[]).map((user: IUsersDetails) => ({
           label: `${user.first_name} ${user.last_name}`,
-          value: `${user.first_name} ${user.last_name}`,
+          value: user.id,
         }));
+
+  // Add counters for deterministic IDs
+  const milestoneIdCounter = useRef(1);
+  const taskIdCounter = useRef(1);
 
   // Validation functions
   const validateMilestone = (milestone: Milestone) => {
@@ -143,9 +158,21 @@ export function Step2MilestoneSetup({
     }
     if (!milestone.start_date) {
       errors.start_date = "Start date is required";
+    } else if (projectStartDate && milestone.start_date < projectStartDate) {
+      errors.start_date = `Milestone start date cannot be before project start date (${projectStartDate})`;
     }
     if (!milestone.end_date) {
       errors.end_date = "End date is required";
+    } else if (projectEndDate && milestone.end_date > projectEndDate) {
+      errors.end_date = `Milestone end date cannot be after project end date (${projectEndDate})`;
+    }
+    if (
+      milestone.start_date &&
+      milestone.end_date &&
+      milestone.start_date > milestone.end_date
+    ) {
+      errors.start_date = "Milestone start date cannot be after end date";
+      errors.end_date = "Milestone end date cannot be before start date";
     }
     
     setMilestoneErrors(errors);
@@ -272,6 +299,62 @@ export function Step2MilestoneSetup({
 
   // Add expandedMilestones state
   const [expandedMilestones, setExpandedMilestones] = useState<string[]>([]);
+  const [autoMilestoneCreated, setAutoMilestoneCreated] = useState(false);
+
+  // Default open logic for milestone and task, and auto-create if none exist
+  useEffect(() => {
+    if (mode !== 'create') return; // Only run auto-create/auto-edit in create mode
+    if (milestoneOption === 'milestone') {
+      if (milestones.length === 0 && !autoMilestoneCreated) {
+        const emptyDate = getEmptyDate();
+        const newTask = {
+          id: `task-${taskIdCounter.current++}`,
+          title: '',
+          description: '',
+          assigned_to: '--',
+          status: 'Open',
+          due_date: emptyDate,
+        };
+        const newMilestone = {
+          id: `milestone-${milestoneIdCounter.current++}`,
+          name: '',
+          description: '',
+          assigned_to: '--',
+          status: 'Open',
+          start_date: emptyDate,
+          end_date: emptyDate,
+          tasks: [newTask],
+        };
+        setMilestones([newMilestone]);
+        setExpandedMilestones([newMilestone.id]);
+        setEditingId(newMilestone.id);
+        setEditMilestone({ ...newMilestone });
+        setEditingTask({ milestoneId: newMilestone.id, taskId: newTask.id });
+        setEditTask({ ...newTask });
+        setAutoMilestoneCreated(true);
+      } else if (milestones.length > 0) {
+        setExpandedMilestones([milestones[0].id]);
+        setEditingId(milestones[0].id);
+        setEditMilestone({ ...milestones[0] });
+        if (milestones[0].tasks && milestones[0].tasks.length > 0) {
+          setEditingTask({ milestoneId: milestones[0].id, taskId: milestones[0].tasks[0].id });
+          setEditTask({ ...milestones[0].tasks[0] });
+        } else {
+          setEditingTask(null);
+          setEditTask(null);
+        }
+      }
+    }
+    // Only run when milestoneOption or milestones change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [milestoneOption, milestones.length, mode]);
+
+  // Reset autoMilestoneCreated when leaving milestoneOption
+  useEffect(() => {
+    if (milestoneOption !== 'milestone') {
+      setAutoMilestoneCreated(false);
+    }
+  }, [milestoneOption]);
 
   // Toggle expand/collapse for milestone
   const toggleMilestone = (id: string) => {
@@ -322,18 +405,17 @@ export function Step2MilestoneSetup({
       toast.error("Please complete the current milestone before adding a new one.");
       return;
     }
-    
-    const newMilestone: Milestone = {
-      id: Date.now().toString(),
+    const emptyDate = getEmptyDate();
+    const newMilestone = {
+      id: `milestone-${milestoneIdCounter.current++}`,
       name: "",
       description: "",
       assigned_to: "--",
       status: "Open",
-      start_date: new Date().toISOString().slice(0, 10),
-      end_date: new Date().toISOString().slice(0, 10),
+      start_date: emptyDate,
+      end_date: emptyDate,
       tasks: [],
     };
-    // setMilestones((prev) => [...prev, newMilestone]);
     setMilestones((prev) => [newMilestone, ...prev]);
     setEditingId(newMilestone.id);
     setEditMilestone(newMilestone);
@@ -427,13 +509,14 @@ export function Step2MilestoneSetup({
       toast.error("Please complete the current task before adding a new one.");
       return;
     }
-    const newTask: Task = {
-      id: Date.now().toString(),
+    const emptyDate = getEmptyDate();
+    const newTask = {
+      id: `task-${taskIdCounter.current++}`,
       title: "",
       description: "",
       assigned_to: "--",
       status: "Open",
-      due_date: new Date().toISOString().slice(0, 10),
+      due_date: emptyDate,
     };
     setMilestones((prev) =>
       prev.map((m) =>
@@ -552,7 +635,8 @@ export function Step2MilestoneSetup({
         <div className="overflow-x-auto">
           <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
             <thead>
-              <tr className="text-gray-500 text-sm 2xl:text-[0.9vw] min-w-[10rem] 2xl:min-w-[10vw]">
+              <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
+                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                 <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
                   <span>Milestone Name</span>
                   <button
@@ -567,9 +651,8 @@ export function Step2MilestoneSetup({
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Estimated Start Date</th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[10vw]">Estimated Start Date</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Estimated End Date</th>
-                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
               </tr>
             </thead>
             <tbody>
@@ -591,14 +674,17 @@ export function Step2MilestoneSetup({
                     userOptions={userOptions}
                     statusOptions={statusOptions}
                     errors={milestoneErrors}
+                    projectStartDate={projectStartDate}
+                    projectEndDate={projectEndDate}
                   />
                   {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
                     <tr className="bg-gray-50 2xl:bg-gray-100">
                       <td colSpan={7} className="p-0">
                         <table className="w-fit">
                           <thead>
-                            <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
-                              <th className="px-8 2xl:px-[2vw] pl-16 2xl:pl-[4vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[13rem] 2xl:min-w-[13vw]">
+                            <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
+                            <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
+                              <th className="px-8 2xl:px-[2vw] pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[13rem] 2xl:min-w-[13vw]">
                                 <span>Task Name</span>
                                 <button
                                   className="text-purple-500 hover:text-purple-700 text-lg"
@@ -613,7 +699,6 @@ export function Step2MilestoneSetup({
                               <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
                               <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
                               <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
-                              <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                             </tr>
                           </thead>
                           <tbody>

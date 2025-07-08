@@ -103,55 +103,55 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
         {/* Lead Details Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-gray-200 p-4 2xl:p-[1vw] rounded-lg 2xl:rounded-[0.5vw] text-[1rem] 2xl:text-[1vw] text-gray-700">
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-            <p className=" text-sm 2xl:text-[0.875vw]">Created By</p>
+            <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Created By</p>
             <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.created_by}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-            <p className=" text-sm 2xl:text-[0.875vw]">Created At</p>
+            <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Created At</p>
             <p className=" text-textColor text-[1rem] 2xl:text-[1vw]">
               {formatIndiaTime(data.created_at, "toReadable")}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-            <p className=" text-sm 2xl:text-[0.875vw]">Location</p>
+            <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Location</p>
             <p className=" text-textColor text-[1rem] 2xl:text-[1vw]">
               {data?.location}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-            <p className="text-sm 2xl:text-[0.875vw]">Updated By</p>
+            <p className="text-[0.9rem] 2xl:text-[0.875vw]">Updated By</p>
             <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.updated_by}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-            <p className="text-sm 2xl:text-[0.875vw]">Updated At</p>
+            <p className="text-[0.9rem] 2xl:text-[0.875vw]">Updated At</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {formatIndiaTime(data.updated_at, "toReadable")}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-            <p className="text-sm 2xl:text-[0.875vw]">Source Name</p>
+            <p className="text-[0.9rem] 2xl:text-[0.875vw]">Source Name</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.source.name}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-            <p className="text-sm 2xl:text-[0.875vw]">Budget</p>
+            <p className="text-[0.9rem] 2xl:text-[0.875vw]">Budget</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.budget}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-            <p className="text-sm 2xl:text-[0.875vw]">Other Contact</p>
+            <p className="text-[0.9rem] 2xl:text-[0.875vw]">Other Contact</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {data?.other_contact}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-            <p className="text-sm 2xl:text-[0.875vw]">Assigned To</p>
+            <p className="text-[0.9rem] 2xl:text-[0.875vw]">Assigned To</p>
             <div className="flex gap-2 2xl:gap-[0.5vw] items-center">
               <p
                 className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
@@ -170,7 +170,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             </div>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-            <p className="text-sm 2xl:text-[0.875vw]">Type Name</p>
+            <p className="text-[0.9rem] 2xl:text-[0.875vw]">Type Name</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {data.type.name}
             </p>

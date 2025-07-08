@@ -6,6 +6,7 @@ import { LeadStatus } from "./components";
 import { RoleManagement } from "./components";
 import { usePermission } from "@/utils/hooks";
 import { EAction, EModule } from "@/constants";
+import { useSearchParams } from "next/navigation";
 
 /**
  * `Settings` is the main component for managing the settings page.
@@ -17,6 +18,7 @@ import { EAction, EModule } from "@/constants";
  * - Roles (currently a placeholder)
  */
 export function Settings() {
+  const searchParams = useSearchParams();
   const { hasPermission } = usePermission();
   const cavViewSources = hasPermission(EModule.LEAD_SOURCES, EAction.VIEW);
   const cavViewStatuses = hasPermission(EModule.LEAD_STATUSES, EAction.VIEW);
@@ -35,8 +37,10 @@ export function Settings() {
     return arr;
   }, [cavViewTypes, cavViewSources, cavViewStatuses, cavViewRoles, cavViewProjectTemplate]);
 
-  // Set the first visible tab as default
-  const [activePage, setActivePage] = useState(() => tabs[0]?.key);
+  // Read tab from query param
+  const tabParam = searchParams.get("tab");
+  const validTab = tabs.find(tab => tab.key === tabParam);
+  const [activePage, setActivePage] = useState(() => validTab?.key || tabs[0]?.key);
 
   return (
     <div className="p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw]">
@@ -55,7 +59,7 @@ export function Settings() {
             key={tab.key}
             className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw] font-medium ${activePage === tab.key
                 ? "border-b-4 border-[#65558F] text-[1rem] 2xl:text-[1vw]"
-                : "text-sm 2xl:text-[0.875vw]"
+                : "text-[0.9rem] 2xl:text-[0.875vw]"
               }`}
             onClick={() => setActivePage(tab.key)}
           >

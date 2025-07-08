@@ -45,7 +45,7 @@ export function Table<T extends { id: string | number }>({
   return (
     <div>
       <div className="scrollbar-style overflow-x-auto border bg-white 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
-        <table className="w-full text-sm 2xl:text-[0.875vw] text-left border-gray-200">
+        <table className="w-full text-[0.9rem] 2xl:text-[0.875vw] text-left border-gray-200">
           <thead className="text-gray-700">
             <tr>
               <th className="min-w-[5rem] 2xl:min-w-[5vw] p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">

@@ -1537,3 +1537,56 @@ export interface IUploadMultipleAttachmentsOptions {
   onSuccessCallback: (data: IUploadMultipleAttachmentResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
+
+export interface DashboardSummary {
+  leads: {
+    total: number;
+    assignedToMe: number;
+    profileSent: number;
+    businessDone: number;
+    notInterested: number;
+    todayFollowups: number;
+    analytics: Record<string, number>;
+  };
+  projects: {
+    total: number;
+    inProgress: number;
+    completed: number;
+    snapshot: {
+      inProgress: number;
+      completed: number;
+      percentCompleted: number;
+      percentInProgress: number;
+      total: number;
+    };
+  };
+  tasks: {
+    total: number;
+    inProgress: number;
+    completed: number;
+    dueToday: number;
+  };
+  dailyTasks: {
+    today: DailyTask[];
+    tomorrow: DailyTask[];
+  };
+}
+
+export interface DailyTask {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  task_title: string;
+  assigned_to: string;
+  description: string;
+  entry_date: string;
+  hours_spent: string;
+  status: string;
+  remarks: string;
+  project: {
+    id: string;
+    name: string;
+  };
+}

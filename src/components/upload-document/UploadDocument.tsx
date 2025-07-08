@@ -38,7 +38,7 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
   return (
     <div className={`flex flex-col gap-1`}>
       {label && (
-        <label className="text-sm font-medium text-gray-800">{label}</label>
+        <label className="text-[0.9rem] font-medium text-gray-800">{label}</label>
       )}
       <div
         onClick={handleFileClick}
@@ -54,7 +54,7 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
         />
       </div>
       {error && (
-        <p className="text-red-500 text-sm 2xl:text-[0.9vw] 2xl:mt-[0.25vw] mt-1">
+        <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] 2xl:mt-[0.25vw] mt-1">
           {error}
         </p>
       )}

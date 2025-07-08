@@ -121,18 +121,18 @@ export function Task({
           </td>
           <td className="px-2 py-4 text-right flex gap-2">
             <button onClick={onSave} className="text-green-600" title="Save">
-              <HiCheck className="w-6 h-6" />
+              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
             <button onClick={onCancel} className="text-red-600" title="Cancel">
-              <HiXMark className="w-6 h-6" />
+              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
           </td>
         </>
       ) : (
         <>
-          <td className="pl-8 py-2 text-sm font-medium">{task.name}</td>
-          <td className="py-2 text-sm">{task.description}</td>
-          <td className="py-2 text-sm">
+          <td className="pl-8 py-2 text-[0.9rem] font-medium">{task.name}</td>
+          <td className="py-2 text-[0.9rem]">{task.description}</td>
+          <td className="py-2 text-[0.9rem]">
             <div className="flex items-center gap-2">
               <p
                 className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full"
@@ -153,7 +153,7 @@ export function Task({
           <td className="py-2">
             <span className="flex items-center gap-2">
               <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-              <span className="text-sm">{task.due_date}</span>
+              <span className="text-[0.9rem]">{task.due_date}</span>
             </span>
           </td>
           <td className="py-2 text-right relative">

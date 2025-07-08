@@ -156,7 +156,7 @@ export function TableCell<T extends { id: string | number }>({
       {col.cell ? (
         col.cell({ row, value })
       ) : isAssignedTo && typeof value === "string" ? (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
           <p
             className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
             style={{ backgroundColor: randomColor }}
@@ -176,15 +176,15 @@ export function TableCell<T extends { id: string | number }>({
         </span>
       ) : isColorColumn ? (
         value ? (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
             <span
-              className="inline-block w-6 h-6 rounded-full border border-gray-300"
+              className="inline-block w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] rounded-full border border-gray-300"
               style={{ backgroundColor: String(value) }}
             />
-            <span className="font-mono text-xs">{String(value)}</span>
+            <span className="text-xs 2xl:text-[0.8vw]">{String(value)}</span>
           </div>
         ) : (
-          <span className="text-gray-400">-</span>
+          <span className="text-gray-400 2xl:text-[1vw]">-</span>
         )
       ) : isEmailColumn ? (
         renderEmailCell(value)

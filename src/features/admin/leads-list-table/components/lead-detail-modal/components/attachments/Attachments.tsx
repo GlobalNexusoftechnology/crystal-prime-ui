@@ -145,7 +145,7 @@ export function Attachments({
               </div>
             </div>
             <div>
-              <p className="text-sm 2xl:text-[0.875vw]">Assigned To</p>
+              <p className="text-[0.9rem] 2xl:text-[0.875vw]">Assigned To</p>
               <div className="flex gap-2 2xl:gap-[0.5vw] items-center">
                 <p
                   className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-8 h-8 2xl:w-[2vw] 2xl:h-[2vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"

@@ -50,11 +50,11 @@ export function EditProject({ projectId }: EditProjectProps) {
         estimated_cost: projectDetailData.estimated_cost || 0,
         cost_of_labour: projectDetailData.cost_of_labour || 0,
         overhead_cost: projectDetailData.overhead_cost || 0,
-        start_date: projectDetailData.start_date ? new Date(projectDetailData.start_date) : undefined,
-        end_date: projectDetailData.end_date ? new Date(projectDetailData.end_date) : undefined,
+        start_date: projectDetailData.start_date ? new Date(projectDetailData.start_date).toISOString().slice(0, 10) : undefined,
+        end_date: projectDetailData.end_date ? new Date(projectDetailData.end_date).toISOString().slice(0, 10) : undefined,
         template_id: projectDetailData.template_id || null,
         renewal_type: projectDetailData.renewal_type || null,
-        renewal_date: projectDetailData.renewal_date ? new Date(projectDetailData.renewal_date) : undefined,
+        renewal_date: projectDetailData.renewal_date ? new Date(projectDetailData.renewal_date).toISOString().slice(0, 10) : undefined,
         is_renewal: projectDetailData.is_renewal || false,
         milestoneOption: "milestone", // Default value for edit mode
       };
@@ -103,7 +103,7 @@ export function EditProject({ projectId }: EditProjectProps) {
       <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
         <div className="flex justify-center items-center h-64">
           <div className="text-lg text-red-600">Error loading project details. Please try again.</div>
-          <div className="text-sm text-gray-600 mt-2">Error: {error.message}</div>
+          <div className="text-[0.9rem] text-gray-600 mt-2">Error: {error.message}</div>
         </div>
       </section>
     );
@@ -114,7 +114,7 @@ export function EditProject({ projectId }: EditProjectProps) {
       <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
         <div className="flex justify-center items-center h-64">
           <div className="text-lg">Project not found</div>
-          <div className="text-sm text-gray-600 mt-2">Project ID: {projectId}</div>
+          <div className="text-[0.9rem] text-gray-600 mt-2">Project ID: {projectId}</div>
         </div>
       </section>
     );

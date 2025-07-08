@@ -18,7 +18,7 @@ export const ProjectDropdown: React.FC<Props> = ({
 }) => {
   return (
     <div className="absolute top-full right-0 mt-2 2xl:mt-[0.5vw] bg-white border border-gray-300 rounded-md 2xl:rounded-[0.5vw] shadow-md z-10 w-[8rem] 2xl:w-[10vw]">
-      <ul className="flex flex-col text-sm 2xl:text-[1vw] 2xl:leading-[1.5vw]">
+      <ul className="flex flex-col text-[0.9rem] 2xl:text-[1vw] 2xl:leading-[1.5vw]">
         <li
           className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100 cursor-pointer"
           onClick={onView}

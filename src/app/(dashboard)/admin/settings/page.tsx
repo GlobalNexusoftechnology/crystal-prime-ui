@@ -1,3 +1,6 @@
+import { Suspense } from "react";
+
+import { Loading } from "@/components";
 import { Settings } from "@/features";
 
 /**
@@ -9,5 +12,9 @@ import { Settings } from "@/features";
  * @returns JSX.Element representing the settings page.
  */
 export default function SettingPage() {
-  return <Settings />;
+  return (
+    <Suspense fallback={<Loading />}>
+      <Settings />
+    </Suspense>
+  );
 }

@@ -6,7 +6,7 @@ import { ProjectTemplateMilestone } from "../project-template-milestone";
 import { Breadcrumb } from "@/features/admin/breadcrumb";
 import { useRouter } from "next/navigation";
 import { ActionDropdown } from "@/components/action-dropdown/ActionDropdown";
-import { formatIndiaTime } from "@/utils";
+import { buildUniversalIdToNameMapping, formatIndiaTime } from "@/utils";
 import { useAllProjectTemplatesQuery, useDeleteProjectTemplateMutation } from "@/services";
 import toast from "react-hot-toast";
 import { useAllTypesQuery } from "@/services";
@@ -88,12 +88,14 @@ export function ProjectTemplateDetail({
       console.log("Milestones submitted:", values);
     }
   });
+  const idToName = buildUniversalIdToNameMapping(projectTemplateData);
+
 
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw] justify-between bg-white rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.1vw] border-borderGray p-4 2xl:p-[1vw]">
       <div className="flex items-start justify-between">
         <div>
-          <Breadcrumb/>
+        <Breadcrumb idToName={idToName} />
         </div>
         <ActionDropdown
         direction="bottom"
@@ -118,31 +120,31 @@ export function ProjectTemplateDetail({
 
       <div className="flex flex-wrap lg:grid lg:grid-cols-5 gap-8 2xl:gap-[2vw]">
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-          <p className=" text-sm 2xl:text-[0.875vw] ">Template Name</p>
+          <p className=" text-[0.9rem] 2xl:text-[0.875vw] ">Template Name</p>
           <p className="text-[1rem] 2xl:text-[1vw] font-medium underline underline-offset-2 2xl:underline-offset-4 leading-[1.6]">
             {projectTemplateData.name}
           </p>
         </div>
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-          <p className=" text-sm 2xl:text-[0.875vw]">Type Of Project</p>
+          <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Type Of Project</p>
           <p className="text-[1rem] 2xl:text-[1vw] font-medium">
             {projectTypeName}
           </p>
         </div>
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-          <p className=" text-sm 2xl:text-[0.875vw]">Estimated Days</p>
+          <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Estimated Days</p>
           <p className="text-[1rem] 2xl:text-[1vw] font-medium">
             {projectTemplateData.estimated_days}
           </p>
         </div>
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-          <p className=" text-sm 2xl:text-[0.875vw]">Created At</p>
+          <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Created At</p>
           <p className="text-[1rem] 2xl:text-[1vw] font-medium">
             {formatIndiaTime(projectTemplateData.created_at, "toReadable")}
           </p>
         </div>
         <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-          <p className=" text-sm 2xl:text-[0.875vw]">Updated At</p>
+          <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Updated At</p>
           <p className="text-[1rem] 2xl:text-[1vw] font-medium">
             {formatIndiaTime(projectTemplateData.updated_at, "toReadable")}
           </p>
@@ -150,7 +152,7 @@ export function ProjectTemplateDetail({
       </div>
 
       <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
-        <p className=" text-sm 2xl:text-[0.875vw]">Project Description</p>
+        <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Project Description</p>
         <p className="text-[1rem] 2xl:text-[1vw] font-medium">
           {projectTemplateData.description}
         </p>

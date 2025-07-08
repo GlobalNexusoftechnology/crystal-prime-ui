@@ -68,7 +68,7 @@ export function Step4Preview({
         <div className="overflow-x-auto">
           <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
             <thead>
-              <tr className="text-gray-500 text-sm 2xl:text-[0.9vw]">
+              <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
                 <th className="text-left p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Milestone Name</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>

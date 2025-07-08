@@ -114,3 +114,6 @@ export { useUpdateTaskStatusMutation } from "./useUpdateTaskStatusMutation";
 
 export { useCreateDailyTaskMutation } from "./useCreateDailyTaskMutation";
 export { useAllDailyTaskQuery } from "./useAllDailyTaskQuery";
+
+export { useDashboardSummaryQuery } from "./useDashboardSummaryQuery";
+export { useUploadMultipleAttachmentsMutation } from "./useUploadMultipleAttachmentsMutation";
