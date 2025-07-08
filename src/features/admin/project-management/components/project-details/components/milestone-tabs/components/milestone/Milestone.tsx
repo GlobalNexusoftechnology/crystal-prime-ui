@@ -109,12 +109,12 @@ export function Milestone({
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
       {editingId === milestone.id && editMilestone ? (
         <>
-        <td className="px-2 py-4 text-right flex gap-2">
+        <td className="px-2 2xl:px-[0.5vw] py-4 2xl:py-[1vw] text-right flex gap-2 2xl:gap-[0.5vw]">
             <button onClick={onSave} className="text-green-600" title="Save">
-              <HiCheck className="w-6 h-6" />
+              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
             <button onClick={onCancel} className="text-red-600" title="Cancel">
-              <HiXMark className="w-6 h-6" />
+              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
@@ -127,7 +127,7 @@ export function Milestone({
                 className={`${errors.name ? 'border-red-500' : ''}`}
               />
               {errors.name && (
-                <span className="text-red-500 text-xs mt-1">{errors.name}</span>
+                <span className="text-red-500 text-xs 2xl:text-[0.8vw] mt-1 2xl:mt-[0.25vw]">{errors.name}</span>
               )}
             </div>
           </td>
@@ -154,7 +154,7 @@ export function Milestone({
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <div className="flex flex-col">
-            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
+            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.8vw] font-semibold w-fit">
               {milestone.status}
             </span>
             </div>
@@ -230,16 +230,16 @@ export function Milestone({
               )}
             </button>
             <span className="text-[0.9rem] 2xl:text-[0.9vw]">{milestone.name}</span>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 2xl:gap-[0.25vw]">
               <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
-              <p className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
+              <p className="border-2 border-dotted border-primary rounded-full text-[0.9rem] 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
                 {milestone.tasks.length}
               </p>
             </div>
             </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
-            <span className="text-gray-600">{milestone.description || "No description"}</span>
+            <span className="text-gray-600 text-[0.9rem] 2xl:text-[0.9vw]">{milestone.description || "No description"}</span>
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
@@ -257,7 +257,7 @@ export function Milestone({
             </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
-            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold">
+            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold">
               {milestone.status}
             </span>
           </td>
@@ -272,7 +272,10 @@ export function Milestone({
           <td className="p-2 2xl:p-[0.5vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
+              <span className="text-[0.9rem] 2xl:text-[0.9vw]">
+
               {formatDateToMMDDYYYY(milestone.end_date)}
+              </span>
             </span>
           </td>
         

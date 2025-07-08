@@ -86,7 +86,7 @@ export function Task({
               <HiXMark className="w-6 2xl:w-[1.5w] h-6 2xl:h-[1.5vw]" />
             </button>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] pl-16 2xl:pl-[4vw] font-medium">
+          <td className="p-2 2xl:p-[0.5vw] pl-20 2xl:pl-[5vw] font-medium">
             <InputField
               value={editTask.title}
               onChange={(e) => onChange({ ...editTask, title: e.target.value })}
@@ -157,7 +157,7 @@ export function Task({
               </div>
             )}
           </td>
-          <td className="pl-16 2xl:pl-[4vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
+          <td className="pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
             {task.title}
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">{task.description}</td>
@@ -175,7 +175,7 @@ export function Task({
               ) : (
                 <LuUserPlus className=" 2xl:w-[1.5vw] 2xl:w-[1.5vw] 2xl:h-[1.5vw] mb-2 2xl:mb-[0.5vw]" />
               )}
-              <p className="px-3 py-1 text-[0.9rem]">
+              <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
                 {getUserName(task.assigned_to) || "---"}
               </p>
             </div>
@@ -186,8 +186,8 @@ export function Task({
             </span>
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
-            <span className="flex items-center gap-2">
-              <HiOutlineCalendar className=" 2xl:w-[1.5vw] text-gray-400" />
+            <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
+              <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-[0.9rem] 2xl:text-[0.9vw]">
                 {task.due_date ? formatDateToMMDDYYYY(task.due_date) : "---"}
               </span>

@@ -94,13 +94,13 @@ export function Task({
         <>
         <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw] text-right flex gap-2 2xl:gap-[0.5vw]">
             <button onClick={onSave} className="text-green-600 2xl:text-[1vw]" title="Save">
-              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1vw]" />
+              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
             <button onClick={onCancel} className="text-red-600 2xl:text-[1vw]" title="Cancel">
-              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1vw]" />
+              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
           </td>
-          <td className="pl-16 2xl:pl-[4vw] py-2 2xl:py-[0.5vw] font-medium">
+          <td className="pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] font-medium">
             <div className="flex flex-col">
               <InputField
                 value={editTask.title}
@@ -199,19 +199,19 @@ export function Task({
               </div>
             )}
           </td>
-          <td className="pl-16 2xl:pl-[4vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">{task.title}</td>
+          <td className="pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">{task.title}</td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">{task.description}</td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2">
               <p
-                className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full"
+                className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
                 style={{
                   backgroundColor: getRandomColor(task.assigned_to || ""),
                 }}
               >
                 {getUserInitials(task.assigned_to || "")}
               </p>
-              <p className="px-3 py-1 text-[0.9rem]">
+              <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
                 {getUserName(task.assigned_to || "")}
               </p>
             </div>
@@ -221,10 +221,10 @@ export function Task({
               {task.status}
             </span>
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw]">
-            <span className="flex items-center gap-2">
-              <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-              <span className="text-[0.9rem]">{task.due_date}</span>
+          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] 2xl:text-[0.9vw]">
+            <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
+              <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
+              <span className="text-[0.9rem] 2xl:text-[0.9vw]">{task.due_date}</span>
             </span>
           </td>
         

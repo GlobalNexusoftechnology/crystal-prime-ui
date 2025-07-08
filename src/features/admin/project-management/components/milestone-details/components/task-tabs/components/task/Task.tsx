@@ -121,10 +121,10 @@ export function Task({
           </td>
           <td className="px-2 py-4 text-right flex gap-2">
             <button onClick={onSave} className="text-green-600" title="Save">
-              <HiCheck className="w-6 h-6" />
+              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
             <button onClick={onCancel} className="text-red-600" title="Cancel">
-              <HiXMark className="w-6 h-6" />
+              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
           </td>
         </>
