@@ -160,6 +160,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   onChange={(value) => setFieldValue("dob", value)}
                   placeholder="Select DOB"
                   error={touched.dob && errors.dob}
+                  maxDate={new Date().toISOString().split("T")[0]}
                 />
                 <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
                   <label className="2xl:text-[1vw] text-gray-700 block">

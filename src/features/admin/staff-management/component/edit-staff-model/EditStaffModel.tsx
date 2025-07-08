@@ -199,6 +199,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
                 value={values.dob}
                 onChange={(value) => setFieldValue("dob", value)}
                 placeholder="Select DOB"
+                maxDate={new Date().toISOString().split("T")[0]}
                 error={touched.dob && errors.dob}
               />
               <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
