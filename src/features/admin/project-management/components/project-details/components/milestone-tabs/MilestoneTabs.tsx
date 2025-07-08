@@ -668,7 +668,7 @@ export function MilestoneTabs({
                               <thead>
                                 <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                                  <th className=" px-2 2xl:px-[0.5vw] pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                                  <th className=" px-2 2xl:px-[0.5vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
                                     <span>Task Name</span>
                                     <button
                                       className="text-purple-500 hover:text-purple-700 text-lg"

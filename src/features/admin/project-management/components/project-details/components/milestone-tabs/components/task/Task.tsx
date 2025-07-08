@@ -100,7 +100,7 @@ export function Task({
               <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
           </td>
-          <td className="pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] font-medium">
+          <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] font-medium">
             <div className="flex flex-col">
               <InputField
                 value={editTask.title}
@@ -134,7 +134,7 @@ export function Task({
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
             <div className="flex flex-col">
-              <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.3vw] py-1 2xl:py-[0.25vw] rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
+              <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold w-fit">
                 {task.status}
               </span>
             </div>
@@ -199,7 +199,7 @@ export function Task({
               </div>
             )}
           </td>
-          <td className="pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">{task.title}</td>
+          <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">{task.title}</td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">{task.description}</td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2">
@@ -217,7 +217,7 @@ export function Task({
             </div>
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw]">
-            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
+            <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold">
               {task.status}
             </span>
           </td>

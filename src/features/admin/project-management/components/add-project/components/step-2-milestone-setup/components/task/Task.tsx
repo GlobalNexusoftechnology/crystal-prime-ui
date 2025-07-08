@@ -86,7 +86,7 @@ export function Task({
               <HiXMark className="w-6 2xl:w-[1.5w] h-6 2xl:h-[1.5vw]" />
             </button>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] pl-20 2xl:pl-[5vw] font-medium">
+          <td className="p-2 2xl:p-[0.5vw] pl-32 2xl:pl-[8vw] font-medium">
             <InputField
               value={editTask.title}
               onChange={(e) => onChange({ ...editTask, title: e.target.value })}
@@ -157,7 +157,7 @@ export function Task({
               </div>
             )}
           </td>
-          <td className="pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
+          <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
             {task.title}
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">{task.description}</td>
