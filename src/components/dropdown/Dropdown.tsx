@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
 
 interface DropdownOption {
   label: string;
@@ -31,6 +31,7 @@ export function Dropdown({
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [menuStyles, setMenuStyles] = useState<React.CSSProperties>({});
 
   const selectedOption = options.find((opt) => opt.value === value);
 
@@ -44,6 +45,37 @@ export function Dropdown({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Calculate and set menu position when opening
+  useEffect(() => {
+    function updateMenuPosition() {
+      if (isOpen && dropdownRef.current) {
+        const rect = dropdownRef.current.getBoundingClientRect();
+        console.log("Dropdown rect:", rect);
+        setMenuStyles({
+          position: "absolute",
+          top: rect.bottom + window.scrollY,
+          left: rect.left + window.scrollX,
+          width: rect.width,
+          zIndex: 9999,
+          background: "white", // debug
+          border: "1px solid #ccc", // debug
+        });
+      } else {
+        console.log("Dropdown ref not set or not open");
+      }
+    }
+    if (isOpen) {
+      console.log("Dropdown opened");
+      setTimeout(updateMenuPosition, 0);
+      window.addEventListener("resize", updateMenuPosition);
+      window.addEventListener("scroll", updateMenuPosition, true);
+    }
+    return () => {
+      window.removeEventListener("resize", updateMenuPosition);
+      window.removeEventListener("scroll", updateMenuPosition, true);
+    };
+  }, [isOpen]);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
@@ -85,28 +117,58 @@ export function Dropdown({
         </svg>
       </div>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className={`absolute z-10 mt-1 2xl:mt-[0.25vw] w-full bg-white border 2xl:border-[0.1vw] ${error ? "border-red-500" : "border-gray-300"} ${dropdownBorderRadius} shadow-lg max-h-60 overflow-auto`}
-            initial={{ opacity: 0, y: -5 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -5 }}
+      {/* Debug: Render portal menu as plain div, no animation */}
+      {isOpen && menuStyles.top !== undefined && menuStyles.left !== undefined &&
+        typeof window !== "undefined" && typeof document !== "undefined" &&
+        createPortal(
+          <div
+            style={{
+              ...menuStyles,
+              background: "#fff",
+              border: "1px solid #F8F8F8",
+              color: "#000",
+              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+              borderRadius: "8px",
+              padding: 0,
+              maxHeight: 240,
+              overflow: "auto",
+            }}
           >
             {options.map((option) => (
               <div
                 key={option.value}
-                className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] 2xl:text-[0.9vw] cursor-pointer hover:bg-gray-100 ${
-                  value === option.value ? "bg-gray-100 font-semibold" : ""
-                }`}
-                onClick={() => handleSelect(option.value)}
+                style={{
+                  padding: "8px 16px",
+                  cursor: "pointer",
+                  background: value === option.value ? "#F8F8F8" : undefined,
+                  fontWeight: value === option.value ? "bold" : undefined,
+                }}
+                onMouseDown={() => handleSelect(option.value)}
               >
                 {option.label}
               </div>
             ))}
-          </motion.div>
+          </div>,
+          document.body
         )}
-      </AnimatePresence>
+      {/* Fallback: render inline if menuStyles not set */}
+      {isOpen && (menuStyles.top === undefined || menuStyles.left === undefined) && (
+        <div
+          className={`absolute z-10 mt-1 2xl:mt-[0.25vw] w-full bg-yellow-100 border border-yellow-500 ${dropdownBorderRadius} shadow-lg max-h-60 overflow-auto`}
+        >
+          {options.map((option) => (
+            <div
+              key={option.value}
+              className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] 2xl:text-[0.9vw] cursor-pointer hover:bg-gray-100 ${
+                value === option.value ? "bg-gray-100 font-semibold" : ""
+              }`}
+              onMouseDown={() => handleSelect(option.value)}
+            >
+              {option.label}
+            </div>
+          ))}
+        </div>
+      )}
 
       {error && (
         <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] mt-1 2xl:mt-[0.5vw]">

@@ -52,7 +52,7 @@ export function ProjectEstimate({ projectEstimateData }: ProjectEstimateProps) {
           <div className="flex flex-col">
             <p className="font-light">Actual Cost</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
-              {projectEstimateData.actual_cost}
+              {projectEstimateData.actual_cost ? projectEstimateData.actual_cost: "---"}
             </p>
           </div>
           <div className="flex flex-col">
