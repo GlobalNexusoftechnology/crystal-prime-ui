@@ -29,6 +29,7 @@ interface ProjectMilestoneMaster {
 interface ProjectTemplate {
   id: string;
   name: string;
+  project_type?: string;
   project_milestone_master?: ProjectMilestoneMaster[];
 }
 
@@ -61,7 +62,6 @@ interface Step2MilestoneSetupProps {
   onBack: () => void;
   onNext: (milestones: Milestone[]) => void;
   milestoneOption: string;
-  projectTemplateOptions: { label: string; value: string }[];
   projectTemplateLoading: boolean;
   projectTemplateError: boolean;
   allProjectTemplatesData?: AllProjectTemplatesData;
@@ -71,6 +71,7 @@ interface Step2MilestoneSetupProps {
   projectStartDate: string;
   projectEndDate: string;
   mode?: 'create' | 'edit';
+  projectType: string;
 }
 
 // Mock options
@@ -89,7 +90,6 @@ export function Step2MilestoneSetup({
   onBack,
   onNext,
   milestoneOption,
-  projectTemplateOptions,
   projectTemplateLoading,
   projectTemplateError,
   allProjectTemplatesData,
@@ -98,6 +98,7 @@ export function Step2MilestoneSetup({
   setProjectTemplate,
   projectStartDate,
   projectEndDate,
+  projectType,
   mode = 'create',
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
@@ -581,6 +582,15 @@ export function Step2MilestoneSetup({
 
   const isTemplateSelected = milestoneOption === "template";
 
+  // Filter templates by selected project type using string match
+  const filteredProjectTemplateOptions =
+    allProjectTemplatesData?.templates
+      ?.filter((tpl) => !projectType || tpl.project_type === projectType)
+      .map((tpl) => ({
+        label: tpl.name,
+        value: tpl.id,
+      })) || [];
+
   // When user clicks next, pass milestones to parent
   const handleNext = () => {
     // Validate all milestones and tasks before proceeding
@@ -630,7 +640,7 @@ export function Step2MilestoneSetup({
               ? [{ label: "Loading...", value: "" }]
               : projectTemplateError
                 ? [{ label: "Error loading templates", value: "" }]
-                : projectTemplateOptions}
+                : filteredProjectTemplateOptions}
             value={projectTemplate}
             onChange={(value) => {
               setProjectTemplate(value);

@@ -246,13 +246,6 @@ export function AddProject({
     error: projectTemplateError,
   } = useAllProjectTemplatesQuery();
 
-  const projectTemplateOptions = (allProjectTemplatesData?.templates || []).map(
-    (template) => ({
-      label: template.name,
-      value: template.id,
-    })
-  );
-
   const { onCreateProject } = useCreateProjectMutation({
     onSuccessCallback: (response) => {
       // Use type assertion to handle the actual response structure
@@ -583,13 +576,13 @@ export function AddProject({
           onBack={() => setStep(1)}
           onNext={handleMilestoneNext}
           milestoneOption={milestoneOption}
-          projectTemplateOptions={projectTemplateOptions}
           projectTemplateLoading={projectTemplateLoading}
           projectTemplateError={!!projectTemplateError}
           allProjectTemplatesData={allProjectTemplatesData}
           initialMilestones={milestones}
           projectTemplate={selectedProjectTemplate}
           setProjectTemplate={setSelectedProjectTemplate}
+          projectType={basicInfo?.project_type ?? ""}
           projectStartDate={
             basicInfo?.start_date
               ? typeof basicInfo.start_date === "string"
