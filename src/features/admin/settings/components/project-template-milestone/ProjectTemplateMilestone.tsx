@@ -2,7 +2,7 @@
 
 import { AddSquareIcon } from "@/features/icons";
 import { FieldArray, FormikProps } from "formik";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Milestone } from "../add-project-template/types";
 import { MilestoneRow } from "./components";
 import toast from "react-hot-toast";
@@ -11,10 +11,13 @@ import toast from "react-hot-toast";
 export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik: FormikProps<any>; readOnly?: boolean }) {
   const { values, handleChange, handleBlur } = formik;
   const [openMilestones, setOpenMilestones] = useState<{ [key: string]: boolean }>(() => {
-    if (values.milestones && values.milestones.length === 1 && !values.milestones[0].id) {
-      return { '0': true } as { [key: string]: boolean };
+    if (values.milestones && values.milestones.length > 0) {
+      // Open all milestones by default
+      return Object.fromEntries(
+        values.milestones.map((m: Milestone, idx: number) => [(m.id || String(idx)), true])
+      );
     }
-    return {} as { [key: string]: boolean };
+    return {};
   });
   const [editingMilestoneId, setEditingMilestoneId] = useState<string | null>(() => {
     if (values.milestones && values.milestones.length === 1 && !values.milestones[0].id) {
@@ -23,6 +26,16 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
     return null;
   });
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (values.milestones && values.milestones.length > 0) {
+      setOpenMilestones(
+        Object.fromEntries(
+          values.milestones.map((m: Milestone, idx: number) => [(m.id || String(idx)), true])
+        )
+      );
+    }
+  }, [values.milestones]);
 
   const toggleMilestone = (id: string) => {
     setOpenMilestones((prev) => ({ ...prev, [id]: !prev[id] }));

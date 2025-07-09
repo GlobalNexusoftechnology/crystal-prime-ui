@@ -40,7 +40,9 @@ export function MilestoneTabs({
   const [milestoneMenu, setMilestoneMenu] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [taskMenu, setTaskMenu] = useState<any>(null);
-  const [expandedMilestones, setExpandedMilestones] = useState<string[]>([]);
+  const [expandedMilestones, setExpandedMilestones] = useState<string[]>(
+    milestoneData.map((m: Milestone) => m.id)
+  );
 
   // Error states for validation
   const [milestoneErrors, setMilestoneErrors] = useState<{[key: string]: string}>({});
@@ -524,6 +526,10 @@ export function MilestoneTabs({
       bottomRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
   }, [showForm]);
+
+  useEffect(() => {
+    setExpandedMilestones(milestones.map((m: Milestone) => m.id));
+  }, [milestones]);
 
   const handleMilestoneChange = (updatedMilestone: { name: string; description: string; assigned_to: string; status: string; start_date: string; end_date: string }) => {
     setEditMilestone(updatedMilestone);

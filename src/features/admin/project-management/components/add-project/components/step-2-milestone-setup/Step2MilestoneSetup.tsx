@@ -272,7 +272,6 @@ export function Step2MilestoneSetup({
           due_date: t.due_date || "",
         })),
       }));
-      console.log("Setting milestones from template:", mappedMilestones);
       setMilestones(mappedMilestones);
       setTemplateApplied(true);
     } else {
@@ -283,7 +282,6 @@ export function Step2MilestoneSetup({
   // Initialize milestones from existing data (for edit mode)
   useEffect(() => {
     if (initialMilestones && initialMilestones.length > 0 && milestones.length === 0 && !templateApplied) {
-      console.log("Setting initial milestones:", initialMilestones);
       setMilestones(initialMilestones.map(m => ({
         id: m.id || "",
         name: m.name,
@@ -310,8 +308,14 @@ export function Step2MilestoneSetup({
   }, [projectTemplate]);
 
   // Add expandedMilestones state
-  const [expandedMilestones, setExpandedMilestones] = useState<string[]>([]);
+  const [expandedMilestones, setExpandedMilestones] = useState<string[]>(
+    milestones.map((m) => m.id)
+  );
   const [autoMilestoneCreated, setAutoMilestoneCreated] = useState(false);
+
+  useEffect(() => {
+    setExpandedMilestones(milestones.map((m) => m.id));
+  }, [milestones]);
 
   // Default open logic for milestone and task, and auto-create if none exist
   useEffect(() => {
