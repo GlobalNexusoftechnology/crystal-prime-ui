@@ -13,28 +13,91 @@ import { useQueryClient } from '@tanstack/react-query';
 
 
 // Validation schema using Yup
-const validationSchema = Yup.object({
-  name: Yup.string().required("Template Name is required"),
-  project_type: Yup.string().required("Type of Project is required"),
-  estimated_days: Yup.number()
-    .typeError("Must be a number")
-    .required("Estimated Days is required"),
-  description: Yup.string().required("Description is required"),
-  milestones: Yup.array().of(
-    Yup.object().shape({
-      name: Yup.string().required("Milestone name is required"),
-      estimated_days: Yup.string().required("Estimated days is required"),
-      description: Yup.string().required("Description is required"),
-      tasks: Yup.array().of(
-        Yup.object().shape({
-          title: Yup.string().required("Task name is required"),
-          estimated_days: Yup.string().required("Estimated days is required"),
-          description: Yup.string().required("Description is required"),
-        })
+const validationSchema = (projectEstimatedDays: string | number) =>
+  Yup.object({
+    name: Yup.string().required("Template Name is required"),
+    project_type: Yup.string().required("Type of Project is required"),
+    estimated_days: Yup.number()
+      .typeError("Must be a number")
+      .required("Estimated Days is required")
+      .test(
+        "milestone-sum-match",
+        "Project estimated days must equal the sum of all milestone estimated days.",
+        function (value) {
+          const { milestones } = this.parent;
+          if (!value || !milestones || !Array.isArray(milestones)) return true;
+          const sum = milestones.reduce((acc, m) => acc + Number(m.estimated_days || 0), 0);
+          return Number(value) === sum;
+        }
       ),
-    })
-  ),
-});
+    description: Yup.string().required("Description is required"),
+    milestones: Yup.array().of(
+      Yup.object().shape({
+        name: Yup.string().required("Milestone name is required"),
+        estimated_days: Yup.string()
+          .required("Estimated days is required")
+          .test(
+            "milestone-estimated-days",
+            "Milestone estimated days cannot be greater than project estimated days.",
+            function (value) {
+              if (!value || !projectEstimatedDays) return true;
+              return Number(value) <= Number(projectEstimatedDays);
+            }
+          )
+          .test(
+            "task-sum-match",
+            "Milestone estimated days must equal the sum of all task estimated days.",
+            function (value) {
+              const { tasks } = this.parent;
+              if (!value || !tasks || !Array.isArray(tasks)) return true;
+              const sum = tasks.reduce((acc, t) => acc + Number(t.estimated_days || 0), 0);
+              return Number(value) === sum;
+            }
+          )
+          .test(
+            "task-sum-not-greater",
+            "Sum of task estimated days cannot be greater than milestone estimated days.",
+            function (value) {
+              const { tasks } = this.parent;
+              if (!value || !tasks || !Array.isArray(tasks)) return true;
+              const sum = tasks.reduce((acc, t) => acc + Number(t.estimated_days || 0), 0);
+              return sum <= Number(value);
+            }
+          ),
+        description: Yup.string().required("Description is required"),
+        tasks: Yup.array().of(
+          Yup.object().shape({
+            title: Yup.string().required("Task name is required"),
+            estimated_days: Yup.string()
+              .required("Estimated days is required")
+              .test(
+                "task-estimated-days",
+                "Task estimated days cannot be greater than milestone estimated days.",
+                function (value) {
+                  const milestoneEstimatedDays = this.parent.estimated_days;
+                  if (!value || !milestoneEstimatedDays) return true;
+                  return Number(value) <= Number(milestoneEstimatedDays);
+                }
+              )
+              .test(
+                "task-sum-not-greater-milestone",
+                "Sum of all task estimated days cannot be greater than milestone estimated days.",
+                function () {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  const milestone = (this.options as any).from?.[1]?.value;
+                  const parentTasks = milestone?.tasks;
+                  const milestoneEstimatedDays = milestone?.estimated_days;
+                  if (!parentTasks || !Array.isArray(parentTasks) || !milestoneEstimatedDays) return true;
+                  const sum = parentTasks.reduce((acc, t) => acc + Number(t.estimated_days || 0), 0);
+                  return sum <= Number(milestoneEstimatedDays);
+                }
+              ),
+            description: Yup.string().required("Description is required"),
+          })
+        ),
+      })
+    ),
+  });
 
 export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: string, refetchAllProjectTemplates: () => void }) {
   const router = useRouter();
@@ -102,7 +165,9 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
   const formik = useFormik<ProjectTemplateFormValues>({
     enableReinitialize: true,
     initialValues,
-    validationSchema,
+    validationSchema: validationSchema(initialValues.estimated_days),
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: (values) => {
       const payload = {
         ...(id ? { id } : {}),
