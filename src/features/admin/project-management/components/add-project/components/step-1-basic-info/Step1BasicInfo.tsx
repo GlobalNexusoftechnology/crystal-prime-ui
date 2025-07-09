@@ -1,12 +1,13 @@
 import { InputField, Dropdown, DatePicker } from "@/components";
 // import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { FormikProps } from "formik";
 import { IAddProjectFormValues } from "../../AddProject";
 import { ImageRegistry } from "@/constants";
 import Image from "next/image";
 import { Checkbox } from '@/components';
 import { useAllTypesQuery } from "@/services";
+import { differenceInCalendarDays, parseISO } from 'date-fns';
 
 
 const renewalTypeOptions = [
@@ -55,6 +56,34 @@ export function Step1BasicInfo({
           ? val.toISOString().slice(0, 10)
           : ''
       : '';
+
+  // Calculate Estimated Cost
+  let estimatedCost = '';
+  const costOfLabour = Number(values.cost_of_labour) || 0;
+  const overheadCost = Number(values.overhead_cost) || 0;
+  const extraCost = Number(values.extra_cost) || 0;
+  let days = 0;
+  if (values.start_date && values.end_date) {
+    try {
+      const start = typeof values.start_date === 'string' ? parseISO(values.start_date) : new Date(values.start_date);
+      const end = typeof values.end_date === 'string' ? parseISO(values.end_date) : new Date(values.end_date);
+      days = differenceInCalendarDays(end, start) + 1;
+    } catch {}
+  }
+  if (costOfLabour > 0 || overheadCost > 0 || extraCost > 0) {
+    estimatedCost = (((costOfLabour + overheadCost) * (days > 0 ? days : 0)) + extraCost).toString();
+  }
+
+  // After estimatedCost calculation
+  useEffect(() => {
+    if (estimatedCost !== "" && estimatedCost !== values.estimated_cost) {
+      setFieldValue("estimated_cost", estimatedCost);
+    }
+    if (estimatedCost === "" && values.estimated_cost !== "") {
+      setFieldValue("estimated_cost", "");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [estimatedCost]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -148,14 +177,8 @@ export function Step1BasicInfo({
           label="Estimated Cost"
           name="estimated_cost"
           placeholder="Estimated Cost"
-          value={values.estimated_cost}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={
-            touched.estimated_cost && typeof errors.estimated_cost === "string"
-              ? errors.estimated_cost
-              : undefined
-          }
+          value={estimatedCost}
+          disabled
           type="number"
           className="2xl:text-[1vw]"
         />
@@ -186,6 +209,16 @@ export function Step1BasicInfo({
               ? errors.overhead_cost
               : undefined
           }
+          type="number"
+          className="2xl:text-[1vw]"
+        />
+        <InputField
+          label="Extra Cost"
+          name="extra_cost"
+          placeholder="Extra Cost"
+          value={values.extra_cost}
+          onChange={handleChange}
+          onBlur={handleBlur}
           type="number"
           className="2xl:text-[1vw]"
         />

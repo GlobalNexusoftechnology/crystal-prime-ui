@@ -356,6 +356,18 @@ export function Step2MilestoneSetup({
     }
   }, [milestoneOption]);
 
+  // When editing a milestone, if its dates are empty, auto-populate from project dates
+  useEffect(() => {
+    if (editMilestone && (!editMilestone.start_date || !editMilestone.end_date)) {
+      setEditMilestone({
+        ...editMilestone,
+        start_date: editMilestone.start_date || projectStartDate || getEmptyDate(),
+        end_date: editMilestone.end_date || projectEndDate || getEmptyDate(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editMilestone, projectStartDate, projectEndDate]);
+
   // Toggle expand/collapse for milestone
   const toggleMilestone = (id: string) => {
     setExpandedMilestones((prev) =>
@@ -405,15 +417,14 @@ export function Step2MilestoneSetup({
       toast.error("Please complete the current milestone before adding a new one.");
       return;
     }
-    const emptyDate = getEmptyDate();
     const newMilestone = {
       id: `milestone-${milestoneIdCounter.current++}`,
       name: "",
       description: "",
       assigned_to: "--",
       status: "Open",
-      start_date: emptyDate,
-      end_date: emptyDate,
+      start_date: projectStartDate || getEmptyDate(),
+      end_date: projectEndDate || getEmptyDate(),
       tasks: [],
     };
     setMilestones((prev) => [newMilestone, ...prev]);

@@ -39,6 +39,7 @@ export interface IAddProjectFormValues {
   estimated_cost?: number | string;
   cost_of_labour?: number | string;
   overhead_cost?: number | string;
+  extra_cost?: number | string;
   start_date?: string;
   end_date?: string;
   template_id?: string | null;
@@ -69,6 +70,7 @@ const initialValues: IAddProjectFormValues = {
   estimated_cost: "",
   cost_of_labour: "",
   overhead_cost: "",
+  extra_cost: "",
   start_date: undefined,
   end_date: undefined,
   template_id: "",
@@ -110,12 +112,9 @@ const validationSchema = Yup.object({
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
 
-// Custom validation function for Formik to show sum error under both fields
 function validate(values: IAddProjectFormValues) {
   const errors: Partial<Record<keyof IAddProjectFormValues, string>> = {};
-  // Let Yup handle most errors
   try {
-    // If is_renewal is false, temporarily remove renewal_date and renewal_type for validation
     const valuesForValidation = { ...values };
     if (!values.is_renewal) {
       valuesForValidation.renewal_date = undefined;
@@ -132,7 +131,6 @@ function validate(values: IAddProjectFormValues) {
       (
         yupError as { inner: Array<{ path?: string; message: string }> }
       ).inner.forEach((err) => {
-        // Only set renewal_date/renewal_type errors if is_renewal is true
         if (err.path && !errors[err.path as keyof IAddProjectFormValues]) {
           if ((err.path === 'renewal_date' || err.path === 'renewal_type') && !values.is_renewal) {
             // skip
@@ -166,7 +164,6 @@ function validate(values: IAddProjectFormValues) {
     errors.overhead_cost =
       "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
   }
-  // Custom: Renewal validation
   if (values.is_renewal) {
     if (!values.renewal_type || values.renewal_type === "NONE") {
       errors.renewal_type = "Renewal Type is required";
@@ -174,7 +171,6 @@ function validate(values: IAddProjectFormValues) {
     if (!values.renewal_date) {
       errors.renewal_date = "Renewal Date is required";
     }
-    // Also check for valid date if present
     if (values.renewal_date) {
       const renewalDate = new Date(values.renewal_date);
       if (isNaN(renewalDate.getTime())) {
