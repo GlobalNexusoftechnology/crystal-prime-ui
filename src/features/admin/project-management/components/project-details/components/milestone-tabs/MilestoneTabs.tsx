@@ -15,6 +15,8 @@ import {
   IProjectTaskResponse 
 } from "@/services";
 import toast from "react-hot-toast";
+import { usePermission } from "@/utils/hooks/usePermission";
+import { EAction, EModule } from "@/constants";
 
 type LocalTask = { id: string; title: string; description: string; assigned_to: string; status: string; due_date: string };
 
@@ -575,6 +577,13 @@ export function MilestoneTabs({
     }
   };
 
+  // Permission checks
+  const { hasPermission } = usePermission();
+  const canAddMilestone = hasPermission(EModule.MILESTONE, EAction.ADD);
+  const canEditMilestone = hasPermission(EModule.MILESTONE, EAction.EDIT);
+  const canDeleteMilestone = hasPermission(EModule.MILESTONE, EAction.DELETE);
+  const canViewMilestone = hasPermission(EModule.MILESTONE, EAction.VIEW);
+
   return (
     <div
       ref={containerRef}
@@ -630,14 +639,16 @@ export function MilestoneTabs({
                     <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                     <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
                       <span>Milestone Name</span>
-                      <button
-                        className="text-purple-500 hover:text-purple-700 text-lg"
-                        title="Add Milestone"
-                        type="button"
-                        onClick={handleAddMilestone}
-                      >
-                        <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
-                      </button>
+                      {canAddMilestone && (
+                        <button
+                          className="text-purple-500 hover:text-purple-700 text-lg"
+                          title="Add Milestone"
+                          type="button"
+                          onClick={handleAddMilestone}
+                        >
+                          <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                        </button>
+                      )}
                     </th>
                     <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
                     <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
@@ -666,6 +677,9 @@ export function MilestoneTabs({
                         statusOptions={statusOptions}
                         projectId={projectId}
                         errors={milestoneErrors}
+                        canEditMilestone={canEditMilestone}
+                        canDeleteMilestone={canDeleteMilestone}
+                        canViewMilestone={canViewMilestone}
                       />
                       {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
                         <tr className="bg-gray-50 2xl:bg-gray-100]">
