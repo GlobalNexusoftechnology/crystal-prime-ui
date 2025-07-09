@@ -31,6 +31,9 @@ interface TaskProps {
   statusOptions: { label: string; value: string }[];
   milestoneId: string;
   errors?: { [key: string]: string };
+  canViewTask?: boolean;
+  canEditTask?: boolean;
+  canDeleteTask?: boolean;
 }
 
 export function Task({
@@ -48,6 +51,9 @@ export function Task({
   userOptions,
   milestoneId,
   errors = {},
+  canViewTask = true,
+  canEditTask = true,
+  canDeleteTask = true,
 }: TaskProps) {
   const router = useRouter();
 
@@ -169,33 +175,39 @@ export function Task({
             </button>
             {menuOpen && menuOpen.taskId === task.id && (
               <div ref={menuRef} className="absolute left-[80%] bottom-[10%] mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
-                  onClick={() => handleRedirectView(task.id)}
-                >
-                  View
-                </button>
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
-                  onClick={() =>
-                    onEdit(milestoneId, {
-                      id: task.id,
-                      title: task.title,
-                      description: task.description || "",
-                      assigned_to: task.assigned_to || "",
-                      status: task.status || "",
-                      due_date: task.due_date || "",
-                    })
-                  }
-                >
-                  Edit
-                </button>
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100 text-red-600"
-                  onClick={() => onDelete(milestoneId, task.id)}
-                >
-                  Delete
-                </button>
+                {canViewTask && (
+                  <button
+                    className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
+                    onClick={() => handleRedirectView(task.id)}
+                  >
+                    View
+                  </button>
+                )}
+                {canEditTask && (
+                  <button
+                    className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
+                    onClick={() =>
+                      onEdit(milestoneId, {
+                        id: task.id,
+                        title: task.title,
+                        description: task.description || "",
+                        assigned_to: task.assigned_to || "",
+                        status: task.status || "",
+                        due_date: task.due_date || "",
+                      })
+                    }
+                  >
+                    Edit
+                  </button>
+                )}
+                {canDeleteTask && (
+                  <button
+                    className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100 text-red-600"
+                    onClick={() => onDelete(milestoneId, task.id)}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             )}
           </td>

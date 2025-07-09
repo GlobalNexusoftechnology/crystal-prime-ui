@@ -30,6 +30,9 @@ interface TaskProps {
   userOptions: { label: string; value: string }[];
   statusOptions: { label: string; value: string }[];
   errors?: {[key: string]: string};
+  canViewTask?: boolean;
+  canEditTask?: boolean;
+  canDeleteTask?: boolean;
 }
 
 export function Task({
@@ -45,6 +48,9 @@ export function Task({
   setMenuOpen,
   userOptions,
   errors = {},
+  canViewTask = true,
+  canEditTask = true,
+  canDeleteTask = true,
 }: TaskProps) {
   const router = useRouter();
   const handleRedirectView = (
@@ -167,30 +173,36 @@ export function Task({
             </button>
             {menuOpen === task.id && (
               <div className="absolute right-[80%] bottom-[20%] mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
-                <button
-                  className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100"
-                  onClick={() =>
-                    handleRedirectView(
-                      task.projectId || "",
-                      task.milestoneId || "",
-                      task.id
-                    )
-                  }
-                >
-                  View
-                </button>
-                <button
-                  className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100"
-                  onClick={() => onEdit(task)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100 text-red-600"
-                  onClick={() => onDelete(task.id)}
-                >
-                  Delete
-                </button>
+                {canViewTask && (
+                  <button
+                    className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100"
+                    onClick={() =>
+                      handleRedirectView(
+                        task.projectId || "",
+                        task.milestoneId || "",
+                        task.id
+                      )
+                    }
+                  >
+                    View
+                  </button>
+                )}
+                {canEditTask && (
+                  <button
+                    className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100"
+                    onClick={() => onEdit(task)}
+                  >
+                    Edit
+                  </button>
+                )}
+                {canDeleteTask && (
+                  <button
+                    className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100 text-red-600"
+                    onClick={() => onDelete(task.id)}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             )}
           </td>

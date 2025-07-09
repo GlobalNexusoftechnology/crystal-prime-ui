@@ -583,6 +583,12 @@ export function MilestoneTabs({
   const canEditMilestone = hasPermission(EModule.MILESTONE, EAction.EDIT);
   const canDeleteMilestone = hasPermission(EModule.MILESTONE, EAction.DELETE);
   const canViewMilestone = hasPermission(EModule.MILESTONE, EAction.VIEW);
+  
+  // Task permission checks
+  const canAddTask = hasPermission(EModule.TASK, EAction.ADD);
+  const canViewTask = hasPermission(EModule.TASK, EAction.VIEW);
+  const canEditTask = hasPermission(EModule.TASK, EAction.EDIT);
+  const canDeleteTask = hasPermission(EModule.TASK, EAction.DELETE);
 
   return (
     <div
@@ -690,14 +696,16 @@ export function MilestoneTabs({
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                                   <th className=" px-2 2xl:px-[0.5vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
                                     <span>Task Name</span>
-                                    <button
-                                      className="text-purple-500 hover:text-purple-700 text-lg"
-                                      title="Add Task"
-                                      type="button"
-                                      onClick={() => handleAddTask(milestone.id)}
-                                    >
-                                      <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
-                                    </button>
+                                    {canAddTask && (
+                                      <button
+                                        className="text-purple-500 hover:text-purple-700 text-lg"
+                                        title="Add Task"
+                                        type="button"
+                                        onClick={() => handleAddTask(milestone.id)}
+                                      >
+                                        <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                                      </button>
+                                    )}
                                   </th>
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Assigned To</th>
@@ -724,6 +732,9 @@ export function MilestoneTabs({
                                     milestoneId={milestone.id}
                                     projectId={projectId}
                                     errors={taskErrors}
+                                    canViewTask={canViewTask}
+                                    canEditTask={canEditTask}
+                                    canDeleteTask={canDeleteTask}
                                   />
                                 ))}
                               </tbody>
