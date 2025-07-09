@@ -63,6 +63,8 @@ export function Step1BasicInfo({
   const overheadCost = Number(values.overhead_cost) || 0;
   const extraCost = Number(values.extra_cost) || 0;
   let days = 0;
+  // Overhead cost validation
+  const overheadCostError = overheadCost > costOfLabour ? 'Overhead cost cannot be greater than cost of labour' : undefined;
   if (values.start_date && values.end_date) {
     try {
       const start = typeof values.start_date === 'string' ? parseISO(values.start_date) : new Date(values.start_date);
@@ -205,9 +207,9 @@ export function Step1BasicInfo({
           onChange={handleChange}
           onBlur={handleBlur}
           error={
-            touched.overhead_cost && typeof errors.overhead_cost === "string"
+            overheadCostError || (touched.overhead_cost && typeof errors.overhead_cost === "string"
               ? errors.overhead_cost
-              : undefined
+              : undefined)
           }
           type="number"
           className="2xl:text-[1vw]"
