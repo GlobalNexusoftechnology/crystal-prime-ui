@@ -12,7 +12,7 @@ export function Breadcrumb({ idToName = {} }: { idToName?: Record<string, string
   const segments = pathname.split("/").filter(Boolean).slice(1); // Remove the first segment
 
   const breadcrumbItems = segments.map((segment, index) => {
-    const href = "/" + segments.slice(0, index + 1).join("/");
+    const href = "/admin/" + segments.slice(0, index + 1).join("/");
     const name = idToName[segment] ||
       decodeURIComponent(segment).replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
     return {
