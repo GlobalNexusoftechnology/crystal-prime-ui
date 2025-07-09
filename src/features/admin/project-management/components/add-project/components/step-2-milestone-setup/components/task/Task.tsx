@@ -21,6 +21,8 @@ interface TaskProps {
   statusOptions: { label: string; value: string }[];
   milestoneId: string;
   errors?: { [key: string]: string };
+  milestoneStartDate?: string;
+  milestoneEndDate?: string;
 }
 
 // Utility to sanitize date for DatePicker
@@ -48,6 +50,8 @@ export function Task({
   userOptions,
   milestoneId,
   errors = {},
+  milestoneStartDate,
+  milestoneEndDate,
 }: TaskProps) {
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -114,6 +118,8 @@ export function Task({
               value={sanitizeDateForPicker(editTask.due_date)}
               onChange={(val) => onChange({ ...editTask, due_date: val })}
               error={errors.due_date}
+              minDate={milestoneStartDate}
+              maxDate={milestoneEndDate}
             />
           </td>
         </>

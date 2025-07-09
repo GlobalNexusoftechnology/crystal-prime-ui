@@ -196,6 +196,17 @@ export function Step2MilestoneSetup({
     }
     if (!task.due_date) {
       errors.due_date = "Due date is required";
+    } else {
+      // Link due date to milestone
+      const milestone = milestones.find(m => m.id === milestoneId);
+      if (milestone) {
+        if (milestone.start_date && task.due_date < milestone.start_date) {
+          errors.due_date = "Due date cannot be before milestone start date";
+        }
+        if (milestone.end_date && task.due_date > milestone.end_date) {
+          errors.due_date = "Due date cannot be after milestone end date";
+        }
+      }
     }
     setTaskErrors(prev => ({ ...prev, [`${milestoneId}_${task.id}`]: errors }));
     return Object.keys(errors).length === 0;
@@ -740,6 +751,8 @@ export function Step2MilestoneSetup({
                                 statusOptions={statusOptions}
                                 milestoneId={milestone.id}
                                 errors={editingTask && editingTask.milestoneId === milestone.id && editingTask.taskId === task.id ? (taskErrors[`${milestone.id}_${task.id}`] || {}) : {}}
+                                milestoneStartDate={milestone.start_date}
+                                milestoneEndDate={milestone.end_date}
                               />
                             ))}
                           </tbody>
