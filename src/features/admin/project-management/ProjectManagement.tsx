@@ -6,6 +6,8 @@ import { Breadcrumb } from "../breadcrumb";
 import { useAllProjectsQuery } from "@/services";
 import { useRouter } from "next/navigation";
 import { useState, useMemo } from "react";
+import { usePermission } from "@/utils/hooks/usePermission";
+import { EAction, EModule } from "@/constants";
 
 const stageLabels = {
   open: "Open Projects",
@@ -41,6 +43,13 @@ export function ProjectManagement() {
   const { allProjectsData, isLoading, error } = useAllProjectsQuery();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Permission checks
+  const { hasPermission } = usePermission();
+  const canAddProject = hasPermission(EModule.PROJECT_MANAGEMENT, EAction.ADD);
+  const canViewProject = hasPermission(EModule.PROJECT_MANAGEMENT, EAction.VIEW);
+  const canEditProject = hasPermission(EModule.PROJECT_MANAGEMENT, EAction.EDIT);
+  const canDeleteProject = hasPermission(EModule.PROJECT_MANAGEMENT, EAction.DELETE);
 
   const handleRedirectToAddProject = () => {
     router.push("/admin/project-management/add-project")
@@ -125,12 +134,14 @@ export function ProjectManagement() {
           Project List
         </h1>
         <div className="w-full md:w-auto flex gap-4 2xl:gap-[1vw] flex-col md:flex-row items-center">
-          <Button
-            title="Add New Project"
-            variant="primary-outline"
-            width="w-full md:w-fit"
-            onClick={handleRedirectToAddProject}
-          />
+          {canAddProject && (
+            <Button
+              title="Add New Project"
+              variant="primary-outline"
+              width="w-full md:w-fit"
+              onClick={handleRedirectToAddProject}
+            />
+          )}
           <SearchBar
             onSearch={(query) => {
               setSearchQuery(query);
@@ -149,6 +160,9 @@ export function ProjectManagement() {
             projects={getProjectsByStage(stage)}
             label={stageLabels[stage]}
             bgColor={bgColors[stage]}
+            canViewProject={canViewProject}
+            canEditProject={canEditProject}
+            canDeleteProject={canDeleteProject}
           />
         ))}
       </div>

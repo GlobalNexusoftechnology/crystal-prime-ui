@@ -9,6 +9,9 @@ type Props = {
   projects: IProjectDetailResponse[];
   label: string;
   bgColor: string;
+  canViewProject?: boolean;
+  canEditProject?: boolean;
+  canDeleteProject?: boolean;
 };
 
 /**
@@ -18,6 +21,9 @@ export const ProjectStageSection: React.FC<Props> = ({
   projects,
   label,
   bgColor,
+  canViewProject = true,
+  canEditProject = true,
+  canDeleteProject = true,
 }) => {
   return (
     <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-white p-4 2xl:p-[1vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] h-fit">
@@ -29,7 +35,14 @@ export const ProjectStageSection: React.FC<Props> = ({
       </div>
       <div className="space-y-4 2xl:space-y-[1vw]">
         {projects.map((project, index) => (
-          <ProjectCard key={index} project={project} bgColor={bgColor} />
+          <ProjectCard 
+            key={index} 
+            project={project} 
+            bgColor={bgColor}
+            canViewProject={canViewProject}
+            canEditProject={canEditProject}
+            canDeleteProject={canDeleteProject}
+          />
         ))}
       </div>
     </div>

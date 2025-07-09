@@ -11,12 +11,21 @@ import { DeleteModal } from "@/components";
 type Props = {
   project: IProjectDetailResponse;
   bgColor: string;
+  canViewProject?: boolean;
+  canEditProject?: boolean;
+  canDeleteProject?: boolean;
 };
 
 /**
  * ProjectCard: Displays individual project card with dropdown for actions
  */
-export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
+export const ProjectCard: React.FC<Props> = ({ 
+  project, 
+  bgColor,
+  canViewProject = true,
+  canEditProject = true,
+  canDeleteProject = true,
+}) => {
   const router = useRouter()
   const [showDropdown, setShowDropdown] = useState(false);
   const { refetchAllProjects } = useAllProjectsQuery();
@@ -94,6 +103,9 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
                 onView={() => router.push(`/admin/project-management/${project.data.id}`)}
                 onEdit={() => router.push(`/admin/project-management/edit/${project.data.id}`)}
                 onDelete={handleDelete}
+                canViewProject={canViewProject}
+                canEditProject={canEditProject}
+                canDeleteProject={canDeleteProject}
               />
             )}
           </div>
