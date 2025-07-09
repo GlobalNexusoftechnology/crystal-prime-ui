@@ -27,13 +27,13 @@ interface TaskProps {
 
 // Utility to sanitize date for DatePicker
 function sanitizeDateForPicker(date: string | undefined | null): string {
-  if (!date) return '';
+  if (!date) return "";
   // Accept only YYYY-MM-DD
   const match = date.match(/^\d{4}-\d{2}-\d{2}$/);
   if (match) return date;
   // Try to extract from ISO string
   if (date.length >= 10) return date.slice(0, 10);
-  return '';
+  return "";
 }
 
 export function Task({
@@ -57,7 +57,12 @@ export function Task({
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (menuOpen && menuOpen.taskId === task.id && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      if (
+        menuOpen &&
+        menuOpen.taskId === task.id &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
         setMenuOpen(null);
       }
     }
@@ -141,7 +146,10 @@ export function Task({
               <HiOutlineDotsVertical className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
             {menuOpen && menuOpen.taskId === task.id && (
-              <div ref={menuRef} className="absolute left-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded shadow z-10 min-w-[100px]">
+              <div
+                ref={menuRef}
+                className="absolute left-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded shadow z-10 min-w-[100px]"
+              >
                 <button
                   className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100 text-[0.9rem] 2xl:text-[0.9vw]"
                   onClick={() => onEdit(milestoneId, task)}
@@ -160,26 +168,34 @@ export function Task({
           <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
             {task.title}
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">{task.description}</td>
+          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
+            {task.description}
+          </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2">
-              {(() => {
-                const user = userOptions.find(u => u.value === task.assigned_to);
-                const fullName = user ? user.label : "";
-                return (
-                  <>
-                    <p
-                      className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
-                      style={{ backgroundColor: getRandomColor(fullName) }}
-                    >
-                      {getInitials(fullName)}
-                    </p>
-                    <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
-                      {fullName || task.assigned_to}
-                    </p>
-                  </>
-                );
-              })()}
+              {task.assigned_to ? (
+                (() => {
+                  const user = userOptions.find(
+                    (u) => u.value === task.assigned_to
+                  );
+                  const fullName = user ? user.label : "";
+                  return (
+                    <>
+                      <p
+                        className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
+                        style={{ backgroundColor: getRandomColor(fullName) }}
+                      >
+                        {getInitials(fullName)}
+                      </p>
+                      <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                        {fullName || task.assigned_to}
+                      </p>
+                    </>
+                  );
+                })()
+              ) : (
+                <p className="text-[0.9rem] 2xl:text-[0.9vw]">---</p>
+              )}
             </div>
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
