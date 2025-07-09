@@ -26,9 +26,14 @@ export interface Milestone {
 
 interface PreviewMilestoneProps {
   milestone: Milestone;
+  users: { id: string; name: string }[];
 }
 
-export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
+function getUserNameById(id: string, users: { id: string; name: string }[] = []): string {
+  return users.find(user => user.id === id)?.name || "Unknown";
+}
+
+export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
   const [expanded, setExpanded] = React.useState(false);
 
   return (
@@ -58,11 +63,11 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
           <div className="flex items-center gap-2">
             <p 
               className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" 
-              style={{ backgroundColor: getRandomColor(milestone.assigned_to || '') }}
+              style={{ backgroundColor: getRandomColor(getUserNameById(milestone.assigned_to, users)) }}
             >
-              {getInitials(milestone?.assigned_to || "")}
+              {getInitials(getUserNameById(milestone.assigned_to, users))}
             </p>
-            <p className="px-3 py-1 text-[0.9rem]">{milestone.assigned_to}</p>
+            <p className="px-3 py-1 text-[0.9rem]">{getUserNameById(milestone.assigned_to, users)}</p>
           </div>
         </td>
         <td className="px-2 py-2">
@@ -107,11 +112,11 @@ export function PreviewMilestone({ milestone }: PreviewMilestoneProps) {
                       <div className="flex items-center gap-2">
                         <p 
                           className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full" 
-                          style={{ backgroundColor: getRandomColor(task?.assigned_to || '') }}
+                          style={{ backgroundColor: getRandomColor(getUserNameById(task?.assigned_to, users)) }}
                         >
-                          {getInitials(task?.assigned_to || "")}
+                          {getInitials(getUserNameById(task?.assigned_to, users))}
                         </p>
-                        <p className="px-3 py-1 text-[0.9rem]">{task?.assigned_to}</p>
+                        <p className="px-3 py-1 text-[0.9rem]">{getUserNameById(task?.assigned_to, users)}</p>
                       </div>
                     </td>
                     <td className="py-2">

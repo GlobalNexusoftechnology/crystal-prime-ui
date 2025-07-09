@@ -8,6 +8,7 @@ import {
 import { Button } from "@/components";
 import { PreviewMilestone } from "./components";
 import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
+import { useAllUsersQuery } from "@/services";
 // Add local types for editing
 export interface Task {
   id: string;
@@ -48,6 +49,13 @@ export function Step4Preview({
   milestones,
   onSubmit,
 }: Step4PreviewProps) {
+  const { allUsersData } = useAllUsersQuery();
+
+  const mappedUsers = (allUsersData ?? []).map(user => ({
+    id: user.id,
+    name: `${user.first_name} ${user.last_name}`.trim(),
+  }));
+
   return (
     <div className="flex flex-col gap-8 2xl:gap-[2vw]">
       {/* Info Summary */}
@@ -80,7 +88,7 @@ export function Step4Preview({
             </thead>
             <tbody>
               {milestones.map((milestone) => (
-                <PreviewMilestone key={milestone.id} milestone={milestone} />
+                <PreviewMilestone key={milestone.id} milestone={milestone} users={mappedUsers} />
               ))}
             </tbody>
           </table>
