@@ -87,6 +87,16 @@ export function Step1BasicInfo({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [estimatedCost]);
 
+  // Filtering handler for name and description
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^a-zA-Z0-9 .,'-]/g, '');
+    setFieldValue('name', value);
+  };
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const value = e.target.value.replace(/[^a-zA-Z0-9 .,'-]/g, '');
+    setFieldValue('description', value);
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
@@ -95,7 +105,7 @@ export function Step1BasicInfo({
           name="name"
           placeholder="Enter Project Name"
           value={values.name}
-          onChange={handleChange}
+          onChange={handleNameChange}
           onBlur={handleBlur}
           error={
             touched.name && typeof errors.name === "string"
@@ -130,7 +140,7 @@ export function Step1BasicInfo({
         name="description"
         placeholder="Enter Description"
         value={values.description}
-        onChange={handleChange}
+        onChange={handleDescriptionChange}
         onBlur={handleBlur}
         error={
           touched.description && typeof errors.description === "string"
