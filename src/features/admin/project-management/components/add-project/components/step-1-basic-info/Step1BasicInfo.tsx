@@ -183,6 +183,7 @@ export function Step1BasicInfo({
           disabled
           type="number"
           className="2xl:text-[1vw]"
+          error={errors.estimated_cost}
         />
         <InputField
           label="Cost Of Labour"
