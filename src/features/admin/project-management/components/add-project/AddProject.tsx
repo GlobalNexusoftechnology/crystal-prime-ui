@@ -338,24 +338,23 @@ export function AddProject({
     }));
 
     // Map attachments: use Cloudinary URL for new files, original info for existing
-    const attachments = uploadedFiles.map((file, idx) => {
+    let newFileUrlIdx = 0;
+    const attachments = uploadedFiles.map((file) => {
       // Check if this is an existing attachment (has originalAttachment metadata)
-      const originalAttachment = (
-        file as File & {
-          originalAttachment?: {
-            file_path?: string;
-            file_type?: string;
-            file_name?: string;
-            uploaded_by?: {
-              id?: string;
-              first_name?: string;
-              last_name?: string;
-            };
-            created_at?: string;
+      const originalAttachment = (file as File & {
+        originalAttachment?: {
+          file_path?: string;
+          file_type?: string;
+          file_name?: string;
+          uploaded_by?: {
             id?: string;
+            first_name?: string;
+            last_name?: string;
           };
-        }
-      ).originalAttachment;
+          created_at?: string;
+          id?: string;
+        };
+      }).originalAttachment;
 
       if (originalAttachment && mode === "edit") {
         // For existing attachments, preserve the original file_path
@@ -366,9 +365,11 @@ export function AddProject({
           uploaded_by: originalAttachment.uploaded_by?.id || userId,
         };
       } else {
-        // For new files, use the Cloudinary URL
+        // For new files, use the next Cloudinary URL
+        const url = uploadedFileUrls[newFileUrlIdx] || file.name;
+        newFileUrlIdx++;
         return {
-          file_path: uploadedFileUrls[idx] || file.name, // fallback to file name if URL missing
+          file_path: url,
           file_type: file.type,
           file_name: file.name,
           uploaded_by: userId,
@@ -441,6 +442,9 @@ export function AddProject({
   };
 
   const handleFinalSubmit = () => {
+    // Debug logs to check mapping before submission
+    console.log('DEBUG: uploadedFiles', uploadedFiles);
+    console.log('DEBUG: uploadedFileUrls', uploadedFileUrls);
     const payload = assemblePayload();
 
     if (payload) {
@@ -490,44 +494,42 @@ export function AddProject({
         : "",
     budget: basicInfo?.budget !== undefined ? String(basicInfo.budget) : "",
   };
-  const documents: IDocumentInfo[] = uploadedFiles.map((file, idx) => {
+  let newFileUrlIdxForDocs = 0;
+  const documents: IDocumentInfo[] = uploadedFiles.map((file) => {
     // Check if this is an existing attachment (has originalAttachment metadata)
-    const originalAttachment = (
-      file as File & {
-        originalAttachment?: {
-          file_path?: string;
-          file_type?: string;
-          file_name?: string;
-          uploaded_by?: {
-            id?: string;
-            first_name?: string;
-            last_name?: string;
-          };
-          created_at?: string;
+    const originalAttachment = (file as File & {
+      originalAttachment?: {
+        file_path?: string;
+        file_type?: string;
+        file_name?: string;
+        uploaded_by?: {
+          id?: string;
+          first_name?: string;
+          last_name?: string;
         };
-      }
-    ).originalAttachment;
+        created_at?: string;
+      };
+    }).originalAttachment;
 
     if (originalAttachment && mode === "edit") {
       // For existing attachments, use the original uploaded_by information
       return {
         name: file.name,
         uploaded_by: originalAttachment.uploaded_by?.first_name
-          ? `${originalAttachment.uploaded_by.first_name} ${
-              originalAttachment.uploaded_by.last_name || ""
-            }`
+          ? `${originalAttachment.uploaded_by.first_name} ${originalAttachment.uploaded_by.last_name || ""}`
           : userId,
-        created_at:
-          originalAttachment.created_at || new Date().toLocaleString(),
+        created_at: originalAttachment.created_at || new Date().toLocaleString(),
         file_path: originalAttachment.file_path || file.name,
       };
     } else {
-      // For new files, use current user
+      // For new files, use the next Cloudinary URL
+      const url = uploadedFileUrls[newFileUrlIdxForDocs] || file.name;
+      newFileUrlIdxForDocs++;
       return {
         name: file.name,
         uploaded_by: userId,
         created_at: new Date().toLocaleString(),
-        file_path: uploadedFileUrls[idx] || file.name,
+        file_path: url,
       };
     }
   });
