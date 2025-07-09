@@ -5,7 +5,6 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { getInitials, getRandomColor } from "@/utils";
 import { formatDateToMMDDYYYY } from "@/utils/helpers/formatDateToMMDDYYYY";
 import type { Task } from "../../Step2MilestoneSetup";
-import { LuUserPlus } from "react-icons/lu";
 
 interface TaskProps {
   task: Task;
@@ -65,11 +64,6 @@ export function Task({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [menuOpen, task.id, setMenuOpen]);
-
-  const getUserName = (userId: string) => {
-    const user = userOptions.find((u) => u.value === userId);
-    return user ? user.label : userId;
-  };
 
   return (
     <tr className="border-t border-gray-200">
@@ -163,21 +157,23 @@ export function Task({
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">{task.description}</td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2">
-              {task.assigned_to ? (
-                <p
-                  className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
-                  style={{
-                    backgroundColor: getRandomColor(task?.assigned_to || ""),
-                  }}
-                >
-                  {getInitials(task.assigned_to || "")}
-                </p>
-              ) : (
-                <LuUserPlus className=" 2xl:w-[1.5vw] 2xl:w-[1.5vw] 2xl:h-[1.5vw] mb-2 2xl:mb-[0.5vw]" />
-              )}
-              <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
-                {getUserName(task.assigned_to) || "---"}
-              </p>
+              {(() => {
+                const user = userOptions.find(u => u.value === task.assigned_to);
+                const fullName = user ? user.label : "";
+                return (
+                  <>
+                    <p
+                      className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
+                      style={{ backgroundColor: getRandomColor(fullName) }}
+                    >
+                      {getInitials(fullName)}
+                    </p>
+                    <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                      {fullName || task.assigned_to}
+                    </p>
+                  </>
+                );
+              })()}
             </div>
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">

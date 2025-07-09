@@ -11,7 +11,6 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TreeStructureIcon } from "@/features";
 import { formatDateToMMDDYYYY, getInitials, getRandomColor } from "@/utils";
 import type { Milestone } from "../../Step2MilestoneSetup";
-import { LuUserPlus } from "react-icons/lu";
 
 interface MilestoneProps {
   milestone: Milestone;
@@ -80,10 +79,7 @@ export function Milestone({
     };
   }, [menuOpen, milestone.id, setMenuOpen]);
 
-  const getUserName = (userId: string) => {
-    const user = userOptions.find((u) => u.value === userId);
-    return user ? user.label : userId;
-  };
+
 
   return (
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
@@ -213,23 +209,23 @@ export function Milestone({
           </td>
           <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] min-w-[14rem] 2xl:min-w-[14vw]">
             <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
-              {milestone.assigned_to ? (
-                <p
-                  className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
-                  style={{
-                    backgroundColor: getRandomColor(
-                      milestone?.assigned_to || ""
-                    ),
-                  }}
-                >
-                  {getInitials(milestone.assigned_to || "")}
-                </p>
-              ) : (
-                <LuUserPlus className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw] mb-2 2xl:mb-[0.5vw]" />
-              )}
-              <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
-                {getUserName(milestone.assigned_to) || "---"}
-              </p>
+              {(() => {
+                const user = userOptions.find(u => u.value === milestone.assigned_to);
+                const fullName = user ? `${user.label}` : "";
+                return (
+                  <>
+                    <p
+                      className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
+                      style={{ backgroundColor: getRandomColor(fullName) }}
+                    >
+                      {getInitials(fullName)}
+                    </p>
+                    <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                      {fullName || milestone.assigned_to}
+                    </p>
+                  </>
+                );
+              })()}
             </div>
           </td>
           <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
