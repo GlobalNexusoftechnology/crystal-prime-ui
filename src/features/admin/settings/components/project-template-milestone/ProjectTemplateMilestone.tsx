@@ -10,8 +10,18 @@ import toast from "react-hot-toast";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik: FormikProps<any>; readOnly?: boolean }) {
   const { values, handleChange, handleBlur } = formik;
-  const [openMilestones, setOpenMilestones] = useState<{ [key: string]: boolean }>({});
-  const [editingMilestoneId, setEditingMilestoneId] = useState<string | null>(null);
+  const [openMilestones, setOpenMilestones] = useState<{ [key: string]: boolean }>(() => {
+    if (values.milestones && values.milestones.length === 1 && !values.milestones[0].id) {
+      return { '0': true } as { [key: string]: boolean };
+    }
+    return {} as { [key: string]: boolean };
+  });
+  const [editingMilestoneId, setEditingMilestoneId] = useState<string | null>(() => {
+    if (values.milestones && values.milestones.length === 1 && !values.milestones[0].id) {
+      return "0";
+    }
+    return null;
+  });
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
   const toggleMilestone = (id: string) => {
@@ -90,7 +100,16 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                   onToggle={toggleMilestone}
                   onEdit={handleEditMilestone}
                   onDelete={arrayHelpers.remove}
-                  onSave={() => setEditingMilestoneId(null)}
+                  onSave={() => {
+                    setEditingMilestoneId(null);
+                    const currentMilestone = values.milestones[index];
+                    const firstTask = currentMilestone && currentMilestone.tasks && currentMilestone.tasks[0];
+                    if (firstTask) {
+                      setEditingTaskId((firstTask.id ? firstTask.id : String(0)) + '-' + Date.now());
+                    } else {
+                      setEditingTaskId(null);
+                    }
+                  }}
                   onCancel={handleCancel}
                   handleChange={handleChange}
                   handleBlur={handleBlur}

@@ -96,7 +96,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
         project_type: "",
         estimated_days: "",
         description: "",
-        milestones: [],
+        milestones: [{ id: "", name: "", estimated_days: "", description: "", tasks: [] }],
       };
 
   const formik = useFormik<ProjectTemplateFormValues>({
@@ -176,7 +176,11 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               name="name"
               placeholder="Enter Template Name"
               value={formik.values.name}
-              onChange={formik.handleChange}
+              onChange={e => {
+                // Disallow special characters
+                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+                formik.setFieldValue('name', value);
+              }}
               onBlur={formik.handleBlur}
               error={
                 formik.touched.name
@@ -204,7 +208,11 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               name="estimated_days"
               placeholder="Enter Estimated Days"
               value={formik.values.estimated_days}
-              onChange={formik.handleChange}
+              onChange={e => {
+                // Allow only numbers
+                const value = e.target.value.replace(/[^0-9]/g, '');
+                formik.setFieldValue('estimated_days', value);
+              }}
               onBlur={formik.handleBlur}
               error={
                 formik.touched.estimated_days
@@ -221,7 +229,11 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
             <textarea
               name="description"
               value={formik.values.description}
-              onChange={formik.handleChange}
+              onChange={e => {
+                // Disallow special characters
+                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+                formik.setFieldValue('description', value);
+              }}
               onBlur={formik.handleBlur}
               placeholder="Write something..."
               className="w-full p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-borderGray rounded-md 2xl:rounded-[0.375vw]"

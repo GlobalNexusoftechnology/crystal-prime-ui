@@ -35,7 +35,11 @@ export function TaskRow({
         <InputField
           name={`milestones[${milestoneIndex}].tasks[${taskIndex}].title`}
           value={formik.values.milestones[milestoneIndex]?.tasks[taskIndex]?.title}
-          onChange={formik.handleChange}
+          onChange={e => {
+            // Disallow special characters
+            const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+            formik.setFieldValue(`milestones[${milestoneIndex}].tasks[${taskIndex}].title`, value);
+          }}
           onBlur={formik.handleBlur}
           placeholder="Enter Name"
           disabled={readOnly}
@@ -57,7 +61,11 @@ export function TaskRow({
         <InputField
           name={`milestones[${milestoneIndex}].tasks[${taskIndex}].estimated_days`}
           value={formik.values.milestones[milestoneIndex]?.tasks[taskIndex]?.estimated_days}
-          onChange={formik.handleChange}
+          onChange={e => {
+            // Allow only numbers
+            const value = e.target.value.replace(/[^0-9]/g, '');
+            formik.setFieldValue(`milestones[${milestoneIndex}].tasks[${taskIndex}].estimated_days`, value);
+          }}
           onBlur={formik.handleBlur}
           placeholder="Enter Days"
           icon={<FaRegCalendarAlt className="text-gray-400" />}
@@ -80,7 +88,11 @@ export function TaskRow({
         <InputField
           name={`milestones[${milestoneIndex}].tasks[${taskIndex}].description`}
           value={formik.values.milestones[milestoneIndex]?.tasks[taskIndex]?.description}
-          onChange={formik.handleChange}
+          onChange={e => {
+            // Disallow special characters
+            const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+            formik.setFieldValue(`milestones[${milestoneIndex}].tasks[${taskIndex}].description`, value);
+          }}
           onBlur={formik.handleBlur}
           placeholder="Enter Description"
           disabled={readOnly}

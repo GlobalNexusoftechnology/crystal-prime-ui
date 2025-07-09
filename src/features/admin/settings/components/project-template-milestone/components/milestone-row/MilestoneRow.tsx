@@ -73,6 +73,12 @@ export function MilestoneRow({
     }
   };
 
+  // Ensure at least one empty task for a new milestone
+  const isNewMilestone = !milestone.id && milestone.tasks.length === 0 && index === 0;
+  if (isNewMilestone) {
+    milestone.tasks.push({ id: '', title: '', estimated_days: '', description: '' });
+  }
+
   return (
     <div>
       <div className="grid grid-cols-4 gap-4 2xl:gap-[1vw] items-center py-2 2xl:py-[0.5vw] px-4 2xl:px-[1vw]  hover:bg-gray-50 border-b ">
@@ -88,7 +94,11 @@ export function MilestoneRow({
             <InputField
               name={`milestones[${index}].name`}
               value={formik.values.milestones[index]?.name}
-              onChange={formik.handleChange}
+              onChange={e => {
+                // Disallow special characters
+                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+                formik.setFieldValue(`milestones[${index}].name`, value);
+              }}
               onBlur={formik.handleBlur}
               placeholder="Enter Name"
               className="w-full"
@@ -117,7 +127,11 @@ export function MilestoneRow({
           <InputField
             name={`milestones[${index}].estimated_days`}
             value={formik.values.milestones[index]?.estimated_days}
-            onChange={formik.handleChange}
+            onChange={e => {
+              // Allow only numbers
+              const value = e.target.value.replace(/[^0-9]/g, '');
+              formik.setFieldValue(`milestones[${index}].estimated_days`, value);
+            }}
             onBlur={formik.handleBlur}
             placeholder="Enter Days"
             icon={<FaRegCalendarAlt className="text-gray-400" />}
@@ -137,7 +151,11 @@ export function MilestoneRow({
           <InputField
             name={`milestones[${index}].description`}
             value={formik.values.milestones[index]?.description}
-            onChange={formik.handleChange}
+            onChange={e => {
+              // Disallow special characters
+              const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+              formik.setFieldValue(`milestones[${index}].description`, value);
+            }}
             onBlur={formik.handleBlur}
             placeholder="Enter Description"
             error={
@@ -264,7 +282,7 @@ export function MilestoneRow({
                               description: "",
                             };
                             taskArrayHelpers.push(newTask);
-                            setEditingTaskId(newTask.id);
+                            setEditingTaskId(String(tasks.length)); // Use the new task's index as the editing key
                           } else {
                             toast.error(
                               "Please complete the previous task before adding a new one."
@@ -285,12 +303,12 @@ export function MilestoneRow({
                 </div>
                 {milestone.tasks?.map((task: Task, taskIndex: number) => (
                   <TaskRow
-                    key={task.id}
+                    key={task.id ? task.id : taskIndex}
                     task={task}
                     milestoneIndex={index}
                     taskIndex={taskIndex}
-                    isEditing={editingTaskId === task.id}
-                    onEdit={setEditingTaskId}
+                    isEditing={!!editingTaskId && editingTaskId.startsWith(task.id ? task.id : String(taskIndex))}
+                    onEdit={() => setEditingTaskId((task.id ? task.id : String(taskIndex)) + '-' + Date.now())}
                     onDelete={taskArrayHelpers.remove}
                     onSave={() => setEditingTaskId(null)}
                     onCancel={() => setEditingTaskId(null)}
