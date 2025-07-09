@@ -1,8 +1,8 @@
 import { InputField, Button, ActionDropdown } from "@/components";
-import { FaRegCalendarAlt } from "react-icons/fa";
 import { Task } from "../../../add-project-template/types";
 import { FormikProps } from "formik";
 import { ProjectTemplateFormValues } from "../../../add-project-template/types";
+import { TimeIcon } from "@/features";
 
 interface TaskRowProps {
   task: Task;
@@ -34,24 +34,33 @@ export function TaskRow({
       {isEditing ? (
         <InputField
           name={`milestones[${milestoneIndex}].tasks[${taskIndex}].title`}
-          value={formik.values.milestones[milestoneIndex]?.tasks[taskIndex]?.title}
-          onChange={e => {
+          value={
+            formik.values.milestones[milestoneIndex]?.tasks[taskIndex]?.title
+          }
+          onChange={(e) => {
             // Disallow special characters
-            const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
-            formik.setFieldValue(`milestones[${milestoneIndex}].tasks[${taskIndex}].title`, value);
+            const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+            formik.setFieldValue(
+              `milestones[${milestoneIndex}].tasks[${taskIndex}].title`,
+              value
+            );
           }}
           onBlur={formik.handleBlur}
           placeholder="Enter Name"
           disabled={readOnly}
           error={
-            formik.touched.milestones?.[milestoneIndex]?.tasks?.[taskIndex]?.title &&
-            typeof formik.errors.milestones?.[milestoneIndex] === 'object' &&
+            formik.touched.milestones?.[milestoneIndex]?.tasks?.[taskIndex]
+              ?.title &&
+            typeof formik.errors.milestones?.[milestoneIndex] === "object" &&
             formik.errors.milestones?.[milestoneIndex] &&
-            'tasks' in formik.errors.milestones[milestoneIndex] &&
-            typeof (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] === 'object' &&
-            (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] &&
-            'title' in (formik.errors.milestones[milestoneIndex]).tasks[taskIndex] ?
-              (formik.errors.milestones[milestoneIndex]).tasks[taskIndex].title : undefined
+            "tasks" in formik.errors.milestones[milestoneIndex] &&
+            typeof formik.errors.milestones[milestoneIndex].tasks?.[
+              taskIndex
+            ] === "object" &&
+            formik.errors.milestones[milestoneIndex].tasks?.[taskIndex] &&
+            "title" in formik.errors.milestones[milestoneIndex].tasks[taskIndex]
+              ? formik.errors.milestones[milestoneIndex].tasks[taskIndex].title
+              : undefined
           }
         />
       ) : (
@@ -60,51 +69,80 @@ export function TaskRow({
       {isEditing ? (
         <InputField
           name={`milestones[${milestoneIndex}].tasks[${taskIndex}].estimated_days`}
-          value={formik.values.milestones[milestoneIndex]?.tasks[taskIndex]?.estimated_days}
-          onChange={e => {
+          value={
+            formik.values.milestones[milestoneIndex]?.tasks[taskIndex]
+              ?.estimated_days
+          }
+          onChange={(e) => {
             // Allow only numbers
-            const value = e.target.value.replace(/[^0-9]/g, '');
-            formik.setFieldValue(`milestones[${milestoneIndex}].tasks[${taskIndex}].estimated_days`, value);
+            const value = e.target.value.replace(/[^0-9]/g, "");
+            formik.setFieldValue(
+              `milestones[${milestoneIndex}].tasks[${taskIndex}].estimated_days`,
+              value
+            );
           }}
           onBlur={formik.handleBlur}
           placeholder="Enter Days"
-          icon={<FaRegCalendarAlt className="text-gray-400" />}
+          icon={<TimeIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />}
           disabled={readOnly}
           error={
-            formik.touched.milestones?.[milestoneIndex]?.tasks?.[taskIndex]?.estimated_days &&
-            typeof formik.errors.milestones?.[milestoneIndex] === 'object' &&
+            formik.touched.milestones?.[milestoneIndex]?.tasks?.[taskIndex]
+              ?.estimated_days &&
+            typeof formik.errors.milestones?.[milestoneIndex] === "object" &&
             formik.errors.milestones?.[milestoneIndex] &&
-            'tasks' in formik.errors.milestones[milestoneIndex] &&
-            typeof (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] === 'object' &&
-            (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] &&
-            'estimated_days' in (formik.errors.milestones[milestoneIndex]).tasks[taskIndex] ?
-              (formik.errors.milestones[milestoneIndex]).tasks[taskIndex].estimated_days : undefined
+            "tasks" in formik.errors.milestones[milestoneIndex] &&
+            typeof formik.errors.milestones[milestoneIndex].tasks?.[
+              taskIndex
+            ] === "object" &&
+            formik.errors.milestones[milestoneIndex].tasks?.[taskIndex] &&
+            "estimated_days" in
+              formik.errors.milestones[milestoneIndex].tasks[taskIndex]
+              ? formik.errors.milestones[milestoneIndex].tasks[taskIndex]
+                  .estimated_days
+              : undefined
           }
         />
       ) : (
-        <span>{task.estimated_days}</span>
+        <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+          <TimeIcon className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.25vw]" />
+          <p className="text-[1.1rem] 2xl:text-[1.1vw] font-medium underline">
+            {task.estimated_days}
+          </p>
+        </div>
       )}
       {isEditing ? (
         <InputField
           name={`milestones[${milestoneIndex}].tasks[${taskIndex}].description`}
-          value={formik.values.milestones[milestoneIndex]?.tasks[taskIndex]?.description}
-          onChange={e => {
+          value={
+            formik.values.milestones[milestoneIndex]?.tasks[taskIndex]
+              ?.description
+          }
+          onChange={(e) => {
             // Disallow special characters
-            const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
-            formik.setFieldValue(`milestones[${milestoneIndex}].tasks[${taskIndex}].description`, value);
+            const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+            formik.setFieldValue(
+              `milestones[${milestoneIndex}].tasks[${taskIndex}].description`,
+              value
+            );
           }}
           onBlur={formik.handleBlur}
           placeholder="Enter Description"
           disabled={readOnly}
           error={
-            formik.touched.milestones?.[milestoneIndex]?.tasks?.[taskIndex]?.description &&
-            typeof formik.errors.milestones?.[milestoneIndex] === 'object' &&
+            formik.touched.milestones?.[milestoneIndex]?.tasks?.[taskIndex]
+              ?.description &&
+            typeof formik.errors.milestones?.[milestoneIndex] === "object" &&
             formik.errors.milestones?.[milestoneIndex] &&
-            'tasks' in formik.errors.milestones[milestoneIndex] &&
-            typeof (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] === 'object' &&
-            (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex] &&
-            'description' in (formik.errors.milestones[milestoneIndex]).tasks[taskIndex] ?
-              (formik.errors.milestones[milestoneIndex]).tasks[taskIndex].description : undefined
+            "tasks" in formik.errors.milestones[milestoneIndex] &&
+            typeof formik.errors.milestones[milestoneIndex].tasks?.[
+              taskIndex
+            ] === "object" &&
+            formik.errors.milestones[milestoneIndex].tasks?.[taskIndex] &&
+            "description" in
+              formik.errors.milestones[milestoneIndex].tasks[taskIndex]
+              ? formik.errors.milestones[milestoneIndex].tasks[taskIndex]
+                  .description
+              : undefined
           }
         />
       ) : (
@@ -117,25 +155,39 @@ export function TaskRow({
               title="Save"
               onClick={async () => {
                 // Mark all task fields as touched
-                await formik.setFieldTouched(`milestones[${milestoneIndex}].tasks[${taskIndex}].title`, true, true);
-                await formik.setFieldTouched(`milestones[${milestoneIndex}].tasks[${taskIndex}].estimated_days`, true, true);
-                await formik.setFieldTouched(`milestones[${milestoneIndex}].tasks[${taskIndex}].description`, true, true);
+                await formik.setFieldTouched(
+                  `milestones[${milestoneIndex}].tasks[${taskIndex}].title`,
+                  true,
+                  true
+                );
+                await formik.setFieldTouched(
+                  `milestones[${milestoneIndex}].tasks[${taskIndex}].estimated_days`,
+                  true,
+                  true
+                );
+                await formik.setFieldTouched(
+                  `milestones[${milestoneIndex}].tasks[${taskIndex}].description`,
+                  true,
+                  true
+                );
 
                 // Validate the task fields
                 await formik.validateForm();
                 let taskErrors;
                 if (
-                  typeof formik.errors.milestones?.[milestoneIndex] === 'object' &&
+                  typeof formik.errors.milestones?.[milestoneIndex] ===
+                    "object" &&
                   formik.errors.milestones?.[milestoneIndex] &&
-                  'tasks' in formik.errors.milestones[milestoneIndex]
+                  "tasks" in formik.errors.milestones[milestoneIndex]
                 ) {
-                  taskErrors = (formik.errors.milestones[milestoneIndex]).tasks?.[taskIndex];
+                  taskErrors =
+                    formik.errors.milestones[milestoneIndex].tasks?.[taskIndex];
                 }
 
                 // Only save if there are no errors for this task
                 if (
                   !taskErrors ||
-                  (typeof taskErrors === 'object' &&
+                  (typeof taskErrors === "object" &&
                     !taskErrors.title &&
                     !taskErrors.estimated_days &&
                     !taskErrors.description)
@@ -167,7 +219,11 @@ export function TaskRow({
               direction="left"
               options={[
                 { label: "Edit", onClick: () => onEdit(task?.id || "") },
-                { label: "Delete", onClick: () => onDelete(taskIndex), className: "text-red-500" },
+                {
+                  label: "Delete",
+                  onClick: () => onDelete(taskIndex),
+                  className: "text-red-500",
+                },
               ]}
             />
           )
@@ -175,4 +231,4 @@ export function TaskRow({
       </div>
     </div>
   );
-} 
+}

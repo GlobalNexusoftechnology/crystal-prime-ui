@@ -1,14 +1,10 @@
 import toast from "react-hot-toast";
-import {
-  FaChevronDown,
-  FaChevronRight,
-  FaRegCalendarAlt,
-} from "react-icons/fa";
+import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
 import { FieldArray, FormikProps } from "formik";
 
 import { InputField, Button, ActionDropdown } from "@/components";
-import { AddSquareIcon, TreeStructureIcon } from "@/features";
+import { AddSquareIcon, TimeIcon, TreeStructureIcon } from "@/features";
 import { useDeleteProjectTemplateMilestoneMutation } from "@/services";
 
 import { Milestone, Task } from "../../../add-project-template/types";
@@ -74,9 +70,15 @@ export function MilestoneRow({
   };
 
   // Ensure at least one empty task for a new milestone
-  const isNewMilestone = !milestone.id && milestone.tasks.length === 0 && index === 0;
+  const isNewMilestone =
+    !milestone.id && milestone.tasks.length === 0 && index === 0;
   if (isNewMilestone) {
-    milestone.tasks.push({ id: '', title: '', estimated_days: '', description: '' });
+    milestone.tasks.push({
+      id: "",
+      title: "",
+      estimated_days: "",
+      description: "",
+    });
   }
 
   return (
@@ -94,9 +96,9 @@ export function MilestoneRow({
             <InputField
               name={`milestones[${index}].name`}
               value={formik.values.milestones[index]?.name}
-              onChange={e => {
+              onChange={(e) => {
                 // Disallow special characters
-                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
                 formik.setFieldValue(`milestones[${index}].name`, value);
               }}
               onBlur={formik.handleBlur}
@@ -127,14 +129,17 @@ export function MilestoneRow({
           <InputField
             name={`milestones[${index}].estimated_days`}
             value={formik.values.milestones[index]?.estimated_days}
-            onChange={e => {
+            onChange={(e) => {
               // Allow only numbers
-              const value = e.target.value.replace(/[^0-9]/g, '');
-              formik.setFieldValue(`milestones[${index}].estimated_days`, value);
+              const value = e.target.value.replace(/[^0-9]/g, "");
+              formik.setFieldValue(
+                `milestones[${index}].estimated_days`,
+                value
+              );
             }}
             onBlur={formik.handleBlur}
             placeholder="Enter Days"
-            icon={<FaRegCalendarAlt className="text-gray-400" />}
+            icon={<TimeIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />}
             error={
               formik.touched.milestones?.[index]?.estimated_days &&
               typeof formik.errors.milestones?.[index] === "object" &&
@@ -145,15 +150,20 @@ export function MilestoneRow({
             }
           />
         ) : (
-          <span>{milestone.estimated_days}</span>
+          <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+            <TimeIcon className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.25vw]" />
+            <p className="text-[1.1rem] 2xl:text-[1.1vw] font-medium underline">
+              {milestone.estimated_days}
+            </p>
+          </div>
         )}
         {isEditing ? (
           <InputField
             name={`milestones[${index}].description`}
             value={formik.values.milestones[index]?.description}
-            onChange={e => {
+            onChange={(e) => {
               // Disallow special characters
-              const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+              const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
               formik.setFieldValue(`milestones[${index}].description`, value);
             }}
             onBlur={formik.handleBlur}
@@ -307,8 +317,19 @@ export function MilestoneRow({
                     task={task}
                     milestoneIndex={index}
                     taskIndex={taskIndex}
-                    isEditing={!!editingTaskId && editingTaskId.startsWith(task.id ? task.id : String(taskIndex))}
-                    onEdit={() => setEditingTaskId((task.id ? task.id : String(taskIndex)) + '-' + Date.now())}
+                    isEditing={
+                      !!editingTaskId &&
+                      editingTaskId.startsWith(
+                        task.id ? task.id : String(taskIndex)
+                      )
+                    }
+                    onEdit={() =>
+                      setEditingTaskId(
+                        (task.id ? task.id : String(taskIndex)) +
+                          "-" +
+                          Date.now()
+                      )
+                    }
                     onDelete={taskArrayHelpers.remove}
                     onSave={() => setEditingTaskId(null)}
                     onCancel={() => setEditingTaskId(null)}
