@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import { Dropdown, InputField, DatePicker } from "@/components";
-import { HiCheck, HiXMark, HiOutlineCalendar } from "react-icons/hi2";
+import { HiCheck, HiXMark } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
-import { getInitials, getRandomColor } from "@/utils";
+import { formatDateToDDMMYYYY, getInitials, getRandomColor } from "@/utils";
 import { useRouter } from "next/navigation";
 import { IProjectTaskResponse } from "@/services";
 
@@ -61,7 +61,12 @@ export function Task({
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (menuOpen && menuOpen.taskId === task.id && menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      if (
+        menuOpen &&
+        menuOpen.taskId === task.id &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
         setMenuOpen(null);
       }
     }
@@ -98,11 +103,19 @@ export function Task({
       editingTask.taskId === task.id &&
       editTask ? (
         <>
-        <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw] text-right flex gap-2 2xl:gap-[0.5vw]">
-            <button onClick={onSave} className="text-green-600 2xl:text-[1vw]" title="Save">
+          <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw] text-right flex gap-2 2xl:gap-[0.5vw]">
+            <button
+              onClick={onSave}
+              className="text-green-600 2xl:text-[1vw]"
+              title="Save"
+            >
               <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
-            <button onClick={onCancel} className="text-red-600 2xl:text-[1vw]" title="Cancel">
+            <button
+              onClick={onCancel}
+              className="text-red-600 2xl:text-[1vw]"
+              title="Cancel"
+            >
               <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
           </td>
@@ -154,7 +167,6 @@ export function Task({
               />
             </div>
           </td>
-          
         </>
       ) : (
         <>
@@ -174,7 +186,10 @@ export function Task({
               <HiOutlineDotsVertical className="w-6 h-6" />
             </button>
             {menuOpen && menuOpen.taskId === task.id && (
-              <div ref={menuRef} className="absolute left-[80%] bottom-[10%] mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
+              <div
+                ref={menuRef}
+                className="absolute left-[80%] bottom-[10%] mt-2 bg-white border rounded shadow z-10 min-w-[100px]"
+              >
                 {canViewTask && (
                   <button
                     className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
@@ -211,8 +226,12 @@ export function Task({
               </div>
             )}
           </td>
-          <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">{task.title}</td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">{task.description}</td>
+          <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
+            {task.title}
+          </td>
+          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
+            {task.description}
+          </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2">
               <p
@@ -235,11 +254,11 @@ export function Task({
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] 2xl:text-[0.9vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
-              <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
-              <span className="text-[0.9rem] 2xl:text-[0.9vw]">{task.due_date}</span>
+              <span className="text-[0.9rem] 2xl:text-[0.9vw]">
+                {task.due_date ? formatDateToDDMMYYYY(task.due_date) : "---"}
+              </span>
             </span>
           </td>
-        
         </>
       )}
     </tr>

@@ -18,7 +18,7 @@ import { EditStaffModel } from "../edit-staff-model";
 import {
   downloadBlobFile,
   formatDate,
-  formatDateToMMDDYYYY,
+  formatDateToDDMMYYYY,
   IApiError,
 } from "@/utils";
 import { usePermission } from "@/utils/hooks";
@@ -79,7 +79,7 @@ export function StaffListTable() {
       number: user?.phone_number || "",
       email: user?.email || "",
       role: user?.role?.role || "",
-      dob: formatDateToMMDDYYYY(user?.dob) || "",
+      dob: formatDateToDDMMYYYY(user?.dob) || "",
       created_at: formatDate(user?.created_at) || "",
       updated_at: formatDate(user?.updated_at) || "",
       role_id: user?.role?.id || "",

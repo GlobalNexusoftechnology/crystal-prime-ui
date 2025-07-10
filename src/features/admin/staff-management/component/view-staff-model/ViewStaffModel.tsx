@@ -1,6 +1,6 @@
 import { ModalOverlay } from "@/components";
 import { IUserViewDetails } from "@/services";
-import { formatDate, formatDateToMMDDYYYY } from "@/utils";
+import { formatDate, formatDateToDDMMYYYY } from "@/utils";
 import { Mail, Phone } from "lucide-react";
 import React from "react";
 
@@ -16,7 +16,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
   isOpen,
   onClose,
 }) => {
-  const dob = selectStaff && formatDateToMMDDYYYY(selectStaff?.dob);
+  const dob = selectStaff && formatDateToDDMMYYYY(selectStaff?.dob);
 
   return (
     <div>

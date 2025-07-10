@@ -1,7 +1,7 @@
 import React from "react";
-import { HiChevronDown, HiChevronUp, HiOutlineCalendar } from "react-icons/hi2";
+import { HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import { TreeStructureIcon } from "@/features";
-import { formatDateToMMDDYYYY, getInitials, getRandomColor } from "@/utils";
+import { formatDateToDDMMYYYY, getInitials, getRandomColor } from "@/utils";
 
 // Add local types for editing
 export interface Task {
@@ -77,14 +77,12 @@ export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
         </td>
         <td className="px-2 py-2">
           <span className="flex items-center gap-2">
-            <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-            <span className="text-[0.9rem]">{formatDateToMMDDYYYY(milestone.start_date)}</span>
+            <span className="text-[0.9rem]">{formatDateToDDMMYYYY(milestone.start_date)}</span>
           </span>
         </td>
         <td className="px-2 py-2">
           <span className="flex items-center gap-2">
-            <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
-            {formatDateToMMDDYYYY(milestone.end_date)}
+            {formatDateToDDMMYYYY(milestone.end_date)}
           </span>
         </td>
         <td className="px-2 py-2"></td>
@@ -95,7 +93,7 @@ export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
             <table>
               <thead>
                 <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
-                  <th className="px-2 2xl:px-[0.5vw] px-8 2xl:px-[2vw] py-2 2xl:py-[0.5vw] text-left min-w-[10rem] 2xl:min-w-[10vw]">Task Name</th>
+                  <th className="px-8 2xl:px-[2vw] py-2 2xl:py-[0.5vw] text-left min-w-[10rem] 2xl:min-w-[10vw]">Task Name</th>
                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
@@ -126,7 +124,6 @@ export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
                     </td>
                     <td className="py-2">
                       <span className="flex items-center gap-2">
-                        <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
                         <span className="text-[0.9rem]">{task?.due_date}</span>
                       </span>
                     </td>
