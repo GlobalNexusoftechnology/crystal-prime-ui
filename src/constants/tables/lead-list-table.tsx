@@ -11,6 +11,7 @@ export interface ILeadsListProps {
   email: string[];
   location: string;
   budget: string;
+  possibility_of_conversion?: number | null;
   requirement: string;
   source_id: string;
   status_id: string;
@@ -32,6 +33,7 @@ export interface ILeadsListDetailsProps {
   email: string[];
   location: string;
   budget: string;
+  possibility_of_conversion?: number | null;
   requirement: string;
   source: ISource;
   status: IStatus;
@@ -97,6 +99,16 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
     header: "BUDGET",
     accessor: "budget",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+  },
+  {
+    header: "POSSIBILITY OF CONVERSION",
+    accessor: "possibility_of_conversion",
+    headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
+    cell: ({ row }) => (
+      <span>
+        {row.possibility_of_conversion ? `${row.possibility_of_conversion}%` : '-'}
+      </span>
+    ),
   },
   {
     header: "REQUIREMENT",

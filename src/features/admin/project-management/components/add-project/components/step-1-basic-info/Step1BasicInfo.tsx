@@ -1,13 +1,14 @@
 import { InputField, Dropdown, DatePicker } from "@/components";
 // import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { FormikProps } from "formik";
 import { IAddProjectFormValues } from "../../AddProject";
 import { ImageRegistry } from "@/constants";
 import Image from "next/image";
-import { Checkbox } from '@/components';
+import { Checkbox } from "@/components";
 import { useAllTypesQuery } from "@/services";
-
+import { differenceInCalendarDays, parseISO } from "date-fns";
+import { CostDisplay } from "./CostDisplay";
 
 const renewalTypeOptions = [
   { label: "Monthly", value: "MONTHLY" },
@@ -49,12 +50,66 @@ export function Step1BasicInfo({
   // Helper to ensure string for DatePicker
   const toDateString = (val: string | Date | undefined) =>
     val
-      ? typeof val === 'string'
+      ? typeof val === "string"
         ? val
         : val instanceof Date && !isNaN(val.getTime())
-          ? val.toISOString().slice(0, 10)
-          : ''
-      : '';
+        ? val.toISOString().slice(0, 10)
+        : ""
+      : "";
+
+  // Calculate Estimated Cost
+  let estimatedCost = "";
+  const costOfLabour = Number(values.cost_of_labour) || 0;
+  const overheadCost = Number(values.overhead_cost) || 0;
+  const extraCost = Number(values.extra_cost) || 0;
+  let days = 0;
+  // Overhead cost validation
+  const overheadCostError =
+    overheadCost > costOfLabour
+      ? "Overhead cost cannot be greater than cost of labour"
+      : undefined;
+  if (values.start_date && values.end_date) {
+    try {
+      const start =
+        typeof values.start_date === "string"
+          ? parseISO(values.start_date)
+          : new Date(values.start_date);
+      const end =
+        typeof values.end_date === "string"
+          ? parseISO(values.end_date)
+          : new Date(values.end_date);
+      days = differenceInCalendarDays(end, start) + 1;
+    } catch {}
+  }
+  if (costOfLabour > 0 || overheadCost > 0 || extraCost > 0) {
+    estimatedCost = (
+      (costOfLabour + overheadCost) * (days > 0 ? days : 0) +
+      extraCost
+    ).toString();
+  }
+
+  // After estimatedCost calculation
+  useEffect(() => {
+    if (estimatedCost !== "" && estimatedCost !== values.estimated_cost) {
+      setFieldValue("estimated_cost", estimatedCost);
+    }
+    if (estimatedCost === "" && values.estimated_cost !== "") {
+      setFieldValue("estimated_cost", "");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [estimatedCost]);
+
+  // Filtering handler for name and description
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/[^a-zA-Z0-9 .,'-]/g, "");
+    setFieldValue("name", value);
+  };
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = e.target.value.replace(/[^a-zA-Z0-9 .,'-]/g, "");
+    setFieldValue("description", value);
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -64,7 +119,7 @@ export function Step1BasicInfo({
           name="name"
           placeholder="Enter Project Name"
           value={values.name}
-          onChange={handleChange}
+          onChange={handleNameChange}
           onBlur={handleBlur}
           error={
             touched.name && typeof errors.name === "string"
@@ -76,21 +131,31 @@ export function Step1BasicInfo({
         <Dropdown
           label="Type Of Project"
           options={projectTypeOptions}
-          value={values.project_type || ''}
+          value={values.project_type || ""}
           onChange={(val) => setFieldValue("project_type", val)}
-          error={touched.project_type && typeof errors.project_type === "string" ? errors.project_type : undefined}
+          error={
+            touched.project_type && typeof errors.project_type === "string"
+              ? errors.project_type
+              : undefined
+          }
           dropdownWidth="w-full"
         />
         <Dropdown
           label="Client"
-          options={clientLoading
-            ? [{ label: "Loading...", value: "" }]
-            : clientError
+          options={
+            clientLoading
+              ? [{ label: "Loading...", value: "" }]
+              : clientError
               ? [{ label: "Error loading clients", value: "" }]
-              : clientOptions}
-          value={values.client_id || ''}
+              : clientOptions
+          }
+          value={values.client_id || ""}
           onChange={(val) => setFieldValue("client_id", val)}
-          error={touched.client_id && typeof errors.client_id === "string" ? errors.client_id : undefined}
+          error={
+            touched.client_id && typeof errors.client_id === "string"
+              ? errors.client_id
+              : undefined
+          }
           dropdownWidth="w-full"
         />
       </div>
@@ -99,7 +164,7 @@ export function Step1BasicInfo({
         name="description"
         placeholder="Enter Description"
         value={values.description}
-        onChange={handleChange}
+        onChange={handleDescriptionChange}
         onBlur={handleBlur}
         error={
           touched.description && typeof errors.description === "string"
@@ -116,16 +181,30 @@ export function Step1BasicInfo({
           onChange={(val) => setFieldValue("start_date", val)}
           placeholder="Estimated Start Date"
           maxDate={toDateString(values.end_date)}
-          minDate={toDateString(values.start_date) || new Date().toISOString().slice(0, 10)}
-          error={touched.start_date && typeof errors.start_date === "string" ? errors.start_date : undefined}
+          minDate={
+            toDateString(values.start_date) ||
+            new Date().toISOString().slice(0, 10)
+          }
+          error={
+            touched.start_date && typeof errors.start_date === "string"
+              ? errors.start_date
+              : undefined
+          }
         />
         <DatePicker
           label="Estimated End Date"
           value={toDateString(values.end_date)}
           onChange={(val) => setFieldValue("end_date", val)}
           placeholder="Estimated End Date"
-          minDate={toDateString(values.start_date) || new Date().toISOString().slice(0, 10)}
-          error={touched.end_date && typeof errors.end_date === "string" ? errors.end_date : undefined}
+          minDate={
+            toDateString(values.start_date) ||
+            new Date().toISOString().slice(0, 10)
+          }
+          error={
+            touched.end_date && typeof errors.end_date === "string"
+              ? errors.end_date
+              : undefined
+          }
         />
         <InputField
           label="Budget"
@@ -144,21 +223,6 @@ export function Step1BasicInfo({
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
-        <InputField
-          label="Estimated Cost"
-          name="estimated_cost"
-          placeholder="Estimated Cost"
-          value={values.estimated_cost}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={
-            touched.estimated_cost && typeof errors.estimated_cost === "string"
-              ? errors.estimated_cost
-              : undefined
-          }
-          type="number"
-          className="2xl:text-[1vw]"
-        />
         <InputField
           label="Cost Of Labour"
           name="cost_of_labour"
@@ -182,20 +246,38 @@ export function Step1BasicInfo({
           onChange={handleChange}
           onBlur={handleBlur}
           error={
-            touched.overhead_cost && typeof errors.overhead_cost === "string"
+            overheadCostError ||
+            (touched.overhead_cost && typeof errors.overhead_cost === "string"
               ? errors.overhead_cost
-              : undefined
+              : undefined)
           }
           type="number"
           className="2xl:text-[1vw]"
         />
+        <InputField
+          label="Additional Cost"
+          name="extra_cost"
+          placeholder="Additional Cost"
+          value={values.extra_cost}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          type="number"
+          className="2xl:text-[1vw]"
+        />
+        <div className="flex items-end h-full">
+          <CostDisplay
+            label="Estimated Cost"
+            value={estimatedCost}
+            currency="₹"
+          />
+        </div>
       </div>
 
       <div className="mt-4">
         <Checkbox
           label="Is Renewal?"
           checked={values.is_renewal}
-          onChange={e => setFieldValue('is_renewal', e.target.checked)}
+          onChange={(e) => setFieldValue("is_renewal", e.target.checked)}
           name="is_renewal"
         />
       </div>
@@ -205,9 +287,13 @@ export function Step1BasicInfo({
             <Dropdown
               label="Renewal Type"
               options={renewalTypeOptions}
-              value={values.renewal_type || ''}
-              onChange={val => setFieldValue('renewal_type', val)}
-              error={touched.renewal_type && typeof errors.renewal_type === 'string' ? errors.renewal_type : undefined}
+              value={values.renewal_type || ""}
+              onChange={(val) => setFieldValue("renewal_type", val)}
+              error={
+                touched.renewal_type && typeof errors.renewal_type === "string"
+                  ? errors.renewal_type
+                  : undefined
+              }
               dropdownWidth="w-full"
             />
           </div>
@@ -215,9 +301,13 @@ export function Step1BasicInfo({
             <DatePicker
               label="Renewal Date"
               value={toDateString(values.renewal_date)}
-              onChange={val => setFieldValue('renewal_date', val)}
+              onChange={(val) => setFieldValue("renewal_date", val)}
               placeholder="Select Renewal Date"
-              error={touched.renewal_date && typeof errors.renewal_date === 'string' ? errors.renewal_date : undefined}
+              error={
+                touched.renewal_date && typeof errors.renewal_date === "string"
+                  ? errors.renewal_date
+                  : undefined
+              }
               minDate={new Date().toISOString().slice(0, 10)}
             />
           </div>
@@ -226,10 +316,11 @@ export function Step1BasicInfo({
       {!hideMilestoneTemplateOption && (
         <div className="flex gap-6 2xl:gap-[1.5vw] mt-6 2xl:mt-[1vw]">
           <div
-            className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${isMilestoneSelected
-              ? "border-primary bg-blue-50"
-              : "border-gray-300 bg-white"
-              }`}
+            className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${
+              isMilestoneSelected
+                ? "border-primary bg-blue-50"
+                : "border-gray-300 bg-white"
+            }`}
             onClick={() => setFieldValue("milestoneOption", "milestone")}
           >
             <div className="w-[8rem] 2xl:w-[8vw] h-[10rem] 2xl:h-[10vw]">
@@ -246,10 +337,11 @@ export function Step1BasicInfo({
             </span>
           </div>
           <div
-            className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${isTemplateSelected
-              ? "border-primary bg-blue-50"
-              : "border-gray-300 bg-white"
-              }`}
+            className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${
+              isTemplateSelected
+                ? "border-primary bg-blue-50"
+                : "border-gray-300 bg-white"
+            }`}
             onClick={() => setFieldValue("milestoneOption", "template")}
           >
             <div className="w-[18rem] 2xl:w-[18vw] h-[10rem] 2xl:h-[10vw]">

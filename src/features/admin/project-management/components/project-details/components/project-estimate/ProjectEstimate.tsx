@@ -46,31 +46,37 @@ export function ProjectEstimate({ projectEstimateData }: ProjectEstimateProps) {
           <div className="flex flex-col">
             <p className="font-light">Estimated Cost</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
-              {projectEstimateData.estimated_cost}
+            ₹ {projectEstimateData.estimated_cost}
             </p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Actual Cost</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
-              {projectEstimateData.actual_cost}
+            ₹ {projectEstimateData.actual_cost ? projectEstimateData.actual_cost: "0"}
             </p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Cost Of Labour</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
-              {projectEstimateData.labour_cost}
+            ₹ {projectEstimateData.labour_cost ? projectEstimateData.labour_cost : "0"}
             </p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Over Head Cost</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
-              {projectEstimateData.overhead_cost}
+            ₹ {projectEstimateData.overhead_cost ? projectEstimateData.overhead_cost : "0"}
+            </p>
+          </div>
+          <div className="flex flex-col">
+            <p className="font-light">Additional Cost</p>
+            <p className="text-[1rem] 2xl:text-[1.1vw]">
+            ₹ {projectEstimateData.extra_cost ? projectEstimateData.extra_cost : "0"}
             </p>
           </div>
           <div className="flex flex-col">
             <p className="font-light">Budget</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
-              {projectEstimateData.budget}
+            ₹ {projectEstimateData.budget ? projectEstimateData.budget : "0"}
             </p>
           </div>
         </div>

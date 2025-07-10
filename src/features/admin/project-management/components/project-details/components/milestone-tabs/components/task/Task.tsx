@@ -31,6 +31,9 @@ interface TaskProps {
   statusOptions: { label: string; value: string }[];
   milestoneId: string;
   errors?: { [key: string]: string };
+  canViewTask?: boolean;
+  canEditTask?: boolean;
+  canDeleteTask?: boolean;
 }
 
 export function Task({
@@ -48,6 +51,9 @@ export function Task({
   userOptions,
   milestoneId,
   errors = {},
+  canViewTask = true,
+  canEditTask = true,
+  canDeleteTask = true,
 }: TaskProps) {
   const router = useRouter();
 
@@ -100,7 +106,7 @@ export function Task({
               <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
           </td>
-          <td className="pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] font-medium">
+          <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] font-medium">
             <div className="flex flex-col">
               <InputField
                 value={editTask.title}
@@ -134,7 +140,7 @@ export function Task({
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
             <div className="flex flex-col">
-              <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.3vw] py-1 2xl:py-[0.25vw] rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
+              <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold w-fit">
                 {task.status}
               </span>
             </div>
@@ -169,37 +175,43 @@ export function Task({
             </button>
             {menuOpen && menuOpen.taskId === task.id && (
               <div ref={menuRef} className="absolute left-[80%] bottom-[10%] mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
-                  onClick={() => handleRedirectView(task.id)}
-                >
-                  View
-                </button>
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
-                  onClick={() =>
-                    onEdit(milestoneId, {
-                      id: task.id,
-                      title: task.title,
-                      description: task.description || "",
-                      assigned_to: task.assigned_to || "",
-                      status: task.status || "",
-                      due_date: task.due_date || "",
-                    })
-                  }
-                >
-                  Edit
-                </button>
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100 text-red-600"
-                  onClick={() => onDelete(milestoneId, task.id)}
-                >
-                  Delete
-                </button>
+                {canViewTask && (
+                  <button
+                    className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
+                    onClick={() => handleRedirectView(task.id)}
+                  >
+                    View
+                  </button>
+                )}
+                {canEditTask && (
+                  <button
+                    className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
+                    onClick={() =>
+                      onEdit(milestoneId, {
+                        id: task.id,
+                        title: task.title,
+                        description: task.description || "",
+                        assigned_to: task.assigned_to || "",
+                        status: task.status || "",
+                        due_date: task.due_date || "",
+                      })
+                    }
+                  >
+                    Edit
+                  </button>
+                )}
+                {canDeleteTask && (
+                  <button
+                    className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100 text-red-600"
+                    onClick={() => onDelete(milestoneId, task.id)}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             )}
           </td>
-          <td className="pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">{task.title}</td>
+          <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">{task.title}</td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">{task.description}</td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
             <div className="flex items-center gap-2">
@@ -217,7 +229,7 @@ export function Task({
             </div>
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw]">
-            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
+            <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold">
               {task.status}
             </span>
           </td>

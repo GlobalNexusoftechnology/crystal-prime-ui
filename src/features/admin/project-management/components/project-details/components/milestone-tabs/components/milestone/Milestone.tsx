@@ -51,6 +51,9 @@ interface MilestoneProps {
   statusOptions: { label: string; value: string }[];
   children?: React.ReactNode;
   errors?: {[key: string]: string};
+  canEditMilestone?: boolean;
+  canDeleteMilestone?: boolean;
+  canViewMilestone?: boolean;
 }
 
 export function Milestone({
@@ -70,6 +73,9 @@ export function Milestone({
   userOptions,
   children,
   errors = {},
+  canEditMilestone = true,
+  canDeleteMilestone = true,
+  canViewMilestone = true,
 }: MilestoneProps) {
   const router = useRouter()
 
@@ -198,19 +204,25 @@ export function Milestone({
             </button>
             {menuOpen === milestone.id && (
               <div ref={menuRef} className="absolute left-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px]">
-                <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => handleRedirectView(milestone.id)}>View</button>
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100"
-                  onClick={() => onEdit(milestone)}
-                >
-                  Edit
-                </button>
-                <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100 text-red-600"
-                  onClick={() => onDelete(milestone.id)}
-                >
-                  Delete
-                </button>
+                {canViewMilestone && (
+                  <button className="block w-full text-left px-4 py-2 hover:bg-gray-100" onClick={() => handleRedirectView(milestone.id)}>View</button>
+                )}
+                {canEditMilestone && (
+                  <button
+                    className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100"
+                    onClick={() => onEdit(milestone)}
+                  >
+                    Edit
+                  </button>
+                )}
+                {canDeleteMilestone && (
+                  <button
+                    className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100 text-red-600"
+                    onClick={() => onDelete(milestone.id)}
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             )}
           </td>

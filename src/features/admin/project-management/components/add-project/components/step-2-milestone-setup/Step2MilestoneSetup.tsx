@@ -29,6 +29,7 @@ interface ProjectMilestoneMaster {
 interface ProjectTemplate {
   id: string;
   name: string;
+  project_type?: string;
   project_milestone_master?: ProjectMilestoneMaster[];
 }
 
@@ -61,7 +62,6 @@ interface Step2MilestoneSetupProps {
   onBack: () => void;
   onNext: (milestones: Milestone[]) => void;
   milestoneOption: string;
-  projectTemplateOptions: { label: string; value: string }[];
   projectTemplateLoading: boolean;
   projectTemplateError: boolean;
   allProjectTemplatesData?: AllProjectTemplatesData;
@@ -71,6 +71,7 @@ interface Step2MilestoneSetupProps {
   projectStartDate: string;
   projectEndDate: string;
   mode?: 'create' | 'edit';
+  projectType: string;
 }
 
 // Mock options
@@ -89,7 +90,6 @@ export function Step2MilestoneSetup({
   onBack,
   onNext,
   milestoneOption,
-  projectTemplateOptions,
   projectTemplateLoading,
   projectTemplateError,
   allProjectTemplatesData,
@@ -98,6 +98,7 @@ export function Step2MilestoneSetup({
   setProjectTemplate,
   projectStartDate,
   projectEndDate,
+  projectType,
   mode = 'create',
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
@@ -195,6 +196,17 @@ export function Step2MilestoneSetup({
     }
     if (!task.due_date) {
       errors.due_date = "Due date is required";
+    } else {
+      // Link due date to milestone
+      const milestone = milestones.find(m => m.id === milestoneId);
+      if (milestone) {
+        if (milestone.start_date && task.due_date < milestone.start_date) {
+          errors.due_date = "Due date cannot be before milestone start date";
+        }
+        if (milestone.end_date && task.due_date > milestone.end_date) {
+          errors.due_date = "Due date cannot be after milestone end date";
+        }
+      }
     }
     setTaskErrors(prev => ({ ...prev, [`${milestoneId}_${task.id}`]: errors }));
     return Object.keys(errors).length === 0;
@@ -260,7 +272,6 @@ export function Step2MilestoneSetup({
           due_date: t.due_date || "",
         })),
       }));
-      console.log("Setting milestones from template:", mappedMilestones);
       setMilestones(mappedMilestones);
       setTemplateApplied(true);
     } else {
@@ -271,7 +282,6 @@ export function Step2MilestoneSetup({
   // Initialize milestones from existing data (for edit mode)
   useEffect(() => {
     if (initialMilestones && initialMilestones.length > 0 && milestones.length === 0 && !templateApplied) {
-      console.log("Setting initial milestones:", initialMilestones);
       setMilestones(initialMilestones.map(m => ({
         id: m.id || "",
         name: m.name,
@@ -298,8 +308,14 @@ export function Step2MilestoneSetup({
   }, [projectTemplate]);
 
   // Add expandedMilestones state
-  const [expandedMilestones, setExpandedMilestones] = useState<string[]>([]);
+  const [expandedMilestones, setExpandedMilestones] = useState<string[]>(
+    milestones.map((m) => m.id)
+  );
   const [autoMilestoneCreated, setAutoMilestoneCreated] = useState(false);
+
+  useEffect(() => {
+    setExpandedMilestones(milestones.map((m) => m.id));
+  }, [milestones]);
 
   // Default open logic for milestone and task, and auto-create if none exist
   useEffect(() => {
@@ -356,6 +372,18 @@ export function Step2MilestoneSetup({
     }
   }, [milestoneOption]);
 
+  // When editing a milestone, if its dates are empty, auto-populate from project dates
+  useEffect(() => {
+    if (editMilestone && (!editMilestone.start_date || !editMilestone.end_date)) {
+      setEditMilestone({
+        ...editMilestone,
+        start_date: editMilestone.start_date || projectStartDate || getEmptyDate(),
+        end_date: editMilestone.end_date || projectEndDate || getEmptyDate(),
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editMilestone, projectStartDate, projectEndDate]);
+
   // Toggle expand/collapse for milestone
   const toggleMilestone = (id: string) => {
     setExpandedMilestones((prev) =>
@@ -405,15 +433,14 @@ export function Step2MilestoneSetup({
       toast.error("Please complete the current milestone before adding a new one.");
       return;
     }
-    const emptyDate = getEmptyDate();
     const newMilestone = {
       id: `milestone-${milestoneIdCounter.current++}`,
       name: "",
       description: "",
       assigned_to: "--",
       status: "Open",
-      start_date: emptyDate,
-      end_date: emptyDate,
+      start_date: projectStartDate || getEmptyDate(),
+      end_date: projectEndDate || getEmptyDate(),
       tasks: [],
     };
     setMilestones((prev) => [newMilestone, ...prev]);
@@ -570,6 +597,15 @@ export function Step2MilestoneSetup({
 
   const isTemplateSelected = milestoneOption === "template";
 
+  // Filter templates by selected project type using string match
+  const filteredProjectTemplateOptions =
+    allProjectTemplatesData?.templates
+      ?.filter((tpl) => !projectType || tpl.project_type === projectType)
+      .map((tpl) => ({
+        label: tpl.name,
+        value: tpl.id,
+      })) || [];
+
   // When user clicks next, pass milestones to parent
   const handleNext = () => {
     // Validate all milestones and tasks before proceeding
@@ -619,7 +655,7 @@ export function Step2MilestoneSetup({
               ? [{ label: "Loading...", value: "" }]
               : projectTemplateError
                 ? [{ label: "Error loading templates", value: "" }]
-                : projectTemplateOptions}
+                : filteredProjectTemplateOptions}
             value={projectTemplate}
             onChange={(value) => {
               setProjectTemplate(value);
@@ -684,7 +720,7 @@ export function Step2MilestoneSetup({
                           <thead>
                             <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
                             <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                              <th className="px-8 2xl:px-[2vw] pl-20 2xl:pl-[5vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[13rem] 2xl:min-w-[13vw]">
+                              <th className="px-8 2xl:px-[2vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[13rem] 2xl:min-w-[13vw]">
                                 <span>Task Name</span>
                                 <button
                                   className="text-purple-500 hover:text-purple-700 text-lg"
@@ -719,6 +755,8 @@ export function Step2MilestoneSetup({
                                 statusOptions={statusOptions}
                                 milestoneId={milestone.id}
                                 errors={editingTask && editingTask.milestoneId === milestone.id && editingTask.taskId === task.id ? (taskErrors[`${milestone.id}_${task.id}`] || {}) : {}}
+                                milestoneStartDate={milestone.start_date}
+                                milestoneEndDate={milestone.end_date}
                               />
                             ))}
                           </tbody>

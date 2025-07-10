@@ -23,3 +23,4 @@ export { TreeStructureIcon } from "./TreeStructureIcon";
 export { AddSquareIcon } from "./AddSquareIcon";
 export { FileAttachmentIcon } from "./FileAttachmentIcon";
 export { UserListRoundedIcon } from "./UserListRoundedIcon";
+export { TimeIcon } from "./TimeIcon";

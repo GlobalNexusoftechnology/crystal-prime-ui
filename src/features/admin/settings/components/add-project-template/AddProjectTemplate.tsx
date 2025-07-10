@@ -1,7 +1,6 @@
 "use client";
 
 import { useFormik, FormikProvider } from "formik";
-import * as Yup from "yup";
 import { Dropdown, InputField, Button } from "@/components";
 import { ProjectTemplateMilestone } from "../project-template-milestone";
 import { ProjectTemplateFormValues } from "./types";
@@ -11,30 +10,6 @@ import { useRouter } from "next/navigation";
 import { useProjectTemplateDetailQuery, useAllTypesQuery } from "@/services";
 import { useQueryClient } from '@tanstack/react-query';
 
-
-// Validation schema using Yup
-const validationSchema = Yup.object({
-  name: Yup.string().required("Template Name is required"),
-  project_type: Yup.string().required("Type of Project is required"),
-  estimated_days: Yup.number()
-    .typeError("Must be a number")
-    .required("Estimated Days is required"),
-  description: Yup.string().required("Description is required"),
-  milestones: Yup.array().of(
-    Yup.object().shape({
-      name: Yup.string().required("Milestone name is required"),
-      estimated_days: Yup.string().required("Estimated days is required"),
-      description: Yup.string().required("Description is required"),
-      tasks: Yup.array().of(
-        Yup.object().shape({
-          title: Yup.string().required("Task name is required"),
-          estimated_days: Yup.string().required("Estimated days is required"),
-          description: Yup.string().required("Description is required"),
-        })
-      ),
-    })
-  ),
-});
 
 export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: string, refetchAllProjectTemplates: () => void }) {
   const router = useRouter();
@@ -96,13 +71,14 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
         project_type: "",
         estimated_days: "",
         description: "",
-        milestones: [],
+        milestones: [{ id: "", name: "", estimated_days: "", description: "", tasks: [] }],
       };
 
   const formik = useFormik<ProjectTemplateFormValues>({
     enableReinitialize: true,
     initialValues,
-    validationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
     onSubmit: (values) => {
       const payload = {
         ...(id ? { id } : {}),
@@ -176,7 +152,11 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               name="name"
               placeholder="Enter Template Name"
               value={formik.values.name}
-              onChange={formik.handleChange}
+              onChange={e => {
+                // Disallow special characters
+                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+                formik.setFieldValue('name', value);
+              }}
               onBlur={formik.handleBlur}
               error={
                 formik.touched.name
@@ -204,7 +184,11 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               name="estimated_days"
               placeholder="Enter Estimated Days"
               value={formik.values.estimated_days}
-              onChange={formik.handleChange}
+              onChange={e => {
+                // Allow only numbers
+                const value = e.target.value.replace(/[^0-9]/g, '');
+                formik.setFieldValue('estimated_days', value);
+              }}
               onBlur={formik.handleBlur}
               error={
                 formik.touched.estimated_days
@@ -221,7 +205,11 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
             <textarea
               name="description"
               value={formik.values.description}
-              onChange={formik.handleChange}
+              onChange={e => {
+                // Disallow special characters
+                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
+                formik.setFieldValue('description', value);
+              }}
               onBlur={formik.handleBlur}
               placeholder="Write something..."
               className="w-full p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-borderGray rounded-md 2xl:rounded-[0.375vw]"

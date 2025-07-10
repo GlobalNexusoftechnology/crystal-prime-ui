@@ -15,7 +15,7 @@ const nextConfig: NextConfig = {
         pathname: '/**', // Match any path for example CDN images
       },
     ],
-    domains: ['carpetmarketbucket.s3.amazonaws.com'],
+    domains: ['res.cloudinary.com'],
   },  
 };
 

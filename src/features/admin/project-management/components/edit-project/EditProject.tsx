@@ -50,6 +50,7 @@ export function EditProject({ projectId }: EditProjectProps) {
         estimated_cost: projectDetailData.estimated_cost || 0,
         cost_of_labour: projectDetailData.cost_of_labour || 0,
         overhead_cost: projectDetailData.overhead_cost || 0,
+        extra_cost: projectDetailData.extra_cost || 0,
         start_date: projectDetailData.start_date ? new Date(projectDetailData.start_date).toISOString().slice(0, 10) : undefined,
         end_date: projectDetailData.end_date ? new Date(projectDetailData.end_date).toISOString().slice(0, 10) : undefined,
         template_id: projectDetailData.template_id || null,

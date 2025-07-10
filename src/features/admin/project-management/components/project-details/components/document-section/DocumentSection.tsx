@@ -25,50 +25,53 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
         Documents
       </h3>
       <div className="flex flex-col gap-8 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
-        {documentSectionData.map((doc, idx) => (
-          <div
-            key={idx}
-            className="flex flex-wrap gap-12 2xl:gap-[3vw] items-center"
-          >
-            <div className="flex flex-col">
-              <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
-                Document Name
-              </p>
-              <Link
-                href={`${doc?.file_path}`}
-                target="_blank"
-                // rel="noopener noreferrer"
-                className="text-[1rem] 2xl:text-[1.1vw] underline hover:text-blue-600 transition-colors duration-200"
-              >
-                {doc?.name || "---"}
-              </Link>
+        {documentSectionData.map((doc, idx) => {         
+          return (
+            <div
+              key={idx}
+              className="flex flex-wrap gap-12 2xl:gap-[3vw] items-center"
+            >
+              
+              <div className="flex flex-col">
+                <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
+                  Document Name
+                </p>
+                <Link
+                  href={`${doc?.file_path}`}
+                  target="_blank"
+                  // rel="noopener noreferrer"
+                  className="text-[1rem] 2xl:text-[1.1vw] underline hover:text-blue-600 transition-colors duration-200"
+                >
+                  {doc?.name || "---"}
+                </Link>
+              </div>
+              <div className="flex flex-col">
+                <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
+                  Uploaded By
+                </p>
+                <p
+                  className={`${
+                    doc.uploaded_by && "underline"
+                  } text-[1rem] 2xl:text-[1.1vw]`}
+                >
+                  {getUserNameById(doc.uploaded_by)}
+                </p>
+              </div>
+              <div className="flex flex-col">
+                <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
+                  Uploaded At
+                </p>
+                <p
+                  className={`${
+                    doc.created_at && "underline"
+                  } text-[1rem] 2xl:text-[1.1vw]`}
+                >
+                  {formatIndiaTime(doc?.created_at, "toReadable") || "---"}
+                </p>
+              </div>
             </div>
-            <div className="flex flex-col">
-              <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
-                Uploaded By
-              </p>
-              <p
-                className={`${
-                  doc.uploaded_by && "underline"
-                } text-[1rem] 2xl:text-[1.1vw]`}
-              >
-                {getUserNameById(doc.uploaded_by)}
-              </p>
-            </div>
-            <div className="flex flex-col">
-              <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
-                Uploaded At
-              </p>
-              <p
-                className={`${
-                  doc.created_at && "underline"
-                } text-[1rem] 2xl:text-[1.1vw]`}
-              >
-                {formatIndiaTime(doc?.created_at, "toReadable") || "---"}
-              </p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

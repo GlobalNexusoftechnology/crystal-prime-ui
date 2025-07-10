@@ -2,7 +2,7 @@
 
 import { AddSquareIcon } from "@/features/icons";
 import { FieldArray, FormikProps } from "formik";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Milestone } from "../add-project-template/types";
 import { MilestoneRow } from "./components";
 import toast from "react-hot-toast";
@@ -10,9 +10,32 @@ import toast from "react-hot-toast";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik: FormikProps<any>; readOnly?: boolean }) {
   const { values, handleChange, handleBlur } = formik;
-  const [openMilestones, setOpenMilestones] = useState<{ [key: string]: boolean }>({});
-  const [editingMilestoneId, setEditingMilestoneId] = useState<string | null>(null);
+  const [openMilestones, setOpenMilestones] = useState<{ [key: string]: boolean }>(() => {
+    if (values.milestones && values.milestones.length > 0) {
+      // Open all milestones by default
+      return Object.fromEntries(
+        values.milestones.map((m: Milestone, idx: number) => [(m.id || String(idx)), true])
+      );
+    }
+    return {};
+  });
+  const [editingMilestoneId, setEditingMilestoneId] = useState<string | null>(() => {
+    if (values.milestones && values.milestones.length === 1 && !values.milestones[0].id) {
+      return "0";
+    }
+    return null;
+  });
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (values.milestones && values.milestones.length > 0) {
+      setOpenMilestones(
+        Object.fromEntries(
+          values.milestones.map((m: Milestone, idx: number) => [(m.id || String(idx)), true])
+        )
+      );
+    }
+  }, [values.milestones]);
 
   const toggleMilestone = (id: string) => {
     setOpenMilestones((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -90,7 +113,16 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                   onToggle={toggleMilestone}
                   onEdit={handleEditMilestone}
                   onDelete={arrayHelpers.remove}
-                  onSave={() => setEditingMilestoneId(null)}
+                  onSave={() => {
+                    setEditingMilestoneId(null);
+                    const currentMilestone = values.milestones[index];
+                    const firstTask = currentMilestone && currentMilestone.tasks && currentMilestone.tasks[0];
+                    if (firstTask) {
+                      setEditingTaskId((firstTask.id ? firstTask.id : String(0)) + '-' + Date.now());
+                    } else {
+                      setEditingTaskId(null);
+                    }
+                  }}
                   onCancel={handleCancel}
                   handleChange={handleChange}
                   handleBlur={handleBlur}

@@ -128,6 +128,7 @@ export interface IAllLeadsList {
   email: string;
   location: string;
   budget: string;
+  possibility_of_conversion?: number | null;
   requirement: string;
   source: ISource;
   status: IStatus;
@@ -276,6 +277,7 @@ export interface ICreateLeadPayload {
   email: string[];
   location: string;
   budget?: number | null;
+  possibility_of_conversion?: number | null;
   requirement: string;
   source_id: string;
   status_id: string;
@@ -1025,6 +1027,7 @@ export interface ICreateProjectPayload {
   budget?: number;
   estimated_cost?: number;
   cost_of_labour?: number;
+  extra_cost?: number;
   overhead_cost?: number;
   start_date?: string;
   end_date?: string;

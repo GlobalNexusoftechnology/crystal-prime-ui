@@ -32,6 +32,7 @@ export interface IEstimates {
   actual_start?: string;
   actual_end?: string;
   estimated_cost: string;
+  extra_cost: string;
   actual_cost?: string;
   labour_cost: string;
   overhead_cost: string;

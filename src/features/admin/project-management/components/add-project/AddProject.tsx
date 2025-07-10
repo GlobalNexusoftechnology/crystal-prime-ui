@@ -39,6 +39,7 @@ export interface IAddProjectFormValues {
   estimated_cost?: number | string;
   cost_of_labour?: number | string;
   overhead_cost?: number | string;
+  extra_cost?: number | string;
   start_date?: string;
   end_date?: string;
   template_id?: string | null;
@@ -69,6 +70,7 @@ const initialValues: IAddProjectFormValues = {
   estimated_cost: "",
   cost_of_labour: "",
   overhead_cost: "",
+  extra_cost: "",
   start_date: undefined,
   end_date: undefined,
   template_id: "",
@@ -79,10 +81,14 @@ const initialValues: IAddProjectFormValues = {
 };
 
 const validationSchema = Yup.object({
-  name: Yup.string().required("Project Name is required"),
+  name: Yup.string()
+    .required("Project Name is required")
+    .matches(/^[a-zA-Z0-9 .,'-]*$/, "No special characters allowed in Project Name."),
   project_type: Yup.string().required("Project Type is required"),
   client_id: Yup.string().required("Client is required"),
-  description: Yup.string().required("Description is required"),
+  description: Yup.string()
+    .required("Description is required")
+    .matches(/^[a-zA-Z0-9 .,'-]*$/, "No special characters allowed in Description."),
   start_date: Yup.date()
     .typeError("Estimated Start Date is required")
     .required("Estimated Start Date is required"),
@@ -110,12 +116,9 @@ const validationSchema = Yup.object({
   milestoneOption: Yup.string().required("Milestone Option is required"),
 });
 
-// Custom validation function for Formik to show sum error under both fields
 function validate(values: IAddProjectFormValues) {
   const errors: Partial<Record<keyof IAddProjectFormValues, string>> = {};
-  // Let Yup handle most errors
   try {
-    // If is_renewal is false, temporarily remove renewal_date and renewal_type for validation
     const valuesForValidation = { ...values };
     if (!values.is_renewal) {
       valuesForValidation.renewal_date = undefined;
@@ -132,7 +135,6 @@ function validate(values: IAddProjectFormValues) {
       (
         yupError as { inner: Array<{ path?: string; message: string }> }
       ).inner.forEach((err) => {
-        // Only set renewal_date/renewal_type errors if is_renewal is true
         if (err.path && !errors[err.path as keyof IAddProjectFormValues]) {
           if ((err.path === 'renewal_date' || err.path === 'renewal_type') && !values.is_renewal) {
             // skip
@@ -142,6 +144,14 @@ function validate(values: IAddProjectFormValues) {
         }
       });
     }
+  }
+  // Custom: Prevent special characters in name and description
+  const allowedPattern = /^[a-zA-Z0-9 .,'-]*$/;
+  if (values.name && !allowedPattern.test(values.name)) {
+    errors.name = "No special characters allowed in Project Name.";
+  }
+  if (values.description && !allowedPattern.test(values.description)) {
+    errors.description = "No special characters allowed in Description.";
   }
   // Custom: Estimated Cost vs Budget
   if (
@@ -166,7 +176,6 @@ function validate(values: IAddProjectFormValues) {
     errors.overhead_cost =
       "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
   }
-  // Custom: Renewal validation
   if (values.is_renewal) {
     if (!values.renewal_type || values.renewal_type === "NONE") {
       errors.renewal_type = "Renewal Type is required";
@@ -174,12 +183,12 @@ function validate(values: IAddProjectFormValues) {
     if (!values.renewal_date) {
       errors.renewal_date = "Renewal Date is required";
     }
-    // Also check for valid date if present
     if (values.renewal_date) {
       const renewalDate = new Date(values.renewal_date);
       if (isNaN(renewalDate.getTime())) {
         errors.renewal_date = "Invalid date";
       }
+
     }
   }
   return errors;
@@ -249,13 +258,6 @@ export function AddProject({
     isLoading: projectTemplateLoading,
     error: projectTemplateError,
   } = useAllProjectTemplatesQuery();
-
-  const projectTemplateOptions = (allProjectTemplatesData?.templates || []).map(
-    (template) => ({
-      label: template.name,
-      value: template.id,
-    })
-  );
 
   const { onCreateProject } = useCreateProjectMutation({
     onSuccessCallback: (response) => {
@@ -337,24 +339,23 @@ export function AddProject({
     }));
 
     // Map attachments: use Cloudinary URL for new files, original info for existing
-    const attachments = uploadedFiles.map((file, idx) => {
+    let newFileUrlIdx = 0;
+    const attachments = uploadedFiles.map((file) => {
       // Check if this is an existing attachment (has originalAttachment metadata)
-      const originalAttachment = (
-        file as File & {
-          originalAttachment?: {
-            file_path?: string;
-            file_type?: string;
-            file_name?: string;
-            uploaded_by?: {
-              id?: string;
-              first_name?: string;
-              last_name?: string;
-            };
-            created_at?: string;
+      const originalAttachment = (file as File & {
+        originalAttachment?: {
+          file_path?: string;
+          file_type?: string;
+          file_name?: string;
+          uploaded_by?: {
             id?: string;
+            first_name?: string;
+            last_name?: string;
           };
-        }
-      ).originalAttachment;
+          created_at?: string;
+          id?: string;
+        };
+      }).originalAttachment;
 
       if (originalAttachment && mode === "edit") {
         // For existing attachments, preserve the original file_path
@@ -365,9 +366,11 @@ export function AddProject({
           uploaded_by: originalAttachment.uploaded_by?.id || userId,
         };
       } else {
-        // For new files, use the Cloudinary URL
+        // For new files, use the next Cloudinary URL
+        const url = uploadedFileUrls[newFileUrlIdx] || file.name;
+        newFileUrlIdx++;
         return {
-          file_path: uploadedFileUrls[idx] || file.name, // fallback to file name if URL missing
+          file_path: url,
           file_type: file.type,
           file_name: file.name,
           uploaded_by: userId,
@@ -409,6 +412,10 @@ export function AddProject({
         basicInfo.overhead_cost !== ""
           ? Number(basicInfo.overhead_cost)
           : undefined,
+      extra_cost:
+        basicInfo.extra_cost !== "" && basicInfo.extra_cost !== undefined
+          ? Number(basicInfo.extra_cost)
+          : undefined,
       start_date: basicInfo.start_date
         ? basicInfo.start_date
           ? basicInfo.start_date
@@ -440,6 +447,9 @@ export function AddProject({
   };
 
   const handleFinalSubmit = () => {
+    // Debug logs to check mapping before submission
+    console.log('DEBUG: uploadedFiles', uploadedFiles);
+    console.log('DEBUG: uploadedFileUrls', uploadedFileUrls);
     const payload = assemblePayload();
 
     if (payload) {
@@ -488,45 +498,44 @@ export function AddProject({
         ? String(basicInfo.overhead_cost)
         : "",
     budget: basicInfo?.budget !== undefined ? String(basicInfo.budget) : "",
+    extra_cost: basicInfo?.extra_cost !== undefined ? String(basicInfo.extra_cost) : "",
   };
-  const documents: IDocumentInfo[] = uploadedFiles.map((file, idx) => {
+  let newFileUrlIdxForDocs = 0;
+  const documents: IDocumentInfo[] = uploadedFiles.map((file) => {
     // Check if this is an existing attachment (has originalAttachment metadata)
-    const originalAttachment = (
-      file as File & {
-        originalAttachment?: {
-          file_path?: string;
-          file_type?: string;
-          file_name?: string;
-          uploaded_by?: {
-            id?: string;
-            first_name?: string;
-            last_name?: string;
-          };
-          created_at?: string;
+    const originalAttachment = (file as File & {
+      originalAttachment?: {
+        file_path?: string;
+        file_type?: string;
+        file_name?: string;
+        uploaded_by?: {
+          id?: string;
+          first_name?: string;
+          last_name?: string;
         };
-      }
-    ).originalAttachment;
+        created_at?: string;
+      };
+    }).originalAttachment;
 
     if (originalAttachment && mode === "edit") {
       // For existing attachments, use the original uploaded_by information
       return {
         name: file.name,
         uploaded_by: originalAttachment.uploaded_by?.first_name
-          ? `${originalAttachment.uploaded_by.first_name} ${
-              originalAttachment.uploaded_by.last_name || ""
-            }`
+          ? `${originalAttachment.uploaded_by.first_name} ${originalAttachment.uploaded_by.last_name || ""}`
           : userId,
-        created_at:
-          originalAttachment.created_at || new Date().toLocaleString(),
+        created_at: originalAttachment.created_at || new Date().toLocaleString(),
         file_path: originalAttachment.file_path || file.name,
       };
     } else {
-      // For new files, use current user
+      // For new files, use the next Cloudinary URL
+      const url = uploadedFileUrls[newFileUrlIdxForDocs] || file.name;
+      newFileUrlIdxForDocs++;
       return {
         name: file.name,
         uploaded_by: userId,
         created_at: new Date().toLocaleString(),
-        file_path: uploadedFileUrls[idx] || file.name,
+        file_path: url,
       };
     }
   });
@@ -587,13 +596,13 @@ export function AddProject({
           onBack={() => setStep(1)}
           onNext={handleMilestoneNext}
           milestoneOption={milestoneOption}
-          projectTemplateOptions={projectTemplateOptions}
           projectTemplateLoading={projectTemplateLoading}
           projectTemplateError={!!projectTemplateError}
           allProjectTemplatesData={allProjectTemplatesData}
           initialMilestones={milestones}
           projectTemplate={selectedProjectTemplate}
           setProjectTemplate={setSelectedProjectTemplate}
+          projectType={basicInfo?.project_type ?? ""}
           projectStartDate={
             basicInfo?.start_date
               ? typeof basicInfo.start_date === "string"
@@ -661,3 +670,4 @@ export function AddProject({
     </section>
   );
 }
+
