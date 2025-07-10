@@ -3,9 +3,9 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, InputField, ModalOverlay } from "@/components";
-import { IApiError, formatDate } from "@/utils";
+import { IApiError, formatIndiaTime } from "@/utils";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   ICreateDailyTaskEntryPayload,
   useAllDailyTaskQuery,
@@ -27,6 +27,8 @@ const dailyTaskValidationSchema = Yup.object().shape({
 type IDailyTaskProps = {
   projectId: string;
   assignedTo: string;
+  originalTitle: string;
+  originalDescription: string;
 };
 
 const tabs = ["Daily Tasks"];
@@ -37,7 +39,7 @@ const statusOptions = [
   { label: "Completed", value: "Completed" },
 ];
 
-export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
+export function DailyTask({ projectId, assignedTo, originalTitle, originalDescription }: IDailyTaskProps) {
   const {
     data: dailyTasks,
     refetchDailyTasks,
@@ -70,9 +72,9 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
     initialValues: {
       project_id: projectId,
       assigned_to: assignedTo,
-      task_title: "",
+      task_title: originalTitle || "",
       entry_date: new Date().toISOString().slice(0, 10),
-      description: "",
+      description: originalDescription || "",
       hours_spent: undefined,
       status: "",
       remarks: "",
@@ -91,6 +93,21 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
       });
     },
   });
+
+  // Track if user has edited title/description
+  const userEditedTitle = useRef(false);
+  const userEditedDescription = useRef(false);
+
+  // Watch for changes in originalTitle/originalDescription and update formik if not edited by user
+  useEffect(() => {
+    if (!userEditedTitle.current) {
+      formik.setFieldValue("task_title", originalTitle || "");
+    }
+    if (!userEditedDescription.current) {
+      formik.setFieldValue("description", originalDescription || "");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [originalTitle, originalDescription]);
 
   // Show error state if task is not found
   if (isError && error?.message?.includes("Task not found")) {
@@ -191,7 +208,10 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
                     name="task_title"
                     placeholder="Enter Task Title"
                     value={formik.values.task_title}
-                    onChange={formik.handleChange}
+                    onChange={e => {
+                      userEditedTitle.current = true;
+                      formik.handleChange(e);
+                    }}
                     onBlur={formik.handleBlur}
                     error={
                       formik.touched.task_title
@@ -204,7 +224,10 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
                     name="description"
                     placeholder="Enter Description"
                     value={formik.values.description}
-                    onChange={formik.handleChange}
+                    onChange={e => {
+                      userEditedDescription.current = true;
+                      formik.handleChange(e);
+                    }}
                     onBlur={formik.handleBlur}
                     error={
                       formik.touched.description
@@ -297,7 +320,7 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
                             </span>
                           </span>
                           <span className="underline text-lightGreen 2xl:text-[1.1vw]">
-                            Created At: {formatDate(task.created_at)}
+                            Created At: {formatIndiaTime(task.created_at, 'toReadable')}
                           </span>
                           </div>
                         </div>
