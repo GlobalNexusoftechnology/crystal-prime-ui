@@ -264,12 +264,29 @@ export function Step1BasicInfo({
           type="number"
           className="2xl:text-[1vw]"
         />
-        <div className="flex items-end h-full">
+        <div className="flex flex-col h-full">
           <CostDisplay
             label="Estimated Cost"
             value={estimatedCost}
             currency="₹"
           />
+          {(() => {
+            const est = Number(values.estimated_cost);
+            const bud = Number(values.budget);
+            if (
+              !isNaN(est) &&
+              !isNaN(bud) &&
+              est > bud
+            ) {
+              const diff = est - bud;
+              return (
+                <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] 2xl:mt-[0.5vw] mt-1">
+                  Estimated Cost Exceeds by ₹{diff.toLocaleString("en-IN")}
+                </p>
+              );
+            }
+            return null;
+          })()}
         </div>
       </div>
 
