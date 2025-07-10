@@ -6,16 +6,22 @@ import { Button, InputField, ModalOverlay } from "@/components";
 import { IApiError, formatDate } from "@/utils";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import { useAllDailyTaskQuery, useCreateDailyTaskMutation } from '@/services/apis/clients/community-client/query-hooks';
-import { ICreateDailyTaskEntryPayload } from '@/services/apis/clients/community-client/types';
-import { HoursSpentInput } from '@/components/hours-spent-input';
-import { Dropdown } from '@/components';
-
+import {
+  ICreateDailyTaskEntryPayload,
+  useAllDailyTaskQuery,
+  useCreateDailyTaskMutation,
+  useAllUsersQuery,
+  IUsersDetails,
+} from "@/services";
+import { HoursSpentInput } from "@/components/hours-spent-input";
+import { Dropdown } from "@/components";
 
 const dailyTaskValidationSchema = Yup.object().shape({
-  hours_spent: Yup.number().positive('Must be a positive number').required('Hours spent is required'),
-  status: Yup.string().required('Status is required'),
-  remarks: Yup.string().required('Remark is required'),
+  hours_spent: Yup.number()
+    .positive("Must be a positive number")
+    .required("Hours spent is required"),
+  status: Yup.string().required("Status is required"),
+  remarks: Yup.string().required("Remark is required"),
 });
 
 type IDailyTaskProps = {
@@ -26,9 +32,9 @@ type IDailyTaskProps = {
 const tabs = ["Daily Tasks"];
 
 const statusOptions = [
-  { label: 'Pending', value: 'Pending' },
-  { label: 'In Progress', value: 'In Progress' },
-  { label: 'Completed', value: 'Completed' },
+  { label: "Pending", value: "Pending" },
+  { label: "In Progress", value: "In Progress" },
+  { label: "Completed", value: "Completed" },
 ];
 
 export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
@@ -39,6 +45,12 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
     error,
     isLoading,
   } = useAllDailyTaskQuery(projectId);
+  const { allUsersData, isLoading: usersLoading } = useAllUsersQuery();
+  const getUserName = (userId: string) => {
+    if (!allUsersData || usersLoading) return userId;
+    const user = (allUsersData as IUsersDetails[]).find((u) => u.id === userId);
+    return user ? `${user.first_name} ${user.last_name}` : userId;
+  };
   const [showForm, setShowForm] = useState(false);
   const [activeTab, setActiveTab] = useState("Daily Tasks");
 
@@ -58,12 +70,12 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
     initialValues: {
       project_id: projectId,
       assigned_to: assignedTo,
-      task_title: '',
+      task_title: "",
       entry_date: new Date().toISOString().slice(0, 10),
-      description: '',
+      description: "",
       hours_spent: undefined,
-      status: '',
-      remarks: '',
+      status: "",
+      remarks: "",
     },
     validationSchema: dailyTaskValidationSchema,
     onSubmit: async (values) => {
@@ -75,7 +87,7 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
         description: values.description,
         hours_spent: values.hours_spent,
         status: values.status,
-        remarks: values.remarks
+        remarks: values.remarks,
       });
     },
   });
@@ -89,10 +101,9 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
             {tabs.map((tab) => (
               <button
                 key={tab}
-                className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${activeTab === tab
-                  ? ""
-                  : "text-gray-500"
-                  }`}
+                className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${
+                  activeTab === tab ? "" : "text-gray-500"
+                }`}
                 onClick={() => {
                   setActiveTab(tab);
                   setShowForm(false);
@@ -109,10 +120,13 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
               Task Not Found
             </div>
             <div className="text-[0.9rem] 2xl:text-[0.9vw] text-gray-600 mb-4 2xl:mb-[1vw]">
-              The task with ID <code className="bg-gray-100 px-2 py-1 rounded">{projectId}</code> could not be found.
+              The task with ID{" "}
+              <code className="bg-gray-100 px-2 py-1 rounded">{projectId}</code>{" "}
+              could not be found.
             </div>
             <div className="text-[0.9rem] 2xl:text-[0.9vw] text-gray-500">
-              This might happen if the task was deleted or the URL contains an invalid task ID.
+              This might happen if the task was deleted or the URL contains an
+              invalid task ID.
             </div>
           </div>
         </div>
@@ -128,10 +142,9 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
           {tabs.map((tab) => (
             <button
               key={tab}
-              className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${activeTab === tab
-                ? ""
-                : "text-gray-500"
-                }`}
+              className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${
+                activeTab === tab ? "" : "text-gray-500"
+              }`}
               onClick={() => {
                 setActiveTab(tab);
                 setShowForm(false);
@@ -149,7 +162,10 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
             {showForm ? (
               "Close"
             ) : (
-              <Button title="Add Daily Task Comment" variant="primary-outline" />
+              <Button
+                title="Add Daily Task Comment"
+                variant="primary-outline"
+              />
             )}
           </span>
         </div>
@@ -177,7 +193,11 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
                     value={formik.values.task_title}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    error={formik.touched.task_title ? formik.errors.task_title : undefined}
+                    error={
+                      formik.touched.task_title
+                        ? formik.errors.task_title
+                        : undefined
+                    }
                   />
                   <InputField
                     label="Description"
@@ -186,21 +206,33 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
                     value={formik.values.description}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    error={formik.touched.description ? formik.errors.description : undefined}
+                    error={
+                      formik.touched.description
+                        ? formik.errors.description
+                        : undefined
+                    }
                   />
                   <div className="grid grid-cols-2 gap-4">
                     <HoursSpentInput
-                      value={formik.values.hours_spent || ''}
+                      value={formik.values.hours_spent || ""}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={formik.touched.hours_spent ? formik.errors.hours_spent : undefined}
+                      error={
+                        formik.touched.hours_spent
+                          ? formik.errors.hours_spent
+                          : undefined
+                      }
                     />
                     <Dropdown
                       label="Status"
                       options={statusOptions}
                       value={formik.values.status || ""}
-                      onChange={value => formik.setFieldValue('status', value)}
-                      error={formik.touched.status ? formik.errors.status : undefined}
+                      onChange={(value) =>
+                        formik.setFieldValue("status", value)
+                      }
+                      error={
+                        formik.touched.status ? formik.errors.status : undefined
+                      }
                     />
                   </div>
                   <InputField
@@ -210,7 +242,9 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
                     value={formik.values.remarks}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    error={formik.touched.remarks ? formik.errors.remarks : undefined}
+                    error={
+                      formik.touched.remarks ? formik.errors.remarks : undefined
+                    }
                   />
                   <div className="flex gap-4">
                     <Button
@@ -243,12 +277,12 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
                         <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
                           <span>
                             <span className="text-[1.1rem] 2xl:text-[1.1vw] font-normal">
-                              {task.task_title || '-'}
+                              {task.task_title || "-"}
                             </span>
                           </span>
                           <span>
                             <span className="2xl:text-[1.1vw] font-normal">
-                              User: {assignedTo}
+                              User: {getUserName(assignedTo)}
                             </span>
                           </span>
                           <span>
@@ -266,10 +300,11 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
                           </span>
                         </div>
                         <div className="mb-2 2xl:mb-[0.5vw]">
-                           {task.description}
+                          {task.description}
                         </div>
                         <div className="mb-2 2xl:mb-[0.5vw]">
-                          <strong>Remark:</strong> <p>{task.remarks || 'No description'}</p>
+                          <strong>Remark:</strong>{" "}
+                          <p>{task.remarks || "No description"}</p>
                         </div>
                       </div>
                     ))}
