@@ -161,7 +161,7 @@ function validate(values: IAddProjectFormValues) {
     values.budget !== "" &&
     Number(values.estimated_cost) > Number(values.budget)
   ) {
-    errors.estimated_cost = "Estimated Cost cannot be greater than Budget";
+    // Do not set errors.estimated_cost here, as the user might want to proceed even if estimated cost is greater than budget.
   }
   // Custom: Cost of Labour + Overhead Cost vs Estimated Cost
   const sum =
