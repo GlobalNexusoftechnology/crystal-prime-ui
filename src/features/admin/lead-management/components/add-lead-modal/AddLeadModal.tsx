@@ -194,10 +194,9 @@ export function AddLeadModal({
                     max="100"
                     value={values.possibility_of_conversion ?? ""}
                     onChange={(e) => {
-                      const value = e.target.value;
                       setFieldValue(
                         "possibility_of_conversion",
-                        value ? parseFloat(value) : null
+                        e.target.value === "" ? 0 : Number(e.target.value)
                       );
                     }}
                   />

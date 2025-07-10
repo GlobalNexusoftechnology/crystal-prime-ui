@@ -144,7 +144,7 @@ export function EditLeadModal({
         : [""],
     location: lead.location || "",
     budget: lead.budget ?? 0,
-    possibility_of_conversion: lead.possibility_of_conversion ?? null,
+    possibility_of_conversion: lead.possibility_of_conversion ?? "",
     requirement: lead.requirement || "",
     source_id: lead.source?.id?.toString() || lead.source_id?.toString() || "",
     status_id: lead.status?.id?.toString() || lead.status_id?.toString() || "",
@@ -266,10 +266,9 @@ export function EditLeadModal({
                       max="100"
                       value={values.possibility_of_conversion ?? ""}
                       onChange={(e) => {
-                        const value = e.target.value;
                         setFieldValue(
                           "possibility_of_conversion",
-                          value ? parseFloat(value) : null
+                          e.target.value === "" ? 0 : Number(e.target.value)
                         );
                       }}
                     />
