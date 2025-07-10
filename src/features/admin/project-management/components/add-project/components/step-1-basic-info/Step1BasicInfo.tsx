@@ -264,12 +264,17 @@ export function Step1BasicInfo({
           type="number"
           className="2xl:text-[1vw]"
         />
-        <div className="flex items-end h-full">
+        <div className="flex flex-col h-full">
           <CostDisplay
             label="Estimated Cost"
             value={estimatedCost}
             currency="₹"
           />
+          {touched.estimated_cost && typeof errors.estimated_cost === "string" && (
+            <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] 2xl:mt-[0.5vw] mt-1">
+              {errors.estimated_cost}
+            </p>
+          )}
         </div>
       </div>
 
