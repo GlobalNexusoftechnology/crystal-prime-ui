@@ -188,6 +188,7 @@ function validate(values: IAddProjectFormValues) {
       if (isNaN(renewalDate.getTime())) {
         errors.renewal_date = "Invalid date";
       }
+
     }
   }
   return errors;
@@ -411,6 +412,10 @@ export function AddProject({
         basicInfo.overhead_cost !== ""
           ? Number(basicInfo.overhead_cost)
           : undefined,
+      extra_cost:
+        basicInfo.extra_cost !== "" && basicInfo.extra_cost !== undefined
+          ? Number(basicInfo.extra_cost)
+          : undefined,
       start_date: basicInfo.start_date
         ? basicInfo.start_date
           ? basicInfo.start_date
@@ -493,6 +498,7 @@ export function AddProject({
         ? String(basicInfo.overhead_cost)
         : "",
     budget: basicInfo?.budget !== undefined ? String(basicInfo.budget) : "",
+    extra_cost: basicInfo?.extra_cost !== undefined ? String(basicInfo.extra_cost) : "",
   };
   let newFileUrlIdxForDocs = 0;
   const documents: IDocumentInfo[] = uploadedFiles.map((file) => {
@@ -664,3 +670,4 @@ export function AddProject({
     </section>
   );
 }
+

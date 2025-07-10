@@ -126,6 +126,9 @@ export function ProjectDetails({
               budget: projectDetailData.budget
                 ? String(projectDetailData.budget)
                 : "",
+              extra_cost: projectDetailData.extra_cost
+                ? String(projectDetailData.extra_cost)
+                : "",
             }}
           />
         </div>

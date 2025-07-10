@@ -1025,6 +1025,7 @@ export interface ICreateProjectPayload {
   budget?: number;
   estimated_cost?: number;
   cost_of_labour?: number;
+  extra_cost?: number;
   overhead_cost?: number;
   start_date?: string;
   end_date?: string;
