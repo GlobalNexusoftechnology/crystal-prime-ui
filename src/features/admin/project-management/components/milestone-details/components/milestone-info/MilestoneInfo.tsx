@@ -35,16 +35,15 @@ export function MilestoneInfo({ milestoneInfoData }: ProjectInfoProps) {
         Milestone Info
       </h3>
       <div className="flex flex-col gap-8 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
-        <div className="flex gap-12 2xl:gap-[3vw] items-center">
+        <div className="flex gap-12 2xl:gap-[3vw] items-start">
           <div className="flex flex-col">
             <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
-              Project Name
+              Milestone Name
             </p>
             <p className="underline text-[1rem] 2xl:text-[1.1vw]">
               {milestoneInfoData.name}
             </p>
           </div>
-
           <div className="flex flex-col ">
             <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
               Assigned To
