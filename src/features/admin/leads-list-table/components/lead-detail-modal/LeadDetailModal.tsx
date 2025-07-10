@@ -145,6 +145,16 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
+            <p className="text-[0.9rem] 2xl:text-[0.875vw]">
+              Possibility of Conversion
+            </p>
+            <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
+              {data.possibility_of_conversion
+                ? `${data.possibility_of_conversion}%`
+                : "Not specified"}
+            </p>
+          </div>
+          <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-[0.9rem] 2xl:text-[0.875vw]">Other Contact</p>
             <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
               {data?.other_contact}

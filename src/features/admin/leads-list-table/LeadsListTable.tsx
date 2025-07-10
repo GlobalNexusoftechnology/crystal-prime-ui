@@ -27,10 +27,10 @@ import { ImDownload2 } from "react-icons/im";
 import { usePermission } from "@/utils/hooks";
 import { useDebounce } from "@/utils/hooks";
 import toast from "react-hot-toast";
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from "@tanstack/react-query";
 
 interface LeadsListTableProps {
-  setAddLeadModalOpen: (arg0: boolean) => void
+  setAddLeadModalOpen: (arg0: boolean) => void;
 }
 
 export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
@@ -43,24 +43,41 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
   const [followupFromDate, setFollowupFromDate] = useState("");
   const [followupToDate, setFollowupToDate] = useState("");
-  const [dateRangeFilter, setDateRangeFilter] = useState<"All" | "Daily" | "Weekly" | "Monthly">("All");
+  const [dateRangeFilter, setDateRangeFilter] = useState<
+    "All" | "Daily" | "Weekly" | "Monthly"
+  >("All");
 
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
     delay: 500,
-    onChangeCb: () => { }, // not needed for this use case
+    onChangeCb: () => {}, // not needed for this use case
   });
 
-  const filters = useMemo(() => ({
-    searchText: searchQuery,
-    statusId: selectedStatus,
-    typeId: selectedType,
-    dateRange: dateRangeFilter,
-    followupFrom: followupFromDate || undefined,
-    followupTo: followupToDate || undefined,
-  }), [searchQuery, selectedStatus, selectedType, dateRangeFilter, followupFromDate, followupToDate]);
+  const filters = useMemo(
+    () => ({
+      searchText: searchQuery,
+      statusId: selectedStatus,
+      typeId: selectedType,
+      dateRange: dateRangeFilter,
+      followupFrom: followupFromDate || undefined,
+      followupTo: followupToDate || undefined,
+    }),
+    [
+      searchQuery,
+      selectedStatus,
+      selectedType,
+      dateRangeFilter,
+      followupFromDate,
+      followupToDate,
+    ]
+  );
 
-  const { data: allLeadList, isLoading, isError, error } = useAllLeadsListQuery(filters);
+  const {
+    data: allLeadList,
+    isLoading,
+    isError,
+    error,
+  } = useAllLeadsListQuery(filters);
   const { allStatusesData } = useAllStatusesQuery();
   const { allTypesData } = useAllTypesQuery();
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
@@ -91,8 +108,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       statusId: selectedStatus,
       typeId: selectedType,
       dateRange: dateRangeFilter,
-      followupFrom: followupFromDate ? new Date(followupFromDate).toISOString() : undefined,
-      followupTo: followupToDate ? new Date(followupToDate).toISOString() : undefined,
+      followupFrom: followupFromDate
+        ? new Date(followupFromDate).toISOString()
+        : undefined,
+      followupTo: followupToDate
+        ? new Date(followupToDate).toISOString()
+        : undefined,
     };
     const blob = await onAllLeadDownloadExcel(filters);
     if (blob instanceof Blob) {
@@ -115,11 +136,11 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const { onDeleteLead } = useDeleteLeadMutation({
     onSuccessCallback: (response: IDeleteLeadResponse) => {
-      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
+      queryClient.invalidateQueries({ queryKey: ["leads-list-query-key"] });
       toast.success(response?.message);
     },
     onErrorCallback: (err: IApiError) => {
-      toast.error(err?.message)
+      toast.error(err?.message);
     },
   });
 
@@ -164,17 +185,23 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
     (lead) => {
-      const status = allStatusesData?.find(s => s.id === lead?.status?.id);
+      const status = allStatusesData?.find((s) => s.id === lead?.status?.id);
       return {
         id: lead?.id || "N/A",
         first_name: lead?.first_name || "N/A",
         last_name: lead?.last_name || "N/A",
         phone: lead?.phone || "N/A",
         other_contact: lead?.other_contact || "N/A",
-        email: lead?.email ? String(lead.email).split(/,\s*/).map(email => email.trim()).filter(Boolean) : [],
+        email: lead?.email
+          ? String(lead.email)
+              .split(/,\s*/)
+              .map((email) => email.trim())
+              .filter(Boolean)
+          : [],
         company: lead?.company || "N/A",
         location: lead?.location || "N/A",
         budget: lead?.budget || "N/A",
+        possibility_of_conversion: lead?.possibility_of_conversion ?? null,
         requirement: lead?.requirement || "N/A",
         source_id: lead?.source?.name || "N/A",
         status_id: status?.name || "N/A",
@@ -186,7 +213,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         assigned_to:
           `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` ||
           "Unassigned",
-      }
+      };
     }
   );
 
@@ -201,6 +228,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     requirement: leadDetailById?.requirement || "null",
     location: leadDetailById?.location || "null",
     budget: leadDetailById?.budget || "null",
+    possibility_of_conversion:
+      leadDetailById?.possibility_of_conversion ?? null,
     status: leadDetailById?.status || {
       id: leadDetailById?.status?.id || "null",
       name: leadDetailById?.status?.name || "null",
@@ -307,7 +336,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   if (isError) {
     return (
       <div className="text-center py-6 text-red-500">
-        Error loading leads: {error?.message || 'Unknown error'}
+        Error loading leads: {error?.message || "Unknown error"}
       </div>
     );
   }
