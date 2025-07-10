@@ -137,7 +137,7 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
   return (
     <div className="flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:px-[1vw]">
       {/* Tabs */}
-      <div className="flex gap-8 2xl:gap-[2vw] items-center">
+      <div className="flex flex-wrap gap-8 2xl:gap-[2vw] items-center">
         <div className="flex gap-8 2xl:gap-[2vw]">
           {tabs.map((tab) => (
             <button
@@ -274,30 +274,32 @@ export function DailyTask({ projectId, assignedTo }: IDailyTaskProps) {
                         key={task.id}
                         className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
                       >
-                        <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
+                        <div className="flex justify-between flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
                           <span>
-                            <span className="text-[1.1rem] 2xl:text-[1.1vw] font-normal">
+                            <span className="underline text-[1.1rem] 2xl:text-[1.1vw] font-normal">
                               {task.task_title || "-"}
                             </span>
                           </span>
-                          <span>
+                          <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw]">
+                          <span className="underline">
                             <span className="2xl:text-[1.1vw] font-normal">
-                              User: {getUserName(assignedTo)}
+                              Assigned To: {getUserName(assignedTo)}
                             </span>
                           </span>
-                          <span>
+                          <span className="underline">
                             <span className="2xl:text-[1.1vw] font-normal">
                               Hours Spent: {task.hours_spent}
                             </span>
                           </span>
-                          <span>
+                          <span className="underline text-primary">
                             <span className="2xl:text-[1.1vw] font-normal">
                               Status: {task.status}
                             </span>
                           </span>
-                          <span className="text-lightGreen 2xl:text-[1.1vw]">
+                          <span className="underline text-lightGreen 2xl:text-[1.1vw]">
                             Created At: {formatDate(task.created_at)}
                           </span>
+                          </div>
                         </div>
                         <div className="mb-2 2xl:mb-[0.5vw]">
                           {task.description}
