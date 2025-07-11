@@ -49,7 +49,9 @@ export function PersonalInfo() {
     last_name: Yup.string().required("Last name is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     dob: Yup.string().required("Date of birth is required"),
-    phone_number: Yup.string().required("Phone number is required"),
+    phone_number: Yup.string()
+      .matches(/^[0-9]{8,15}$/, "Phone number must be 8 to 15 digits")
+      .required("Phone number is required"),
   });
 
   const { onEditUser, isPending } = useUpdateUserMutation({
@@ -148,7 +150,8 @@ export function PersonalInfo() {
                     pattern="[0-9]*"
                     value={values.phone_number}
                     onChange={(e) => {
-                      const onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                      let onlyNums = e.target.value.replace(/[^0-9]/g, "");
+                      if (onlyNums.length > 15) onlyNums = onlyNums.slice(0, 15);
                       setFieldValue("phone_number", onlyNums);
                     }}
                     error={touched.phone_number && errors.phone_number}

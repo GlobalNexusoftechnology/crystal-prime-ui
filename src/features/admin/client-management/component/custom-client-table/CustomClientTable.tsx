@@ -14,7 +14,7 @@ import React from "react";
 import { clientContactDetailsColumns, clientListColumn } from "@/constants";
 import { ActionDropdown } from "@/components";
 import { useUpdateClientDetailMutation, useDeleteClientDetailMutation, IClientList } from "@/services";
-import { formatDateToMMDDYYYY } from "@/utils";
+import { formatDateToDDMMYYYY } from "@/utils";
 
 interface EditContactData {
   contact_person: string;
@@ -198,7 +198,7 @@ export function CustomClientTable({
                       className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]"
                     >
                       {col.accessor === "created_at"
-                        ? formatDateToMMDDYYYY(value as string)
+                        ? formatDateToDDMMYYYY(value as string)
                         : Array.isArray(value)
                         ? value.length
                         : value}

@@ -1,9 +1,9 @@
 import React, { useRef, useEffect } from "react";
 import { Dropdown, InputField, DatePicker } from "@/components";
-import { HiCheck, HiXMark, HiOutlineCalendar } from "react-icons/hi2";
+import { HiCheck, HiXMark } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { getInitials, getRandomColor } from "@/utils";
-import { formatDateToMMDDYYYY } from "@/utils/helpers/formatDateToMMDDYYYY";
+import { formatDateToDDMMYYYY } from "@/utils/helpers/formatDateToDDMMYYYY";
 import type { Task } from "../../Step2MilestoneSetup";
 
 interface TaskProps {
@@ -205,9 +205,8 @@ export function Task({
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
-              <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-[0.9rem] 2xl:text-[0.9vw]">
-                {task.due_date ? formatDateToMMDDYYYY(task.due_date) : "---"}
+                {task.due_date ? formatDateToDDMMYYYY(task.due_date) : "---"}
               </span>
             </span>
           </td>

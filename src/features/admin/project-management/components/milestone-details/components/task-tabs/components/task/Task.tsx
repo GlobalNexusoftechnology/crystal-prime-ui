@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { Dropdown, InputField, DatePicker } from "@/components";
-import { HiCheck, HiXMark, HiOutlineCalendar } from "react-icons/hi2";
+import { HiCheck, HiXMark } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { getInitials, getRandomColor } from "@/utils";
 import { useRouter } from "next/navigation";
@@ -222,7 +222,6 @@ export function Task({
           </td>
           <td className="py-2">
             <span className="flex items-center gap-2">
-              <HiOutlineCalendar className="w-6 h-6 text-gray-400" />
               <span className="text-[0.9rem]">{task.due_date}</span>
             </span>
           </td>

@@ -5,11 +5,10 @@ import {
   HiXMark,
   HiChevronDown,
   HiChevronUp,
-  HiOutlineCalendar,
 } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TreeStructureIcon } from "@/features";
-import { formatDateToMMDDYYYY, getInitials, getRandomColor } from "@/utils";
+import { formatDateToDDMMYYYY, getInitials, getRandomColor } from "@/utils";
 import { useRouter } from "next/navigation";
 
 export interface Task {
@@ -275,18 +274,16 @@ export function Milestone({
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
-              <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-[0.9rem] 2xl:text-[0.9vw]">
-                {formatDateToMMDDYYYY(milestone.start_date)}
+                {formatDateToDDMMYYYY(milestone.start_date)}
               </span>
             </span>
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
-              <HiOutlineCalendar className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-400" />
               <span className="text-[0.9rem] 2xl:text-[0.9vw]">
 
-              {formatDateToMMDDYYYY(milestone.end_date)}
+              {formatDateToDDMMYYYY(milestone.end_date)}
               </span>
             </span>
           </td>

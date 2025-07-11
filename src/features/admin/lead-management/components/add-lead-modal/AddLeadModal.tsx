@@ -43,7 +43,8 @@ const validationSchema = Yup.object().shape({
   status_id: Yup.string().required("Status is required"),
   type_id: Yup.string().required("Type is required"),
   assigned_to: Yup.string().required("Assigned To is required"),
-});
+  other_contact: Yup.string()
+    .matches(/^[0-9]{8,15}$/, "Other Contact must be 8 to 15 digits"),});
 
 export function AddLeadModal({
   setAddLeadModalOpen,
@@ -182,8 +183,14 @@ export function AddLeadModal({
                     label="Other Contact"
                     placeholder="Enter Other Contact"
                     name="other_contact"
+                    type="text"
                     value={values?.other_contact}
-                    onChange={handleChange}
+                    onChange={e => {
+                      let digitsOnly = e.target.value.replace(/[^0-9]/g, "");
+                      if (digitsOnly.length > 15) digitsOnly = digitsOnly.slice(0, 15);
+                      setFieldValue("other_contact", digitsOnly);
+                    }}
+                    error={touched.other_contact && errors.other_contact}
                   />
                   <InputField
                     label="Possibility of Conversion (%)"
