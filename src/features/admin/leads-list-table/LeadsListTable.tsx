@@ -366,24 +366,6 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
               />
             </div>
           )}
-          <Dropdown
-            options={statusOptions}
-            value={selectedStatus}
-            onChange={handleStatusChange}
-            dropdownWidth="w-full md:w-fit"
-          />
-          <Dropdown
-            options={typeOptions}
-            value={selectedType}
-            onChange={handleTypeChange}
-            dropdownWidth="w-full md:w-fit"
-          />
-          <Dropdown
-            options={dateRangeOptions}
-            value={dateRangeFilter}
-            onChange={handleDateRangeChange}
-            dropdownWidth="w-full md:w-fit"
-          />
           <Button
             title="Export"
             variant="background-white"
@@ -431,6 +413,24 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             />
           </div>
         )}
+        <Dropdown
+          options={statusOptions}
+          value={selectedStatus}
+          onChange={handleStatusChange}
+          dropdownWidth="w-full md:w-fit"
+        />
+        <Dropdown
+          options={typeOptions}
+          value={selectedType}
+          onChange={handleTypeChange}
+          dropdownWidth="w-full md:w-fit"
+        />
+        <Dropdown
+          options={dateRangeOptions}
+          value={dateRangeFilter}
+          onChange={handleDateRangeChange}
+          dropdownWidth="w-full md:w-fit"
+        />
       </div>
       {isLoading ? (
         <div className="text-center py-6 text-gray-500">Loading leads...</div>

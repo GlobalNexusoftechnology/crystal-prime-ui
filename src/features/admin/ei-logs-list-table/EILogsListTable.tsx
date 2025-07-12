@@ -38,6 +38,7 @@ export function EILogsListTable({
   const [searchInput, setSearchInput] = useState("");
   const [selectedType, setSelectedType] = useState("All Type");
   const [selectedHead, setSelectedHead] = useState("All Head");
+  const [selectedPaymentMode, setSelectedPaymentMode] = useState("All Payment Mode");
   const [viewEILog, setViewEILog] = useState<IAllEILogList | null>(null);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -56,11 +57,12 @@ export function EILogsListTable({
       searchText: searchQuery,
       eiLogTypeId: selectedType,
       eiLogHeadId: selectedHead,
+      paymentMode: selectedPaymentMode,
       dateRange: dateRangeFilter,
       fromDate: fromDate || undefined,
       toDate: toDate || undefined,
     }),
-    [searchQuery, selectedType, selectedHead, dateRangeFilter, fromDate, toDate]
+    [searchQuery, selectedType, selectedHead, selectedPaymentMode, dateRangeFilter, fromDate, toDate]
   );
 
   const { data: allEILogList, eiLogsRefetch } = useAllEILogsQuery(filters);
@@ -103,6 +105,10 @@ export function EILogsListTable({
 
   const handleHeadChange = (value: string) => {
     setSelectedHead(value);
+  };
+
+  const handlePaymentModeChange = (value: string) => {
+    setSelectedPaymentMode(value);
   };
 
   const handleDateRangeChange = (
@@ -202,6 +208,15 @@ export function EILogsListTable({
     { key: "Monthly", label: "Monthly", value: "Monthly" },
   ];
 
+  const paymentModeOptions = [
+    { key: "All Payment Mode", label: "All Payment Mode", value: "All Payment Mode" },
+    { key: "cash", label: "Cash", value: "cash" },
+    { key: "card", label: "Card", value: "card" },
+    { key: "bank_transfer", label: "Bank Transfer", value: "bank_transfer" },
+    { key: "upi", label: "UPI", value: "upi" },
+    { key: "cheque", label: "Cheque", value: "cheque" },
+  ];
+
   return (
     <div className="bg-customGray p-5 2xl:p-[1.25vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.375vw]">
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
@@ -225,28 +240,7 @@ export function EILogsListTable({
               onClick={() => setAddEILogModalOpen(true)}
             />
           ) : null}
-          <Dropdown
-            options={typeOptions}
-            value={selectedType}
-            onChange={handleTypeChange}
-            dropdownWidth="w-full md:w-fit"
-          />
-          <Dropdown
-            options={headOptions}
-            value={selectedHead}
-            onChange={handleHeadChange}
-            dropdownWidth="w-full md:w-fit"
-          />
-          <Dropdown
-            options={dateRangeOptions}
-            value={dateRangeFilter}
-            onChange={(val: string) =>
-              handleDateRangeChange(
-                val as "All" | "Daily" | "Weekly" | "Monthly"
-              )
-            }
-            dropdownWidth="w-full md:w-fit"
-          />
+         
           <Button
             title="Export"
             variant="background-white"
@@ -298,6 +292,34 @@ export function EILogsListTable({
             />
           </div>
         )}
+         <Dropdown
+            options={typeOptions}
+            value={selectedType}
+            onChange={handleTypeChange}
+            dropdownWidth="w-full md:w-fit"
+          />
+          <Dropdown
+            options={headOptions}
+            value={selectedHead}
+            onChange={handleHeadChange}
+            dropdownWidth="w-full md:w-fit"
+          />
+            <Dropdown
+              options={paymentModeOptions}
+              value={selectedPaymentMode}
+              onChange={handlePaymentModeChange}
+              dropdownWidth="w-full md:w-fit"
+            />
+          <Dropdown
+            options={dateRangeOptions}
+            value={dateRangeFilter}
+            onChange={(val: string) =>
+              handleDateRangeChange(
+                val as "All" | "Daily" | "Weekly" | "Monthly"
+              )
+            }
+            dropdownWidth="w-full md:w-fit"
+          />
       </div>
 
       <div className="w-full mt-4">

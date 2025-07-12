@@ -15,29 +15,29 @@ export function TimeIcon({
         d="M13.3332 1.66602V4.99935M6.6665 1.66602V4.99935"
         stroke={color}
         strokeWidth="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M10.8333 3.33398H9.16667C6.02397 3.33398 4.45262 3.33398 3.47631 4.31029C2.5 5.28661 2.5 6.85795 2.5 10.0007V11.6673C2.5 14.81 2.5 16.3814 3.47631 17.3577C4.45262 18.334 6.02397 18.334 9.16667 18.334H10.8333C13.976 18.334 15.5474 18.334 16.5237 17.3577C17.5 16.3814 17.5 14.81 17.5 11.6673V10.0007C17.5 6.85795 17.5 5.28661 16.5237 4.31029C15.5474 3.33398 13.976 3.33398 10.8333 3.33398Z"
         stroke={color}
         strokeWidth="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M2.5 8.33398H17.5"
         stroke={color}
         strokeWidth="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M7.5 13.75C7.5 13.75 8.75 14.1667 9.16667 15.4167C9.16667 15.4167 10.9804 12.0833 13.3333 11.25"
         stroke={color}
         strokeWidth="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
