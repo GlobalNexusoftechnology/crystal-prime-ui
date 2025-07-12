@@ -2,7 +2,12 @@
 
 import { useState, useMemo } from "react";
 import { SearchBar, Button, Table, Dropdown, DatePicker } from "@/components";
-import { EAction, EModule, IEILogListTableColumn, ITableAction } from "@/constants";
+import {
+  EAction,
+  EModule,
+  IEILogListTableColumn,
+  ITableAction,
+} from "@/constants";
 import {
   IAllEILogList,
   useAllEILogsQuery,
@@ -17,13 +22,17 @@ import { useDebounce } from "@/utils/hooks";
 import toast from "react-hot-toast";
 import { usePermission } from "@/utils/hooks";
 import { AddEILogModal } from "../ei-log-management/components";
-
+import { ImDownload2 } from "react-icons/im";
+import { ExportIcon } from "@/features";
+import { FiPlus, FiX } from "react-icons/fi";
 
 interface EILogsListTableProps {
   setAddEILogModalOpen: (value: boolean) => void;
 }
 
-export function EILogsListTable({ setAddEILogModalOpen }: EILogsListTableProps) {
+export function EILogsListTable({
+  setAddEILogModalOpen,
+}: EILogsListTableProps) {
   const [eiLogId, setEiLogId] = useState("");
   const [isEditEILogModalOpen, setIsEditEILogModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
@@ -51,20 +60,10 @@ export function EILogsListTable({ setAddEILogModalOpen }: EILogsListTableProps) 
       fromDate: fromDate || undefined,
       toDate: toDate || undefined,
     }),
-    [
-      searchQuery,
-      selectedType,
-      selectedHead,
-      dateRangeFilter,
-      fromDate,
-      toDate,
-    ]
+    [searchQuery, selectedType, selectedHead, dateRangeFilter, fromDate, toDate]
   );
 
-  const {
-    data: allEILogList,
-    eiLogsRefetch,
-  } = useAllEILogsQuery(filters);
+  const { data: allEILogList, eiLogsRefetch } = useAllEILogsQuery(filters);
   const { allEILogTypesData } = useAllEILogTypesQuery();
   const { allEILogHeadsData } = useAllEILogHeadsQuery();
   const { onAllEILogsDownloadExcel } = useAllEILogsDownloadExcelQuery();
@@ -106,7 +105,9 @@ export function EILogsListTable({ setAddEILogModalOpen }: EILogsListTableProps) 
     setSelectedHead(value);
   };
 
-  const handleDateRangeChange = (value: "All" | "Daily" | "Weekly" | "Monthly") => {
+  const handleDateRangeChange = (
+    value: "All" | "Daily" | "Weekly" | "Monthly"
+  ) => {
     setDateRangeFilter(value);
   };
 
@@ -116,6 +117,11 @@ export function EILogsListTable({ setAddEILogModalOpen }: EILogsListTableProps) 
 
   const handleDownloadTemplate = () => {
     onEILogDownloadTemplateExcel();
+  };
+
+  const handleClearDates = () => {
+    setFromDate("");
+    setToDate("");
   };
 
   // Prepare full list from API
@@ -208,57 +214,90 @@ export function EILogsListTable({ setAddEILogModalOpen }: EILogsListTableProps) 
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
-          <Dropdown
-            options={typeOptions}
-            value={selectedType}
-            onChange={handleTypeChange}
-            dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
-          />
-          <Dropdown
-            options={headOptions}
-            value={selectedHead}
-            onChange={handleHeadChange}
-            dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
-          />
-          <Dropdown
-            options={dateRangeOptions}
-            value={dateRangeFilter}
-            onChange={(val: string) => handleDateRangeChange(val as "All" | "Daily" | "Weekly" | "Monthly")}
-            dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
-          />
-          <DatePicker
-            value={fromDate}
-            onChange={(date) => setFromDate(date)}
-            placeholder="From Date"
-            datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
-          />
-          <DatePicker
-            value={toDate}
-            onChange={(date) => setToDate(date)}
-            placeholder="To Date"
-            datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
-          />
           {cavAddEILogManagement ? (
             <Button
               title="Add EI Log"
               variant="background-white"
               width="w-full md:w-fit"
+              leftIcon={
+                <FiPlus className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+              }
               onClick={() => setAddEILogModalOpen(true)}
             />
           ) : null}
+          <Dropdown
+            options={typeOptions}
+            value={selectedType}
+            onChange={handleTypeChange}
+            dropdownWidth="w-full md:w-fit"
+          />
+          <Dropdown
+            options={headOptions}
+            value={selectedHead}
+            onChange={handleHeadChange}
+            dropdownWidth="w-full md:w-fit"
+          />
+          <Dropdown
+            options={dateRangeOptions}
+            value={dateRangeFilter}
+            onChange={(val: string) =>
+              handleDateRangeChange(
+                val as "All" | "Daily" | "Weekly" | "Monthly"
+              )
+            }
+            dropdownWidth="w-full md:w-fit"
+          />
           <Button
             title="Export"
             variant="background-white"
+            rightIcon={<ExportIcon />}
             width="w-full md:w-fit"
             onClick={handleExport}
           />
           <Button
-            title="Download Template"
-            variant="background-white"
+            variant="primary-outline-blue"
             width="w-full md:w-fit"
             onClick={handleDownloadTemplate}
+            leftIcon={
+              <ImDownload2
+                className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
+                color="#034A9F"
+              />
+            }
+            tooltip="Download Template"
           />
         </div>
+      </div>
+      <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] mt-4 mt-[1vw]">
+        <div className="flex flex-col justify-start items-start w-full min-w-[12rem] md:w-[15vw]">
+           <DatePicker
+            label="From Date"
+            value={fromDate}
+            onChange={(date) => setFromDate(date)}
+            placeholder="From Date"
+            datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
+          />
+        </div>
+        <DatePicker
+            label="To Date"
+            value={toDate}
+            onChange={(date) => setToDate(date)}
+            placeholder="To Date"
+            datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
+          />
+        {(fromDate || toDate) && (
+          <div>
+            <Button
+              variant="background-white"
+              width="w-full md:w-fit"
+              onClick={handleClearDates}
+              leftIcon={
+                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+              }
+              tooltip="Clear Dates"
+            />
+          </div>
+        )}
       </div>
 
       <div className="w-full mt-4">
@@ -284,4 +323,4 @@ export function EILogsListTable({ setAddEILogModalOpen }: EILogsListTableProps) 
       )}
     </div>
   );
-} 
+}
