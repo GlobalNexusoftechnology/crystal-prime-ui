@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { LeadSources, LeadTypes, ProjectTemplateList, } from "./components";
+import { LeadSources, LeadTypes, ProjectTemplateList, EILogTypes, EILogHeads } from "./components";
 import { LeadStatus } from "./components";
 import { RoleManagement } from "./components";
 import { usePermission } from "@/utils/hooks";
@@ -25,17 +25,21 @@ export function Settings() {
   const cavViewRoles = hasPermission(EModule.ROLES, EAction.VIEW);
   const cavViewTypes = hasPermission(EModule.LEAD_TYPES, EAction.VIEW);
   const cavViewProjectTemplate = hasPermission(EModule.PROJECT_TEMPLATE, EAction.VIEW);
+  const cavViewEILogTypes = hasPermission(EModule.EI_LOG_TYPES, EAction.VIEW);
+  const cavViewEILogHeads = hasPermission(EModule.EI_LOG_HEADS, EAction.VIEW);
 
   // Dynamically build the tabs array based on permissions
   const tabs = useMemo(() => {
     const arr = [];
     if (cavViewTypes) arr.push({ key: "leadTypes", label: "Lead Types" });
+    if (cavViewEILogTypes) arr.push({ key: "eiLogTypes", label: "EI Log Types" });
+    if (cavViewEILogHeads) arr.push({ key: "eiLogHeads", label: "EI Log Heads" });
     if (cavViewSources) arr.push({ key: "leadSources", label: "Lead Sources" });
     if (cavViewStatuses) arr.push({ key: "leadStatus", label: "Lead Status" });
     if (cavViewRoles) arr.push({ key: "role", label: "Role" });
     if (cavViewProjectTemplate) arr.push({ key: "projectTemplate", label: "Project Template" });
     return arr;
-  }, [cavViewTypes, cavViewSources, cavViewStatuses, cavViewRoles, cavViewProjectTemplate]);
+  }, [cavViewTypes, cavViewSources, cavViewStatuses, cavViewRoles, cavViewProjectTemplate, cavViewEILogTypes, cavViewEILogHeads]);
 
   // Read tab from query param
   const tabParam = searchParams.get("tab");
@@ -74,6 +78,8 @@ export function Settings() {
       {activePage === "leadTypes" && <LeadTypes />}
       {activePage === "role" && <RoleManagement />}
       {activePage === "projectTemplate" && <ProjectTemplateList />}
+      {activePage === "eiLogTypes" && <EILogTypes />}
+      {activePage === "eiLogHeads" && <EILogHeads />}
     </div>
   );
 }

@@ -12,6 +12,8 @@ export enum EModule {
   PROJECT_TEMPLATE = "PROJECT_TEMPLATE",
   MILESTONE = "MILESTONE",
   TASK = "TASK",
+  EI_LOG_TYPES = "EI_LOG_TYPES",
+  EI_LOG_HEADS = "EI_LOG_HEADS",
 }
 
 export enum EAction {
@@ -41,6 +43,8 @@ export const MODULES: TOptionItem[] = [
   { key: EModule.PROJECT_TEMPLATE, label: "Project Template Module", value: "20" },
   { key: EModule.MILESTONE, label: "Milestone Module", value: "21" },
   { key: EModule.TASK, label: "Task Module", value: "22" },
+  { key: EModule.EI_LOG_TYPES, label: "EI Log Types Module", value: "23" },
+  { key: EModule.EI_LOG_HEADS, label: "EI Log Heads Module", value: "24" },
 ];
 
 export const ACTIONS: TOptionItem[] = [
