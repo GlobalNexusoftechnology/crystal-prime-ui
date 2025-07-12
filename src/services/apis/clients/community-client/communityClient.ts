@@ -129,6 +129,18 @@ import {
   IUpdateDailyTaskEntryPayload,
   IDailyTaskEntryResponse,
   IAllDailyTaskEntriesResponse,
+  ICreateEILogTypePayload,
+  ICreateEILogTypeResponse,
+  IUpdateEILogTypePayload,
+  IUpdateEILogTypeResponse,
+  IAllEILogTypesResponse,
+  IDeleteEILogTypeResponse,
+  ICreateEILogHeadPayload,
+  ICreateEILogHeadResponse,
+  IUpdateEILogHeadPayload,
+  IUpdateEILogHeadResponse,
+  IAllEILogHeadsResponse,
+  IDeleteEILogHeadResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -242,6 +254,16 @@ import {
   getAllDailyTaskEntriesUrl,
   uploadMultipleAttachmentUrl,
   dashboardSummaryUrl,
+  fetchAllEILogTypesUrl,
+  createEILogTypeUrl,
+  getEILogTypeDetailByIdUrl,
+  updateEILogTypeUrl,
+  deleteEILogTypeUrl,
+  fetchAllEILogHeadsUrl,
+  createEILogHeadUrl,
+  getEILogHeadDetailByIdUrl,
+  updateEILogHeadUrl,
+  deleteEILogHeadUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummary } from "./types";
 
@@ -1753,6 +1775,88 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   }
+
+  // EI Log Type Master Methods
+  public fetchAllEILogTypes = async () => {
+    const response = await this.get<IAllEILogTypesResponse>(fetchAllEILogTypesUrl());
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public createEILogType = async (payload: ICreateEILogTypePayload) => {
+    const response = await this.post<ICreateEILogTypeResponse>(createEILogTypeUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public updateEILogType = async ({ id, payload }: IUpdateEILogTypePayload) => {
+    const response = await this.put<IUpdateEILogTypeResponse>(updateEILogTypeUrl(id), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public deleteEILogType = async (id: string) => {
+    const response = await this.del<IDeleteEILogTypeResponse>(deleteEILogTypeUrl(id));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public getEILogTypeDetailById = async (id: string) => {
+    const response = await this.get<IAllEILogTypesResponse>(getEILogTypeDetailByIdUrl(id));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  // EI Log Head Master Methods
+  public fetchAllEILogHeads = async () => {
+    const response = await this.get<IAllEILogHeadsResponse>(fetchAllEILogHeadsUrl());
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public createEILogHead = async (payload: ICreateEILogHeadPayload) => {
+    const response = await this.post<ICreateEILogHeadResponse>(createEILogHeadUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public updateEILogHead = async ({ id, payload }: IUpdateEILogHeadPayload) => {
+    const response = await this.put<IUpdateEILogHeadResponse>(updateEILogHeadUrl(id), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public deleteEILogHead = async (id: string) => {
+    const response = await this.del<IDeleteEILogHeadResponse>(deleteEILogHeadUrl(id));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public getEILogHeadDetailById = async (id: string) => {
+    const response = await this.get<IAllEILogHeadsResponse>(getEILogHeadDetailByIdUrl(id));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
 }
 
 

@@ -112,6 +112,130 @@ export interface IDeleteTypeResponse {
 }
 // END LEAD TYPES
 
+// START EI LOG TYPE MASTER
+export interface ICreateEILogTypePayload {
+  name: string;
+}
+
+export interface ICreateEILogTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateEILogTypePayload;
+}
+
+export interface IUpdateEILogTypePayload {
+  id: string;
+  payload: ICreateEILogTypePayload;
+}
+
+export interface IUpdateEILogTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateEILogTypePayload;
+}
+
+export interface IEILogType {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+}
+
+export interface IAllEILogTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILogType[];
+}
+
+export interface IAllEILogTypeList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+}
+
+export interface IAllEILogTypesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllEILogTypeList[];
+}
+
+export interface IDeleteEILogTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateEILogTypePayload;
+}
+// END EI LOG TYPE MASTER
+
+// START EI LOG HEAD MASTER
+export interface ICreateEILogHeadPayload {
+  name: string;
+}
+
+export interface ICreateEILogHeadResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateEILogHeadPayload;
+}
+
+export interface IUpdateEILogHeadPayload {
+  id: string;
+  payload: ICreateEILogHeadPayload;
+}
+
+export interface IUpdateEILogHeadResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateEILogHeadPayload;
+}
+
+export interface IEILogHead {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+}
+
+export interface IAllEILogHeadResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILogHead[];
+}
+
+export interface IAllEILogHeadList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+}
+
+export interface IAllEILogHeadsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllEILogHeadList[];
+}
+
+export interface IDeleteEILogHeadResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateEILogHeadPayload;
+}
+// END EI LOG HEAD MASTER
+
 export interface IAllLeadsList {
   id: string;
   created_at: string;

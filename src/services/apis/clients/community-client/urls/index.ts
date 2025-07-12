@@ -250,3 +250,17 @@ export const getAllDailyTaskEntriesUrl = (projectId?: string) => projectId ? `/d
 
 export const dashboardSummaryUrl = () => "/dashboard/summary";
 
+// EI Log Type Master API
+export const fetchAllEILogTypesUrl = () => "/ei-log-types"; //Get
+export const createEILogTypeUrl = () => "/ei-log-types"; //post
+export const getEILogTypeDetailByIdUrl = (id: string) => `/ei-log-types/${id}`;//get by id
+export const updateEILogTypeUrl = (id: string) => `/ei-log-types/${id}`;//put
+export const deleteEILogTypeUrl = (id: string) => `/ei-log-types/${id}`; //delete
+
+// EI Log Head Master API
+export const fetchAllEILogHeadsUrl = () => "/ei-log-heads"; //Get
+export const createEILogHeadUrl = () => "/ei-log-heads"; //post
+export const getEILogHeadDetailByIdUrl = (id: string) => `/ei-log-heads/${id}`;//get by id
+export const updateEILogHeadUrl = (id: string) => `/ei-log-heads/${id}`;//put
+export const deleteEILogHeadUrl = (id: string) => `/ei-log-heads/${id}`; //delete
+

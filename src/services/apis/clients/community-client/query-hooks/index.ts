@@ -117,3 +117,15 @@ export { useAllDailyTaskQuery } from "./useAllDailyTaskQuery";
 
 export { useDashboardSummaryQuery } from "./useDashboardSummaryQuery";
 export { useUploadMultipleAttachmentsMutation } from "./useUploadMultipleAttachmentsMutation";
+
+// EI Log Type Master
+export { useAllEILogTypesQuery } from "./useAllEILogTypesQuery";
+export { useCreateEILogTypeMutation } from "./useCreateEILogTypeMutation";
+export { useUpdateEILogTypeMutation } from "./useUpdateEILogTypeMutation";
+export { useDeleteEILogTypeMutation } from "./useDeleteEILogTypeMutation";
+
+// EI Log Head Master
+export { useAllEILogHeadsQuery } from "./useAllEILogHeadsQuery";
+export { useCreateEILogHeadMutation } from "./useCreateEILogHeadMutation";
+export { useUpdateEILogHeadMutation } from "./useUpdateEILogHeadMutation";
+export { useDeleteEILogHeadMutation } from "./useDeleteEILogHeadMutation";
