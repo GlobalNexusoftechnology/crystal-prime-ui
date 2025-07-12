@@ -264,3 +264,13 @@ export const getEILogHeadDetailByIdUrl = (id: string) => `/ei-log-heads/${id}`;/
 export const updateEILogHeadUrl = (id: string) => `/ei-log-heads/${id}`;//put
 export const deleteEILogHeadUrl = (id: string) => `/ei-log-heads/${id}`; //delete
 
+// EI Log Management URLs
+export const fetchAllEILogsUrl = () => "/ei-logs";
+export const createEILogUrl = () => "/ei-logs";
+export const getEILogDetailByIdUrl = (id: string) => `/ei-logs/${id}`;
+export const updateEILogUrl = (id: string) => `/ei-logs/${id}`;
+export const deleteEILogUrl = (id: string) => `/ei-logs/${id}`;
+export const fetchAllEILogsDownloadExcelUrl = () => "/ei-logs/export/excel";
+export const fetchEILogDownloadTemplateExcelUrl = () => "/ei-logs/template/download";
+export const uploadEILogFromExcelUrl = () => "/ei-logs/upload-excel";
+

@@ -129,3 +129,13 @@ export { useAllEILogHeadsQuery } from "./useAllEILogHeadsQuery";
 export { useCreateEILogHeadMutation } from "./useCreateEILogHeadMutation";
 export { useUpdateEILogHeadMutation } from "./useUpdateEILogHeadMutation";
 export { useDeleteEILogHeadMutation } from "./useDeleteEILogHeadMutation";
+
+// EI Log Management
+export { useAllEILogsQuery } from "./useAllEILogsQuery";
+export { useCreateEILogMutation } from "./useCreateEILogMutation";
+export { useUpdateEILogMutation } from "./useUpdateEILogMutation";
+export { useDeleteEILogMutation } from "./useDeleteEILogMutation";
+export { useEILogDetailQuery } from "./useEILogDetailQuery";
+export { useAllEILogsDownloadExcelQuery } from "./useAllEILogsDownloadExcelQuery";
+export { useEILogDownloadTemplateExcelQuery } from "./useEILogDownloadTemplateExcelQuery";
+export { useUploadEILogFromExcelMutation } from "./useUploadEILogFromExcelMutation";

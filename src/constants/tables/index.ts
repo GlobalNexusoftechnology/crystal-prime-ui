@@ -10,3 +10,4 @@ export * from "./client-list-table";
 export * from "./project-management-list";
 export * from "./ei-log-types-list-table";
 export * from "./ei-log-heads-list-table";
+export * from "./ei-log-list-table";
