@@ -1,14 +1,23 @@
 "use client";
 
 import React from "react";
-import { DailyTaskList, ExpensesOverviewChart, LeadAnalyticsChart, LeadTypeChart, ProjectRenewalList, ProjectSnapshotChart, StatsCards } from "./components";
+import {
+  DailyTaskList,
+  ExpensesOverviewChart,
+  LeadAnalyticsChart,
+  LeadTypeChart,
+  ProjectRenewalList,
+  ProjectSnapshotChart,
+} from "./components";
+import { AnalyticalCard } from "../analytical-card";
+import { AnalyticalCardIcon } from "@/features";
 // Mock data for the dashboard components
 const stats = [
-  { label: "Total Leads", value: 234, sub: "Over All leads" },
-  { label: "Follow-Ups Due Today", value: 20, sub: "Today's pending work" },
-  { label: "Converted Leads", value: 12, sub: "Weekly Leads" },
-  { label: "Lost Leads", value: 12, sub: "Weekly Leads" },
-  { label: "Conversion Rate", value: "80%", sub: "Lead to Customer" },
+  { count: "234", title: "Total Leads", subtitle: "Over All leads", icon: <AnalyticalCardIcon /> },
+  { count: "20", title: "Follow-Ups Due Today", subtitle: "Today's pending work", icon: <AnalyticalCardIcon /> },
+  { count: "12", title: "Converted Leads", subtitle: "Weekly Leads", icon: <AnalyticalCardIcon /> },
+  { count: "12", title: "Lost Leads", subtitle: "Weekly Leads", icon: <AnalyticalCardIcon /> },
+  { count: "80%", title: "Conversion Rate", subtitle: "Lead to Customer", icon: <AnalyticalCardIcon /> },
 ];
 
 const projectSnapshotData = [
@@ -118,10 +127,13 @@ function Dashboard() {
       </div>
 
       {/* Stats Cards */}
-      <StatsCards stats={stats} />
-
+      <div className="flex gap-4 2xl:gap-[1vw] flex-wrap">
+        {stats.map((card, index) => (
+          <AnalyticalCard key={index} data={card} />
+        ))}
+      </div>
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 my-6">
         {/* Left Column */}
         <div className="flex flex-col gap-6">
           <ProjectSnapshotChart
