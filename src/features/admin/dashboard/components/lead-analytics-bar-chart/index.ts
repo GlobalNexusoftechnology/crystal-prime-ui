@@ -1,1 +1,0 @@
-export { LeadAnalyticsBarChart } from "./LeadAnalyticsBarChart";
