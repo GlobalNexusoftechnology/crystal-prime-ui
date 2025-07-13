@@ -123,9 +123,9 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
 
   const { onUploadEILogAttachment } = useUploadEILogAttachmentMutation({
     onSuccessCallback: (data: IUploadAttachmentResponse) => {
-      // Set the Formik field to the uploaded file name (or URL, depending on your backend)
+      // Set the Formik field to the uploaded file URL (docUrl)
       if (setFieldValueRef.current) {
-        setFieldValueRef.current("attachment", data.data.fileName);
+        setFieldValueRef.current("attachment", data.data.docUrl);
       }
     },
     onErrorCallback: (err: IApiError) => {
@@ -273,11 +273,11 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
                 <div className="mt-2">
                   <UploadDocument
                     label="Attachment (Optional)"
-                    placeholder="Upload Attachment"
+                    placeholder={typeof values.attachment === 'string' ? values.attachment : "Upload Attachment"}
                     onChange={(files: FileList | null) => {
                       if (files && files[0]) {
                         const formData = new FormData();
-                        formData.append("file", files[0]);
+                        formData.append("document", files[0]);
                         onUploadEILogAttachment(formData);
                       }
                     }}

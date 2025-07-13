@@ -86,6 +86,23 @@ export const IEILogListTableColumn: ITableColumn<IAllEILogList>[] = [
     accessor: "attachment",
     sortable: false,
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
-    cell: (value) => value ? "Yes" : "No",
+    cell: ({ value }) => {
+      if (!value) return "-";
+      
+      // Extract file name from URL
+      const url = value as string;
+      const fileName = url.split('/').pop()?.split('?')[0] || "File";
+      
+      return (
+        <a 
+          href={url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:text-blue-800 underline"
+        >
+          {fileName}
+        </a>
+      );
+    },
   },
 ]; 
