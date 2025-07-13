@@ -141,6 +141,15 @@ import {
   IUpdateEILogHeadResponse,
   IAllEILogHeadsResponse,
   IDeleteEILogHeadResponse,
+  IAllEILogResponse,
+  ICreateEILogPayload,
+  ICreateEILogResponse,
+  IUpdateEILogPayload,
+  IUpdateEILogResponse,
+  IDeleteEILogResponse,
+  IEILogDetailResponse,
+  IEILogFilters,
+  IUploadEILogFromExcelResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -264,6 +273,15 @@ import {
   getEILogHeadDetailByIdUrl,
   updateEILogHeadUrl,
   deleteEILogHeadUrl,
+  fetchAllEILogsUrl,
+  createEILogUrl,
+  updateEILogUrl,
+  deleteEILogUrl,
+  getEILogDetailByIdUrl,
+  fetchAllEILogsDownloadExcelUrl,
+  fetchEILogDownloadTemplateExcelUrl,
+  uploadEILogFromExcelUrl,
+  uploadEILogAttachmentUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummary } from "./types";
 
@@ -1857,6 +1875,118 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   };
+
+  // EI Log Management Methods
+  public fetchAllEILogs = async (filters: IEILogFilters = {}) => {
+    // Build query string from filters
+    const params = new URLSearchParams();
+    if (filters.searchText) params.append('searchText', filters.searchText);
+    if (filters.eilogTypeId && filters.eilogTypeId !== 'All Type') params.append('eilogTypeId', filters.eilogTypeId);
+    if (filters.eilogHeadId && filters.eilogHeadId !== 'All Head') params.append('eilogHeadId', filters.eilogHeadId);
+    if (filters.paymentMode && filters.paymentMode !== 'All Payment Mode') params.append('paymentMode', filters.paymentMode);
+    if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
+    if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
+    if (filters.fromDate) params.append('fromDate', filters.fromDate);
+    if (filters.toDate) params.append('toDate', filters.toDate);
+    const url = params.toString() ? `${fetchAllEILogsUrl()}?${params.toString()}` : fetchAllEILogsUrl();
+
+    const response = await this.get<IAllEILogResponse>(url);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public createEILog = async (payload: ICreateEILogPayload) => {
+    const response = await this.post<ICreateEILogResponse>(createEILogUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public updateEILog = async ({ id, payload }: IUpdateEILogPayload) => {
+    const response = await this.put<IUpdateEILogResponse>(updateEILogUrl(id), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public deleteEILog = async (id: string) => {
+    const response = await this.del<IDeleteEILogResponse>(deleteEILogUrl(id));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public getEILogDetailById = async (id: string) => {
+    const response = await this.get<IEILogDetailResponse>(getEILogDetailByIdUrl(id));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchAllEILogsDownloadExcel = async (filters: IEILogFilters = {}) => {
+    const params = new URLSearchParams();
+    if (filters.searchText) params.append('searchText', filters.searchText);
+    if (filters.eilogTypeId && filters.eilogTypeId !== 'All Type') params.append('eilogTypeId', filters.eilogTypeId);
+    if (filters.eilogHeadId && filters.eilogHeadId !== 'All Head') params.append('eilogHeadId', filters.eilogHeadId);
+    if (filters.paymentMode && filters.paymentMode !== 'All Payment Mode') params.append('paymentMode', filters.paymentMode);
+    if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
+    if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
+    if (filters.fromDate) params.append('fromDate', filters.fromDate);
+    if (filters.toDate) params.append('toDate', filters.toDate);
+    const url = params.toString() ? `${fetchAllEILogsDownloadExcelUrl()}?${params.toString()}` : fetchAllEILogsDownloadExcelUrl();
+
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchEILogDownloadTemplateExcel = async () => {
+    const response = await this.get<Blob>(fetchEILogDownloadTemplateExcelUrl(), { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public uploadEILogFromExcel = async (formData: FormData) => {
+    const response = await this.post<IUploadEILogFromExcelResponse>(uploadEILogFromExcelUrl(), formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      requiresAuth: true,
+    });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public uploadEILogAttachment = async (formData: FormData) => {
+    const response = await this.post<IUploadAttachmentResponse>(
+      uploadEILogAttachmentUrl(),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        requiresAuth: true, // if no auth required, else set true
+      }
+    )
+
+    if (!response?.success) {
+      throw response.response?.data
+    }
+
+    return response?.data
+  }
 }
 
 

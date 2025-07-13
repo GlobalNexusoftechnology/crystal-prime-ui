@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 
 import {
   DashboardIcon,
+  EILogIcon,
   LeadManagementIcon,
   ProjectManagementIcon,  
   SettingsIcon,
@@ -80,6 +81,13 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
    icon: <UserListRoundedIcon />,
    activeIcon: <UserListRoundedIcon color="#034A9F" />,
    permission: { module: "CLIENT_MANAGEMENT", actions: "VIEW" },
+  },
+  {
+    path: "/admin/ei-log-management",
+    name: "EI Log Management",
+    icon: <EILogIcon />,
+    activeIcon: <EILogIcon color="#034A9F" />,
+    permission: { module: "EI_LOG_MANAGEMENT", actions: "VIEW" },
   },
   {
     path: "/admin/settings",

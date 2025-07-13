@@ -14,6 +14,7 @@ export enum EModule {
   TASK = "TASK",
   EI_LOG_TYPES = "EI_LOG_TYPES",
   EI_LOG_HEADS = "EI_LOG_HEADS",
+  EI_LOG_MANAGEMENT = "EI_LOG_MANAGEMENT",
 }
 
 export enum EAction {
@@ -45,6 +46,7 @@ export const MODULES: TOptionItem[] = [
   { key: EModule.TASK, label: "Task Module", value: "22" },
   { key: EModule.EI_LOG_TYPES, label: "EI Log Types Module", value: "23" },
   { key: EModule.EI_LOG_HEADS, label: "EI Log Heads Module", value: "24" },
+  { key: EModule.EI_LOG_MANAGEMENT, label: "EI Log Management Module", value: "25" },
 ];
 
 export const ACTIONS: TOptionItem[] = [

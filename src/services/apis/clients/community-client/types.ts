@@ -1717,3 +1717,119 @@ export interface DailyTask {
     name: string;
   };
 }
+
+// START EI LOG MANAGEMENT
+export interface ICreateEILogPayload {
+  eilogType: string;
+  eilogHead: string;
+  description: string;
+  income?: number;
+  expense?: number;
+  paymentMode?: string;
+  attachment?: string;
+}
+
+export interface ICreateEILogResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILog;
+}
+
+export interface IUpdateEILogPayload {
+  id: string;
+  payload: Partial<ICreateEILogPayload>;
+}
+
+export interface IUpdateEILogResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILog;
+}
+
+export interface IEILog {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  description: string;
+  income?: number;
+  expense?: number;
+  payment_mode?: string;
+  attachment?: string;
+  ei_log_type: IEILogType;
+  ei_log_head: IEILogHead;
+}
+
+export interface IAllEILogList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  description: string;
+  income?: string;
+  expense?: number | null;
+  paymentMode?: string;
+  attachment?: string | null;
+  eilogType: {
+    id: string;
+    name: string;
+  };
+  eilogHead: {
+    id: string;
+    name: string;
+  };
+  createdBy?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+}
+
+export interface IAllEILogResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: {
+    data: IAllEILogList[];
+    pagination?: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
+}
+
+export interface IEILogDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILog;
+}
+
+export interface IDeleteEILogResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILog;
+}
+
+export interface IUploadEILogFromExcelResponse {
+  status: string;
+  message: string;
+  data: IEILog;
+}
+
+export interface IEILogFilters {
+  searchText?: string;
+  eilogTypeId?: string;
+  eilogHeadId?: string;
+  paymentMode?: string;
+  dateRange?: "All" | "Daily" | "Weekly" | "Monthly";
+  referenceDate?: string;
+  fromDate?: string;
+  toDate?: string;
+}
+// END EI LOG MANAGEMENT
