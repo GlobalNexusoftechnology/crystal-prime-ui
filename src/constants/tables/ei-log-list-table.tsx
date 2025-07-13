@@ -41,16 +41,16 @@ export const IEILogListTableColumn: ITableColumn<IAllEILogList>[] = [
     sortable: true,
     headerClassName: "min-w-[15rem] 2xl:min-w-[15vw]",
   },
-  {
-    header: "Created By",
-    accessor: "createdBy",
-    sortable: false,
-    headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
-    cell: ({ value }) =>
-      value && typeof value === "object" && "firstName" in value && "lastName" in value
-        ? `${value.firstName} ${value.lastName}`
-        : "-",
-  },
+  // {
+  //   header: "Created By",
+  //   accessor: "createdBy",
+  //   sortable: false,
+  //   headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
+  //   cell: ({ value }) =>
+  //     value && typeof value === "object" && "firstName" in value && "lastName" in value
+  //       ? `${value.firstName} ${value.lastName}`
+  //       : "-",
+  // },
   {
     header: "INCOME",
     accessor: "income",

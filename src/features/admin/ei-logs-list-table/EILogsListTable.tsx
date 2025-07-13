@@ -53,9 +53,6 @@ export function EILogsListTable({
     onChangeCb: () => {},
   });
 
-  console.log(selectedHead, "selectHead#####")
-  console.log(selectedType, "selectType#####")
-
   const filters = useMemo(
     () => ({
       eilogTypeId: selectedType !== "All Type" ? selectedType : undefined,

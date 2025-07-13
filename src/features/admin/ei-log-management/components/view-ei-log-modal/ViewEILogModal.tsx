@@ -2,7 +2,6 @@
 
 import { ModalOverlay } from "@/components";
 import { IAllEILogList } from "@/services";
-import { FiArrowLeft } from "react-icons/fi";
 
 interface ViewEILogModalProps {
   isOpen: boolean;
