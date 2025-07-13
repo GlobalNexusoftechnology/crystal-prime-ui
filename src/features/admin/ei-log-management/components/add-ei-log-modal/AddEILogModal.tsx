@@ -10,7 +10,7 @@ import {
 import { IApiError } from "@/utils";
 import { IAllEILogList } from "@/services";
 import React, { useEffect, useState } from "react";
-import { Formik, Form } from "formik";
+import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import {
   ICreateEILogResponse,
@@ -19,8 +19,20 @@ import {
   useUpdateEILogMutation,
   useAllEILogTypesQuery,
   useAllEILogHeadsQuery,
+  useUploadEILogAttachmentMutation,
+  IUploadAttachmentResponse,
 } from "@/services";
 import toast from "react-hot-toast";
+
+interface EILogFormValues {
+  ei_log_type_id: string;
+  ei_log_head_id: string;
+  description: string;
+  income: string;
+  expense: string;
+  payment_mode: string;
+  attachment: File | string;
+}
 
 interface AddEILogModalProps {
   isOpen: boolean;
@@ -107,6 +119,20 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
     },
   });
 
+  const setFieldValueRef = React.useRef<FormikHelpers<EILogFormValues>["setFieldValue"] | null>(null);
+
+  const { onUploadEILogAttachment } = useUploadEILogAttachmentMutation({
+    onSuccessCallback: (data: IUploadAttachmentResponse) => {
+      // Set the Formik field to the uploaded file name (or URL, depending on your backend)
+      if (setFieldValueRef.current) {
+        setFieldValueRef.current("attachment", data.data.fileName);
+      }
+    },
+    onErrorCallback: (err: IApiError) => {
+      toast.error(err.message);
+    },
+  });
+
   const typeOptions = (allEILogTypesData?.data || []).map((type) => ({
     key: type.id,
     label: type.name,
@@ -135,7 +161,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
       onClose={onClose}
       modalClassName="w-full sm:w-[40rem]"
     >
-      <Formik
+      <Formik<EILogFormValues>
         enableReinitialize
         initialValues={initialValues}
         validationSchema={Yup.object({
@@ -155,7 +181,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
             income: values.income ? parseFloat(values.income) : undefined,
             expense: values.expense ? parseFloat(values.expense) : undefined,
             paymentMode: values.payment_mode,
-            attachment: values.attachment ? values.attachment.name : undefined,
+            attachment: typeof values.attachment === 'string' ? values.attachment : undefined,
           };
 
           if (eiLogId) {
@@ -166,129 +192,135 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
           resetForm();
         }}
       >
-        {({ isSubmitting, setFieldValue, values, touched, errors }) => (
-          <Form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw] border-gray-400">
-            <h1 className="text-md 2xl:text-[1vw] text-gray-900">
-              {eiLogId ? "Edit EI Log" : "Add New EI Log"}
-            </h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw]">
-              <div>
-                <Dropdown
-                  label="EI Log Type *"
-                  options={typeOptions}
-                  value={values.ei_log_type_id}
-                  onChange={(value: string) =>
-                    setFieldValue("ei_log_type_id", value)
-                  }
-                  error={
-                    touched.ei_log_type_id && errors.ei_log_type_id
-                      ? errors.ei_log_type_id
-                      : ""
-                  }
-                />
-              </div>
-              <div>
-                <Dropdown
-                  label="EI Log Head *"
-                  options={headOptions}
-                  value={values.ei_log_head_id}
-                  onChange={(value: string) =>
-                    setFieldValue("ei_log_head_id", value)
-                  }
-                  error={
-                    touched.ei_log_head_id && errors.ei_log_head_id
-                      ? errors.ei_log_head_id
-                      : ""
-                  }
-                />
-              </div>
-              <div>
-                <Dropdown
-                  label="Payment Mode *"
-                  options={paymentModeOptions}
-                  value={values.payment_mode}
-                  onChange={(value: string) =>
-                    setFieldValue("payment_mode", value)
-                  }
-                  error={
-                    touched.payment_mode && errors.payment_mode
-                      ? errors.payment_mode
-                      : ""
-                  }
-                />
-              </div>
-              <div>
-                <InputField
-                  label="Income"
-                  name="income"
-                  type="number"
-                  placeholder="Enter Income"
-                  value={values.income}
-                  onChange={(e) => setFieldValue("income", e.target.value)}
-                  error={touched.income && errors.income ? errors.income : ""}
-                />
-              </div>
-              <div>
-                <InputField
-                  label="Expense"
-                  name="expense"
-                  type="number"
-                  placeholder="Enter Expense"
-                  value={values.expense}
-                  onChange={(e) => setFieldValue("expense", e.target.value)}
-                  error={
-                    touched.expense && errors.expense ? errors.expense : ""
-                  }
-                />
-              </div>
-              <div className="mt-2">
-                <UploadDocument
-                  label="Attachment (Optional)"
-                  placeholder="Upload Attachment"
-                  onChange={(files: FileList | null) => {
-                    if (files && files[0]) {
-                      setFieldValue("attachment", files[0]);
+        {({ isSubmitting, setFieldValue, values, touched, errors }) => {
+          // Set the ref directly
+          setFieldValueRef.current = setFieldValue;
+          return (
+            <Form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw] border-gray-400">
+              <h1 className="text-md 2xl:text-[1vw] text-gray-900">
+                {eiLogId ? "Edit EI Log" : "Add New EI Log"}
+              </h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw]">
+                <div>
+                  <Dropdown
+                    label="EI Log Type *"
+                    options={typeOptions}
+                    value={values.ei_log_type_id}
+                    onChange={(value: string) =>
+                      setFieldValue("ei_log_type_id", value)
                     }
-                  }}
+                    error={
+                      touched.ei_log_type_id && errors.ei_log_type_id
+                        ? errors.ei_log_type_id
+                        : ""
+                    }
+                  />
+                </div>
+                <div>
+                  <Dropdown
+                    label="EI Log Head *"
+                    options={headOptions}
+                    value={values.ei_log_head_id}
+                    onChange={(value: string) =>
+                      setFieldValue("ei_log_head_id", value)
+                    }
+                    error={
+                      touched.ei_log_head_id && errors.ei_log_head_id
+                        ? errors.ei_log_head_id
+                        : ""
+                    }
+                  />
+                </div>
+                <div>
+                  <Dropdown
+                    label="Payment Mode *"
+                    options={paymentModeOptions}
+                    value={values.payment_mode}
+                    onChange={(value: string) =>
+                      setFieldValue("payment_mode", value)
+                    }
+                    error={
+                      touched.payment_mode && errors.payment_mode
+                        ? errors.payment_mode
+                        : ""
+                    }
+                  />
+                </div>
+                <div>
+                  <InputField
+                    label="Income"
+                    name="income"
+                    type="number"
+                    placeholder="Enter Income"
+                    value={values.income}
+                    onChange={(e) => setFieldValue("income", e.target.value)}
+                    error={touched.income && errors.income ? errors.income : ""}
+                  />
+                </div>
+                <div>
+                  <InputField
+                    label="Expense"
+                    name="expense"
+                    type="number"
+                    placeholder="Enter Expense"
+                    value={values.expense}
+                    onChange={(e) => setFieldValue("expense", e.target.value)}
+                    error={
+                      touched.expense && errors.expense ? errors.expense : ""
+                    }
+                  />
+                </div>
+                <div className="mt-2">
+                  <UploadDocument
+                    label="Attachment (Optional)"
+                    placeholder="Upload Attachment"
+                    onChange={(files: FileList | null) => {
+                      if (files && files[0]) {
+                        const formData = new FormData();
+                        formData.append("file", files[0]);
+                        onUploadEILogAttachment(formData);
+                      }
+                    }}
+                    error={
+                      touched.attachment && errors.attachment
+                        ? errors.attachment
+                        : undefined
+                    }
+                  />
+                </div>
+              </div>
+
+              <div>
+                <InputField
+                  label="Description *"
+                  name="description"
+                  type="textarea"
+                  value={values.description}
+                  onChange={(e) => setFieldValue("description", e.target.value)}
                   error={
-                    touched.attachment && errors.attachment
-                      ? errors.attachment
-                      : undefined
+                    touched.description && errors.description
+                      ? errors.description
+                      : ""
                   }
                 />
               </div>
-            </div>
-
-            <div>
-              <InputField
-                label="Description *"
-                name="description"
-                type="textarea"
-                value={values.description}
-                onChange={(e) => setFieldValue("description", e.target.value)}
-                error={
-                  touched.description && errors.description
-                    ? errors.description
-                    : ""
-                }
-              />
-            </div>
-            <div className="flex justify-end gap-4 2xl:gap-[1vw] mt-4">
-              <Button
-                title="Cancel"
-                variant="primary-outline"
-                onClick={onClose}
-                type="button"
-              />
-              <Button
-                title={eiLogId ? "Update" : "Create"}
-                variant="primary"
-                type="submit"
-                disabled={isSubmitting || isCreating || isUpdating}
-              />
-            </div>
-          </Form>
-        )}
+              <div className="flex justify-end gap-4 2xl:gap-[1vw] mt-4">
+                <Button
+                  title="Cancel"
+                  variant="primary-outline"
+                  onClick={onClose}
+                  type="button"
+                />
+                <Button
+                  title={eiLogId ? "Update" : "Create"}
+                  variant="primary"
+                  type="submit"
+                  disabled={isSubmitting || isCreating || isUpdating}
+                />
+              </div>
+            </Form>
+          );
+        }}
       </Formik>
     </ModalOverlay>
   );

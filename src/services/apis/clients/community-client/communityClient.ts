@@ -281,6 +281,7 @@ import {
   fetchAllEILogsDownloadExcelUrl,
   fetchEILogDownloadTemplateExcelUrl,
   uploadEILogFromExcelUrl,
+  uploadEILogAttachmentUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummary } from "./types";
 
@@ -1967,6 +1968,25 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   };
+
+  public uploadEILogAttachment = async (formData: FormData) => {
+    const response = await this.post<IUploadAttachmentResponse>(
+      uploadEILogAttachmentUrl(),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        requiresAuth: true, // if no auth required, else set true
+      }
+    )
+
+    if (!response?.success) {
+      throw response.response?.data
+    }
+
+    return response?.data
+  }
 }
 
 

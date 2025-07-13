@@ -273,4 +273,5 @@ export const deleteEILogUrl = (id: string) => `/ei-logs/${id}`;
 export const fetchAllEILogsDownloadExcelUrl = () => "/ei-logs/export/excel";
 export const fetchEILogDownloadTemplateExcelUrl = () => "/ei-logs/template/download";
 export const uploadEILogFromExcelUrl = () => "/ei-logs/upload-excel";
+export const uploadEILogAttachmentUrl = () => "/ei-logs/uploadAttachment";
 
