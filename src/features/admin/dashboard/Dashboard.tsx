@@ -47,9 +47,10 @@ const stats = [
 
 const projectSnapshotData = [
   { name: "In Progress", value: 20 },
-  { name: "Completed", value: 80 },
+  { name: "Completed", value: 50 },
+  { name: "Pending", value: 30 },
 ];
-const projectSnapshotColors = ["#3B82F6", "#6366F1"];
+const projectSnapshotColors = ["#3B82F6", "#6366F1", "#F59E42"];
 
 const leadAnalyticsData = [
   { name: "New", value: 40 },
