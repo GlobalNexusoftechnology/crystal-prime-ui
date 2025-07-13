@@ -21,7 +21,7 @@ import { formatDate, IApiError } from "@/utils";
 import { useDebounce } from "@/utils/hooks";
 import toast from "react-hot-toast";
 import { usePermission } from "@/utils/hooks";
-import { AddEILogModal } from "../ei-log-management/components";
+import { AddEILogModal, ViewEILogModal } from "../ei-log-management/components";
 import { ImDownload2 } from "react-icons/im";
 import { ExportIcon } from "@/features";
 import { FiPlus, FiX } from "react-icons/fi";
@@ -40,6 +40,7 @@ export function EILogsListTable({
   const [selectedHead, setSelectedHead] = useState("All Head");
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("All Payment Mode");
   const [viewEILog, setViewEILog] = useState<IAllEILogList | null>(null);
+  const [isViewEILogModalOpen, setIsViewEILogModalOpen] = useState(false);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [dateRangeFilter, setDateRangeFilter] = useState<
@@ -157,6 +158,16 @@ export function EILogsListTable({
 
   const eiLogAction: ITableAction<IAllEILogList>[] = [];
 
+  // Add View action for all users
+  eiLogAction.push({
+    label: "View",
+    onClick: (row: IAllEILogList) => {
+      setViewEILog(row);
+      setIsViewEILogModalOpen(true);
+    },
+    className: "text-green-500",
+  });
+
   if (cavEditEILogManagement) {
     eiLogAction.push({
       label: "Edit",
@@ -189,6 +200,11 @@ export function EILogsListTable({
   const handleModalClose = () => {
     setIsEditEILogModalOpen(false);
     setEiLogId("");
+    setViewEILog(null);
+  };
+
+  const handleViewModalClose = () => {
+    setIsViewEILogModalOpen(false);
     setViewEILog(null);
   };
 
@@ -351,6 +367,14 @@ export function EILogsListTable({
             setEiLogId("");
             setViewEILog(null);
           }}
+        />
+      )}
+
+      {isViewEILogModalOpen && (
+        <ViewEILogModal
+          isOpen={isViewEILogModalOpen}
+          onClose={handleViewModalClose}
+          eiLogData={viewEILog}
         />
       )}
     </div>
