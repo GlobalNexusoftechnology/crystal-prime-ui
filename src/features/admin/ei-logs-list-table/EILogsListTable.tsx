@@ -43,8 +43,8 @@ export function EILogsListTable({
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [dateRangeFilter, setDateRangeFilter] = useState<
-    "All" | "Daily" | "Weekly" | "Monthly"
-  >("All");
+    "All Dates" | "Daily" | "Weekly" | "Monthly"
+  >("All Dates");
 
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
@@ -60,7 +60,7 @@ export function EILogsListTable({
       eilogTypeId: selectedType !== "All Type" ? selectedType : undefined,
       eilogHeadId: selectedHead !== "All Head" ? selectedHead : undefined,
       paymentMode: selectedPaymentMode !== "All Payment Mode" ? selectedPaymentMode : undefined,
-      dateRange: dateRangeFilter,
+      dateRange: dateRangeFilter !== "All Dates" ? dateRangeFilter : undefined,
       fromDate: fromDate || undefined,
       toDate: toDate || undefined,
       searchText: searchQuery,
@@ -115,7 +115,7 @@ export function EILogsListTable({
   };
 
   const handleDateRangeChange = (
-    value: "All" | "Daily" | "Weekly" | "Monthly"
+    value: "All Dates" | "Daily" | "Weekly" | "Monthly"
   ) => {
     setDateRangeFilter(value);
   };
@@ -211,13 +211,14 @@ export function EILogsListTable({
   ];
 
   const dateRangeOptions = [
-    { key: "All", label: "All", value: "All" },
+    { key: "All Dates", label: "All Dates", value: "All Dates" },
     { key: "Daily", label: "Daily", value: "Daily" },
     { key: "Weekly", label: "Weekly", value: "Weekly" },
     { key: "Monthly", label: "Monthly", value: "Monthly" },
   ];
 
   const paymentModeOptions = [
+    { key: "All Payment Mode", label: "All Payment Mode", value: "All Payment Mode" },
     { key: "Cash", label: "Cash", value: "Cash" },
     { key: "Online", label: "Online", value: "Online" },
     { key: "UPI", label: "UPI", value: "UPI" },
@@ -324,7 +325,7 @@ export function EILogsListTable({
             value={dateRangeFilter}
             onChange={(val: string) =>
               handleDateRangeChange(
-                val as "All" | "Daily" | "Weekly" | "Monthly"
+                val as "All Dates" | "Daily" | "Weekly" | "Monthly"
               )
             }
             dropdownWidth="w-full md:w-fit"
