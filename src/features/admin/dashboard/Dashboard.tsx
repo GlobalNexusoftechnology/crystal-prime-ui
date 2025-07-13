@@ -2,7 +2,6 @@
 
 import React from "react";
 import {
-  DailyTaskList,
   ExpensesOverviewChart,
   LeadAnalyticsChart,
   LeadTypeChart,
@@ -11,13 +10,39 @@ import {
 } from "./components";
 import { AnalyticalCard } from "../analytical-card";
 import { AnalyticalCardIcon } from "@/features";
+import { Table } from "@/components";
 // Mock data for the dashboard components
 const stats = [
-  { count: "234", title: "Total Leads", subtitle: "Over All leads", icon: <AnalyticalCardIcon /> },
-  { count: "20", title: "Follow-Ups Due Today", subtitle: "Today's pending work", icon: <AnalyticalCardIcon /> },
-  { count: "12", title: "Converted Leads", subtitle: "Weekly Leads", icon: <AnalyticalCardIcon /> },
-  { count: "12", title: "Lost Leads", subtitle: "Weekly Leads", icon: <AnalyticalCardIcon /> },
-  { count: "80%", title: "Conversion Rate", subtitle: "Lead to Customer", icon: <AnalyticalCardIcon /> },
+  {
+    count: "234",
+    title: "Total Leads",
+    subtitle: "Over All leads",
+    icon: <AnalyticalCardIcon />,
+  },
+  {
+    count: "20",
+    title: "Follow-Ups Due Today",
+    subtitle: "Today's pending work",
+    icon: <AnalyticalCardIcon />,
+  },
+  {
+    count: "12",
+    title: "Converted Leads",
+    subtitle: "Weekly Leads",
+    icon: <AnalyticalCardIcon />,
+  },
+  {
+    count: "12",
+    title: "Lost Leads",
+    subtitle: "Weekly Leads",
+    icon: <AnalyticalCardIcon />,
+  },
+  {
+    count: "80%",
+    title: "Conversion Rate",
+    subtitle: "Lead to Customer",
+    icon: <AnalyticalCardIcon />,
+  },
 ];
 
 const projectSnapshotData = [
@@ -81,40 +106,44 @@ const expensesData = [
   { month: "Dec", income: 50000, expense: 35000 },
 ];
 
-const dailyTasks = [
-  {
-    name: "Product List",
-    description: "This Project Belongs to the...",
-    status: "Open",
-    priority: "High",
-    due: "24-02-2021",
-  },
-  {
-    name: "Offer List",
-    description: "This Project Belongs to the...",
-    status: "In Progress",
-    priority: "Medium",
-    due: "24-02-2021",
-  },
-  {
-    name: "Offer List",
-    description: "This Project Belongs to the...",
-    status: "Completed",
-    priority: "Moderate",
-    due: "24-02-2021",
-  },
+
+// const statusColors: Record<string, string> = {
+//   Open: "bg-green-100 text-green-700",
+//   "In Progress": "bg-blue-100 text-blue-700",
+//   Completed: "bg-green-200 text-green-900",
+// };
+// const priorityColors: Record<string, string> = {
+//   High: "bg-red-100 text-red-700",
+//   Medium: "bg-yellow-100 text-yellow-700",
+//   Moderate: "bg-blue-100 text-blue-700",
+// };
+
+type DailyTask = { id: number; name: string; description: string; status: string; due: string };
+
+const dailyTaskList: DailyTask[] = [
+  { id: 1, name: "Product List", description: "This Project Belongs to the...", status: "Open", due: "24-02-2021" },
+  { id: 2, name: "Offer List", description: "This Project Belongs to the...", status: "In Progress", due: "25-02-2021" },
 ];
 
-const statusColors: Record<string, string> = {
-  Open: "bg-green-100 text-green-700",
-  "In Progress": "bg-blue-100 text-blue-700",
-  Completed: "bg-green-200 text-green-900",
-};
-const priorityColors: Record<string, string> = {
-  High: "bg-red-100 text-red-700",
-  Medium: "bg-yellow-100 text-yellow-700",
-  Moderate: "bg-blue-100 text-blue-700",
-};
+const dailyTaskListColumn: { header: string; accessor: keyof DailyTask }[] = [
+  { header: "TASK NAME", accessor: "name" },
+  { header: "DESCRIPTION", accessor: "description" },
+  { header: "STATUS", accessor: "status" },
+  { header: "DUE DATE", accessor: "due" },
+];
+
+const dailyTaskListAction = [
+  {
+    label: "Edit",
+    onClick: (row: DailyTask) => alert(`Edit task: ${row.name}`),
+    className: "text-blue-500 whitespace-nowrap",
+  },
+  {
+    label: "Delete",
+    onClick: (row: DailyTask) => alert(`Delete task: ${row.name}`),
+    className: "text-red-500 whitespace-nowrap",
+  },
+];
 
 function Dashboard() {
   return (
@@ -155,11 +184,10 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Daily Task List */}
-      <DailyTaskList
-        tasks={dailyTasks}
-        statusColors={statusColors}
-        priorityColors={priorityColors}
+      <Table
+        data={dailyTaskList}
+        columns={dailyTaskListColumn}
+        actions={dailyTaskListAction}
       />
     </div>
   );
