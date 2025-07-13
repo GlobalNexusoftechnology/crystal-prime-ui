@@ -15,6 +15,7 @@ export const useAllEILogsQuery = (filters: IEILogFilters = {}) => {
     queryKey: [ALL_EI_LOGS_QUERY_KEY, filters],
     queryFn: () => COMMUNITY_CLIENT.fetchAllEILogs(filters),
     networkMode: 'always',
+    enabled: !! filters
   });
 
   return {

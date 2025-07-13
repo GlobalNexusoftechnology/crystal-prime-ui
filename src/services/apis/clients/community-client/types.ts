@@ -1720,13 +1720,13 @@ export interface DailyTask {
 
 // START EI LOG MANAGEMENT
 export interface ICreateEILogPayload {
-  ei_log_type_id: string;
-  ei_log_head_id: string;
+  eilogType: string;
+  eilogHead: string;
   description: string;
   income?: number;
   expense?: number;
-  payment_mode?: string;
-  attachment?: File;
+  paymentMode?: string;
+  attachment?: string;
 }
 
 export interface ICreateEILogResponse {
@@ -1768,17 +1768,22 @@ export interface IAllEILogList {
   created_at: string;
   updated_at: string;
   description: string;
-  income?: number;
-  expense?: number;
-  payment_mode?: string;
-  attachment?: string;
-  ei_log_type: {
+  income?: string;
+  expense?: number | null;
+  paymentMode?: string;
+  attachment?: string | null;
+  eilogType: {
     id: string;
     name: string;
   };
-  ei_log_head: {
+  eilogHead: {
     id: string;
     name: string;
+  };
+  createdBy?: {
+    id: string;
+    firstName: string;
+    lastName: string;
   };
 }
 
@@ -1787,11 +1792,12 @@ export interface IAllEILogResponse {
   message: string;
   success: true;
   data: {
-    list: IAllEILogList[];
-    stats?: {
-      totalIncome: number;
-      totalExpense: number;
-      totalEILogs: number;
+    data: IAllEILogList[];
+    pagination?: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
     };
   };
 }
@@ -1818,8 +1824,9 @@ export interface IUploadEILogFromExcelResponse {
 
 export interface IEILogFilters {
   searchText?: string;
-  eiLogTypeId?: string;
-  eiLogHeadId?: string;
+  eilogTypeId?: string;
+  eilogHeadId?: string;
+  paymentMode?: string;
   dateRange?: "All" | "Daily" | "Weekly" | "Monthly";
   referenceDate?: string;
   fromDate?: string;

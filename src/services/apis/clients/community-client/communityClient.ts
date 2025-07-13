@@ -1880,8 +1880,9 @@ export class CommunityClient extends ApiClient {
     // Build query string from filters
     const params = new URLSearchParams();
     if (filters.searchText) params.append('searchText', filters.searchText);
-    if (filters.eiLogTypeId && filters.eiLogTypeId !== 'All Type') params.append('eiLogTypeId', filters.eiLogTypeId);
-    if (filters.eiLogHeadId && filters.eiLogHeadId !== 'All Head') params.append('eiLogHeadId', filters.eiLogHeadId);
+    if (filters.eilogTypeId && filters.eilogTypeId !== 'All Type') params.append('eilogTypeId', filters.eilogTypeId);
+    if (filters.eilogHeadId && filters.eilogHeadId !== 'All Head') params.append('eilogHeadId', filters.eilogHeadId);
+    if (filters.paymentMode && filters.paymentMode !== 'All Payment Mode') params.append('paymentMode', filters.paymentMode);
     if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
     if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
     if (filters.fromDate) params.append('fromDate', filters.fromDate);
@@ -1930,8 +1931,9 @@ export class CommunityClient extends ApiClient {
   public fetchAllEILogsDownloadExcel = async (filters: IEILogFilters = {}) => {
     const params = new URLSearchParams();
     if (filters.searchText) params.append('searchText', filters.searchText);
-    if (filters.eiLogTypeId && filters.eiLogTypeId !== 'All Type') params.append('eiLogTypeId', filters.eiLogTypeId);
-    if (filters.eiLogHeadId && filters.eiLogHeadId !== 'All Head') params.append('eiLogHeadId', filters.eiLogHeadId);
+    if (filters.eilogTypeId && filters.eilogTypeId !== 'All Type') params.append('eilogTypeId', filters.eilogTypeId);
+    if (filters.eilogHeadId && filters.eilogHeadId !== 'All Head') params.append('eilogHeadId', filters.eilogHeadId);
+    if (filters.paymentMode && filters.paymentMode !== 'All Payment Mode') params.append('paymentMode', filters.paymentMode);
     if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
     if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
     if (filters.fromDate) params.append('fromDate', filters.fromDate);

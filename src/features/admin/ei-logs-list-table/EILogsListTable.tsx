@@ -52,17 +52,20 @@ export function EILogsListTable({
     onChangeCb: () => {},
   });
 
+  console.log(selectedHead, "selectHead#####")
+  console.log(selectedType, "selectType#####")
+
   const filters = useMemo(
     () => ({
-      searchText: searchQuery,
-      eiLogTypeId: selectedType,
-      eiLogHeadId: selectedHead,
-      paymentMode: selectedPaymentMode,
+      eilogTypeId: selectedType !== "All Type" ? selectedType : undefined,
+      eilogHeadId: selectedHead !== "All Head" ? selectedHead : undefined,
+      paymentMode: selectedPaymentMode !== "All Payment Mode" ? selectedPaymentMode : undefined,
       dateRange: dateRangeFilter,
       fromDate: fromDate || undefined,
       toDate: toDate || undefined,
+      searchText: searchQuery,
     }),
-    [searchQuery, selectedType, selectedHead, selectedPaymentMode, dateRangeFilter, fromDate, toDate]
+    [selectedType, selectedHead, selectedPaymentMode, dateRangeFilter, fromDate, toDate, searchQuery]
   );
 
   const { data: allEILogList, eiLogsRefetch } = useAllEILogsQuery(filters);
@@ -131,18 +134,24 @@ export function EILogsListTable({
   };
 
   // Prepare full list from API
-  const fullEILogList: IAllEILogList[] = (allEILogList?.data?.list ?? []).map(
-    (eiLog) => ({
+  const dataSource =
+    allEILogList?.data && "list" in allEILogList.data
+      ? ((allEILogList.data.list as { data: IAllEILogList[] }).data)
+      : allEILogList?.data?.data ?? [];
+
+  const fullEILogList: IAllEILogList[] = dataSource.map(
+    (eiLog: IAllEILogList) => ({
       id: eiLog?.id || "N/A",
       created_at: `${formatDate(eiLog?.created_at)}` || "N/A",
       updated_at: `${formatDate(eiLog?.updated_at)}` || "N/A",
       description: eiLog?.description || "N/A",
-      income: eiLog?.income || 0,
-      expense: eiLog?.expense || 0,
-      payment_mode: eiLog?.payment_mode || "N/A",
+      income: eiLog?.income !== undefined && eiLog?.income !== null ? String(eiLog.income) : undefined,
+      expense: typeof eiLog?.expense === 'number' ? eiLog.expense : eiLog?.expense ? Number(eiLog.expense) : null,
+      paymentMode: eiLog?.paymentMode || "N/A",
       attachment: eiLog?.attachment || undefined,
-      ei_log_type: eiLog?.ei_log_type || { id: "N/A", name: "N/A" },
-      ei_log_head: eiLog?.ei_log_head || { id: "N/A", name: "N/A" },
+      eilogType: eiLog?.eilogType || { id: "N/A", name: "N/A" },
+      eilogHead: eiLog?.eilogHead || { id: "N/A", name: "N/A" },
+      createdBy: eiLog?.createdBy,
     })
   );
 
@@ -188,7 +197,7 @@ export function EILogsListTable({
     ...(allEILogTypesData?.data?.map((type) => ({
       key: type.id,
       label: type.name,
-      value: type.id,
+      value: type.id, // Use ID as value
     })) || []),
   ];
 
@@ -197,7 +206,7 @@ export function EILogsListTable({
     ...(allEILogHeadsData?.data?.map((head) => ({
       key: head.id,
       label: head.name,
-      value: head.id,
+      value: head.id, // Use ID as value
     })) || []),
   ];
 
@@ -209,12 +218,12 @@ export function EILogsListTable({
   ];
 
   const paymentModeOptions = [
-    { key: "All Payment Mode", label: "All Payment Mode", value: "All Payment Mode" },
-    { key: "cash", label: "Cash", value: "cash" },
-    { key: "card", label: "Card", value: "card" },
-    { key: "bank_transfer", label: "Bank Transfer", value: "bank_transfer" },
-    { key: "upi", label: "UPI", value: "upi" },
-    { key: "cheque", label: "Cheque", value: "cheque" },
+    { key: "Cash", label: "Cash", value: "Cash" },
+    { key: "Online", label: "Online", value: "Online" },
+    { key: "UPI", label: "UPI", value: "UPI" },
+    { key: "Bank Transfer", label: "Bank Transfer", value: "Bank Transfer" },
+    { key: "Cheque", label: "Cheque", value: "Cheque" },
+    { key: "Others", label: "Others", value: "Others" },
   ];
 
   return (
