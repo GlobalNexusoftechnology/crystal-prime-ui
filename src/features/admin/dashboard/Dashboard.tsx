@@ -62,12 +62,34 @@ const leadAnalyticsData = [
   { name: "Business Done", value: 30 },
 ];
 
-const leadTypeData = [
-  { name: "Website", value: 20 },
-  { name: "Completed", value: 20 },
-  { name: "SEO", value: 20 },
-  { name: "Training", value: 20 },
-];
+// Example data for each filter
+const leadTypeChartDataMap = {
+  "This Week": [
+    { name: "Website", value: 20 },
+    { name: "Completed", value: 20 },
+    { name: "SEO", value: 20 },
+    { name: "Training", value: 20 },
+  ],
+  "Last Week": [
+    { name: "Website", value: 10 },
+    { name: "Completed", value: 30 },
+    { name: "SEO", value: 30 },
+    { name: "Training", value: 30 },
+  ],
+  "This Month": [
+    { name: "Website", value: 25 },
+    { name: "Completed", value: 25 },
+    { name: "SEO", value: 25 },
+    { name: "Training", value: 25 },
+  ],
+  "Last Month": [
+    { name: "Website", value: 15 },
+    { name: "Completed", value: 35 },
+    { name: "SEO", value: 25 },
+    { name: "Training", value: 25 },
+  ],
+};
+
 const leadTypeColors = ["#10B981", "#3B82F6", "#F59E42", "#6366F1"];
 
 const projectRenewalData = [
@@ -107,7 +129,6 @@ const expensesData = [
   { month: "Dec", income: 50000, expense: 35000 },
 ];
 
-
 // const statusColors: Record<string, string> = {
 //   Open: "bg-green-100 text-green-700",
 //   "In Progress": "bg-blue-100 text-blue-700",
@@ -119,11 +140,29 @@ const expensesData = [
 //   Moderate: "bg-blue-100 text-blue-700",
 // };
 
-type DailyTask = { id: number; name: string; description: string; status: string; due: string };
+type DailyTask = {
+  id: number;
+  name: string;
+  description: string;
+  status: string;
+  due: string;
+};
 
 const dailyTaskList: DailyTask[] = [
-  { id: 1, name: "Product List", description: "This Project Belongs to the...", status: "Open", due: "24-02-2021" },
-  { id: 2, name: "Offer List", description: "This Project Belongs to the...", status: "In Progress", due: "25-02-2021" },
+  {
+    id: 1,
+    name: "Product List",
+    description: "This Project Belongs to the...",
+    status: "Open",
+    due: "24-02-2021",
+  },
+  {
+    id: 2,
+    name: "Offer List",
+    description: "This Project Belongs to the...",
+    status: "In Progress",
+    due: "25-02-2021",
+  },
 ];
 
 const dailyTaskListColumn: { header: string; accessor: keyof DailyTask }[] = [
@@ -146,7 +185,7 @@ const dailyTaskListAction = [
   },
 ];
 
-function Dashboard() {
+export default function Dashboard() {
   return (
     <div className="p-6 md:p-8 bg-[#fafbfc] min-h-screen">
       <div className="mb-6">
@@ -163,28 +202,16 @@ function Dashboard() {
         ))}
       </div>
       {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 my-6">
-        {/* Left Column */}
-        <div className="flex flex-col gap-6">
-          <ProjectSnapshotChart
-            data={projectSnapshotData}
-            colors={projectSnapshotColors}
-          />
-          <ProjectRenewalList data={projectRenewalData} />
-        </div>
-
-        {/* Center Column */}
-        <div className="flex flex-col gap-6">
-          <LeadAnalyticsChart data={leadAnalyticsData} />
-          <ExpensesOverviewChart data={expensesData} />
-        </div>
-
-        {/* Right Column */}
-        <div className="flex flex-col gap-6">
-          <LeadTypeChart data={leadTypeData} colors={leadTypeColors} />
-        </div>
+      <div className="flex flex-wrap gap-6 my-6">
+        <ProjectSnapshotChart
+          data={projectSnapshotData}
+          colors={projectSnapshotColors}
+        />
+        <LeadAnalyticsChart data={leadAnalyticsData} />
+        <LeadTypeChart chartDataMap={leadTypeChartDataMap} colors={leadTypeColors} />
+        <ProjectRenewalList data={projectRenewalData} />
+        <ExpensesOverviewChart data={expensesData} />
       </div>
-
       <Table
         data={dailyTaskList}
         columns={dailyTaskListColumn}
@@ -193,5 +220,3 @@ function Dashboard() {
     </div>
   );
 }
-
-export default Dashboard;
