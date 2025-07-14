@@ -104,20 +104,37 @@ const projectRenewalData = [
   },
 ];
 
-const expensesData = [
-  { month: "Jan", income: 10000, expense: 5000 },
-  { month: "Feb", income: 20000, expense: 10000 },
-  { month: "Mar", income: 15000, expense: 8000 },
-  { month: "Apr", income: 25000, expense: 12000 },
-  { month: "May", income: 30000, expense: 15000 },
-  { month: "Jun", income: 20000, expense: 10000 },
-  { month: "Jul", income: 35000, expense: 20000 },
-  { month: "Aug", income: 40000, expense: 25000 },
-  { month: "Sep", income: 30000, expense: 18000 },
-  { month: "Oct", income: 25000, expense: 12000 },
-  { month: "Nov", income: 45000, expense: 30000 },
-  { month: "Dec", income: 50000, expense: 35000 },
-];
+const expensesDataMap = {
+  Weekly: [
+    { month: "Mon", income: 2000, expense: 1000 },
+    { month: "Tue", income: 2500, expense: 1200 },
+    { month: "Wed", income: 1800, expense: 900 },
+    { month: "Thu", income: 2200, expense: 1100 },
+    { month: "Fri", income: 2700, expense: 1300 },
+    { month: "Sat", income: 3000, expense: 1500 },
+    { month: "Sun", income: 2100, expense: 1000 },
+  ],
+  Monthly: [
+    { month: "Week 1", income: 8000, expense: 4000 },
+    { month: "Week 2", income: 9000, expense: 4500 },
+    { month: "Week 3", income: 8500, expense: 4200 },
+    { month: "Week 4", income: 9500, expense: 4800 },
+  ],
+  Yearly: [
+    { month: "Jan", income: 10000, expense: 5000 },
+    { month: "Feb", income: 20000, expense: 10000 },
+    { month: "Mar", income: 15000, expense: 8000 },
+    { month: "Apr", income: 25000, expense: 12000 },
+    { month: "May", income: 30000, expense: 15000 },
+    { month: "Jun", income: 20000, expense: 10000 },
+    { month: "Jul", income: 35000, expense: 20000 },
+    { month: "Aug", income: 40000, expense: 25000 },
+    { month: "Sep", income: 30000, expense: 18000 },
+    { month: "Oct", income: 25000, expense: 12000 },
+    { month: "Nov", income: 45000, expense: 30000 },
+    { month: "Dec", income: 50000, expense: 35000 },
+  ],
+};
 
 // const statusColors: Record<string, string> = {
 //   Open: "bg-green-100 text-green-700",
@@ -239,7 +256,7 @@ export default function Dashboard() {
         <LeadAnalyticsChart dataMap={leadAnalyticsChartDataMap} />
         <LeadTypeChart chartDataMap={leadTypeChartDataMap} colors={leadTypeColors} />
         <ProjectRenewalList data={projectRenewalData} />
-        <ExpensesOverviewChart data={expensesData} />
+        <ExpensesOverviewChart dataMap={expensesDataMap} />
       </div>
       <Table
         data={dailyTaskList}
