@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   ExpensesOverviewChart,
   LeadAnalyticsChart,
@@ -232,6 +232,21 @@ const leadAnalyticsChartDataMap = {
 };
 
 export default function Dashboard() {
+  const [selectedMonth, setSelectedMonth] = useState("June");
+  const monthOptions = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
   return (
     <div className="p-6 md:p-8 bg-[#fafbfc] min-h-screen">
       <div className="mb-6">
@@ -255,7 +270,21 @@ export default function Dashboard() {
         />
         <LeadAnalyticsChart dataMap={leadAnalyticsChartDataMap} />
         <LeadTypeChart chartDataMap={leadTypeChartDataMap} colors={leadTypeColors} />
-        <ProjectRenewalList data={projectRenewalData} />
+        <ProjectRenewalList
+          data={
+            projectRenewalData
+              .map((cat) => ({
+                ...cat,
+                projects: cat.projects.filter((proj) =>
+                  proj.date.toLowerCase().includes(selectedMonth.toLowerCase())
+                ),
+              }))
+              .filter((cat) => cat.projects.length > 0)
+          }
+          selectedMonth={selectedMonth}
+          onMonthChange={setSelectedMonth}
+          monthOptions={monthOptions}
+        />
         <ExpensesOverviewChart dataMap={expensesDataMap} />
       </div>
       <Table
