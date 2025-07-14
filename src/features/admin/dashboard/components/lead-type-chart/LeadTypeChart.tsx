@@ -91,7 +91,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
 
   return (
     <div
-      className="bg-white rounded-xl p-6 shadow border border-gray-200 flex flex-col items-center min-w-[550px] max-w-[700px]"
+      className="bg-white rounded-xl p-4 border 2xl:border-[0.1vw] border-gray-300 flex flex-col items-center min-w-[550px] max-w-[700px]"
     >
       <div className="flex justify-between items-center w-full mb-2">
         <span className="font-medium text-lg text-gray-900">Lead Type</span>

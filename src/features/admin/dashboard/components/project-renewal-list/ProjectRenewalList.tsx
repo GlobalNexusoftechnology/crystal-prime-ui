@@ -14,7 +14,7 @@ interface ProjectRenewalListProps {
 }
 
 export const ProjectRenewalList: React.FC<ProjectRenewalListProps> = ({ data }) => (
-  <div className="bg-white rounded-xl p-4 shadow border border-gray-100 w-[45%]">
+  <div className="bg-white rounded-xl p-4 border 2xl:border-[0.1vw] border-gray-300 w-[46%]">
     <div className="flex justify-between items-center mb-2">
       <span className="font-medium text-lg text-gray-700">Project Renewal</span>
       <span className="text-xs text-gray-400">June</span>

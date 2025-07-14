@@ -36,7 +36,7 @@ export const LeadAnalyticsChart: React.FC<LeadAnalyticsChartProps> = ({ dataMap 
   }, []);
 
   return (
-    <div className="bg-white rounded-xl p-4 border border-gray-300 w-[60%]">
+    <div className="bg-white rounded-xl p-4 border 2xl:border-[0.1vw] border-gray-300 w-[67%]">
       <div className="flex justify-between items-center mb-2">
         <span className="font-medium text-lg text-gray-700">Lead Analytics</span>
         <div className="flex items-center gap-2 relative" ref={dropdownRef}>

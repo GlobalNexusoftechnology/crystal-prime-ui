@@ -39,7 +39,7 @@ export const ExpensesOverviewChart: React.FC<ExpensesOverviewChartProps> = ({
   }, []);
 
   return (
-    <div className="bg-white rounded-xl p-4 shadow border border-gray-100 w-full">
+    <div className="bg-white rounded-xl p-4 border 2xl:border-[0.1vw] border-gray-300 w-full">
       <div className="flex justify-between items-center mb-2">
         <span className="font-medium text-lg text-gray-700">Expenses Overview</span>
         <div className="flex items-center gap-2 relative" ref={dropdownRef}>
