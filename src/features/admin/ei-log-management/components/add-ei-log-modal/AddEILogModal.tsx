@@ -119,7 +119,9 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
     },
   });
 
-  const setFieldValueRef = React.useRef<FormikHelpers<EILogFormValues>["setFieldValue"] | null>(null);
+  const setFieldValueRef = React.useRef<
+    FormikHelpers<EILogFormValues>["setFieldValue"] | null
+  >(null);
 
   const { onUploadEILogAttachment } = useUploadEILogAttachmentMutation({
     onSuccessCallback: (data: IUploadAttachmentResponse) => {
@@ -181,7 +183,10 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
             income: values.income ? parseFloat(values.income) : undefined,
             expense: values.expense ? parseFloat(values.expense) : undefined,
             paymentMode: values.payment_mode,
-            attachment: typeof values.attachment === 'string' ? values.attachment : undefined,
+            attachment:
+              typeof values.attachment === "string"
+                ? values.attachment
+                : undefined,
           };
 
           if (eiLogId) {
@@ -273,7 +278,11 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
                 <div className="mt-2">
                   <UploadDocument
                     label="Attachment (Optional)"
-                    placeholder={typeof values.attachment === 'string' ? values.attachment : "Upload Attachment"}
+                    placeholder={
+                      typeof values.attachment === "string"
+                        ? values.attachment
+                        : "Upload Attachment"
+                    }
                     onChange={(files: FileList | null) => {
                       if (files && files[0]) {
                         const formData = new FormData();

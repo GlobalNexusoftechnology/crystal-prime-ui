@@ -94,7 +94,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
       className="bg-white rounded-xl p-6 shadow border border-gray-200 flex flex-col items-center min-w-[550px] max-w-[700px]"
     >
       <div className="flex justify-between items-center w-full mb-2">
-        <span className="font-semibold text-lg text-gray-900">Lead Type</span>
+        <span className="font-medium text-lg text-gray-900">Lead Type</span>
         <div className="flex items-center gap-2 relative" ref={dropdownRef}>
           <button
             type="button"

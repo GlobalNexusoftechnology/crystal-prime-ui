@@ -41,7 +41,7 @@ export const ProjectSnapshotChart: React.FC<ProjectSnapshotChartProps> = ({ data
   return (
     <div className="bg-white rounded-xl p-6 shadow border border-gray-200 flex flex-col items-center min-w-[260px] max-w-[320px]" style={{ boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
       <div className="w-full flex justify-between items-center mb-2">
-        <p className="font-semibold text-lg text-gray-900">Project Snapshot</p>
+        <p className="font-medium text-lg text-gray-900">Project Snapshot</p>
       </div>
       <div className="relative w-full flex items-center justify-center" style={{ height: 180 }}>
         <ResponsiveContainer width="100%" height={180}>

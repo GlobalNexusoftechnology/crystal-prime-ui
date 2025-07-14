@@ -52,16 +52,6 @@ const projectSnapshotData = [
 ];
 const projectSnapshotColors = ["#3B82F6", "#6366F1", "#F59E42"];
 
-const leadAnalyticsData = [
-  { name: "New", value: 40 },
-  { name: "Profile Sent", value: 35 },
-  { name: "Quotation", value: 30 },
-  { name: "Not Interested", value: 20 },
-  { name: "Call Me Later", value: 25 },
-  { name: "Phone Not Received", value: 15 },
-  { name: "Business Done", value: 30 },
-];
-
 // Example data for each filter
 const leadTypeChartDataMap = {
   "This Week": [
@@ -185,6 +175,45 @@ const dailyTaskListAction = [
   },
 ];
 
+const leadAnalyticsChartDataMap = {
+  "This Week": [
+    { name: "New", value: 40 },
+    { name: "Profile Sent", value: 35 },
+    { name: "Quotation", value: 30 },
+    { name: "Not Interested", value: 20 },
+    { name: "Call Me Later", value: 25 },
+    { name: "Phone Not Received", value: 15 },
+    { name: "Business Done", value: 30 },
+  ],
+  "Last Week": [
+    { name: "New", value: 30 },
+    { name: "Profile Sent", value: 25 },
+    { name: "Quotation", value: 20 },
+    { name: "Not Interested", value: 15 },
+    { name: "Call Me Later", value: 20 },
+    { name: "Phone Not Received", value: 10 },
+    { name: "Business Done", value: 25 },
+  ],
+  "This Month": [
+    { name: "New", value: 100 },
+    { name: "Profile Sent", value: 90 },
+    { name: "Quotation", value: 80 },
+    { name: "Not Interested", value: 60 },
+    { name: "Call Me Later", value: 70 },
+    { name: "Phone Not Received", value: 50 },
+    { name: "Business Done", value: 85 },
+  ],
+  "Last Month": [
+    { name: "New", value: 80 },
+    { name: "Profile Sent", value: 70 },
+    { name: "Quotation", value: 60 },
+    { name: "Not Interested", value: 40 },
+    { name: "Call Me Later", value: 50 },
+    { name: "Phone Not Received", value: 30 },
+    { name: "Business Done", value: 65 },
+  ],
+};
+
 export default function Dashboard() {
   return (
     <div className="p-6 md:p-8 bg-[#fafbfc] min-h-screen">
@@ -207,7 +236,7 @@ export default function Dashboard() {
           data={projectSnapshotData}
           colors={projectSnapshotColors}
         />
-        <LeadAnalyticsChart data={leadAnalyticsData} />
+        <LeadAnalyticsChart dataMap={leadAnalyticsChartDataMap} />
         <LeadTypeChart chartDataMap={leadTypeChartDataMap} colors={leadTypeColors} />
         <ProjectRenewalList data={projectRenewalData} />
         <ExpensesOverviewChart data={expensesData} />
