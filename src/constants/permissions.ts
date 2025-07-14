@@ -15,6 +15,12 @@ export enum EModule {
   EI_LOG_TYPES = "EI_LOG_TYPES",
   EI_LOG_HEADS = "EI_LOG_HEADS",
   EI_LOG_MANAGEMENT = "EI_LOG_MANAGEMENT",
+  REPORTS = "REPORTS",
+  STAFF_PERFORMANCE_REPORT = "STAFF_PERFORMANCE_REPORT",
+  PROJECT_PERFORMANCE_REPORT = "PROJECT_PERFORMANCE_REPORT",
+  LEAD_ANALYTICS_REPORT = "LEAD_ANALYTICS_REPORT",
+  BUSINESS_ANALYSIS_REPORT = "BUSINESS_ANALYSIS_REPORT",
+  PUBLIC_BUSINESS_DASHBOARD = "PUBLIC_BUSINESS_DASHBOARD",
 }
 
 export enum EAction {
@@ -47,6 +53,12 @@ export const MODULES: TOptionItem[] = [
   { key: EModule.EI_LOG_TYPES, label: "EI Log Types Module", value: "23" },
   { key: EModule.EI_LOG_HEADS, label: "EI Log Heads Module", value: "24" },
   { key: EModule.EI_LOG_MANAGEMENT, label: "EI Log Management Module", value: "25" },
+  { key: EModule.REPORTS, label: "Reports", value: "26" },
+  { key: EModule.STAFF_PERFORMANCE_REPORT, label: "Staff Performance Report", value: "27" },
+  { key: EModule.PROJECT_PERFORMANCE_REPORT, label: "Project Performance Report", value: "28" },
+  { key: EModule.LEAD_ANALYTICS_REPORT, label: "Lead Analytics Report", value: "29" },
+  { key: EModule.BUSINESS_ANALYSIS_REPORT, label: "Business Analysis Report", value: "30" },
+  { key: EModule.PUBLIC_BUSINESS_DASHBOARD, label: "Public Business Dashboard", value: "31" },
 ];
 
 export const ACTIONS: TOptionItem[] = [
@@ -55,3 +67,15 @@ export const ACTIONS: TOptionItem[] = [
   { key: EAction.EDIT, label: "Edit", value: "3" },
   { key: EAction.DELETE, label: "Delete", value: "4" },
 ];
+
+// Add documentation for report permissions
+// Permission keys for reports:
+// - VIEW_STAFF_PERFORMANCE_REPORT
+// - VIEW_PROJECT_PERFORMANCE_REPORT
+// - VIEW_LEAD_ANALYTICS_REPORT
+// - VIEW_BUSINESS_ANALYSIS_REPORT
+// - VIEW_PUBLIC_BUSINESS_DASHBOARD
+
+// ACTIONS array remains the same, as VIEW is already present
+// If you want to add custom actions for reports, you can do so here
+// For now, the VIEW action is used for all report modules
