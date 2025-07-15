@@ -1,11 +1,13 @@
 "use client"
 
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useState, useMemo } from "react"
 import { Button, SearchBar } from "@/components"
 import { RoleRowTable } from "../role-row-table"
 import { RolePermissionModal } from "../role-permission-modal"
 import { IAllRoleList, IDeleteRoleResponse, useAllRoleListQuery, useDeleteRoleMutation } from "@/services"
 import { IApiError } from "@/utils"
+import { Pagination } from "@/components/table/components/pagination/Pagination";
+import { DeleteModal } from "@/components";
 // import { ILeadSourcesListTable } from "@/constants";
 // import { IRoleListTable } from "@/constants/tables/role-list-table";
 
@@ -17,6 +19,8 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [selectedRole, setSelectedRole] = useState<IAllRoleList | null>(null)
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const toggleExpand = (id: string) => {
     setExpandedId(expandedId === id ? null : id)
@@ -25,13 +29,25 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
   const { isError, isPending, data, isLoading, refetchRoles } =
     useAllRoleListQuery()
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  const paginatedRoles = useMemo(() => {
+    if (!data) return [];
+    const start = (currentPage - 1) * pageSize;
+    return data.slice(start, start + pageSize);
+  }, [data, currentPage]);
+
   const { onDeleteRole } = useDeleteRoleMutation({
     onSuccessCallback: (data: IDeleteRoleResponse) => {
       console.log("Role deleted successfully", data)
       refetchRoles()
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
       console.error("Failed to delete lead:", err)
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
   })
   
@@ -40,8 +56,9 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
   console.log(shouldRenderFallback)
 
   const handleRoleDelete = (roleId: string) => {
-    onDeleteRole(roleId);
-  }
+    setDeleteId(roleId);
+    setShowDeleteModal(true);
+  };
 
   const handleRoleEdit = (role: IAllRoleList) => {
     setSelectedRole(role);
@@ -52,6 +69,10 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
     setSelectedRole(null);
     setShowModal(true);
   }
+
+  const roleNameToDelete = deleteId
+    ? (data?.find((r) => r.id === deleteId)?.role || "")
+    : "";
 
   return (
     <>
@@ -104,22 +125,25 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
                 </tr>
               </thead>
               <tbody>
-                {data?.map((role, index) => {
-                  return (
-                    <RoleRowTable
-                      index={index}
-                      key={role.id}
-                      role={role}
-                      isExpanded={expandedId === role.id}
-                      onToggle={() => toggleExpand(role.id)}
-                      onRoleDelete={handleRoleDelete}
-                      onRoleEdit={handleRoleEdit}
-                    />
-                  )
-                })}
+                {paginatedRoles.map((role, index) => (
+                  <RoleRowTable
+                    index={(currentPage - 1) * pageSize + index}
+                    key={role.id}
+                    role={role}
+                    isExpanded={expandedId === role.id}
+                    onToggle={() => toggleExpand(role.id)}
+                    onRoleDelete={handleRoleDelete}
+                    onRoleEdit={handleRoleEdit}
+                  />
+                ))}
               </tbody>
             </table>
           </div>
+         <Pagination
+           currentPage={currentPage}
+           totalPages={Math.ceil((data?.length || 0) / pageSize)}
+           onPageChange={setCurrentPage}
+         />
         </div>
       </div>
 
@@ -131,6 +155,22 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
           defaultValues={selectedRole ?? undefined}
         />
       )}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId) onDeleteRole(deleteId);
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        isLoading={false}
+        title="Delete Role"
+        message="Are you sure you want to delete this role "
+        itemName={roleNameToDelete}
+      />
     </>
   )
 }

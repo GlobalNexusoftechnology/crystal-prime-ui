@@ -7,6 +7,8 @@ import { useRouter } from "next/navigation";
 import { ActionDropdown } from "@/components/action-dropdown";
 import { useAllTypesQuery, useDeleteProjectTemplateMutation } from "@/services";
 import toast from "react-hot-toast";
+import { DeleteModal } from "@/components";
+import { useState } from "react";
 
 /**
  * Props for the ProjectTemplateCard component.
@@ -47,13 +49,17 @@ export function ProjectTemplateCard({
 
   const projectTypeName = allTypesData?.find(type => type.id?.toString() === projectType)?.name || projectType;
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const { onDeleteProjectTemplate } = useDeleteProjectTemplateMutation({
     onSuccessCallback: (response) => {
       toast.success(response.message || "Project template deleted successfully");
       refetchAllProjectTemplates();
+      setShowDeleteModal(false);
     },
     onErrorCallback: (err) => {
       toast.error(err.message || "Failed to delete project template");
+      setShowDeleteModal(false);
     },
   });
 
@@ -66,7 +72,11 @@ export function ProjectTemplateCard({
   };
 
   const handleDelete = () => {
-      onDeleteProjectTemplate(id);
+    setShowDeleteModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDeleteProjectTemplate(id);
   };
 
   return (
@@ -149,6 +159,15 @@ export function ProjectTemplateCard({
           </Link>
         </div>
       </div>
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleConfirmDelete}
+        isLoading={false}
+        title="Delete Project Template"
+        message="Are you sure you want to delete this Project Template "
+        itemName={templateName}
+      />
     </div>
   );
 }

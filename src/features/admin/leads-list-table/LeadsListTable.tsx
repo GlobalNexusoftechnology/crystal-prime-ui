@@ -28,6 +28,7 @@ import { usePermission } from "@/utils/hooks";
 import { useDebounce } from "@/utils/hooks";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { DeleteModal } from "@/components";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen: (arg0: boolean) => void;
@@ -46,6 +47,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [dateRangeFilter, setDateRangeFilter] = useState<
     "All" | "Daily" | "Weekly" | "Monthly"
   >("All");
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
@@ -138,9 +141,13 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     onSuccessCallback: (response: IDeleteLeadResponse) => {
       queryClient.invalidateQueries({ queryKey: ["leads-list-query-key"] });
       toast.success(response?.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err?.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
   });
 
@@ -177,7 +184,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     leadLeadManagementAction.push({
       label: "Delete",
       onClick: (row: ILeadsListProps) => {
-        onDeleteLead(row.id);
+        setDeleteId(row.id);
+        setShowDeleteModal(true);
       },
       className: "text-red-500",
     });
@@ -333,6 +341,13 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     setFollowupToDate(date);
   };
 
+  const leadNameToDelete = deleteId
+    ? (() => {
+        const lead = leadsList.find((l) => l.id === deleteId);
+        return lead ? `${lead.first_name} ${lead.last_name}` : "";
+      })()
+    : "";
+
   if (isError) {
     return (
       <div className="text-center py-6 text-red-500">
@@ -458,6 +473,22 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           lead={leadDetailById}
         />
       )}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId) onDeleteLead(deleteId);
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        isLoading={false}
+        title="Delete Lead"
+        message="Are you sure you want to delete this lead "
+        itemName={leadNameToDelete}
+      />
     </div>
   );
 }

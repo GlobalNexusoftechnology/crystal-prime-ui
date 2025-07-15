@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import { CustomClientTable } from "..";
 import { downloadBlobFile } from "@/utils";
 import { ImDownload2 } from "react-icons/im";
+import { DeleteModal } from "@/components/modal/DeleteModal";
 
 /**
  * Renders the client list table with search, import, export, and CRUD operations.
@@ -34,6 +35,8 @@ import { ImDownload2 } from "react-icons/im";
 export function ClientListTable(): JSX.Element {
   const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<IClientListProps | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { allClientData, refetchClient } = useAllClientQuery();
   const { hasPermission } = usePermission();
@@ -71,18 +74,25 @@ export function ClientListTable(): JSX.Element {
   if (canDeleteClient) {
     clientListActions.push({
       label: "Delete",
-      onClick: (row) => handleDelete(row.id),
+      onClick: (row) => {
+        setDeleteId(row.id);
+        setShowDeleteModal(true);
+      },
       className: "text-red-500",
     });
   }
 
-  const { onDeleteClient } = useDeleteClientMutation({
+  const { onDeleteClient, isPending: isDeletePending } = useDeleteClientMutation({
     onSuccessCallback: (data) => {
       toast.success(data.message);
       refetchClient();
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
   });
 
@@ -180,6 +190,8 @@ export function ClientListTable(): JSX.Element {
     );
   });
 
+  const clientNameToDelete = deleteId ? allClientData?.find((c) => c.id === deleteId)?.name : "";
+
   return (
     <div className="flex flex-col gap-8 2xl:gap-[2vw] px-4 2xl:p-[1vw] py-2 2xl:py-[0.5vw]">
       <div className="flex flex-col gap-4 2xl:gap-[1vw]">
@@ -250,6 +262,20 @@ export function ClientListTable(): JSX.Element {
           isUpdatePending={isUpdatePending}
         />
       )}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId) onDeleteClient(deleteId);
+        }}
+        isLoading={isDeletePending}
+        title="Delete Client"
+        message="Are you sure you want to delete this client "
+        itemName={clientNameToDelete}
+      />
     </div>
   );
 }
