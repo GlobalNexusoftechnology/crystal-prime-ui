@@ -22,6 +22,7 @@ import {
   IApiError,
 } from "@/utils";
 import { usePermission } from "@/utils/hooks";
+import { DeleteModal } from "@/components";
 
 export function StaffListTable() {
   const { allUsersData, refetchAllUsers } = useAllUsersQuery();
@@ -32,6 +33,8 @@ export function StaffListTable() {
     null
   );
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { downloadAllUserExcel } = useAllUserDownloadExcelQuery();
 
@@ -57,9 +60,13 @@ export function StaffListTable() {
     onSuccessCallback: (data) => {
       toast.success(data.message);
       refetchAllUsers();
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
   });
 
@@ -147,7 +154,8 @@ export function StaffListTable() {
     leadStaffManagementAction.push({
       label: "Delete",
       onClick: (row) => {
-        onDeleteUser(row.id);
+        setDeleteId(row.id);
+        setShowDeleteModal(true);
       },
       className: "text-red-500",
     });
@@ -157,6 +165,13 @@ export function StaffListTable() {
   const handleCloseAddModal = () => setIsAddStaffModalOpen(false);
   const handleCloseEditModal = () => setIsEditStaffModalOpen(false);
   // const handleCloseViewModal = () => setIsViewStaffModalOpen(false);
+
+  const staffNameToDelete = deleteId
+    ? (() => {
+        const staff = filteredUserList.find((u) => u.id === deleteId);
+        return staff ? `${staff.first_name} ${staff.last_name}` : "";
+      })()
+    : "";
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
@@ -218,6 +233,22 @@ export function StaffListTable() {
           onClose={handleCloseViewModal}
         />
       )} */}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId) onDeleteUser(deleteId);
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        isLoading={false}
+        title="Delete Staff"
+        message="Are you sure you want to delete this staff "
+        itemName={staffNameToDelete}
+      />
     </div>
   );
 }

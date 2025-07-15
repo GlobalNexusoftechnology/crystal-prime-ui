@@ -17,6 +17,7 @@ import {
 import toast from "react-hot-toast";
 import { usePermission } from "@/utils/hooks/usePermission";
 import { EAction, EModule } from "@/constants";
+import { DeleteModal } from "@/components";
 
 type LocalTask = { id: string; title: string; description: string; assigned_to: string; status: string; due_date: string };
 
@@ -73,6 +74,7 @@ export function MilestoneTabs({
   const { onDeleteMilestone } = useDeleteMilestoneMutation({
     onSuccessCallback: () => {
       setMilestones((prev) => prev.filter((m) => m.id !== deletingMilestoneId));
+      setShowDeleteMilestoneModal(false);
       setDeletingMilestoneId(null);
       setMilestoneMenu(null);
       toast.success("Milestone deleted successfully");
@@ -84,6 +86,8 @@ export function MilestoneTabs({
     },
     onErrorCallback: (err) => {
       toast.error(err.message || "Failed to delete milestone");
+      setShowDeleteMilestoneModal(false);
+      setDeletingMilestoneId(null);
     },
   });
   // Delete task mutation
@@ -252,6 +256,7 @@ export function MilestoneTabs({
 
   // Track which milestone/task is being deleted
   const [deletingMilestoneId, setDeletingMilestoneId] = useState<string | null>(null);
+  const [showDeleteMilestoneModal, setShowDeleteMilestoneModal] = useState(false);
   const [deletingTaskMilestoneId, setDeletingTaskMilestoneId] = useState<string | null>(null);
   const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
@@ -398,7 +403,7 @@ export function MilestoneTabs({
   };
   const handleDeleteMilestone = (id: string) => {
     setDeletingMilestoneId(id);
-    onDeleteMilestone(id);
+    setShowDeleteMilestoneModal(true);
   };
   const handleAddMilestone = () => {
     // Check if there's an incomplete milestone
@@ -590,6 +595,17 @@ export function MilestoneTabs({
   const canEditTask = hasPermission(EModule.TASK, EAction.EDIT);
   const canDeleteTask = hasPermission(EModule.TASK, EAction.DELETE);
 
+  const confirmDeleteMilestone = () => {
+    if (deletingMilestoneId) {
+      onDeleteMilestone(deletingMilestoneId);
+      setShowDeleteMilestoneModal(false);
+    }
+  };
+
+  const milestoneNameToDelete = deletingMilestoneId
+    ? milestones.find((m) => m.id === deletingMilestoneId)?.name
+    : "";
+
   return (
     <div
       ref={containerRef}
@@ -757,6 +773,19 @@ export function MilestoneTabs({
           />
         )}
       </div>
+
+      <DeleteModal
+        isOpen={showDeleteMilestoneModal}
+        onClose={() => {
+          setShowDeleteMilestoneModal(false);
+          setDeletingMilestoneId(null);
+        }}
+        onConfirm={confirmDeleteMilestone}
+        isLoading={false}
+        title="Delete Milestone"
+        message="Are you sure you want to delete this milestone "
+        itemName={milestoneNameToDelete}
+      />
 
       <div ref={bottomRef} />
     </div>

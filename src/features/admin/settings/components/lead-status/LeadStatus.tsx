@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SearchBar, Button, Table } from "@/components";
+import { SearchBar, Button, Table, DeleteModal } from "@/components";
 import {
   IAllStatusesList,
   useAllStatusesQuery,
@@ -20,6 +20,8 @@ export function LeadStatus() {
     name: string;
     color: string;
   } | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -31,9 +33,13 @@ export function LeadStatus() {
     onSuccessCallback: (data) => {
       toast.success(data.message);
       allStatuses();
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
   });
 
@@ -73,8 +79,8 @@ export function LeadStatus() {
     {
       label: "Delete",
       onClick: (row: IAllStatusesList) => {
-        console.log("Delete clicked", row.id);
-        onDeleteStatuses(row.id);
+        setDeleteId(row.id);
+        setShowDeleteModal(true);
       },
       className: "text-red-500",
     },
@@ -91,6 +97,10 @@ export function LeadStatus() {
     setIsAddModalOpen(false);
     setSelectedStatus(null);
   };
+
+  const statusNameToDelete = deleteId
+    ? filteredStatusesList.find((s) => s.id === deleteId)?.name || ""
+    : "";
 
   return (
     <div className="bg-[#F8F8F8] p-5 rounded-xl">
@@ -135,6 +145,22 @@ export function LeadStatus() {
           onClearEditData={() => setSelectedStatus(null)}
         />
       )}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId) onDeleteStatuses(deleteId);
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        isLoading={false}
+        title="Delete Lead Status"
+        message="Are you sure you want to delete this Lead Status "
+        itemName={statusNameToDelete}
+      />
     </div>
   );
 }

@@ -12,6 +12,7 @@ import { formatDate, IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import { usePermission } from "@/utils/hooks";
 import { AddEILogHeadsModal } from "../add-ei-log-heads-modal";
+import { DeleteModal } from "@/components";
 
 export function EILogHeads() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,6 +21,8 @@ export function EILogHeads() {
     name: string;
   } | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { hasPermission } = usePermission();
   const cavAddHeads = hasPermission(EModule.EI_LOG_HEADS, EAction.ADD);
   const cavEditHeads = hasPermission(EModule.EI_LOG_HEADS, EAction.EDIT);
@@ -35,9 +38,13 @@ export function EILogHeads() {
     onSuccessCallback: (data) => {
       toast.success(data.message);
       fetchAllEILogHeads();
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
   });
 
@@ -80,7 +87,8 @@ export function EILogHeads() {
     eiLogHeadsAction.push({
       label: "Delete",
       onClick: (row: IAllEILogHeadList) => {
-        onDeleteEILogHead(row.id);
+        setDeleteId(row.id);
+        setShowDeleteModal(true);
       },
       className: "text-red-500",
     });
@@ -98,6 +106,10 @@ export function EILogHeads() {
     setIsAddModalOpen(false);
     setSelectedHead(null);
   };
+
+  const headNameToDelete = deleteId
+    ? filteredHeadsList.find((h) => h.id === deleteId)?.name || ""
+    : "";
 
   return (
     <div className="bg-[#F8F8F8] p-5 rounded-xl">
@@ -142,6 +154,22 @@ export function EILogHeads() {
           onClearEditData={() => setSelectedHead(null)}
         />
       )}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId) onDeleteEILogHead(deleteId);
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        isLoading={false}
+        title="Delete EI Log Head"
+        message="Are you sure you want to delete this EI Log Head "
+        itemName={headNameToDelete}
+      />
     </div>
   );
 } 

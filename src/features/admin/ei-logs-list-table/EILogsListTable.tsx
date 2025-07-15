@@ -24,6 +24,7 @@ import { usePermission } from "@/utils/hooks";
 import { AddEILogModal, ViewEILogModal } from "../ei-log-management/components";
 import { ImDownload2 } from "react-icons/im";
 import { ExportIcon } from "@/features";
+import { DeleteModal } from "@/components";
 import { FiPlus, FiX } from "react-icons/fi";
 
 interface EILogsListTableProps {
@@ -46,6 +47,8 @@ export function EILogsListTable({
   const [dateRangeFilter, setDateRangeFilter] = useState<
     "All Dates" | "Daily" | "Weekly" | "Monthly"
   >("All Dates");
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
@@ -90,9 +93,13 @@ export function EILogsListTable({
     onSuccessCallback: (data) => {
       toast.success(data.message);
       eiLogsRefetch();
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
   });
 
@@ -181,7 +188,8 @@ export function EILogsListTable({
     eiLogAction.push({
       label: "Delete",
       onClick: (row: IAllEILogList) => {
-        onDeleteEILog(row.id);
+        setDeleteId(row.id);
+        setShowDeleteModal(true);
       },
       className: "text-red-500",
     });
@@ -239,6 +247,10 @@ export function EILogsListTable({
     { key: "Cheque", label: "Cheque", value: "Cheque" },
     { key: "Others", label: "Others", value: "Others" },
   ];
+
+  const eiLogDescToDelete = deleteId
+    ? fullEILogList.find((l) => l.id === deleteId)?.description || ""
+    : "";
 
   return (
     <div className="bg-customGray p-5 2xl:p-[1.25vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.375vw]">
@@ -374,6 +386,22 @@ export function EILogsListTable({
           eiLogData={viewEILog}
         />
       )}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId) onDeleteEILog(deleteId);
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        isLoading={false}
+        title="Delete EI Log"
+        message="Are you sure you want to delete this EI Log "
+        itemName={eiLogDescToDelete}
+      />
     </div>
   );
 }
