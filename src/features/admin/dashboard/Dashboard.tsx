@@ -66,6 +66,7 @@ export default function Dashboard() {
     description: string;
     status: string;
     due: string;
+    priority: "High" | "Medium" | "Low";
   };
 
   const dailyTaskList: DailyTask[] = [
@@ -75,6 +76,7 @@ export default function Dashboard() {
       description: "This Project Belongs to the...",
       status: "Open",
       due: "24-02-2021",
+      priority: "High",
     },
     {
       id: 2,
@@ -82,6 +84,7 @@ export default function Dashboard() {
       description: "This Project Belongs to the...",
       status: "In Progress",
       due: "25-02-2021",
+      priority: "Medium",
     },
   ];
   
@@ -89,6 +92,7 @@ export default function Dashboard() {
     { header: "TASK NAME", accessor: "name" },
     { header: "DESCRIPTION", accessor: "description" },
     { header: "STATUS", accessor: "status" },
+    { header: "PRIORITY", accessor: "priority" },
     { header: "DUE DATE", accessor: "due" },
   ];
   

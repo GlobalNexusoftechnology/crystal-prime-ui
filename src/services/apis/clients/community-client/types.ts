@@ -1623,6 +1623,7 @@ export interface ICreateDailyTaskEntryPayload {
   hours_spent?: number;
   remarks?: string;
   status?: string;
+  priority?: "High" | "Medium" | "Low";
 }
 
 export interface IUpdateDailyTaskEntryPayload {
@@ -1640,6 +1641,7 @@ export interface IDailyTaskEntryResponse {
   remarks?: string;
   hours_spent?: number;
   status: string;
+  priority?: "High" | "Medium" | "Low";
   created_at: string;
   updated_at: string;
   deleted: boolean;
@@ -1774,6 +1776,7 @@ export interface DailyTask {
   hours_spent: string;
   status: string;
   remarks: string;
+  priority?: "High" | "Medium" | "Low";
   project: {
     id: string;
     name: string;

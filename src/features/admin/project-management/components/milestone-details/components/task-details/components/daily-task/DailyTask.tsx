@@ -16,12 +16,19 @@ import {
 import { HoursSpentInput } from "@/components/hours-spent-input";
 import { Dropdown } from "@/components";
 
+const priorityOptions = [
+  { label: "High", value: "High" },
+  { label: "Medium", value: "Medium" },
+  { label: "Low", value: "Low" },
+];
+
 const dailyTaskValidationSchema = Yup.object().shape({
   hours_spent: Yup.number()
     .positive("Must be a positive number")
     .required("Hours spent is required"),
   status: Yup.string().required("Status is required"),
   remarks: Yup.string().required("Remark is required"),
+  priority: Yup.string().required("Priority is required"),
 });
 
 type IDailyTaskProps = {
@@ -78,6 +85,7 @@ export function DailyTask({ projectId, assignedTo, originalTitle, originalDescri
       hours_spent: undefined,
       status: "",
       remarks: "",
+      priority: "Medium",
     },
     validationSchema: dailyTaskValidationSchema,
     onSubmit: async (values) => {
@@ -90,6 +98,7 @@ export function DailyTask({ projectId, assignedTo, originalTitle, originalDescri
         hours_spent: values.hours_spent,
         status: values.status,
         remarks: values.remarks,
+        priority: values.priority,
       });
     },
   });
@@ -258,6 +267,13 @@ export function DailyTask({ projectId, assignedTo, originalTitle, originalDescri
                       }
                     />
                   </div>
+                  <Dropdown
+                    label="Priority"
+                    options={priorityOptions}
+                    value={formik.values.priority || ""}
+                    onChange={(value) => formik.setFieldValue("priority", value)}
+                    error={formik.touched.priority ? formik.errors.priority : undefined}
+                  />
                   <InputField
                     label="Remark"
                     name="remarks"
@@ -321,6 +337,11 @@ export function DailyTask({ projectId, assignedTo, originalTitle, originalDescri
                           </span>
                           <span className="underline text-lightGreen 2xl:text-[1.1vw]">
                             Created At: {formatIndiaTime(task.created_at, 'toReadable')}
+                          </span>
+                          <span className="underline text-yellow-600">
+                            <span className="2xl:text-[1.1vw] font-normal">
+                              Priority: {task.priority || "-"}
+                            </span>
                           </span>
                           </div>
                         </div>
