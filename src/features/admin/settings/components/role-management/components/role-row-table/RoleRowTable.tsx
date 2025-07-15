@@ -146,20 +146,6 @@ export function RoleRowTable({
           </td>
         </tr>
       )}
-
-      {/* Optional: Move this out to a parent container if this is per-role */}
-      <tr>
-        <td colSpan={6}>
-          {/* <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(data.length / pageSize)}
-            onPageChange={(page) => {
-              setOpenActionId(null);
-              setCurrentPage(page);
-            }}
-          /> */}
-        </td>
-      </tr>
     </>
   );
 }

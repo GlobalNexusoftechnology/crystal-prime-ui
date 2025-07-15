@@ -1,11 +1,12 @@
 "use client"
 
-import { Dispatch, SetStateAction, useState } from "react"
+import { Dispatch, SetStateAction, useState, useMemo } from "react"
 import { Button, SearchBar } from "@/components"
 import { RoleRowTable } from "../role-row-table"
 import { RolePermissionModal } from "../role-permission-modal"
 import { IAllRoleList, IDeleteRoleResponse, useAllRoleListQuery, useDeleteRoleMutation } from "@/services"
 import { IApiError } from "@/utils"
+import { Pagination } from "@/components/table/components/pagination/Pagination";
 // import { ILeadSourcesListTable } from "@/constants";
 // import { IRoleListTable } from "@/constants/tables/role-list-table";
 
@@ -24,6 +25,14 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
 
   const { isError, isPending, data, isLoading, refetchRoles } =
     useAllRoleListQuery()
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  const paginatedRoles = useMemo(() => {
+    if (!data) return [];
+    const start = (currentPage - 1) * pageSize;
+    return data.slice(start, start + pageSize);
+  }, [data, currentPage]);
 
   const { onDeleteRole } = useDeleteRoleMutation({
     onSuccessCallback: (data: IDeleteRoleResponse) => {
@@ -104,22 +113,25 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
                 </tr>
               </thead>
               <tbody>
-                {data?.map((role, index) => {
-                  return (
-                    <RoleRowTable
-                      index={index}
-                      key={role.id}
-                      role={role}
-                      isExpanded={expandedId === role.id}
-                      onToggle={() => toggleExpand(role.id)}
-                      onRoleDelete={handleRoleDelete}
-                      onRoleEdit={handleRoleEdit}
-                    />
-                  )
-                })}
+                {paginatedRoles.map((role, index) => (
+                  <RoleRowTable
+                    index={(currentPage - 1) * pageSize + index}
+                    key={role.id}
+                    role={role}
+                    isExpanded={expandedId === role.id}
+                    onToggle={() => toggleExpand(role.id)}
+                    onRoleDelete={handleRoleDelete}
+                    onRoleEdit={handleRoleEdit}
+                  />
+                ))}
               </tbody>
             </table>
           </div>
+         <Pagination
+           currentPage={currentPage}
+           totalPages={Math.ceil((data?.length || 0) / pageSize)}
+           onPageChange={setCurrentPage}
+         />
         </div>
       </div>
 
