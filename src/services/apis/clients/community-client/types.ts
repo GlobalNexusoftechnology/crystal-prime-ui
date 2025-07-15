@@ -1665,38 +1665,100 @@ export interface IUploadMultipleAttachmentsOptions {
   onErrorCallback?: (err: IApiError) => void;
 }
 
+export interface ProjectSnapshot {
+  data: {
+    inProgress: number;
+    completed: number;
+    percentCompleted: number;
+    percentInProgress: number;
+    total: number;
+  };
+  colors: Record<string, string>;
+}
+
+export interface ChartData {
+  labels: string[];
+  income: number[];
+  expense: number[];
+}
+
+export interface LeadAnalyticsChartDataMap {
+  [key: string]: ChartData;
+}
+
+export interface LeadTypeChartDataMap {
+  [key: string]: ChartData;
+}
+
+export interface LeadTypeColors {
+  [key: string]: string;
+}
+
+export interface ProjectRenewalItem {
+  name: string;
+  renewal_date: string;
+  completion: number;
+}
+
+export interface ProjectRenewalData {
+  [category: string]: ProjectRenewalItem[];
+}
+
+export interface ExpensesDataMap {
+  yearly: ChartData;
+  monthly: ChartData;
+  weekly: ChartData;
+}
+
+export interface LeadTypeChartItem {
+  type: string;
+  count: number;
+  percent: number;
+  color: string;
+}
+
+export interface DashboardStatCard {
+  count: string;
+  title: string;
+  subtitle: string;
+}
+
+export interface ProjectSnapshotData {
+  name: string;
+  value: number;
+}
+
+export interface ExpensesData {
+  labels: string[];
+  income: number[];
+  expense: number[];
+}
+
+// Add Category and Project interfaces for projectRenewalData
+export interface Project {
+  name: string;
+  date: string;
+  status: number;
+}
+export interface Category {
+  category: string;
+  projects: Project[];
+}
+
 export interface DashboardSummary {
-  leads: {
-    total: number;
-    assignedToMe: number;
-    profileSent: number;
-    businessDone: number;
-    notInterested: number;
-    todayFollowups: number;
-    analytics: Record<string, number>;
-  };
-  projects: {
-    total: number;
-    inProgress: number;
-    completed: number;
-    snapshot: {
-      inProgress: number;
-      completed: number;
-      percentCompleted: number;
-      percentInProgress: number;
-      total: number;
-    };
-  };
-  tasks: {
-    total: number;
-    inProgress: number;
-    completed: number;
-    dueToday: number;
-  };
-  dailyTasks: {
-    today: DailyTask[];
-    tomorrow: DailyTask[];
-  };
+  stats: DashboardStatCard[];
+  projectSnapshotData: ProjectSnapshotData[];
+  projectSnapshotColors: string[];
+  leadTypeChartDataMap: Record<string, { name: string; value: number }[]>;
+  leadTypeColors: string[];
+  projectRenewalData: Category[];
+  expensesDataMap: Record<string, ExpensesData>;
+  leadAnalyticsChartDataMap: Record<string, { name: string; value: number }[]>;
+}
+
+export interface DashboardSummaryApiResponse {
+  status: string;
+  data: DashboardSummary;
 }
 
 export interface DailyTask {

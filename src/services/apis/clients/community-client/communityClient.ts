@@ -283,7 +283,7 @@ import {
   uploadEILogFromExcelUrl,
   uploadEILogAttachmentUrl,
 } from "./urls";
-import { IClientDetails, IClientDetailsResponse, DashboardSummary } from "./types";
+import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
 /**
  * CommunityClient class handles all API requests related to
@@ -1786,8 +1786,8 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchDashboardSummary = async (): Promise<DashboardSummary> => {
-    const response = await this.get<DashboardSummary>(dashboardSummaryUrl());
+  public fetchDashboardSummary = async (): Promise<DashboardSummaryApiResponse> => {
+    const response = await this.get<DashboardSummaryApiResponse>(dashboardSummaryUrl());
     if (!response?.success) {
       throw response?.errorData;
     }
