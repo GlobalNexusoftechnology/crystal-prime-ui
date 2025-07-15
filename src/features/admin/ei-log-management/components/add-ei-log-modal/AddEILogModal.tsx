@@ -53,14 +53,14 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
   eiLogData,
   eiLogsRefetch,
 }) => {
-  const [initialValues, setInitialValues] = useState({
+  const [initialValues, setInitialValues] = useState<EILogFormValues>({
     ei_log_type_id: "",
     ei_log_head_id: "",
     description: "",
     income: "",
     expense: "",
     payment_mode: "Cash",
-    attachment: "" as File | "",
+    attachment: "",
   });
 
   const { allEILogTypesData } = useAllEILogTypesQuery();
@@ -76,7 +76,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
         income: eiLogData.income?.toString() || "",
         expense: eiLogData.expense?.toString() || "",
         payment_mode: eiLogData.paymentMode || "",
-        attachment: "",
+        attachment: eiLogData.attachment || "", // FIXED: show existing attachment
       });
     } else if (isOpen) {
       setInitialValues({
@@ -123,10 +123,10 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
 
   const { onUploadEILogAttachment } = useUploadEILogAttachmentMutation({
     onSuccessCallback: (data: IUploadAttachmentResponse) => {
-      // Set the Formik field to the uploaded file URL (docUrl)
       if (setFieldValueRef.current) {
         setFieldValueRef.current("attachment", data.data.docUrl);
       }
+      toast.success("Document uploaded successfully!");
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
@@ -315,7 +315,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
                   title={eiLogId ? "Update" : "Create"}
                   variant="primary"
                   type="submit"
-                  disabled={isSubmitting || isCreating || isUpdating}
+                  disabled={isSubmitting || isCreating || isUpdating || !values.attachment}
                 />
               </div>
             </Form>
