@@ -53,7 +53,7 @@ export function DailyTask({ projectId, assignedTo, originalTitle, originalDescri
     isError,
     error,
     isLoading,
-  } = useAllDailyTaskQuery(projectId);
+  } = useAllDailyTaskQuery({ projectId });
   const { allUsersData, isLoading: usersLoading } = useAllUsersQuery();
   const getUserName = (userId: string) => {
     if (!allUsersData || usersLoading) return userId;

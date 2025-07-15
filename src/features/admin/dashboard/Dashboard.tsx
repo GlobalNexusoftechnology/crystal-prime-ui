@@ -13,11 +13,13 @@ import {
   useDashboardSummaryQuery,
   Category,
   useAllDailyTaskQuery,
-  useDeleteDailyTaskMutation
+  useDeleteDailyTaskMutation,
 } from "@/services";
 import { AnalyticalCardIcon } from "@/features";
-import { Table } from "@/components";
+import { Button, DatePicker, Dropdown, SearchBar, Table } from "@/components";
 import { DeleteModal } from "@/components/modal/DeleteModal";
+import { FiX } from "react-icons/fi";
+import { useDebounce } from "@/utils/hooks";
 
 export default function Dashboard() {
   // Move all hooks to the top
@@ -39,13 +41,59 @@ export default function Dashboard() {
   );
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
+  // Daily Task Filters
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [priorityFilter, setPriorityFilter] = useState<string>("");
+  const [searchInput, setSearchInput] = useState("");
+
+  const { debouncedValue: searchQuery } = useDebounce({
+    initialValue: searchInput,
+    delay: 500,
+    onChangeCb: () => {},
+  });
+
+  const handleSearch = (value: string) => {
+    setSearchInput(value);
+  };
+
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
+
+  const statusOptions = [
+    { label: "All Status", value: "" },
+    { label: "Pending", value: "Pending" },
+    { label: "In Progress", value: "In Progress" },
+    { label: "Completed", value: "Completed" },
+  ];
+  const priorityOptions = [
+    { label: "All Priority", value: "" },
+    { label: "High", value: "High" },
+    { label: "Medium", value: "Medium" },
+    { label: "Low", value: "Low" },
+  ];
+
+  // Filter handler
+  const handleStatusChange = (value: string) => setStatusFilter(value);
+  const handlePriorityChange = (value: string) => setPriorityFilter(value);
+  const handleClearDates = () => {
+    setFromDate("");
+    setToDate("");
+  };
+
+  // Fetch daily tasks with filters
   const {
     data: dailyTasks,
     isLoading: dailyTasksLoading,
     isError: dailyTasksError,
     error: dailyTasksErrorObj,
     refetchDailyTasks,
-  } = useAllDailyTaskQuery();
+  } = useAllDailyTaskQuery({
+    status: statusFilter,
+    priority: priorityFilter,
+    from: fromDate,
+    to: toDate,
+    search: searchQuery,
+  });
 
   // ProjectRenewalList month selection logic
   const renewalMonthOptions = dashboardSummary?.projectRenewalData?.length
@@ -195,11 +243,68 @@ export default function Dashboard() {
           {dailyTasksErrorObj?.message || "Unknown error"}
         </div>
       ) : (
-        <Table
-          data={dailyTaskList}
-          columns={dailyTaskListColumn}
-          actions={dailyTaskListAction}
-        />
+        <div className="p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw]">
+          <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
+            <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
+              Daily Task List
+            </h1>
+            <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+              <SearchBar
+                onSearch={handleSearch}
+                bgColor="white"
+                width="w-full min-w-[12rem] md:w-[25vw]"
+              />
+              <Dropdown
+                options={statusOptions}
+                value={statusFilter}
+                onChange={handleStatusChange}
+                dropdownWidth="w-full md:w-fit"
+              />
+              <Dropdown
+                options={priorityOptions}
+                value={priorityFilter}
+                onChange={handlePriorityChange}
+                dropdownWidth="w-full md:w-fit"
+              />
+            </div>
+          </div>
+          <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] my-4 2xl:my-[1vw]">
+            <div className="flex flex-col justify-start items-start w-full min-w-[12rem] md:w-[15vw]">
+              <DatePicker
+                label="From Date"
+                value={fromDate}
+                onChange={(date) => setFromDate(date)}
+                placeholder="From Date"
+                datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
+              />
+            </div>
+            <DatePicker
+              label="To Date"
+              value={toDate}
+              onChange={(date) => setToDate(date)}
+              placeholder="To Date"
+              datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
+            />
+            {(fromDate || toDate) && (
+              <div>
+                <Button
+                  variant="background-white"
+                  width="w-full md:w-fit"
+                  onClick={handleClearDates}
+                  leftIcon={
+                    <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                  }
+                  tooltip="Clear Dates"
+                />
+              </div>
+            )}
+          </div>
+          <Table
+            data={dailyTaskList}
+            columns={dailyTaskListColumn}
+            actions={dailyTaskListAction}
+          />
+        </div>
       )}
       {/* Delete Modal */}
       {showDeleteModal && (

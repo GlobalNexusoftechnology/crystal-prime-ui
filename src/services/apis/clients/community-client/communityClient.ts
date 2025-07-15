@@ -261,7 +261,6 @@ import {
   updateDailyTaskEntryUrl,
   deleteDailyTaskEntryUrl,
   getDailyTaskEntryDetailUrl,
-  getAllDailyTaskEntriesUrl,
   uploadMultipleAttachmentUrl,
   dashboardSummaryUrl,
   fetchAllEILogTypesUrl,
@@ -1768,8 +1767,23 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
-  public getAllDailyTaskEntries = async (projectId?: string): Promise<IDailyTaskEntryResponse[]> => {
-    const response = await this.get<IAllDailyTaskEntriesResponse>(getAllDailyTaskEntriesUrl(projectId));
+  public getAllDailyTaskEntries = async (filters: {
+    status?: string;
+    priority?: string;
+    from?: string;
+    to?: string;
+    projectId?: string;
+    search?: string;
+  } = {}): Promise<IDailyTaskEntryResponse[]> => {
+    const params = new URLSearchParams();
+    if (filters.projectId) params.append('projectId', filters.projectId);
+    if (filters.status) params.append('status', filters.status);
+    if (filters.priority) params.append('priority', filters.priority);
+    if (filters.from) params.append('from', filters.from);
+    if (filters.to) params.append('to', filters.to);
+    if (filters.search) params.append('search', filters.search);
+    const url = `/daily-task?${params.toString()}`;
+    const response = await this.get<IAllDailyTaskEntriesResponse>(url);
     if (!response?.success) {
       throw response?.errorData;
     }
