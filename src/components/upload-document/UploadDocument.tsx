@@ -35,6 +35,12 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
     }
   };
 
+  // Helper to truncate file name or placeholder to 30 characters
+  function truncateName(name: string) {
+    if (!name) return "";
+    return name.length > 30 ? name.slice(0, 27) + "..." : name;
+  }
+
   return (
     <div className={`flex flex-col gap-1`}>
       {label && (
@@ -44,7 +50,7 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
         onClick={handleFileClick}
         className={`w-full cursor-pointer px-3 py-2 border rounded-md bg-white text-gray-600 border-gray-300 hover:border-gray-400 transition ${className}`}
       >
-        {selectedFileName || placeholder}
+        {truncateName(selectedFileName || placeholder || "Upload Attachment")}
         <input
           type="file"
           accept={accept}
