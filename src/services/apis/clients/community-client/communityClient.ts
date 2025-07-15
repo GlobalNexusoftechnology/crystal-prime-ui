@@ -150,6 +150,7 @@ import {
   IEILogDetailResponse,
   IEILogFilters,
   IUploadEILogFromExcelResponse,
+  IDeleteDailyTaskEntryResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -1751,11 +1752,12 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
-  public deleteDailyTaskEntry = async (id: string): Promise<void> => {
-    const response = await this.del<void>(deleteDailyTaskEntryUrl(id));
+  public deleteDailyTaskEntry = async (id: string): Promise<IDeleteDailyTaskEntryResponse> => {
+    const response = await this.del<IDeleteDailyTaskEntryResponse>(deleteDailyTaskEntryUrl(id));
     if (!response?.success) {
       throw response?.errorData;
     }
+    return response?.data;
   };
 
   public getDailyTaskEntryDetail = async (id: string): Promise<IDailyTaskEntryResponse> => {

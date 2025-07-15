@@ -140,3 +140,4 @@ export { useAllEILogsDownloadExcelQuery } from "./useAllEILogsDownloadExcelQuery
 export { useEILogDownloadTemplateExcelQuery } from "./useEILogDownloadTemplateExcelQuery";
 export { useUploadEILogFromExcelMutation } from "./useUploadEILogFromExcelMutation";
 export { useUploadEILogAttachmentMutation } from "./useUploadEILogAttachmentMutation";
+export { useDeleteDailyTaskMutation } from "./useDeleteDailyTaskMutation";

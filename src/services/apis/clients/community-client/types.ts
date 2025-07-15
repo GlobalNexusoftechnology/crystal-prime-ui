@@ -1662,6 +1662,12 @@ export interface IAllDailyTaskEntriesResponse {
   data: IDailyTaskEntryResponse[];
 }
 
+export interface IDeleteDailyTaskEntryResponse {
+  status: boolean;
+  message: string;
+  success: true;
+}
+
 export interface IUploadMultipleAttachmentsOptions {
   onSuccessCallback: (data: IUploadMultipleAttachmentResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
