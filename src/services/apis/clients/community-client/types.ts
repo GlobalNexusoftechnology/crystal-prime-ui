@@ -1753,13 +1753,39 @@ export interface Category {
 
 export interface DashboardSummary {
   stats: DashboardStatCard[];
-  projectSnapshotData: ProjectSnapshotData[];
-  projectSnapshotColors: string[];
-  leadTypeChartDataMap: Record<string, { name: string; value: number }[]>;
-  leadTypeColors: string[];
+  projectSnapshot: {
+    inProgress: number;
+    completed: number;
+    open: number;
+  };
+  leadAnalytics: {
+    weekly: { status: string; count: number }[];
+    monthly: { status: string; count: number }[];
+    yearly: { status: string; count: number }[];
+  };
+  leadType: {
+    weekly: { type: string | null; count: number }[];
+    monthly: { type: string | null; count: number }[];
+    yearly: { type: string | null; count: number }[];
+  };
   projectRenewalData: Category[];
-  expensesDataMap: Record<string, ExpensesData>;
-  leadAnalyticsChartDataMap: Record<string, { name: string; value: number }[]>;
+  expenses: {
+    weekly: {
+      labels: string[];
+      income: number[];
+      expense: number[];
+    };
+    monthly: {
+      labels: string[];
+      income: number[];
+      expense: number[];
+    };
+    yearly: {
+      labels: string[];
+      income: number[];
+      expense: number[];
+    };
+  };
 }
 
 export interface DashboardSummaryApiResponse {

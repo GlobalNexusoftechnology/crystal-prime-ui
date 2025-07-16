@@ -10,12 +10,12 @@ interface LeadAnalyticsChartProps {
   dataMap: Record<string, DataItem[]>;
 }
 
-const dropdownOptions = ["This Week", "Last Week", "This Month", "Last Month"];
+const dropdownOptions = ["weekly", "monthly", "yearly"];
 
 export const LeadAnalyticsChart: React.FC<LeadAnalyticsChartProps> = ({ dataMap }) => {
-  const [selected, setSelected] = useState(dropdownOptions[0]);
+  const [selected, setSelected] = useState("weekly");
   const [open, setOpen] = useState(false);
-  const [chartData, setChartData] = useState<DataItem[]>(dataMap[dropdownOptions[0]]);
+  const [chartData, setChartData] = useState<DataItem[]>(dataMap["weekly"] ?? []);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -80,14 +80,18 @@ export const LeadAnalyticsChart: React.FC<LeadAnalyticsChartProps> = ({ dataMap 
           )}
         </div>
       </div>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={chartData}>
-          <XAxis dataKey="name" tick={{ fontSize: 12 }} />
-          <YAxis tick={{ fontSize: 12 }} />
-          <Tooltip />
-          <Bar dataKey="value" fill="#3B82F6" radius={[6, 6, 0, 0]} />
-        </BarChart>
-      </ResponsiveContainer>
+      {(chartData ?? []).length === 0 ? (
+        <div className="text-center text-gray-500 py-8">No data available for this period.</div>
+      ) : (
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={chartData}>
+            <XAxis dataKey="name" tick={{ fontSize: 12 }} />
+            <YAxis tick={{ fontSize: 12 }} />
+            <Tooltip />
+            <Bar dataKey="value" fill="#3B82F6" radius={[6, 6, 0, 0]} />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 }; 

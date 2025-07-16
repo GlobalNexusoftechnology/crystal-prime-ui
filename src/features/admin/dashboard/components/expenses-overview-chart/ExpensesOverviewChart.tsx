@@ -11,14 +11,14 @@ interface ExpensesOverviewChartProps {
   dataMap: Record<string, DataItem[]>;
 }
 
-const dropdownOptions = ["Weekly", "Monthly", "Yearly"];
+const dropdownOptions = ["weekly", "monthly", "yearly"];
 
 export const ExpensesOverviewChart: React.FC<ExpensesOverviewChartProps> = ({
   dataMap,
 }) => {
-  const [selected, setSelected] = useState("Yearly");
+  const [selected, setSelected] = useState("yearly");
   const [open, setOpen] = useState(false);
-  const [chartData, setChartData] = useState<DataItem[]>(dataMap["Yearly"]);
+  const [chartData, setChartData] = useState<DataItem[]>(dataMap["yearly"]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

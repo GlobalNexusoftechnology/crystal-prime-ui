@@ -117,37 +117,9 @@ export default function Dashboard() {
         )
       : [];
 
-  // Transform expensesDataMap to the shape expected by ExpensesOverviewChart
-  const expensesDataMapForChart = dashboardSummary?.expensesDataMap
-    ? Object.fromEntries(
-        Object.entries(dashboardSummary.expensesDataMap).map(
-          ([period, data]) => [
-            period,
-            data.labels.map((label, i) => ({
-              month: label,
-              income: data.income[i] ?? 0,
-              expense: data.expense[i] ?? 0,
-            })),
-          ]
-        )
-      )
-    : {};
-
+  // Remove old transformation for leadAnalyticsChartDataMap
   // Prepare safe dataMap for LeadAnalyticsChart
-  const leadAnalyticsDataMap =
-    dashboardSummary?.leadAnalyticsChartDataMap ?? {};
-  const leadAnalyticsDropdownOptions = [
-    "This Week",
-    "Last Week",
-    "This Month",
-    "Last Month",
-  ];
-  const safeLeadAnalyticsDataMap = Object.fromEntries(
-    leadAnalyticsDropdownOptions.map((option) => [
-      option,
-      leadAnalyticsDataMap[option] ?? [],
-    ])
-  );
+ 
 
   const { updateDailyTask, isPending: isUpdating } = useUpdateDailyTaskMutation({
     onSuccessCallback: () => {
@@ -228,6 +200,46 @@ export default function Dashboard() {
     },
   ];
 
+  // ProjectSnapshotChart
+  const projectSnapshotArray = [
+    { name: "In Progress", value: dashboardSummary?.projectSnapshot?.inProgress ?? 0 },
+    { name: "Completed", value: dashboardSummary?.projectSnapshot?.completed ?? 0 },
+    { name: "Open", value: dashboardSummary?.projectSnapshot?.open ?? 0 },
+  ];
+
+  // LeadAnalyticsChart
+  const leadAnalyticsDataMap = {
+    weekly: (dashboardSummary?.leadAnalytics?.weekly ?? []).map(item => ({ name: item.status, value: item.count })),
+    monthly: (dashboardSummary?.leadAnalytics?.monthly ?? []).map(item => ({ name: item.status, value: item.count })),
+    yearly: (dashboardSummary?.leadAnalytics?.yearly ?? []).map(item => ({ name: item.status, value: item.count })),
+  };
+
+  // LeadTypeChart
+  const leadTypeDataMap = {
+    weekly: (dashboardSummary?.leadType?.weekly ?? []).map(item => ({ name: item.type ?? "Unknown", value: item.count })),
+    monthly: (dashboardSummary?.leadType?.monthly ?? []).map(item => ({ name: item.type ?? "Unknown", value: item.count })),
+    yearly: (dashboardSummary?.leadType?.yearly ?? []).map(item => ({ name: item.type ?? "Unknown", value: item.count })),
+  };
+
+  // ExpensesOverviewChart
+  const expensesDataMap = {
+    weekly: (dashboardSummary?.expenses?.weekly?.labels ?? []).map((label, i) => ({
+      month: label,
+      income: dashboardSummary?.expenses?.weekly?.income?.[i] ?? 0,
+      expense: dashboardSummary?.expenses?.weekly?.expense?.[i] ?? 0,
+    })),
+    monthly: (dashboardSummary?.expenses?.monthly?.labels ?? []).map((label, i) => ({
+      month: label,
+      income: dashboardSummary?.expenses?.monthly?.income?.[i] ?? 0,
+      expense: dashboardSummary?.expenses?.monthly?.expense?.[i] ?? 0,
+    })),
+    yearly: (dashboardSummary?.expenses?.yearly?.labels ?? []).map((label, i) => ({
+      month: label,
+      income: dashboardSummary?.expenses?.yearly?.income?.[i] ?? 0,
+      expense: dashboardSummary?.expenses?.yearly?.expense?.[i] ?? 0,
+    })),
+  };
+
   return (
     <div className="p-6 md:p-8 bg-[#fafbfc] min-h-screen">
       <div className="mb-6">
@@ -243,13 +255,13 @@ export default function Dashboard() {
       </div>
       <div className="flex flex-wrap gap-6 my-6">
         <ProjectSnapshotChart
-          data={dashboardSummary?.projectSnapshotData ?? []}
-          colors={dashboardSummary?.projectSnapshotColors ?? []}
+          data={projectSnapshotArray}
+          colors={["#3B82F6", "#10B981", "#F59E42"]}
         />
-        <LeadAnalyticsChart dataMap={safeLeadAnalyticsDataMap} />
+        <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
         <LeadTypeChart
-          chartDataMap={dashboardSummary.leadTypeChartDataMap}
-          colors={dashboardSummary.leadTypeColors}
+          chartDataMap={leadTypeDataMap}
+          colors={["#6366F1", "#F59E42", "#10B981", "#EF4444"]}
         />
         <ProjectRenewalList
           data={renewalDataForSelectedMonth}
@@ -257,7 +269,7 @@ export default function Dashboard() {
           onMonthChange={handleMonthChange}
           monthOptions={renewalMonthOptions}
         />
-        <ExpensesOverviewChart dataMap={expensesDataMapForChart} />
+        <ExpensesOverviewChart dataMap={expensesDataMap} />
       </div>
       {dailyTasksLoading ? (
         <div>Loading daily tasks...</div>

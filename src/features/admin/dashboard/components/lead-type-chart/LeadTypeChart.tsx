@@ -59,12 +59,12 @@ const renderCustomizedLabel = ({
   );
 };
 
-const dropdownOptions = ["This Week", "Last Week", "This Month", "Last Month"];
+const dropdownOptions = ["weekly", "monthly", "yearly"];
 
 export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colors }) => {
-  const [selected, setSelected] = useState(dropdownOptions[0]);
+  const [selected, setSelected] = useState("weekly");
   const [open, setOpen] = useState(false);
-  const [chartData, setChartData] = useState<DataItem[]>(chartDataMap[dropdownOptions[0]]);
+  const [chartData, setChartData] = useState<DataItem[]>(chartDataMap["yearly"] ?? []);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -84,10 +84,13 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const legendItems = chartData.map((d, idx) => ({
+  const legendItems = (chartData ?? []).map((d, idx) => ({
     name: d.name,
     color: colors[idx % colors.length],
   }));
+
+  // If all items are 'Unknown', show a message instead of the chart
+  const allUnknown = (chartData ?? []).length > 0 && (chartData ?? []).every(d => d.name === "Unknown");
 
   return (
     <div
@@ -140,32 +143,38 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
       </div>
       <div className="w-full flex flex-col md:flex-row gap-8">
         <div className="w-full flex flex-col justify-center">
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie
-                data={chartData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                innerRadius={70}
-                outerRadius={90}
-                startAngle={90}
-                endAngle={-270}
-                paddingAngle={4}
-                label={renderCustomizedLabel}
-                labelLine={false}
-                isAnimationActive={false}
-              >
-                {chartData.map((entry, idx) => (
-                  <Cell
-                    key={`cell-${idx}`}
-                    fill={colors[idx % colors.length]}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
+          {allUnknown ? (
+            <div className="text-center text-gray-500 py-8">No lead type data available for this period.</div>
+          ) : (chartData ?? []).length === 0 ? (
+            <div className="text-center text-gray-500 py-8">No data available for this period.</div>
+          ) : (
+            <ResponsiveContainer width="100%" height={250}>
+              <PieChart>
+                <Pie
+                  data={chartData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={70}
+                  outerRadius={90}
+                  startAngle={90}
+                  endAngle={-270}
+                  paddingAngle={4}
+                  label={renderCustomizedLabel}
+                  labelLine={false}
+                  isAnimationActive={false}
+                >
+                  {(chartData ?? []).map((entry, idx) => (
+                    <Cell
+                      key={`cell-${idx}`}
+                      fill={colors[idx % colors.length]}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          )}
         </div>
         {/* Legend */}
         <div className="flex flex-wrap justify-center flex-col gap-4">
