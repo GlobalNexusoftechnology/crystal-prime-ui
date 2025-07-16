@@ -31,6 +31,10 @@ export interface IAdminSidebarLink {
    * Permission mapping for the sidebar link.
    */
   permission: TSidebarPermission;
+  /**
+   * Optional sublinks for dropdown/section links.
+   */
+  links?: IAdminSidebarLink[];
 }
 
 /**
@@ -88,6 +92,50 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     icon: <EILogIcon />,
     activeIcon: <EILogIcon color="#034A9F" />,
     permission: { module: "EI_LOG_MANAGEMENT", actions: "VIEW" },
+  },
+  {
+    name: "Reports",
+    path: "#reports",
+    icon: <DashboardIcon />,
+    activeIcon: <DashboardIcon color="#034A9F" />,
+    permission: { module: "REPORTS", actions: "VIEW" },
+    links: [
+      {
+        path: "/admin/reports/staff-performance",
+        name: "Staff Performance",
+        icon: <StaffManagementIcon />,
+        activeIcon: <StaffManagementIcon color="#034A9F" />,
+        permission: { module: "STAFF_PERFORMANCE_REPORT", actions: "VIEW" },
+      },
+      {
+        path: "/admin/reports/project-performance",
+        name: "Project Performance",
+        icon: <ProjectManagementIcon />,
+        activeIcon: <ProjectManagementIcon color="#034A9F" />,
+        permission: { module: "PROJECT_PERFORMANCE_REPORT", actions: "VIEW" },
+      },
+      {
+        path: "/admin/reports/lead-analytics",
+        name: "Lead Analytics",
+        icon: <LeadManagementIcon />,
+        activeIcon: <LeadManagementIcon color="#034A9F" />,
+        permission: { module: "LEAD_ANALYTICS_REPORT", actions: "VIEW" },
+      },
+      {
+        path: "/admin/reports/business-analysis",
+        name: "Business Analysis",
+        icon: <DashboardIcon />,
+        activeIcon: <DashboardIcon color="#034A9F" />,
+        permission: { module: "BUSINESS_ANALYSIS_REPORT", actions: "VIEW" },
+      },
+      {
+        path: "/admin/reports/public-business-dashboard",
+        name: "PB Dashboard",
+        icon: <DashboardIcon />,
+        activeIcon: <DashboardIcon color="#034A9F" />,
+        permission: { module: "PUBLIC_BUSINESS_DASHBOARD", actions: "VIEW" },
+      },
+    ],
   },
   {
     path: "/admin/settings",

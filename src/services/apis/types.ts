@@ -97,3 +97,31 @@ export interface IApiClient {
     config?: IApiConfiguration<TRequestPayload>
   ): Promise<IApiResponse<TResponseData> | IApiError>;
 }
+
+export interface DashboardStatCard {
+  count: string;
+  title: string;
+  subtitle: string;
+}
+
+export interface ProjectSnapshotData {
+  name: string;
+  value: number;
+}
+
+export interface ExpensesData {
+  labels: string[];
+  income: number[];
+  expense: number[];
+}
+
+export interface DashboardSummary {
+  stats: DashboardStatCard[];
+  projectSnapshotData: ProjectSnapshotData[];
+  projectSnapshotColors: string[];
+  leadTypeChartDataMap: Record<string, { name: string; value: number }[]>;
+  leadTypeColors: string[];
+  projectRenewalData: any[];
+  expensesDataMap: Record<string, ExpensesData>;
+  leadAnalyticsChartDataMap: Record<string, { name: string; value: number }[]>;
+}

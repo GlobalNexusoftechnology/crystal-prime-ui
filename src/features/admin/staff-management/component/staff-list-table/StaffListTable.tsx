@@ -128,6 +128,7 @@ export function StaffListTable() {
   //     className: "text-blue-500 whitespace-nowrap",
   //   });
   // }
+  
   if (cavEditStaffManagement) {
     leadStaffManagementAction.push({
       label: "Edit",

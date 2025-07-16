@@ -46,7 +46,7 @@ export function LeadManagement() {
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data?.stats?.businessDone}`,
+      count: `${allLeadList?.data?.stats?.convertedLeads}`,
       title: "Business Done",
       subtitle: "Successful leads closed",
       icon: <AnalyticalCardIcon />,

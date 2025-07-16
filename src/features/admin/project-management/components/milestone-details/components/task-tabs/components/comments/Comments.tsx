@@ -32,13 +32,12 @@ interface IFollowupsProps {
 }
 
 export function Comments({ projectId, showForm, setShowForm }: IFollowupsProps) {
-  const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery(projectId);
+  const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery();
   const { activeSession } = useAuthStore();
   const userId = activeSession?.user?.id;
 
   const { createClientFollowUp, isPending } = useCreateProjectFollowUpMutation({
     onSuccessCallback: (response: ICreateProjectFollowUpResponse) => {
-      console.log("Client follow-up created successfully", response);
       toast.success(response.message);
       formik.resetForm();
       setShowForm(false);
@@ -51,11 +50,11 @@ export function Comments({ projectId, showForm, setShowForm }: IFollowupsProps) 
 
   const formik = useFormik<ICreateProjectFollowUpPayload>({
     initialValues: {
-      project_id: projectId,
       due_date: "",
       status: "",
       user_id: userId,
       remarks: "",
+      client_id: ""
     },
     validationSchema,
     onSubmit: async (values) => {
@@ -63,7 +62,7 @@ export function Comments({ projectId, showForm, setShowForm }: IFollowupsProps) 
         toast.error("Client ID is missing");
         return;
       }
-      await createClientFollowUp({ ...values, project_id: projectId });
+      await createClientFollowUp({ ...values });
     },
   });
 
