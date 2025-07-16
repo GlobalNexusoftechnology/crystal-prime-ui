@@ -264,7 +264,7 @@ export interface IStats {
   totalLeads: number;
   assignedToMe: number;
   profileSent: number;
-  businessDone: number;
+  convertedLeads: number;
   todayFollowups: 0;
 
 }
