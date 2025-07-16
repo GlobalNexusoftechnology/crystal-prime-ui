@@ -153,13 +153,21 @@ export default function Dashboard() {
   if (isLoading) return <div>Loading...</div>;
   if (error || !dashboardSummary) return <div>Error loading dashboard</div>;
 
-  // Map API stats to AnalyticalCardData by adding a default icon
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const statsData = dashboardSummary as any || {};
+  console.log('statsData:', statsData);
   const analyticalCards = dashboardSummary?.stats
     ? dashboardSummary.stats.map((card) => ({
         ...card,
         icon: <AnalyticalCardIcon />,
       }))
-    : [];
+    : [
+        { count: statsData.totalLeads, title: "Total Leads", subtitle: "", icon: <AnalyticalCardIcon /> },
+        { count: statsData.todayFollowups, title: "Today's Followups", subtitle: "", icon: <AnalyticalCardIcon /> },
+        { count: statsData.convertedLeads, title: "Converted Leads", subtitle: "", icon: <AnalyticalCardIcon /> },
+        { count: statsData.lostLeads, title: "Lost Leads", subtitle: "", icon: <AnalyticalCardIcon /> },
+        { count: statsData.conversionRate, title: "Conversion Rate", subtitle: "", icon: <AnalyticalCardIcon /> },
+      ];
 
   const dailyTaskList: DailyTaskRow[] = (dailyTasks || []).map((task) => {
     const validPriority = ["High", "Medium", "Low"].includes(
