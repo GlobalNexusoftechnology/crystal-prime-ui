@@ -14,14 +14,19 @@ import {
   Category,
   useAllDailyTaskQuery,
   useDeleteDailyTaskMutation,
+  useUpdateDailyTaskMutation,
 } from "@/services";
+import type { IDailyTaskEntryResponse } from "@/services";
 import { AnalyticalCardIcon } from "@/features";
 import { Button, DatePicker, Dropdown, SearchBar, Table } from "@/components";
 import { DeleteModal } from "@/components/modal/DeleteModal";
+import { AddDailyTaskModal } from "@/components/modal/AddDailyTaskModal";
 import { FiX } from "react-icons/fi";
 import { useDebounce } from "@/utils/hooks";
 
 export default function Dashboard() {
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editTask, setEditTask] = useState<Partial<IDailyTaskEntryResponse> | null>(null);
   // Move all hooks to the top
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -144,6 +149,19 @@ export default function Dashboard() {
     ])
   );
 
+  const { updateDailyTask, isPending: isUpdating } = useUpdateDailyTaskMutation({
+    onSuccessCallback: () => {
+      setShowEditModal(false);
+      setEditTask(null);
+      refetchDailyTasks();
+    },
+    onErrorCallback: () => {
+      setShowEditModal(false);
+      setEditTask(null);
+      // Optionally show a toast or error message
+    },
+  });
+
   if (isLoading) return <div>Loading...</div>;
   if (error || !dashboardSummary) return <div>Error loading dashboard</div>;
 
@@ -191,7 +209,13 @@ export default function Dashboard() {
   const dailyTaskListAction = [
     {
       label: "Edit",
-      onClick: (row: DailyTask) => alert(`Edit task: ${row.name}`),
+      onClick: (row: DailyTask) => {
+        const task = (dailyTasks || []).find((t) => t.id === row.id);
+        if (task) {
+          setEditTask(task);
+          setShowEditModal(true);
+        }
+      },
       className: "text-blue-500 whitespace-nowrap",
     },
     {
@@ -305,6 +329,37 @@ export default function Dashboard() {
             actions={dailyTaskListAction}
           />
         </div>
+      )}
+      {showEditModal && editTask && (
+        <AddDailyTaskModal
+          isOpen={showEditModal}
+          onClose={() => {
+            setShowEditModal(false);
+            setEditTask(null);
+          }}
+          onSubmit={async (values) => {
+            updateDailyTask({
+              id: editTask.id || "",
+              payload: {
+                ...values,
+                hours_spent: values.hours_spent ? Number(values.hours_spent) : undefined,
+              },
+            });
+          }}
+          initialValues={{
+            project_id: editTask.project?.id || "",
+            assigned_to: editTask.user?.id || "",
+            task_title: editTask.task_title || "",
+            entry_date: editTask.entry_date || "",
+            description: editTask.description || "",
+            hours_spent: editTask.hours_spent || undefined,
+            status: editTask.status || "",
+            remarks: editTask.remarks || "",
+            priority: editTask.priority || "Medium",
+          }}
+          isPending={isUpdating}
+          isEdit={true}
+        />
       )}
       {/* Delete Modal */}
       {showDeleteModal && (
