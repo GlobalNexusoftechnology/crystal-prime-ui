@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   ExpensesOverviewChart,
   LeadAnalyticsChart,
@@ -15,18 +15,20 @@ import {
   useAllDailyTaskQuery,
   useDeleteDailyTaskMutation,
   useUpdateDailyTaskMutation,
+  useAuthStore,
 } from "@/services";
 import type { IDailyTaskEntryResponse } from "@/services";
 import { AnalyticalCardIcon } from "@/features";
-import { Button, DatePicker, Dropdown, SearchBar, Table } from "@/components";
-import { DeleteModal } from "@/components/modal/DeleteModal";
-import { AddDailyTaskModal } from "@/components/modal/AddDailyTaskModal";
-import { FiX } from "react-icons/fi";
+import { AddDailyTaskModal, DeleteModal } from "@/components";
+import DailyTaskTable from "./components/DailyTaskTable";
+import type { ITableAction } from "@/constants/table";
+import type { DailyTaskRow } from "./components/DailyTaskTable";
 import { useDebounce } from "@/utils/hooks";
 
 export default function Dashboard() {
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editTask, setEditTask] = useState<Partial<IDailyTaskEntryResponse> | null>(null);
+  const [editTask, setEditTask] =
+    useState<Partial<IDailyTaskEntryResponse> | null>(null);
   // Move all hooks to the top
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -46,6 +48,8 @@ export default function Dashboard() {
   );
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
+  const { activeSession } = useAuthStore();
+  const userRole = activeSession?.user?.role.role || "";
   // Daily Task Filters
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [priorityFilter, setPriorityFilter] = useState<string>("");
@@ -57,12 +61,23 @@ export default function Dashboard() {
     onChangeCb: () => {},
   });
 
-  const handleSearch = (value: string) => {
-    setSearchInput(value);
+  const handleSearch = (query: string) => {
+    setSearchInput(query.toLowerCase());
   };
 
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
+
+  const filters = useMemo(
+    () => ({
+      searchText: searchQuery,
+      status: statusFilter,
+      priority: priorityFilter,
+      fromDate: fromDate || undefined,
+      toDate: toDate || undefined,
+    }),
+    [searchQuery, statusFilter, priorityFilter, fromDate, toDate]
+  );
 
   const statusOptions = [
     { label: "All Status", value: "" },
@@ -93,11 +108,11 @@ export default function Dashboard() {
     error: dailyTasksErrorObj,
     refetchDailyTasks,
   } = useAllDailyTaskQuery({
-    status: statusFilter,
-    priority: priorityFilter,
-    from: fromDate,
-    to: toDate,
-    search: searchQuery,
+    status: filters.status,
+    priority: filters.priority,
+    from: filters.fromDate,
+    to: filters.toDate,
+    search: filters.searchText,
   });
 
   // ProjectRenewalList month selection logic
@@ -119,20 +134,21 @@ export default function Dashboard() {
 
   // Remove old transformation for leadAnalyticsChartDataMap
   // Prepare safe dataMap for LeadAnalyticsChart
- 
 
-  const { updateDailyTask, isPending: isUpdating } = useUpdateDailyTaskMutation({
-    onSuccessCallback: () => {
-      setShowEditModal(false);
-      setEditTask(null);
-      refetchDailyTasks();
-    },
-    onErrorCallback: () => {
-      setShowEditModal(false);
-      setEditTask(null);
-      // Optionally show a toast or error message
-    },
-  });
+  const { updateDailyTask, isPending: isUpdating } = useUpdateDailyTaskMutation(
+    {
+      onSuccessCallback: () => {
+        setShowEditModal(false);
+        setEditTask(null);
+        refetchDailyTasks();
+      },
+      onErrorCallback: () => {
+        setShowEditModal(false);
+        setEditTask(null);
+        // Optionally show a toast or error message
+      },
+    }
+  );
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !dashboardSummary) return <div>Error loading dashboard</div>;
@@ -145,16 +161,7 @@ export default function Dashboard() {
       }))
     : [];
 
-  type DailyTask = {
-    id: string;
-    name: string;
-    description: string;
-    status: string;
-    due: string;
-    priority: "High" | "Medium" | "Low";
-  };
-
-  const dailyTaskList: DailyTask[] = (dailyTasks || []).map((task) => {
+  const dailyTaskList: DailyTaskRow[] = (dailyTasks || []).map((task) => {
     const validPriority = ["High", "Medium", "Low"].includes(
       task.priority ?? ""
     );
@@ -170,7 +177,7 @@ export default function Dashboard() {
     };
   });
 
-  const dailyTaskListColumn: { header: string; accessor: keyof DailyTask }[] = [
+  const dailyTaskListColumn: { header: string; accessor: string }[] = [
     { header: "TASK NAME", accessor: "name" },
     { header: "DESCRIPTION", accessor: "description" },
     { header: "STATUS", accessor: "status" },
@@ -178,10 +185,10 @@ export default function Dashboard() {
     { header: "DUE DATE", accessor: "due" },
   ];
 
-  const dailyTaskListAction = [
+  const dailyTaskListAction: ITableAction<DailyTaskRow>[] = [
     {
       label: "Edit",
-      onClick: (row: DailyTask) => {
+      onClick: (row: DailyTaskRow) => {
         const task = (dailyTasks || []).find((t) => t.id === row.id);
         if (task) {
           setEditTask(task);
@@ -192,8 +199,8 @@ export default function Dashboard() {
     },
     {
       label: "Delete",
-      onClick: (row: DailyTask) => {
-        setDeleteId(row.id);
+      onClick: (row: DailyTaskRow) => {
+        setDeleteId(row.id as string);
         setShowDeleteModal(true);
       },
       className: "text-red-500 whitespace-nowrap",
@@ -202,42 +209,72 @@ export default function Dashboard() {
 
   // ProjectSnapshotChart
   const projectSnapshotArray = [
-    { name: "In Progress", value: dashboardSummary?.projectSnapshot?.inProgress ?? 0 },
-    { name: "Completed", value: dashboardSummary?.projectSnapshot?.completed ?? 0 },
+    {
+      name: "In Progress",
+      value: dashboardSummary?.projectSnapshot?.inProgress ?? 0,
+    },
+    {
+      name: "Completed",
+      value: dashboardSummary?.projectSnapshot?.completed ?? 0,
+    },
     { name: "Open", value: dashboardSummary?.projectSnapshot?.open ?? 0 },
   ];
 
   // LeadAnalyticsChart
   const leadAnalyticsDataMap = {
-    weekly: (dashboardSummary?.leadAnalytics?.weekly ?? []).map(item => ({ name: item.status, value: item.count })),
-    monthly: (dashboardSummary?.leadAnalytics?.monthly ?? []).map(item => ({ name: item.status, value: item.count })),
-    yearly: (dashboardSummary?.leadAnalytics?.yearly ?? []).map(item => ({ name: item.status, value: item.count })),
+    weekly: (dashboardSummary?.leadAnalytics?.weekly ?? []).map((item) => ({
+      name: item.status,
+      value: item.count,
+    })),
+    monthly: (dashboardSummary?.leadAnalytics?.monthly ?? []).map((item) => ({
+      name: item.status,
+      value: item.count,
+    })),
+    yearly: (dashboardSummary?.leadAnalytics?.yearly ?? []).map((item) => ({
+      name: item.status,
+      value: item.count,
+    })),
   };
 
   // LeadTypeChart
   const leadTypeDataMap = {
-    weekly: (dashboardSummary?.leadType?.weekly ?? []).map(item => ({ name: item.type ?? "Unknown", value: item.count })),
-    monthly: (dashboardSummary?.leadType?.monthly ?? []).map(item => ({ name: item.type ?? "Unknown", value: item.count })),
-    yearly: (dashboardSummary?.leadType?.yearly ?? []).map(item => ({ name: item.type ?? "Unknown", value: item.count })),
+    weekly: (dashboardSummary?.leadType?.weekly ?? []).map((item) => ({
+      name: item.type ?? "Unknown",
+      value: item.count,
+    })),
+    monthly: (dashboardSummary?.leadType?.monthly ?? []).map((item) => ({
+      name: item.type ?? "Unknown",
+      value: item.count,
+    })),
+    yearly: (dashboardSummary?.leadType?.yearly ?? []).map((item) => ({
+      name: item.type ?? "Unknown",
+      value: item.count,
+    })),
   };
 
   // ExpensesOverviewChart
   const expensesDataMap = {
-    weekly: (dashboardSummary?.expenses?.weekly?.labels ?? []).map((label, i) => ({
-      month: label,
-      income: dashboardSummary?.expenses?.weekly?.income?.[i] ?? 0,
-      expense: dashboardSummary?.expenses?.weekly?.expense?.[i] ?? 0,
-    })),
-    monthly: (dashboardSummary?.expenses?.monthly?.labels ?? []).map((label, i) => ({
-      month: label,
-      income: dashboardSummary?.expenses?.monthly?.income?.[i] ?? 0,
-      expense: dashboardSummary?.expenses?.monthly?.expense?.[i] ?? 0,
-    })),
-    yearly: (dashboardSummary?.expenses?.yearly?.labels ?? []).map((label, i) => ({
-      month: label,
-      income: dashboardSummary?.expenses?.yearly?.income?.[i] ?? 0,
-      expense: dashboardSummary?.expenses?.yearly?.expense?.[i] ?? 0,
-    })),
+    weekly: (dashboardSummary?.expenses?.weekly?.labels ?? []).map(
+      (label, i) => ({
+        month: label,
+        income: dashboardSummary?.expenses?.weekly?.income?.[i] ?? 0,
+        expense: dashboardSummary?.expenses?.weekly?.expense?.[i] ?? 0,
+      })
+    ),
+    monthly: (dashboardSummary?.expenses?.monthly?.labels ?? []).map(
+      (label, i) => ({
+        month: label,
+        income: dashboardSummary?.expenses?.monthly?.income?.[i] ?? 0,
+        expense: dashboardSummary?.expenses?.monthly?.expense?.[i] ?? 0,
+      })
+    ),
+    yearly: (dashboardSummary?.expenses?.yearly?.labels ?? []).map(
+      (label, i) => ({
+        month: label,
+        income: dashboardSummary?.expenses?.yearly?.income?.[i] ?? 0,
+        expense: dashboardSummary?.expenses?.yearly?.expense?.[i] ?? 0,
+      })
+    ),
   };
 
   return (
@@ -248,100 +285,52 @@ export default function Dashboard() {
           Wishing you a productive and fulfilling day ahead!
         </p>
       </div>
-      <div className="flex gap-4 2xl:gap-[1vw] flex-wrap">
+      <div className="flex gap-4 2xl:gap-[1vw] flex-wrap mb-4 2xl:mb-[1vw]">
         {analyticalCards.map((card, idx) => (
           <AnalyticalCard key={idx} data={card} />
         ))}
       </div>
-      <div className="flex flex-wrap gap-6 my-6">
-        <ProjectSnapshotChart
-          data={projectSnapshotArray}
-          colors={["#3B82F6", "#10B981", "#F59E42"]}
-        />
-        <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
-        <LeadTypeChart
-          chartDataMap={leadTypeDataMap}
-          colors={["#6366F1", "#F59E42", "#10B981", "#EF4444"]}
-        />
-        <ProjectRenewalList
-          data={renewalDataForSelectedMonth}
-          selectedMonth={selectedMonth}
-          onMonthChange={handleMonthChange}
-          monthOptions={renewalMonthOptions}
-        />
-        <ExpensesOverviewChart dataMap={expensesDataMap} />
-      </div>
-      {dailyTasksLoading ? (
-        <div>Loading daily tasks...</div>
-      ) : dailyTasksError ? (
-        <div className="text-red-500">
-          Error loading daily tasks:{" "}
-          {dailyTasksErrorObj?.message || "Unknown error"}
-        </div>
-      ) : (
-        <div className="p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw]">
-          <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
-            <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
-              Daily Task List
-            </h1>
-            <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
-              <SearchBar
-                onSearch={handleSearch}
-                bgColor="white"
-                width="w-full min-w-[12rem] md:w-[25vw]"
-              />
-              <Dropdown
-                options={statusOptions}
-                value={statusFilter}
-                onChange={handleStatusChange}
-                dropdownWidth="w-full md:w-fit"
-              />
-              <Dropdown
-                options={priorityOptions}
-                value={priorityFilter}
-                onChange={handlePriorityChange}
-                dropdownWidth="w-full md:w-fit"
-              />
-            </div>
-          </div>
-          <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] my-4 2xl:my-[1vw]">
-            <div className="flex flex-col justify-start items-start w-full min-w-[12rem] md:w-[15vw]">
-              <DatePicker
-                label="From Date"
-                value={fromDate}
-                onChange={(date) => setFromDate(date)}
-                placeholder="From Date"
-                datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
-              />
-            </div>
-            <DatePicker
-              label="To Date"
-              value={toDate}
-              onChange={(date) => setToDate(date)}
-              placeholder="To Date"
-              datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
-            />
-            {(fromDate || toDate) && (
-              <div>
-                <Button
-                  variant="background-white"
-                  width="w-full md:w-fit"
-                  onClick={handleClearDates}
-                  leftIcon={
-                    <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-                  }
-                  tooltip="Clear Dates"
-                />
-              </div>
-            )}
-          </div>
-          <Table
-            data={dailyTaskList}
-            columns={dailyTaskListColumn}
-            actions={dailyTaskListAction}
+      {userRole.toLowerCase() === "admin" ? (
+        <div className="flex flex-wrap gap-6 my-6">
+          <ProjectSnapshotChart
+            data={projectSnapshotArray}
+            colors={["#3B82F6", "#10B981", "#F59E42"]}
           />
+          <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
+          <LeadTypeChart
+            chartDataMap={leadTypeDataMap}
+            colors={["#6366F1", "#F59E42", "#10B981", "#EF4444"]}
+          />
+          <ProjectRenewalList
+            data={renewalDataForSelectedMonth}
+            selectedMonth={selectedMonth}
+            onMonthChange={handleMonthChange}
+            monthOptions={renewalMonthOptions}
+          />
+          <ExpensesOverviewChart dataMap={expensesDataMap} />
         </div>
-      )}
+      ) : null}
+      <DailyTaskTable
+        userRole={userRole}
+        dailyTasksLoading={dailyTasksLoading}
+        dailyTasksError={dailyTasksError}
+        dailyTasksErrorObj={dailyTasksErrorObj}
+        dailyTaskList={dailyTaskList}
+        dailyTaskListColumn={dailyTaskListColumn}
+        dailyTaskListAction={dailyTaskListAction}
+        statusOptions={statusOptions}
+        statusFilter={statusFilter}
+        handleStatusChange={handleStatusChange}
+        priorityOptions={priorityOptions}
+        priorityFilter={priorityFilter}
+        handlePriorityChange={handlePriorityChange}
+        handleSearch={handleSearch}
+        fromDate={fromDate}
+        setFromDate={setFromDate}
+        toDate={toDate}
+        setToDate={setToDate}
+        handleClearDates={handleClearDates}
+      />
       {showEditModal && editTask && (
         <AddDailyTaskModal
           isOpen={showEditModal}
@@ -354,7 +343,9 @@ export default function Dashboard() {
               id: editTask.id || "",
               payload: {
                 ...values,
-                hours_spent: values.hours_spent ? Number(values.hours_spent) : undefined,
+                hours_spent: values.hours_spent
+                  ? Number(values.hours_spent)
+                  : undefined,
               },
             });
           }}
