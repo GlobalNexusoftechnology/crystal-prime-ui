@@ -4,32 +4,39 @@ import { Button } from "@/components";
 import React, { useEffect, useRef, useState } from "react";
 import { Followups, Milestone, Task } from "./components";
 import { AddSquareIcon } from "@/features";
-import { 
-  useDeleteMilestoneMutation, 
-  useDeleteMilestoneTaskMutation, 
+import {
+  useDeleteMilestoneMutation,
+  useDeleteMilestoneTaskMutation,
   useCreateMilestoneMutation,
   useUpdateMilestoneMutation,
   useCreateMilestoneTaskMutation,
   useUpdateMilestoneTaskMutation,
-  useAllUsersQuery, 
-  IProjectTaskResponse 
+  useAllUsersQuery,
+  IProjectTaskResponse,
 } from "@/services";
 import toast from "react-hot-toast";
 import { usePermission } from "@/utils/hooks/usePermission";
 import { EAction, EModule } from "@/constants";
 import { DeleteModal } from "@/components";
 
-type LocalTask = { id: string; title: string; description: string; assigned_to: string; status: string; due_date: string };
+type LocalTask = {
+  id: string;
+  title: string;
+  description: string;
+  assigned_to: string;
+  status: string;
+  due_date: string;
+};
 
-const tabs = ["Milestones"];
+const tabs = ["Milestones", "Follow-ups"];
 
 export function MilestoneTabs({
   milestoneData = [],
   projectId,
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  milestoneData?: any[],
-  projectId: string,
+  milestoneData?: any[];
+  projectId: string;
 }) {
   // Milestone/task state
   const [milestones, setMilestones] = useState(milestoneData || []);
@@ -48,16 +55,22 @@ export function MilestoneTabs({
   );
 
   // Error states for validation
-  const [milestoneErrors, setMilestoneErrors] = useState<{[key: string]: string}>({});
-  const [taskErrors, setTaskErrors] = useState<{[key: string]: string}>({});
+  const [milestoneErrors, setMilestoneErrors] = useState<{
+    [key: string]: string;
+  }>({});
+  const [taskErrors, setTaskErrors] = useState<{ [key: string]: string }>({});
 
   // User options
-  const { allUsersData, isLoading: usersLoading, isError: usersError } = useAllUsersQuery();
+  const {
+    allUsersData,
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useAllUsersQuery();
   const userOptions = usersLoading
     ? [{ label: "Loading...", value: "" }]
     : usersError || !allUsersData
-      ? [{ label: "Error loading users", value: "" }]
-      : allUsersData.map((user) => ({
+    ? [{ label: "Error loading users", value: "" }]
+    : allUsersData.map((user) => ({
         label: `${user.first_name} ${user.last_name}`,
         value: user.id,
       }));
@@ -78,9 +91,9 @@ export function MilestoneTabs({
       setDeletingMilestoneId(null);
       setMilestoneMenu(null);
       toast.success("Milestone deleted successfully");
-      
+
       // Refetch data to ensure consistency
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         window.location.reload();
       }
     },
@@ -96,16 +109,21 @@ export function MilestoneTabs({
       setMilestones((prev) =>
         prev.map((m) =>
           m.id === deletingTaskMilestoneId
-            ? { ...m, tasks: m.tasks.filter((t: LocalTask) => t.id !== deletingTaskId) }
+            ? {
+                ...m,
+                tasks: m.tasks.filter(
+                  (t: LocalTask) => t.id !== deletingTaskId
+                ),
+              }
             : m
         )
       );
       setDeletingTaskId(null);
       setTaskMenu(null);
       toast.success("Task deleted successfully");
-      
+
       // Refetch data to ensure consistency
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         window.location.reload();
       }
     },
@@ -118,23 +136,26 @@ export function MilestoneTabs({
   const { onCreateMilestone } = useCreateMilestoneMutation({
     onSuccessCallback: (data) => {
       // Add the new milestone to the list
-      setMilestones((prev) => [...prev, {
-        id: data.id,
-        name: data.name,
-        description: data.description || '',
-        assigned_to: data.assigned_to || '',
-        status: data.status || 'Open',
-        start_date: data.start_date || '',
-        end_date: data.end_date || '',
-        tasks: [],
-      }]);
+      setMilestones((prev) => [
+        ...prev,
+        {
+          id: data.id,
+          name: data.name,
+          description: data.description || "",
+          assigned_to: data.assigned_to || "",
+          status: data.status || "Open",
+          start_date: data.start_date || "",
+          end_date: data.end_date || "",
+          tasks: [],
+        },
+      ]);
       setEditingId(null);
       setEditMilestone(null);
       setMilestoneErrors({});
       toast.success("Milestone created successfully");
-      
+
       // Refetch data to ensure consistency
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         window.location.reload();
       }
     },
@@ -153,11 +174,11 @@ export function MilestoneTabs({
             ? {
                 id: data.id,
                 name: data.name,
-                description: data.description || '',
-                assigned_to: data.assigned_to || '',
-                status: data.status || 'Open',
-                start_date: data.start_date || '',
-                end_date: data.end_date || '',
+                description: data.description || "",
+                assigned_to: data.assigned_to || "",
+                status: data.status || "Open",
+                start_date: data.start_date || "",
+                end_date: data.end_date || "",
                 tasks: m.tasks,
               }
             : m
@@ -167,9 +188,9 @@ export function MilestoneTabs({
       setEditMilestone(null);
       setMilestoneErrors({});
       toast.success("Milestone updated successfully");
-      
+
       // Refetch data to ensure consistency
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         window.location.reload();
       }
     },
@@ -187,14 +208,17 @@ export function MilestoneTabs({
           m.id === editingTask?.milestoneId
             ? {
                 ...m,
-                tasks: [...m.tasks, {
-                  id: data.id,
-                  title: data.title,
-                  description: data.description || '',
-                  assigned_to: data.assigned_to || '',
-                  status: data.status || 'Open',
-                  due_date: data.due_date || '',
-                }],
+                tasks: [
+                  ...m.tasks,
+                  {
+                    id: data.id,
+                    title: data.title,
+                    description: data.description || "",
+                    assigned_to: data.assigned_to || "",
+                    status: data.status || "Open",
+                    due_date: data.due_date || "",
+                  },
+                ],
               }
             : m
         )
@@ -203,9 +227,9 @@ export function MilestoneTabs({
       setEditTask(null);
       setTaskErrors({});
       toast.success("Task created successfully");
-      
+
       // Refetch data to ensure consistency
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         window.location.reload();
       }
     },
@@ -228,10 +252,10 @@ export function MilestoneTabs({
                     ? {
                         id: data.id,
                         title: data.title,
-                        description: data.description || '',
-                        assigned_to: data.assigned_to || '',
-                        status: data.status || 'Open',
-                        due_date: data.due_date || '',
+                        description: data.description || "",
+                        assigned_to: data.assigned_to || "",
+                        status: data.status || "Open",
+                        due_date: data.due_date || "",
                       }
                     : t
                 ),
@@ -243,9 +267,9 @@ export function MilestoneTabs({
       setEditTask(null);
       setTaskErrors({});
       toast.success("Task updated successfully");
-      
+
       // Refetch data to ensure consistency
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         window.location.reload();
       }
     },
@@ -255,15 +279,27 @@ export function MilestoneTabs({
   });
 
   // Track which milestone/task is being deleted
-  const [deletingMilestoneId, setDeletingMilestoneId] = useState<string | null>(null);
-  const [showDeleteMilestoneModal, setShowDeleteMilestoneModal] = useState(false);
-  const [deletingTaskMilestoneId, setDeletingTaskMilestoneId] = useState<string | null>(null);
+  const [deletingMilestoneId, setDeletingMilestoneId] = useState<string | null>(
+    null
+  );
+  const [showDeleteMilestoneModal, setShowDeleteMilestoneModal] =
+    useState(false);
+  const [deletingTaskMilestoneId, setDeletingTaskMilestoneId] = useState<
+    string | null
+  >(null);
   const [deletingTaskId, setDeletingTaskId] = useState<string | null>(null);
 
   // Validation functions
-  const validateMilestone = (milestone: { name: string; description: string; assigned_to: string; status: string; start_date: string; end_date: string }) => {
-    const errors: {[key: string]: string} = {};
-    
+  const validateMilestone = (milestone: {
+    name: string;
+    description: string;
+    assigned_to: string;
+    status: string;
+    start_date: string;
+    end_date: string;
+  }) => {
+    const errors: { [key: string]: string } = {};
+
     if (!milestone.name || milestone.name.trim() === "") {
       errors.name = "Milestone name is required";
     }
@@ -282,14 +318,20 @@ export function MilestoneTabs({
     if (!milestone.end_date) {
       errors.end_date = "End date is required";
     }
-    
+
     setMilestoneErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  const validateTask = (task: { title: string; description: string; assigned_to: string; status: string; due_date: string }) => {
-    const errors: {[key: string]: string} = {};
-    
+  const validateTask = (task: {
+    title: string;
+    description: string;
+    assigned_to: string;
+    status: string;
+    due_date: string;
+  }) => {
+    const errors: { [key: string]: string } = {};
+
     if (!task.title || task.title.trim() === "") {
       errors.title = "Task title is required";
     }
@@ -305,42 +347,63 @@ export function MilestoneTabs({
     if (!task.due_date) {
       errors.due_date = "Due date is required";
     }
-    
+
     setTaskErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
-  const isMilestoneValid = (milestone: { name: string; description: string; assigned_to: string; status: string; start_date: string; end_date: string }) => {
-    return milestone.name && 
-           milestone.name.trim() !== "" && 
-           milestone.description &&
-           milestone.description.trim() !== "" &&
-           milestone.assigned_to && 
-           milestone.assigned_to !== "--" &&
-           milestone.status &&
-           milestone.start_date &&
-           milestone.end_date;
+  const isMilestoneValid = (milestone: {
+    name: string;
+    description: string;
+    assigned_to: string;
+    status: string;
+    start_date: string;
+    end_date: string;
+  }) => {
+    return (
+      milestone.name &&
+      milestone.name.trim() !== "" &&
+      milestone.description &&
+      milestone.description.trim() !== "" &&
+      milestone.assigned_to &&
+      milestone.assigned_to !== "--" &&
+      milestone.status &&
+      milestone.start_date &&
+      milestone.end_date
+    );
   };
 
-  const isTaskValid = (task: { title: string; description: string; assigned_to: string; status: string; due_date: string }) => {
-    return task.title && 
-           task.title.trim() !== "" && 
-           task.description && 
-           task.description.trim() !== "" &&
-           task.assigned_to && 
-           task.assigned_to !== "--" &&
-           task.status &&
-           task.due_date;
+  const isTaskValid = (task: {
+    title: string;
+    description: string;
+    assigned_to: string;
+    status: string;
+    due_date: string;
+  }) => {
+    return (
+      task.title &&
+      task.title.trim() !== "" &&
+      task.description &&
+      task.description.trim() !== "" &&
+      task.assigned_to &&
+      task.assigned_to !== "--" &&
+      task.status &&
+      task.due_date
+    );
   };
 
   const hasIncompleteMilestone = () => {
-    return milestones.some(m => m.id.startsWith('temp_') && !isMilestoneValid(m));
+    return milestones.some(
+      (m) => m.id.startsWith("temp_") && !isMilestoneValid(m)
+    );
   };
 
   const hasIncompleteTask = (milestoneId: string) => {
-    const milestone = milestones.find(m => m.id === milestoneId);
+    const milestone = milestones.find((m) => m.id === milestoneId);
     if (!milestone) return false;
-    return milestone.tasks.some((t: LocalTask) => t.id.startsWith('temp_') && !isTaskValid(t));
+    return milestone.tasks.some(
+      (t: LocalTask) => t.id.startsWith("temp_") && !isTaskValid(t)
+    );
   };
 
   // Handlers
@@ -357,7 +420,11 @@ export function MilestoneTabs({
   };
   const handleCancel = () => {
     // If this is a temporary milestone (new one being created), remove it
-    if (editMilestone && editMilestone.id && editMilestone.id.startsWith('temp_')) {
+    if (
+      editMilestone &&
+      editMilestone.id &&
+      editMilestone.id.startsWith("temp_")
+    ) {
       setMilestones((prev) => prev.filter((m) => m.id !== editMilestone.id));
     }
     setEditingId(null);
@@ -366,21 +433,25 @@ export function MilestoneTabs({
   };
   const handleSave = () => {
     if (!editMilestone) return;
-    
+
     // Validate milestone before saving
     if (!validateMilestone(editMilestone)) {
       return; // Don't show toast, validation errors are shown in fields
     }
-    
+
     // Check if this is a new milestone (temporary ID) or existing one
-    const isNewMilestone = editMilestone.id && editMilestone.id.startsWith('temp_');
-    
+    const isNewMilestone =
+      editMilestone.id && editMilestone.id.startsWith("temp_");
+
     if (isNewMilestone) {
       // Create new milestone
       const payload = {
         name: editMilestone.name,
         description: editMilestone.description,
-        assigned_to: editMilestone.assigned_to === "--" ? undefined : editMilestone.assigned_to,
+        assigned_to:
+          editMilestone.assigned_to === "--"
+            ? undefined
+            : editMilestone.assigned_to,
         status: editMilestone.status,
         start_date: editMilestone.start_date,
         end_date: editMilestone.end_date,
@@ -392,7 +463,10 @@ export function MilestoneTabs({
       const payload = {
         name: editMilestone.name,
         description: editMilestone.description,
-        assigned_to: editMilestone.assigned_to === "--" ? undefined : editMilestone.assigned_to,
+        assigned_to:
+          editMilestone.assigned_to === "--"
+            ? undefined
+            : editMilestone.assigned_to,
         status: editMilestone.status,
         start_date: editMilestone.start_date,
         end_date: editMilestone.end_date,
@@ -408,7 +482,9 @@ export function MilestoneTabs({
   const handleAddMilestone = () => {
     // Check if there's an incomplete milestone
     if (hasIncompleteMilestone()) {
-      toast.error("Please complete the current milestone before adding a new one");
+      toast.error(
+        "Please complete the current milestone before adding a new one"
+      );
       return;
     }
 
@@ -439,11 +515,19 @@ export function MilestoneTabs({
   };
   const handleCancelTask = () => {
     // If this is a temporary task (new one being created), remove it
-    if (editTask && editTask.id && editTask.id.startsWith('temp_') && editingTask) {
+    if (
+      editTask &&
+      editTask.id &&
+      editTask.id.startsWith("temp_") &&
+      editingTask
+    ) {
       setMilestones((prev) =>
         prev.map((m) =>
           m.id === editingTask.milestoneId
-            ? { ...m, tasks: m.tasks.filter((t: LocalTask) => t.id !== editTask.id) }
+            ? {
+                ...m,
+                tasks: m.tasks.filter((t: LocalTask) => t.id !== editTask.id),
+              }
             : m
         )
       );
@@ -454,21 +538,22 @@ export function MilestoneTabs({
   };
   const handleSaveTask = () => {
     if (!editTask || !editingTask) return;
-    
+
     // Validate task before saving
     if (!validateTask(editTask)) {
       return; // Don't show toast, validation errors are shown in fields
     }
-    
+
     // Check if this is a new task (temporary ID) or existing one
-    const isNewTask = editTask.id && editTask.id.startsWith('temp_');
-    
+    const isNewTask = editTask.id && editTask.id.startsWith("temp_");
+
     if (isNewTask) {
       // Create new task
       const payload = {
         title: editTask.title,
         description: editTask.description,
-        assigned_to: editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
+        assigned_to:
+          editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
         status: editTask.status,
         due_date: editTask.due_date,
         milestone_id: editingTask.milestoneId,
@@ -479,7 +564,8 @@ export function MilestoneTabs({
       const payload = {
         title: editTask.title,
         description: editTask.description,
-        assigned_to: editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
+        assigned_to:
+          editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
         status: editTask.status,
         due_date: editTask.due_date,
         milestone_id: editingTask.milestoneId,
@@ -494,9 +580,11 @@ export function MilestoneTabs({
   };
   const handleAddTask = (milestoneId: string) => {
     // Check if milestone is valid before allowing task add
-    const milestone = milestones.find(m => m.id === milestoneId);
+    const milestone = milestones.find((m) => m.id === milestoneId);
     if (!milestone || !isMilestoneValid(milestone)) {
-      toast.error("Please complete and save the milestone before adding a task.");
+      toast.error(
+        "Please complete and save the milestone before adding a task."
+      );
       return;
     }
     // Check if there's an incomplete task in this milestone
@@ -538,47 +626,84 @@ export function MilestoneTabs({
     setExpandedMilestones(milestones.map((m: Milestone) => m.id));
   }, [milestones]);
 
-  const handleMilestoneChange = (updatedMilestone: { name: string; description: string; assigned_to: string; status: string; start_date: string; end_date: string }) => {
+  const handleMilestoneChange = (updatedMilestone: {
+    name: string;
+    description: string;
+    assigned_to: string;
+    status: string;
+    start_date: string;
+    end_date: string;
+  }) => {
     setEditMilestone(updatedMilestone);
     // Clear specific field errors when user makes changes
-    if (milestoneErrors.name && updatedMilestone.name && updatedMilestone.name.trim() !== "") {
-      setMilestoneErrors(prev => ({ ...prev, name: "" }));
+    if (
+      milestoneErrors.name &&
+      updatedMilestone.name &&
+      updatedMilestone.name.trim() !== ""
+    ) {
+      setMilestoneErrors((prev) => ({ ...prev, name: "" }));
     }
-    if (milestoneErrors.description && updatedMilestone.description && updatedMilestone.description.trim() !== "") {
-      setMilestoneErrors(prev => ({ ...prev, description: "" }));
+    if (
+      milestoneErrors.description &&
+      updatedMilestone.description &&
+      updatedMilestone.description.trim() !== ""
+    ) {
+      setMilestoneErrors((prev) => ({ ...prev, description: "" }));
     }
-    if (milestoneErrors.assigned_to && updatedMilestone.assigned_to && updatedMilestone.assigned_to !== "--") {
-      setMilestoneErrors(prev => ({ ...prev, assigned_to: "" }));
+    if (
+      milestoneErrors.assigned_to &&
+      updatedMilestone.assigned_to &&
+      updatedMilestone.assigned_to !== "--"
+    ) {
+      setMilestoneErrors((prev) => ({ ...prev, assigned_to: "" }));
     }
     if (milestoneErrors.status && updatedMilestone.status) {
-      setMilestoneErrors(prev => ({ ...prev, status: "" }));
+      setMilestoneErrors((prev) => ({ ...prev, status: "" }));
     }
     if (milestoneErrors.start_date && updatedMilestone.start_date) {
-      setMilestoneErrors(prev => ({ ...prev, start_date: "" }));
+      setMilestoneErrors((prev) => ({ ...prev, start_date: "" }));
     }
     if (milestoneErrors.end_date && updatedMilestone.end_date) {
-      setMilestoneErrors(prev => ({ ...prev, end_date: "" }));
+      setMilestoneErrors((prev) => ({ ...prev, end_date: "" }));
     }
   };
 
-  const handleTaskChange = (updatedTask: { title: string; description: string; assigned_to: string; status: string; due_date: string }) => {
+  const handleTaskChange = (updatedTask: {
+    title: string;
+    description: string;
+    assigned_to: string;
+    status: string;
+    due_date: string;
+  }) => {
     setEditTask(updatedTask);
-    
+
     // Clear specific field errors when user makes changes
-    if (taskErrors.title && updatedTask.title && updatedTask.title.trim() !== "") {
-      setTaskErrors(prev => ({ ...prev, title: "" }));
+    if (
+      taskErrors.title &&
+      updatedTask.title &&
+      updatedTask.title.trim() !== ""
+    ) {
+      setTaskErrors((prev) => ({ ...prev, title: "" }));
     }
-    if (taskErrors.description && updatedTask.description && updatedTask.description.trim() !== "") {
-      setTaskErrors(prev => ({ ...prev, description: "" }));
+    if (
+      taskErrors.description &&
+      updatedTask.description &&
+      updatedTask.description.trim() !== ""
+    ) {
+      setTaskErrors((prev) => ({ ...prev, description: "" }));
     }
-    if (taskErrors.assigned_to && updatedTask.assigned_to && updatedTask.assigned_to !== "--") {
-      setTaskErrors(prev => ({ ...prev, assigned_to: "" }));
+    if (
+      taskErrors.assigned_to &&
+      updatedTask.assigned_to &&
+      updatedTask.assigned_to !== "--"
+    ) {
+      setTaskErrors((prev) => ({ ...prev, assigned_to: "" }));
     }
     if (taskErrors.status && updatedTask.status) {
-      setTaskErrors(prev => ({ ...prev, status: "" }));
+      setTaskErrors((prev) => ({ ...prev, status: "" }));
     }
     if (taskErrors.due_date && updatedTask.due_date) {
-      setTaskErrors(prev => ({ ...prev, due_date: "" }));
+      setTaskErrors((prev) => ({ ...prev, due_date: "" }));
     }
   };
 
@@ -588,7 +713,7 @@ export function MilestoneTabs({
   const canEditMilestone = hasPermission(EModule.MILESTONE, EAction.EDIT);
   const canDeleteMilestone = hasPermission(EModule.MILESTONE, EAction.DELETE);
   const canViewMilestone = hasPermission(EModule.MILESTONE, EAction.VIEW);
-  
+
   // Task permission checks
   const canAddTask = hasPermission(EModule.TASK, EAction.ADD);
   const canViewTask = hasPermission(EModule.TASK, EAction.VIEW);
@@ -617,10 +742,9 @@ export function MilestoneTabs({
           {tabs.map((tab) => (
             <button
               key={tab}
-              className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${activeTab === tab
-                ? ""
-                : "text-gray-500"
-                }`}
+              className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${
+                activeTab === tab ? "" : "text-gray-500"
+              }`}
               onClick={() => {
                 setActiveTab(tab);
                 setShowForm(false);
@@ -639,9 +763,7 @@ export function MilestoneTabs({
               "Close"
             ) : (
               <>
-                {activeTab === "Milestones" ? (
-                  null
-                ) : (
+                {activeTab === "Milestones" ? null : (
                   <Button title="Add followup" variant="primary-outline" />
                 )}
               </>
@@ -672,11 +794,21 @@ export function MilestoneTabs({
                         </button>
                       )}
                     </th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[8rem] 2xl:min-w-[8vw]">Status</th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">Estimated Start Date</th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">Estimated End Date</th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                      Description
+                    </th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">
+                      Assigned To
+                    </th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                      Status
+                    </th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                      Estimated Start Date
+                    </th>
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                      Estimated End Date
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -703,7 +835,8 @@ export function MilestoneTabs({
                         canDeleteMilestone={canDeleteMilestone}
                         canViewMilestone={canViewMilestone}
                       />
-                      {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
+                      {(expandedMilestones.includes(milestone.id) ||
+                        editingId === milestone.id) && (
                         <tr className="bg-gray-50 2xl:bg-gray-100]">
                           <td colSpan={7} className="p-0">
                             <table>
@@ -717,42 +850,54 @@ export function MilestoneTabs({
                                         className="text-purple-500 hover:text-purple-700 text-lg"
                                         title="Add Task"
                                         type="button"
-                                        onClick={() => handleAddTask(milestone.id)}
+                                        onClick={() =>
+                                          handleAddTask(milestone.id)
+                                        }
                                       >
                                         <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                                       </button>
                                     )}
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Assigned To</th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">Status</th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                                    Description
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                    Assigned To
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                    Status
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    Due Date
+                                  </th>
                                 </tr>
                               </thead>
                               <tbody>
-                                {milestone.tasks.map((task: IProjectTaskResponse) => (
-                                  <Task
-                                    key={task.id}
-                                    task={task}
-                                    editingTask={editingTask}
-                                    editTask={editTask}
-                                    onEdit={handleEditTask}
-                                    onDelete={handleDeleteTask}
-                                    onSave={handleSaveTask}
-                                    onCancel={handleCancelTask}
-                                    onChange={handleTaskChange}
-                                    menuOpen={taskMenu}
-                                    setMenuOpen={setTaskMenu}
-                                    userOptions={userOptions}
-                                    statusOptions={statusOptions}
-                                    milestoneId={milestone.id}
-                                    projectId={projectId}
-                                    errors={taskErrors}
-                                    canViewTask={canViewTask}
-                                    canEditTask={canEditTask}
-                                    canDeleteTask={canDeleteTask}
-                                  />
-                                ))}
+                                {milestone.tasks.map(
+                                  (task: IProjectTaskResponse) => (
+                                    <Task
+                                      key={task.id}
+                                      task={task}
+                                      editingTask={editingTask}
+                                      editTask={editTask}
+                                      onEdit={handleEditTask}
+                                      onDelete={handleDeleteTask}
+                                      onSave={handleSaveTask}
+                                      onCancel={handleCancelTask}
+                                      onChange={handleTaskChange}
+                                      menuOpen={taskMenu}
+                                      setMenuOpen={setTaskMenu}
+                                      userOptions={userOptions}
+                                      statusOptions={statusOptions}
+                                      milestoneId={milestone.id}
+                                      projectId={projectId}
+                                      errors={taskErrors}
+                                      canViewTask={canViewTask}
+                                      canEditTask={canEditTask}
+                                      canDeleteTask={canDeleteTask}
+                                    />
+                                  )
+                                )}
                               </tbody>
                             </table>
                           </td>
@@ -765,15 +910,13 @@ export function MilestoneTabs({
             </div>
           </div>
         )}
-        {activeTab === "Followup's" && (
+        {activeTab === "Follow-ups" && (
           <Followups
-            projectId={projectId}
             showForm={showForm}
             setShowForm={setShowForm}
           />
         )}
       </div>
-
       <DeleteModal
         isOpen={showDeleteMilestoneModal}
         onClose={() => {
@@ -786,7 +929,6 @@ export function MilestoneTabs({
         message="Are you sure you want to delete this milestone "
         itemName={milestoneNameToDelete}
       />
-
       <div ref={bottomRef} />
     </div>
   );

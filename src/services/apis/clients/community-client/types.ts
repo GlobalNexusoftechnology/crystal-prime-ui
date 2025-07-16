@@ -965,7 +965,6 @@ export interface IProjectFollowupsList {
   due_date: string;
   completed_date: string | null;
   remarks: string;
-  project: IAllProjectsResponse;
   user: IUsersDetails;
 }
 
@@ -979,11 +978,10 @@ export enum ProjectFollowupStatus {
 }
 
 export interface ICreateProjectFollowUpPayload {
-  project_id: string;
+  client_id: string; // Added for client followup
   user_id?: string;
   status: string;
   due_date?: string;
-  completed_date?: string;
   remarks?: string;
 }
 

@@ -861,9 +861,9 @@ export class CommunityClient extends ApiClient {
   }
 
     // all client follow ups
-  public fetchAllProjectFollowUp = async (projectId?: string) => {
+  public fetchAllProjectFollowUp = async () => {
     const response = await this.get<IAllProjectFollowUpResponse>(
-      fetchAllProjectFollowUpUrl(projectId),
+      fetchAllProjectFollowUpUrl(),
       {
         requiresAuth: false,
       }
