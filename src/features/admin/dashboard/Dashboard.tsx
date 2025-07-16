@@ -351,7 +351,8 @@ export default function Dashboard() {
           }}
           initialValues={{
             project_id: editTask.project?.id || "",
-            assigned_to: editTask.user?.id || "",
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            assigned_to: editTask.user?.id || (editTask as any)?.assigned_to || "",
             task_title: editTask.task_title || "",
             entry_date: editTask.entry_date || "",
             description: editTask.description || "",
