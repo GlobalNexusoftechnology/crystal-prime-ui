@@ -59,12 +59,16 @@ const renderCustomizedLabel = ({
   );
 };
 
-const dropdownOptions = ["weekly", "monthly", "yearly"];
+const dropdownOptions = [
+  { value: "weekly", label: "Weekly" },
+  { value: "monthly", label: "Monthly" },
+  { value: "yearly", label: "Yearly" },
+];
 
 export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colors }) => {
-  const [selected, setSelected] = useState("weekly");
+  const [selected, setSelected] = useState(dropdownOptions[0].value);
   const [open, setOpen] = useState(false);
-  const [chartData, setChartData] = useState<DataItem[]>(chartDataMap["yearly"] ?? []);
+  const [chartData, setChartData] = useState<DataItem[]>(chartDataMap[dropdownOptions[0].value] ?? []);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -104,7 +108,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
             className="text-base text-gray-700 font-medium bg-transparent outline-none flex items-center gap-1"
             onClick={() => setOpen((prev) => !prev)}
           >
-            {selected}
+            {dropdownOptions.find(opt => opt.value === selected)?.label}
             <svg
               className={`w-4 h-4 ml-2 transition-transform ${
                 open ? "rotate-180" : "rotate-0"
@@ -125,16 +129,16 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
             <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded shadow z-10 min-w-[8rem]">
               {dropdownOptions.map((option) => (
                 <button
-                  key={option}
+                  key={option.value}
                   className={`block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 ${
-                    selected === option ? "font-medium" : ""
+                    selected === option.value ? "font-medium" : ""
                   }`}
                   onClick={() => {
-                    setSelected(option);
+                    setSelected(option.value);
                     setOpen(false);
                   }}
                 >
-                  {option}
+                  {option.label}
                 </button>
               ))}
             </div>
