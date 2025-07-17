@@ -12,7 +12,7 @@ import {
   useCreateLeadFollowUpMutation,
 } from "@/services";
 import { formatDate, formatIndiaTime, IApiError } from "@/utils";
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 
 // Fixing validationSchema field names to match Formik fields
@@ -43,14 +43,14 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
   const { createLeadFollowUp } = useCreateLeadFollowUpMutation({
     onSuccessCallback: (response: ICreateLeadFollowUpResponse) => {
       console.log("Lead follow-up created successfully", response);
-      toast.success(response.message)
+      toast.success(response.message);
       formik.resetForm();
       setShowForm(false);
       LeadFollowUp();
-      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
+      queryClient.invalidateQueries({ queryKey: ["leads-list-query-key"] });
     },
     onErrorCallback: (err: IApiError) => {
-      toast.error(err.message)
+      toast.error(err.message);
     },
   });
 
@@ -148,21 +148,36 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
                 </div>
                 <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                   <p className="text-[1rem] 2xl:text-[1vw]">Status:</p>
-                  <p className="text-[1rem] 2xl:text-[1vw]">{followup?.status}</p>
+                  <p className="text-[1rem] 2xl:text-[1vw]">
+                    {followup?.status}
+                  </p>
                 </div>
               </div>
-              <h1 className="text-[1rem] 2xl:text-[1vw]">{followup?.remarks}</h1>
+              <h1 className="text-[1rem] 2xl:text-[1vw]">
+                {followup?.remarks}
+              </h1>
             </div>
-            <div className="flex justify-between flex-col md:flex-row gap-4">
+            <div className="flex justify-between flex-col md:flex-row flex-wrap gap-4">
               <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                 <p className="text-[1rem] 2xl:text-[1vw]">Due:</p>
-                <p className="text-[1rem] 2xl:text-[1vw]">{formatDate(`${followup?.due_date}`)}</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">
+                  {formatDate(`${followup?.due_date}`)}
+                </p>
+              </div>
+              <div className="flex flex-col text-lightGreen md:flex-row gap-2 2xl:gap-[0.5vw] underline">
+                <p className="text-[1rem] 2xl:text-[1vw]">Created At</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">
+                  {formatIndiaTime(`${followup?.created_at}`, "toReadable")}
+                </p>
               </div>
               {followup?.completed_date ? (
                 <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                   <p className="text-[1rem] 2xl:text-[1vw]">Completed:</p>
                   <p className="text-[1rem] 2xl:text-[1vw]">
-                    {formatIndiaTime(`${followup?.completed_date}`, "toReadable")}
+                    {formatIndiaTime(
+                      `${followup?.completed_date}`,
+                      "toReadable"
+                    )}
                   </p>
                 </div>
               ) : null}

@@ -62,6 +62,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
     payment_mode: "Cash",
     attachment: "",
   });
+  const [isUploading, setIsUploading] = useState(false);
 
   const { allEILogTypesData } = useAllEILogTypesQuery();
   const { allEILogHeadsData } = useAllEILogHeadsQuery();
@@ -125,12 +126,14 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
 
   const { onUploadEILogAttachment } = useUploadEILogAttachmentMutation({
     onSuccessCallback: (data: IUploadAttachmentResponse) => {
+      setIsUploading(false);
       if (setFieldValueRef.current) {
         setFieldValueRef.current("attachment", data.data.docUrl);
       }
       toast.success("Document uploaded successfully!");
     },
     onErrorCallback: (err: IApiError) => {
+      setIsUploading(false);
       toast.error(err.message);
     },
   });
@@ -285,6 +288,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
                     }
                     onChange={(files: FileList | null) => {
                       if (files && files[0]) {
+                        setIsUploading(true);
                         const formData = new FormData();
                         formData.append("document", files[0]);
                         onUploadEILogAttachment(formData);
@@ -324,7 +328,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
                   title={eiLogId ? "Update" : "Create"}
                   variant="primary"
                   type="submit"
-                  disabled={isSubmitting || isCreating || isUpdating || !values.attachment}
+                  disabled={isSubmitting || isCreating || isUpdating || isUploading}
                 />
               </div>
             </Form>
