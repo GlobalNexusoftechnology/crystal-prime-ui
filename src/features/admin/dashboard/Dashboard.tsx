@@ -185,10 +185,10 @@ export default function Dashboard() {
   });
 
   const dailyTaskListColumn: { header: string; accessor: string }[] = [
-    { header: "TASK NAME", accessor: "name" },
-    { header: "DESCRIPTION", accessor: "description" },
     { header: "STATUS", accessor: "status" },
     { header: "PRIORITY", accessor: "priority" },
+    { header: "TASK NAME", accessor: "name" },
+    { header: "DESCRIPTION", accessor: "description" },
     { header: "DUE DATE", accessor: "due" },
   ];
 
