@@ -24,8 +24,10 @@ import DailyTaskTable from "./components/DailyTaskTable";
 import type { ITableAction } from "@/constants/table";
 import type { DailyTaskRow } from "./components/DailyTaskTable";
 import { useDebounce } from "@/utils/hooks";
+import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
+  const router = useRouter();
   const [showEditModal, setShowEditModal] = useState(false);
   const [editTask, setEditTask] =
     useState<Partial<IDailyTaskEntryResponse> | null>(null);
@@ -181,6 +183,12 @@ export default function Dashboard() {
       priority: validPriority
         ? (task.priority as "High" | "Medium" | "Low")
         : "Medium",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      projectId: (task as any)?.projectId || "",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      milestoneId: (task as any)?.milestoneId || "",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      taskId: (task as any)?.taskId || "",
     };
   });
 
@@ -194,23 +202,11 @@ export default function Dashboard() {
 
   const dailyTaskListAction: ITableAction<DailyTaskRow>[] = [
     {
-      label: "Edit",
+      label: "View",
       onClick: (row: DailyTaskRow) => {
-        const task = (dailyTasks || []).find((t) => t.id === row.id);
-        if (task) {
-          setEditTask(task);
-          setShowEditModal(true);
-        }
+        router.push(`/admin/project-management/${row.projectId}/${row.milestoneId}/${row.taskId}`);
       },
       className: "text-blue-500 whitespace-nowrap",
-    },
-    {
-      label: "Delete",
-      onClick: (row: DailyTaskRow) => {
-        setDeleteId(row.id as string);
-        setShowDeleteModal(true);
-      },
-      className: "text-red-500 whitespace-nowrap",
     },
   ];
 
