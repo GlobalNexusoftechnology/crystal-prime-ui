@@ -162,11 +162,10 @@ export default function Dashboard() {
         icon: <AnalyticalCardIcon />,
       }))
     : [
-        { count: statsData.totalLeads, title: "Total Leads", subtitle: "", icon: <AnalyticalCardIcon /> },
-        { count: statsData.todayFollowups, title: "Today's Followups", subtitle: "", icon: <AnalyticalCardIcon /> },
-        { count: statsData.convertedLeads, title: "Converted Leads", subtitle: "", icon: <AnalyticalCardIcon /> },
-        { count: statsData.lostLeads, title: "Lost Leads", subtitle: "", icon: <AnalyticalCardIcon /> },
-        { count: statsData.conversionRate, title: "Conversion Rate", subtitle: "", icon: <AnalyticalCardIcon /> },
+        { count: statsData.myTaskCount, title: "My Task", subtitle: "Open & In Process", icon: <AnalyticalCardIcon /> },
+        { count: statsData.todayFollowups, title: "Today Follow up", subtitle: "Due Today", icon: <AnalyticalCardIcon /> },
+        { count: statsData.projectCount, title: "Project", subtitle: "Assigned Projects", icon: <AnalyticalCardIcon /> },
+        { count: statsData.performanceRatio, title: "Performance Ratio", subtitle: "Completed/Assigned", icon: <AnalyticalCardIcon /> },
       ];
 
   const dailyTaskList: DailyTaskRow[] = (dailyTasks || []).map((task) => {

@@ -1,4 +1,4 @@
-import { IUser } from "@/services/stores";
+import { IUser } from "@/services/stores/auth-store/types";
 import { IApiError } from "@/utils";
 
 export interface ILoginPayload {
@@ -851,7 +851,7 @@ export interface IUpdateUserResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IUpdateUserPayload;
+  data: IUser;
 }
 //delete
 export interface IDeleteUserResponse {
