@@ -1,4 +1,4 @@
-import { IUser } from "@/services/stores";
+import { IUser } from "@/services/stores/auth-store/types";
 import { IApiError } from "@/utils";
 
 export interface ILoginPayload {
@@ -264,7 +264,7 @@ export interface IStats {
   totalLeads: number;
   assignedToMe: number;
   profileSent: number;
-  businessDone: number;
+  convertedLeads: number;
   todayFollowups: 0;
 
 }
@@ -851,7 +851,7 @@ export interface IUpdateUserResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IUpdateUserPayload;
+  data: IUser;
 }
 //delete
 export interface IDeleteUserResponse {
@@ -965,7 +965,6 @@ export interface IProjectFollowupsList {
   due_date: string;
   completed_date: string | null;
   remarks: string;
-  project: IAllProjectsResponse;
   user: IUsersDetails;
 }
 
@@ -979,11 +978,10 @@ export enum ProjectFollowupStatus {
 }
 
 export interface ICreateProjectFollowUpPayload {
-  project_id: string;
+  client_id: string; // Added for client followup
   user_id?: string;
   status: string;
   due_date?: string;
-  completed_date?: string;
   remarks?: string;
 }
 
@@ -1623,6 +1621,7 @@ export interface ICreateDailyTaskEntryPayload {
   hours_spent?: number;
   remarks?: string;
   status?: string;
+  priority?: "High" | "Medium" | "Low";
 }
 
 export interface IUpdateDailyTaskEntryPayload {
@@ -1640,6 +1639,7 @@ export interface IDailyTaskEntryResponse {
   remarks?: string;
   hours_spent?: number;
   status: string;
+  priority?: "High" | "Medium" | "Low";
   created_at: string;
   updated_at: string;
   deleted: boolean;
@@ -1660,43 +1660,137 @@ export interface IAllDailyTaskEntriesResponse {
   data: IDailyTaskEntryResponse[];
 }
 
+export interface IDeleteDailyTaskEntryResponse {
+  status: boolean;
+  message: string;
+  success: true;
+}
+
 export interface IUploadMultipleAttachmentsOptions {
   onSuccessCallback: (data: IUploadMultipleAttachmentResponse) => void;
   onErrorCallback?: (err: IApiError) => void;
 }
 
-export interface DashboardSummary {
-  leads: {
-    total: number;
-    assignedToMe: number;
-    profileSent: number;
-    businessDone: number;
-    notInterested: number;
-    todayFollowups: number;
-    analytics: Record<string, number>;
-  };
-  projects: {
-    total: number;
+export interface ProjectSnapshot {
+  data: {
     inProgress: number;
     completed: number;
-    snapshot: {
-      inProgress: number;
-      completed: number;
-      percentCompleted: number;
-      percentInProgress: number;
-      total: number;
+    percentCompleted: number;
+    percentInProgress: number;
+    total: number;
+  };
+  colors: Record<string, string>;
+}
+
+export interface ChartData {
+  labels: string[];
+  income: number[];
+  expense: number[];
+}
+
+export interface LeadAnalyticsChartDataMap {
+  [key: string]: ChartData;
+}
+
+export interface LeadTypeChartDataMap {
+  [key: string]: ChartData;
+}
+
+export interface LeadTypeColors {
+  [key: string]: string;
+}
+
+export interface ProjectRenewalItem {
+  name: string;
+  renewal_date: string;
+  completion: number;
+}
+
+export interface ProjectRenewalData {
+  [category: string]: ProjectRenewalItem[];
+}
+
+export interface ExpensesDataMap {
+  yearly: ChartData;
+  monthly: ChartData;
+  weekly: ChartData;
+}
+
+export interface LeadTypeChartItem {
+  type: string;
+  count: number;
+  percent: number;
+  color: string;
+}
+
+export interface DashboardStatCard {
+  count: string;
+  title: string;
+  subtitle: string;
+}
+
+export interface ProjectSnapshotData {
+  name: string;
+  value: number;
+}
+
+export interface ExpensesData {
+  labels: string[];
+  income: number[];
+  expense: number[];
+}
+
+// Add Category and Project interfaces for projectRenewalData
+export interface Project {
+  name: string;
+  date: string;
+  status: number;
+}
+export interface Category {
+  category: string;
+  projects: Project[];
+}
+
+export interface DashboardSummary {
+  stats: DashboardStatCard[];
+  projectSnapshot: {
+    inProgress: number;
+    completed: number;
+    open: number;
+  };
+  leadAnalytics: {
+    weekly: { status: string; count: number }[];
+    monthly: { status: string; count: number }[];
+    yearly: { status: string; count: number }[];
+  };
+  leadType: {
+    weekly: { type: string | null; count: number }[];
+    monthly: { type: string | null; count: number }[];
+    yearly: { type: string | null; count: number }[];
+  };
+  projectRenewalData: Category[];
+  expenses: {
+    weekly: {
+      labels: string[];
+      income: number[];
+      expense: number[];
+    };
+    monthly: {
+      labels: string[];
+      income: number[];
+      expense: number[];
+    };
+    yearly: {
+      labels: string[];
+      income: number[];
+      expense: number[];
     };
   };
-  tasks: {
-    total: number;
-    inProgress: number;
-    completed: number;
-    dueToday: number;
-  };
-  dailyTasks: {
-    today: DailyTask[];
-    tomorrow: DailyTask[];
-  };
+}
+
+export interface DashboardSummaryApiResponse {
+  status: string;
+  data: DashboardSummary;
 }
 
 export interface DailyTask {
@@ -1712,6 +1806,7 @@ export interface DailyTask {
   hours_spent: string;
   status: string;
   remarks: string;
+  priority?: "High" | "Medium" | "Low";
   project: {
     id: string;
     name: string;

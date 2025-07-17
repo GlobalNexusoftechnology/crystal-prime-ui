@@ -3,44 +3,51 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, DatePicker, Dropdown, InputField, ModalOverlay } from "@/components";
 import {
-  ICreateProjectFollowUpPayload,
   ICreateProjectFollowUpResponse,
   ProjectFollowupStatus,
   useAllClientFollowUpQuery,
   useAllUsersQuery,
   useAuthStore,
   useCreateProjectFollowUpMutation,
+  useAllClientQuery,
 } from "@/services";
 import { IApiError, formatDate } from "@/utils";
 import toast from "react-hot-toast";
 
 // Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
-  project_id: Yup.string().required("Project ID is required"),
-  due_date: Yup.string().required("Next follow-up date is required"),
+  client_id: Yup.string().required("Client is required"),
+  user_id: Yup.string().nullable(),
   status: Yup.string().oneOf(
-    Object.values(ProjectFollowupStatus),
+    [
+      "RESCHEDULE",
+      "PENDING",
+      "AWAITING RESPONSE",
+      "NO RESPONSE",
+      "FAILED",
+      "COMPLETED",
+    ],
     "Invalid status"
   ),
-  user_id: Yup.string().required("Assignee is required"),
-  remarks: Yup.string().required("Remark is required"),
+  due_date: Yup.string().nullable(),
+  completed_date: Yup.string().nullable(),
+  remarks: Yup.string().nullable(),
 });
 
 interface IFollowupsProps {
   showForm: boolean;
   setShowForm: (val: boolean) => void;
-  projectId: string;
 }
 
-export function Followups({ projectId, showForm, setShowForm }: IFollowupsProps) {
-  const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery(projectId);
+export function Followups({ showForm, setShowForm }: IFollowupsProps) {
+  const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery();
   const { allUsersData } = useAllUsersQuery();
+  const { allClientData } = useAllClientQuery();
   const { activeSession } = useAuthStore();
   const userId = activeSession?.user?.id;
 
   const { createClientFollowUp, isPending } = useCreateProjectFollowUpMutation({
     onSuccessCallback: (response: ICreateProjectFollowUpResponse) => {
-      console.log("Client follow-up created successfully", response);
       toast.success(response.message);
       formik.resetForm();
       setShowForm(false);
@@ -48,24 +55,6 @@ export function Followups({ projectId, showForm, setShowForm }: IFollowupsProps)
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
-    },
-  });
-
-  const formik = useFormik<ICreateProjectFollowUpPayload>({
-    initialValues: {
-      project_id: projectId,
-      due_date: "",
-      status: "",
-      user_id: userId,
-      remarks: "",
-    },
-    validationSchema,
-    onSubmit: async (values) => {
-      if (!projectId) {
-        toast.error("Client ID is missing");
-        return;
-      }
-      await createClientFollowUp({ ...values, project_id: projectId });
     },
   });
 
@@ -79,6 +68,42 @@ export function Followups({ projectId, showForm, setShowForm }: IFollowupsProps)
       label: `${user?.first_name} ${user?.last_name}`,
       value: user?.id.toString(),
     })) || [];
+
+  const clientOptions =
+    allClientData?.map((client) => ({
+      label: client?.name,
+      value: client?.id,
+    })) || [];
+
+  const formik = useFormik<{
+    client_id: string;
+    user_id?: string | null;
+    status?: string;
+    due_date?: string | null;
+    remarks?: string | null;
+  }>({
+    initialValues: {
+      client_id: clientOptions[0]?.value || "",
+      user_id: userId || "",
+      status: "PENDING",
+      due_date: "",
+      remarks: "",
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      if (!values.client_id) {
+        toast.error("Client ID is required");
+        return;
+      }
+      await createClientFollowUp({
+        client_id: values.client_id,
+        user_id: values.user_id || undefined,
+        status: values.status || "PENDING",
+        due_date: values.due_date || undefined,
+        remarks: values.remarks || undefined,
+      });
+    },
+  });
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -118,20 +143,13 @@ export function Followups({ projectId, showForm, setShowForm }: IFollowupsProps)
             onSubmit={formik.handleSubmit}
             className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
           >
-            <DatePicker
-              label="Next Followup Date"
-              value={`${formik.values.due_date}`}
-              onChange={(date) => formik.setFieldValue("due_date", date)}
-              placeholder="Next Followup Date"
-              error={formik.touched.due_date ? formik.errors.due_date : undefined}
-            />
             <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw]">
               <Dropdown
-                label="Status"
-                options={statusOptions}
-                value={formik.values.status}
-                onChange={(val) => formik.setFieldValue("status", val)}
-                error={formik.touched.status ? formik.errors.status : undefined}
+                label="Client"
+                options={clientOptions}
+                value={formik.values.client_id}
+                onChange={(val) => formik.setFieldValue("client_id", val)}
+                error={formik.touched.client_id ? formik.errors.client_id : undefined}
               />
               <Dropdown
                 label="Assigned To"
@@ -141,11 +159,27 @@ export function Followups({ projectId, showForm, setShowForm }: IFollowupsProps)
                 error={formik.touched.user_id ? formik.errors.user_id : undefined}
               />
             </div>
+            <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw]">
+              <Dropdown
+                label="Status"
+                options={statusOptions}
+                value={formik.values.status || "PENDING"}
+                onChange={(val) => formik.setFieldValue("status", val)}
+                error={formik.touched.status ? formik.errors.status : undefined}
+              />
+            <DatePicker
+              label="Next Followup Date"
+              value={formik.values.due_date || ""}
+              onChange={(date) => formik.setFieldValue("due_date", date)}
+              placeholder="Next Followup Date"
+              error={formik.touched.due_date ? formik.errors.due_date : undefined}
+            />
+            </div>
             <InputField
               label="Remarks"
               name="remarks"
               placeholder="Enter remarks"
-              value={formik.values.remarks}
+              value={formik.values.remarks || ""}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               error={formik.touched.remarks ? formik.errors.remarks : undefined}

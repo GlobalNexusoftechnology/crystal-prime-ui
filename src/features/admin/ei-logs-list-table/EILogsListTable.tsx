@@ -297,7 +297,7 @@ export function EILogsListTable({
           />
         </div>
       </div>
-      <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] mt-4 mt-[1vw]">
+      <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] mt-4 2xl:mt-[1vw]">
         <div className="flex flex-col justify-start items-start w-full min-w-[12rem] md:w-[15vw]">
            <DatePicker
             label="From Date"

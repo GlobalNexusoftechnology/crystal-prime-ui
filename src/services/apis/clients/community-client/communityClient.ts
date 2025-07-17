@@ -150,6 +150,7 @@ import {
   IEILogDetailResponse,
   IEILogFilters,
   IUploadEILogFromExcelResponse,
+  IDeleteDailyTaskEntryResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -260,7 +261,6 @@ import {
   updateDailyTaskEntryUrl,
   deleteDailyTaskEntryUrl,
   getDailyTaskEntryDetailUrl,
-  getAllDailyTaskEntriesUrl,
   uploadMultipleAttachmentUrl,
   dashboardSummaryUrl,
   fetchAllEILogTypesUrl,
@@ -283,7 +283,7 @@ import {
   uploadEILogFromExcelUrl,
   uploadEILogAttachmentUrl,
 } from "./urls";
-import { IClientDetails, IClientDetailsResponse, DashboardSummary } from "./types";
+import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
 /**
  * CommunityClient class handles all API requests related to
@@ -861,9 +861,9 @@ export class CommunityClient extends ApiClient {
   }
 
     // all client follow ups
-  public fetchAllProjectFollowUp = async (projectId?: string) => {
+  public fetchAllProjectFollowUp = async () => {
     const response = await this.get<IAllProjectFollowUpResponse>(
-      fetchAllProjectFollowUpUrl(projectId),
+      fetchAllProjectFollowUpUrl(),
       {
         requiresAuth: false,
       }
@@ -1751,11 +1751,12 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
-  public deleteDailyTaskEntry = async (id: string): Promise<void> => {
-    const response = await this.del<void>(deleteDailyTaskEntryUrl(id));
+  public deleteDailyTaskEntry = async (id: string): Promise<IDeleteDailyTaskEntryResponse> => {
+    const response = await this.del<IDeleteDailyTaskEntryResponse>(deleteDailyTaskEntryUrl(id));
     if (!response?.success) {
       throw response?.errorData;
     }
+    return response?.data;
   };
 
   public getDailyTaskEntryDetail = async (id: string): Promise<IDailyTaskEntryResponse> => {
@@ -1766,8 +1767,23 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
-  public getAllDailyTaskEntries = async (projectId?: string): Promise<IDailyTaskEntryResponse[]> => {
-    const response = await this.get<IAllDailyTaskEntriesResponse>(getAllDailyTaskEntriesUrl(projectId));
+  public getAllDailyTaskEntries = async (filters: {
+    status?: string;
+    priority?: string;
+    from?: string;
+    to?: string;
+    projectId?: string;
+    search?: string;
+  } = {}): Promise<IDailyTaskEntryResponse[]> => {
+    const params = new URLSearchParams();
+    if (filters.projectId) params.append('projectId', filters.projectId);
+    if (filters.status) params.append('status', filters.status);
+    if (filters.priority) params.append('priority', filters.priority);
+    if (filters.from) params.append('from', filters.from);
+    if (filters.to) params.append('to', filters.to);
+    if (filters.search) params.append('search', filters.search);
+    const url = `/daily-task?${params.toString()}`;
+    const response = await this.get<IAllDailyTaskEntriesResponse>(url);
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -1786,8 +1802,8 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchDashboardSummary = async (): Promise<DashboardSummary> => {
-    const response = await this.get<DashboardSummary>(dashboardSummaryUrl());
+  public fetchDashboardSummary = async (): Promise<DashboardSummaryApiResponse> => {
+    const response = await this.get<DashboardSummaryApiResponse>(dashboardSummaryUrl());
     if (!response?.success) {
       throw response?.errorData;
     }

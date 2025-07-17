@@ -21,11 +21,10 @@ export function PersonalInfo() {
   const userId = activeSession?.user?.id;
 
   // Fetch user profile on mount or when userId changes
-  const { userDetailById, isLoading, onUserDetail } = useUserDetailQuery(userId || '');
+  const { userDetailById, isLoading } = useUserDetailQuery(userId || '');
 
-  // Update store with full profile when fetched
   useEffect(() => {
-    if (userDetailById && userId) {
+    if (userDetailById && userId && userDetailById.id === userId) {
       updateActiveSession({
         access_token: activeSession?.access_token || '',
         refresh_token: activeSession?.refresh_token || '',
@@ -34,6 +33,7 @@ export function PersonalInfo() {
     }
   }, [userDetailById, userId, activeSession?.access_token, activeSession?.refresh_token, updateActiveSession]);
 
+  
   const user = activeSession?.user;
 
   const initialValues = {
@@ -55,21 +55,16 @@ export function PersonalInfo() {
   });
 
   const { onEditUser, isPending } = useUpdateUserMutation({
-    onSuccessCallback: () => {
+    onSuccessCallback: (response) => {
       toast.success("Profile updated successfully!");
-      // Re-fetch the profile and update the store
-      if (userId) {
-        onUserDetail().then((result) => {
-          if (result?.data) {
-            updateActiveSession({
-              access_token: activeSession?.access_token || '',
-              refresh_token: activeSession?.refresh_token || '',
-              user: { ...result.data },
-            });
-          }
+      // Immediately update the session with the updated user data
+      if (response?.data && response.data.id === userId) {
+        updateActiveSession({
+          access_token: activeSession?.access_token || '',
+          refresh_token: activeSession?.refresh_token || '',
+          user: { ...response.data },
         });
       }
-      // setTimeout(() => router.push("/admin/dashboard"), 1000);
     },
     onErrorCallback: (err) => {
       toast.error(err?.message || "Failed to update profile");

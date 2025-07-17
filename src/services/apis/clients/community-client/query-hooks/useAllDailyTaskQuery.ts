@@ -3,11 +3,20 @@ import { COMMUNITY_CLIENT } from '../communityClient';
 
 const DAILY_TASK_ENTRIES_QUERY_KEY = 'daily-task-entries-query-key';
 
-export const useAllDailyTaskQuery = (projectId?: string) => {
+export interface DailyTaskFilters {
+  status?: string;
+  priority?: string;
+  from?: string;
+  to?: string;
+  projectId?: string;
+  search?: string;
+}
+
+export const useAllDailyTaskQuery = (filters: DailyTaskFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
-    queryKey: [DAILY_TASK_ENTRIES_QUERY_KEY, projectId],
-    queryFn: () => COMMUNITY_CLIENT.getAllDailyTaskEntries(projectId),
-    networkMode: 'always'
+    queryKey: [DAILY_TASK_ENTRIES_QUERY_KEY, filters],
+    queryFn: () => COMMUNITY_CLIENT.getAllDailyTaskEntries(filters),
+    networkMode: 'always',
   });
 
   return {

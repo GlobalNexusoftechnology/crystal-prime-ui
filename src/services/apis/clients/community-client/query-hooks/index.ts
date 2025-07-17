@@ -114,6 +114,7 @@ export { useUpdateTaskStatusMutation } from "./useUpdateTaskStatusMutation";
 
 export { useCreateDailyTaskMutation } from "./useCreateDailyTaskMutation";
 export { useAllDailyTaskQuery } from "./useAllDailyTaskQuery";
+export { useUpdateDailyTaskMutation } from "./useUpdateDailyTaskMutation";
 
 export { useDashboardSummaryQuery } from "./useDashboardSummaryQuery";
 export { useUploadMultipleAttachmentsMutation } from "./useUploadMultipleAttachmentsMutation";
@@ -140,3 +141,4 @@ export { useAllEILogsDownloadExcelQuery } from "./useAllEILogsDownloadExcelQuery
 export { useEILogDownloadTemplateExcelQuery } from "./useEILogDownloadTemplateExcelQuery";
 export { useUploadEILogFromExcelMutation } from "./useUploadEILogFromExcelMutation";
 export { useUploadEILogAttachmentMutation } from "./useUploadEILogAttachmentMutation";
+export { useDeleteDailyTaskMutation } from "./useDeleteDailyTaskMutation";

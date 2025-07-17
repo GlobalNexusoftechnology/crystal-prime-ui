@@ -57,7 +57,10 @@ export function ProjectDetails({
           <ProjectInfo
             projectInfoData={{
               name: projectDetailData.name,
-              project_type: projectDetailData.project_type || "",
+              project_type:
+                typeof projectDetailData.project_type === "object" && projectDetailData.project_type !== null && "id" in projectDetailData.project_type
+                  ? (projectDetailData.project_type as { id: string }).id
+                  : projectDetailData.project_type || "",
               contact_person: projectDetailData.client.contact_person,
               description: projectDetailData.description || "",
               created_at: formatIndiaTime(
