@@ -35,7 +35,7 @@ export const TimelineAnalysis: React.FC<TimelineAnalysisProps> = ({
     <div className="border-b 2xl:border-[0.1vw] p-6 2xl:p-[1vw]">
     <div className="bg-white rounded-xl border border-gray-300 p-6 flex flex-col items-center gap-8 w-full">
       <div className="flex items-center justify-between mb-2 w-full">
-        <span className="font-semibold text-lg">Timeline Analysis</span>
+        <span className="font-semibold text-[1rem] 2xl:text-[1vw]">Timeline Analysis</span>
         <span className="ml-auto text-base font-medium flex items-center gap-2">
           Progress
           <span className="bg-green-500 text-white rounded px-3 py-1 text-sm font-semibold">
