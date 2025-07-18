@@ -1,4 +1,11 @@
-import { BasicProjectInfo, CostBudgetAnalysisMetric, ProjectSearchFilter } from "./components";
+import {
+  BasicProjectInfo,
+  CostBudgetAnalysisMetric,
+  ProjectSearchFilter,
+  DocumentSummaryTable,
+  FollowUpCommunicationMatrix,
+  TaskMetricsChart,
+} from "./components";
 
 export function ProjectReport() {
   return (
@@ -12,11 +19,32 @@ export function ProjectReport() {
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="flex flex-col gap-6 2xl:gap-[1vw] border-r 2xl:border-r-[0.1vw]">
           <BasicProjectInfo />
-          {/* <TaskSummary /> */}
+          <DocumentSummaryTable />
+          <FollowUpCommunicationMatrix
+            data={{
+              totalFollowUps: 22,
+              followUpsCompleted: 18,
+              pendingFollowUps: 3,
+              missedFollowUps: 1,
+              avgResponseTime: "4.2 hours",
+              escalatedItems: "2 (1 tech, 1 client)",
+            }}
+          />
         </div>
         <div className="flex flex-col gap-6 2xl:gap-[1vw]">
           <CostBudgetAnalysisMetric />
           {/* <FollowUpPerformance /> */}
+          <TaskMetricsChart
+            data={{
+              totalTasks: 40,
+              completed: 26,
+              inProgress: 32,
+              overdue: 28,
+              avgCompletionTime: "3.6 Days",
+              reassignmentCount: 4,
+              topPerformer: { name: "Meena", completed: 12 },
+            }}
+          />
         </div>
       </div>
     </div>
