@@ -8,6 +8,7 @@ import {
   ResponsiveContainer,
   LabelList,
   Cell,
+  CartesianGrid,
 } from "recharts";
 
 const funnelData = [
@@ -49,13 +50,19 @@ export const LeadFunnelChart: React.FC = () => {
       </div>
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={funnelData} barSize={48}>
+          <CartesianGrid strokeDasharray="3 3" vertical={false} />
           <XAxis
             dataKey="name"
             tick={{ fontSize: 15, fill: "#222" }}
             axisLine={false}
             tickLine={false}
           />
-          <YAxis hide domain={[10, 50]} />
+          <YAxis
+            domain={[0, 50]}
+            tick={{ fontSize: 15, fill: "#222" }}
+            axisLine={false}
+            tickLine={false}
+          />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: "#F3F4F6" }} />
           <Bar dataKey="value" radius={[6, 6, 0, 0]}>
             <LabelList
