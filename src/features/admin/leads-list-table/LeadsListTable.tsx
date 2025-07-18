@@ -10,7 +10,7 @@ import {
   leadsListColumn,
 } from "@/constants";
 import { ExportIcon } from "@/features";
-import { EditLeadModal, LeadDetailModal, AddLeadModal } from "./components";
+import { EditLeadModal, LeadDetailModal } from "./components";
 import {
   IDeleteLeadResponse,
   useAllLeadDownloadExcelQuery,
@@ -27,37 +27,60 @@ import { ImDownload2 } from "react-icons/im";
 import { usePermission } from "@/utils/hooks";
 import { useDebounce } from "@/utils/hooks";
 import toast from "react-hot-toast";
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from "@tanstack/react-query";
+import { DeleteModal } from "@/components";
 
-export function LeadsListTable() {
+interface LeadsListTableProps {
+  setAddLeadModalOpen: (arg0: boolean) => void;
+}
+
+export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const queryClient = useQueryClient();
   const [leadId, setLeadId] = useState("");
   const [isEditLeadModalOpen, setIsEditLeadModalOpen] = useState(false);
-  const [isAddLeadModalOpen, setAddLeadModalOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [selectedType, setSelectedType] = useState("All Type");
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
   const [followupFromDate, setFollowupFromDate] = useState("");
   const [followupToDate, setFollowupToDate] = useState("");
-  const [dateRangeFilter, setDateRangeFilter] = useState<"All" | "Daily" | "Weekly" | "Monthly">("All");
+  const [dateRangeFilter, setDateRangeFilter] = useState<
+    "All" | "Daily" | "Weekly" | "Monthly"
+  >("All");
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
     delay: 500,
-    onChangeCb: () => { }, // not needed for this use case
+    onChangeCb: () => {}, // not needed for this use case
   });
 
-  const filters = useMemo(() => ({
-    searchText: searchQuery,
-    statusId: selectedStatus,
-    typeId: selectedType,
-    dateRange: dateRangeFilter,
-    followupFrom: followupFromDate || undefined,
-    followupTo: followupToDate || undefined,
-  }), [searchQuery, selectedStatus, selectedType, dateRangeFilter, followupFromDate, followupToDate]);
+  const filters = useMemo(
+    () => ({
+      searchText: searchQuery,
+      statusId: selectedStatus,
+      typeId: selectedType,
+      dateRange: dateRangeFilter,
+      followupFrom: followupFromDate || undefined,
+      followupTo: followupToDate || undefined,
+    }),
+    [
+      searchQuery,
+      selectedStatus,
+      selectedType,
+      dateRangeFilter,
+      followupFromDate,
+      followupToDate,
+    ]
+  );
 
-  const { data: allLeadList, isLoading, isError, error, leadsRefetch } = useAllLeadsListQuery(filters);
+  const {
+    data: allLeadList,
+    isLoading,
+    isError,
+    error,
+  } = useAllLeadsListQuery(filters);
   const { allStatusesData } = useAllStatusesQuery();
   const { allTypesData } = useAllTypesQuery();
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
@@ -88,8 +111,12 @@ export function LeadsListTable() {
       statusId: selectedStatus,
       typeId: selectedType,
       dateRange: dateRangeFilter,
-      followupFrom: followupFromDate ? new Date(followupFromDate).toISOString() : undefined,
-      followupTo: followupToDate ? new Date(followupToDate).toISOString() : undefined,
+      followupFrom: followupFromDate
+        ? new Date(followupFromDate).toISOString()
+        : undefined,
+      followupTo: followupToDate
+        ? new Date(followupToDate).toISOString()
+        : undefined,
     };
     const blob = await onAllLeadDownloadExcel(filters);
     if (blob instanceof Blob) {
@@ -112,11 +139,15 @@ export function LeadsListTable() {
 
   const { onDeleteLead } = useDeleteLeadMutation({
     onSuccessCallback: (response: IDeleteLeadResponse) => {
-      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
+      queryClient.invalidateQueries({ queryKey: ["leads-list-query-key"] });
       toast.success(response?.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
-      toast.error(err?.message)
+      toast.error(err?.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
   });
 
@@ -153,34 +184,45 @@ export function LeadsListTable() {
     leadLeadManagementAction.push({
       label: "Delete",
       onClick: (row: ILeadsListProps) => {
-        onDeleteLead(row.id);
+        setDeleteId(row.id);
+        setShowDeleteModal(true);
       },
       className: "text-red-500",
     });
   }
 
   const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
-    (lead) => ({
-      id: lead?.id || "N/A",
-      first_name: lead?.first_name || "N/A",
-      last_name: lead?.last_name || "N/A",
-      phone: lead?.phone || "N/A",
-      other_contact: lead?.other_contact || "N/A",
-      email: lead?.email ? String(lead.email).split(/,\s*/).map(email => email.trim()).filter(Boolean) : [],
-      company: lead?.company || "N/A",
-      location: lead?.location || "N/A",
-      budget: lead?.budget || "N/A",
-      requirement: lead?.requirement || "N/A",
-      source_id: lead?.source?.name || "N/A",
-      status_id: lead?.status?.name || "N/A",
-      type_id: lead?.type?.name || "N/A",
-      created_at: lead?.created_at || "N/A",
-      updated_at: lead?.updated_at || "N/A",
-      deleted_at: lead?.deleted_at || "N/A",
-      assigned_to:
-        `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` ||
-        "Unassigned",
-    })
+    (lead) => {
+      const status = allStatusesData?.find((s) => s.id === lead?.status?.id);
+      return {
+        id: lead?.id || "N/A",
+        first_name: lead?.first_name || "N/A",
+        last_name: lead?.last_name || "N/A",
+        phone: lead?.phone || "N/A",
+        other_contact: lead?.other_contact || "N/A",
+        email: lead?.email
+          ? String(lead.email)
+              .split(/,\s*/)
+              .map((email) => email.trim())
+              .filter(Boolean)
+          : [],
+        company: lead?.company || "N/A",
+        location: lead?.location || "N/A",
+        budget: lead?.budget || "N/A",
+        possibility_of_conversion: lead?.possibility_of_conversion ?? null,
+        requirement: lead?.requirement || "N/A",
+        source_id: lead?.source?.name || "N/A",
+        status_id: status?.name || "N/A",
+        status_color: status?.color || "#888888",
+        type_id: lead?.type?.name || "N/A",
+        created_at: lead?.created_at || "N/A",
+        updated_at: lead?.updated_at || "N/A",
+        deleted_at: lead?.deleted_at || "N/A",
+        assigned_to:
+          `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` ||
+          "Unassigned",
+      };
+    }
   );
 
   const leadDetailModalData: ILeadsListDetailsProps = {
@@ -194,6 +236,8 @@ export function LeadsListTable() {
     requirement: leadDetailById?.requirement || "null",
     location: leadDetailById?.location || "null",
     budget: leadDetailById?.budget || "null",
+    possibility_of_conversion:
+      leadDetailById?.possibility_of_conversion ?? null,
     status: leadDetailById?.status || {
       id: leadDetailById?.status?.id || "null",
       name: leadDetailById?.status?.name || "null",
@@ -297,10 +341,17 @@ export function LeadsListTable() {
     setFollowupToDate(date);
   };
 
+  const leadNameToDelete = deleteId
+    ? (() => {
+        const lead = leadsList.find((l) => l.id === deleteId);
+        return lead ? `${lead.first_name} ${lead.last_name}` : "";
+      })()
+    : "";
+
   if (isError) {
     return (
       <div className="text-center py-6 text-red-500">
-        Error loading leads: {error?.message || 'Unknown error'}
+        Error loading leads: {error?.message || "Unknown error"}
       </div>
     );
   }
@@ -330,24 +381,6 @@ export function LeadsListTable() {
               />
             </div>
           )}
-          <Dropdown
-            options={statusOptions}
-            value={selectedStatus}
-            onChange={handleStatusChange}
-            dropdownWidth="w-full md:w-fit"
-          />
-          <Dropdown
-            options={typeOptions}
-            value={selectedType}
-            onChange={handleTypeChange}
-            dropdownWidth="w-full md:w-fit"
-          />
-          <Dropdown
-            options={dateRangeOptions}
-            value={dateRangeFilter}
-            onChange={handleDateRangeChange}
-            dropdownWidth="w-full md:w-fit"
-          />
           <Button
             title="Export"
             variant="background-white"
@@ -395,6 +428,24 @@ export function LeadsListTable() {
             />
           </div>
         )}
+        <Dropdown
+          options={statusOptions}
+          value={selectedStatus}
+          onChange={handleStatusChange}
+          dropdownWidth="w-full md:w-fit"
+        />
+        <Dropdown
+          options={typeOptions}
+          value={selectedType}
+          onChange={handleTypeChange}
+          dropdownWidth="w-full md:w-fit"
+        />
+        <Dropdown
+          options={dateRangeOptions}
+          value={dateRangeFilter}
+          onChange={handleDateRangeChange}
+          dropdownWidth="w-full md:w-fit"
+        />
       </div>
       {isLoading ? (
         <div className="text-center py-6 text-gray-500">Loading leads...</div>
@@ -422,9 +473,22 @@ export function LeadsListTable() {
           lead={leadDetailById}
         />
       )}
-      {isAddLeadModalOpen && (
-        <AddLeadModal setAddLeadModalOpen={setAddLeadModalOpen} leadsRefetch={leadsRefetch} />
-      )}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId) onDeleteLead(deleteId);
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        isLoading={false}
+        title="Delete Lead"
+        message="Are you sure you want to delete this lead "
+        itemName={leadNameToDelete}
+      />
     </div>
   );
 }

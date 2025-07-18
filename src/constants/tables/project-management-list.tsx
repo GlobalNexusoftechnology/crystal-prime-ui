@@ -1,133 +1,48 @@
-import { ITableAction } from "../table";
-
-export interface DetailedProject {
-  id: string;
-  type: "detailed" | "summary";
-  color: string;
-  projectName: string;
-  leadName?: string;
-  renewalDate?: string;
+// Project basic information
+export interface IProjectInfo {
+  name: string;
+  project_type: string;
+  contact_person: string;
+  description: string;
+  created_at: string; 
+  updated_at: string;
 }
 
-export interface SummaryProject {
-  id: string;
-  type: "summary";
-  projectName: string;
-  leadName: string;
-  renewalDate: string;
-  color: string;
-}
-
-export type Project = DetailedProject | SummaryProject;
-
-export interface ProjectSection {
-  id: string;
+export interface ITaskInfo {
   title: string;
-  projects: Project[];
+  assigned_to: string;
+  description: string;
+  created_at: string; 
+  updated_at: string;
 }
 
-export const ProjectManagementList: ProjectSection[] = [
-  {
-    id: "open",
-    title: "Open Projects",
-    projects: [
-      {
-        id: "open-1",
-        type: "summary",
-        projectName: "E-Commerce App Development",
-        leadName: "Nisha Sharma",
-        renewalDate: "20/02/2022",
-        color: "#BAD8FD",
-      },
-      {
-        id: "open-2",
-        type: "summary",
-        projectName: "E-Commerce App Development",
-        leadName: "Nisha Sharma",
-        renewalDate: "20/02/2022",
-        color: "#F8F8F8",
-      },
-    ],
-  },
-  {
-    id: "in-progress Project",
-    title: "In Progress Projects",
-    projects: [
-      {
-        id: "progress-1",
-        type: "summary",
-        projectName: "E-Commerce App Development",
-        leadName: "Nisha Sharma",
-        renewalDate: "20/02/2022",
-        color: "#FFB866",
-      },
-      {
-        id: "progress-2",
-        type: "summary",
-        projectName: "E-Commerce App Development",
-        leadName: "Nisha Sharma",
-        renewalDate: "20/02/2022",
-        color: "#F8F8F8",
-      },
-    ],
-  },
-  {
-    id: "final",
-    title: "Final Projects",
-    projects: [
-      {
-        id: "final-1",
-        type: "summary",
-        projectName: "E-Commerce App Development",
-        leadName: "Nisha Sharma",
-        renewalDate: "20/02/2022",
-        color: "#7BE5A1",
-      },
-      {
-        id: "final-2",
-        type: "summary",
-        projectName: "E-Commerce App Development",
-        leadName: "Nisha Sharma",
-        renewalDate: "20/02/2022",
-        color: "#F8F8F8",
-      },
-    ],
-  },
-];
+// Client information
+export interface IClientInfo {
+  client_name: string;
+  company_name: string;
+  contact_person: string;
+  phone: string;
+  email: string;
+}
 
-export const action: ITableAction<DetailedProject>[] = [
-  {
-    label: "Edit",
-    onClick: (row) => {
-      console.log("Edit clicked", row.id);
-    },
-    className: "text-blue-500",
-  },
-  {
-    label: "View",
-    onClick: (row) => {
-      console.log("View clicked", row.id);
-    },
-    className: "text-blue-500",
-  },
-  {
-    label: "Delete",
-    onClick: (row) => {
-      console.log("Delete clicked", row.id);
-    },
-    className: "text-red-500",
-  },
-  {
-    label: "Explore As xlsx ",
-    onClick: (row) => {
-      console.log("Explore As xlsx clicked", row.id);
-    },
-    className: "text-blue-500 whitespace-nowrap",
-  },
-];
+// Cost & timeline estimates
+export interface IEstimates {
+  start_date: string;
+  end_date: string;
+  actual_start?: string;
+  actual_end?: string;
+  estimated_cost: string;
+  extra_cost: string;
+  actual_cost?: string;
+  labour_cost: string;
+  overhead_cost: string;
+  budget: string;
+}
 
-/**
- * Column definitions for the Follow Up Management table.
- */
-
-
+// Document details
+export interface IDocumentInfo {
+  name: string;
+  uploaded_by: string;
+  created_at: string;
+  file_path: string;
+}

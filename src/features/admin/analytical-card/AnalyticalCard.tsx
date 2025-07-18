@@ -27,7 +27,7 @@ export function AnalyticalCard({ data }: AnalyticalCardDataProps) {
         </div>
       </div>
       <div className="flex  items-center justify-between ">
-        <p className="text-sm 2xl:text-[0.875vw] text-gray-700 font-medium">
+        <p className="text-[0.9rem] 2xl:text-[0.875vw] text-gray-700 font-medium">
           {data.title}
         </p>
       </div>

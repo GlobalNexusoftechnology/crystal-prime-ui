@@ -2,15 +2,12 @@ import { ReactNode } from "react";
 
 import {
   DashboardIcon,
-  // FollowUpManagementIcon,
-  // DocumentManagementIcon,
+  EILogIcon,
   LeadManagementIcon,
-  // ProjectManagementIcon,
-  // ProjectManagementIcon,
-  
+  ProjectManagementIcon,  
   SettingsIcon,
   StaffManagementIcon,
-  // TaskManagementIcon,
+  UserListRoundedIcon,
 } from "@/features";
 
 type TSidebarPermission = {
@@ -34,6 +31,10 @@ export interface IAdminSidebarLink {
    * Permission mapping for the sidebar link.
    */
   permission: TSidebarPermission;
+  /**
+   * Optional sublinks for dropdown/section links.
+   */
+  links?: IAdminSidebarLink[];
 }
 
 /**
@@ -64,27 +65,13 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     activeIcon: <LeadManagementIcon color="#034A9F" />,
     permission: { module: "LEAD_MANAGEMENT", actions: "VIEW" },
   },
-  // {
-  //   path: "/admin/project-management",
-  //   name: "Project Management",
-  //   icon: <ProjectManagementIcon />,
-  //   activeIcon: <ProjectManagementIcon color="#034A9F" />,
-  //   permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" },
-  // },
-  // {
-  //   path: "/admin/task-management",
-  //   name: "Task Management",
-  //   icon: <TaskManagementIcon />,
-  //   activeIcon: <TaskManagementIcon color="#034A9F" />,
-  //   permission: { module: "TASK_MANAGEMENT", actions: "VIEW" }, // Assuming task is under project
-  // },
-  // {
-  //   path: "/admin/follow-up-management",
-  //   name: "Follow Up Management",
-  //   icon: <FollowUpManagementIcon />,
-  //   activeIcon: <FollowUpManagementIcon color="#034A9F" />,
-  //   permission: { module: "FOLLOW_UP_MANAGEMENT", actions: "VIEW" }, // Adjust if separate module
-  // },
+  {
+    path: "/admin/project-management",
+    name: "Project Management",
+    icon: <ProjectManagementIcon />,
+    activeIcon: <ProjectManagementIcon color="#034A9F" />,
+    permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" },
+  },
   {
     path: "/admin/staff-management",
     name: "Staff Management",
@@ -92,25 +79,69 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     activeIcon: <StaffManagementIcon color="#034A9F" />,
     permission: { module: "STAFF_MANAGEMENT", actions: "VIEW" },
   },
-   {
-    path: "/admin/client-management",
-    name: "Client Management",
-    icon: <StaffManagementIcon />,
-    activeIcon: <StaffManagementIcon color="#034A9F" />,
-    permission: { module: "CLIENT_MANAGEMENT", actions: "VIEW" },
+  {
+   path: "/admin/client-management",
+   name: "Client Management",
+   icon: <UserListRoundedIcon />,
+   activeIcon: <UserListRoundedIcon color="#034A9F" />,
+   permission: { module: "CLIENT_MANAGEMENT", actions: "VIEW" },
   },
-  // {
-  //   path: "/admin/document-management",
-  //   name: "Document Management",
-  //   icon: <DocumentManagementIcon />,
-  //   activeIcon: <DocumentManagementIcon color="#034A9F" />,
-  //   permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" }, // Or create new module key
-  // },
+  {
+    path: "/admin/ei-log-management",
+    name: "EI Log Management",
+    icon: <EILogIcon />,
+    activeIcon: <EILogIcon color="#034A9F" />,
+    permission: { module: "EI_LOG_MANAGEMENT", actions: "VIEW" },
+  },
+  {
+    name: "Reports",
+    path: "#reports",
+    icon: <DashboardIcon />,
+    activeIcon: <DashboardIcon color="#034A9F" />,
+    permission: { module: "REPORTS", actions: "VIEW" },
+    links: [
+      {
+        path: "/admin/reports/staff-performance",
+        name: "Staff Performance",
+        icon: <StaffManagementIcon />,
+        activeIcon: <StaffManagementIcon color="#034A9F" />,
+        permission: { module: "STAFF_PERFORMANCE_REPORT", actions: "VIEW" },
+      },
+      {
+        path: "/admin/reports/project-performance",
+        name: "Project Performance",
+        icon: <ProjectManagementIcon />,
+        activeIcon: <ProjectManagementIcon color="#034A9F" />,
+        permission: { module: "PROJECT_PERFORMANCE_REPORT", actions: "VIEW" },
+      },
+      {
+        path: "/admin/reports/lead-analytics",
+        name: "Lead Analytics",
+        icon: <LeadManagementIcon />,
+        activeIcon: <LeadManagementIcon color="#034A9F" />,
+        permission: { module: "LEAD_ANALYTICS_REPORT", actions: "VIEW" },
+      },
+      {
+        path: "/admin/reports/business-analysis",
+        name: "Business Analysis",
+        icon: <DashboardIcon />,
+        activeIcon: <DashboardIcon color="#034A9F" />,
+        permission: { module: "BUSINESS_ANALYSIS_REPORT", actions: "VIEW" },
+      },
+      {
+        path: "/admin/reports/public-business-dashboard",
+        name: "PB Dashboard",
+        icon: <DashboardIcon />,
+        activeIcon: <DashboardIcon color="#034A9F" />,
+        permission: { module: "PUBLIC_BUSINESS_DASHBOARD", actions: "VIEW" },
+      },
+    ],
+  },
   {
     path: "/admin/settings",
     name: "Settings",
     icon: <SettingsIcon />,
     activeIcon: <SettingsIcon color="#034A9F" />,
-    permission: { module: "SETTINGS", actions: "VIEW" }, // Example: only visible to HR/manager
+    permission: { module: "SETTINGS", actions: "VIEW" }, 
   },
 ];

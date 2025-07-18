@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SearchBar, Button, Table } from "@/components";
+import { SearchBar, Button, Table, DeleteModal } from "@/components";
 import {
   IAllStatusesList,
   useAllStatusesQuery,
@@ -18,7 +18,10 @@ export function LeadStatus() {
   const [selectedStatus, setSelectedStatus] = useState<{
     id: string;
     name: string;
+    color: string;
   } | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
@@ -30,9 +33,13 @@ export function LeadStatus() {
     onSuccessCallback: (data) => {
       toast.success(data.message);
       allStatuses();
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
   });
 
@@ -41,6 +48,7 @@ export function LeadStatus() {
     (lead) => ({
       id: lead?.id || "N/A",
       name: lead?.name || "N/A",
+      color: lead?.color ?? undefined,
       created_at: `${formatDate(lead?.created_at)}` || "N/A",
       updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
     })
@@ -63,7 +71,7 @@ export function LeadStatus() {
       label: "Edit",
       onClick: (row: IAllStatusesList) => {
         console.log("Edit clicked", row.id);
-        setSelectedStatus({ id: row.id, name: row.name });
+        setSelectedStatus({ id: row.id, name: row.name, color: row.color || "" });
         setIsAddModalOpen(true);
       },
       className: "text-blue-500",
@@ -71,8 +79,8 @@ export function LeadStatus() {
     {
       label: "Delete",
       onClick: (row: IAllStatusesList) => {
-        console.log("Delete clicked", row.id);
-        onDeleteStatuses(row.id);
+        setDeleteId(row.id);
+        setShowDeleteModal(true);
       },
       className: "text-red-500",
     },
@@ -89,6 +97,10 @@ export function LeadStatus() {
     setIsAddModalOpen(false);
     setSelectedStatus(null);
   };
+
+  const statusNameToDelete = deleteId
+    ? filteredStatusesList.find((s) => s.id === deleteId)?.name || ""
+    : "";
 
   return (
     <div className="bg-[#F8F8F8] p-5 rounded-xl">
@@ -129,9 +141,26 @@ export function LeadStatus() {
           onAddStatusSuccessCallback={handleAddStatusSuccessCallback}
           statusId={selectedStatus?.id}
           statusName={selectedStatus?.name}
+          statusColor={selectedStatus?.color}
           onClearEditData={() => setSelectedStatus(null)}
         />
       )}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId) onDeleteStatuses(deleteId);
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        isLoading={false}
+        title="Delete Lead Status"
+        message="Are you sure you want to delete this Lead Status "
+        itemName={statusNameToDelete}
+      />
     </div>
   );
 }

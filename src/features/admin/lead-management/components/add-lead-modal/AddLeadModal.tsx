@@ -1,10 +1,4 @@
-import {
-  Button,
-  Checkbox,
-  Dropdown,
-  InputField,
-  ModalOverlay,
-} from "@/components";
+import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
 import {
   ICreateLeadPayload,
   ICreateLeadResponse,
@@ -21,7 +15,7 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import * as Yup from "yup";
 import { Plus, X } from "lucide-react";
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from "@tanstack/react-query";
 
 interface IAddLeadModalProps {
   setAddLeadModalOpen: (open: boolean) => void;
@@ -49,9 +43,13 @@ const validationSchema = Yup.object().shape({
   status_id: Yup.string().required("Status is required"),
   type_id: Yup.string().required("Type is required"),
   assigned_to: Yup.string().required("Assigned To is required"),
-});
+  other_contact: Yup.string()
+    .matches(/^[0-9]{8,15}$/, "Other Contact must be 8 to 15 digits"),});
 
-export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModalProps) {
+export function AddLeadModal({
+  setAddLeadModalOpen,
+  leadsRefetch,
+}: IAddLeadModalProps) {
   const queryClient = useQueryClient();
   const { allSourcesData } = useAllSourcesQuery();
   const { allStatusesData } = useAllStatusesQuery();
@@ -60,7 +58,7 @@ export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModa
 
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (response: ICreateLeadResponse) => {
-      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
+      queryClient.invalidateQueries({ queryKey: ["leads-list-query-key"] });
       if (leadsRefetch) {
         leadsRefetch();
       }
@@ -94,7 +92,7 @@ export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModa
       value: user?.id.toString(),
     })) || [];
 
-   const typeOptions =
+  const typeOptions =
     allTypesData?.map((type) => ({
       label: type?.name,
       value: type?.id.toString(),
@@ -108,7 +106,9 @@ export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModa
     >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
-          <h2 className="text-lg 2xl:text-[1.125vw] font-semibold">Lead Information</h2>
+          <h2 className="text-lg 2xl:text-[1.125vw] font-semibold">
+            Lead Information
+          </h2>
           <Formik<ICreateLeadPayload>
             initialValues={{
               first_name: "",
@@ -120,6 +120,7 @@ export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModa
               email: [""],
               location: "",
               budget: 0,
+              possibility_of_conversion: null,
               requirement: "",
               source_id: "",
               status_id: "",
@@ -171,25 +172,50 @@ export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModa
                       inputProps={{ name: "phone" }}
                     />
                     {errors.phone && touched.phone && (
-                      <p className="text-red-500 text-sm 2xl:text-[0.9vw]">
+                      <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw]">
                         {errors.phone}
                       </p>
                     )}
                   </div>
                 </div>
-                <div className="w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
                   <InputField
-                      label="Other Contact"
-                      placeholder="Enter Other Contact"
-                      name="other_contact"
-                      value={values?.other_contact}
-                      onChange={handleChange}
-                    />
+                    label="Other Contact"
+                    placeholder="Enter Other Contact"
+                    name="other_contact"
+                    type="text"
+                    value={values?.other_contact}
+                    onChange={e => {
+                      let digitsOnly = e.target.value.replace(/[^0-9]/g, "");
+                      if (digitsOnly.length > 15) digitsOnly = digitsOnly.slice(0, 15);
+                      setFieldValue("other_contact", digitsOnly);
+                    }}
+                    error={touched.other_contact && errors.other_contact}
+                  />
+                  <InputField
+                    label="Possibility of Conversion (%)"
+                    placeholder="Enter Possibility of Conversion"
+                    name="possibility_of_conversion"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value={values.possibility_of_conversion ?? ""}
+                    onChange={(e) => {
+                      setFieldValue(
+                        "possibility_of_conversion",
+                        e.target.value === "" ? 0 : Number(e.target.value)
+                      );
+                    }}
+                  />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
-                  <div className={`w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative`}>
+                  <div
+                    className={`w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative`}
+                  >
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Emails</label>
+                      <label className="text-[0.9rem] font-medium text-gray-700">
+                        Emails
+                      </label>
                       {values.email.map((_, index) => (
                         <div key={index} className="flex gap-2">
                           <InputField
@@ -198,7 +224,11 @@ export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModa
                             type="email"
                             value={values.email[index]}
                             onChange={handleChange}
-                            error={touched.email && Array.isArray(errors.email) && errors.email[index]}
+                            error={
+                              touched.email &&
+                              Array.isArray(errors.email) &&
+                              errors.email[index]
+                            }
                           />
                           {index > 0 && (
                             <button
@@ -220,7 +250,7 @@ export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModa
                         onClick={() => {
                           setFieldValue("email", [...values.email, ""]);
                         }}
-                        className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+                        className="flex items-center gap-1 text-[0.9rem] text-blue-600 hover:text-blue-800"
                       >
                         <Plus className="w-4 h-4" />
                         Add Another Email
@@ -289,16 +319,6 @@ export function AddLeadModal({ setAddLeadModalOpen, leadsRefetch }: IAddLeadModa
                     value={values.requirement}
                     onChange={handleChange}
                     error={touched.requirement && errors.requirement}
-                  />
-                </div>
-                <div className="py-2 2xl:py-[0.5vw]">
-                  <Checkbox
-                    label="Escalate To"
-                    name="escalate_to"
-                    checked={values.escalate_to}
-                    onChange={(e) =>
-                      setFieldValue("escalate_to", e.target.checked)
-                    }
                   />
                 </div>
                 <div className="flex justify-between mt-6 2xl:mt-[1.5vw] space-x-4">

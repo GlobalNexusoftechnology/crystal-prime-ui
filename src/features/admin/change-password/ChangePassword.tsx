@@ -7,6 +7,7 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import * as Yup from "yup";
+import { useRouter } from "next/navigation";
 
 /**
  * `ChangePassword` component renders a password change form
@@ -15,6 +16,7 @@ import * as Yup from "yup";
  * @returns JSX.Element representing the change password form.
  */
 export function ChangePassword() {
+  const router = useRouter();
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -141,6 +143,7 @@ export function ChangePassword() {
                   type="button"
                   title="Cancel"
                   variant="primary-outline"
+                  onClick={() => router.back()}
                 />
                 <Button type="submit" title="Save" disabled={isPending} />
               </div>

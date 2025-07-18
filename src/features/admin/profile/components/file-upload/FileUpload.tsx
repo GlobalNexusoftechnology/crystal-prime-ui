@@ -52,7 +52,7 @@ export function FileUpload() {
           </span>{" "}
           or drag and drop
         </p>
-        <p className="text-sm 2xl:text-[0.875vw] text-gray-400">
+        <p className="text-[0.9rem] 2xl:text-[0.875vw] text-gray-400">
           SVG, PNG, JPG or GIF (max. 800×400px)
         </p>
       </div>

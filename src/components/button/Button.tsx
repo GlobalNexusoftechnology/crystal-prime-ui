@@ -14,6 +14,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   rightIcon?: ReactNode;
   actionIcon?: ReactNode;
   width?: string;
+  hover?: boolean;
   tooltip?: string;
 }
 
@@ -27,6 +28,7 @@ export const Button: React.FC<ButtonProps> = ({
   actionIcon: ActionIcon,
   tooltip,
   width = "w-full",
+  hover,
   ...props
 }) => {
   const variantClasses = {
@@ -36,14 +38,14 @@ export const Button: React.FC<ButtonProps> = ({
     secondary: "bg-secondary text-white hover:bg-secondary",
     "secondary-outline":
       "border 2xl:border-[0.1vw] border-secondary text-secondary hover:text-white hover:bg-secondary",
-    "background-white": "border 2xl:border-[0.1vw] bg-white border-gray-300",
+    "background-white": `border 2xl:border-[0.1vw] bg-white border-gray-300 ${hover ? "hover:border-primary hover:text-primary" : ""}  duration-300`,
     "primary-outline-blue":
       "border 2xl:border-[0.1vw] border-primary text-primary hover:scale-95 duration-300",
   };
   return (
     <div className={`${width} relative group inline-block`}>
       <button
-        className={`flex items-center justify-center rounded-xl w-full 2xl:rounded-[0.75vw] h-auto 2xl:px-[1vw] 2xl:py-[0.65vw] px-4 py-3 space-x-2 2xl:space-x-[0.5vw] font-medium ${
+        className={`flex items-center justify-center rounded-xl w-full 2xl:rounded-[0.75vw] h-auto 2xl:px-[1vw] 2xl:py-[0.65vw] px-4 py-2 space-x-2 2xl:space-x-[0.5vw] font-medium ${
           variantClasses[variant]
         } ${disabled || isLoading ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={disabled || isLoading}
@@ -59,7 +61,7 @@ export const Button: React.FC<ButtonProps> = ({
               </span>
             )}
             {title && (
-              <span className="text-sm 2xl:text-[1vw] text-nowrap">
+              <span className="text-[0.9rem] 2xl:text-[1vw] text-nowrap">
                 {title}
               </span>
             )}

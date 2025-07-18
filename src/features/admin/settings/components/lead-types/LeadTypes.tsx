@@ -12,6 +12,7 @@ import { formatDate, IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import { usePermission } from "@/utils/hooks";
 import { AddLeadTypesModal } from "./components";
+import { DeleteModal } from "@/components";
 
 export function LeadTypes() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,6 +21,8 @@ export function LeadTypes() {
     name: string;
   } | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { hasPermission } = usePermission();
   const cavAddTypes = hasPermission(EModule.LEAD_SOURCES, EAction.ADD);
   const cavEditTypes = hasPermission(EModule.LEAD_SOURCES, EAction.EDIT);
@@ -35,9 +38,13 @@ export function LeadTypes() {
     onSuccessCallback: (data) => {
       toast.success(data.message);
       fetchAllTypes();
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
+      setShowDeleteModal(false);
+      setDeleteId(null);
     },
   });
 
@@ -80,7 +87,8 @@ export function LeadTypes() {
     leadTypesAction.push({
       label: "Delete",
       onClick: (row: IAllTypesList) => {
-        onDeleteTypes(row.id);
+        setDeleteId(row.id);
+        setShowDeleteModal(true);
       },
       className: "text-red-500",
     });
@@ -98,6 +106,10 @@ export function LeadTypes() {
     setIsAddModalOpen(false);
     setSelectedType(null);
   };
+
+  const typeNameToDelete = deleteId
+    ? filteredTypesList.find((t) => t.id === deleteId)?.name || ""
+    : "";
 
   return (
     <div className="bg-[#F8F8F8] p-5 rounded-xl">
@@ -142,6 +154,22 @@ export function LeadTypes() {
           onClearEditData={() => setSelectedType(null)}
         />
       )}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        onConfirm={() => {
+          if (deleteId) onDeleteTypes(deleteId);
+          setShowDeleteModal(false);
+          setDeleteId(null);
+        }}
+        isLoading={false}
+        title="Delete Lead Type"
+        message="Are you sure you want to delete this Lead Type "
+        itemName={typeNameToDelete}
+      />
     </div>
   );
 }

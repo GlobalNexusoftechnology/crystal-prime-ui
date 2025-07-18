@@ -16,7 +16,7 @@ import {
   useUpdateLeadMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from "@tanstack/react-query";
 import { Formik, Form } from "formik";
 import toast from "react-hot-toast";
 import PhoneInput from "react-phone-input-2";
@@ -52,11 +52,14 @@ const validationSchema = Yup.object().shape({
   status_id: Yup.string().required("Status is required"),
   type_id: Yup.string().required("Type is required"),
   assigned_to: Yup.string().required("Assigned To is required"),
+  other_contact: Yup.string()
+    .matches(/^[0-9]{8,15}$/, "Other Contact must be 8 to 15 digits")
+    .required("Other Contact is required"),
 });
 
 export function EditLeadModal({
   setIsEditLeadModalOpen,
-  lead
+  lead,
 }: IEditLeadModalProps) {
   const queryClient = useQueryClient();
   const { allSourcesData } = useAllSourcesQuery();
@@ -66,7 +69,7 @@ export function EditLeadModal({
 
   const { onEditLead, isPending } = useUpdateLeadMutation({
     onSuccessCallback: (response: IUpdateLeadResponse) => {
-      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
+      queryClient.invalidateQueries({ queryKey: ["leads-list-query-key"] });
       toast.success(response.message);
       setIsEditLeadModalOpen(false);
     },
@@ -133,13 +136,18 @@ export function EditLeadModal({
     phone: lead.phone || "",
     other_contact: lead.other_contact || "",
     escalate_to: lead.escalate_to || false,
-    email: typeof lead.email === 'string' 
-      ? lead.email.split(',').map((email: string) => email.trim()).filter((email: string) => email !== '')
-      : Array.isArray(lead.email) 
-        ? lead.email 
+    email:
+      typeof lead.email === "string"
+        ? lead.email
+            .split(",")
+            .map((email: string) => email.trim())
+            .filter((email: string) => email !== "")
+        : Array.isArray(lead.email)
+        ? lead.email
         : [""],
     location: lead.location || "",
     budget: lead.budget ?? 0,
+    possibility_of_conversion: lead.possibility_of_conversion ?? "",
     requirement: lead.requirement || "",
     source_id: lead.source?.id?.toString() || lead.source_id?.toString() || "",
     status_id: lead.status?.id?.toString() || lead.status_id?.toString() || "",
@@ -169,6 +177,9 @@ export function EditLeadModal({
                 payload: {
                   ...values,
                   budget: Number(values.budget),
+                  possibility_of_conversion: values.possibility_of_conversion
+                    ? Number(values.possibility_of_conversion)
+                    : null,
                 },
               });
 
@@ -235,25 +246,48 @@ export function EditLeadModal({
                         inputProps={{ name: "phone" }}
                       />
                       {errors.phone && touched.phone && (
-                        <p className="text-red-500 text-sm 2xl:text-[0.9vw]">
+                        <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw]">
                           {errors.phone}
                         </p>
                       )}
                     </div>
                   </div>
-                  <div className="w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
+                  <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
                     <InputField
-                        label="Other Contact"
-                        placeholder="Enter Other Contact"
-                        name="other_contact"
-                        value={values?.other_contact}
-                        onChange={handleChange}
-                      />
+                      label="Other Contact"
+                      placeholder="Enter Other Contact"
+                      name="other_contact"
+                      type="text"
+                      value={values?.other_contact}
+                      onChange={e => {
+                        let digitsOnly = e.target.value.replace(/[^0-9]/g, "");
+                        if (digitsOnly.length > 15) digitsOnly = digitsOnly.slice(0, 15);
+                        setFieldValue("other_contact", digitsOnly);
+                      }}
+                      error={touched.other_contact && errors.other_contact}
+                    />
+                    <InputField
+                      label="Possibility of Conversion (%)"
+                      placeholder="Enter Possibility of Conversion"
+                      name="possibility_of_conversion"
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={values.possibility_of_conversion ?? ""}
+                      onChange={(e) => {
+                        setFieldValue(
+                          "possibility_of_conversion",
+                          e.target.value === "" ? 0 : Number(e.target.value)
+                        );
+                      }}
+                    />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                     <div className="w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
                       <div className="space-y-2">
-                        <label className="block text-sm font-medium text-gray-700">Emails</label>
+                        <label className="block text-[0.9rem] font-medium text-gray-700">
+                          Emails
+                        </label>
                         {values.email.map((_, index) => (
                           <div key={index} className="flex gap-2">
                             <InputField
@@ -262,7 +296,11 @@ export function EditLeadModal({
                               type="email"
                               value={values.email[index]}
                               onChange={handleChange}
-                              error={touched.email && Array.isArray(errors.email) && errors.email[index]}
+                              error={
+                                touched.email &&
+                                Array.isArray(errors.email) &&
+                                errors.email[index]
+                              }
                             />
                             {index > 0 && (
                               <button
@@ -284,7 +322,7 @@ export function EditLeadModal({
                           onClick={() => {
                             setFieldValue("email", [...values.email, ""]);
                           }}
-                          className="flex items-center gap-1 text-sm text-blue-600 hover:text-blue-800"
+                          className="flex items-center gap-1 text-[0.9rem] text-blue-600 hover:text-blue-800"
                         >
                           <Plus className="w-4 h-4" />
                           Add Another Email

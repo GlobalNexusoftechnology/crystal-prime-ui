@@ -1,4 +1,5 @@
-import { IUser } from "@/services/stores";
+import { IUser } from "@/services/stores/auth-store/types";
+import { IApiError } from "@/utils";
 
 export interface ILoginPayload {
   email: string;
@@ -39,6 +40,7 @@ export interface IAllStatusesList {
   created_at: string;
   updated_at: string;
   name: string;
+  color?: string;
 }
 
 export interface IAllStatusesResponse {
@@ -110,6 +112,130 @@ export interface IDeleteTypeResponse {
 }
 // END LEAD TYPES
 
+// START EI LOG TYPE MASTER
+export interface ICreateEILogTypePayload {
+  name: string;
+}
+
+export interface ICreateEILogTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateEILogTypePayload;
+}
+
+export interface IUpdateEILogTypePayload {
+  id: string;
+  payload: ICreateEILogTypePayload;
+}
+
+export interface IUpdateEILogTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateEILogTypePayload;
+}
+
+export interface IEILogType {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+}
+
+export interface IAllEILogTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILogType[];
+}
+
+export interface IAllEILogTypeList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+}
+
+export interface IAllEILogTypesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllEILogTypeList[];
+}
+
+export interface IDeleteEILogTypeResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateEILogTypePayload;
+}
+// END EI LOG TYPE MASTER
+
+// START EI LOG HEAD MASTER
+export interface ICreateEILogHeadPayload {
+  name: string;
+}
+
+export interface ICreateEILogHeadResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateEILogHeadPayload;
+}
+
+export interface IUpdateEILogHeadPayload {
+  id: string;
+  payload: ICreateEILogHeadPayload;
+}
+
+export interface IUpdateEILogHeadResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateEILogHeadPayload;
+}
+
+export interface IEILogHead {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  name: string;
+}
+
+export interface IAllEILogHeadResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILogHead[];
+}
+
+export interface IAllEILogHeadList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+}
+
+export interface IAllEILogHeadsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IAllEILogHeadList[];
+}
+
+export interface IDeleteEILogHeadResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateEILogHeadPayload;
+}
+// END EI LOG HEAD MASTER
+
 export interface IAllLeadsList {
   id: string;
   created_at: string;
@@ -126,6 +252,7 @@ export interface IAllLeadsList {
   email: string;
   location: string;
   budget: string;
+  possibility_of_conversion?: number | null;
   requirement: string;
   source: ISource;
   status: IStatus;
@@ -137,7 +264,7 @@ export interface IStats {
   totalLeads: number;
   assignedToMe: number;
   profileSent: number;
-  businessDone: number;
+  convertedLeads: number;
   todayFollowups: 0;
 
 }
@@ -274,6 +401,7 @@ export interface ICreateLeadPayload {
   email: string[];
   location: string;
   budget?: number | null;
+  possibility_of_conversion?: number | null;
   requirement: string;
   source_id: string;
   status_id: string;
@@ -327,6 +455,12 @@ export interface IUploadAttachmentResponse {
     fileName: string;
   };
 }
+
+export interface IUploadMultipleAttachmentResponse {
+  status: string;
+  message: string;
+  data: string[]
+}
 export interface IUploadLeadFromExcelResponse {
   status: string;
   message: string;
@@ -351,6 +485,7 @@ export interface ICreateLeadAttachmentResponse {
 // all status
 export interface ICreateStatusesPayload {
   name: string;
+  color?: string;
 }
 export interface ICreateStatusesResponse {
   status: boolean;
@@ -716,7 +851,7 @@ export interface IUpdateUserResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IUpdateUserPayload;
+  data: IUser;
 }
 //delete
 export interface IDeleteUserResponse {
@@ -817,6 +952,53 @@ export interface IAllLeadFollowUpResponse {
   data: LeadFollowupsList[];
 }
 
+// Client Followups APIs Types
+//------------------------------------------------------
+
+export interface IProjectFollowupsList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  status: ProjectFollowupStatus;
+  due_date: string;
+  completed_date: string | null;
+  remarks: string;
+  user: IUsersDetails;
+}
+
+export enum ProjectFollowupStatus {
+  PENDING = "PENDING",
+  RESCHEDULE = "RESCHEDULE",
+  AWAITING_RESPONSE = "AWAITING RESPONSE",
+  NO_RESPONSE = "NO RESPONSE",
+  FAILED = "FAILED",
+  COMPLETED = "COMPLETED",
+}
+
+export interface ICreateProjectFollowUpPayload {
+  client_id: string; // Added for client followup
+  user_id?: string;
+  status: string;
+  due_date?: string;
+  remarks?: string;
+}
+
+export interface ICreateProjectFollowUpResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectFollowupsList;
+}
+
+export interface IAllProjectFollowUpResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectFollowupsList[];
+}
+
 //interface for mark as read notification api response
 export interface IMarkAsReadNotificationResponse {
   status: string;
@@ -830,9 +1012,6 @@ export interface IDeleteNotification {
   message: string;
  
 }
-
-
-
 
 interface INotificationMetadata {
   leadId: string;
@@ -863,9 +1042,202 @@ export interface INotificationsResponse {
   data: INotification[];
 }
 
+// Project APIs Types
+// -----------------------------------------------------
 
-//client......................................................................
-//post  ...
+// --- Project Schema Additions (matches backend Zod schema) ---
+
+export interface ICreateProjectTask {
+  title: string;
+  description?: string;
+  due_date?: string; 
+  status?: string;
+  assigned_to?: string;
+  milestone_id: string;
+}
+
+export interface IProjectTaskResponse  {
+  id: string;
+  title: string;
+  description?: string;
+  due_date?: string; 
+  status?: string;
+  assigned_to?: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  milestone: IProjectMilestoneResponse
+  deleted_at: string | null;
+}
+
+export interface IProjectTaskDetailResponse  {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectTaskResponse;
+}
+
+export interface ICreateProjectMilestone {
+  name: string;
+  description: string;
+  start_date?: string;
+  end_date?: string;
+  actual_date?: string;
+  estimated_date?: string;
+  assigned_to?: string;
+  status: string;
+  remark?: string;
+  project_id: string;
+}
+
+export interface IProjectMilestoneResponse {
+  id?: string;
+  project: IProjectResponse
+  name: string;
+  description: string;
+  start_date?: string;
+  end_date?: string;
+  actual_date?: string;
+  estimated_date?: string;
+  assigned_to?: string;
+  status: string;
+  remark?: string;
+  tasks?: IProjectTaskResponse[];
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+}
+
+export interface IProjectMilestoneDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectMilestoneResponse;
+}
+
+export interface ICreateProjectAttachment {
+  file_path: string;
+  file_type: string;
+  file_name: string;
+  uploaded_by?: string;
+}
+
+export interface IProjectAttachmentResponse {
+  id?: string;
+  file_path: string;
+  file_type: string;
+  file_name: string;
+  uploaded_by?: IUser;
+  created_at?: string;
+  project: IProjectAttachmentResponse
+}
+
+export enum ProjectRenewalType {
+  NONE = "NONE",
+  MONTHLY = "MONTHLY",
+  QUARTERLY = "QUARTERLY",
+  YEARLY = "YEARLY",
+  CUSTOM = "CUSTOM",
+}
+
+export interface ICreateProjectPayload {
+  client_id?: string;
+  name: string;
+  description?: string;
+  project_type?: string;
+  budget?: number;
+  estimated_cost?: number;
+  cost_of_labour?: number;
+  extra_cost?: number;
+  overhead_cost?: number;
+  start_date?: string;
+  end_date?: string;
+  template_id?: string | null;
+  renewal_type?: ProjectRenewalType | null;
+  renewal_date?: string;
+  is_renewal?: boolean;
+  milestones?: Array<{
+    name: string;
+    description?: string;
+    assigned_to?: string;
+    status?: string;
+    start_date?: string;
+    end_date?: string;
+    tasks?: Array<{
+      title: string;
+      description?: string;
+      assigned_to?: string;
+      status?: string;
+      due_date?: string;
+    }>;
+  }>;
+  attachments?: Array<{
+    file_path: string;
+    file_type: string;
+    file_name: string;
+  }>;
+}
+
+export interface IProjectResponse extends ICreateProjectPayload {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  status: string;
+  client: IClientList;
+  milestones: IProjectMilestoneResponse[];
+  attachments: IProjectAttachmentResponse[];
+  actual_cost?: number;
+  actual_start_date?: string;
+  actual_end_date?: string;
+}
+
+export interface ICreateProjectResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectResponse;
+}
+
+export interface IAllProjectsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectResponse[];
+}
+
+export interface IProjectDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectResponse;
+}
+
+export interface IUpdateProjectPayload {
+  id: string;
+  payload: Partial<ICreateProjectPayload>;
+}
+
+
+export interface IUpdateProjectResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectResponse;
+}
+
+export interface IDeleteProjectResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectResponse;
+}
+
+// Client APIs Types
+// -----------------------------------------------------
+
 export interface ICreateClientPayload {
   name: string;
   contact_number: string;
@@ -883,8 +1255,8 @@ export interface ICreateClientResponse {
   success: true;
   data: ICreateClientPayload;
 }
-//get 
-export interface IAllClientList {
+
+export interface IClientList {
   id: string;
   created_at: string;
   updated_at: string;
@@ -898,23 +1270,23 @@ export interface IAllClientList {
   company_name: string;
   contact_person: string;
   lead_id: null; 
+  client_details?: IClientDetails[]
 }
 
 export interface IAllClientResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllClientList[];
+  data: IClientList[];
 }
-//get by id  client
 
 export interface IClientDetailResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllClientList;
+  data: IClientList;
 }
-//update client 
+
 export interface IUpdateClientPayload {
   id: string;
   payload: ICreateClientPayload;
@@ -926,10 +1298,633 @@ export interface IUpdateClientResponse {
   success: true;
   data: IUpdateClientPayload;
 }
-//delete client 
+
 export interface IDeleteClientResponse {
   status: boolean;
   message: string;
   success: true;
   data: ICreateClientPayload;
 }
+
+// Project Templates APIs Types
+// -----------------------------------------------------
+
+export interface ICreateProjectTemplatePayload {
+  name: string;
+  description?: string;
+  project_type?: string;
+  estimated_days?: number;
+}
+
+export interface ICreateProjectTemplateResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplatePayload;
+}
+
+export interface IUpdateProjectTemplatePayload {
+  id: string;
+  payload: Partial<ICreateProjectTemplatePayload>;
+}
+
+export interface IUpdateProjectTemplateResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplatePayload;
+}
+
+export interface IDeleteProjectTemplateResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplatePayload;
+}
+
+export interface IProjectTemplateTask {
+  id: string;
+  title: string;
+  description: string;
+  estimated_days: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IProjectTemplateMilestone {
+  id: string;
+  name: string;
+  description: string;
+  estimated_days: number;
+  project_task_master: IProjectTemplateTask[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IProjectTemplate extends ICreateProjectTemplatePayload {
+  id: string;
+  project_milestone_master: IProjectTemplateMilestone[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface IAllProjectTemplatesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: {
+    templates: IProjectTemplate[];
+    total: number;
+  };
+}
+
+export interface IProjectTemplateDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IProjectTemplate;
+}
+
+// Project Template Milestones APIs Types
+// -----------------------------------------------------
+export interface ICreateProjectTemplateMilestonePayload {
+  template_id: string;
+  name: string;
+  description?: string;
+  estimated_days?: number;
+}
+
+export interface ICreateProjectTemplateMilestoneResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestonePayload;
+}
+
+export interface IUpdateProjectTemplateMilestonePayload {
+  id: string;
+  payload: Partial<ICreateProjectTemplateMilestonePayload>;
+}
+
+export interface IUpdateProjectTemplateMilestoneResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestonePayload;
+}
+
+export interface IDeleteProjectTemplateMilestoneResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestonePayload;
+}
+
+export interface IAllProjectTemplateMilestonesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestonePayload[];
+}
+
+export interface IProjectTemplateMilestoneDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestonePayload;
+}
+
+// Project Template Milestone Tasks APIs Types
+// -----------------------------------------------------
+export interface ICreateProjectTemplateMilestoneTaskPayload {
+  milestone_master_id: string;
+  title: string;
+  description?: string;
+  estimated_days?: number;
+}
+
+export interface ICreateProjectTemplateMilestoneTaskResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestoneTaskPayload;
+}
+
+export interface IUpdateProjectTemplateMilestoneTaskPayload {
+  id: string;
+  payload: Partial<ICreateProjectTemplateMilestoneTaskPayload>;
+}
+
+export interface IUpdateProjectTemplateMilestoneTaskResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestoneTaskPayload;
+}
+
+export interface IDeleteProjectTemplateMilestoneTaskResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestoneTaskPayload;
+}
+
+export interface IAllProjectTemplateMilestoneTasksResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestoneTaskPayload[];
+}
+
+export interface IProjectTemplateMilestoneTaskDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateProjectTemplateMilestoneTaskPayload;
+}
+
+// Client Details APIs Types
+// -----------------------------------------------------
+export interface ICreateClientDetailPayload {
+  client_id: string;
+  client_contact: string;
+  contact_person: string;
+  email: string;
+  other_contact: string;
+  designation: string;
+}
+
+export interface ICreateClientDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientDetailPayload;
+}
+
+export interface IUpdateClientDetailPayload {
+  id: string;
+  payload: Partial<ICreateClientDetailPayload>;
+}
+
+export interface IUpdateClientDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientDetailPayload;
+}
+
+export interface IDeleteClientDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientDetailPayload;
+}
+
+export interface IAllClientDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientDetailPayload[];
+}
+
+export interface IClientDetailByIdResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateClientDetailPayload;
+}
+
+export interface IClientDetails {
+  id: string;
+  client_id: string;
+  client_contact: string;
+  contact_person: string;
+  email: string;
+  other_contact: string;
+  designation: string;
+}
+
+export interface IClientDetailsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IClientDetails;
+}
+
+export interface IUploadClientFromExcelResponse {
+  status: string;
+  message: string;
+  data: IClientList[];
+}
+
+// Task Comment APIs Types
+// -----------------------------------------------------
+
+export interface ICreateTaskCommentPayload {
+  task_id: string;
+  assigned_to: string;
+  remarks: string;
+}
+
+export interface ITaskCommentResponse {
+  id: string;
+  remarks: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  task: IProjectTaskResponse;
+  assignedTo: IUsersDetails;
+}
+
+export interface ICreateTaskCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITaskCommentResponse;
+}
+
+export interface IAllTaskCommentsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITaskCommentResponse[];
+}
+
+export interface IUpdateTaskCommentPayload {
+  id: string;
+  payload: Partial<ICreateTaskCommentPayload>;
+}
+
+export interface IUpdateTaskCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITaskCommentResponse;
+}
+
+export interface IDeleteTaskCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITaskCommentResponse;
+}
+
+// Daily Task Entries APIs Types
+// -----------------------------------------------------
+export interface ICreateDailyTaskEntryPayload {
+  project_id: string;
+  assigned_to: string;
+  task_title: string;
+  entry_date: string; // ISO string
+  description?: string;
+  hours_spent?: number;
+  remarks?: string;
+  status?: string;
+  priority?: "High" | "Medium" | "Low";
+}
+
+export interface IUpdateDailyTaskEntryPayload {
+  id: string;
+  payload: Partial<ICreateDailyTaskEntryPayload>;
+}
+
+export interface IDailyTaskEntryResponse {
+  id: string;
+  project: IProjectResponse;
+  user: IUsersDetails;
+  task_title: string;
+  entry_date: string;
+  description?: string;
+  remarks?: string;
+  hours_spent?: number;
+  status: string;
+  priority?: "High" | "Medium" | "Low";
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+}
+
+export interface ICreateDailyTaskEntryResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IDailyTaskEntryResponse;
+}
+
+export interface IAllDailyTaskEntriesResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IDailyTaskEntryResponse[];
+}
+
+export interface IDeleteDailyTaskEntryResponse {
+  status: boolean;
+  message: string;
+  success: true;
+}
+
+export interface IUploadMultipleAttachmentsOptions {
+  onSuccessCallback: (data: IUploadMultipleAttachmentResponse) => void;
+  onErrorCallback?: (err: IApiError) => void;
+}
+
+export interface ProjectSnapshot {
+  data: {
+    inProgress: number;
+    completed: number;
+    percentCompleted: number;
+    percentInProgress: number;
+    total: number;
+  };
+  colors: Record<string, string>;
+}
+
+export interface ChartData {
+  labels: string[];
+  income: number[];
+  expense: number[];
+}
+
+export interface LeadAnalyticsChartDataMap {
+  [key: string]: ChartData;
+}
+
+export interface LeadTypeChartDataMap {
+  [key: string]: ChartData;
+}
+
+export interface LeadTypeColors {
+  [key: string]: string;
+}
+
+export interface ProjectRenewalItem {
+  name: string;
+  renewal_date: string;
+  completion: number;
+}
+
+export interface ProjectRenewalData {
+  [category: string]: ProjectRenewalItem[];
+}
+
+export interface ExpensesDataMap {
+  yearly: ChartData;
+  monthly: ChartData;
+  weekly: ChartData;
+}
+
+export interface LeadTypeChartItem {
+  type: string;
+  count: number;
+  percent: number;
+  color: string;
+}
+
+export interface DashboardStatCard {
+  count: string;
+  title: string;
+  subtitle: string;
+}
+
+export interface ProjectSnapshotData {
+  name: string;
+  value: number;
+}
+
+export interface ExpensesData {
+  labels: string[];
+  income: number[];
+  expense: number[];
+}
+
+// Add Category and Project interfaces for projectRenewalData
+export interface Project {
+  name: string;
+  date: string;
+  status: number;
+}
+export interface Category {
+  category: string;
+  projects: Project[];
+}
+
+export interface DashboardSummary {
+  stats: DashboardStatCard[];
+  projectSnapshot: {
+    inProgress: number;
+    completed: number;
+    open: number;
+  };
+  leadAnalytics: {
+    weekly: { status: string; count: number }[];
+    monthly: { status: string; count: number }[];
+    yearly: { status: string; count: number }[];
+  };
+  leadType: {
+    weekly: { type: string | null; count: number }[];
+    monthly: { type: string | null; count: number }[];
+    yearly: { type: string | null; count: number }[];
+  };
+  projectRenewalData: Category[];
+  expenses: {
+    weekly: {
+      labels: string[];
+      income: number[];
+      expense: number[];
+    };
+    monthly: {
+      labels: string[];
+      income: number[];
+      expense: number[];
+    };
+    yearly: {
+      labels: string[];
+      income: number[];
+      expense: number[];
+    };
+  };
+}
+
+export interface DashboardSummaryApiResponse {
+  status: string;
+  data: DashboardSummary;
+}
+
+export interface DailyTask {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  task_title: string;
+  assigned_to: string;
+  description: string;
+  entry_date: string;
+  hours_spent: string;
+  status: string;
+  remarks: string;
+  priority?: "High" | "Medium" | "Low";
+  project: {
+    id: string;
+    name: string;
+  };
+}
+
+// START EI LOG MANAGEMENT
+export interface ICreateEILogPayload {
+  eilogType: string;
+  eilogHead: string;
+  description: string;
+  income?: number;
+  expense?: number;
+  paymentMode?: string;
+  attachment?: string;
+}
+
+export interface ICreateEILogResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILog;
+}
+
+export interface IUpdateEILogPayload {
+  id: string;
+  payload: Partial<ICreateEILogPayload>;
+}
+
+export interface IUpdateEILogResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILog;
+}
+
+export interface IEILog {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  description: string;
+  income?: number;
+  expense?: number;
+  payment_mode?: string;
+  attachment?: string;
+  ei_log_type: IEILogType;
+  ei_log_head: IEILogHead;
+}
+
+export interface IAllEILogList {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  description: string;
+  income?: string;
+  expense?: number | null;
+  paymentMode?: string;
+  attachment?: string | null;
+  eilogType: {
+    id: string;
+    name: string;
+  };
+  eilogHead: {
+    id: string;
+    name: string;
+  };
+  createdBy?: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+}
+
+export interface IAllEILogResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: {
+    data: IAllEILogList[];
+    pagination?: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
+}
+
+export interface IEILogDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILog;
+}
+
+export interface IDeleteEILogResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IEILog;
+}
+
+export interface IUploadEILogFromExcelResponse {
+  status: string;
+  message: string;
+  data: IEILog;
+}
+
+export interface IEILogFilters {
+  searchText?: string;
+  eilogTypeId?: string;
+  eilogHeadId?: string;
+  paymentMode?: string;
+  dateRange?: "All" | "Daily" | "Weekly" | "Monthly";
+  referenceDate?: string;
+  fromDate?: string;
+  toDate?: string;
+}
+// END EI LOG MANAGEMENT

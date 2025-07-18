@@ -50,7 +50,7 @@ export function SentOTP({ onNext }: TSentOTPProps) {
               <ErrorMessage
                 name="otp"
                 component="div"
-                className="text-red-500 text-sm"
+                className="text-red-500 text-[0.9rem]"
               />
               <Button type="submit" title="Reset Password" />
               <Button title="Cancel" variant="primary-outline" />

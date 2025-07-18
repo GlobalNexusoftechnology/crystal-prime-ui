@@ -6,15 +6,15 @@ import { IRoleData } from "@/services/apis";
  */
 export interface IUser {
   id: string;
+  created_at: string;
+  updated_at: string;
+  role: IRoleData;
+  email: string;
   first_name: string;
   last_name: string;
-  email: string;
   phone_number: string;
+  role_id: string;
   dob: string;
-  role: IRoleData;
-  updated_at: string;
-  deleted_at: string;
-  created_at: string;
 }
 
 export interface IActiveSession {

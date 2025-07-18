@@ -30,7 +30,7 @@ const togglePasswordVisibility = () => {
     });
 
     toast.success(response?.message || "Login successful 🎉");
-    router.push("/admin/lead-management");
+    router.push("/admin/dashboard");
   };
 
   const handleErrorCallback = (error: IApiError) => {
@@ -108,7 +108,7 @@ const togglePasswordVisibility = () => {
           <Button type="submit" title={isPending ? "Logging in..." : "Login"} />
           <Link
             href="/forget-password"
-            className="text-sm 2xl:text-[0.875vw] text-black underline underline-offset-4"
+            className="text-[0.9rem] 2xl:text-[0.875vw] text-black underline underline-offset-4"
           >
             Forget Password?
           </Link>

@@ -11,9 +11,11 @@ export interface ILeadsListProps {
   email: string[];
   location: string;
   budget: string;
+  possibility_of_conversion?: number | null;
   requirement: string;
   source_id: string;
   status_id: string;
+  status_color?: string;
   type_id: string;
   assigned_to: string;
   created_at: string;
@@ -31,6 +33,7 @@ export interface ILeadsListDetailsProps {
   email: string[];
   location: string;
   budget: string;
+  possibility_of_conversion?: number | null;
   requirement: string;
   source: ISource;
   status: IStatus;
@@ -48,6 +51,14 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
     header: "STATUS",
     accessor: "status_id",
     headerClassName: "min-w-[13rem] 2xl:min-w-[13vw]",
+    cell: ({ row }) => (
+      <span
+        className="inline-block px-4 py-1 rounded-full text-white"
+        style={{ backgroundColor: row.status_color }}
+      >
+        {row.status_id}
+      </span>
+    ),
   },
   {
     header: "FIRST NAME",
@@ -88,6 +99,16 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
     header: "BUDGET",
     accessor: "budget",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+  },
+  {
+    header: "POSSIBILITY OF CONVERSION",
+    accessor: "possibility_of_conversion",
+    headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
+    cell: ({ row }) => (
+      <span>
+        {row.possibility_of_conversion ? `${row.possibility_of_conversion}%` : '-'}
+      </span>
+    ),
   },
   {
     header: "REQUIREMENT",

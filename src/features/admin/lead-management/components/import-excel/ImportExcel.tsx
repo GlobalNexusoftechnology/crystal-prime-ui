@@ -74,7 +74,7 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
                 />
                 <label
                   htmlFor="addCustomFields"
-                  className="text-sm text-gray-700"
+                  className="text-[0.9rem] text-gray-700"
                 >
                   <span className="font-medium text-[1rem] 2xl:text-[1vw]">
                     Add these as Custom Fields in the Lead Table
@@ -95,7 +95,7 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
                   onChange={(e) => setIgnoreFieldsChecked(e.target.checked)}
                   className="accent-black mt-1"
                 />
-                <label htmlFor="ignoreFields" className="text-sm text-gray-700">
+                <label htmlFor="ignoreFields" className="text-[0.9rem] text-gray-700">
                   <span className="font-medium text-[1rem] 2xl:text-[1vw]">
                     Ignore these columns
                   </span>

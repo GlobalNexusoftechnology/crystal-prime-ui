@@ -46,7 +46,7 @@ export function LeadManagement() {
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data?.stats?.businessDone}`,
+      count: `${allLeadList?.data?.stats?.convertedLeads}`,
       title: "Business Done",
       subtitle: "Successful leads closed",
       icon: <AnalyticalCardIcon />,
@@ -119,7 +119,7 @@ export function LeadManagement() {
             <AnalyticalCard key={index} data={card} />
           ))}
         </div>
-        <LeadsListTable />
+        <LeadsListTable setAddLeadModalOpen={setAddLeadModalOpen} />
       </div>
 
       <ModalOverlay
@@ -135,7 +135,7 @@ export function LeadManagement() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw]">
                   {/* Manual Upload */}
                   <div>
-                    <p className="text-sm 2xl:text-[0.875vw] pb-2 2xl:pb-[1vw] pl-[0.3vw] 2xl:pl-[0.5vw]">
+                    <p className="text-[0.9rem] 2xl:text-[0.875vw] pb-2 2xl:pb-[1vw] pl-[0.3vw] 2xl:pl-[0.5vw]">
                       Add Lead Manually
                     </p>
                     <div
@@ -151,10 +151,10 @@ export function LeadManagement() {
                           className="object-contain w-full h-full"
                         />
                       </div>
-                      <p className="text-purple-600  cursor-pointer text-sm 2xl:text-[0.875vw] 2xl:pb-[0.5vw]">
+                      <p className="text-purple-600  cursor-pointer text-[0.9rem] 2xl:text-[0.875vw] 2xl:pb-[0.5vw]">
                         Click to add
                       </p>
-                      <p className="text-sm 2xl:text-[0.875vw] text-gray-500">
+                      <p className="text-[0.9rem] 2xl:text-[0.875vw] text-gray-500">
                         One Lead at a time
                       </p>
                     </div>
@@ -162,7 +162,7 @@ export function LeadManagement() {
 
                   {/* Excel Upload */}
                   <div>
-                    <p className="text-sm 2xl:text-[0.875vw] pb-2 2xl:pb-[1vw] pl-[0.3vw] 2xl:pl-[0.5vw]">
+                    <p className="text-[0.9rem] 2xl:text-[0.875vw] pb-2 2xl:pb-[1vw] pl-[0.3vw] 2xl:pl-[0.5vw]">
                       Import From Excel
                     </p>
                     <div
@@ -197,14 +197,14 @@ export function LeadManagement() {
 
                       <div className="flex md:flex-row flx-col gap-2 2xl:gap-[0.5vw] 2xl:pb-[0.3vw]">
                         {" "}
-                        <p className="text-purple-600 text-sm 2xl:text-[0.875vw] whitespace-nowrap">
+                        <p className="text-purple-600 text-[0.9rem] 2xl:text-[0.875vw] whitespace-nowrap">
                           {isPending ? "Uploading..." : "Click to upload"}
                         </p>
-                        <p className="text-sm 2xl:text-[0.875vw] text-gray-500 whitespace-nowrap ">
+                        <p className="text-[0.9rem] 2xl:text-[0.875vw] text-gray-500 whitespace-nowrap ">
                           or drag and drop
                         </p>
                       </div>
-                      <p className="text-sm 2xl:text-[0.875vw] text-gray-400 mt-1 2xl:mt-[0.25vw]">
+                      <p className="text-[0.9rem] 2xl:text-[0.875vw] text-gray-400 mt-1 2xl:mt-[0.25vw]">
                         .XLS, .XLSX (max. 5MB)
                       </p>
                     </div>

@@ -173,9 +173,9 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
                   <span className="text-2xl">{getNotificationIcon(notification.type)}</span>
                   <div className="flex-1">
                     <p className="font-bold">{getNotificationTitle(notification.type)}</p>
-                    <p className="text-sm mt-1">{notification.message}</p>
+                    <p className="text-[0.9rem] mt-1">{notification.message}</p>
                     {notification.metadata && (
-                      <div className="text-sm mt-2 space-y-1">
+                      <div className="text-[0.9rem] mt-2 space-y-1">
                         {notification.metadata.leadName && (
                           <p>Lead: <span className="font-semibold text-blue-600">{notification.metadata.leadName}</span></p>
                         )}

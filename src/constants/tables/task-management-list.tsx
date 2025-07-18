@@ -16,6 +16,7 @@ export interface SummaryTask {
   leadName: string;
   renewalDate: string;
   color: string;
+  priority: "High" | "Medium" | "Low";
 }
 
 export type Task = DetailedTask | SummaryTask;
@@ -48,6 +49,7 @@ export const TaskManagementList: TaskSection[] = [
         leadName: "Nisha Sharma",
         renewalDate: "20/02/2022",
         color: "#F8F8F8",
+        priority: "Medium",
       },
     ],
   },
@@ -72,6 +74,7 @@ export const TaskManagementList: TaskSection[] = [
         leadName: "Nisha Sharma",
         renewalDate: "20/02/2022",
         color: "#F8F8F8",
+        priority: "Low",
       },
     ],
   },
@@ -96,6 +99,7 @@ export const TaskManagementList: TaskSection[] = [
         leadName: "Nisha Sharma",
         renewalDate: "20/02/2022",
         color: "#F8F8F8",
+        priority: "High",
       },
     ],
   },

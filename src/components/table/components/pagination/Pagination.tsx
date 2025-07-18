@@ -11,15 +11,14 @@ interface PaginationProps {
 export function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
   const getPages = () => {
     const pages = [];
-    if (totalPages <= 7) {
+    if (totalPages <= 5) {
       for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       pages.push(1);
-      if (currentPage > 3) pages.push("...");
-      const start = Math.max(2, currentPage - 1);
-      const end = Math.min(totalPages - 1, currentPage + 1);
-      for (let i = start; i <= end; i++) pages.push(i);
-      if (currentPage < totalPages - 2) pages.push("...");
+      pages.push(2);
+      pages.push(3);
+      pages.push("...");
+      pages.push(totalPages - 1);
       pages.push(totalPages);
     }
     return pages;
@@ -32,7 +31,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       <button
         onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`flex items-center gap-1 px-3 py-1 text-sm rounded ${
+        className={`flex items-center gap-1 px-3 py-1 text-[0.9rem] rounded ${
           currentPage === 1 ? "text-gray-400 cursor-not-allowed" : "text-gray-700 hover:text-primary"
         }`}
       >
@@ -49,7 +48,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
           <button
             key={page}
             onClick={() => onPageChange(Number(page))}
-            className={`w-8 h-8 rounded flex items-center justify-center text-sm ${
+            className={`w-8 h-8 rounded flex items-center justify-center text-[0.9rem] ${
               page === currentPage ? "bg-primary text-white" : "text-gray-700 hover:text-primary"
             }`}
           >
@@ -61,7 +60,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
       <button
         onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`flex items-center gap-1 px-3 py-1 text-sm rounded ${
+        className={`flex items-center gap-1 px-3 py-1 text-[0.9rem] rounded ${
           currentPage === totalPages
             ? "text-gray-400 cursor-not-allowed"
             : "text-gray-700 hover:text-primary"

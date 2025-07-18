@@ -1,5 +1,5 @@
 import { ProjectManagement } from "@/features";
 
-export default function LeadManagementPage() {
+export default function ProjectManagementPage() {
   return <ProjectManagement />;
 }

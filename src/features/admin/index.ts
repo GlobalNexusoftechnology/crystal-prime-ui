@@ -12,3 +12,6 @@ export * from "./change-password";
 export * from "./task-management";
 export * from "./settings/components/role-management";
 export * from "./client-management";
+export * from "./breadcrumb";
+export * from "./ei-log-management";
+export * from "./ei-logs-list-table";

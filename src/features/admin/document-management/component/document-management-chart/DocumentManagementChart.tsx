@@ -18,7 +18,7 @@ const data = [
 export function DocumentManagementChart() {
   return (
     <div className="w-full max-w-md p-4 bg-white border rounded-lg shadow-sm">
-      <h2 className="text-sm font-medium text-gray-800 mb-2">Storage</h2>
+      <h2 className="text-[0.9rem] font-medium text-gray-800 mb-2">Storage</h2>
       <ResponsiveContainer width="100%" height={180}>
         <BarChart
           layout="vertical"
