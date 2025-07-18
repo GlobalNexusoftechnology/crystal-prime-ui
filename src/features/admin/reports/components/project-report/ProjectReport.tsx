@@ -5,6 +5,7 @@ import {
   DocumentSummaryTable,
   FollowUpCommunicationMatrix,
   TaskMetricsChart,
+  TimelineAnalysis,
 } from "./components";
 
 export function ProjectReport() {
@@ -33,7 +34,6 @@ export function ProjectReport() {
         </div>
         <div className="flex flex-col gap-6 2xl:gap-[1vw]">
           <CostBudgetAnalysisMetric />
-          {/* <FollowUpPerformance /> */}
           <TaskMetricsChart
             data={{
               totalTasks: 40,
@@ -45,6 +45,7 @@ export function ProjectReport() {
               topPerformer: { name: "Meena", completed: 12 },
             }}
           />
+            <TimelineAnalysis daysSinceStart={60} plannedDuration={90} delayRisk="Medium" />
         </div>
       </div>
     </div>
