@@ -5,3 +5,5 @@ export { DocumentSummaryTable } from "./document-summary-table"
 export { FollowUpCommunicationMatrix } from "./follow-up-communication-matrix";
 export { TaskMetricsChart } from './task-metrics';
 export { TimelineAnalysis } from './timeline-analysis';
+export { MilestoneSummaryTable } from './milestone-summary';
+export { ResourceUtilizationTable } from './resource-utilization';

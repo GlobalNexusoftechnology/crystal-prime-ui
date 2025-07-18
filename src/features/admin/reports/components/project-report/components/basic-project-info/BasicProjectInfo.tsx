@@ -27,7 +27,7 @@ export function BasicProjectInfo() {
   const currentStatus = "Development & Integration";
 
   return (
-    <div className="border-b 2xl:border-[">
+    <div className="border-b 2xl:border-b-[0.1vw]">
       <div className="p-6 2xl:p-[2vw] bg-white rounded-lg 2xl:rounded-[1vw]">
         <h2 className="text-xl 2xl:text-[1.25vw] font-medium mb-6 2xl:mb-[1vw]">
           Basic Project Info

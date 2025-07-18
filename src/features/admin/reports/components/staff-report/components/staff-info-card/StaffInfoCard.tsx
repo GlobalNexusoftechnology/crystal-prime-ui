@@ -8,21 +8,21 @@ export function StaffInfoCard() {
         <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
           <div className="flex flex-col">
             <span className="font-light">First Name</span>
-            <span className="underline text-[1rem] 2xl:text-[1.1vw]">Nisha</span>
+            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">Nisha</span>
           </div>
           <div className="flex flex-col">
             <span className="font-light">Last Name</span>
-            <span className="underline text-[1rem] 2xl:text-[1.1vw]">Sharma</span>
+            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">Sharma</span>
           </div>
         </div>
         <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
-          <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1.1vw] text-primary">
+          <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1vw] text-primary">
             <FiPhone className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-            <a href="tel:3853449378" className="underline text-textColor">(385) 344-9378</a>
+            <a href="tel:3853449378" className="underline text-textColor font-medium">(385) 344-9378</a>
           </div>
-          <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1.1vw] text-primary">
+          <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1vw] text-primary">
             <FiMail className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-            <a href="mailto:Elna.Ferry@hotmail.com" className="underline text-textColor">Elna.Ferry@hotmail.com</a>
+            <a href="mailto:Elna.Ferry@hotmail.com" className="underline text-textColor font-medium">Elna.Ferry@hotmail.com</a>
           </div>
         </div>
       </div>

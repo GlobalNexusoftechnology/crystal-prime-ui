@@ -6,6 +6,8 @@ import {
   FollowUpCommunicationMatrix,
   TaskMetricsChart,
   TimelineAnalysis,
+  MilestoneSummaryTable,
+  ResourceUtilizationTable,
 } from "./components";
 
 export function ProjectReport() {
@@ -18,7 +20,7 @@ export function ProjectReport() {
         <ProjectSearchFilter />
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-2">
-        <div className="flex flex-col gap-6 2xl:gap-[1vw] border-r 2xl:border-r-[0.1vw]">
+        <div className="flex flex-col border-r 2xl:border-r-[0.1vw]">
           <BasicProjectInfo />
           <DocumentSummaryTable />
           <FollowUpCommunicationMatrix
@@ -32,7 +34,7 @@ export function ProjectReport() {
             }}
           />
         </div>
-        <div className="flex flex-col gap-6 2xl:gap-[1vw]">
+        <div className="flex flex-col">
           <CostBudgetAnalysisMetric />
           <TaskMetricsChart
             data={{
@@ -48,6 +50,8 @@ export function ProjectReport() {
             <TimelineAnalysis daysSinceStart={60} plannedDuration={90} delayRisk="Medium" />
         </div>
       </div>
+        <MilestoneSummaryTable />
+        <ResourceUtilizationTable />
     </div>
   );
 }

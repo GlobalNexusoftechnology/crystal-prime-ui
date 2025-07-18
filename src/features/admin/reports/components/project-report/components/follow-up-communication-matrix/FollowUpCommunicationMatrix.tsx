@@ -26,19 +26,19 @@ export function FollowUpCommunicationMatrix({
           <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
             <div className="flex flex-col">
               <span className="font-light">Total Follow-ups Logged</span>
-              <span className="underline text-[1rem] 2xl:text-[1.1vw] cursor-pointer">
+              <span className="underline text-[1rem] 2xl:text-[1vw] cursor-pointer">
                 {data.totalFollowUps}
               </span>
             </div>
             <div className="flex flex-col">
               <span className="font-light">Follow-ups Completed</span>
-              <span className="underline text-[1rem] 2xl:text-[1.1vw] cursor-pointer">
+              <span className="underline text-[1rem] 2xl:text-[1vw] cursor-pointer">
                 {data.followUpsCompleted}
               </span>
             </div>
             <div className="flex flex-col">
               <span className="font-light">Pending Follow-ups</span>
-              <span className="text-[1rem] 2xl:text-[1.1vw]">
+              <span className="text-[1rem] 2xl:text-[1vw]">
                 {data.pendingFollowUps}
               </span>
             </div>
@@ -46,19 +46,19 @@ export function FollowUpCommunicationMatrix({
           <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
             <div className="flex flex-col">
               <span className="font-light">Missed / Delayed Follow-ups</span>
-              <span className="underline text-[1rem] 2xl:text-[1.1vw] cursor-pointer">
+              <span className="underline text-[1rem] 2xl:text-[1vw] cursor-pointer">
                 {data.missedFollowUps}
               </span>
             </div>
             <div className="flex flex-col">
               <span className="font-light">Avg Response Time</span>
-              <span className="underline text-[1rem] 2xl:text-[1.1vw] cursor-pointer">
+              <span className="underline text-[1rem] 2xl:text-[1vw] cursor-pointer">
                 {data.avgResponseTime}
               </span>
             </div>
             <div className="flex flex-col">
               <span className="font-light">Escalated Items</span>
-              <span className="underline text-[1rem] 2xl:text-[1.1vw] cursor-pointer">
+              <span className="underline text-[1rem] 2xl:text-[1vw] cursor-pointer">
                 {data.escalatedItems}
               </span>
             </div>

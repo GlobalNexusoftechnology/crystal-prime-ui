@@ -1,6 +1,6 @@
 import React from "react";
 import { Table } from "@/components";
-import { ITableAction, ITableColumn } from "@/constants";
+import { ITableColumn } from "@/constants";
 
 // Define the row type for the document summary table
 export interface DocumentSummaryRow {
@@ -9,9 +9,6 @@ export interface DocumentSummaryRow {
   fileCount: string;
   lastUpdated: string;
 }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const documentSummaryAction: ITableAction<DocumentSummaryRow>[] = [];
 
 // Mock data for demonstration
 const documentSummaryData: DocumentSummaryRow[] = [
@@ -75,7 +72,13 @@ export function DocumentSummaryTable() {
         <Table
           data={documentSummaryData}
           columns={documentSummaryColumns}
-          actions={documentSummaryAction}
+          actions={[
+            {
+              label: "More",
+              onClick: () => {},
+              className: "text-gray-700",
+            },
+          ]}
         />
       </div>
     </div>
