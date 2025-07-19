@@ -1,65 +1,21 @@
-import React from "react";
 import { Table } from "@/components";
-import { ITableColumn } from "@/constants";
+import { ProjectPerformanceReportResponse } from "@/services";
 
-// Define the row type for the document summary table
-export interface DocumentSummaryRow {
-  id: number;
-  fileType: string;
-  fileCount: string;
-  lastUpdated: string;
-}
-
-// Mock data for demonstration
-const documentSummaryData: DocumentSummaryRow[] = [
-  {
-    id: 2,
-    fileType: "07-25-2022",
-    fileCount: "Regular",
-    lastUpdated: "07-25-2022",
-  },
-  {
-    id: 3,
-    fileType: "07-25-2022",
-    fileCount: "Office",
-    lastUpdated: "07-25-2022",
-  },
-  {
-    id: 4,
-    fileType: "07-25-2022",
-    fileCount: "Project",
-    lastUpdated: "07-25-2022",
-  },
-  {
-    id: 5,
-    fileType: "07-25-2022",
-    fileCount: "Staff",
-    lastUpdated: "07-25-2022",
-  },
+const columns: {
+  header: string;
+  accessor: "file_type" | "count" | "last_updated" | "id";
+}[] = [
+  { header: "Type", accessor: "file_type" },
+  { header: "Count", accessor: "count" },
+  { header: "Last Updated", accessor: "last_updated" },
 ];
 
-export const documentSummaryColumns: ITableColumn<DocumentSummaryRow>[] = [
-  {
-    header: "FILE TYPE",
-    accessor: "fileType",
-    sortable: true,
-    headerClassName: "text-center",
-  },
-  {
-    header: "FILE COUNT",
-    accessor: "fileCount",
-    sortable: true,
-    headerClassName: "text-center",
-  },
-  {
-    header: "LAST UPDATED",
-    accessor: "lastUpdated",
-    sortable: true,
-    headerClassName: "text-center",
-  },
-];
-
-export function DocumentSummaryTable() {
+export function DocumentSummaryTable({
+  data,
+}: {
+  data: ProjectPerformanceReportResponse["data"]["documentSummary"];
+}) {
+  if (!data) return null;
   return (
     <div className="border-b 2xl:border-[0.1vw]">
       <div className="bg-white rounded-xl 2xl:rounded-[1vw] p-6 2xl:p-[2vw]">
@@ -67,18 +23,13 @@ export function DocumentSummaryTable() {
           <h2 className="text-xl 2xl:text-[1.25vw] font-medium">
             Document Summary
           </h2>
-          <span className="2xl:text-[1vw] font-medium">Total FILES: 14</span>
+          <span className="2xl:text-[1vw] font-medium">
+            Total FILES: {data.totalFiles ?? "-"}
+          </span>
         </div>
         <Table
-          data={documentSummaryData}
-          columns={documentSummaryColumns}
-          actions={[
-            {
-              label: "More",
-              onClick: () => {},
-              className: "text-gray-700",
-            },
-          ]}
+          data={(data.files || []).map((file, idx) => ({ ...file, id: idx }))}
+          columns={columns}
         />
       </div>
     </div>

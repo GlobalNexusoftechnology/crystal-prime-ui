@@ -2,17 +2,19 @@ import { useState, useEffect } from "react";
 import { useProjectPerformanceReportQuery } from "@/services";
 import { useAllProjectsQuery } from "@/services";
 import { useAllClientQuery } from "@/services";
-import { BasicProjectInfo } from "./components/BasicProjectInfo";
-import { DocumentSummaryTable } from "./components/DocumentSummaryTable";
-import { FollowUpCommunicationMatrix } from "./components/FollowUpCommunicationMatrix";
-import { CostBudgetAnalysisMetric } from "./components/CostBudgetAnalysisMetric";
-import { TaskMetricsChart } from "./components/TaskMetricsChart";
+import {
+  BasicProjectInfo,
+  CostBudgetAnalysisMetric,
+  DocumentSummaryTable,
+  FollowUpCommunicationMatrix,
+  MilestoneSummaryTable,
+  ProjectSearchFilter,
+  ResourceUtilizationTable,
+  TaskMetricsChart,
+} from "./components";
 import { TimelineAnalysis } from "./components/TimelineAnalysis";
-import { MilestoneSummaryTable } from "./components/MilestoneSummaryTable";
-import { ResourceUtilizationTable } from "./components/ResourceUtilizationTable";
-import { ProjectSearchFilter } from "./components";
-import { ProjectPerformanceReportResponse } from "@/services";
-
+import { Loading } from "@/components";
+import { defaultBasicProjectInfo, defaultCostBudgetAnalysis, defaultDocumentSummary, defaultFollowUpMatrix, defaultMilestoneSummary, defaultResourceUtilization, defaultTaskMetrics, defaultTimelineAnalysis } from "@/constants";
 
 export function ProjectReport() {
   const { allProjectsData } = useAllProjectsQuery();
@@ -50,76 +52,29 @@ export function ProjectReport() {
 
   // Update selectedClient when selectedProject changes
   useEffect(() => {
-    if (
-      selectedProject &&
-      allProjectsData &&
-      allProjectsData.length > 0
-    ) {
+    if (selectedProject && allProjectsData && allProjectsData.length > 0) {
       const project = allProjectsData.find((p) => p.id === selectedProject);
-      if (project && project.client?.id && selectedClient !== project.client.id) {
+      if (
+        project &&
+        project.client?.id &&
+        selectedClient !== project.client.id
+      ) {
         setSelectedClient(project.client.id);
       }
     }
-  }, [selectedProject, allProjectsData]);
+  }, [selectedProject, allProjectsData, selectedClient]);
 
-  const { projectPerformanceData, isLoading, error } = useProjectPerformanceReportQuery({
-    projectId: selectedProject,
-    clientId: selectedClient,
-    fromDate,
-    toDate,
-  });
+  const { projectPerformanceData, isLoading, error } =
+    useProjectPerformanceReportQuery({
+      projectId: selectedProject,
+      clientId: selectedClient,
+      fromDate,
+      toDate,
+    });
 
   if (!fromDate || !toDate || !allClientData) return null;
 
-  console.log({ selectedProject, selectedClient, allProjectsData, allClientData });
-
-  const defaultBasicProjectInfo = {
-    projectType: '',
-    projectManager: null,
-    estimatedStartDate: null,
-    estimatedEndDate: null,
-    actualStartDate: null,
-    actualEndDate: null,
-    assignedTeam: [],
-    projectPhase: '',
-    currentStatus: '',
-  };
-  const defaultDocumentSummary = { totalFiles: 0, files: [] };
-  const defaultFollowUpMatrix = {
-    totalFollowUpsLogged: 0,
-    followUpsCompleted: 0,
-    pendingFollowUps: 0,
-    missedOrDelayedFollowUps: 0,
-    avgResponseTimeHours: '',
-    escalatedItems: 0,
-  };
-  const defaultCostBudgetAnalysis = {
-    budget: '',
-    estimatedCost: '',
-    actualCost: '',
-    budgetUtilization: '',
-    overrun: '',
-  };
-  const defaultTaskMetrics = {
-    totalTasks: 0,
-    completedTasks: 0,
-    inProgressTasks: 0,
-    overdueTasks: 0,
-    avgTaskCompletionTime: '',
-    taskReassignmentCount: 0,
-    topPerformer: undefined,
-    chart: [],
-  };
-  const defaultTimelineAnalysis = {
-    daysSinceStart: 0,
-    plannedDurationDays: 0,
-    progressPercent: 0,
-    delayRisk: '',
-  };
-  const defaultMilestoneSummary: ProjectPerformanceReportResponse["data"]["milestoneSummary"] = [];
-  const defaultResourceUtilization: ProjectPerformanceReportResponse["data"]["resourceUtilization"] = [];
-
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
   if (error) return <div>Error loading report</div>;
 
   const data = projectPerformanceData?.data;
@@ -131,7 +86,11 @@ export function ProjectReport() {
           Project Performance Report
         </h2>
         <ProjectSearchFilter
-          projects={(allProjectsData || []).map((p) => ({ id: p.id, name: p.name, client_id: p.client?.id || '' }))}
+          projects={(allProjectsData || []).map((p) => ({
+            id: p.id,
+            name: p.name,
+            client_id: p.client?.id || "",
+          }))}
           clients={allClientData || []}
           selectedProject={selectedProject}
           setSelectedProject={setSelectedProject}
@@ -145,18 +104,32 @@ export function ProjectReport() {
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="flex flex-col border-r 2xl:border-r-[0.1vw]">
-          <BasicProjectInfo data={data?.basicProjectInfo ?? defaultBasicProjectInfo} />
-          <DocumentSummaryTable data={data?.documentSummary ?? defaultDocumentSummary} />
-          <FollowUpCommunicationMatrix data={data?.followUpMatrix ?? defaultFollowUpMatrix} />
+          <BasicProjectInfo
+            data={data?.basicProjectInfo ?? defaultBasicProjectInfo}
+          />
+          <DocumentSummaryTable
+            data={data?.documentSummary ?? defaultDocumentSummary}
+          />
+          <FollowUpCommunicationMatrix
+            data={data?.followUpMatrix ?? defaultFollowUpMatrix}
+          />
         </div>
         <div className="flex flex-col">
-          <CostBudgetAnalysisMetric data={data?.costBudgetAnalysis ?? defaultCostBudgetAnalysis} />
+          <CostBudgetAnalysisMetric
+            data={data?.costBudgetAnalysis ?? defaultCostBudgetAnalysis}
+          />
           <TaskMetricsChart data={data?.taskMetrics ?? defaultTaskMetrics} />
-          <TimelineAnalysis data={data?.timelineAnalysis ?? defaultTimelineAnalysis} />
+          <TimelineAnalysis
+            data={data?.timelineAnalysis ?? defaultTimelineAnalysis}
+          />
         </div>
       </div>
-      <MilestoneSummaryTable data={data?.milestoneSummary ?? defaultMilestoneSummary} />
-      <ResourceUtilizationTable data={data?.resourceUtilization ?? defaultResourceUtilization} />
+      <MilestoneSummaryTable
+        data={data?.milestoneSummary ?? defaultMilestoneSummary}
+      />
+      <ResourceUtilizationTable
+        data={data?.resourceUtilization ?? defaultResourceUtilization}
+      />
     </div>
   );
 }

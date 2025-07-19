@@ -1,103 +1,42 @@
-import React from "react";
-import { IProjectInfo } from "@/constants";
+import { ProjectPerformanceReportResponse } from "@/services";
 
-// Placeholder for team members
-const teamMembers = [
-  { id: 1, name: "Ramesh Gupta", initials: "RM" },
-  { id: 2, name: "Ramesh Gupta", initials: "RM" },
-  { id: 3, name: "Ramesh Gupta", initials: "RM" },
-  { id: 4, name: "Ramesh Gupta", initials: "RM" },
-  { id: 5, name: "Ramesh Gupta", initials: "RM" },
-];
-
-export function BasicProjectInfo() {
-  // Mock data for demonstration
-  const projectInfo: Partial<IProjectInfo> = {
-    name: "Sample Project",
-    project_type: "Software Development",
-    contact_person: "Priya D",
-    description: "",
-    created_at: "24-02-2021 09:00 AM",
-    updated_at: "24-02-2021 09:00 AM",
-  };
-  const estimatedStartDate = "24-02-2021 09:00 AM";
-  const actualStartDate = "24-02-2021 09:00 AM";
-  const estimatedEndDate = "24-02-2021 09:00 AM";
-  const projectPhase = "Development & Integration";
-  const currentStatus = "Development & Integration";
-
+export function BasicProjectInfo({ data }: { data: ProjectPerformanceReportResponse["data"]["basicProjectInfo"] }) {
+  if (!data) return null;
   return (
-    <div className="border-b 2xl:border-b-[0.1vw]">
-      <div className="p-6 2xl:p-[2vw] bg-white rounded-lg 2xl:rounded-[1vw]">
-        <h2 className="text-xl 2xl:text-[1.25vw] font-medium mb-6 2xl:mb-[1vw]">
-          Basic Project Info
-        </h2>
-        <div className="flex flex-wrap gap-x-24 2xl:gap-x-[6vw] gap-y-10 2xl:gap-y-[2vw] text-[1rem] 2xl:text-[1vw]">
-          <div>
-            <p className="font-light">Project Type</p>
-            <p className="underline cursor-pointer font-medium text-[1rem] 2xl:text-[1vw]">
-              {projectInfo.project_type}
-            </p>
+    <div className="border-b 2xl:border-[0.1vw] p-6 2xl:p-[1vw]">
+      <h3 className="text-[1.2rem] 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw] font-medium">Basic Project Info</h3>
+      <div className="flex flex-col gap-6 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
+        <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
+          <div className="flex flex-col">
+            <span className="font-light">Project Type</span>
+            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.projectType ?? '-'}</span>
           </div>
-          <div>
-            <p className="font-light">Project Manager</p>
-            <p className="underline cursor-pointer font-medium text-[1rem] 2xl:text-[1vw]">
-              {projectInfo.contact_person}
-            </p>
-          </div>
-          <div>
-            <p className="font-light">Estimated start Date</p>
-            <p className="text-gray-900 font-medium text-[1rem] 2xl:text-[1vw]">
-              {estimatedStartDate}
-            </p>
-          </div>
-          <div>
-            <p className="font-light">Actual start Date</p>
-            <p className="text-gray-900 font-medium text-[1rem] 2xl:text-[1vw]">
-              {actualStartDate}
-            </p>
-          </div>
-          <div>
-            <p className="font-light">Estimated End Date</p>
-            <p className="text-gray-900 font-medium text-[1rem] 2xl:text-[1vw]">
-              {estimatedEndDate}
-            </p>
-          </div>
-          <div>
-            <p className="font-light">Assigned Team</p>
-            <p className="underline cursor-pointer font-medium text-[1rem] 2xl:text-[1vw]">
-              5 Members
-            </p>
-          </div>
-          <div>
-            <p className="font-light">Project Phase</p>
-            <p className="underline cursor-pointer font-medium text-[1rem] 2xl:text-[1vw]">
-              {projectPhase}
-            </p>
-          </div>
-          <div>
-            <p className="font-light">Current Status</p>
-            <p className="underline cursor-pointer font-medium text-[1rem] 2xl:text-[1vw]">
-              {currentStatus}
-            </p>
+          <div className="flex flex-col">
+            <span className="font-light">Project Manager</span>
+            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.projectManager?.name ?? '-'}</span>
           </div>
         </div>
-        <div className="flex flex-wrap gap-6 2xl:gap-[2vw] mt-4 2xl:mt-[1vw]">
-          {teamMembers.map((member) => (
-            <div
-              key={member.id}
-              className="flex items-center gap-3 2xl:gap-[1vw]"
-            >
-              <div className="w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] rounded-full bg-primary flex items-center justify-center text-white font-semibold text-lg text-[1rem] 2xl:text-[1vw]">
-                {member.initials}
-              </div>
-              <span className="underline cursor-pointer text-lg text-[1rem] 2xl:text-[1vw]">
-                {member.name}
-              </span>
-            </div>
-          ))}
+        <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
+          <div className="flex flex-col">
+            <span className="font-light">Estimated Start Date</span>
+            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.estimatedStartDate ?? '-'}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-light">Estimated End Date</span>
+            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.estimatedEndDate ?? '-'}</span>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
+          <div className="flex flex-col">
+            <span className="font-light">Project Phase</span>
+            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.projectPhase ?? '-'}</span>
+          </div>
+          <div className="flex flex-col">
+            <span className="font-light">Current Status</span>
+            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.currentStatus ?? '-'}</span>
+          </div>
         </div>
       </div>
     </div>
   );
-}
+} 
