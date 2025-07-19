@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceDot,
+  ReferenceLine,
 } from "recharts";
 
 const data = [
@@ -18,11 +19,13 @@ const data = [
 
 export const ProjectSnapshotChart: React.FC = () => (
   <div className="bg-white rounded-2xl border border-gray-200 p-4">
-    <div className="font-semibold mb-2">
-      Project Snapshot{" "}
+    <div className="flex justify-between font-semibold mb-2">
+      <span>
+      Project Snapshot
+        </span>
       <span className="ml-4 text-xs align-middle">
         <span className="inline-block w-2 h-2 rounded-full bg-blue-500 mr-1"></span>
-        Started{" "}
+        Started
         <span className="inline-block w-2 h-2 rounded-full bg-orange-500 mx-2"></span>
         Completed
       </span>
@@ -51,10 +54,8 @@ export const ProjectSnapshotChart: React.FC = () => (
         />
         <YAxis
           domain={[0, 50]}
-          tick={{ fontSize: 14, fill: "#222" }}
-          axisLine={false}
-          tickLine={false}
         />
+        <ReferenceLine y={0} stroke="#ccc" />
         <Tooltip />
         <Area
           type="monotone"

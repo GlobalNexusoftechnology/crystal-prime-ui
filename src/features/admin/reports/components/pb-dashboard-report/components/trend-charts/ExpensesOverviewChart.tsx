@@ -6,6 +6,8 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  ReferenceLine,
+  CartesianGrid,
 } from "recharts";
 import { TooltipProps } from "recharts";
 
@@ -68,6 +70,7 @@ export const ExpensesOverviewChart: React.FC = () => (
             <stop offset="100%" stopColor="#fb923c" stopOpacity={0.05} />
           </linearGradient>
         </defs>
+        <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis
           dataKey="name"
           tick={{ fontSize: 14, fill: "#222" }}
@@ -76,10 +79,8 @@ export const ExpensesOverviewChart: React.FC = () => (
         />
         <YAxis
           domain={[0, 50]}
-          tick={{ fontSize: 14, fill: "#222" }}
-          axisLine={false}
-          tickLine={false}
         />
+        <ReferenceLine y={0} stroke="#ccc" />
         <Tooltip content={<CustomTooltip />} />
         <Area
           type="monotone"

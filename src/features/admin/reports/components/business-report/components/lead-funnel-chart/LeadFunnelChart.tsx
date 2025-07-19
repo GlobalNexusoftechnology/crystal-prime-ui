@@ -9,6 +9,7 @@ import {
   LabelList,
   Cell,
   CartesianGrid,
+  ReferenceLine,
 } from "recharts";
 
 const funnelData = [
@@ -60,10 +61,8 @@ export const LeadFunnelChart: React.FC = () => {
             />
             <YAxis
               domain={[0, 50]}
-              tick={{ fontSize: 15, fill: "#222" }}
-              axisLine={false}
-              tickLine={false}
             />
+            <ReferenceLine y={0} stroke="#ccc" />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: "#F3F4F6" }} />
             <Bar dataKey="value" radius={[6, 6, 0, 0]}>
               <LabelList

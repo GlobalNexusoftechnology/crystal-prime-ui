@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceDot,
+  ReferenceLine,
 } from "recharts";
 
 const data = [
@@ -40,10 +41,8 @@ export const NewLeadsChart: React.FC = () => (
         />
         <YAxis
           domain={[0, 50]}
-          tick={{ fontSize: 14, fill: "#222" }}
-          axisLine={false}
-          tickLine={false}
         />
+        <ReferenceLine y={0} stroke="#ccc" />
         <Tooltip />
         <Area
           type="monotone"

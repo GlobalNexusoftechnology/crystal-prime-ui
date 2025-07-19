@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
   ReferenceDot,
+  ReferenceLine,
 } from "recharts";
 
 // Default data for Jan-Dec
@@ -64,7 +65,7 @@ export const MonthlyLeadsChart: React.FC<{
             <stop offset="100%" stopColor="#fff" stopOpacity={0.05} />
           </linearGradient>
         </defs>
-        <CartesianGrid vertical={false} strokeDasharray="3 3" />
+        <CartesianGrid strokeDasharray="3 3" vertical={false} />
         <XAxis
           dataKey="name"
           tick={{ fontSize: 16, fill: "#222" }}
@@ -73,10 +74,8 @@ export const MonthlyLeadsChart: React.FC<{
         />
         <YAxis
           domain={yDomain}
-          tick={{ fontSize: 16, fill: "#222" }}
-          axisLine={false}
-          tickLine={false}
         />
+        <ReferenceLine y={0} stroke="#ccc" />
         <Tooltip content={<CustomTooltip />} />
         <Area
           type="monotone"
