@@ -101,7 +101,6 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
       queryClient.invalidateQueries({ queryKey: ['all-ei-logs-query-key'], exact: false });
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to create EI Log:", err);
       toast.error(err.message);
     },
   });
