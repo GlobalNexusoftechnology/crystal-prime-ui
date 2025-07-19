@@ -11,8 +11,8 @@ import {
   ProjectSearchFilter,
   ResourceUtilizationTable,
   TaskMetricsChart,
+  TimelineAnalysis,
 } from "./components";
-import { TimelineAnalysis } from "./components/TimelineAnalysis";
 import { Loading } from "@/components";
 import { defaultBasicProjectInfo, defaultCostBudgetAnalysis, defaultDocumentSummary, defaultFollowUpMatrix, defaultMilestoneSummary, defaultResourceUtilization, defaultTaskMetrics, defaultTimelineAnalysis } from "@/constants";
 
