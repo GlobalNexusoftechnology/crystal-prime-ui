@@ -14,7 +14,6 @@ import {
 import { ExportIcon } from "@/features";
 import { AddNewStaffModel } from "../add-new-staff-model";
 import { EditStaffModel } from "../edit-staff-model";
-// import { ViewStaffModel } from "../view-staff-model";
 import {
   downloadBlobFile,
   formatDate,
@@ -25,14 +24,13 @@ import { usePermission } from "@/utils/hooks";
 import { DeleteModal } from "@/components";
 
 export function StaffListTable() {
-  const { allUsersData, refetchAllUsers } = useAllUsersQuery();
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const { allUsersData, refetchAllUsers } = useAllUsersQuery(searchQuery);
   const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
   const [isEditStaffModalOpen, setIsEditStaffModalOpen] = useState(false);
-  // const [isViewStaffModalOpen, setIsViewStaffModalOpen] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState<IUserViewDetails | null>(
     null
   );
-  const [searchQuery, setSearchQuery] = useState<string>("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -43,10 +41,7 @@ export function StaffListTable() {
     EModule.STAFF_MANAGEMENT,
     EAction.ADD
   );
-  // const cavViewStaffManagement = hasPermission(
-  //   EModule.STAFF_MANAGEMENT,
-  //   EAction.VIEW
-  // );
+
   const cavEditStaffManagement = hasPermission(
     EModule.STAFF_MANAGEMENT,
     EAction.EDIT
@@ -71,13 +66,13 @@ export function StaffListTable() {
   });
 
   const handleUserDownloadExcel = async () => {
-    const { data } = await downloadAllUserExcel();
-    if (data instanceof Blob) {
-      await downloadBlobFile(data, `staff_list_${new Date().getTime()}.xlsx`);
+    const blob = await downloadAllUserExcel(searchQuery); 
+    if (blob instanceof Blob) {
+      await downloadBlobFile(blob, `staff_data.xlsx`);
     }
   };
 
-  // Prepare staff list data for table
+  // Prepare staff list data for table (no frontend filtering)
   const userList: IAllUsersListResponse[] = (allUsersData ?? []).map(
     (user) => ({
       id: user.id || "",
@@ -92,42 +87,9 @@ export function StaffListTable() {
       role_id: user?.role?.id || "",
     })
   );
-
-  // Filter user list based on search query
-  const filteredUserList = userList.filter((user) => {
-    const query = searchQuery.toLowerCase();
-    return (
-      user.first_name.toLowerCase().includes(query) ||
-      user.last_name.toLowerCase().includes(query) ||
-      user.email.toLowerCase().includes(query) ||
-      user.number.toLowerCase().includes(query) ||
-      user.role.toLowerCase().includes(query)
-    );
-  });
+  const filteredUserList = userList;
 
   const leadStaffManagementAction: ITableAction<IAllUsersListResponse>[] = [];
-
-  // if (cavViewStaffManagement) {
-  //   leadStaffManagementAction.push({
-  //     label: "View",
-  //     onClick: (row: IAllUsersListResponse) => {
-  //       setSelectedStaff({
-  //         id: row.id || "",
-  //         first_name: row.first_name || "",
-  //         last_name: row.last_name || "",
-  //         email: row.email || "",
-  //         phone_number: row.number || "",
-  //         dob: row.dob || "",
-  //         role: row?.role || "",
-  //         role_id: row.role_id || "",
-  //         created_at: formatDate(row.created_at) || "",
-  //         updated_at: formatDate(row.updated_at) || "",
-  //       });
-  //       setIsViewStaffModalOpen(true);
-  //     },
-  //     className: "text-blue-500 whitespace-nowrap",
-  //   });
-  // }
   
   if (cavEditStaffManagement) {
     leadStaffManagementAction.push({
@@ -182,7 +144,7 @@ export function StaffListTable() {
         </h1>
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           <SearchBar
-            onSearch={(query) => setSearchQuery(query)}
+            onSearch={setSearchQuery}
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           />
@@ -226,14 +188,6 @@ export function StaffListTable() {
           onAEditSuccessCallback={refetchAllUsers}
         />
       )}
-
-      {/* {isViewStaffModalOpen && selectedStaff && (
-        <ViewStaffModel
-          isOpen={isViewStaffModalOpen}
-          selectStaff={selectedStaff}
-          onClose={handleCloseViewModal}
-        />
-      )} */}
       <DeleteModal
         isOpen={showDeleteModal}
         onClose={() => {

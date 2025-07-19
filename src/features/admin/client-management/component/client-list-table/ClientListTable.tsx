@@ -13,7 +13,7 @@ import {
   useClientDownloadTemplateExcelQuery,
   useUploadClientFromExcelMutation,
 } from "@/services";
-import { usePermission } from "@/utils/hooks";
+import { usePermission, useDebounce } from "@/utils/hooks";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import { CustomClientTable } from "..";
@@ -38,7 +38,6 @@ export function ClientListTable(): JSX.Element {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const { allClientData, refetchClient } = useAllClientQuery();
   const { hasPermission } = usePermission();
 
   const canEditClient = hasPermission(EModule.CLIENT_MANAGEMENT, EAction.EDIT);
@@ -115,9 +114,9 @@ export function ClientListTable(): JSX.Element {
    * Downloads all clients as an Excel file.
    */
   const handleExportClients = async () => {
-    const { data } = await onAllClientDownloadExcel();
-    if (data instanceof Blob) {
-      await downloadBlobFile(data, `clients_${new Date().getTime()}.xlsx`);
+    const blob = await onAllClientDownloadExcel(searchQuery); // pass searchQuery if you want filtered export
+    if (blob instanceof Blob) {
+      await downloadBlobFile(blob, `clients_data.xlsx`);
     }
   };
 
@@ -173,22 +172,19 @@ export function ClientListTable(): JSX.Element {
   };
 
   const [searchQuery, setSearchQuery] = useState("");
-
-  /**
-   * Filters the client list based on the search query.
-   */
-  const filteredClients = (allClientData || []).filter((client) => {
-    const q = searchQuery.toLowerCase();
-    return (
-      client.name?.toLowerCase().includes(q) ||
-      client.company_name?.toLowerCase().includes(q) ||
-      client.contact_person?.toLowerCase().includes(q) ||
-      client.contact_number?.toLowerCase().includes(q) ||
-      client.email?.toLowerCase().includes(q) ||
-      client.address?.toLowerCase().includes(q) ||
-      client.website?.toLowerCase().includes(q)
-    );
+  const { debouncedValue: debouncedSearch } = useDebounce({
+    initialValue: searchQuery,
+    delay: 300,
+    onChangeCb: () => {},
   });
+
+  // Use the debounced value for backend search
+  const { allClientData, refetchClient } = useAllClientQuery(debouncedSearch);
+
+  // Remove the frontend filter:
+  // const filteredClients = (allClientData || []).filter(...);
+  // Instead, just use allClientData directly:
+  const filteredClients = allClientData || [];
 
   const clientNameToDelete = deleteId ? allClientData?.find((c) => c.id === deleteId)?.name : "";
 
@@ -200,8 +196,9 @@ export function ClientListTable(): JSX.Element {
           <h1 className="font-medium text-2xl 2xl:text-[1.5vw]">Client List</h1>
           <div className="flex flex-col flex-wrap md:flex-row gap-4 2xl:gap-[1vw]">
             <SearchBar
-              width="w-full md:w-[20rem] 2xl:w-[15vw]"
+              value={searchQuery}
               onSearch={setSearchQuery}
+              placeholder="Search clients..."
             />
             <Button
               title="Add New Client"

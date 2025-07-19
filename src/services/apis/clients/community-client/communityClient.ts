@@ -1006,19 +1006,15 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   }
 
-  public fetchAllUserDownloadExcel = async () => {
-    const response = await this.get<Blob>(
-      fetchAllUserDownloadExcelUrl(),
-      {
-        responseType: 'blob'
-      }
-    )
-
+  public fetchAllUserDownloadExcel = async (searchText?: string) => {
+    const url = searchText
+      ? `${fetchAllUserDownloadExcelUrl()}?searchText=${encodeURIComponent(searchText)}`
+      : fetchAllUserDownloadExcelUrl();
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-
-    return response?.data
+    return response?.data;
   }
 
   public fetchAllStatuses = async () => {
@@ -1049,16 +1045,15 @@ export class CommunityClient extends ApiClient {
   }
   // staff
 
-  public fetchAllUsers = async () => {
-    const response = await this.get<IAllUsersResponse>(fetchAllUsersUrl(), {
-      requiresAuth: false,
-    })
-
+  public fetchAllUsers = async (searchText?: string) => {
+    const url = searchText
+      ? `${fetchAllUsersUrl()}?searchText=${encodeURIComponent(searchText)}`
+      : fetchAllUsersUrl();
+    const response = await this.get<IAllUsersResponse>(url, { requiresAuth: false });
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-
-    return response?.data.data
+    return response?.data.data;
   }
 
   //post
@@ -1241,13 +1236,14 @@ export class CommunityClient extends ApiClient {
 
   //get
 
-  public fetchAllClient = async () => {
-    const response = await this.get<IAllClientResponse>(
-      fetchAllClientUrl(),
-      {
-        requiresAuth: false,
-      }
-    );
+  public fetchAllClient = async (searchText?: string) => {
+    const url = searchText
+      ? `${fetchAllClientUrl()}?searchText=${encodeURIComponent(searchText)}`
+      : fetchAllClientUrl();
+
+    const response = await this.get<IAllClientResponse>(url, {
+      requiresAuth: false,
+    });
 
     if (!response?.success) {
       throw response?.errorData;
@@ -1560,13 +1556,12 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchAllClientDownloadExcel = async () => {
-    const response = await this.get<Blob>(
-      fetchAllClientDownloadExcelUrl(),
-      {
-        responseType: 'blob'
-      }
-    );
+  public fetchAllClientDownloadExcel = async (searchText?: string) => {
+    const url = searchText
+      ? `${fetchAllClientDownloadExcelUrl()}?searchText=${encodeURIComponent(searchText)}`
+      : fetchAllClientDownloadExcelUrl();
+
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
 
     if (!response?.success) {
       throw response?.errorData;
