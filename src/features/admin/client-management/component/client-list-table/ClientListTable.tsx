@@ -114,9 +114,9 @@ export function ClientListTable(): JSX.Element {
    * Downloads all clients as an Excel file.
    */
   const handleExportClients = async () => {
-    const { data } = await onAllClientDownloadExcel();
-    if (data instanceof Blob) {
-      await downloadBlobFile(data, `clients_${new Date().getTime()}.xlsx`);
+    const blob = await onAllClientDownloadExcel(searchQuery); // pass searchQuery if you want filtered export
+    if (blob instanceof Blob) {
+      await downloadBlobFile(blob, `clients_data.xlsx`);
     }
   };
 

@@ -1557,13 +1557,12 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchAllClientDownloadExcel = async () => {
-    const response = await this.get<Blob>(
-      fetchAllClientDownloadExcelUrl(),
-      {
-        responseType: 'blob'
-      }
-    );
+  public fetchAllClientDownloadExcel = async (searchText?: string) => {
+    const url = searchText
+      ? `${fetchAllClientDownloadExcelUrl()}?searchText=${encodeURIComponent(searchText)}`
+      : fetchAllClientDownloadExcelUrl();
+
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
 
     if (!response?.success) {
       throw response?.errorData;
