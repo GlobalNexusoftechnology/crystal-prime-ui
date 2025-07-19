@@ -276,4 +276,5 @@ export const uploadEILogFromExcelUrl = () => "/ei-logs/upload-excel";
 export const uploadEILogAttachmentUrl = () => "/ei-logs/uploadAttachment";
 
 export const staffPerformanceReportUrl = () => "/reports/staff-performance";
+export const projectPerformanceReportUrl = () => "/reports/project-performance";
 

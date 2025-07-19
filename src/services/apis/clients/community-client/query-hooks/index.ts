@@ -143,3 +143,4 @@ export { useUploadEILogFromExcelMutation } from "./useUploadEILogFromExcelMutati
 export { useUploadEILogAttachmentMutation } from "./useUploadEILogAttachmentMutation";
 export { useDeleteDailyTaskMutation } from "./useDeleteDailyTaskMutation";
 export { useStaffPerformanceReportQuery } from './useStaffPerformanceReportQuery';
+export { useProjectPerformanceReportQuery } from './useProjectPerformanceReportQuery';

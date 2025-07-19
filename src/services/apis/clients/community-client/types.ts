@@ -1959,3 +1959,100 @@ export interface StaffPerformanceReportResponse {
     };
   };
 }
+
+export interface ProjectPerformanceReportResponse {
+  status: string;
+  message: string;
+  data: {
+    basicProjectInfo: {
+      projectType: string;
+      projectManager: {
+        id: string;
+        name: string;
+        email: string;
+        phone: string;
+        role: string;
+      } | null;
+      estimatedStartDate: string | null;
+      estimatedEndDate: string | null;
+      actualStartDate: string | null;
+      actualEndDate: string | null;
+      assignedTeam: Array<{
+        id: string;
+        name: string;
+        email: string;
+        phone: string;
+        role: string;
+      }>;
+      projectPhase: string;
+      currentStatus: string;
+    };
+    costBudgetAnalysis: {
+      budget: string;
+      estimatedCost: string;
+      actualCost: string;
+      budgetUtilization: string;
+      overrun: string;
+    };
+    taskMetrics: {
+      totalTasks: number;
+      completedTasks: number;
+      inProgressTasks: number;
+      overdueTasks: number;
+      avgTaskCompletionTime: string;
+      taskReassignmentCount: number;
+      topPerformer: any;
+      chart: Array<{ label: string; value: number }>;
+    };
+    documentSummary: {
+      totalFiles: number;
+      files: Array<{
+        file_type: string;
+        count: number;
+        last_updated: string | null;
+      }>;
+    };
+    followUpMatrix: {
+      totalFollowUpsLogged: number;
+      followUpsCompleted: number;
+      pendingFollowUps: number;
+      missedOrDelayedFollowUps: number;
+      avgResponseTimeHours: string;
+      escalatedItems: number;
+    };
+    timelineAnalysis: {
+      daysSinceStart: number;
+      plannedDurationDays: number;
+      progressPercent: number;
+      delayRisk: string;
+    };
+    milestoneSummary: Array<{
+      milestoneId: string;
+      name: string;
+      status: string;
+      start_date: string | null;
+      end_date: string | null;
+      actual_date: string | null;
+      assigned_to: {
+        id: string;
+        name: string;
+        email: string;
+        phone: string;
+        role: string;
+      } | null;
+      delayDays: number | null;
+    }>;
+    resourceUtilization: Array<{
+      id: string;
+      name: string;
+      email: string;
+      phone: string;
+      role: string;
+      assignedTasks: number;
+      completedTasks: number;
+      loadPercent: string;
+      followUpsHandled: number;
+      activeIssues: number;
+    }>;
+  };
+}
