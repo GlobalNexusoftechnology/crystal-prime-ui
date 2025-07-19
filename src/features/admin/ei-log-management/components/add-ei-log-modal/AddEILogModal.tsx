@@ -23,6 +23,7 @@ import {
   IUploadAttachmentResponse,
 } from "@/services";
 import toast from "react-hot-toast";
+import { useQueryClient } from '@tanstack/react-query';
 
 interface EILogFormValues {
   ei_log_type_id: string;
@@ -41,7 +42,6 @@ interface AddEILogModalProps {
   onClearEditData?: () => void;
   eiLogId?: string;
   eiLogData?: IAllEILogList | null;
-  eiLogsRefetch?: () => void;
 }
 
 export const AddEILogModal: React.FC<AddEILogModalProps> = ({
@@ -51,7 +51,6 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
   onClearEditData,
   eiLogId,
   eiLogData,
-  eiLogsRefetch,
 }) => {
   const [initialValues, setInitialValues] = useState<EILogFormValues>({
     ei_log_type_id: "",
@@ -63,6 +62,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
     attachment: "",
   });
   const [isUploading, setIsUploading] = useState(false);
+  const queryClient = useQueryClient();
 
   const { allEILogTypesData } = useAllEILogTypesQuery();
   const { allEILogHeadsData } = useAllEILogHeadsQuery();
@@ -98,7 +98,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
       onClose();
       onClearEditData?.();
       toast.success(response.message);
-      eiLogsRefetch?.();
+      queryClient.invalidateQueries({ queryKey: ['all-ei-logs-query-key'], exact: false });
     },
     onErrorCallback: (err: IApiError) => {
       console.error("Failed to create EI Log:", err);
@@ -112,10 +112,9 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
       onClose();
       onClearEditData?.();
       toast.success(response.message);
-      eiLogsRefetch?.();
+      queryClient.invalidateQueries({ queryKey: ['all-ei-logs-query-key'], exact: false });
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to update EI Log:", err);
       toast.error(err.message);
     },
   });

@@ -162,7 +162,6 @@ export function EILogManagement() {
                       </div>
 
                       <div className="flex md:flex-row flx-col gap-2 2xl:gap-[0.5vw] 2xl:pb-[0.3vw]">
-                        {" "}
                         <p className="text-purple-600 text-[0.9rem] 2xl:text-[0.875vw] whitespace-nowrap">
                           {isPending ? "Uploading..." : "Click to upload"}
                         </p>
@@ -189,7 +188,6 @@ export function EILogManagement() {
         <AddEILogModal
           isOpen={activeStep === "addForm"}
           onClose={handleAddFormClose}
-          eiLogsRefetch={eiLogsRefetch}
           onAddEILogSuccessCallback={eiLogsRefetch}
         />
       )}

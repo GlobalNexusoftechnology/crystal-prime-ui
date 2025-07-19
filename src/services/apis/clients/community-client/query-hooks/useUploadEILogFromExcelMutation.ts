@@ -26,6 +26,9 @@ export const useUploadEILogFromExcelMutation = ({
     retry: false,
     mutationFn: COMMUNITY_CLIENT.uploadEILogFromExcel,
     onSuccess: (response) => {
+      queryClient.invalidateQueries({
+        predicate: (query) => Array.isArray(query.queryKey) && query.queryKey[0] === 'all-ei-logs-query-key'
+      });
       queryClient.invalidateQueries({ queryKey: [NOTIFICATIONS_QUERY_KEY] });
       onSuccessCallback(response);
     },
