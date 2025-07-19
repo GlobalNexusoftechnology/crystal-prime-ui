@@ -6,15 +6,20 @@ import * as Yup from "yup";
 import { useUploadEILogFromExcelMutation } from "@/services";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ImportExcelProps {
   setAddEILogModalOpen: (value: boolean) => void;
 }
 
 export function ImportExcel({ setAddEILogModalOpen }: ImportExcelProps) {
+  const queryClient = useQueryClient();
   const { onUploadEILogFromExcel, isPending } = useUploadEILogFromExcelMutation({
     onSuccessCallback: (response) => {
       toast.success(response?.message);
+      queryClient.invalidateQueries({
+        predicate: (query) => Array.isArray(query.queryKey) && query.queryKey[0] === 'all-ei-logs-query-key'
+      });
       setAddEILogModalOpen(false);
     },
     onErrorCallback: (error: IApiError) => {
