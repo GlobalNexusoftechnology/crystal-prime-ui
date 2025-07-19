@@ -1,57 +1,162 @@
-import {
-  BasicProjectInfo,
-  CostBudgetAnalysisMetric,
-  ProjectSearchFilter,
-  DocumentSummaryTable,
-  FollowUpCommunicationMatrix,
-  TaskMetricsChart,
-  TimelineAnalysis,
-  MilestoneSummaryTable,
-  ResourceUtilizationTable,
-} from "./components";
+import { useState, useEffect } from "react";
+import { useProjectPerformanceReportQuery } from "@/services";
+import { useAllProjectsQuery } from "@/services";
+import { useAllClientQuery } from "@/services";
+import { BasicProjectInfo } from "./components/BasicProjectInfo";
+import { DocumentSummaryTable } from "./components/DocumentSummaryTable";
+import { FollowUpCommunicationMatrix } from "./components/FollowUpCommunicationMatrix";
+import { CostBudgetAnalysisMetric } from "./components/CostBudgetAnalysisMetric";
+import { TaskMetricsChart } from "./components/TaskMetricsChart";
+import { TimelineAnalysis } from "./components/TimelineAnalysis";
+import { MilestoneSummaryTable } from "./components/MilestoneSummaryTable";
+import { ResourceUtilizationTable } from "./components/ResourceUtilizationTable";
+import { ProjectSearchFilter } from "./components";
+import { ProjectPerformanceReportResponse } from "@/services";
+
 
 export function ProjectReport() {
+  const { allProjectsData } = useAllProjectsQuery();
+  const { allClientData } = useAllClientQuery();
+  const [selectedProject, setSelectedProject] = useState("");
+  const [selectedClient, setSelectedClient] = useState("");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
+
+  // Set default date range: 1st to last date of current month
+  useEffect(() => {
+    const now = new Date();
+    const first = new Date(now.getFullYear(), now.getMonth(), 1);
+    const last = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+    const formatDate = (date: Date) => date.toLocaleDateString("en-CA");
+    setFromDate(formatDate(first));
+    setToDate(formatDate(last));
+  }, []);
+
+  // Set default selected project and client to the first project when data loads
+  useEffect(() => {
+    if (
+      allProjectsData &&
+      allProjectsData.length > 0 &&
+      allClientData &&
+      allClientData.length > 0 &&
+      !selectedProject &&
+      !selectedClient
+    ) {
+      const firstProject = allProjectsData[0];
+      setSelectedProject(firstProject.id);
+      setSelectedClient(firstProject.client?.id || "");
+    }
+  }, [allProjectsData, allClientData, selectedProject, selectedClient]);
+
+  // Update selectedClient when selectedProject changes
+  useEffect(() => {
+    if (
+      selectedProject &&
+      allProjectsData &&
+      allProjectsData.length > 0
+    ) {
+      const project = allProjectsData.find((p) => p.id === selectedProject);
+      if (project && project.client?.id && selectedClient !== project.client.id) {
+        setSelectedClient(project.client.id);
+      }
+    }
+  }, [selectedProject, allProjectsData]);
+
+  const { projectPerformanceData, isLoading, error } = useProjectPerformanceReportQuery({
+    projectId: selectedProject,
+    clientId: selectedClient,
+    fromDate,
+    toDate,
+  });
+
+  if (!fromDate || !toDate || !allClientData) return null;
+
+  console.log({ selectedProject, selectedClient, allProjectsData, allClientData });
+
+  const defaultBasicProjectInfo = {
+    projectType: '',
+    projectManager: null,
+    estimatedStartDate: null,
+    estimatedEndDate: null,
+    actualStartDate: null,
+    actualEndDate: null,
+    assignedTeam: [],
+    projectPhase: '',
+    currentStatus: '',
+  };
+  const defaultDocumentSummary = { totalFiles: 0, files: [] };
+  const defaultFollowUpMatrix = {
+    totalFollowUpsLogged: 0,
+    followUpsCompleted: 0,
+    pendingFollowUps: 0,
+    missedOrDelayedFollowUps: 0,
+    avgResponseTimeHours: '',
+    escalatedItems: 0,
+  };
+  const defaultCostBudgetAnalysis = {
+    budget: '',
+    estimatedCost: '',
+    actualCost: '',
+    budgetUtilization: '',
+    overrun: '',
+  };
+  const defaultTaskMetrics = {
+    totalTasks: 0,
+    completedTasks: 0,
+    inProgressTasks: 0,
+    overdueTasks: 0,
+    avgTaskCompletionTime: '',
+    taskReassignmentCount: 0,
+    topPerformer: undefined,
+    chart: [],
+  };
+  const defaultTimelineAnalysis = {
+    daysSinceStart: 0,
+    plannedDurationDays: 0,
+    progressPercent: 0,
+    delayRisk: '',
+  };
+  const defaultMilestoneSummary: ProjectPerformanceReportResponse["data"]["milestoneSummary"] = [];
+  const defaultResourceUtilization: ProjectPerformanceReportResponse["data"]["resourceUtilization"] = [];
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading report</div>;
+
+  const data = projectPerformanceData?.data;
+
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1vw]">
       <div>
         <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
           Project Performance Report
         </h2>
-        <ProjectSearchFilter />
+        <ProjectSearchFilter
+          projects={(allProjectsData || []).map((p) => ({ id: p.id, name: p.name, client_id: p.client?.id || '' }))}
+          clients={allClientData || []}
+          selectedProject={selectedProject}
+          setSelectedProject={setSelectedProject}
+          selectedClient={selectedClient}
+          setSelectedClient={setSelectedClient}
+          fromDate={fromDate}
+          setFromDate={setFromDate}
+          toDate={toDate}
+          setToDate={setToDate}
+        />
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="flex flex-col border-r 2xl:border-r-[0.1vw]">
-          <BasicProjectInfo />
-          <DocumentSummaryTable />
-          <FollowUpCommunicationMatrix
-            data={{
-              totalFollowUps: 22,
-              followUpsCompleted: 18,
-              pendingFollowUps: 3,
-              missedFollowUps: 1,
-              avgResponseTime: "4.2 hours",
-              escalatedItems: "2 (1 tech, 1 client)",
-            }}
-          />
+          <BasicProjectInfo data={data?.basicProjectInfo ?? defaultBasicProjectInfo} />
+          <DocumentSummaryTable data={data?.documentSummary ?? defaultDocumentSummary} />
+          <FollowUpCommunicationMatrix data={data?.followUpMatrix ?? defaultFollowUpMatrix} />
         </div>
         <div className="flex flex-col">
-          <CostBudgetAnalysisMetric />
-          <TaskMetricsChart
-            data={{
-              totalTasks: 40,
-              completed: 26,
-              inProgress: 32,
-              overdue: 28,
-              avgCompletionTime: "3.6 Days",
-              reassignmentCount: 4,
-              topPerformer: { name: "Meena", completed: 12 },
-            }}
-          />
-            <TimelineAnalysis daysSinceStart={60} plannedDuration={90} delayRisk="Medium" />
+          <CostBudgetAnalysisMetric data={data?.costBudgetAnalysis ?? defaultCostBudgetAnalysis} />
+          <TaskMetricsChart data={data?.taskMetrics ?? defaultTaskMetrics} />
+          <TimelineAnalysis data={data?.timelineAnalysis ?? defaultTimelineAnalysis} />
         </div>
       </div>
-        <MilestoneSummaryTable />
-        <ResourceUtilizationTable />
+      <MilestoneSummaryTable data={data?.milestoneSummary ?? defaultMilestoneSummary} />
+      <ResourceUtilizationTable data={data?.resourceUtilization ?? defaultResourceUtilization} />
     </div>
   );
 }

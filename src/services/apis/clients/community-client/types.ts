@@ -2001,7 +2001,8 @@ export interface ProjectPerformanceReportResponse {
       overdueTasks: number;
       avgTaskCompletionTime: string;
       taskReassignmentCount: number;
-      topPerformer: any;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      topPerformer: unknown;
       chart: Array<{ label: string; value: number }>;
     };
     documentSummary: {

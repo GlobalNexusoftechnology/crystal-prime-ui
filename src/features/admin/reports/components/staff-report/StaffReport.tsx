@@ -29,7 +29,7 @@ export function StaffReport() {
     const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
     const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-    const formatDate = (date: Date): string => date.toLocaleDateString("en-CA"); // YYYY-MM-DD format in local time
+    const formatDate = (date: Date): string => date.toLocaleDateString("en-CA"); 
 
     setFromDate(formatDate(firstDay));
     setToDate(formatDate(lastDay));
