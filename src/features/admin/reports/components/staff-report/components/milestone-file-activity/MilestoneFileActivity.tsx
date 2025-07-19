@@ -1,4 +1,11 @@
-export function MilestoneFileActivity() {
+import { StaffPerformanceReportResponse } from "@/services";
+
+type MilestoneFileActivityProps = {
+  milestoneFileActivity?: StaffPerformanceReportResponse["data"]["milestoneFileActivity"];
+};
+
+export function MilestoneFileActivity({ milestoneFileActivity }: MilestoneFileActivityProps) {
+  if (!milestoneFileActivity) return null;
   return (
     <div className="border-b 2xl:border-[0.1vw] p-6 2xl:p-[1vw]">
       <h3 className="text-xl 2xl:text-[1.25vw] mb-4 2xl:mb-[1vw] font-medium">
@@ -8,13 +15,13 @@ export function MilestoneFileActivity() {
         <div className="flex flex-col">
           <span className="font-light">Milestone Managed</span>
           <span className="underline font-medium text-[1rem] 2xl:text-[1vw] cursor-pointer">
-            4
+            {milestoneFileActivity.milestonesManaged}
           </span>
         </div>
         <div className="flex flex-col">
           <span className="font-light">Files Uploaded</span>
           <span className="underline font-medium text-[1rem] 2xl:text-[1vw] cursor-pointer">
-            8
+            {milestoneFileActivity.filesUploaded}
           </span>
         </div>
       </div>

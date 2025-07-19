@@ -1,6 +1,12 @@
 import { IoInformationCircleOutline } from "react-icons/io5";
+import { StaffPerformanceReportResponse } from "@/services";
 
-export function TaskSummary() {
+type TaskSummaryProps = {
+  taskSummary?: StaffPerformanceReportResponse["data"]["taskSummary"];
+};
+
+export function TaskSummary({ taskSummary }: TaskSummaryProps) {
+  if (!taskSummary) return null;
   return (
     <div className="border-b 2xl:border-[0.1vw] p-4 2xl:p-[1vw]">
       <h3 className="text-xl 2xl:text-[1.25vw] mb-4 2xl:mb-[1vw] font-medium">
@@ -14,7 +20,7 @@ export function TaskSummary() {
               Total Task Assigned
             </span>
             <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">
-              25
+              {taskSummary.totalTasksAssigned}
             </span>
           </div>
           <div className="flex flex-col">
@@ -23,7 +29,7 @@ export function TaskSummary() {
               Completed Task
             </span>
             <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">
-              20
+              {taskSummary.completedTasks}
             </span>
           </div>
           <div className="flex flex-col">
@@ -32,7 +38,7 @@ export function TaskSummary() {
               Completion Rate
             </span>
             <span className="text-[1rem] 2xl:text-[1vw] font-medium">
-              80.0%
+              {taskSummary.completionRate}
             </span>
           </div>
         </div>
@@ -43,7 +49,7 @@ export function TaskSummary() {
               Avg Day To Complete
             </span>
             <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">
-              3.2 Days
+              {taskSummary.avgDaysToComplete}
             </span>
           </div>
           <div className="flex flex-col">
@@ -52,7 +58,7 @@ export function TaskSummary() {
               Delayed Task
             </span>
             <span className="text-[1rem] 2xl:text-[1vw] font-medium">
-              5
+              {taskSummary.delayedTasks}
             </span>
           </div>
         </div>
