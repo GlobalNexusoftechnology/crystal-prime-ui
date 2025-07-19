@@ -1237,13 +1237,14 @@ export class CommunityClient extends ApiClient {
 
   //get
 
-  public fetchAllClient = async () => {
-    const response = await this.get<IAllClientResponse>(
-      fetchAllClientUrl(),
-      {
-        requiresAuth: false,
-      }
-    );
+  public fetchAllClient = async (searchText?: string) => {
+    const url = searchText
+      ? `${fetchAllClientUrl()}?searchText=${encodeURIComponent(searchText)}`
+      : fetchAllClientUrl();
+
+    const response = await this.get<IAllClientResponse>(url, {
+      requiresAuth: false,
+    });
 
     if (!response?.success) {
       throw response?.errorData;

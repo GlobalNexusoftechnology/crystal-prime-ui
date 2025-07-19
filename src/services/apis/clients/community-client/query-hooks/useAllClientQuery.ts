@@ -10,10 +10,10 @@ const ALL_CLIENT_QUERY_KEY = 'all-client-query-key';
 /**
  * This hook fetches a list of all the client list in the bloom portal.
  */
-export const useAllClientQuery = () => {
+export const useAllClientQuery = (searchText?: string) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
-    queryKey: [ALL_CLIENT_QUERY_KEY ],
-    queryFn: COMMUNITY_CLIENT.fetchAllClient,
+    queryKey: [ALL_CLIENT_QUERY_KEY, searchText],
+    queryFn: () => COMMUNITY_CLIENT.fetchAllClient(searchText),
     networkMode: 'always',
   });
 
