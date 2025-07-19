@@ -1928,3 +1928,34 @@ export interface IEILogFilters {
   toDate?: string;
 }
 // END EI LOG MANAGEMENT
+
+export interface StaffPerformanceReportResponse {
+  status: string;
+  message: string;
+  data: {
+    staffInfo: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone: string;
+    };
+    taskSummary: {
+      totalTasksAssigned: number;
+      completedTasks: number;
+      completionRate: string;
+      avgDaysToComplete: string;
+      delayedTasks: number;
+    };
+    milestoneFileActivity: {
+      milestonesManaged: number;
+      filesUploaded: number;
+    };
+    followUpPerformance: {
+      totalFollowUps: number;
+      completedFollowUps: number;
+      pendingFollowUps: number;
+      missedFollowUps: number;
+      avgResponseTime: string;
+    };
+  };
+}

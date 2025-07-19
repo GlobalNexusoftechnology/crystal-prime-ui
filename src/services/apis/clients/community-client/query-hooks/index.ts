@@ -142,3 +142,4 @@ export { useEILogDownloadTemplateExcelQuery } from "./useEILogDownloadTemplateEx
 export { useUploadEILogFromExcelMutation } from "./useUploadEILogFromExcelMutation";
 export { useUploadEILogAttachmentMutation } from "./useUploadEILogAttachmentMutation";
 export { useDeleteDailyTaskMutation } from "./useDeleteDailyTaskMutation";
+export { useStaffPerformanceReportQuery } from './useStaffPerformanceReportQuery';

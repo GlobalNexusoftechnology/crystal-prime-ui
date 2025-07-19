@@ -151,6 +151,7 @@ import {
   IEILogFilters,
   IUploadEILogFromExcelResponse,
   IDeleteDailyTaskEntryResponse,
+  StaffPerformanceReportResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -282,6 +283,7 @@ import {
   fetchEILogDownloadTemplateExcelUrl,
   uploadEILogFromExcelUrl,
   uploadEILogAttachmentUrl,
+  staffPerformanceReportUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2003,6 +2005,15 @@ export class CommunityClient extends ApiClient {
 
     return response?.data
   }
+
+  public fetchStaffPerformanceReport = async (params: { userId: string; startDate?: string; endDate?: string }) => {
+    const url = staffPerformanceReportUrl();
+    const response = await this.get<StaffPerformanceReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
 }
 
 
