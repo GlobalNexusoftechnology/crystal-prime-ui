@@ -10,7 +10,7 @@ export function StaffSearchFilter() {
   return (
     <form className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw] mb-6 2xl:mb-[1vw]">
       <div>
-        <label className="block text-gray-700 mb-1 2xl:mb-[0.25vw]">Enter Staff Name</label>
+        <label className="block text-gray-700 2xl:text-[0.9vw] mb-1 2xl:mb-[0.25vw]">Enter Staff Name</label>
         <SearchBar
           placeholder="Enter Staff Name"
           value={search}

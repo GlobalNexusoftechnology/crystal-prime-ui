@@ -283,8 +283,8 @@ export default function Dashboard() {
   return (
     <div className="p-6 md:p-8 bg-[#fafbfc] min-h-screen">
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-1">Welcome</h1>
-        <p className="text-gray-500 text-base">
+        <h1 className="text-2xl 2xl:text-[1.5vw] 2xl:leading-[2vw] font-semibold text-gray-900 mb-1 2xl:mb-[0.25vw]">Welcome</h1>
+        <p className="text-gray-500 text-base 2xl:text-[1vw]">
           Wishing you a productive and fulfilling day ahead!
         </p>
       </div>
@@ -294,7 +294,7 @@ export default function Dashboard() {
         ))}
       </div>
       {userRole.toLowerCase() === "admin" ? (
-        <div className="flex flex-wrap gap-6 my-6">
+        <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
           <ProjectSnapshotChart
             data={projectSnapshotArray}
             colors={["#3B82F6", "#10B981", "#F59E42"]}

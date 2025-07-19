@@ -29,7 +29,7 @@ export const StaffConversionPerformance: React.FC = () => {
   };
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-200 p-6 max-w-xl w-full shadow-sm">
+    <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full shadow-sm">
       <div className="flex justify-between items-center mb-6">
         <span className="text-[1.1rem] 2xl:text-[1.1vw] font-medium text-black">Staff Conversion Performance</span>
         <div className="flex items-center gap-2">

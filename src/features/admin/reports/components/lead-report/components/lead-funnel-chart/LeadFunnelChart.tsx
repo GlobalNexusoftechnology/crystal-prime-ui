@@ -36,7 +36,7 @@ const CustomTooltip = ({
 
 export const LeadFunnelChart: React.FC = () => {
   return (
-    <div className="bg-white rounded-xl p-6 border border-gray-200 w-full max-w-xl">
+    <div className="bg-white rounded-xl p-6 border border-gray-200 w-full">
       <div className="flex justify-between items-center mb-4">
         <span className="font-semibold text-lg text-gray-900">
           Lead Metrics

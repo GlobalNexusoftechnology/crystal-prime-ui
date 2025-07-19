@@ -126,7 +126,7 @@ export function Step3UploadDocument({
       )}
       {/* Upload Area */}
       <div
-        className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg bg-gray-50 p-12 2xl:p-[4vw] mx-auto w-full max-w-2xl min-h-[300px] cursor-pointer"
+        className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg bg-gray-50 p-12 2xl:p-[4vw] mx-auto w-full min-h-[300px] cursor-pointer"
         onClick={() => inputRef.current?.click()}
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}

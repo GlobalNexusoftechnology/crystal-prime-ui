@@ -64,7 +64,7 @@ const columns: ITableColumn<Milestone>[] = [
 export const MilestoneSummaryTable: React.FC = () => {
   return (
     <div className="bg-white w-full">
-      <h2 className="text-xl font-medium mb-4">Milestone Summary</h2>
+      <h2 className="text-xl 2xl:text-[1.25vw] font-medium mb-4 2xl:mb-[1vw]">Milestone Summary</h2>
       <Table<Milestone>
         data={sampleData}
         columns={columns}

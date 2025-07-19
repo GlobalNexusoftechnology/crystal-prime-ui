@@ -43,7 +43,7 @@ export const MonthlyLeadsChart: React.FC<{
   data?: { name: string; value: number }[];
   yDomain?: [number, number];
 }> = ({ data = defaultData, yDomain = [0, 50] }) => (
-  <div className="bg-white rounded-2xl border border-gray-200 p-6 max-w-2xl w-full shadow-sm">
+  <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full shadow-sm">
     <div className="text-[1.1rem] 2xl:text-[1.1vw] font-medium text-black mb-2">
       Monthly Leads Chart
     </div>

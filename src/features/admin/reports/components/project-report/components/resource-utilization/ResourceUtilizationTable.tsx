@@ -64,7 +64,7 @@ const columns: ITableColumn<ResourceUtilization>[] = [
 export const ResourceUtilizationTable: React.FC = () => {
   return (
     <div className="bg-white w-full">
-      <h2 className="text-xl font-medium mb-4">Resource Utilization</h2>
+      <h2 className="text-xl 2xl:text-[1.25vw] font-medium mb-4 2xl:mb-[1vw]">Resource Utilization</h2>
       <Table<ResourceUtilization>
         data={sampleData}
         columns={columns}
