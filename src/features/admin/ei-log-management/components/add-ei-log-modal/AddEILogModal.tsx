@@ -162,7 +162,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
       modalTitle="Back to EI Logs"
       isOpen={isOpen}
       onClose={onClose}
-      modalClassName="w-full sm:w-[40rem]"
+      modalClassName="w-full sm:w-[40rem] 2xl:w-[40vw]"
     >
       <Formik<EILogFormValues>
         enableReinitialize
@@ -276,7 +276,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
                     }
                   />
                 </div>
-                <div className="mt-2">
+                <div>
                   <UploadDocument
                     label="Attachment (Optional)"
                     placeholder={
