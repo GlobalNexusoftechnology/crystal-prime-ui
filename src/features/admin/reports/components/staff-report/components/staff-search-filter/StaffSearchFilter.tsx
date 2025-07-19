@@ -1,37 +1,62 @@
-import { useState } from "react";
-import { SearchBar } from "@/components/search-bar";
+import { useAllUsersQuery } from "@/services";
+import { Dropdown } from "@/components/dropdown";
 import { DatePicker } from "@/components/date-picker";
+import { IUsersDetails } from "@/services";
 
-export function StaffSearchFilter() {
-  const [search, setSearch] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+interface StaffSearchFilterProps {
+  selectedStaff: string;
+  setSelectedStaff: (id: string) => void;
+  fromDate: string;
+  setFromDate: (date: string) => void;
+  toDate: string;
+  setToDate: (date: string) => void;
+}
+
+export function StaffSearchFilter({
+  selectedStaff,
+  setSelectedStaff,
+  fromDate,
+  setFromDate,
+  toDate,
+  setToDate,
+}: StaffSearchFilterProps) {
+  const { allUsersData } = useAllUsersQuery();
+  let staffList: IUsersDetails[] = allUsersData || [];
+  // Exclude users with role 'admin' (case-insensitive, role may be object)
+  staffList = staffList.filter(user => user.role?.role?.toLowerCase() !== "admin");
+
+  const staffOptions = [
+    ...staffList.map((user: IUsersDetails) => ({
+      label: `${user.first_name} ${user.last_name}`,
+      value: user.id,
+    })),
+  ];
 
   return (
     <form className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw] mb-6 2xl:mb-[1vw]">
       <div>
-        <label className="block text-gray-700 2xl:text-[0.9vw] mb-1 2xl:mb-[0.25vw]">Enter Staff Name</label>
-        <SearchBar
-          placeholder="Enter Staff Name"
-          value={search}
-          onSearch={setSearch}
-          width="w-full"
+        <Dropdown
+          label="Select Staff"
+          options={staffOptions}
+          value={selectedStaff}
+          onChange={setSelectedStaff}
+          dropdownWidth="w-full"
         />
       </div>
       <div>
         <DatePicker
-          label="Start Date"
-          value={startDate}
-          onChange={setStartDate}
-          placeholder="Start Date"
+          label="From Date"
+          value={fromDate}
+          onChange={setFromDate}
+          placeholder="From Date"
         />
       </div>
       <div>
         <DatePicker
-          label="End Date"
-          value={endDate}
-          onChange={setEndDate}
-          placeholder="End Date"
+          label="To Date"
+          value={toDate}
+          onChange={setToDate}
+          placeholder="To Date"
         />
       </div>
     </form>
