@@ -101,7 +101,6 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
       queryClient.invalidateQueries({ queryKey: ['all-ei-logs-query-key'], exact: false });
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to create EI Log:", err);
       toast.error(err.message);
     },
   });
@@ -163,7 +162,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
       modalTitle="Back to EI Logs"
       isOpen={isOpen}
       onClose={onClose}
-      modalClassName="w-full sm:w-[40rem]"
+      modalClassName="w-full sm:w-[40rem] 2xl:w-[40vw]"
     >
       <Formik<EILogFormValues>
         enableReinitialize
@@ -277,7 +276,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
                     }
                   />
                 </div>
-                <div className="mt-2">
+                <div>
                   <UploadDocument
                     label="Attachment (Optional)"
                     placeholder={

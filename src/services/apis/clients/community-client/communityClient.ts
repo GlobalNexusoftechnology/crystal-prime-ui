@@ -1916,7 +1916,7 @@ export class CommunityClient extends ApiClient {
   public createEILog = async (payload: ICreateEILogPayload) => {
     const response = await this.post<ICreateEILogResponse>(createEILogUrl(), payload);
     if (!response?.success) {
-      throw response?.errorData;
+      throw response?.response?.data;
     }
     return response?.data;
   };
