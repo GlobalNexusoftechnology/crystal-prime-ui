@@ -2175,3 +2175,43 @@ export interface BusinessAnalysisReportResponse {
   message: string;
   data: BusinessAnalysisReport;
 }
+
+// Public Dashboard Report Types
+export interface PublicDashboardParams {
+  fromDate?: string;
+  toDate?: string;
+}
+
+export interface PublicDashboardReport {
+  businessOverview: {
+    totalProjectsDelivered: number;
+    ongoingProjects: number;
+    clientsServed: number;
+  };
+  leadClientInterest: {
+    leadsThisMonth: number;
+    conversionsThisMonth: number;
+    avgConversionTime: number;
+    topSourceOfLeads: string;
+  };
+  trendChart: {
+    labels: string[];
+    newProject: number[];
+    completedProject: number[];
+  };
+  monthlyLeadsChart: {
+    labels: string[];
+    leads: number[];
+  };
+  teamPerformance: {
+    topPerformer: string;
+    onTimeDeliveryRate: number;
+    avgTaskCompletionRate: number;
+  };
+}
+
+export interface PublicDashboardReportResponse {
+  status: string;
+  message: string;
+  data: PublicDashboardReport;
+}

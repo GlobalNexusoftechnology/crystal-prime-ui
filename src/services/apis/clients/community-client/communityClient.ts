@@ -156,6 +156,8 @@ import {
   LeadReportResponse,
   BusinessAnalysisParams,
   BusinessAnalysisReportResponse,
+  PublicDashboardParams,
+  PublicDashboardReportResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -291,6 +293,7 @@ import {
   projectPerformanceReportUrl,
   leadReportUrl,
   businessAnalysisReportUrl,
+  publicDashboardReportUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2045,6 +2048,15 @@ export class CommunityClient extends ApiClient {
   public fetchBusinessAnalysisReport = async (params?: BusinessAnalysisParams) => {
     const url = businessAnalysisReportUrl();
     const response = await this.get<BusinessAnalysisReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  }
+
+  public fetchPublicDashboardReport = async (params?: PublicDashboardParams) => {
+    const url = publicDashboardReportUrl();
+    const response = await this.get<PublicDashboardReportResponse>(url, { params });
     if (!response?.success) {
       throw response?.errorData;
     }

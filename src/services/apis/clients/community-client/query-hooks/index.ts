@@ -146,3 +146,4 @@ export { useStaffPerformanceReportQuery } from './useStaffPerformanceReportQuery
 export { useProjectPerformanceReportQuery } from './useProjectPerformanceReportQuery';
 export { useLeadReportQuery } from './useLeadReportQuery';
 export { useBusinessAnalysisReportQuery } from './useBusinessAnalysisReportQuery';
+export { usePublicDashboardReportQuery } from './usePublicDashboardReportQuery';
