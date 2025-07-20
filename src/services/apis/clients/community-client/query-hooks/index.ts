@@ -145,3 +145,4 @@ export { useDeleteDailyTaskMutation } from "./useDeleteDailyTaskMutation";
 export { useStaffPerformanceReportQuery } from './useStaffPerformanceReportQuery';
 export { useProjectPerformanceReportQuery } from './useProjectPerformanceReportQuery';
 export { useLeadReportQuery } from './useLeadReportQuery';
+export { useBusinessAnalysisReportQuery } from './useBusinessAnalysisReportQuery';

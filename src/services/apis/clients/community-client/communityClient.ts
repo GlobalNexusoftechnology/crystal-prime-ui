@@ -154,6 +154,8 @@ import {
   StaffPerformanceReportResponse,
   ProjectPerformanceReportResponse,
   LeadReportResponse,
+  BusinessAnalysisParams,
+  BusinessAnalysisReportResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -288,6 +290,7 @@ import {
   staffPerformanceReportUrl,
   projectPerformanceReportUrl,
   leadReportUrl,
+  businessAnalysisReportUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2038,6 +2041,15 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   };
+
+  public fetchBusinessAnalysisReport = async (params?: BusinessAnalysisParams) => {
+    const url = businessAnalysisReportUrl();
+    const response = await this.get<BusinessAnalysisReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  }
 }
 
 

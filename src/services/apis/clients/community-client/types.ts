@@ -2107,3 +2107,71 @@ export interface LeadReportResponse {
     };
   };
 }
+
+// Business Analysis Report Types
+export interface BusinessAnalysisParams {
+  fromDate?: string;
+  toDate?: string;
+}
+
+export interface BusinessAnalysisReport {
+  leadFunnelMetrics: {
+    totalLeads: number;
+    qualifiedLeads: number;
+    convertedLeads: number;
+    dropOfStage: string;
+    conversionRate: number;
+    avgTimeToConvert: number;
+    avgFollowups: number;
+    bestLeadSource: string;
+  };
+  projectDeliveryMetrics: {
+    totalProjects: number;
+    completedProjects: number;
+    onTimeDeliveryRate: number;
+    budgetOverrunProjects: number;
+    avgProjectProfitability: number;
+    avgProjectDuration: number;
+    resourceUtilization: number;
+    clientSatisfactionIndex: number;
+  };
+  financialSummary: {
+    totalIncome: number;
+    amountReceivedInBank: number;
+    amountReceivedInUPI: number;
+    amountReceivedInCash: number;
+    amountReceivedInOnline: number;
+    amountSpentInBank: number;
+    amountSpentInUPI: number;
+    amountSpentInCash: number;
+    amountSpentInOnline: number;
+  };
+  teamStaffPerformance: {
+    activeStaffMembers: number;
+    topPerformer: string;
+    taskCompletionRate: number;
+    delayedTasks: number;
+    avgFollowupsPerStaff: number;
+    documentContributions: number;
+  };
+  monthlyTrends: {
+    labels: string[];
+    started: (number|null)[];
+    completed: (number|null)[];
+    newLeads: (number|null)[];
+    revenue: (number|null)[];
+  };
+  summary: {
+    totalRevenue: number;
+    totalProjects: number;
+    totalLeads: number;
+    totalStaff: number;
+    overallPerformance: number;
+  };
+}
+
+export interface BusinessAnalysisReportResponse {
+  status: string;
+  message: string;
+  data: BusinessAnalysisReport;
+}
