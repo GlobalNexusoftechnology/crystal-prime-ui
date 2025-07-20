@@ -4,3 +4,4 @@ export { StaffConversionPerformance } from "./staff-conversion-performance";
 export { SourceWiseConversionRate } from "./source-wise-conversion-rate";
 export { LeadFunnel } from "./lead-funnel";
 export { MonthlyLeadsChart } from "./monthly-leads-chart";
+export { LeadReportFilter } from "./lead-report-filter";

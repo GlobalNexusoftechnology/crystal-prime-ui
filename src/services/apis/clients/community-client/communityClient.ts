@@ -153,6 +153,7 @@ import {
   IDeleteDailyTaskEntryResponse,
   StaffPerformanceReportResponse,
   ProjectPerformanceReportResponse,
+  LeadReportResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -286,6 +287,7 @@ import {
   uploadEILogAttachmentUrl,
   staffPerformanceReportUrl,
   projectPerformanceReportUrl,
+  leadReportUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2015,6 +2017,22 @@ export class CommunityClient extends ApiClient {
   public fetchProjectPerformanceReport = async (params: { projectId?: string; clientId?: string; fromDate?: string; toDate?: string }) => {
     const url = projectPerformanceReportUrl();
     const response = await this.get<ProjectPerformanceReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchLeadReport = async (params?: { 
+    fromDate?: string; 
+    toDate?: string; 
+    sourceId?: string; 
+    statusId?: string;
+    userId?: string;
+    typeId?: string;
+  }) => {
+    const url = leadReportUrl();
+    const response = await this.get<LeadReportResponse>(url, { params });
     if (!response?.success) {
       throw response?.errorData;
     }

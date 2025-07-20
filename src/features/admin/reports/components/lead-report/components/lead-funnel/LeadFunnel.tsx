@@ -11,17 +11,28 @@ import {
   CartesianGrid,
 } from "recharts";
 
-const funnelData = [
-  { name: "New", value: 36, color: "#69A8F7" },
-  { name: "Profile Sent", value: 35, color: "#69A8F7" },
-  { name: "Quotation", value: 22, color: "#69A8F7" },
-  { name: "Not Interested", value: 36, color: "#1746A2" },
-  { name: "Call Me Later", value: 25, color: "#69A8F7" },
-  { name: "Phone Not Received", value: 34, color: "#69A8F7" },
-  { name: "Business Done", value: 34, color: "#69A8F7" },
-];
+interface LeadFunnelProps {
+  data?: Array<{
+    stage: string;
+    count: number;
+    isHighlighted: boolean;
+  }>;
+}
 
-export const LeadFunnel: React.FC = () => {
+export const LeadFunnel: React.FC<LeadFunnelProps> = ({ data }) => {
+  const funnelData = data ? data.map(item => ({
+    name: item.stage,
+    value: item.count,
+    color: item.isHighlighted ? "#1746A2" : "#69A8F7"
+  })) : [
+    { name: "New", value: 0, color: "#69A8F7" },
+    { name: "Profile Sent", value: 0, color: "#69A8F7" },
+    { name: "Quotation", value: 0, color: "#69A8F7" },
+    { name: "Not Interested", value: 0, color: "#1746A2" },
+    { name: "Call Me Later", value: 0, color: "#69A8F7" },
+    { name: "Phone Not Received", value: 0, color: "#69A8F7" },
+    { name: "Business Done", value: 0, color: "#69A8F7" },
+  ];
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full shadow-sm">
       <div className="text-[1.1rem] 2xl:text-[1.1vw] font-medium text-black mb-2">Lead Funnel</div>

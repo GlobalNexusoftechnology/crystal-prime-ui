@@ -1,16 +1,21 @@
 import React, { useRef, useState, useEffect } from "react";
 import { FiMenu } from "react-icons/fi";
 
-const staffData = [
-  { name: "Ramesh Gupta", initials: "RM", percent: 60 },
-  { name: "Mahesh", initials: "RM", percent: 60 },
-  { name: "Riya", initials: "RM", percent: 60 },
-  { name: "Rohit", initials: "RM", percent: 60 },
-  { name: "Rakesh", initials: "RM", percent: 60 },
-  { name: "Ritu", initials: "RM", percent: 60 },
-];
+interface StaffConversionPerformanceProps {
+  data?: Array<{
+    staffName: string;
+    conversionRate: number;
+  }>;
+}
 
-export const StaffConversionPerformance: React.FC = () => {
+export const StaffConversionPerformance: React.FC<StaffConversionPerformanceProps> = ({ data }) => {
+  const staffData = data ? data.map(item => ({
+    name: item.staffName,
+    initials: item.staffName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase(),
+    percent: item.conversionRate || 0
+  })) : [
+    { name: "No Data", initials: "ND", percent: 0 },
+  ];
   const listRef = useRef<HTMLDivElement>(null);
   const [showScroll, setShowScroll] = useState(false);
 

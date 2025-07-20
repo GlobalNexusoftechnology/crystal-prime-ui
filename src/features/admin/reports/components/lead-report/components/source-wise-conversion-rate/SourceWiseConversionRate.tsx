@@ -1,11 +1,20 @@
 import React from "react";
 
-const sourceData = [
-  { label: "Website", value: "26.6%" },
-  { label: "Referral", value: "42%" },
-];
+interface SourceWiseConversionRateProps {
+  data?: Array<{
+    source: string;
+    conversionRate: number;
+  }>;
+}
 
-export const SourceWiseConversionRate: React.FC = () => {
+export const SourceWiseConversionRate: React.FC<SourceWiseConversionRateProps> = ({ data }) => {
+  const sourceData = data ? data.map(item => ({
+    label: item.source,
+    value: `${item.conversionRate}%`
+  })) : [
+    { label: "Website", value: "0%" },
+    { label: "Referral", value: "0%" },
+  ];
   return (
     <div className="w-full">
       <div className="text-[1.1rem] 2xl:text-[1.1vw] font-medium text-black mb-8">Source-Wise Conversion Rate</div>

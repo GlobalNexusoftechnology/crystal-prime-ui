@@ -12,11 +12,17 @@ import {
   ReferenceLine,
 } from "recharts";
 
-const funnelData = [
-  { name: "Total Leads", value: 40, color: "#1746A2" },
-  { name: "Lost Leads", value: 22, color: "#69A8F7" },
-  { name: "Converted Leads", value: 34, color: "#69A8F7" },
-];
+interface LeadFunnelChartProps {
+  data?: {
+    totalLeads: number;
+    lostLeads: number;
+    convertedLeads: number;
+    dropOfStage: {
+      stage: string;
+      count: number;
+    };
+  };
+}
 
 const CustomTooltip = ({
   active,
@@ -35,7 +41,16 @@ const CustomTooltip = ({
   return null;
 };
 
-export const LeadFunnelChart: React.FC = () => {
+export const LeadFunnelChart: React.FC<LeadFunnelChartProps> = ({ data }) => {
+  const funnelData = data ? [
+    { name: "Total Leads", value: data.totalLeads, color: "#1746A2" },
+    { name: "Lost Leads", value: data.lostLeads, color: "#69A8F7" },
+    { name: "Converted Leads", value: data.convertedLeads, color: "#69A8F7" },
+  ] : [
+    { name: "Total Leads", value: 0, color: "#1746A2" },
+    { name: "Lost Leads", value: 0, color: "#69A8F7" },
+    { name: "Converted Leads", value: 0, color: "#69A8F7" },
+  ];
   return (
     <div className="bg-white rounded-xl p-6 border border-gray-200 w-full">
       <div className="flex justify-between items-center mb-4">
@@ -45,7 +60,7 @@ export const LeadFunnelChart: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="text-gray-700 font-medium">Drop of Stage</span>
           <span className="bg-green-500 text-white text-sm font-semibold px-3 py-1 rounded">
-            Personal Sent
+            {data?.dropOfStage?.stage || "Personal Sent"}
           </span>
         </div>
       </div>

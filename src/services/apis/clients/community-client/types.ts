@@ -2057,3 +2057,53 @@ export interface ProjectPerformanceReportResponse {
     }>;
   };
 }
+
+export interface LeadReportResponse {
+  status: string;
+  message: string;
+  data: {
+    leadFunnelChart: {
+      totalLeads: number;
+      lostLeads: number;
+      convertedLeads: number;
+      dropOfStage: {
+        stage: string;
+        count: number;
+      };
+    };
+    kpiMetrics: {
+      conversionRate: number;
+      avgLeadAge: number;
+      avgFollowupsLead: number;
+      topPerformingSource: string;
+      avgTimeToConvert: number;
+      pendingFollowups: number;
+      hotLeadsCount: number;
+      averageResponseTime: number;
+    };
+    sourceWiseConversionRates: Array<{
+      source: string;
+      conversionRate: number;
+    }>;
+    leadFunnelStages: Array<{
+      stage: string;
+      count: number;
+      isHighlighted: boolean;
+    }>;
+    monthlyLeadsChart: {
+      labels: string[];
+      leads: number[];
+    };
+    staffConversionPerformance: Array<{
+      staffName: string;
+      conversionRate: number;
+    }>;
+    summary: {
+      totalLeads: number;
+      convertedLeads: number;
+      lostLeads: number;
+      activeLeads: number;
+      conversionRate: number;
+    };
+  };
+}
