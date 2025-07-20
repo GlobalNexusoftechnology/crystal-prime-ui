@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
-import { useBusinessAnalysisReportQuery } from "@/services";
-import { Loading } from "@/components";
+import {
+  useBusinessAnalysisReportExcelQuery,
+  useBusinessAnalysisReportQuery,
+} from "@/services";
+import { Button, Loading } from "@/components";
 import {
   BusinessAnalysisFilter,
   FinancialSummary,
@@ -12,6 +15,7 @@ import {
   RevenueTrendChart,
   TeamStaffPerformance,
 } from "./components";
+import { ImDownload2 } from "react-icons/im";
 
 export const BusinessReport: React.FC = () => {
   const [fromDate, setFromDate] = useState("");
@@ -26,10 +30,21 @@ export const BusinessReport: React.FC = () => {
     setToDate(formatDate(last));
   }, []);
 
-  const { businessAnalysisData, isLoading, isError } = useBusinessAnalysisReportQuery({
-    fromDate,
-    toDate,
-  });
+  const { businessAnalysisData, isLoading, isError } =
+    useBusinessAnalysisReportQuery({
+      fromDate,
+      toDate,
+    });
+
+  const { onDownloadBusinessAnalysisReportExcel } =
+    useBusinessAnalysisReportExcelQuery();
+
+  const handleExport = () => {
+    onDownloadBusinessAnalysisReportExcel({
+      fromDate,
+      toDate,
+    });
+  };
 
   if (isLoading) return <Loading />;
   if (isError) return <div>Error loading report</div>;
@@ -37,25 +52,42 @@ export const BusinessReport: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1vw]">
-      <div>
+      <div className="flex justify-between items-center">
         <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
           Overall Business Analysis Report
         </h2>
-        <BusinessAnalysisFilter
-          fromDate={fromDate}
-          setFromDate={setFromDate}
-          toDate={toDate}
-          setToDate={setToDate}
+        <Button
+          type="button"
+          variant="primary-outline-blue"
+          width="w-full md:w-fit"
+          onClick={handleExport}
+          leftIcon={
+            <ImDownload2
+              className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
+              color="#034A9F"
+            />
+          }
+          tooltip="Download Excel"
         />
       </div>
+      <BusinessAnalysisFilter
+        fromDate={fromDate}
+        setFromDate={setFromDate}
+        toDate={toDate}
+        setToDate={setToDate}
+      />
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="flex flex-col border-r gap-8 2xl:gap-[2vw] 2xl:border-r-[0.1vw]">
           <LeadFunnelChart data={businessAnalysisData.leadFunnelMetrics} />
           <LeadMetrics data={businessAnalysisData.leadFunnelMetrics} />
-          <TeamStaffPerformance data={businessAnalysisData.teamStaffPerformance} />
+          <TeamStaffPerformance
+            data={businessAnalysisData.teamStaffPerformance}
+          />
         </div>
         <div className="flex flex-col gap-8 2xl:gap-[2vw]">
-          <ProjectDeliveryPerformance data={businessAnalysisData.projectDeliveryMetrics} />
+          <ProjectDeliveryPerformance
+            data={businessAnalysisData.projectDeliveryMetrics}
+          />
           <FinancialSummary data={businessAnalysisData.financialSummary} />
         </div>
       </div>

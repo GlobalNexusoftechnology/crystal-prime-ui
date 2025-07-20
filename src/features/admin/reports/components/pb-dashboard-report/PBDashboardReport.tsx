@@ -11,7 +11,7 @@ import {
   PBDashboardFilter,
   TeamPerformanceHighlights,
 } from "./components";
-import { Button } from "@/components";
+import { Button, Loading } from "@/components";
 import { ImDownload2 } from "react-icons/im";
 
 export function PBDashboardReport() {
@@ -37,30 +37,29 @@ export function PBDashboardReport() {
     onDownloadPublicDashboardReportExcel({ fromDate, toDate });
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
   if (isError || !publicDashboardData)
     return <div>Error loading dashboard</div>;
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1vw]">
-      <div>
-        <div className="flex justify-between items-center">
-          <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
-            Public Business Dashboard
-          </h2>
-          <Button
-            type="button"
-            variant="primary-outline-blue"
-            width="w-full md:w-fit"
-            onClick={handleExport}
-            leftIcon={
-              <ImDownload2
-                className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
-                color="#034A9F"
-              />
-            }
-            tooltip="Download Excel"
-          />
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
+          Public Business Dashboard
+        </h2>
+        <Button
+          type="button"
+          variant="primary-outline-blue"
+          width="w-full md:w-fit"
+          onClick={handleExport}
+          leftIcon={
+            <ImDownload2
+              className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
+              color="#034A9F"
+            />
+          }
+          tooltip="Download Excel"
+        />
         </div>
         <PBDashboardFilter
           fromDate={fromDate}
@@ -68,7 +67,6 @@ export function PBDashboardReport() {
           toDate={toDate}
           setToDate={setToDate}
         />
-      </div>
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="flex flex-col gap-8 border-r 2xl:border-r-[0.1vw]">
           <BusinessOverview data={publicDashboardData.businessOverview} />

@@ -295,6 +295,10 @@ import {
   businessAnalysisReportUrl,
   publicDashboardReportUrl,
   fetchPublicDashboardReportExcelUrl,
+  fetchProjectPerformanceReportExcelUrl,
+  fetchStaffPerformanceReportExcelUrl,
+  fetchLeadReportExcelUrl,
+  fetchBusinessAnalysisReportExcelUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2046,6 +2050,19 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
+  public fetchLeadReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchLeadReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
   public fetchBusinessAnalysisReport = async (params?: BusinessAnalysisParams) => {
     const url = businessAnalysisReportUrl();
     const response = await this.get<BusinessAnalysisReportResponse>(url, { params });
@@ -2076,8 +2093,46 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   }
-}
 
+  public fetchProjectPerformanceReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchProjectPerformanceReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchStaffPerformanceReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchStaffPerformanceReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchBusinessAnalysisReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchBusinessAnalysisReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+}
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.

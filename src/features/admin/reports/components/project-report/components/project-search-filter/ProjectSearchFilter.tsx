@@ -47,7 +47,7 @@ export function ProjectSearchFilter({
     : clientOptions;
 
   return (
-    <form className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw] mb-6 2xl:mb-[1vw]">
+    <form className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 2xl:gap-[1vw] mb-6 2xl:mb-[1vw]">
       <div>
         <Dropdown
           label="Project Title"
