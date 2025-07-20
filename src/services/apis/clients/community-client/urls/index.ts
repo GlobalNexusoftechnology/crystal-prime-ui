@@ -281,4 +281,5 @@ export const projectPerformanceReportUrl = () => "/reports/project-performance";
 export const leadReportUrl = () => "/reports/leads";
 export const businessAnalysisReportUrl = () => "/reports/business-analysis";
 export const publicDashboardReportUrl = () => "/reports/public-dashboard";
+export const fetchPublicDashboardReportExcelUrl = () => "/reports/public-dashboard/export/excel";
 

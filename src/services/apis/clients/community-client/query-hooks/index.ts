@@ -147,3 +147,4 @@ export { useProjectPerformanceReportQuery } from './useProjectPerformanceReportQ
 export { useLeadReportQuery } from './useLeadReportQuery';
 export { useBusinessAnalysisReportQuery } from './useBusinessAnalysisReportQuery';
 export { usePublicDashboardReportQuery } from './usePublicDashboardReportQuery';
+export { usePublicDashboardReportExcelQuery } from './usePublicDashboardReportExcelQuery';

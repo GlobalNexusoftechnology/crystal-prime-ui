@@ -294,6 +294,7 @@ import {
   leadReportUrl,
   businessAnalysisReportUrl,
   publicDashboardReportUrl,
+  fetchPublicDashboardReportExcelUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2061,6 +2062,19 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
     return response?.data.data;
+  }
+
+  public fetchPublicDashboardReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchPublicDashboardReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
   }
 }
 

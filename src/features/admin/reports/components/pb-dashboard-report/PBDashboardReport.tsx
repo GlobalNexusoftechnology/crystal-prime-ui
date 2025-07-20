@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { usePublicDashboardReportQuery } from "@/services";
+import {
+  usePublicDashboardReportExcelQuery,
+  usePublicDashboardReportQuery,
+} from "@/services";
 import {
   BusinessOverview,
   ExpensesOverviewChart,
@@ -8,6 +11,8 @@ import {
   PBDashboardFilter,
   TeamPerformanceHighlights,
 } from "./components";
+import { Button } from "@/components";
+import { ImDownload2 } from "react-icons/im";
 
 export function PBDashboardReport() {
   const [fromDate, setFromDate] = useState("");
@@ -22,17 +27,41 @@ export function PBDashboardReport() {
     setToDate(formatDate(last));
   }, []);
 
-  const { publicDashboardData, isLoading, isError } = usePublicDashboardReportQuery({ fromDate, toDate });
+  const { publicDashboardData, isLoading, isError } =
+    usePublicDashboardReportQuery({ fromDate, toDate });
+
+  const { onDownloadPublicDashboardReportExcel } =
+    usePublicDashboardReportExcelQuery();
+
+  const handleExport = () => {
+    onDownloadPublicDashboardReportExcel({ fromDate, toDate });
+  };
 
   if (isLoading) return <div>Loading...</div>;
-  if (isError || !publicDashboardData) return <div>Error loading dashboard</div>;
+  if (isError || !publicDashboardData)
+    return <div>Error loading dashboard</div>;
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[1vw]">
       <div>
-        <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
-          Public Business Dashboard
-        </h2>
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
+            Public Business Dashboard
+          </h2>
+          <Button
+            type="button"
+            variant="primary-outline-blue"
+            width="w-full md:w-fit"
+            onClick={handleExport}
+            leftIcon={
+              <ImDownload2
+                className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
+                color="#034A9F"
+              />
+            }
+            tooltip="Download Excel"
+          />
+        </div>
         <PBDashboardFilter
           fromDate={fromDate}
           setFromDate={setFromDate}
@@ -43,7 +72,7 @@ export function PBDashboardReport() {
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="flex flex-col gap-8 border-r 2xl:border-r-[0.1vw]">
           <BusinessOverview data={publicDashboardData.businessOverview} />
-          <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+          <div className="flex flex-col gap-4 2xl:gap-[1vw] pr-4 2xl:pr-[1vw]">
             <h2 className="text-xl font-semibold mb-2">Trend Charts</h2>
             <ExpensesOverviewChart data={publicDashboardData.trendChart} />
             <MonthlyLeadsChart data={publicDashboardData.monthlyLeadsChart} />
@@ -51,7 +80,9 @@ export function PBDashboardReport() {
         </div>
         <div className="flex flex-col gap-8">
           <LeadClientInterest data={publicDashboardData.leadClientInterest} />
-          <TeamPerformanceHighlights data={publicDashboardData.teamPerformance} />
+          <TeamPerformanceHighlights
+            data={publicDashboardData.teamPerformance}
+          />
         </div>
       </div>
     </div>
