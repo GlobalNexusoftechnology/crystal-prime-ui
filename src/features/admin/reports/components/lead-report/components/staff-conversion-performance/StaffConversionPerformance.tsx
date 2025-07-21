@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from "react";
-import { FiMenu } from "react-icons/fi";
 
 interface StaffConversionPerformanceProps {
   data?: Array<{
@@ -37,12 +36,6 @@ export const StaffConversionPerformance: React.FC<StaffConversionPerformanceProp
     <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full shadow-sm">
       <div className="flex justify-between items-center mb-6">
         <span className="text-[1.1rem] 2xl:text-[1.1vw] font-medium text-black">Staff Conversion Performance</span>
-        <div className="flex items-center gap-2">
-          <span className="text-black font-medium">Short</span>
-          <span className="rounded-full border border-black p-1">
-            <FiMenu size={22} />
-          </span>
-        </div>
       </div>
       <div
         ref={listRef}
