@@ -51,9 +51,11 @@ export function Table<T extends { id: string | number }>({
               <th className="min-w-[5rem] 2xl:min-w-[5vw] p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
                 Sr No
               </th>
+              {actions && actions.length > 0 && (
                 <th className="min-w-[6rem] p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
-                Action
-              </th>
+                  Action
+                </th>
+              )}
               {columns.map((col) => (
                 <TableHeader
                   key={String(col.accessor)}

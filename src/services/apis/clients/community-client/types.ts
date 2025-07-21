@@ -1928,3 +1928,290 @@ export interface IEILogFilters {
   toDate?: string;
 }
 // END EI LOG MANAGEMENT
+
+export interface StaffPerformanceReportResponse {
+  status: string;
+  message: string;
+  data: {
+    staffInfo: {
+      firstName: string;
+      lastName: string;
+      email: string;
+      phone: string;
+    };
+    taskSummary: {
+      totalTasksAssigned: number;
+      completedTasks: number;
+      completionRate: string;
+      avgDaysToComplete: string;
+      delayedTasks: number;
+    };
+    milestoneFileActivity: {
+      milestonesManaged: number;
+      filesUploaded: number;
+    };
+    followUpPerformance: {
+      totalFollowUps: number;
+      completedFollowUps: number;
+      pendingFollowUps: number;
+      missedFollowUps: number;
+      avgResponseTime: string;
+    };
+  };
+}
+
+export interface ProjectPerformanceReportResponse {
+  status: string;
+  message: string;
+  data: {
+    basicProjectInfo: {
+      projectType: string;
+      projectManager: {
+        id: string;
+        name: string;
+        email: string;
+        phone: string;
+        role: string;
+      } | null;
+      estimatedStartDate: string | null;
+      estimatedEndDate: string | null;
+      actualStartDate: string | null;
+      actualEndDate: string | null;
+      assignedTeam: Array<{
+        id: string;
+        name: string;
+        email: string;
+        phone: string;
+        role: string;
+      }>;
+      projectPhase: string;
+      currentStatus: string;
+    };
+    costBudgetAnalysis: {
+      budget: string;
+      estimatedCost: string;
+      actualCost: string;
+      budgetUtilization: string;
+      overrun: string;
+    };
+    taskMetrics: {
+      totalTasks: number;
+      completedTasks: number;
+      inProgressTasks: number;
+      overdueTasks: number;
+      avgTaskCompletionTime: string;
+      taskReassignmentCount: number;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      topPerformer: unknown;
+      chart: Array<{ label: string; value: number }>;
+    };
+    documentSummary: {
+      totalFiles: number;
+      files: Array<{
+        file_type: string;
+        count: number;
+        last_updated: string | null;
+      }>;
+    };
+    followUpMatrix: {
+      totalFollowUpsLogged: number;
+      followUpsCompleted: number;
+      pendingFollowUps: number;
+      missedOrDelayedFollowUps: number;
+      avgResponseTimeHours: string;
+      escalatedItems: number;
+    };
+    timelineAnalysis: {
+      daysSinceStart: number;
+      plannedDurationDays: number;
+      progressPercent: number;
+      delayRisk: string;
+    };
+    milestoneSummary: Array<{
+      milestoneId: string;
+      name: string;
+      status: string;
+      start_date: string | null;
+      end_date: string | null;
+      actual_date: string | null;
+      assigned_to: {
+        id: string;
+        name: string;
+        email: string;
+        phone: string;
+        role: string;
+      } | null;
+      delayDays: number | null;
+    }>;
+    resourceUtilization: Array<{
+      id: string;
+      name: string;
+      email: string;
+      phone: string;
+      role: string;
+      assignedTasks: number;
+      completedTasks: number;
+      loadPercent: string;
+      followUpsHandled: number;
+      activeIssues: number;
+    }>;
+  };
+}
+
+export interface LeadReportResponse {
+  status: string;
+  message: string;
+  data: {
+    leadFunnelChart: {
+      totalLeads: number;
+      lostLeads: number;
+      convertedLeads: number;
+      dropOfStage: {
+        stage: string;
+        count: number;
+      };
+    };
+    kpiMetrics: {
+      conversionRate: number;
+      avgLeadAge: number;
+      avgFollowupsLead: number;
+      topPerformingSource: string;
+      avgTimeToConvert: number;
+      pendingFollowups: number;
+      hotLeadsCount: number;
+      averageResponseTime: number;
+    };
+    sourceWiseConversionRates: Array<{
+      source: string;
+      conversionRate: number;
+    }>;
+    leadFunnelStages: Array<{
+      stage: string;
+      count: number;
+      isHighlighted: boolean;
+    }>;
+    monthlyLeadsChart: {
+      labels: string[];
+      leads: number[];
+    };
+    staffConversionPerformance: Array<{
+      staffName: string;
+      conversionRate: number;
+    }>;
+    summary: {
+      totalLeads: number;
+      convertedLeads: number;
+      lostLeads: number;
+      activeLeads: number;
+      conversionRate: number;
+    };
+  };
+}
+
+// Business Analysis Report Types
+export interface BusinessAnalysisParams {
+  fromDate?: string;
+  toDate?: string;
+}
+
+export interface BusinessAnalysisReport {
+  leadFunnelMetrics: {
+    totalLeads: number;
+    qualifiedLeads: number;
+    convertedLeads: number;
+    dropOfStage: string;
+    conversionRate: number;
+    avgTimeToConvert: number;
+    avgFollowups: number;
+    bestLeadSource: string;
+  };
+  projectDeliveryMetrics: {
+    totalProjects: number;
+    completedProjects: number;
+    onTimeDeliveryRate: number;
+    budgetOverrunProjects: number;
+    avgProjectProfitability: number;
+    avgProjectDuration: number;
+    resourceUtilization: number;
+    clientSatisfactionIndex: number;
+  };
+  financialSummary: {
+    totalIncome: number;
+    amountReceivedInBank: number;
+    amountReceivedInUPI: number;
+    amountReceivedInCash: number;
+    amountReceivedInOnline: number;
+    amountSpentInBank: number;
+    amountSpentInUPI: number;
+    amountSpentInCash: number;
+    amountSpentInOnline: number;
+  };
+  teamStaffPerformance: {
+    activeStaffMembers: number;
+    topPerformer: string;
+    taskCompletionRate: number;
+    delayedTasks: number;
+    avgFollowupsPerStaff: number;
+    documentContributions: number;
+  };
+  monthlyTrends: {
+    labels: string[];
+    started: (number|null)[];
+    completed: (number|null)[];
+    newLeads: (number|null)[];
+    revenue: (number|null)[];
+  };
+  summary: {
+    totalRevenue: number;
+    totalProjects: number;
+    totalLeads: number;
+    totalStaff: number;
+    overallPerformance: number;
+  };
+}
+
+export interface BusinessAnalysisReportResponse {
+  status: string;
+  message: string;
+  data: BusinessAnalysisReport;
+}
+
+// Public Dashboard Report Types
+export interface PublicDashboardParams {
+  fromDate?: string;
+  toDate?: string;
+}
+
+export interface PublicDashboardReport {
+  businessOverview: {
+    totalProjectsDelivered: number;
+    ongoingProjects: number;
+    clientsServed: number;
+  };
+  leadClientInterest: {
+    leadsThisMonth: number;
+    conversionsThisMonth: number;
+    avgConversionTime: number;
+    topSourceOfLeads: string;
+  };
+  trendChart: {
+    labels: string[];
+    newProject: number[];
+    completedProject: number[];
+  };
+  monthlyLeadsChart: {
+    labels: string[];
+    leads: number[];
+  };
+  teamPerformance: {
+    topPerformer: string;
+    onTimeDeliveryRate: number;
+    avgTaskCompletionRate: number;
+  };
+}
+
+export interface PublicDashboardReportResponse {
+  status: string;
+  message: string;
+  data: PublicDashboardReport;
+}
