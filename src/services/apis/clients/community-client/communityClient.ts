@@ -151,6 +151,13 @@ import {
   IEILogFilters,
   IUploadEILogFromExcelResponse,
   IDeleteDailyTaskEntryResponse,
+  StaffPerformanceReportResponse,
+  ProjectPerformanceReportResponse,
+  LeadReportResponse,
+  BusinessAnalysisParams,
+  BusinessAnalysisReportResponse,
+  PublicDashboardParams,
+  PublicDashboardReportResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -282,6 +289,16 @@ import {
   fetchEILogDownloadTemplateExcelUrl,
   uploadEILogFromExcelUrl,
   uploadEILogAttachmentUrl,
+  staffPerformanceReportUrl,
+  projectPerformanceReportUrl,
+  leadReportUrl,
+  businessAnalysisReportUrl,
+  publicDashboardReportUrl,
+  fetchPublicDashboardReportExcelUrl,
+  fetchProjectPerformanceReportExcelUrl,
+  fetchStaffPerformanceReportExcelUrl,
+  fetchLeadReportExcelUrl,
+  fetchBusinessAnalysisReportExcelUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -1998,8 +2015,124 @@ export class CommunityClient extends ApiClient {
 
     return response?.data
   }
-}
 
+  public fetchStaffPerformanceReport = async (params: { userId: string; startDate?: string; endDate?: string }) => {
+    const url = staffPerformanceReportUrl();
+    const response = await this.get<StaffPerformanceReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchProjectPerformanceReport = async (params: { projectId?: string; clientId?: string; fromDate?: string; toDate?: string }) => {
+    const url = projectPerformanceReportUrl();
+    const response = await this.get<ProjectPerformanceReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchLeadReport = async (params?: { 
+    fromDate?: string; 
+    toDate?: string; 
+    sourceId?: string; 
+    statusId?: string;
+    userId?: string;
+    typeId?: string;
+  }) => {
+    const url = leadReportUrl();
+    const response = await this.get<LeadReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchLeadReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchLeadReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchBusinessAnalysisReport = async (params?: BusinessAnalysisParams) => {
+    const url = businessAnalysisReportUrl();
+    const response = await this.get<BusinessAnalysisReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  }
+
+  public fetchPublicDashboardReport = async (params?: PublicDashboardParams) => {
+    const url = publicDashboardReportUrl();
+    const response = await this.get<PublicDashboardReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  }
+
+  public fetchPublicDashboardReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchPublicDashboardReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchProjectPerformanceReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchProjectPerformanceReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchStaffPerformanceReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchStaffPerformanceReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchBusinessAnalysisReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchBusinessAnalysisReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+}
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.

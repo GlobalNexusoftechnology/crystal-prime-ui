@@ -1,0 +1,1 @@
+export { DocumentSummaryTable } from "./DocumentSummaryTable"
