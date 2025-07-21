@@ -12,7 +12,7 @@ import {
   StaffSearchFilter,
   TaskSummary,
 } from "./components";
-import { Button } from "@/components";
+import { Button, Loading } from "@/components";
 import { ImDownload2 } from "react-icons/im";
 
 export function StaffReport() {
@@ -69,7 +69,7 @@ export function StaffReport() {
   };
 
   if (!fromDate || !toDate) return null;
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
   if (error) return <div>Error loading report</div>;
 
   const data = staffPerformanceData?.data;
