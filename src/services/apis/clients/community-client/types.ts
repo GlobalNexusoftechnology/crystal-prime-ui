@@ -2008,9 +2008,11 @@ export interface ProjectPerformanceReportResponse {
     documentSummary: {
       totalFiles: number;
       files: Array<{
-        file_type: string;
-        count: number;
-        last_updated: string | null;
+        file_type?: string;
+        count?: number;
+        last_updated?: string | null;
+        file_name?: string;
+        file_url?: string;
       }>;
     };
     followUpMatrix: {

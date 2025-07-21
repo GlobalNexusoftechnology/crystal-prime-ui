@@ -3,11 +3,11 @@ import { ProjectPerformanceReportResponse } from "@/services";
 
 const columns: {
   header: string;
-  accessor: "file_type" | "count" | "last_updated" | "id";
+  accessor: "last_updated" | "file_name" | "file_url" | "id";
 }[] = [
-  { header: "Type", accessor: "file_type" },
-  { header: "Count", accessor: "count" },
+  { header: "File Name", accessor: "file_name" },
   { header: "Last Updated", accessor: "last_updated" },
+  { header: "Download", accessor: "file_url" },
 ];
 
 export function DocumentSummaryTable({
@@ -28,7 +28,22 @@ export function DocumentSummaryTable({
           </span>
         </div>
         <Table
-          data={(data.files || []).map((file, idx) => ({ ...file, id: idx }))}
+          data={(data.files || []).map((file, idx) => ({
+            ...file,
+            id: idx,
+            file_url: file.file_url
+              ? (
+                  <a
+                    href={file.file_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 underline"
+                  >
+                    Download
+                  </a>
+                )
+              : "-",
+          }))}
           columns={columns}
         />
       </div>
