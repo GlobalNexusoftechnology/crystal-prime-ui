@@ -40,7 +40,14 @@ export function StaffReport() {
 
   useEffect(() => {
     if (staffList.length > 0 && !selectedStaff) {
-      setSelectedStaff(staffList[0].id);
+      // Find the first user who is NOT admin
+      const firstNonAdmin = staffList.find(
+        (user) => user.role?.role?.toLowerCase() !== "admin"
+      );
+      if (firstNonAdmin) {
+        setSelectedStaff(firstNonAdmin.id);
+      }
+      // If all are admin, do nothing
     }
   }, [staffList, selectedStaff]);
 
