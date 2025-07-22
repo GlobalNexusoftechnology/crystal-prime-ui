@@ -38,7 +38,7 @@ export const defaultTaskMetrics = {
   overdueTasks: 0,
   avgTaskCompletionTime: "",
   taskReassignmentCount: 0,
-  topPerformer: undefined,
+  topPerformer: "",
   chart: [],
 };
 

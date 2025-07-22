@@ -12,7 +12,7 @@ import {
   StaffSearchFilter,
   TaskSummary,
 } from "./components";
-import { Button } from "@/components";
+import { Button, Loading } from "@/components";
 import { ImDownload2 } from "react-icons/im";
 
 export function StaffReport() {
@@ -40,7 +40,14 @@ export function StaffReport() {
 
   useEffect(() => {
     if (staffList.length > 0 && !selectedStaff) {
-      setSelectedStaff(staffList[0].id);
+      // Find the first user who is NOT admin
+      const firstNonAdmin = staffList.find(
+        (user) => user.role?.role?.toLowerCase() !== "admin"
+      );
+      if (firstNonAdmin) {
+        setSelectedStaff(firstNonAdmin.id);
+      }
+      // If all are admin, do nothing
     }
   }, [staffList, selectedStaff]);
 
@@ -62,7 +69,7 @@ export function StaffReport() {
   };
 
   if (!fromDate || !toDate) return null;
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
   if (error) return <div>Error loading report</div>;
 
   const data = staffPerformanceData?.data;
