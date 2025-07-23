@@ -5,6 +5,7 @@ import {
   EILogIcon,
   LeadManagementIcon,
   ProjectManagementIcon,
+  ReportIcon,
   SettingsIcon,
   StaffManagementIcon,
   UserListRoundedIcon,
@@ -92,8 +93,8 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   {
     name: "Reports",
     path: "/admin/reports",
-    icon: <DashboardIcon />,
-    activeIcon: <DashboardIcon color="#034A9F" />,
+    icon: <ReportIcon />,
+    activeIcon: <ReportIcon color="#034A9F" />,
     permission: { module: "REPORTS", actions: "VIEW" },
   },
   {

@@ -25,3 +25,4 @@ export { FileAttachmentIcon } from "./FileAttachmentIcon";
 export { UserListRoundedIcon } from "./UserListRoundedIcon";
 export { TimeIcon } from "./TimeIcon";
 export { EILogIcon } from "./EILogIcon";
+export { ReportIcon } from "./ReportIcon";
