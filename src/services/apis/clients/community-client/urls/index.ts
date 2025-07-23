@@ -22,9 +22,12 @@ export const verifyEmailUrl = () => "/auth/verify-email";
 
 export const sentOtpUrl = () => "/auth/sentOTP";
 
-export const resetPasswordUrl = () => "/auth/resetPassword";
+export const resetPasswordUrl = () => "/auth/reset-password";
 
 export const changePasswordUrl = () => "/users/change-password";
+
+export const forgotPasswordUrl = () => "/auth/forgot-password";
+export const verifyOtpUrl = () => "/auth/verify-otp";
 
 // leads APIs url
 export const createLeadUrl = () => "/leads";

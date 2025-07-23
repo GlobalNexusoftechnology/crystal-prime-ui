@@ -14,12 +14,13 @@ import { EmailValidation, ResetPassword, SentOTP } from "./components";
  */
 export function ForgetPassword() {
   const [step, setStep] = useState("email"); 
+  const [email, setEmail] = useState("");
 
   return (
     <div>
-      {step === "email" && <EmailValidation onNext={() => setStep("otp")} />}
-      {step === "otp" && <SentOTP onNext={() => setStep("reset")} />}
-      {step === "reset" && <ResetPassword />}
+      {step === "email" && <EmailValidation onNext={(enteredEmail) => { setEmail(enteredEmail); setStep("otp"); }} />}
+      {step === "otp" && <SentOTP email={email} onNext={() => setStep("reset")} />}
+      {step === "reset" && <ResetPassword email={email} />}
     </div>
   );
 }

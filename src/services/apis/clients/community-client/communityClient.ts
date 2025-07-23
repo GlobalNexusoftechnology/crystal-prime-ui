@@ -158,6 +158,10 @@ import {
   BusinessAnalysisReportResponse,
   PublicDashboardParams,
   PublicDashboardReportResponse,
+  IForgotPasswordPayload,
+  IForgotPasswordResponse,
+  IVerifyOtpPayload,
+  IVerifyOtpResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -299,6 +303,8 @@ import {
   fetchStaffPerformanceReportExcelUrl,
   fetchLeadReportExcelUrl,
   fetchBusinessAnalysisReportExcelUrl,
+  forgotPasswordUrl,
+  verifyOtpUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2132,6 +2138,40 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   }
+
+  /**
+   * Sends forgot password request to the user's email.
+   * @param payload - email
+   * @returns message
+   */
+  public forgotPassword = async (payload: IForgotPasswordPayload) => {
+    const response = await this.post<IForgotPasswordResponse>(
+      forgotPasswordUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  /**
+   * Verifies OTP for password reset.
+   * @param payload - email and otp
+   * @returns message
+   */
+  public verifyOtp = async (payload: IVerifyOtpPayload) => {
+    const response = await this.post<IVerifyOtpResponse>(
+      verifyOtpUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
 }
 
 /**

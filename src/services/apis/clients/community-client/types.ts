@@ -650,7 +650,6 @@ export interface IRegisterResponse {
 export interface IResetPasswordPayload {
   email: string;
   newPassword: string;
-  confirmPassword: string;
 }
 
 export interface IResetPasswordResponse {
@@ -2215,4 +2214,21 @@ export interface PublicDashboardReportResponse {
   status: string;
   message: string;
   data: PublicDashboardReport;
+}
+
+export interface IForgotPasswordPayload {
+  email: string;
+}
+
+export interface IForgotPasswordResponse {
+  message: string;
+}
+
+export interface IVerifyOtpPayload {
+  email: string;
+  otp: string;
+}
+
+export interface IVerifyOtpResponse {
+  message: string;
 }

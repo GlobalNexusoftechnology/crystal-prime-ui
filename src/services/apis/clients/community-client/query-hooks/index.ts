@@ -150,3 +150,5 @@ export { useProjectPerformanceReportExcelQuery } from "./useProjectPerformanceRe
 export { useStaffPerformanceReportExcelQuery } from './useStaffPerformanceReportExcelQuery';
 export { useLeadReportExcelQuery } from './useLeadReportExcelQuery';
 export { useBusinessAnalysisReportExcelQuery } from './useBusinessAnalysisReportExcelQuery';
+export { useForgotPasswordMutation } from "./useForgotPasswordMutation";
+export { useVerifyOtpMutation } from "./useVerifyOtpMutation";
