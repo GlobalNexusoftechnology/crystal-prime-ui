@@ -58,7 +58,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
     description: "",
     income: "",
     expense: "",
-    payment_mode: "Cash",
+    payment_mode: "",
     attachment: "",
   });
   const [isUploading, setIsUploading] = useState(false);
@@ -86,7 +86,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
         description: "",
         income: "",
         expense: "",
-        payment_mode: "Cash",
+        payment_mode: "",
         attachment: "",
       });
     }
