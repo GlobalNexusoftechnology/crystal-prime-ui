@@ -97,6 +97,13 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     permission: { module: "REPORTS", actions: "VIEW" },
   },
   {
+    path: "/admin/public-business-report",
+    name: "Public Business Report",
+    icon: <EILogIcon />,
+    activeIcon: <EILogIcon color="#034A9F" />,
+    permission: { module: "PUBLIC_BUSINESS_DASHBOARD", actions: "VIEW" },
+  },
+  {
     path: "/admin/settings",
     name: "Settings",
     icon: <SettingsIcon />,

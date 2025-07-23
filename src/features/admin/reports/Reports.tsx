@@ -8,7 +8,6 @@ import {
   ProjectReport,
   LeadReport,
   BusinessReport,
-  PBDashboardReport,
 } from "./components";
 import { Breadcrumb } from "../breadcrumb";
 
@@ -18,7 +17,6 @@ export function Reports() {
   const canViewProject = hasPermission(EModule.PROJECT_PERFORMANCE_REPORT, EAction.VIEW);
   const canViewLead = hasPermission(EModule.LEAD_ANALYTICS_REPORT, EAction.VIEW);
   const canViewBusiness = hasPermission(EModule.BUSINESS_ANALYSIS_REPORT, EAction.VIEW);
-  const canViewPBDashboard = hasPermission(EModule.PUBLIC_BUSINESS_DASHBOARD, EAction.VIEW);
 
   // Dynamically build the tabs array based on permissions
   const tabs = useMemo(() => {
@@ -27,9 +25,8 @@ export function Reports() {
     if (canViewProject) arr.push({ key: "project", label: "Project" });
     if (canViewLead) arr.push({ key: "lead", label: "Lead" });
     if (canViewBusiness) arr.push({ key: "business", label: "Business" });
-    if (canViewPBDashboard) arr.push({ key: "pbDashboard", label: "PB Dashboard" });
     return arr;
-  }, [canViewStaff, canViewProject, canViewLead, canViewBusiness, canViewPBDashboard]);
+  }, [canViewStaff, canViewProject, canViewLead, canViewBusiness]);
 
   const [activeTab, setActiveTab] = useState(() => tabs[0]?.key);
 
@@ -64,7 +61,6 @@ export function Reports() {
       {activeTab === "project" && <ProjectReport />}
       {activeTab === "lead" && <LeadReport />}
       {activeTab === "business" && <BusinessReport />}
-      {activeTab === "pbDashboard" && <PBDashboardReport />}
     </div>
   );
 } 

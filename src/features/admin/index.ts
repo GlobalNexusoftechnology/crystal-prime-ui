@@ -16,3 +16,4 @@ export * from "./breadcrumb";
 export * from "./ei-log-management";
 export * from "./ei-logs-list-table";
 export * from "./reports";
+export * from "./pb-dashboard-report";

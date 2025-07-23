@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import {
   usePublicDashboardReportExcelQuery,
@@ -13,6 +14,7 @@ import {
 } from "./components";
 import { Button, Loading } from "@/components";
 import { ImDownload2 } from "react-icons/im";
+import { Breadcrumb } from "../breadcrumb";
 
 export function PBDashboardReport() {
   const [fromDate, setFromDate] = useState("");
@@ -42,7 +44,9 @@ export function PBDashboardReport() {
     return <div>Error loading dashboard</div>;
 
   return (
-    <div className="flex flex-col gap-6 2xl:gap-[1vw]">
+    <div className="flex flex-col gap-6 2xl:gap-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw] bg-white px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw]">
+            <Breadcrumb />
+
       <div className="flex justify-between items-center">
         <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
           Public Business Dashboard
@@ -60,13 +64,13 @@ export function PBDashboardReport() {
           }
           tooltip="Download Excel"
         />
-        </div>
-        <PBDashboardFilter
-          fromDate={fromDate}
-          setFromDate={setFromDate}
-          toDate={toDate}
-          setToDate={setToDate}
-        />
+      </div>
+      <PBDashboardFilter
+        fromDate={fromDate}
+        setFromDate={setFromDate}
+        toDate={toDate}
+        setToDate={setToDate}
+      />
       <div className="grid grid-cols-1 xl:grid-cols-2">
         <div className="flex flex-col gap-8 border-r 2xl:border-r-[0.1vw]">
           <BusinessOverview data={publicDashboardData.businessOverview} />
