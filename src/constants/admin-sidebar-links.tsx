@@ -10,6 +10,7 @@ import {
   StaffManagementIcon,
   UserListRoundedIcon,
 } from "@/features";
+import { TbReportAnalytics } from "react-icons/tb";
 
 type TSidebarPermission = {
   module: string;
@@ -104,8 +105,8 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
       {
         path: "/admin/reports/public-business-report",
         name: "Public Business Report",
-        icon: <EILogIcon />,
-        activeIcon: <EILogIcon color="#034A9F" />,
+        icon: <TbReportAnalytics className="w-full h-full" />,
+        activeIcon: <TbReportAnalytics className="w-full h-full" color="#034A9F" />,
         permission: { module: "PUBLIC_BUSINESS_DASHBOARD", actions: "VIEW" },
       },
     ],
