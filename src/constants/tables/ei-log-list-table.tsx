@@ -6,12 +6,6 @@ import { ITableColumn } from "../table";
  */
 export const IEILogListTableColumn: ITableColumn<IAllEILogList>[] = [
   {
-    header: "DATE",
-    accessor: "created_at",
-    sortable: true,
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
-  },
-  {
     header: "EI LOG TYPE",
     accessor: "eilogType",
     sortable: true,
@@ -33,6 +27,21 @@ export const IEILogListTableColumn: ITableColumn<IAllEILogList>[] = [
         return value.name;
       }
       return "N/A";
+    },
+  },
+  {
+    header: "DATE",
+    accessor: "created_at",
+    sortable: true,
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    cell: ({ value }) => {
+      if (!value || (typeof value !== 'string' && typeof value !== 'number')) return "-";
+      const date = new Date(value);
+      if (isNaN(date.getTime())) return String(value); // fallback if invalid
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
     },
   },
   {

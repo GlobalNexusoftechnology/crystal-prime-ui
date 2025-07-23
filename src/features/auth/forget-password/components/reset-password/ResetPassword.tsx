@@ -4,6 +4,9 @@ import { AuthCard } from "@/features";
 import { Button, InputField } from "@/components";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { useResetPasswordMutation } from '@/services';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 /**
  * ResetPassword Component
@@ -23,12 +26,22 @@ const validationSchema = Yup.object({
 });
 ;
 
-export function ResetPassword() {
+export function ResetPassword({ email }: { email: string }) {
+  const router = useRouter();
+  const { resetPassword, isPending, error } = useResetPasswordMutation({
+    onSuccessCallback: () => {
+      toast.success('Password reset successfully. Please login.');
+      router.push('/login');
+    },
+    onErrorCallback: (err) => {
+      toast.error(err?.message || 'Failed to reset password');
+    },
+  });
   return (
     <div className="flex justify-center items-center">
       <AuthCard
         title="Forget Password"
-        copyright="Copyrights and developed © Islahdata.com"
+        copyright="Copyrights and developed  Islahdata.com"
       >
         <Formik
           initialValues={{
@@ -37,8 +50,10 @@ export function ResetPassword() {
           }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            console.log("Form values:", values);
-            // Call API or handle save logic here
+            resetPassword({
+              email,
+              newPassword: values.password,
+            });
           }}
         >
           {({ errors, touched }) => (
@@ -61,8 +76,8 @@ export function ResetPassword() {
                   error={touched.confirmPassword && errors.confirmPassword}
                 />
               </div>
-
-              <Button title="Save Password" type="submit" />
+              <Button title={isPending ? "Saving..." : "Save Password"} type="submit" disabled={isPending} />
+              {error && <div className="text-red-500 text-center">{error.message || 'Failed to reset password'}</div>}
               <Button title="Cancel" variant="primary-outline" type="button" />
             </Form>
           )}

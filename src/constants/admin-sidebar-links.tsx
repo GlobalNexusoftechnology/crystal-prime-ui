@@ -5,10 +5,12 @@ import {
   EILogIcon,
   LeadManagementIcon,
   ProjectManagementIcon,
+  ReportIcon,
   SettingsIcon,
   StaffManagementIcon,
   UserListRoundedIcon,
 } from "@/features";
+import { TbReportAnalytics } from "react-icons/tb";
 
 type TSidebarPermission = {
   module: string;
@@ -31,6 +33,10 @@ export interface IAdminSidebarLink {
    * Permission mapping for the sidebar link.
    */
   permission: TSidebarPermission;
+  /**
+   * Optional nested links for sub-navigation.
+   */
+  links?: IAdminSidebarLink[];
 }
 
 /**
@@ -92,9 +98,18 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   {
     name: "Reports",
     path: "/admin/reports",
-    icon: <DashboardIcon />,
-    activeIcon: <DashboardIcon color="#034A9F" />,
+    icon: <ReportIcon />,
+    activeIcon: <ReportIcon color="#034A9F" />,
     permission: { module: "REPORTS", actions: "VIEW" },
+    links: [
+      {
+        path: "/admin/reports/public-business-report",
+        name: "Public Business Report",
+        icon: <TbReportAnalytics className="w-full h-full" />,
+        activeIcon: <TbReportAnalytics className="w-full h-full" color="#034A9F" />,
+        permission: { module: "PUBLIC_BUSINESS_DASHBOARD", actions: "VIEW" },
+      },
+    ],
   },
   {
     path: "/admin/settings",

@@ -5,6 +5,8 @@ import * as Yup from "yup";
 
 import { Button } from "@/components";
 import { AuthCard, OtpInput } from "@/features";
+import { useVerifyOtpMutation } from '@/services';
+import toast from 'react-hot-toast';
 
 /**
  * SentOTP Component (Formik + Yup)
@@ -15,17 +17,27 @@ import { AuthCard, OtpInput } from "@/features";
 
 type TSentOTPProps = {
   onNext: () => void;
+  email: string;
 };
 
 // OTP validation schema (assuming 6-digit code)
 const validationSchema = Yup.object().shape({
   otp: Yup.string()
     .required("OTP is required")
-    .length(5, "OTP must be exactly 5 digits")
+    .length(6, "OTP must be exactly 6 digits")
     .matches(/^\d+$/, "OTP must contain only digits"),
 });
 
-export function SentOTP({ onNext }: TSentOTPProps) {
+export function SentOTP({ onNext, email }: TSentOTPProps) {
+  const { submitVerifyOtp, isPending, error } = useVerifyOtpMutation({
+    onSuccessCallback: () => {
+      toast.success('OTP verified successfully');
+      onNext();
+    },
+    onErrorCallback: (err) => {
+      toast.error(err?.message || 'Failed to verify OTP');
+    },
+  });
   return (
     <div className="flex justify-center items-center">
       <AuthCard
@@ -36,8 +48,7 @@ export function SentOTP({ onNext }: TSentOTPProps) {
           initialValues={{ otp: "" }}
           validationSchema={validationSchema}
           onSubmit={(values) => {
-            console.log("OTP Submitted:", values.otp);
-            onNext();
+            submitVerifyOtp({ email, otp: values.otp });
           }}
         >
           {({ setFieldValue, values }) => (
@@ -52,7 +63,8 @@ export function SentOTP({ onNext }: TSentOTPProps) {
                 component="div"
                 className="text-red-500 text-[0.9rem]"
               />
-              <Button type="submit" title="Reset Password" />
+              <Button type="submit" title={isPending ? "Verifying..." : "Reset Password"} disabled={isPending} />
+              {error && <div className="text-red-500 text-center">{error.message || 'Failed to verify OTP'}</div>}
               <Button title="Cancel" variant="primary-outline" />
             </Form>
           )}
