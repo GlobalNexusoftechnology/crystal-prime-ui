@@ -32,6 +32,10 @@ export interface IAdminSidebarLink {
    * Permission mapping for the sidebar link.
    */
   permission: TSidebarPermission;
+  /**
+   * Optional nested links for sub-navigation.
+   */
+  links?: IAdminSidebarLink[];
 }
 
 /**
@@ -96,13 +100,15 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     icon: <ReportIcon />,
     activeIcon: <ReportIcon color="#034A9F" />,
     permission: { module: "REPORTS", actions: "VIEW" },
-  },
-  {
-    path: "/admin/public-business-report",
-    name: "Public Business Report",
-    icon: <EILogIcon />,
-    activeIcon: <EILogIcon color="#034A9F" />,
-    permission: { module: "PUBLIC_BUSINESS_DASHBOARD", actions: "VIEW" },
+    links: [
+      {
+        path: "/admin/reports/public-business-report",
+        name: "Public Business Report",
+        icon: <EILogIcon />,
+        activeIcon: <EILogIcon color="#034A9F" />,
+        permission: { module: "PUBLIC_BUSINESS_DASHBOARD", actions: "VIEW" },
+      },
+    ],
   },
   {
     path: "/admin/settings",
