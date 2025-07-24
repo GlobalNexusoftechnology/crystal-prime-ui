@@ -5,11 +5,12 @@ import { Breadcrumb } from "@/features";
 import { IProjectTaskResponse } from "@/services";
 import { formatIndiaTime, buildUniversalIdToNameMapping } from "@/utils";
 import { HeaderDetails } from "../../../header-details";
-import { DailyTask, TaskEstimate, TaskInfo } from "./components";
+import { TaskEstimate, TaskInfo } from "./components";
 import {
   useUpdateTaskStatusMutation,
   useMilestoneTaskDetailQuery,
 } from "@/services";
+import { CommentTabs } from "./components";
 
 export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
   const [status, setStatus] = useState(taskData.status || "Open");
@@ -74,13 +75,18 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
           />
         </div>
       </div>
-      <DailyTask
+      <CommentTabs projectId={taskData?.milestone?.project?.id}
+        assignedTo={taskData?.assigned_to || ""}
+        originalTitle={taskData.title}
+        originalDescription={taskData.description || ""}
+        taskId={taskData.id}/>
+      {/* <DailyTask
         projectId={taskData?.milestone?.project?.id}
         assignedTo={taskData?.assigned_to || ""}
         originalTitle={taskData.title}
         originalDescription={taskData.description || ""}
         taskId={taskData.id}
-      />
+      /> */}
     </section>
   );
 }

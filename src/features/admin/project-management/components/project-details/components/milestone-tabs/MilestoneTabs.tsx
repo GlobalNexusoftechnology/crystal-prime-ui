@@ -1,8 +1,7 @@
 "use client";
 
-import { Button } from "@/components";
 import React, { useEffect, useRef, useState } from "react";
-import { Followups, Milestone, Task } from "./components";
+import { Milestone, Task } from "./components";
 import { AddSquareIcon } from "@/features";
 import {
   useDeleteMilestoneMutation,
@@ -28,7 +27,7 @@ type LocalTask = {
   due_date: string;
 };
 
-const tabs = ["Milestones", "Follow-ups"];
+const tabs = ["Milestones"];
 
 export function MilestoneTabs({
   milestoneData = [],
@@ -758,22 +757,6 @@ export function MilestoneTabs({
             </button>
           ))}
         </div>
-        <button
-          onClick={() => setShowForm((prev) => !prev)}
-          className="flex items-center gap-2 2xl:gap-[0.5vw] text-primary text-[1rem] 2xl:text-[1vw]"
-        >
-          <span>
-            {showForm ? (
-              "Close"
-            ) : (
-              <>
-                {activeTab === "Milestones" ? null : (
-                  <Button title="Add followup" variant="primary-outline" />
-                )}
-              </>
-            )}
-          </span>
-        </button>
       </div>
 
       {/* Tab Contents */}
@@ -915,12 +898,6 @@ export function MilestoneTabs({
               </table>
             </div>
           </div>
-        )}
-        {activeTab === "Follow-ups" && (
-          <Followups
-            showForm={showForm}
-            setShowForm={setShowForm}
-          />
         )}
       </div>
       <DeleteModal
