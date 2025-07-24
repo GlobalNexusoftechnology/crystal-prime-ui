@@ -14,6 +14,7 @@ import { AddDailyTaskModal } from "@/components/modal";
 
 type IDailyTaskProps = {
   projectId: string;
+  taskId: string;
   assignedTo: string;
   originalTitle: string;
   originalDescription: string;
@@ -21,14 +22,20 @@ type IDailyTaskProps = {
 
 const tabs = ["Daily Tasks"];
 
-export function DailyTask({ projectId, assignedTo, originalTitle, originalDescription }: IDailyTaskProps) {
+export function DailyTask({
+  projectId,
+  taskId,
+  assignedTo,
+  originalTitle,
+  originalDescription,
+}: IDailyTaskProps) {
   const {
     data: dailyTasks,
     refetchDailyTasks,
     isError,
     error,
     isLoading,
-  } = useAllDailyTaskQuery({ projectId });
+  } = useAllDailyTaskQuery({ projectId, taskId });
   const { allUsersData, isLoading: usersLoading } = useAllUsersQuery();
   const getUserName = (userId: string) => {
     if (!allUsersData || usersLoading) return userId;
@@ -169,48 +176,46 @@ export function DailyTask({ projectId, assignedTo, originalTitle, originalDescri
                 ) : dailyTasks && dailyTasks.length > 0 ? (
                   <div className="space-y-4 2xl:space-y-[1vw]">
                     {dailyTasks.map((task) => {
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      console.log('Task assigned_to:', (task as any).assigned_to);
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      console.log('All users:', allUsersData);
-                      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                      console.log('getUserName result:', getUserName((task as any).assigned_to));
                       return (
                         <div
                           key={task.id}
                           className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
                         >
-                          <div className="flex justify-between flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
+                          <div className="flex justify-between gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
                             <span>
                               <span className="underline text-[1.1rem] 2xl:text-[1.1vw] font-normal">
                                 {task.task_title || "-"}
                               </span>
                             </span>
-                            <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw]">
-                            <span className="underline">
-                              <span className="2xl:text-[1.1vw] font-normal">
-                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                                Assigned To: {task.user ? `${task.user.first_name} ${task.user.last_name}` : getUserName((task as any).assigned_to)}
+                            <div className="flex justify-end flex-wrap gap-6 2xl:gap-[1.5vw]">
+                              <span className="underline">
+                                <span className="2xl:text-[1.1vw] font-normal">
+                                  Assigned To:{" "}
+                                  {task.user
+                                    ? `${task.user.first_name} ${task.user.last_name}`
+                                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                    : getUserName((task as any).assigned_to)}
+                                </span>
                               </span>
-                            </span>
-                            <span className="underline">
-                              <span className="2xl:text-[1.1vw] font-normal">
-                                Hours Spent: {task.hours_spent}
+                              <span className="underline">
+                                <span className="2xl:text-[1.1vw] font-normal">
+                                  Hours Spent: {task.hours_spent}
+                                </span>
                               </span>
-                            </span>
-                            <span className="underline text-primary">
-                              <span className="2xl:text-[1.1vw] font-normal">
-                                Status: {task.status}
+                              <span className="underline text-primary">
+                                <span className="2xl:text-[1.1vw] font-normal">
+                                  Status: {task.status}
+                                </span>
                               </span>
-                            </span>
-                            <span className="underline text-lightGreen 2xl:text-[1.1vw]">
-                              Created At: {formatIndiaTime(task.created_at, 'toReadable')}
-                            </span>
-                            <span className="underline text-yellow-600">
-                              <span className="2xl:text-[1.1vw] font-normal">
-                                Priority: {task.priority || "-"}
+                              <span className="underline text-lightGreen 2xl:text-[1.1vw]">
+                                Created At:{" "}
+                                {formatIndiaTime(task.created_at, "toReadable")}
                               </span>
-                            </span>
+                              <span className="underline text-yellow-600">
+                                <span className="2xl:text-[1.1vw] font-normal">
+                                  Priority: {task.priority || "-"}
+                                </span>
+                              </span>
                             </div>
                           </div>
                           <div className="mb-2 2xl:mb-[0.5vw]">

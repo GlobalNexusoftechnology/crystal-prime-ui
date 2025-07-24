@@ -1792,9 +1792,11 @@ export class CommunityClient extends ApiClient {
     to?: string;
     projectId?: string;
     search?: string;
+    taskId?: string;
   } = {}): Promise<IDailyTaskEntryResponse[]> => {
     const params = new URLSearchParams();
     if (filters.projectId) params.append('projectId', filters.projectId);
+    if (filters.taskId) params.append('taskId', filters.taskId);
     if (filters.status) params.append('status', filters.status);
     if (filters.priority) params.append('priority', filters.priority);
     if (filters.from) params.append('from', filters.from);

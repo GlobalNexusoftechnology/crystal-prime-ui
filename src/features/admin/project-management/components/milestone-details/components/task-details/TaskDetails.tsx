@@ -11,7 +11,6 @@ import {
   useMilestoneTaskDetailQuery,
 } from "@/services";
 
-
 export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
   const [status, setStatus] = useState(taskData.status || "Open");
   const { refetchMilestoneTaskDetail } = useMilestoneTaskDetailQuery(
@@ -80,6 +79,7 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
         assignedTo={taskData?.assigned_to || ""}
         originalTitle={taskData.title}
         originalDescription={taskData.description || ""}
+        taskId={taskData.id}
       />
     </section>
   );
