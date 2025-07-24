@@ -107,8 +107,7 @@ export function Step1BasicInfo({
   const handleDescriptionChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const value = e.target.value.replace(/[^a-zA-Z0-9 .,'-]/g, "");
-    setFieldValue("description", value);
+    setFieldValue("description", e.target.value);
   };
 
   return (
