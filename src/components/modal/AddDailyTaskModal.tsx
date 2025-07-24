@@ -19,14 +19,18 @@ const statusOptions = [
   { label: "Completed", value: "Completed" },
 ];
 
-const dailyTaskValidationSchema = Yup.object().shape({
-  hours_spent: Yup.number()
-    .positive("Must be a positive number")
-    .required("Hours spent is required"),
-  status: Yup.string().required("Status is required"),
-  remarks: Yup.string().required("Remark is required"),
-  priority: Yup.string().required("Priority is required"),
-});
+const hhmmToDecimal = (hhmm: string) => {
+  if (!hhmm || typeof hhmm !== "string") return undefined;
+  const [h, m] = hhmm.split(":").map(Number);
+  if (isNaN(h) && isNaN(m)) return undefined;
+  return (Number(h) || 0) + ((Number(m) || 0) / 60);
+};
+const decimalToHHMM = (dec?: number) => {
+  if (typeof dec !== "number" || isNaN(dec)) return "";
+  const h = Math.floor(dec);
+  const m = Math.round((dec - h) * 60);
+  return `${h}:${m.toString().padStart(2, "0")}`;
+};
 
 export interface AddDailyTaskModalProps {
   isOpen: boolean;
@@ -50,11 +54,32 @@ export function AddDailyTaskModal({
   const userEditedDescription = useRef(false);
 
   const formik = useFormik({
-    initialValues,
-    validationSchema: dailyTaskValidationSchema,
+    initialValues: {
+      ...initialValues,
+      hours_spent: decimalToHHMM(initialValues.hours_spent as number),
+    },
+    validationSchema: Yup.object().shape({
+      hours_spent: Yup.string()
+        .matches(/^\d{1,2}:\d{2}$/, "Format must be hh:mm")
+        .test("valid-time", "Invalid time", (val) => {
+          if (!val) return false;
+          const [h, m] = val.split(":").map(Number);
+          return (
+            !isNaN(h) && !isNaN(m) && h >= 0 && h <= 24 && m >= 0 && m < 60 && (h !== 24 || m === 0)
+          );
+        })
+        .required("Hours spent is required"),
+      status: Yup.string().required("Status is required"),
+      remarks: Yup.string().required("Remark is required"),
+      priority: Yup.string().required("Priority is required"),
+    }),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      await onSubmit(values);
+      const submitValues = {
+        ...values,
+        hours_spent: hhmmToDecimal(values.hours_spent),
+      };
+      await onSubmit(submitValues);
     },
   });
 
