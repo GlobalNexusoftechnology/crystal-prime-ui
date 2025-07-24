@@ -9,10 +9,10 @@ const CLIENT_FOLLOW_UP_QUERY_KEY = 'client-follow-up-query-key';
 /**
  * This hook fetches all client follow up.
  */
-export const useAllClientFollowUpQuery = () => {
+export const useAllClientFollowUpQuery = (filters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
-    queryKey: [CLIENT_FOLLOW_UP_QUERY_KEY],
-    queryFn: () => COMMUNITY_CLIENT.fetchAllProjectFollowUp(),
+    queryKey: [CLIENT_FOLLOW_UP_QUERY_KEY, filters],
+    queryFn: () => COMMUNITY_CLIENT.fetchAllProjectFollowUp(filters),
     networkMode: 'always'
   });
 

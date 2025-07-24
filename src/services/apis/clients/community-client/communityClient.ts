@@ -250,7 +250,6 @@ import {
   fetchAllClientDownloadExcelUrl,
   fetchClientDownloadTemplateExcelUrl,
   uploadClientFromExcelUrl,
-  fetchAllProjectFollowUpUrl,
   createProjectFollowUpUrl,
   createMilestoneUrl,
   updateMilestoneUrl,
@@ -884,19 +883,15 @@ export class CommunityClient extends ApiClient {
   }
 
     // all client follow ups
-  public fetchAllProjectFollowUp = async () => {
-    const response = await this.get<IAllProjectFollowUpResponse>(
-      fetchAllProjectFollowUpUrl(),
-      {
-        requiresAuth: false,
-      }
-    )
-
-    if (!response?.success) {
-      throw response?.error
-    }
-
-    return response?.data.data
+  public fetchAllProjectFollowUp = async (filters: { project_task_id?: string } = {}) => {
+    const params = new URLSearchParams();
+    if (filters.project_task_id) params.append('project_task_id', filters.project_task_id);
+    const url = params.toString()
+      ? `/client-followups?${params.toString()}`
+      : `/client-followups`;
+    const response = await this.get<IAllProjectFollowUpResponse>(url, { requiresAuth: false });
+    if (!response?.success) throw response?.error;
+    return response?.data.data;
   }
   /**
    * Fetches a list of all leads.

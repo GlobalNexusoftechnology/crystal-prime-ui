@@ -72,7 +72,7 @@ export function CommentTabs({
           />
         )}
         {activeTab === "Follow-ups" && (
-          <Followups showForm={showForm} setShowForm={setShowForm} />
+          <Followups showForm={showForm} setShowForm={setShowForm} taskId={taskId} />
         )}
       </div>
     </div>

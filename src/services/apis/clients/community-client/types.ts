@@ -982,6 +982,7 @@ export interface ICreateProjectFollowUpPayload {
   status: string;
   due_date?: string;
   remarks?: string;
+  project_task_id?: string;
 }
 
 export interface ICreateProjectFollowUpResponse {
