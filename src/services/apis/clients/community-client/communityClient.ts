@@ -1998,7 +1998,7 @@ export class CommunityClient extends ApiClient {
       requiresAuth: true,
     });
     if (!response?.success) {
-      throw response?.errorData;
+      throw response;
     }
     return response?.data;
   };
