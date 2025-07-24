@@ -103,22 +103,7 @@ export function Task({
       editingTask.taskId === task.id &&
       editTask ? (
         <>
-          <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw] text-right flex gap-2 2xl:gap-[0.5vw]">
-            <button
-              onClick={onSave}
-              className="text-green-600 2xl:text-[1vw]"
-              title="Save"
-            >
-              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
-            </button>
-            <button
-              onClick={onCancel}
-              className="text-red-600 2xl:text-[1vw]"
-              title="Cancel"
-            >
-              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
-            </button>
-          </td>
+          <td></td>
           <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] font-medium">
             <div className="flex flex-col">
               <InputField
@@ -166,6 +151,22 @@ export function Task({
                 error={errors.due_date}
               />
             </div>
+          </td>
+          <td className="h-full px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw] text-right flex mt-2 2xl:mt-[0.5vw] gap-2 2xl:gap-[0.5vw]">
+            <button
+              onClick={onSave}
+              className="text-green-600 2xl:text-[1vw]"
+              title="Save"
+            >
+              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+            </button>
+            <button
+              onClick={onCancel}
+              className="text-red-600 2xl:text-[1vw]"
+              title="Cancel"
+            >
+              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+            </button>
           </td>
         </>
       ) : (
