@@ -415,7 +415,11 @@ export function MilestoneTabs({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEdit = (milestone: any) => {
     setEditingId(milestone.id);
-    setEditMilestone({ ...milestone });
+    setEditMilestone({
+      ...milestone,
+      start_date: milestone.start_date ? milestone.start_date.slice(0, 10) : new Date().toISOString().slice(0, 10),
+      end_date: milestone.end_date ? milestone.end_date.slice(0, 10) : new Date().toISOString().slice(0, 10),
+    });
     setMilestoneMenu(null);
   };
   const handleCancel = () => {
