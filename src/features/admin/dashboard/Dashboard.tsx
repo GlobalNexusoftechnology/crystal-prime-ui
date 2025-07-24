@@ -157,7 +157,6 @@ export default function Dashboard() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const statsData = dashboardSummary as any || {};
-  console.log('statsData:', statsData);
   const analyticalCards = dashboardSummary?.stats
     ? dashboardSummary.stats.map((card) => ({
         ...card,
@@ -288,7 +287,7 @@ export default function Dashboard() {
           Wishing you a productive and fulfilling day ahead!
         </p>
       </div>
-      <div className="flex gap-4 2xl:gap-[1vw] flex-wrap mb-4 2xl:mb-[1vw]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
         {analyticalCards.map((card, idx) => (
           <AnalyticalCard key={idx} data={card} />
         ))}

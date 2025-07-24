@@ -315,7 +315,7 @@ export function Step1BasicInfo({
           </div>
           <div>
             <DatePicker
-              label="Renewal Date"
+              label=" Renewal Start Date"
               value={toDateString(values.renewal_date)}
               onChange={(val) => setFieldValue("renewal_date", val)}
               placeholder="Select Renewal Date"
