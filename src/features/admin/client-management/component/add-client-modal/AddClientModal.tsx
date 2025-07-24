@@ -47,20 +47,11 @@ export function AddClientModal({
       contact_person: selectedClient?.contact_person || "",
       contact_number: selectedClient?.contact_number || "",
       email: selectedClient?.email || "",
+      gst_number: selectedClient?.gst_number || "",
       client_details: selectedClient?.client_details?.map((c) => ({
         ...c,
         _showOtherContact: false,
-      })) || [
-        {
-          client_id: "",
-          client_contact: "",
-          contact_person: "",
-          designation: "",
-          email: "",
-          other_contact: "",
-          _showOtherContact: false,
-        },
-      ],
+      })) || [],
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Customer name is required"),
@@ -70,18 +61,12 @@ export function AddClientModal({
       contact_person: Yup.string().required("Contact person is required"),
       contact_number: Yup.string().required("Phone number is required"),
       email: Yup.string().email("Invalid email").required("Email is required"),
-      client_details: Yup.array().of(
-        Yup.object().shape({
-          client_contact: Yup.string().required(
-            "Client contact number is required"
-          ),
-          contact_person: Yup.string().required("Contact name is required"),
-          designation: Yup.string().required("Designation is required"),
-          email: Yup.string()
-            .email("Invalid email")
-            .required("Email is required"),
-        })
-      ),
+      gst_number: Yup.string()
+        .matches(
+          /^$|^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+          "Invalid GST number"
+        )
+        .nullable(),
     }),
     onSubmit: (values) => {
       if (isEditMode && selectedClient && onUpdateClient) {
@@ -125,14 +110,24 @@ export function AddClientModal({
               placeholder="Enter company name"
             />
           </div>
-          <InputField
-            label="Address"
-            name="address"
-            value={formik.values.address}
-            onChange={formik.handleChange}
-            error={formik.touched.address && formik.errors.address}
-            placeholder="Enter address"
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <InputField
+              label="Address"
+              name="address"
+              value={formik.values.address}
+              onChange={formik.handleChange}
+              error={formik.touched.address && formik.errors.address}
+              placeholder="Enter address"
+            />
+            <InputField
+              label="GST Number"
+              name="gst_number"
+              value={formik.values.gst_number}
+              onChange={formik.handleChange}
+              error={formik.touched.gst_number && formik.errors.gst_number}
+              placeholder="Enter GST number"
+            />
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <InputField
               label="Contact Person"
@@ -177,7 +172,7 @@ export function AddClientModal({
             name="client_details"
             render={(arrayHelpers) => (
               <div className="flex flex-col gap-4 2xl:gap-[1vw]">
-                {formik.values.client_details.map((contact, index) => (
+                {formik.values.client_details.length > 0 && formik.values.client_details.map((contact, index) => (
                   <div
                     key={index}
                     className="flex flex-col gap-4 2xl:gap-[1vw] relative border p-2 rounded"

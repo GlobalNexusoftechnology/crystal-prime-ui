@@ -41,6 +41,11 @@ export const clientListColumn = [
     headerClass: "min-w-[15rem] 2xl:min-w-[15vw]",
   },
   {
+    header: "GST NUMBER",
+    accessor: "gst_number",
+    headerClass: "min-w-[12rem] 2xl:min-w-[12vw]",
+  },
+  {
     header: "WEBSITE URL",
     accessor: "website",
     headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
