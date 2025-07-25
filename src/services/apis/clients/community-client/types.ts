@@ -982,6 +982,7 @@ export interface ICreateProjectFollowUpPayload {
   status: string;
   due_date?: string;
   remarks?: string;
+  project_task_id?: string;
 }
 
 export interface ICreateProjectFollowUpResponse {
@@ -1269,7 +1270,8 @@ export interface IClientList {
   company_name: string;
   contact_person: string;
   lead_id: null; 
-  client_details?: IClientDetails[]
+  client_details?: IClientDetails[];
+  gst_number?: string;
 }
 
 export interface IAllClientResponse {

@@ -107,8 +107,7 @@ export function Step1BasicInfo({
   const handleDescriptionChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const value = e.target.value.replace(/[^a-zA-Z0-9 .,'-]/g, "");
-    setFieldValue("description", value);
+    setFieldValue("description", e.target.value);
   };
 
   return (
@@ -316,7 +315,7 @@ export function Step1BasicInfo({
           </div>
           <div>
             <DatePicker
-              label="Renewal Date"
+              label=" Renewal Start Date"
               value={toDateString(values.renewal_date)}
               onChange={(val) => setFieldValue("renewal_date", val)}
               placeholder="Select Renewal Date"

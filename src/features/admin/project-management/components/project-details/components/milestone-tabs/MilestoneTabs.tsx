@@ -1,8 +1,7 @@
 "use client";
 
-import { Button } from "@/components";
 import React, { useEffect, useRef, useState } from "react";
-import { Followups, Milestone, Task } from "./components";
+import { Milestone, Task } from "./components";
 import { AddSquareIcon } from "@/features";
 import {
   useDeleteMilestoneMutation,
@@ -28,7 +27,7 @@ type LocalTask = {
   due_date: string;
 };
 
-const tabs = ["Milestones", "Follow-ups"];
+const tabs = ["Milestones"];
 
 export function MilestoneTabs({
   milestoneData = [],
@@ -415,7 +414,11 @@ export function MilestoneTabs({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleEdit = (milestone: any) => {
     setEditingId(milestone.id);
-    setEditMilestone({ ...milestone });
+    setEditMilestone({
+      ...milestone,
+      start_date: milestone.start_date ? milestone.start_date.slice(0, 10) : new Date().toISOString().slice(0, 10),
+      end_date: milestone.end_date ? milestone.end_date.slice(0, 10) : new Date().toISOString().slice(0, 10),
+    });
     setMilestoneMenu(null);
   };
   const handleCancel = () => {
@@ -754,22 +757,6 @@ export function MilestoneTabs({
             </button>
           ))}
         </div>
-        <button
-          onClick={() => setShowForm((prev) => !prev)}
-          className="flex items-center gap-2 2xl:gap-[0.5vw] text-primary text-[1rem] 2xl:text-[1vw]"
-        >
-          <span>
-            {showForm ? (
-              "Close"
-            ) : (
-              <>
-                {activeTab === "Milestones" ? null : (
-                  <Button title="Add followup" variant="primary-outline" />
-                )}
-              </>
-            )}
-          </span>
-        </button>
       </div>
 
       {/* Tab Contents */}
@@ -781,7 +768,7 @@ export function MilestoneTabs({
                 <thead>
                   <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
                     <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                    <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                    <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
                       <span>Milestone Name</span>
                       {canAddMilestone && (
                         <button
@@ -794,7 +781,7 @@ export function MilestoneTabs({
                         </button>
                       )}
                     </th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
                       Description
                     </th>
                     <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">
@@ -809,6 +796,7 @@ export function MilestoneTabs({
                     <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">
                       Estimated End Date
                     </th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -843,7 +831,7 @@ export function MilestoneTabs({
                               <thead>
                                 <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                                  <th className=" px-2 2xl:px-[0.5vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                                  <th className=" px-2 2xl:px-[0.5vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
                                     <span>Task Name</span>
                                     {canAddTask && (
                                       <button
@@ -858,7 +846,7 @@ export function MilestoneTabs({
                                       </button>
                                     )}
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
                                     Description
                                   </th>
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
@@ -870,6 +858,7 @@ export function MilestoneTabs({
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
                                     Due Date
                                   </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -909,12 +898,6 @@ export function MilestoneTabs({
               </table>
             </div>
           </div>
-        )}
-        {activeTab === "Follow-ups" && (
-          <Followups
-            showForm={showForm}
-            setShowForm={setShowForm}
-          />
         )}
       </div>
       <DeleteModal

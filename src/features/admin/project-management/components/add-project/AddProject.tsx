@@ -87,8 +87,7 @@ const validationSchema = Yup.object({
   project_type: Yup.string().required("Project Type is required"),
   client_id: Yup.string().required("Client is required"),
   description: Yup.string()
-    .required("Description is required")
-    .matches(/^[a-zA-Z0-9 .,'-]*$/, "No special characters allowed in Description."),
+    .required("Description is required"),
   start_date: Yup.date()
     .typeError("Estimated Start Date is required")
     .required("Estimated Start Date is required"),
@@ -145,13 +144,10 @@ function validate(values: IAddProjectFormValues) {
       });
     }
   }
-  // Custom: Prevent special characters in name and description
+  // Custom: Prevent special characters in name only
   const allowedPattern = /^[a-zA-Z0-9 .,'-]*$/;
   if (values.name && !allowedPattern.test(values.name)) {
     errors.name = "No special characters allowed in Project Name.";
-  }
-  if (values.description && !allowedPattern.test(values.description)) {
-    errors.description = "No special characters allowed in Description.";
   }
   // Custom: Estimated Cost vs Budget
   if (

@@ -37,10 +37,11 @@ const validationSchema = Yup.object().shape({
 interface IFollowupsProps {
   showForm: boolean;
   setShowForm: (val: boolean) => void;
+  taskId: string;
 }
 
-export function Followups({ showForm, setShowForm }: IFollowupsProps) {
-  const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery();
+export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
+  const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery({ project_task_id: taskId });
   const { allUsersData } = useAllUsersQuery();
   const { allClientData } = useAllClientQuery();
   const { activeSession } = useAuthStore();
@@ -101,6 +102,7 @@ export function Followups({ showForm, setShowForm }: IFollowupsProps) {
         status: values.status || "PENDING",
         due_date: values.due_date || undefined,
         remarks: values.remarks || undefined,
+        project_task_id: taskId, 
       });
     },
   });
@@ -213,7 +215,7 @@ export function Followups({ showForm, setShowForm }: IFollowupsProps) {
                   <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
                     <span>
                       <span className="2xl:text-[1.1vw] font-normal">
-                        Assigned To:{" "}
+                        Assigned To: {" "}
                       </span>
                       <span className="underline 2xl:text-[1.1vw]">
                         {followup.user ? `${followup.user.first_name} ${followup.user.last_name}` : 'Unassigned'}

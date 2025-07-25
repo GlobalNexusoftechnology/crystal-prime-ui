@@ -54,7 +54,6 @@ const validationSchema = Yup.object().shape({
   assigned_to: Yup.string().required("Assigned To is required"),
   other_contact: Yup.string()
     .matches(/^[0-9]{8,15}$/, "Other Contact must be 8 to 15 digits")
-    .required("Other Contact is required"),
 });
 
 export function EditLeadModal({

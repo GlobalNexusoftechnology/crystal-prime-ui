@@ -1,11 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { Dropdown, InputField, DatePicker } from "@/components";
-import {
-  HiCheck,
-  HiXMark,
-  HiChevronDown,
-  HiChevronUp,
-} from "react-icons/hi2";
+import { HiCheck, HiXMark, HiChevronDown, HiChevronUp } from "react-icons/hi2";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TreeStructureIcon } from "@/features";
 import { formatDateToDDMMYYYY, getInitials, getRandomColor } from "@/utils";
@@ -86,14 +81,7 @@ export function Milestone({
     <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
       {editingId === milestone.id && editMilestone ? (
         <>
-          <td className="px-2 2xl:px-[0.5vw] py-4 2xl:py-[1vw] text-left flex gap-2 2xl:gap-[0.5vw]">
-            <button onClick={onSave} className="text-green-600" title="Save">
-              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
-            </button>
-            <button onClick={onCancel} className="text-red-600" title="Cancel">
-              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
-            </button>
-          </td>
+          <td></td>
           <td className="p-2 2xl:p-[0.5vw]">
             <InputField
               value={editMilestone.name}
@@ -147,6 +135,14 @@ export function Milestone({
               minDate={projectStartDate}
               maxDate={projectEndDate}
             />
+          </td>
+          <td className="px-2 2xl:px-[0.5vw] py-4 2xl:py-[1vw] text-left flex gap-2 2xl:gap-[0.5vw]">
+            <button onClick={onSave} className="text-green-600" title="Save">
+              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+            </button>
+            <button onClick={onCancel} className="text-red-600" title="Cancel">
+              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+            </button>
           </td>
         </>
       ) : (
