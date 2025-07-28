@@ -1747,11 +1747,14 @@ export interface Project {
   date: string;
   status: number;
 }
+
+// Updated Category to match new API response
 export interface Category {
   category: string;
   projects: Project[];
 }
 
+// Updated DashboardSummary to match new API response
 export interface DashboardSummary {
   stats: DashboardStatCard[];
   projectSnapshot: {
@@ -1769,7 +1772,10 @@ export interface DashboardSummary {
     monthly: { type: string | null; count: number }[];
     yearly: { type: string | null; count: number }[];
   };
-  projectRenewalData: Category[];
+  // projectRenewalData is now an object with month keys and array of categories as values
+  projectRenewalData: {
+    [month: string]: Category[];
+  };
   expenses: {
     weekly: {
       labels: string[];

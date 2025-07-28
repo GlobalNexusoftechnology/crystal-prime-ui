@@ -11,7 +11,6 @@ import {
 import { AnalyticalCard } from "../analytical-card";
 import {
   useDashboardSummaryQuery,
-  Category,
   useAllDailyTaskQuery,
   useDeleteDailyTaskMutation,
   useUpdateDailyTaskMutation,
@@ -118,20 +117,35 @@ export default function Dashboard() {
   });
 
   // ProjectRenewalList month selection logic
-  const renewalMonthOptions = dashboardSummary?.projectRenewalData?.length
-    ? dashboardSummary.projectRenewalData.map((cat: Category) => cat.category)
+  const renewalMonthOptions = dashboardSummary?.projectRenewalData
+    ? Object.keys(dashboardSummary.projectRenewalData)
     : [];
+  
+  // Get current month name
+  const getCurrentMonth = () => {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return months[new Date().getMonth()];
+  };
+
+  const currentMonth = getCurrentMonth();
+  
+  // Add current month to options if it doesn't exist
+  const allMonthOptions = renewalMonthOptions.includes(currentMonth) 
+    ? renewalMonthOptions 
+    : [currentMonth, ...renewalMonthOptions];
+  
   const [selectedMonth, setSelectedMonth] = useState(
-    renewalMonthOptions[0] || ""
+    currentMonth
   );
   const handleMonthChange = (month: string) => setSelectedMonth(month);
 
-  // Filter data for selected month
+  // Get data for selected month
   const renewalDataForSelectedMonth =
     dashboardSummary && selectedMonth
-      ? dashboardSummary.projectRenewalData.filter(
-          (cat: Category) => cat.category === selectedMonth
-        )
+      ? dashboardSummary.projectRenewalData[selectedMonth] || (selectedMonth === currentMonth ? [] : [])
       : [];
 
   // Remove old transformation for leadAnalyticsChartDataMap
@@ -307,7 +321,7 @@ export default function Dashboard() {
             data={renewalDataForSelectedMonth}
             selectedMonth={selectedMonth}
             onMonthChange={handleMonthChange}
-            monthOptions={renewalMonthOptions}
+            monthOptions={allMonthOptions}
           />
           <ExpensesOverviewChart dataMap={expensesDataMap} />
         </div>
