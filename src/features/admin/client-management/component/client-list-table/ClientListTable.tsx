@@ -172,6 +172,7 @@ export function ClientListTable(): JSX.Element {
   };
 
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const { debouncedValue: debouncedSearch } = useDebounce({
     initialValue: searchQuery,
     delay: 300,
@@ -179,14 +180,15 @@ export function ClientListTable(): JSX.Element {
   });
 
   // Use the debounced value for backend search
-  const { allClientData, refetchClient } = useAllClientQuery(debouncedSearch);
+  const { allClientData, refetchClient } = useAllClientQuery({ searchText: debouncedSearch, page: currentPage });
 
   // Remove the frontend filter:
   // const filteredClients = (allClientData || []).filter(...);
   // Instead, just use allClientData directly:
-  const filteredClients = allClientData || [];
+  const filteredClients = allClientData?.data?.list || [];
+  const paginationData = allClientData?.data?.pagination;
 
-  const clientNameToDelete = deleteId ? allClientData?.find((c) => c.id === deleteId)?.name : "";
+  const clientNameToDelete = deleteId ? filteredClients.find((c) => c.id === deleteId)?.name : "";
 
   return (
     <div className="flex flex-col gap-8 2xl:gap-[2vw] px-4 2xl:p-[1vw] py-2 2xl:py-[0.5vw]">
@@ -249,6 +251,8 @@ export function ClientListTable(): JSX.Element {
         onEdit={handleEdit}
         onDelete={handleDelete}
         refetch={refetchClient}
+        paginationData={paginationData}
+        onPageChange={setCurrentPage}
       />
       {isAddClientModalOpen && (
         <AddClientModal

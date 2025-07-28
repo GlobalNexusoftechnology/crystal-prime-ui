@@ -208,7 +208,7 @@ export function EILogsListTable({
 
   const typeOptions = [
     { key: "All Type", label: "All Type", value: "All Type" },
-    ...(allEILogTypesData?.data?.map((type) => ({
+    ...(allEILogTypesData?.data?.list?.map((type) => ({
       key: type.id,
       label: type.name,
       value: type.id, // Use ID as value
@@ -217,7 +217,7 @@ export function EILogsListTable({
 
   const headOptions = [
     { key: "All Head", label: "All Head", value: "All Head" },
-    ...(allEILogHeadsData?.data?.map((head) => ({
+    ...(allEILogHeadsData?.data?.list?.map((head) => ({
       key: head.id,
       label: head.name,
       value: head.id, // Use ID as value

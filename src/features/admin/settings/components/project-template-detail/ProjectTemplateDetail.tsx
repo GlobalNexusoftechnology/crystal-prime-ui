@@ -56,7 +56,7 @@ export function ProjectTemplateDetail({
   const { allTypesData } = useAllTypesQuery();
   const { refetchAllProjectTemplates } = useAllProjectTemplatesQuery();
 
-  const projectTypeName = allTypesData?.find(type => type.id?.toString() === projectTemplateData.project_type)?.name || projectTemplateData.project_type;
+  const projectTypeName = allTypesData?.data?.list?.find(type => type.id?.toString() === projectTemplateData.project_type)?.name || projectTemplateData.project_type;
 
   const { onDeleteProjectTemplate } = useDeleteProjectTemplateMutation({
     onSuccessCallback: (response) => {

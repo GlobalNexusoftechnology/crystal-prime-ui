@@ -10,10 +10,14 @@ const ALL_SOURCES_QUERY_KEY = "all-type-query-key";
 /**
  * This hook fetches a list of all the type from the backend.
  */
-export const useAllTypesQuery = () => {
+export interface TypesFilters {
+  page?: number;
+}
+
+export const useAllTypesQuery = (filters: TypesFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
-    queryKey: [ALL_SOURCES_QUERY_KEY],
-    queryFn: COMMUNITY_CLIENT.fetchAllTypes,
+    queryKey: [ALL_SOURCES_QUERY_KEY, filters],
+    queryFn: () => COMMUNITY_CLIENT.fetchAllTypes(filters.page),
     networkMode: "always",
   });
 

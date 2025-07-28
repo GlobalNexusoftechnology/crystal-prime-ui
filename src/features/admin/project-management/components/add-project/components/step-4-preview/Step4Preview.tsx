@@ -51,7 +51,7 @@ export function Step4Preview({
 }: Step4PreviewProps) {
   const { allUsersData } = useAllUsersQuery();
 
-  const mappedUsers = (allUsersData ?? []).map(user => ({
+  const mappedUsers = (allUsersData?.data?.list ?? []).map(user => ({
     id: user.id,
     name: `${user.first_name} ${user.last_name}`.trim(),
   }));

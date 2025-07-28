@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, SearchBar, Table } from "@/components";
 import toast from "react-hot-toast";
 import { EAction, EModule, ITableAction, staffListColumn } from "@/constants";
@@ -25,7 +25,8 @@ import { DeleteModal } from "@/components";
 
 export function StaffListTable() {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const { allUsersData, refetchAllUsers } = useAllUsersQuery(searchQuery);
+  const [currentPage, setCurrentPage] = useState(1);
+  const { allUsersData, refetchAllUsers } = useAllUsersQuery({ searchText: searchQuery, page: currentPage });
   const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
   const [isEditStaffModalOpen, setIsEditStaffModalOpen] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState<IUserViewDetails | null>(
@@ -35,6 +36,11 @@ export function StaffListTable() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { downloadAllUserExcel } = useAllUserDownloadExcelQuery();
+
+  // Reset to first page when search changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery]);
 
   const { hasPermission } = usePermission();
   const cavAddStaffManagement = hasPermission(
@@ -73,7 +79,7 @@ export function StaffListTable() {
   };
 
   // Prepare staff list data for table (no frontend filtering)
-  const userList: IAllUsersListResponse[] = (allUsersData ?? []).map(
+  const userList: IAllUsersListResponse[] = (allUsersData?.data?.list ?? []).map(
     (user) => ({
       id: user.id || "",
       first_name: user?.first_name || "",
@@ -88,6 +94,9 @@ export function StaffListTable() {
     })
   );
   const filteredUserList = userList;
+
+  // Extract pagination data
+  const paginationData = allUsersData?.data?.pagination;
 
   const leadStaffManagementAction: ITableAction<IAllUsersListResponse>[] = [];
   
@@ -167,11 +176,13 @@ export function StaffListTable() {
         </div>
       </div>
 
-      <Table
-        data={filteredUserList}
-        columns={staffListColumn}
-        actions={leadStaffManagementAction}
-      />
+              <Table
+          data={filteredUserList}
+          columns={staffListColumn}
+          actions={leadStaffManagementAction}
+          paginationData={paginationData}
+          onPageChange={setCurrentPage}
+        />
 
       {/* Modals */}
       <AddNewStaffModel

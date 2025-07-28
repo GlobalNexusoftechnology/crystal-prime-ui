@@ -928,8 +928,12 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   }
 
-  public fetchAllSources = async () => {
-    const response = await this.get<IAllSourcesResponse>(fetchAllSourcesUrl())
+  public fetchAllSources = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllSourcesUrl()}?${params.toString()}` : fetchAllSourcesUrl();
+    
+    const response = await this.get<IAllSourcesResponse>(url)
 
     if (!response?.success) {
       throw response?.errorData
@@ -938,14 +942,18 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
-  public fetchAllTypes = async () => {
-    const response = await this.get<IAllTypesResponse>(fetchAllTypesUrl())
+  public fetchAllTypes = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllTypesUrl()}?${params.toString()}` : fetchAllTypesUrl();
+    
+    const response = await this.get<IAllTypesResponse>(url)
 
     if (!response?.success) {
       throw response?.errorData
     }
 
-    return response?.data.data
+    return response?.data
   }
 
   // All lead attachment
@@ -1033,23 +1041,12 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   }
 
-  public fetchAllStatuses = async () => {
-    const response = await this.get<IAllStatusesResponse>(
-      fetchAllStatusesUrl(),
-      {
-        requiresAuth: false,
-      }
-    )
-
-    if (!response?.success) {
-      throw response?.errorData
-    }
-
-    return response?.data?.data
-  }
-
-  public fetchAllRoleList = async () => {
-    const response = await this.get<IAllRoleResponse>(fetchAllRoleListUrl(), {
+  public fetchAllStatuses = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllStatusesUrl()}?${params.toString()}` : fetchAllStatusesUrl();
+    
+    const response = await this.get<IAllStatusesResponse>(url, {
       requiresAuth: false,
     })
 
@@ -1057,19 +1054,36 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData
     }
 
-    return response?.data.data
+    return response?.data
+  }
+
+  public fetchAllRoleList = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllRoleListUrl()}?${params.toString()}` : fetchAllRoleListUrl();
+    
+    const response = await this.get<IAllRoleResponse>(url, {
+      requiresAuth: false,
+    })
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data
   }
   // staff
 
-  public fetchAllUsers = async (searchText?: string) => {
-    const url = searchText
-      ? `${fetchAllUsersUrl()}?searchText=${encodeURIComponent(searchText)}`
-      : fetchAllUsersUrl();
+  public fetchAllUsers = async (searchText?: string, page?: number) => {
+    const params = new URLSearchParams();
+    if (searchText) params.append('searchText', searchText);
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllUsersUrl()}?${params.toString()}` : fetchAllUsersUrl();
     const response = await this.get<IAllUsersResponse>(url, { requiresAuth: false });
     if (!response?.success) {
       throw response?.errorData;
     }
-    return response?.data.data;
+    return response?.data;
   }
 
   //post
@@ -1252,10 +1266,11 @@ export class CommunityClient extends ApiClient {
 
   //get
 
-  public fetchAllClient = async (searchText?: string) => {
-    const url = searchText
-      ? `${fetchAllClientUrl()}?searchText=${encodeURIComponent(searchText)}`
-      : fetchAllClientUrl();
+  public fetchAllClient = async (searchText?: string, page?: number) => {
+    const params = new URLSearchParams();
+    if (searchText) params.append('searchText', searchText);
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllClientUrl()}?${params.toString()}` : fetchAllClientUrl();
 
     const response = await this.get<IAllClientResponse>(url, {
       requiresAuth: false,
@@ -1265,7 +1280,7 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
 
-    return response?.data.data;
+    return response?.data;
   };
 
   public getProjectDetailById = async (id: string) => {
@@ -1828,8 +1843,12 @@ export class CommunityClient extends ApiClient {
   }
 
   // EI Log Type Master Methods
-  public fetchAllEILogTypes = async () => {
-    const response = await this.get<IAllEILogTypesResponse>(fetchAllEILogTypesUrl());
+  public fetchAllEILogTypes = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllEILogTypesUrl()}?${params.toString()}` : fetchAllEILogTypesUrl();
+    
+    const response = await this.get<IAllEILogTypesResponse>(url);
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -1869,8 +1888,12 @@ export class CommunityClient extends ApiClient {
   };
 
   // EI Log Head Master Methods
-  public fetchAllEILogHeads = async () => {
-    const response = await this.get<IAllEILogHeadsResponse>(fetchAllEILogHeadsUrl());
+  public fetchAllEILogHeads = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllEILogHeadsUrl()}?${params.toString()}` : fetchAllEILogHeadsUrl();
+    
+    const response = await this.get<IAllEILogHeadsResponse>(url);
     if (!response?.success) {
       throw response?.errorData;
     }

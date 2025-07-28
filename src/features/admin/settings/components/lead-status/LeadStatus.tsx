@@ -44,7 +44,7 @@ export function LeadStatus() {
   });
 
   // Prepare full list from API
-  const fullStatusesList: IAllStatusesList[] = (allStatusesData ?? []).map(
+  const fullStatusesList: IAllStatusesList[] = (allStatusesData?.data?.list ?? []).map(
     (lead) => ({
       id: lead?.id || "N/A",
       name: lead?.name || "N/A",

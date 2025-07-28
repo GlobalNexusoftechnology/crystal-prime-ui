@@ -37,6 +37,13 @@ interface CustomClientTableProps {
   onEdit: (client: IClientList) => void;
   onDelete: (id: string) => void;
   refetch: () => void;
+  paginationData?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+  onPageChange?: (page: number) => void;
   pageSize?: number;
 }
 
@@ -44,6 +51,8 @@ export function CustomClientTable({
   data,
   actions,
   refetch,
+  paginationData,
+  onPageChange,
   pageSize = 10,
 }: CustomClientTableProps) {
   const [expandedRowId, setExpandedRowId] = useState<string | null>(null);
@@ -91,16 +100,28 @@ export function CustomClientTable({
     setCurrentPage(1); // Reset to first page when data changes
   }, [data]);
 
-  // Pagination logic
+  // Pagination logic - use server-side pagination if available, otherwise client-side
   const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return tableData.slice(start, start + pageSize);
-  }, [tableData, currentPage, pageSize]);
+    if (paginationData) {
+      // Server-side pagination - use data directly
+      return tableData;
+    } else {
+      // Client-side pagination
+      const start = (currentPage - 1) * pageSize;
+      return tableData.slice(start, start + pageSize);
+    }
+  }, [tableData, currentPage, pageSize, paginationData]);
 
-  const totalPages = Math.ceil(tableData.length / pageSize);
+  const totalPages = paginationData ? paginationData.totalPages : Math.ceil(tableData.length / pageSize);
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    if (onPageChange) {
+      // Server-side pagination
+      onPageChange(page);
+    } else {
+      // Client-side pagination
+      setCurrentPage(page);
+    }
     setExpandedRowId(null); // Close expanded rows when changing pages
     setEditContact(null); // Close edit mode when changing pages
   };

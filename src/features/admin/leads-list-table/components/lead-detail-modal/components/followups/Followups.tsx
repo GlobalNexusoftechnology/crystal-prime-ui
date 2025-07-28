@@ -78,7 +78,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
   }));
 
   const userOptions =
-    allUsersData?.map((user) => ({
+    allUsersData?.data?.list?.map((user) => ({
       label: `${user?.first_name} ${user?.last_name}`,
       value: user?.id.toString(),
     })) || [];

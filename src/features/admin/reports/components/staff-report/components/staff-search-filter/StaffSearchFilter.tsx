@@ -21,7 +21,7 @@ export function StaffSearchFilter({
   setToDate,
 }: StaffSearchFilterProps) {
   const { allUsersData } = useAllUsersQuery();
-  let staffList: IUsersDetails[] = allUsersData || [];
+  let staffList: IUsersDetails[] = allUsersData?.data?.list || [];
   // Exclude users with role 'admin' (case-insensitive, role may be object)
   staffList = staffList.filter(user => user.role?.role?.toLowerCase() !== "admin");
 

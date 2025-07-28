@@ -76,7 +76,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
   const [showPassword, setShowPassword] = React.useState(false);
 
   const roleOptions =
-    rolesList?.map((roleData) => ({
+    rolesList?.data?.list?.map((roleData) => ({
       label: roleData?.role,
       value: roleData?.id.toString(),
     })) || [];

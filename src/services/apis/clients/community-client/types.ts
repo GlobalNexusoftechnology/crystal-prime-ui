@@ -47,7 +47,15 @@ export interface IAllStatusesResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllStatusesList[];
+  data: {
+    list: IAllStatusesList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 // START LEAD TYPES 
@@ -101,7 +109,15 @@ export interface IAllTypesResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllTypesList[];
+  data: {
+    list: IAllTypesList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 // delete types
 export interface IDeleteTypeResponse {
@@ -163,7 +179,15 @@ export interface IAllEILogTypesResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllEILogTypeList[];
+  data: {
+    list: IAllEILogTypeList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 export interface IDeleteEILogTypeResponse {
@@ -225,7 +249,15 @@ export interface IAllEILogHeadsResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllEILogHeadList[];
+  data: {
+    list: IAllEILogHeadList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 export interface IDeleteEILogHeadResponse {
@@ -355,7 +387,15 @@ export interface IAllSourcesResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllSourcesList[];
+  data: {
+    list: IAllSourcesList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 //get lead attachment
@@ -703,7 +743,15 @@ export interface ISignupResponse {
 export interface IAllRoleResponse {
   status: boolean;
   message: string;
-  data: IAllRoleList[];
+  data: {
+    list: IAllRoleList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 export interface IAllRoleList {
@@ -781,7 +829,15 @@ export interface IAllUsersResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IUsersDetails[];
+  data: {
+    list: IUsersDetails[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 // export interface INotification {
@@ -1284,7 +1340,15 @@ export interface IAllClientResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IClientList[];
+  data: {
+    list: IClientList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 export interface IClientDetailResponse {

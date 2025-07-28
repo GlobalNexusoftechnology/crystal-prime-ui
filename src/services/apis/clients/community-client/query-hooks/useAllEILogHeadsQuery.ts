@@ -10,10 +10,14 @@ const ALL_EI_LOG_HEADS_QUERY_KEY = "all-ei-log-heads-query-key";
 /**
  * This hook fetches a list of all the EI Log Heads from the backend.
  */
-export const useAllEILogHeadsQuery = () => {
+export interface EILogHeadsFilters {
+  page?: number;
+}
+
+export const useAllEILogHeadsQuery = (filters: EILogHeadsFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
-    queryKey: [ALL_EI_LOG_HEADS_QUERY_KEY],
-    queryFn: COMMUNITY_CLIENT.fetchAllEILogHeads,
+    queryKey: [ALL_EI_LOG_HEADS_QUERY_KEY, filters],
+    queryFn: () => COMMUNITY_CLIENT.fetchAllEILogHeads(filters.page),
     networkMode: "always",
   });
 

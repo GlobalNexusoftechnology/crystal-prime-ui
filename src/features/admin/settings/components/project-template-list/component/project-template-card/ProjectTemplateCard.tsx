@@ -47,7 +47,7 @@ export function ProjectTemplateCard({
   
   const { allTypesData } = useAllTypesQuery();
 
-  const projectTypeName = allTypesData?.find(type => type.id?.toString() === projectType)?.name || projectType;
+  const projectTypeName = allTypesData?.data?.list?.find(type => type.id?.toString() === projectType)?.name || projectType;
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 

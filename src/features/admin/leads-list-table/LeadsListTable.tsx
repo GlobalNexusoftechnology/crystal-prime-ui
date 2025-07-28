@@ -201,7 +201,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
     (lead) => {
-      const status = allStatusesData?.find((s) => s.id === lead?.status?.id);
+      const status = allStatusesData?.data?.list?.find((s) => s.id === lead?.status?.id);
       return {
         id: lead?.id || "N/A",
         first_name: lead?.first_name || "N/A",
@@ -305,7 +305,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const statusOptions = [
     { label: "All Status", value: "All Status" },
-    ...(allStatusesData?.map((status) => ({
+    ...(allStatusesData?.data?.list?.map((status) => ({
       label: status?.name,
       value: status?.id.toString(),
     })) || []),
@@ -313,7 +313,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const typeOptions = [
     { label: "All Type", value: "All Type" },
-    ...(allTypesData?.map((type) => ({
+    ...(allTypesData?.data?.list?.map((type) => ({
       label: type?.name,
       value: type?.id.toString(),
     })) || []),

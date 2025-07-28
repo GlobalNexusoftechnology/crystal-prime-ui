@@ -136,13 +136,13 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
     },
   });
 
-  const typeOptions = (allEILogTypesData?.data || []).map((type) => ({
+  const typeOptions = (allEILogTypesData?.data?.list || []).map((type) => ({
     key: type.id,
     label: type.name,
     value: type.id,
   }));
 
-  const headOptions = (allEILogHeadsData?.data || []).map((head) => ({
+  const headOptions = (allEILogHeadsData?.data?.list || []).map((head) => ({
     key: head.id,
     label: head.name,
     value: head.id,

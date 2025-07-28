@@ -49,7 +49,7 @@ export function FollowUpManagementListTable({
   // Create status options dynamically with a fallback
   const statusOptions = [
     { label: "All Status", value: "" },
-    ...(allStatusesData?.map((status) => ({
+    ...(allStatusesData?.data?.list?.map((status) => ({
       label: status?.name,
       value: status?.id.toString(),
     })) || []),
