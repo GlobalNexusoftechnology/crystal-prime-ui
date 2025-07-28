@@ -49,6 +49,7 @@ export function StaffSearchFilter({
           value={fromDate}
           onChange={setFromDate}
           placeholder="From Date"
+          maxDate={toDate}
         />
       </div>
       <div>
@@ -57,6 +58,7 @@ export function StaffSearchFilter({
           value={toDate}
           onChange={setToDate}
           placeholder="To Date"
+          minDate={fromDate}
         />
       </div>
     </form>

@@ -22,6 +22,7 @@ export const LeadReportFilter: React.FC<LeadReportFilterProps> = ({
           value={fromDate}
           onChange={setFromDate}
           placeholder="Start Date"
+          maxDate={toDate}
         />
       </div>
       <div>
@@ -30,6 +31,7 @@ export const LeadReportFilter: React.FC<LeadReportFilterProps> = ({
           value={toDate}
           onChange={setToDate}
           placeholder="End Date"
+          minDate={fromDate}
         />
       </div>
     </form>
