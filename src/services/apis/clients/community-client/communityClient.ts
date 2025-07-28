@@ -1919,6 +1919,7 @@ export class CommunityClient extends ApiClient {
     if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
     if (filters.fromDate) params.append('fromDate', filters.fromDate);
     if (filters.toDate) params.append('toDate', filters.toDate);
+    if (filters.page) params.append('page', filters.page.toString());
     const url = params.toString() ? `${fetchAllEILogsUrl()}?${params.toString()}` : fetchAllEILogsUrl();
 
     const response = await this.get<IAllEILogResponse>(url);
@@ -1970,6 +1971,7 @@ export class CommunityClient extends ApiClient {
     if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
     if (filters.fromDate) params.append('fromDate', filters.fromDate);
     if (filters.toDate) params.append('toDate', filters.toDate);
+    if (filters.page) params.append('page', filters.page.toString());
     const url = params.toString() ? `${fetchAllEILogsDownloadExcelUrl()}?${params.toString()}` : fetchAllEILogsDownloadExcelUrl();
 
     const response = await this.get<Blob>(url, { responseType: 'blob' });

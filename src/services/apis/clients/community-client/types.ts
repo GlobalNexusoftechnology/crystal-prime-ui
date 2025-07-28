@@ -1894,12 +1894,26 @@ export interface IAllEILogResponse {
   message: string;
   success: true;
   data: {
-    data: IAllEILogList[];
-    pagination?: {
-      total: number;
-      page: number;
-      limit: number;
-      totalPages: number;
+    list: {
+      data: IAllEILogList[];
+      pagination?: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      };
+    };
+    stats: {
+      totalCount: number;
+      totalIncome: number;
+      totalExpense: number;
+      netAmount: number;
+      todayIncome: number;
+      todayExpense: number;
+      todayNet: number;
+      monthIncome: number;
+      monthExpense: number;
+      monthNet: number;
     };
   };
 }
@@ -1933,6 +1947,7 @@ export interface IEILogFilters {
   referenceDate?: string;
   fromDate?: string;
   toDate?: string;
+  page?: number;
 }
 // END EI LOG MANAGEMENT
 

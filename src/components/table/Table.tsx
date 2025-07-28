@@ -4,18 +4,37 @@ import { ITableProps } from "@/constants";
 import { useState, useMemo } from "react";
 import { Pagination, TableHeader, TableRow } from "./components";
 
+interface PaginationData {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export function Table<T extends { id: string | number }>({
   data,
   columns,
   pageSize = 10,
   actions,
-}: ITableProps<T>) {
-  const [currentPage, setCurrentPage] = useState(1);
+  paginationData,
+  onPageChange,
+}: ITableProps<T> & {
+  paginationData?: PaginationData;
+  onPageChange?: (page: number) => void;
+}) {
+  const [currentPage, setCurrentPage] = useState(paginationData?.page || 1);
   const [sortBy, setSortBy] = useState<keyof T | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
   const [openActionId, setOpenActionId] = useState<string | number | null>(
     null
   );
+
+  // Update current page when pagination data changes
+  useMemo(() => {
+    if (paginationData?.page) {
+      setCurrentPage(paginationData.page);
+    }
+  }, [paginationData?.page]);
 
   const handleSort = (accessor: keyof T) => {
     if (sortBy === accessor) {
@@ -37,10 +56,26 @@ export function Table<T extends { id: string | number }>({
     });
   }, [data, sortBy, sortOrder]);
 
+  // Use server-side pagination if available, otherwise use client-side
   const paginatedData = useMemo(() => {
-    const start = (currentPage - 1) * pageSize;
-    return sortedData.slice(start, start + pageSize);
-  }, [sortedData, currentPage, pageSize]);
+    if (paginationData) {
+      // Server-side pagination - data is already paginated
+      return sortedData;
+    } else {
+      // Client-side pagination
+      const start = (currentPage - 1) * pageSize;
+      return sortedData.slice(start, start + pageSize);
+    }
+  }, [sortedData, currentPage, pageSize, paginationData]);
+
+  const handlePageChange = (page: number) => {
+    setOpenActionId(null);
+    if (onPageChange) {
+      onPageChange(page);
+    } else {
+      setCurrentPage(page);
+    }
+  };
 
   return (
     <div>
@@ -70,7 +105,9 @@ export function Table<T extends { id: string | number }>({
           </thead>
           <tbody>
             {paginatedData.map((row, idx) => {
-              const serialNumber = (currentPage - 1) * pageSize + idx;
+              const serialNumber = paginationData 
+                ? (paginationData.page - 1) * paginationData.limit + idx
+                : (currentPage - 1) * pageSize + idx;
               return (
                 <TableRow
                   key={row.id}
@@ -88,11 +125,8 @@ export function Table<T extends { id: string | number }>({
       </div>
       <Pagination
         currentPage={currentPage}
-        totalPages={Math.ceil(data.length / pageSize)}
-        onPageChange={(page) => {
-          setOpenActionId(null);
-          setCurrentPage(page);
-        }}
+        totalPages={paginationData?.totalPages || Math.ceil(data.length / pageSize)}
+        onPageChange={handlePageChange}
       />
     </div>
   );
