@@ -275,6 +275,12 @@ export interface IAllLeadResponse {
   success: true;
   data: {
     list: IAllLeadsList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
     stats: IStats;
   };
 }

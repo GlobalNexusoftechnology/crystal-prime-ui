@@ -905,6 +905,7 @@ export class CommunityClient extends ApiClient {
     referenceDate?: string;
     followupFrom?: string;
     followupTo?: string;
+    page?: number;
   } = {}) => {
     // Build query string from filters
     const params = new URLSearchParams();
@@ -915,6 +916,7 @@ export class CommunityClient extends ApiClient {
     if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
     if (filters.followupFrom) params.append('followupFrom', filters.followupFrom);
     if (filters.followupTo) params.append('followupTo', filters.followupTo);
+    if (filters.page) params.append('page', filters.page.toString());
     const url = params.toString() ? `${fetchAllLeadsListUrl()}?${params.toString()}` : fetchAllLeadsListUrl();
 
     const response = await this.get<IAllLeadResponse>(url);

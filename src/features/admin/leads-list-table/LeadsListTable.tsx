@@ -49,6 +49,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   >("All");
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
@@ -64,6 +65,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       dateRange: dateRangeFilter,
       followupFrom: followupFromDate || undefined,
       followupTo: followupToDate || undefined,
+      page: currentPage,
     }),
     [
       searchQuery,
@@ -72,6 +74,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       dateRangeFilter,
       followupFromDate,
       followupToDate,
+      currentPage,
     ]
   );
 
@@ -86,6 +89,11 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
 
   const { onLeadDownloadTemplateExcel } = useLeadDownloadTemplateExcelQuery();
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedStatus, selectedType, dateRangeFilter, followupFromDate, followupToDate]);
 
   const { hasPermission } = usePermission();
   const cavAddLeadManagement = hasPermission(
@@ -224,6 +232,14 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       };
     }
   );
+
+  // Extract pagination data
+  const paginationData = allLeadList?.data?.pagination;
+
+  // Handle page change
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const leadDetailModalData: ILeadsListDetailsProps = {
     id: leadDetailById?.id || "null",
@@ -456,6 +472,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           data={leadsList}
           columns={leadsListColumn}
           actions={leadLeadManagementAction}
+          paginationData={paginationData}
+          onPageChange={handlePageChange}
         />
       )}
 
