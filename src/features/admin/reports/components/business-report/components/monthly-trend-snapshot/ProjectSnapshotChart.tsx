@@ -20,7 +20,7 @@ interface ProjectSnapshotChartProps {
 }
 
 export const ProjectSnapshotChart: React.FC<ProjectSnapshotChartProps> = ({ data }) => {
-  const chartData = data.labels.map((label, idx) => ({
+  const chartData = data?.labels?.map((label, idx) => ({
     name: label,
     started: data.started[idx] ?? 0,
     completed: data.completed[idx] ?? 0,

@@ -192,7 +192,7 @@ export function CustomClientTable({
               <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase">
                 Actions
               </th>
-              {clientListColumn.map((col) => (
+              {clientListColumn.length > 0 && clientListColumn.map((col) => (
                 <th
                   key={col.header}
                   className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase ${col.headerClass}`}
@@ -203,7 +203,7 @@ export function CustomClientTable({
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {paginatedData.map((row, idx) => (
+            {paginatedData.length > 0 && paginatedData.map((row, idx) => (
               <React.Fragment key={row.id}>
                 <tr
                   className={`hover:bg-blue-50 transition-colors duration-150 ${
@@ -220,10 +220,10 @@ export function CustomClientTable({
                         )}
                       </button>
                       <ActionDropdown
-                        options={actions.map((action) => ({
-                          label: action.label,
-                          onClick: () => action.onClick(row),
-                          className: action.className,
+                        options={actions?.map((action) => ({
+                          label: action?.label,
+                          onClick: () => action?.onClick(row),
+                          className: action?.className,
                         }))}
                         icon={
                           <FiMoreVertical className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
@@ -231,7 +231,7 @@ export function CustomClientTable({
                       />
                     </div>
                   </td>
-                  {clientListColumn.map((col) => {
+                  {clientListColumn.length > 0 && clientListColumn.map((col) => {
                     const value = row[col.accessor as keyof IClientList];
                     return (
                       <td
@@ -262,7 +262,7 @@ export function CustomClientTable({
                             <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase">
                               Action
                             </th>
-                            {clientContactDetailsColumns.map((col) => (
+                            {clientContactDetailsColumns.length > 0 && clientContactDetailsColumns.map((col) => (
                               <th
                                 key={col.header}
                                 className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase ${col.headerClass}`}
@@ -273,7 +273,7 @@ export function CustomClientTable({
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                          {row.client_details?.map((contact) => {
+                          {Array.isArray(row?.client_details) && row.client_details.length > 0 && row.client_details.map((contact) => {
                             const isEditing =
                               editContact &&
                               editContact.clientId === row.id &&

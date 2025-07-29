@@ -55,7 +55,7 @@ export function ActionDropdown({ options, icon, direction = "right" }: ActionDro
         <div
           className={`absolute ${direction === "right" ? "left-full bottom-0" : direction === "bottom" ? "right-full top-[50%]" : "right-full bottom-0"} mt-2 bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-fit min-w-[8rem] 2xl:min-w-[8vw]`}
         >
-          {options.map((action, actionIndex) => (
+          {options.length > 0 && options.map((action, actionIndex) => (
             <button
               type="button"
               key={actionIndex}

@@ -26,7 +26,7 @@ export function StaffSearchFilter({
   staffList = staffList.filter(user => user.role?.role?.toLowerCase() !== "admin");
 
   const staffOptions = [
-    ...staffList.map((user: IUsersDetails) => ({
+    ...staffList?.map((user: IUsersDetails) => ({
       label: `${user.first_name} ${user.last_name}`,
       value: user.id,
     })),

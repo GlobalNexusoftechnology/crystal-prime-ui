@@ -72,7 +72,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
     },
   });
 
-  const statusOptions = Object.entries(LeadFollowupStatus).map(([, value]) => ({
+  const statusOptions = Object?.entries(LeadFollowupStatus)?.map(([, value]) => ({
     label: value,
     value,
   }));

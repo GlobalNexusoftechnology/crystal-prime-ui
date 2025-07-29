@@ -38,10 +38,10 @@ const CustomTooltip = (props: TooltipProps<number, string>) => {
 export const ExpensesOverviewChart: React.FC<ExpensesOverviewChartProps> = ({
   data,
 }) => {
-  const chartData = data.labels.map((label, idx) => ({
+  const chartData = data?.labels?.map((label, idx) => ({
     name: label,
-    new: data.newProject[idx] ?? 0,
-    completed: data.completedProject[idx] ?? 0,
+    new: data?.newProject[idx] ?? 0,
+    completed: data?.completedProject[idx] ?? 0,
   }));
 
   return (

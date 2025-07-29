@@ -31,7 +31,7 @@ export const TeamPerformanceHighlights: React.FC<
         Team & Performance Highlights
       </h2>
       <div className="flex flex-wrap gap-6">
-        {metrics.map((metric, idx) => (
+        {metrics?.length > 0 && metrics?.map((metric, idx) => (
           <div key={idx} className="flex items-start gap-3">
             <FiInfo className="text-gray-400" size={20} />
             <div>

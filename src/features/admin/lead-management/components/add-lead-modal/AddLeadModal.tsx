@@ -216,7 +216,7 @@ export function AddLeadModal({
                       <label className="text-[0.9rem] font-medium text-gray-700">
                         Emails
                       </label>
-                      {values.email.map((_, index) => (
+                      {values?.email?.map((_, index) => (
                         <div key={index} className="flex gap-2">
                           <InputField
                             placeholder="Enter Email"

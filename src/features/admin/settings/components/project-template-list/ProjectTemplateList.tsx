@@ -37,7 +37,7 @@ export function ProjectTemplateList() {
           templates
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             .filter((template) => !!(template as any).id)
-            .map((template) => {
+            ?.map((template) => {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const milestones = Array.isArray((template as any).project_milestone_master) ? (template as any).project_milestone_master : [];
               const milestoneCount = milestones.length;

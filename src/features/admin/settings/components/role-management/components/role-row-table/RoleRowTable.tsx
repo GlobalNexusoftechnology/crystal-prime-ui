@@ -121,7 +121,7 @@ export function RoleRowTable({
 
           {isOpen && (
             <div className="absolute right-[95%] top-[-40%] bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-32 2xl:w-[10vw]">
-              {actions.map((action, index) => (
+              {actions?.length > 0 && actions?.map((action, index) => (
                 <button
                   key={index}
                   className={`block w-full px-4 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left hover:bg-gray-100 ${action.className}`}

@@ -125,7 +125,7 @@ export function ProjectReport() {
         />
       </div>
       <ProjectSearchFilter
-        projects={(allProjectsData || []).map((p) => ({
+        projects={(allProjectsData || [])?.map((p) => ({
           id: p.id,
           name: p.name,
           client_id: p.client?.id || "",

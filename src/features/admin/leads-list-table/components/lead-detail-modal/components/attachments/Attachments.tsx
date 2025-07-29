@@ -130,7 +130,7 @@ export function Attachments({
           </div>
         </form>
       ) : (
-        allLeadAttachmentData?.map((attachment, idx) => (
+         allLeadAttachmentData?.map((attachment, idx) => (
           <div
             key={idx}
             className="flex gap-6 2xl:gap-[2vw] text-darkBlue bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] flex-col md:flex-row justify-between "

@@ -124,7 +124,7 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
                 </tr>
               </thead>
               <tbody>
-                {paginatedRoles.map((role, index) => (
+                {paginatedRoles?.length > 0 && paginatedRoles?.map((role, index) => (
                   <RoleRowTable
                     index={(currentPage - 1) * pageSize + index}
                     key={role.id}

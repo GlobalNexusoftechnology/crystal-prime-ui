@@ -87,7 +87,7 @@ export const ProjectRenewalList: React.FC<ProjectRenewalListProps> = ({
           </button>
           {open && (
             <div className="absolute right-0 mt-2 2xl:mt-[0.5vw] bg-white border border-gray-200 rounded shadow z-10 min-w-[8rem] 2xl:min-w-[8vw]">
-              {monthOptions.map((option) => (
+              {monthOptions?.length > 0 && monthOptions.map((option) => (
                 <button
                   key={option}
                   className={`block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100 text-gray-700 2xl:text-[0.9vw] ${
@@ -111,7 +111,7 @@ export const ProjectRenewalList: React.FC<ProjectRenewalListProps> = ({
         </div>
       ) : (
         <div className="space-y-3 2xl:space-y-[0.75vw]">
-          {data.map((cat) => {
+          {data?.length > 0 && data.map((cat) => {
             const isExpanded = expandedCategories.has(cat.category);
             const firstProject = cat.projects[0];
 
@@ -179,7 +179,7 @@ export const ProjectRenewalList: React.FC<ProjectRenewalListProps> = ({
                     </div>
 
                     {/* Other Projects */}
-                    {cat.projects.slice(1).map((proj, idx) => (
+                    {cat?.projects?.length > 0 && cat?.projects.slice(1)?.map((proj, idx) => (
                       <div
                         key={idx}
                         className="flex items-center justify-between"

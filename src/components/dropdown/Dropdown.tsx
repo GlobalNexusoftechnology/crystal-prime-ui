@@ -154,7 +154,7 @@ export function Dropdown({
             {filteredOptions.length === 0 ? (
               <div className="px-4 py-2 text-gray-400">No options</div>
             ) : (
-              filteredOptions.map((option) => (
+              filteredOptions.length > 0 && filteredOptions.map((option) => (
                 <div
                   key={option.value}
                   style={{
@@ -190,7 +190,7 @@ export function Dropdown({
           {filteredOptions.length === 0 ? (
             <div className="px-4 py-2 text-gray-400">No options</div>
           ) : (
-            filteredOptions.map((option) => (
+            filteredOptions.length > 0 && filteredOptions.map((option) => (
               <div
                 key={option.value}
                 className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] 2xl:text-[0.9vw] cursor-pointer hover:bg-gray-100 ${

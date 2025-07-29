@@ -33,9 +33,9 @@ const CustomTooltip = (props: TooltipProps<number, string>) => {
 };
 
 export const MonthlyLeadsChart: React.FC<MonthlyLeadsChartProps> = ({ data }) => {
-  const chartData = data.labels.map((label, idx) => ({
+  const chartData = data?.labels?.map((label, idx) => ({
     name: label,
-    value: data.leads[idx] ?? 0,
+    value: data?.leads[idx] ?? 0,
   }));
 
   return (

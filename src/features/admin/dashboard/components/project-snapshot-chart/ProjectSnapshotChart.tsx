@@ -36,7 +36,7 @@ export const ProjectSnapshotChart: React.FC<ProjectSnapshotChartProps> = ({
   // Show the largest value as the center label (or customize as needed)
 
   // For the legend, show all statuses
-  const legendItems = data.map((d, idx) => ({
+  const legendItems = data?.map((d, idx) => ({
     name: d.name,
     color: colors[idx % colors.length],
   }));
@@ -69,7 +69,7 @@ export const ProjectSnapshotChart: React.FC<ProjectSnapshotChartProps> = ({
               label={false}
               isAnimationActive={false}
             >
-              {data.map((entry, idx) => (
+              {data?.length > 0 &&  data?.map((entry, idx) => (
                 <Cell key={`cell-${idx}`} fill={colors[idx % colors.length]} />
               ))}
             </Pie>
@@ -79,7 +79,7 @@ export const ProjectSnapshotChart: React.FC<ProjectSnapshotChartProps> = ({
       </div>
       {/* Legend */}
       <div className="flex flex-wrap gap-6 mt-4">
-        {legendItems.map((item) => (
+        {legendItems?.length > 0 && legendItems?.map((item) => (
           <div key={item.name} className="flex items-center gap-2 text-base">
             <span
               className="inline-block w-4 h-4 rounded-full"

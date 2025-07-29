@@ -105,7 +105,7 @@ export function Step3UploadDocument({
     <div className="flex flex-col gap-8 2xl:gap-[2vw]">
       {files.length > 0 && (
         <div className="flex mt-2 gap-4 2xl:gap-[1vw]">
-          {files.map((f, idx) => (
+          {files?.length > 0 && files?.map((f, idx) => (
             <div key={idx} className="flex items-center gap-2">
               <span className="text-primary">{f.name}</span>
               <button

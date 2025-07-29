@@ -83,7 +83,7 @@ export const LeadFunnelChart: React.FC<LeadFunnelChartProps> = ({ data }) => {
               content={({ value }) => `${value} Leads`}
               style={{ fontWeight: 600, fontSize: 16, fill: "#222" }}
             />
-            {funnelData.map((entry, idx) => (
+            {funnelData?.length > 0 && funnelData.map((entry, idx) => (
               <Cell key={`cell-${idx}`} fill={entry.color} />
             ))}
           </Bar>

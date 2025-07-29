@@ -244,7 +244,7 @@ export function AddProject({
   const currentUser = activeSession?.user;
   const userId = currentUser?.id || "";
 
-  const clientOptions = (allClientData?.data?.list || []).map((client) => ({
+  const clientOptions = (allClientData?.data?.list || [])?.map((client) => ({
     label: client.name,
     value: client.id,
   }));
@@ -318,14 +318,14 @@ export function AddProject({
 
   const assemblePayload = () => {
     if (!basicInfo) return null;
-    const apiMilestones = milestones.map((m) => ({
+    const apiMilestones = milestones?.map((m) => ({
       name: m.name,
       description: m.description,
       assigned_to: m.assigned_to,
       status: m.status,
       start_date: m.start_date,
       end_date: m.end_date,
-      tasks: (m.tasks ?? []).map((t) => ({
+      tasks: (m.tasks ?? [])?.map((t) => ({
         title: t.title,
         description: t.description,
         assigned_to: t.assigned_to,
@@ -336,7 +336,7 @@ export function AddProject({
 
     // Map attachments: use Cloudinary URL for new files, original info for existing
     let newFileUrlIdx = 0;
-    const attachments = uploadedFiles.map((file) => {
+    const attachments = uploadedFiles?.map((file) => {
       // Check if this is an existing attachment (has originalAttachment metadata)
       const originalAttachment = (file as File & {
         originalAttachment?: {
@@ -497,7 +497,7 @@ export function AddProject({
     extra_cost: basicInfo?.extra_cost !== undefined ? String(basicInfo.extra_cost) : "",
   };
   let newFileUrlIdxForDocs = 0;
-  const documents: IDocumentInfo[] = uploadedFiles.map((file) => {
+  const documents: IDocumentInfo[] = uploadedFiles?.map((file) => {
     // Check if this is an existing attachment (has originalAttachment metadata)
     const originalAttachment = (file as File & {
       originalAttachment?: {

@@ -28,7 +28,7 @@ export function DocumentSummaryTable({
           </span>
         </div>
         <Table
-          data={(data.files || []).map((file, idx) => ({
+          data={(data.files || [])?.map((file, idx) => ({
             ...file,
             id: idx,
             file_url: file.file_url

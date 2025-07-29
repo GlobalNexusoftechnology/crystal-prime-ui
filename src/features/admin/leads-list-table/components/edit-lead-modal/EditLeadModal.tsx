@@ -139,7 +139,7 @@ export function EditLeadModal({
       typeof lead.email === "string"
         ? lead.email
             .split(",")
-            .map((email: string) => email.trim())
+            ?.map((email: string) => email?.trim())
             .filter((email: string) => email !== "")
         : Array.isArray(lead.email)
         ? lead.email
@@ -287,7 +287,7 @@ export function EditLeadModal({
                         <label className="block text-[0.9rem] font-medium text-gray-700">
                           Emails
                         </label>
-                        {values.email.map((_, index) => (
+                        {values?.email?.map((_, index) => (
                           <div key={index} className="flex gap-2">
                             <InputField
                               placeholder="Enter Email"

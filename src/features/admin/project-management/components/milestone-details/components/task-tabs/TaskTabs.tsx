@@ -106,8 +106,8 @@ export function TaskTabs({
   const { onUpdateMilestoneTask } = useUpdateMilestoneTaskMutation({
     onSuccessCallback: (data) => {
       setTasks((prev) =>
-        prev.map((t) => 
-          t.id === data.id
+        prev?.map((t) => 
+          t?.id === data?.id
             ? {
                 id: data.id,
                 name: data.title,
@@ -317,7 +317,7 @@ export function TaskTabs({
               </tr>
             </thead>
             <tbody>
-              {tasks.map((task) => (
+              {tasks?.length > 0 && tasks?.map((task) => (
                 <Task
                   key={task.id}
                   task={task}

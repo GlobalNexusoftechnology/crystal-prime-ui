@@ -25,12 +25,12 @@ export function ProjectSearchFilter({
   toDate,
   setToDate,
 }: ProjectSearchFilterProps) {
-  const projectOptions = (projects || []).map((project) => ({
+  const projectOptions = (projects || [])?.map((project) => ({
     label: project.name,
     value: project.id,
   }));
 
-  const clientOptions = (clients || []).map((client) => ({
+  const clientOptions = (clients || [])?.map((client) => ({
     label: client.name,
     value: client.id,
   }));

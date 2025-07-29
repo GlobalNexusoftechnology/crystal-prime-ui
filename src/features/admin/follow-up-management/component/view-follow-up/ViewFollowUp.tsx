@@ -104,7 +104,7 @@ export function ViewFollowUp({ onClose }: IViewFollowUpProps) {
           <p className="font-medium text-gray-700  text-[1rem] 2xl:text-[1vw]">
             Remark
           </p>
-          {notes.map((note) => (
+          {notes?.length > 0 && notes?.map((note) => (
             <div
               key={note.id}
               className="bg-gray-100  rounded-md border w-[15.9rem] xl:w-[36.3rem] md:w-[30rem] 2xl:w-[47.5vw] border-gray-200 space-y-1 p-2"

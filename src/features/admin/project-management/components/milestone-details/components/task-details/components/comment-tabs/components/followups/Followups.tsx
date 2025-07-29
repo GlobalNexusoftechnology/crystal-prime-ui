@@ -59,7 +59,7 @@ export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
     },
   });
 
-  const statusOptions = Object.entries(ProjectFollowupStatus).map(([, value]) => ({
+  const statusOptions = Object?.entries(ProjectFollowupStatus)?.map(([, value]) => ({
     label: value,
     value,
   }));
@@ -207,7 +207,7 @@ export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
         <div className="flex flex-col gap-4 2xl:gap-[1vw]">
           {followupData && followupData.length > 0 ? (
             <div className="space-y-4 2xl:space-y-[1vw]">
-              {followupData.map((followup) => (
+              {followupData?.length > 0 && followupData?.map((followup) => (
                 <div
                   key={followup.id}
                   className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"

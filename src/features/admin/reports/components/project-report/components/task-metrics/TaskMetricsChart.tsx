@@ -42,7 +42,7 @@ export function TaskMetricsChart({ data }: { data: ProjectPerformanceReportRespo
                   position="top"
                   style={{ fontWeight: 600, fontSize: 18, fill: "#222" }}
                 />
-                {barData.map((entry: { label: string; value: number }, idx: number) => (
+                {barData?.map((entry: { label: string; value: number }, idx: number) => (
                   <Cell key={`cell-${idx}`} fill="#69A8F7" />
                 ))}
               </Bar>

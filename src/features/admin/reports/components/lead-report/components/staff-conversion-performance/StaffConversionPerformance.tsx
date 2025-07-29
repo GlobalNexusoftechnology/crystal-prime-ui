@@ -42,7 +42,7 @@ export const StaffConversionPerformance: React.FC<StaffConversionPerformanceProp
         className="flex flex-col gap-6 max-h-60 overflow-y-auto pr-2"
         style={{ scrollBehavior: "smooth" }}
       >
-        {staffData.map((staff, idx) => (
+        {staffData?.length > 0 && staffData.map((staff, idx) => (
           <div key={idx} className="flex items-center gap-4 w-full">
             <div className="flex-shrink-0">
               <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white text-lg font-bold border-4 border-white shadow">

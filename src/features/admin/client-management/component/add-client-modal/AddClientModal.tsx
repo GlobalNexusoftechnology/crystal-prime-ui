@@ -48,10 +48,12 @@ export function AddClientModal({
       contact_number: selectedClient?.contact_number || "",
       email: selectedClient?.email || "",
       gst_number: selectedClient?.gst_number || "",
-      client_details: selectedClient?.client_details?.map((c) => ({
-        ...c,
-        _showOtherContact: false,
-      })) || [],
+      client_details: Array.isArray(selectedClient?.client_details) && selectedClient.client_details.length > 0
+        ? selectedClient.client_details.map((c) => ({
+            ...c,
+            _showOtherContact: false,
+          }))
+        : [],
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Customer name is required"),
@@ -172,7 +174,7 @@ export function AddClientModal({
             name="client_details"
             render={(arrayHelpers) => (
               <div className="flex flex-col gap-4 2xl:gap-[1vw]">
-                {formik.values.client_details.length > 0 && formik.values.client_details.map((contact, index) => (
+                {formik?.values?.client_details?.length > 0 && formik?.values?.client_details?.map((contact, index) => (
                   <div
                     key={index}
                     className="flex flex-col gap-4 2xl:gap-[1vw] relative border p-2 rounded"

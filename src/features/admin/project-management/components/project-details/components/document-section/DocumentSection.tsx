@@ -25,7 +25,7 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
         Documents
       </h3>
       <div className="flex flex-col gap-8 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
-        {documentSectionData.map((doc, idx) => {         
+        {documentSectionData?.length > 0 && documentSectionData?.map((doc, idx) => {         
           return (
             <div
               key={idx}

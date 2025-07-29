@@ -59,7 +59,7 @@ export function AdminSidebar({
       </div>
       <ul className="w-full h-full flex flex-col justify-between gap-4 2xl:gap-[1vw] overflow-scroll admin-sidebar-links-container">
         <div className="flex flex-col gap-4 2xl:gap-[1vw]">
-          {adminSidebarLinks.map((link, index) => {
+          {adminSidebarLinks.length > 0 &&  adminSidebarLinks.map((link, index) => {
             const isActive = pathName === link.path;
             return (
               <React.Fragment key={index}>
@@ -88,7 +88,7 @@ export function AdminSidebar({
                 {/* Render child links if present */}
                 {Array.isArray(link.links) && link.links.length > 0 && !isVisibleSidebar && (
                   <ul className="ml-10 2xl:ml-[2vw] flex flex-col gap-2">
-                    {link.links.map((child, childIdx) => {
+                    {link.links.length > 0 &&  link.links.map((child, childIdx) => {
                       const isChildActive = pathName === child.path;
                       return (
                         <li key={childIdx} className="flex items-center relative group">

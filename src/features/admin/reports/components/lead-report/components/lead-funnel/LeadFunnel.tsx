@@ -44,7 +44,7 @@ export const LeadFunnel: React.FC<LeadFunnelProps> = ({ data }) => {
           <ReferenceLine y={0} stroke="#ccc" />
           <Tooltip cursor={{ fill: "#F3F4F6" }} />
           <Bar dataKey="value" radius={[6, 6, 0, 0]}> 
-            {funnelData.map((entry, idx) => (
+            {funnelData?.length > 0 && funnelData.map((entry, idx) => (
               <Cell key={`cell-${idx}`} fill={entry.color} />
             ))}
           </Bar>

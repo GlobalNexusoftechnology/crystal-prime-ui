@@ -54,7 +54,7 @@ export function OtpInput({ value, onChange }: OtpInputProps) {
         Enter OTP
       </h1>
       <div className="flex gap-2 justify-start">
-        {inputRefs.map((ref, index) => (
+        {inputRefs?.length > 0 && inputRefs.map((ref, index) => (
           <input
             key={index}
             ref={ref}

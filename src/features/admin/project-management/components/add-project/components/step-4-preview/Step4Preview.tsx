@@ -87,7 +87,7 @@ export function Step4Preview({
               </tr>
             </thead>
             <tbody>
-              {milestones.map((milestone) => (
+              {milestones?.length > 0 && milestones?.map((milestone) => (
                 <PreviewMilestone key={milestone.id} milestone={milestone} users={mappedUsers} />
               ))}
             </tbody>

@@ -33,7 +33,7 @@ export const FinancialSummary: React.FC<FinancialSummaryProps> = ({ data }) => {
         Financial Summary
       </div>
       <div className="flex flex-wrap gap-x-12 gap-y-6 w-full">
-        {metrics.map((metric, idx) => (
+        {metrics?.length > 0 && metrics?.map((metric, idx) => (
           <div key={idx}>
             <div className="text-gray-800 font-light 2xl:text-[1vw]">
               {metric.label}

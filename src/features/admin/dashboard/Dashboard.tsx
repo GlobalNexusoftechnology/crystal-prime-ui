@@ -172,15 +172,15 @@ export default function Dashboard() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const statsData = dashboardSummary as any || {};
   const analyticalCards = dashboardSummary?.stats
-    ? dashboardSummary.stats.map((card) => ({
+    ? dashboardSummary?.stats?.map((card) => ({
         ...card,
         icon: <AnalyticalCardIcon />,
       }))
     : [
-        { count: statsData.myTaskCount, title: "My Task", subtitle: "Open & In Process", icon: <AnalyticalCardIcon /> },
-        { count: statsData.todayFollowups, title: "Today Follow up", subtitle: "Due Today", icon: <AnalyticalCardIcon /> },
-        { count: statsData.projectCount, title: "Project", subtitle: "Assigned Projects", icon: <AnalyticalCardIcon /> },
-        { count: statsData.performanceRatio, title: "Performance Ratio", subtitle: "Completed/Assigned", icon: <AnalyticalCardIcon /> },
+        { count: statsData?.myTaskCount, title: "My Task", subtitle: "Open & In Process", icon: <AnalyticalCardIcon /> },
+        { count: statsData?.todayFollowups, title: "Today Follow up", subtitle: "Due Today", icon: <AnalyticalCardIcon /> },
+        { count: statsData?.projectCount, title: "Project", subtitle: "Assigned Projects", icon: <AnalyticalCardIcon /> },
+        { count: statsData?.performanceRatio, title: "Performance Ratio", subtitle: "Completed/Assigned", icon: <AnalyticalCardIcon /> },
       ];
 
   const dailyTaskList: DailyTaskRow[] = (dailyTasks || []).map((task) => {
@@ -188,13 +188,13 @@ export default function Dashboard() {
       task.priority ?? ""
     );
     return {
-      id: task.id,
-      name: task.task_title,
-      description: task.description || "-",
-      status: task.status || "-",
-      due: task.entry_date || "-",
+      id: task?.id,
+      name: task?.task_title,
+      description: task?.description || "-",
+      status: task?.status || "-",
+      due: task?.entry_date || "-",
       priority: validPriority
-        ? (task.priority as "High" | "Medium" | "Low")
+        ? (task?.priority as "High" | "Medium" | "Low")
         : "Medium",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       projectId: (task as any)?.projectId || "",
@@ -238,32 +238,32 @@ export default function Dashboard() {
 
   // LeadAnalyticsChart
   const leadAnalyticsDataMap = {
-    weekly: (dashboardSummary?.leadAnalytics?.weekly ?? []).map((item) => ({
-      name: item.status,
-      value: item.count,
+    weekly: (dashboardSummary?.leadAnalytics?.weekly ?? [])?.map((item) => ({
+      name: item?.status,
+      value: item?.count,
     })),
-    monthly: (dashboardSummary?.leadAnalytics?.monthly ?? []).map((item) => ({
-      name: item.status,
-      value: item.count,
+    monthly: (dashboardSummary?.leadAnalytics?.monthly ?? [])?.map((item) => ({
+      name: item?.status,
+      value: item?.count,
     })),
-    yearly: (dashboardSummary?.leadAnalytics?.yearly ?? []).map((item) => ({
-      name: item.status,
-      value: item.count,
+    yearly: (dashboardSummary?.leadAnalytics?.yearly ?? [])?.map((item) => ({
+      name: item?.status,
+      value: item?.count,
     })),
   };
 
   // LeadTypeChart
   const leadTypeDataMap = {
     weekly: (dashboardSummary?.leadType?.weekly ?? []).map((item) => ({
-      name: item.type ?? "Unknown",
-      value: item.count,
+      name: item?.type ?? "",
+      value: item?.count,
     })),
     monthly: (dashboardSummary?.leadType?.monthly ?? []).map((item) => ({
-      name: item.type ?? "Unknown",
+      name: item.type ?? "",
       value: item.count,
     })),
     yearly: (dashboardSummary?.leadType?.yearly ?? []).map((item) => ({
-      name: item.type ?? "Unknown",
+      name: item.type ?? "",
       value: item.count,
     })),
   };
@@ -302,7 +302,7 @@ export default function Dashboard() {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
-        {analyticalCards.map((card, idx) => (
+        {analyticalCards?.length > 0 && analyticalCards.map((card, idx) => (
           <AnalyticalCard key={idx} data={card} />
         ))}
       </div>
@@ -366,16 +366,16 @@ export default function Dashboard() {
             });
           }}
           initialValues={{
-            project_id: editTask.project?.id || "",
+            project_id: editTask?.project?.id || "",
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            assigned_to: editTask.user?.id || (editTask as any)?.assigned_to || "",
-            task_title: editTask.task_title || "",
-            entry_date: editTask.entry_date || "",
-            description: editTask.description || "",
-            hours_spent: editTask.hours_spent || undefined,
-            status: editTask.status || "",
-            remarks: editTask.remarks || "",
-            priority: editTask.priority || "Medium",
+            assigned_to: editTask?.user?.id || (editTask as any)?.assigned_to || "",
+            task_title: editTask?.task_title || "",
+            entry_date: editTask?.entry_date || "",
+            description: editTask?.description || "",
+            hours_spent: editTask?.hours_spent || undefined,
+            status: editTask?.status || "",
+            remarks: editTask?.remarks || "",
+            priority: editTask?.priority || "Medium",
           }}
           isPending={isUpdating}
           isEdit={true}

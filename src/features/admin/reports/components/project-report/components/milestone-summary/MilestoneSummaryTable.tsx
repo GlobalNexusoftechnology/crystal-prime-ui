@@ -34,7 +34,7 @@ export function MilestoneSummaryTable({
         Milestone Summary
       </h3>
       <Table
-        data={data.map((row) => ({
+        data={data?.map((row) => ({
           ...row,
           id: row.milestoneId,
           assignedToName: row.assigned_to?.name ?? "-",

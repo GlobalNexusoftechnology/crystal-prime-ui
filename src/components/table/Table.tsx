@@ -91,7 +91,7 @@ export function Table<T extends { id: string | number }>({
                   Action
                 </th>
               )}
-              {columns.map((col) => (
+              {columns.length > 0 && columns.map((col) => (
                 <TableHeader
                   key={String(col.accessor)}
                   column={col}
@@ -104,7 +104,7 @@ export function Table<T extends { id: string | number }>({
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((row, idx) => {
+            {paginatedData.length > 0 && paginatedData.map((row, idx) => {
               const serialNumber = paginationData 
                 ? (paginationData.page - 1) * paginationData.limit + idx
                 : (currentPage - 1) * pageSize + idx;

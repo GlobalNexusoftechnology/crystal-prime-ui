@@ -41,7 +41,7 @@ export function Reports() {
       <div className="flex items-center gap-8 2xl:gap-[2vw]">
         <h1 className="text-3xl 2xl:text-[2vw] font-medium mb-6 2xl:mb-[1vw]">Reports</h1>
         <div className="flex gap-4 2xl:gap-[1vw] mb-6 2xl:mb-[1vw] overflow-x-auto">
-          {tabs.map((tab) => (
+          {tabs?.length > 0 && tabs?.map((tab) => (
             <button
               key={tab.key}
               className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw] font-medium whitespace-nowrap ${

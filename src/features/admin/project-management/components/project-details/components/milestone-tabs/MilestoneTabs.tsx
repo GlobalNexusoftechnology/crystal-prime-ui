@@ -50,7 +50,7 @@ export function MilestoneTabs({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [taskMenu, setTaskMenu] = useState<any>(null);
   const [expandedMilestones, setExpandedMilestones] = useState<string[]>(
-    milestoneData.map((m: Milestone) => m.id)
+    milestoneData?.map((m: Milestone) => m?.id)
   );
 
   // Error states for validation
@@ -69,7 +69,7 @@ export function MilestoneTabs({
     ? [{ label: "Loading...", value: "" }]
     : usersError || !allUsersData
     ? [{ label: "Error loading users", value: "" }]
-    : (allUsersData?.data?.list || []).map((user) => ({
+    : (allUsersData?.data?.list || [])?.map((user) => ({
         label: `${user.first_name} ${user.last_name}`,
         value: user.id,
       }));
@@ -106,8 +106,8 @@ export function MilestoneTabs({
   const { onDeleteMilestoneTask } = useDeleteMilestoneTaskMutation({
     onSuccessCallback: () => {
       setMilestones((prev) =>
-        prev.map((m) =>
-          m.id === deletingTaskMilestoneId
+        prev?.map((m) =>
+          m?.id === deletingTaskMilestoneId
             ? {
                 ...m,
                 tasks: m.tasks.filter(
@@ -168,8 +168,8 @@ export function MilestoneTabs({
     onSuccessCallback: (data) => {
       // Update the milestone in the list
       setMilestones((prev) =>
-        prev.map((m) =>
-          m.id === data.id
+        prev?.map((m) =>
+          m?.id === data?.id
             ? {
                 id: data.id,
                 name: data.name,
@@ -203,8 +203,8 @@ export function MilestoneTabs({
     onSuccessCallback: (data) => {
       // Add the new task to the appropriate milestone
       setMilestones((prev) =>
-        prev.map((m) =>
-          m.id === editingTask?.milestoneId
+        prev?.map((m) =>
+          m?.id === editingTask?.milestoneId
             ? {
                 ...m,
                 tasks: [
@@ -242,12 +242,12 @@ export function MilestoneTabs({
     onSuccessCallback: (data) => {
       // Update the task in the appropriate milestone
       setMilestones((prev) =>
-        prev.map((m) =>
+        prev?.map((m) =>
           m.id === editingTask?.milestoneId
             ? {
                 ...m,
-                tasks: m.tasks.map((t: LocalTask) =>
-                  t.id === data.id
+                tasks: m?.tasks?.map((t: LocalTask) =>
+                  t?.id === data?.id
                     ? {
                         id: data.id,
                         title: data.title,
@@ -525,8 +525,8 @@ export function MilestoneTabs({
       editingTask
     ) {
       setMilestones((prev) =>
-        prev.map((m) =>
-          m.id === editingTask.milestoneId
+        prev?.map((m) =>
+          m?.id === editingTask?.milestoneId
             ? {
                 ...m,
                 tasks: m.tasks.filter((t: LocalTask) => t.id !== editTask.id),
@@ -605,8 +605,8 @@ export function MilestoneTabs({
       due_date: new Date().toISOString().slice(0, 10),
     };
     setMilestones((prev) =>
-      prev.map((m) =>
-        m.id === milestoneId ? { ...m, tasks: [...m.tasks, newTask] } : m
+      prev?.map((m) =>
+        m?.id === milestoneId ? { ...m, tasks: [...m.tasks, newTask] } : m
       )
     );
     setEditingTask({ milestoneId, taskId: newId });
@@ -626,7 +626,7 @@ export function MilestoneTabs({
   }, [showForm]);
 
   useEffect(() => {
-    setExpandedMilestones(milestones.map((m: Milestone) => m.id));
+    setExpandedMilestones(milestones?.map((m: Milestone) => m?.id));
   }, [milestones]);
 
   const handleMilestoneChange = (updatedMilestone: {
@@ -742,7 +742,7 @@ export function MilestoneTabs({
       {/* Tabs */}
       <div className="flex gap-8 2xl:gap-[2vw] items-center">
         <div className="flex gap-8 2xl:gap-[2vw]">
-          {tabs.map((tab) => (
+          {tabs?.length > 0 && tabs?.map((tab) => (
             <button
               key={tab}
               className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${
@@ -800,7 +800,7 @@ export function MilestoneTabs({
                   </tr>
                 </thead>
                 <tbody>
-                  {milestones.map((milestone) => (
+                  {milestones?.length > 0 && milestones?.map((milestone) => (
                     <React.Fragment key={milestone.id}>
                       <Milestone
                         milestone={milestone}

@@ -30,7 +30,7 @@ export const ProjectDeliveryPerformance: React.FC<ProjectDeliveryPerformanceProp
     <div className="border-b 2xl:border-b-[0.1vw] p-6 2xl:p-[1.5vw] pt-0 2xl:pt-0">
       <div className="text-[1.1rem] 2xl:text-[1.1vw] font-medium mb-4">Project Delivery & Performance</div>
       <div className="flex flex-wrap gap-x-16 gap-y-8 w-full">
-        {metrics.map((metric, idx) => (
+        {metrics?.length > 0 && metrics?.map((metric, idx) => (
           <div key={idx} className="flex items-start gap-4">
             <span className="mt-1 text-gray-500">
               <FiInfo size={28} />

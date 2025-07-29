@@ -24,7 +24,7 @@ const formatRupees = (value: number) => {
 };
 
 export const RevenueTrendChart: React.FC<RevenueTrendChartProps> = ({ data }) => {
-  const chartData = data.labels.map((label, idx) => ({
+  const chartData = data?.labels?.map((label, idx) => ({
     name: label,
     value: data.revenue[idx] ?? 0,
   }));

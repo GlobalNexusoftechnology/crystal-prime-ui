@@ -48,7 +48,7 @@ interface MonthlyLeadsChartProps {
 }
 
 export const MonthlyLeadsChart: React.FC<MonthlyLeadsChartProps> = ({ data }) => {
-  const chartData = data ? data.labels.map((label, index) => ({
+  const chartData = data ? data?.labels?.map((label, index) => ({
     name: label,
     value: data.leads[index] || 0
   })) : defaultData;

@@ -63,7 +63,7 @@ export function BasicProjectInfo({
         </div>
         <div>
           {(Array.isArray(data.assignedTeam) && data.assignedTeam.length > 0) ? (
-            data.assignedTeam.map((member) => {
+            data?.assignedTeam?.map((member) => {
               const randomColor =
                 typeof member.name === "string"
                   ? getRandomColor(member.name)

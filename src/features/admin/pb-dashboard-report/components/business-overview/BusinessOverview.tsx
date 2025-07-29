@@ -24,7 +24,7 @@ export const BusinessOverview: React.FC<BusinessOverviewProps> = ({ data }) => {
     <div className="border-b pb-6 2xl:pb-[1.5vw]">
       <h2 className="text-[1.1rem] 2xl:text-[1.1vw] font-medium mb-4 2xl:mb-[1vw]">Business Overview</h2>
       <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw]">
-        {metrics.map((metric, idx) => (
+        {metrics?.length > 0 && metrics?.map((metric, idx) => (
           <div key={idx} className="flex items-start gap-3 2xl:gap-[0.75vw]">
             <FiInfo className="text-gray-400 w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.25vw]" />
             {/* 2xl: text-[1vw] for icon if needed, but react-icons uses size prop */}

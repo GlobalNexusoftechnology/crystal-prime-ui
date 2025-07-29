@@ -39,7 +39,7 @@ export function Pagination({ currentPage, totalPages, onPageChange }: Pagination
         Previous
       </button>
 
-      {pagesToRender.map((page, idx) =>
+      {pagesToRender.length > 0 && pagesToRender.map((page, idx) =>
         page === "..." ? (
           <span key={`ellipsis-${idx}`} className="px-2 2xl:px-[0.5vw] text-gray-500">
             ...

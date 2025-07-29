@@ -53,7 +53,7 @@ export const TimelineAnalysis: React.FC<{
                   dataKey="value"
                   isAnimationActive={false}
                 >
-                  {chartData.map((entry, idx) => (
+                  {chartData?.map((entry, idx) => (
                     <Cell key={`cell-${idx}`} fill={COLORS[idx]} />
                   ))}
                 </Pie>

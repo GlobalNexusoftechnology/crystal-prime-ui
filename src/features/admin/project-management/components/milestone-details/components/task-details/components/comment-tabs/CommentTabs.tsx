@@ -27,7 +27,7 @@ export function CommentTabs({
       {/* Tabs */}
       <div className="flex flex-wrap gap-8 2xl:gap-[2vw] items-center">
         <div className="flex gap-8 2xl:gap-[2vw]">
-          {tabs.map((tab) => (
+          {tabs?.length > 0 && tabs?.map((tab) => (
             <button
               key={tab}
               className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${

@@ -100,7 +100,7 @@ export const LeadMetricsGrid: React.FC<LeadMetricsGridProps> = ({ data }) => {
   ];
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-8 w-full max-w-4xl mx-auto">
-      {metrics.map((metric, idx) => (
+      {metrics?.length > 0 && metrics.map((metric, idx) => (
         <div key={idx} className="flex items-start gap-4">
           <span className="mt-1 text-gray-500">
             <FiInfo size={28} />

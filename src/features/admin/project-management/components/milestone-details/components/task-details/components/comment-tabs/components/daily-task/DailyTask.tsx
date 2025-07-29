@@ -118,7 +118,7 @@ export function DailyTask({
                 <div>Loading...</div>
               ) : dailyTasks && dailyTasks.length > 0 ? (
                 <div className="space-y-4 2xl:space-y-[1vw]">
-                  {dailyTasks.map((task: IDailyTaskEntryResponse) => {
+                  {dailyTasks?.length > 0 && dailyTasks?.map((task: IDailyTaskEntryResponse) => {
                     return (
                       <div
                         key={task.id}

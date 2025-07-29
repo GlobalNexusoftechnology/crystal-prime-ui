@@ -34,7 +34,7 @@ export const ProjectStageSection: React.FC<Props> = ({
         </span>
       </div>
       <div className="space-y-4 2xl:space-y-[1vw]">
-        {projects.map((project, index) => (
+        {projects?.length > 0 && projects?.map((project, index) => (
           <ProjectCard 
             key={index} 
             project={project} 
