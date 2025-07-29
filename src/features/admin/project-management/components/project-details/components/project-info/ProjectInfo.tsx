@@ -13,7 +13,7 @@ export function ProjectInfo({ projectInfoData }: ProjectInfoProps) {
   // Helper function to get project type name from ID
   const getProjectTypeName = (typeId: string) => {
     if (!allTypesData || typesLoading) return typeId;
-    const projectType = allTypesData.find((type) => type.id === typeId);
+    const projectType = allTypesData?.data?.list?.find((type) => type.id === typeId);
     return projectType ? projectType.name : typeId;
   };
 

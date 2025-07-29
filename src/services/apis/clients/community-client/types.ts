@@ -47,7 +47,15 @@ export interface IAllStatusesResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllStatusesList[];
+  data: {
+    list: IAllStatusesList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 // START LEAD TYPES 
@@ -101,7 +109,15 @@ export interface IAllTypesResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllTypesList[];
+  data: {
+    list: IAllTypesList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 // delete types
 export interface IDeleteTypeResponse {
@@ -163,7 +179,15 @@ export interface IAllEILogTypesResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllEILogTypeList[];
+  data: {
+    list: IAllEILogTypeList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 export interface IDeleteEILogTypeResponse {
@@ -225,7 +249,15 @@ export interface IAllEILogHeadsResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllEILogHeadList[];
+  data: {
+    list: IAllEILogHeadList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 export interface IDeleteEILogHeadResponse {
@@ -275,6 +307,12 @@ export interface IAllLeadResponse {
   success: true;
   data: {
     list: IAllLeadsList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
     stats: IStats;
   };
 }
@@ -349,7 +387,15 @@ export interface IAllSourcesResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IAllSourcesList[];
+  data: {
+    list: IAllSourcesList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 //get lead attachment
@@ -697,7 +743,15 @@ export interface ISignupResponse {
 export interface IAllRoleResponse {
   status: boolean;
   message: string;
-  data: IAllRoleList[];
+  data: {
+    list: IAllRoleList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 export interface IAllRoleList {
@@ -775,7 +829,15 @@ export interface IAllUsersResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IUsersDetails[];
+  data: {
+    list: IUsersDetails[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 // export interface INotification {
@@ -1278,7 +1340,15 @@ export interface IAllClientResponse {
   status: boolean;
   message: string;
   success: true;
-  data: IClientList[];
+  data: {
+    list: IClientList[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 export interface IClientDetailResponse {
@@ -1747,11 +1817,14 @@ export interface Project {
   date: string;
   status: number;
 }
+
+// Updated Category to match new API response
 export interface Category {
   category: string;
   projects: Project[];
 }
 
+// Updated DashboardSummary to match new API response
 export interface DashboardSummary {
   stats: DashboardStatCard[];
   projectSnapshot: {
@@ -1769,7 +1842,10 @@ export interface DashboardSummary {
     monthly: { type: string | null; count: number }[];
     yearly: { type: string | null; count: number }[];
   };
-  projectRenewalData: Category[];
+  // projectRenewalData is now an object with month keys and array of categories as values
+  projectRenewalData: {
+    [month: string]: Category[];
+  };
   expenses: {
     weekly: {
       labels: string[];
@@ -1888,12 +1964,26 @@ export interface IAllEILogResponse {
   message: string;
   success: true;
   data: {
-    data: IAllEILogList[];
-    pagination?: {
-      total: number;
-      page: number;
-      limit: number;
-      totalPages: number;
+    list: {
+      data: IAllEILogList[];
+      pagination?: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+      };
+    };
+    stats: {
+      totalCount: number;
+      totalIncome: number;
+      totalExpense: number;
+      netAmount: number;
+      todayIncome: number;
+      todayExpense: number;
+      todayNet: number;
+      monthIncome: number;
+      monthExpense: number;
+      monthNet: number;
     };
   };
 }
@@ -1927,6 +2017,7 @@ export interface IEILogFilters {
   referenceDate?: string;
   fromDate?: string;
   toDate?: string;
+  page?: number;
 }
 // END EI LOG MANAGEMENT
 

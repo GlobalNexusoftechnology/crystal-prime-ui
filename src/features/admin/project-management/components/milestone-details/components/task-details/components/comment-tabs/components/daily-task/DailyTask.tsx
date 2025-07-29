@@ -6,7 +6,6 @@ import {
   useAllDailyTaskQuery,
   useCreateDailyTaskMutation,
   useAllUsersQuery,
-  IUsersDetails,
   IDailyTaskEntryResponse,
 } from "@/services";
 import { AddDailyTaskModal } from "@/components";
@@ -40,7 +39,7 @@ export function DailyTask({
   const { allUsersData, isLoading: usersLoading } = useAllUsersQuery();
   const getUserName = (userId: string) => {
     if (!allUsersData || usersLoading) return userId;
-    const user = (allUsersData as IUsersDetails[]).find((u) => u.id === userId);
+    const user = allUsersData?.data?.list?.find((u) => u.id === userId);
     return user ? `${user.first_name} ${user.last_name}` : userId;
   };
 

@@ -17,7 +17,7 @@ import {
   useAllEILogsDownloadExcelQuery,
   useEILogDownloadTemplateExcelQuery,
 } from "@/services";
-import { formatDate, IApiError } from "@/utils";
+import { IApiError } from "@/utils";
 import { useDebounce } from "@/utils/hooks";
 import toast from "react-hot-toast";
 import { usePermission } from "@/utils/hooks";
@@ -42,8 +42,9 @@ export function EILogsListTable({
   const [selectedPaymentMode, setSelectedPaymentMode] = useState("All Payment Mode");
   const [viewEILog, setViewEILog] = useState<IAllEILogList | null>(null);
   const [isViewEILogModalOpen, setIsViewEILogModalOpen] = useState(false);
-  const [fromDate, setFromDate] = useState("");
-  const [toDate, setToDate] = useState("");
+  const [fromDate, setFromDate] = useState<Date | null>(null);
+  const [toDate, setToDate] = useState<Date | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
   const [dateRangeFilter, setDateRangeFilter] = useState<
     "All Dates" | "Daily" | "Weekly" | "Monthly"
   >("All Dates");
@@ -62,11 +63,12 @@ export function EILogsListTable({
       eilogHeadId: selectedHead !== "All Head" ? selectedHead : undefined,
       paymentMode: selectedPaymentMode !== "All Payment Mode" ? selectedPaymentMode : undefined,
       dateRange: dateRangeFilter !== "All Dates" ? dateRangeFilter : undefined,
-      fromDate: fromDate || undefined,
-      toDate: toDate || undefined,
+      fromDate: fromDate ? fromDate.toISOString() : undefined,
+      toDate: toDate ? toDate.toISOString() : undefined,
       searchText: searchQuery,
+      page: currentPage,
     }),
-    [selectedType, selectedHead, selectedPaymentMode, dateRangeFilter, fromDate, toDate, searchQuery]
+    [selectedType, selectedHead, selectedPaymentMode, dateRangeFilter, fromDate, toDate, searchQuery, currentPage]
   );
 
   const { data: allEILogList, eiLogsRefetch } = useAllEILogsQuery(filters);
@@ -134,31 +136,22 @@ export function EILogsListTable({
   };
 
   const handleClearDates = () => {
-    setFromDate("");
-    setToDate("");
+    setFromDate(null);
+    setToDate(null);
   };
 
   // Prepare full list from API
-  const dataSource =
-    allEILogList?.data && "list" in allEILogList.data
-      ? ((allEILogList.data.list as { data: IAllEILogList[] }).data)
-      : allEILogList?.data?.data ?? [];
+  const dataSource = allEILogList?.data?.list?.data ?? [];
 
-  const fullEILogList: IAllEILogList[] = dataSource.map(
-    (eiLog: IAllEILogList) => ({
-      id: eiLog?.id || "N/A",
-      created_at: `${formatDate(eiLog?.created_at)}` || "N/A",
-      updated_at: `${formatDate(eiLog?.updated_at)}` || "N/A",
-      description: eiLog?.description || "N/A",
-      income: eiLog?.income !== undefined && eiLog?.income !== null ? String(eiLog.income) : undefined,
-      expense: typeof eiLog?.expense === 'number' ? eiLog.expense : eiLog?.expense ? Number(eiLog.expense) : null,
-      paymentMode: eiLog?.paymentMode || "N/A",
-      attachment: eiLog?.attachment || undefined,
-      eilogType: eiLog?.eilogType || { id: "N/A", name: "N/A" },
-      eilogHead: eiLog?.eilogHead || { id: "N/A", name: "N/A" },
-      createdBy: eiLog?.createdBy,
-    })
-  );
+  const fullEILogList: IAllEILogList[] = dataSource;
+
+  // Prepare pagination data
+  const paginationData = allEILogList?.data?.list?.pagination;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    // The API call will automatically refetch with the new page due to the filters dependency
+  };
 
   const eiLogAction: ITableAction<IAllEILogList>[] = [];
 
@@ -215,7 +208,7 @@ export function EILogsListTable({
 
   const typeOptions = [
     { key: "All Type", label: "All Type", value: "All Type" },
-    ...(allEILogTypesData?.data?.map((type) => ({
+    ...(allEILogTypesData?.data?.list?.map((type) => ({
       key: type.id,
       label: type.name,
       value: type.id, // Use ID as value
@@ -224,7 +217,7 @@ export function EILogsListTable({
 
   const headOptions = [
     { key: "All Head", label: "All Head", value: "All Head" },
-    ...(allEILogHeadsData?.data?.map((head) => ({
+    ...(allEILogHeadsData?.data?.list?.map((head) => ({
       key: head.id,
       label: head.name,
       value: head.id, // Use ID as value
@@ -301,16 +294,16 @@ export function EILogsListTable({
         <div className="flex flex-col justify-start items-start w-full min-w-[12rem] md:w-[15vw]">
            <DatePicker
             label="From Date"
-            value={fromDate}
-            onChange={(date) => setFromDate(date)}
+            value={fromDate ? fromDate.toISOString().split('T')[0] : ""}
+            onChange={(date) => setFromDate(date ? new Date(date) : null)}
             placeholder="From Date"
             datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
           />
         </div>
         <DatePicker
             label="To Date"
-            value={toDate}
-            onChange={(date) => setToDate(date)}
+            value={toDate ? toDate.toISOString().split('T')[0] : ""}
+            onChange={(date) => setToDate(date ? new Date(date) : null)}
             placeholder="To Date"
             datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
           />
@@ -362,6 +355,8 @@ export function EILogsListTable({
           data={fullEILogList}
           columns={IEILogListTableColumn}
           actions={eiLogAction}
+          paginationData={paginationData}
+          onPageChange={handlePageChange}
         />
       </div>
 

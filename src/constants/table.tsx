@@ -18,7 +18,13 @@ export interface ITableProps<T> {
   columns: ITableColumn<T>[];
   pageSize?: number;
   actions?: ITableAction<T>[]; 
-
+  paginationData?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+  onPageChange?: (page: number) => void;
 }
 
 export interface ITableHeaderProps<T> {

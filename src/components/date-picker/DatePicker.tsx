@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 
 /**
  * Reusable Date Picker Component
@@ -34,6 +34,72 @@ export function DatePicker({
 
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [internalValue, setInternalValue] = useState(value);
+  const [isPickerOpen, setIsPickerOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Update internal value when external value changes
+  useEffect(() => {
+    setInternalValue(value);
+  }, [value]);
+
+  // Debounced onChange handler
+  const debouncedOnChange = useCallback((newValue: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    
+    timeoutRef.current = setTimeout(() => {
+      if (newValue !== value) {
+        onChange(newValue);
+      }
+    }, 500); // 500ms delay
+  }, [onChange, value]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setInternalValue(newValue);
+    
+    // If picker is not open, use debounced onChange
+    if (!isPickerOpen) {
+      debouncedOnChange(newValue);
+    }
+  };
+
+  const handleInputFocus = () => {
+    setIsPickerOpen(true);
+  };
+
+  const handleInputBlur = () => {
+    setIsPickerOpen(false);
+    
+    // Ensure the final value is applied
+    if (internalValue !== value) {
+      onChange(internalValue);
+    }
+    
+    // Clear any pending timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Prevent immediate onChange when using arrow keys in the picker
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      e.stopPropagation();
+    }
+  };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className={`${datePickerWidth}`}>
@@ -53,13 +119,16 @@ export function DatePicker({
           } ${datePickerBorderRadius} px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] pr-10 2xl:pr-[2.5vw] focus:outline-none focus:ring-1 ${
             error ? "focus:ring-red-500" : "focus:ring-primary"
           }`}
-          value={value}
+          value={internalValue}
           name={name}
           min={minDate}
           max={maxDate}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={handleInputChange}
+          onFocus={handleInputFocus}
+          onBlur={handleInputBlur}
+          onKeyDown={handleKeyDown}
         />
-        {/* Custom Calendar Icon (Now Works on All Browsers) */}
+        {/* Custom Calendar Icon */}
         <div
           className="absolute inset-y-0 right-3 2xl:right-[0.75vw] flex items-center cursor-pointer"
           onClick={() =>

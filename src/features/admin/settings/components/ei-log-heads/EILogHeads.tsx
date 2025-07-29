@@ -16,6 +16,7 @@ import { DeleteModal } from "@/components";
 
 export function EILogHeads() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedHead, setSelectedHead] = useState<{
     id: string;
     name: string;
@@ -32,7 +33,7 @@ export function EILogHeads() {
     setSearchTerm(value);
   };
 
-  const { allEILogHeadsData, fetchAllEILogHeads } = useAllEILogHeadsQuery();
+  const { allEILogHeadsData, fetchAllEILogHeads } = useAllEILogHeadsQuery({ page: currentPage });
 
   const { onDeleteEILogHead } = useDeleteEILogHeadMutation({
     onSuccessCallback: (data) => {
@@ -49,7 +50,7 @@ export function EILogHeads() {
   });
 
   // Prepare full list from API
-  const fullHeadsList: IAllEILogHeadList[] = (allEILogHeadsData?.data ?? []).map(
+  const fullHeadsList: IAllEILogHeadList[] = (allEILogHeadsData?.data?.list ?? []).map(
     (head) => ({
       id: head?.id || "N/A",
       name: head?.name || "N/A",
@@ -57,6 +58,9 @@ export function EILogHeads() {
       updated_at: `${formatDate(head?.updated_at)}` || "N/A",
     })
   );
+
+  // Extract pagination data
+  const paginationData = allEILogHeadsData?.data?.pagination;
 
   // Filter list based on search term (case-insensitive)
   const filteredHeadsList = useMemo(() => {
@@ -142,6 +146,8 @@ export function EILogHeads() {
           data={filteredHeadsList}
           columns={IEILogHeadsListTableColumn}
           actions={eiLogHeadsAction}
+          paginationData={paginationData}
+          onPageChange={setCurrentPage}
         />
       </div>
       {isAddModalOpen && (

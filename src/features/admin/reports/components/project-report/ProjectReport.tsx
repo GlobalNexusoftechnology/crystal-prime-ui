@@ -52,8 +52,8 @@ export function ProjectReport() {
     if (
       allProjectsData &&
       allProjectsData.length > 0 &&
-      allClientData &&
-      allClientData.length > 0 &&
+      allClientData?.data?.list &&
+      allClientData.data.list.length > 0 &&
       !selectedProject &&
       !selectedClient
     ) {
@@ -130,7 +130,7 @@ export function ProjectReport() {
           name: p.name,
           client_id: p.client?.id || "",
         }))}
-        clients={allClientData || []}
+        clients={allClientData?.data?.list || []}
         selectedProject={selectedProject}
         setSelectedProject={setSelectedProject}
         selectedClient={selectedClient}

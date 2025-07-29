@@ -244,7 +244,7 @@ export function AddProject({
   const currentUser = activeSession?.user;
   const userId = currentUser?.id || "";
 
-  const clientOptions = (allClientData || []).map((client) => ({
+  const clientOptions = (allClientData?.data?.list || []).map((client) => ({
     label: client.name,
     value: client.id,
   }));
@@ -467,7 +467,7 @@ export function AddProject({
     created_at: new Date().toLocaleString(),
     updated_at: new Date().toLocaleString(),
   };
-  const selectedClient = allClientData?.find(
+  const selectedClient = allClientData?.data?.list?.find(
     (client) => client.id === basicInfo?.client_id
   );
 

@@ -15,7 +15,7 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
   // Function to get user name by ID
   const getUserNameById = (userId: string) => {
     if (!allUsersData || !userId) return "---";
-    const user = allUsersData.find((user) => user.id === userId);
+    const user = allUsersData?.data?.list?.find((user) => user.id === userId);
     return user ? `${user.first_name} ${user.last_name}`.trim() : "---";
   };
 

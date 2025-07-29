@@ -46,7 +46,7 @@ export function TaskTabs({
     ? [{ label: "Loading...", value: "" }]
     : usersError || !allUsersData
       ? [{ label: "Error loading users", value: "" }]
-      : allUsersData.map((user) => ({
+      : (allUsersData?.data?.list || []).map((user) => ({
         label: `${user.first_name} ${user.last_name}`,
         value: user.id,
       }));

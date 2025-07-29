@@ -14,6 +14,7 @@ import { ILeadStatusListTableColumn } from "@/constants";
 
 export function LeadStatus() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<{
     id: string;
@@ -27,7 +28,7 @@ export function LeadStatus() {
     setSearchTerm(value);
   };
 
-  const { allStatusesData, allStatuses } = useAllStatusesQuery();
+  const { allStatusesData, allStatuses } = useAllStatusesQuery({ page: currentPage });
 
   const { onDeleteStatuses } = useDeleteStatusesMutation({
     onSuccessCallback: (data) => {
@@ -44,7 +45,7 @@ export function LeadStatus() {
   });
 
   // Prepare full list from API
-  const fullStatusesList: IAllStatusesList[] = (allStatusesData ?? []).map(
+  const fullStatusesList: IAllStatusesList[] = (allStatusesData?.data?.list ?? []).map(
     (lead) => ({
       id: lead?.id || "N/A",
       name: lead?.name || "N/A",
@@ -53,6 +54,9 @@ export function LeadStatus() {
       updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
     })
   );
+
+  // Extract pagination data
+  const paginationData = allStatusesData?.data?.pagination;
 
   // Filter list based on search term (case-insensitive)
   const filteredStatusesList = useMemo(() => {
@@ -131,6 +135,8 @@ export function LeadStatus() {
           data={filteredStatusesList}
           columns={ILeadStatusListTableColumn}
           actions={leadStatusAction}
+          paginationData={paginationData}
+          onPageChange={setCurrentPage}
         />
       </div>
       {/* 👇 MODAL WHEN "VIEW" IS CLICKED */}

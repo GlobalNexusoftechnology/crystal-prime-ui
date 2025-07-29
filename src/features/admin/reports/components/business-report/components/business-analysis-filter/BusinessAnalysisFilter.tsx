@@ -21,6 +21,7 @@ export function BusinessAnalysisFilter({
           value={fromDate}
           onChange={setFromDate}
           placeholder="Start Date"
+          maxDate={toDate}
         />
       </div>
       <div>
@@ -29,6 +30,7 @@ export function BusinessAnalysisFilter({
           value={toDate}
           onChange={setToDate}
           placeholder="End Date"
+          minDate={fromDate}
         />
       </div>
     </form>

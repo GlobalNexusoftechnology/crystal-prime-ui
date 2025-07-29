@@ -10,10 +10,14 @@ const ALL_EI_LOG_TYPES_QUERY_KEY = "all-ei-log-types-query-key";
 /**
  * This hook fetches a list of all the EI Log Types from the backend.
  */
-export const useAllEILogTypesQuery = () => {
+export interface EILogTypesFilters {
+  page?: number;
+}
+
+export const useAllEILogTypesQuery = (filters: EILogTypesFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
-    queryKey: [ALL_EI_LOG_TYPES_QUERY_KEY],
-    queryFn: COMMUNITY_CLIENT.fetchAllEILogTypes,
+    queryKey: [ALL_EI_LOG_TYPES_QUERY_KEY, filters],
+    queryFn: () => COMMUNITY_CLIENT.fetchAllEILogTypes(filters.page),
     networkMode: "always",
   });
 

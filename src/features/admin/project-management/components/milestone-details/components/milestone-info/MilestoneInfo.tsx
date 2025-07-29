@@ -1,6 +1,5 @@
 import React from "react";
 import { useAllUsersQuery } from "@/services";
-import { IUsersDetails } from "@/services/apis/clients/community-client/types";
 import { getInitials, getRandomColor } from "@/utils";
 
 export interface ProjectInfoProps {
@@ -20,7 +19,7 @@ export function MilestoneInfo({ milestoneInfoData }: ProjectInfoProps) {
   // Helper to get user name from ID
   const getUserName = (userId: string) => {
     if (!allUsersData || usersLoading) return userId;
-    const user = (allUsersData as IUsersDetails[]).find((u) => u.id === userId);
+    const user = allUsersData?.data?.list?.find((u) => u.id === userId);
     return user ? `${user.first_name} ${user.last_name}` : userId;
   };
 

@@ -132,7 +132,7 @@ export function Step2MilestoneSetup({
     ? [{ label: "Loading...", value: "" }]
     : usersError || !allUsersData
       ? [{ label: "Error loading users", value: "" }]
-      : (allUsersData as IUsersDetails[]).map((user: IUsersDetails) => ({
+      : (allUsersData?.data?.list || []).map((user: IUsersDetails) => ({
           label: `${user.first_name} ${user.last_name}`,
           value: user.id,
         }));

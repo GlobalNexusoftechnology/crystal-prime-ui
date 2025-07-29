@@ -16,6 +16,7 @@ import { DeleteModal } from "@/components";
 
 export function EILogTypes() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedType, setSelectedType] = useState<{
     id: string;
     name: string;
@@ -32,7 +33,7 @@ export function EILogTypes() {
     setSearchTerm(value);
   };
 
-  const { allEILogTypesData, fetchAllEILogTypes } = useAllEILogTypesQuery();
+  const { allEILogTypesData, fetchAllEILogTypes } = useAllEILogTypesQuery({ page: currentPage });
 
   const { onDeleteEILogType } = useDeleteEILogTypeMutation({
     onSuccessCallback: (data) => {
@@ -49,7 +50,7 @@ export function EILogTypes() {
   });
 
   // Prepare full list from API
-  const fullTypesList: IAllEILogTypeList[] = (allEILogTypesData?.data ?? []).map(
+  const fullTypesList: IAllEILogTypeList[] = (allEILogTypesData?.data?.list ?? []).map(
     (type) => ({
       id: type?.id || "N/A",
       name: type?.name || "N/A",
@@ -57,6 +58,9 @@ export function EILogTypes() {
       updated_at: `${formatDate(type?.updated_at)}` || "N/A",
     })
   );
+
+  // Extract pagination data
+  const paginationData = allEILogTypesData?.data?.pagination;
 
   // Filter list based on search term (case-insensitive)
   const filteredTypesList = useMemo(() => {
@@ -142,6 +146,8 @@ export function EILogTypes() {
           data={filteredTypesList}
           columns={IEILogTypesListTableColumn}
           actions={eiLogTypesAction}
+          paginationData={paginationData}
+          onPageChange={setCurrentPage}
         />
       </div>
       {isAddModalOpen && (

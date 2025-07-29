@@ -104,25 +104,25 @@ export function EditLeadModal({
   };
 
   const sourceOptions =
-    allSourcesData?.data?.map((source) => ({
+    allSourcesData?.data?.list?.map((source) => ({
       label: source?.name,
       value: source.id.toString(),
     })) || [];
 
   const statusOptions =
-    allStatusesData?.map((status) => ({
+    allStatusesData?.data?.list?.map((status) => ({
       label: status?.name,
       value: status?.id.toString(),
     })) || [];
 
   const userOptions =
-    allUsersData?.map((user) => ({
+    allUsersData?.data?.list?.map((user) => ({
       label: `${user?.first_name} ${user?.last_name}`,
       value: user?.id.toString(),
     })) || [];
 
   const typeOptions =
-    allTypesData?.map((type) => ({
+    allTypesData?.data?.list?.map((type) => ({
       label: type?.name,
       value: type?.id.toString(),
     })) || [];
@@ -183,7 +183,7 @@ export function EditLeadModal({
               });
 
               if (values.escalate_to) {
-                const newAssignee = allUsersData?.find(
+                const newAssignee = allUsersData?.data?.list?.find(
                   (user) => user.id.toString() === values.assigned_to
                 );
 

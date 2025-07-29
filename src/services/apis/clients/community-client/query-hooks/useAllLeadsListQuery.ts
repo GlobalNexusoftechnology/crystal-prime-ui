@@ -14,6 +14,7 @@ export interface LeadsListFilters {
   referenceDate?: string;
   followupFrom?: string;
   followupTo?: string;
+  page?: number;
 }
 
 /**

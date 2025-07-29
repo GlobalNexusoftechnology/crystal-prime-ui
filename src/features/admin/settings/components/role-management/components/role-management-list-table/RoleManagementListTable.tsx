@@ -26,16 +26,15 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
     setExpandedId(expandedId === id ? null : id)
   }
 
-  const { isError, isPending, data, isLoading, refetchRoles } =
-    useAllRoleListQuery()
-
   const [currentPage, setCurrentPage] = useState(1);
+  const { isError, isPending, data, isLoading, refetchRoles } =
+    useAllRoleListQuery({ page: currentPage })
+
   const pageSize = 10;
   const paginatedRoles = useMemo(() => {
-    if (!data) return [];
-    const start = (currentPage - 1) * pageSize;
-    return data.slice(start, start + pageSize);
-  }, [data, currentPage]);
+    if (!data?.data?.list) return [];
+    return data.data.list;
+  }, [data]);
 
   const { onDeleteRole } = useDeleteRoleMutation({
     onSuccessCallback: (data: IDeleteRoleResponse) => {
@@ -51,7 +50,7 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
     },
   })
   
-  const hasNoData = data?.length === 0
+  const hasNoData = data?.data?.list?.length === 0
   const shouldRenderFallback = isError || isPending || isLoading || hasNoData
   console.log(shouldRenderFallback)
 
@@ -71,7 +70,7 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
   }
 
   const roleNameToDelete = deleteId
-    ? (data?.find((r) => r.id === deleteId)?.role || "")
+    ? (data?.data?.list?.find((r) => r.id === deleteId)?.role || "")
     : "";
 
   return (
@@ -139,11 +138,11 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
               </tbody>
             </table>
           </div>
-         <Pagination
-           currentPage={currentPage}
-           totalPages={Math.ceil((data?.length || 0) / pageSize)}
-           onPageChange={setCurrentPage}
-         />
+                   <Pagination
+            currentPage={currentPage}
+            totalPages={data?.data?.pagination?.totalPages || 1}
+            onPageChange={setCurrentPage}
+          />
         </div>
       </div>
 

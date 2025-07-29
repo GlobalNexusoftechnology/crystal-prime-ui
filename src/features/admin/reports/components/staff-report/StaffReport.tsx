@@ -18,7 +18,7 @@ import { ImDownload2 } from "react-icons/im";
 export function StaffReport() {
   const { allUsersData } = useAllUsersQuery();
   const staffList: IUsersDetails[] = useMemo(
-    () => allUsersData || [],
+    () => allUsersData?.data?.list || [],
     [allUsersData]
   );
 

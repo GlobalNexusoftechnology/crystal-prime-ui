@@ -65,13 +65,13 @@ export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
   }));
 
   const userOptions =
-    allUsersData?.map((user) => ({
+    allUsersData?.data?.list?.map((user) => ({
       label: `${user?.first_name} ${user?.last_name}`,
       value: user?.id.toString(),
     })) || [];
 
   const clientOptions =
-    allClientData?.map((client) => ({
+    allClientData?.data?.list?.map((client) => ({
       label: client?.name,
       value: client?.id,
     })) || [];

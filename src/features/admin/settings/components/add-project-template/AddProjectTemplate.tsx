@@ -42,7 +42,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
   const { allTypesData } = useAllTypesQuery();
 
   const projectTypeOptions =
-    allTypesData?.map((type) => ({
+    allTypesData?.data?.list?.map((type) => ({
       label: type?.name,
       value: type?.id.toString(),
     })) || [];

@@ -14,7 +14,7 @@ export function TaskInfo({ taskInfoData }: ITaskInfoProps) {
   // Helper function to get user name from ID
   const getUserName = (userId: string) => {
     if (!allUsersData || usersLoading) return userId;
-    const user = allUsersData.find((user) => user.id === userId);
+    const user = allUsersData?.data?.list?.find((user) => user.id === userId);
     return user ? `${user.first_name} ${user.last_name}` : userId;
   };
 

@@ -10,10 +10,14 @@ const ALL_STATUSES_QUERY_KEY = 'all-statuses-query-key';
 /**
  * This hook fetches a list of all the leads list in the bloom portal.
  */
-export const useAllStatusesQuery = () => {
+export interface StatusesFilters {
+  page?: number;
+}
+
+export const useAllStatusesQuery = (filters: StatusesFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
-    queryKey: [ALL_STATUSES_QUERY_KEY ],
-    queryFn: COMMUNITY_CLIENT.fetchAllStatuses,
+    queryKey: [ALL_STATUSES_QUERY_KEY, filters],
+    queryFn: () => COMMUNITY_CLIENT.fetchAllStatuses(filters.page),
     networkMode: 'always',
   });
 

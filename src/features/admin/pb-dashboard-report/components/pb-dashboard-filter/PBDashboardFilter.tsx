@@ -21,6 +21,7 @@ export function PBDashboardFilter({
           value={fromDate}
           onChange={setFromDate}
           placeholder="Start Date"
+          maxDate={toDate}
         />
       </div>
       <div className="flex gap-2">
@@ -29,6 +30,7 @@ export function PBDashboardFilter({
           value={toDate}
           onChange={setToDate}
           placeholder="End Date"
+          minDate={fromDate}
         />
       </div>
     </form>

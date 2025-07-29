@@ -42,7 +42,7 @@ export function Step1BasicInfo({
   // Fetch lead/project types
   const { allTypesData } = useAllTypesQuery();
   const projectTypeOptions =
-    allTypesData?.map((type) => ({
+    allTypesData?.data?.list?.map((type) => ({
       label: type?.name,
       value: type?.id.toString(),
     })) || [];

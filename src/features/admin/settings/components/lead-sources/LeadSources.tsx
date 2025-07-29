@@ -16,6 +16,7 @@ import { usePermission } from "@/utils/hooks";
 
 export function LeadSources() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedSource, setSelectedSource] = useState<{
     id: string;
     name: string;
@@ -32,7 +33,7 @@ export function LeadSources() {
     setSearchTerm(value);
   };
 
-  const { allSourcesData, fetchAllSources } = useAllSourcesQuery();
+  const { allSourcesData, fetchAllSources } = useAllSourcesQuery({ page: currentPage });
 
   const { onDeleteSources } = useDeleteSourcesMutation({
     onSuccessCallback: (data) => {
@@ -49,7 +50,7 @@ export function LeadSources() {
   });
 
   // Prepare full list from API
-  const fullSourcesList: IAllSourcesList[] = (allSourcesData?.data ?? []).map(
+  const fullSourcesList: IAllSourcesList[] = (allSourcesData?.data?.list ?? []).map(
     (lead) => ({
       id: lead?.id || "N/A",
       name: lead?.name || "N/A",
@@ -57,6 +58,9 @@ export function LeadSources() {
       updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
     })
   );
+
+  // Extract pagination data
+  const paginationData = allSourcesData?.data?.pagination;
 
   // Filter list based on search term (case-insensitive)
   const filteredSourcesList = useMemo(() => {
@@ -142,6 +146,8 @@ export function LeadSources() {
           data={filteredSourcesList}
           columns={ILeadSourcesListTableColumn}
           actions={leadSourcesAction}
+          paginationData={paginationData}
+          onPageChange={setCurrentPage}
         />
       </div>
       {isAddModalOpen && (
