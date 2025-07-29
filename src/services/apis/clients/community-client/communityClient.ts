@@ -688,7 +688,7 @@ export class CommunityClient extends ApiClient {
     const response = await this.del<IDeleteLeadResponse>(deleteLeadUrl(id))
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
     return response?.data
   }
@@ -697,7 +697,7 @@ export class CommunityClient extends ApiClient {
     const response = await this.del<IDeleteRoleResponse>(deleteRoleUrl(id))
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
     return response?.data
   }
@@ -713,7 +713,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
     return response?.data
   }
@@ -729,7 +729,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
     return response?.data
   }
@@ -743,7 +743,7 @@ export class CommunityClient extends ApiClient {
     )
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.response?.data
     }
     return response?.data
   }
@@ -1874,7 +1874,7 @@ export class CommunityClient extends ApiClient {
   public deleteEILogType = async (id: string) => {
     const response = await this.del<IDeleteEILogTypeResponse>(deleteEILogTypeUrl(id));
     if (!response?.success) {
-      throw response?.errorData;
+      throw response?.response?.data;
     }
     return response?.data;
   };
@@ -1919,7 +1919,7 @@ export class CommunityClient extends ApiClient {
   public deleteEILogHead = async (id: string) => {
     const response = await this.del<IDeleteEILogHeadResponse>(deleteEILogHeadUrl(id));
     if (!response?.success) {
-      throw response?.errorData;
+      throw response?.response?.data;
     }
     return response?.data;
   };

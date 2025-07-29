@@ -144,8 +144,8 @@ export default function Dashboard() {
 
   // Get data for selected month
   const renewalDataForSelectedMonth =
-    dashboardSummary && selectedMonth
-      ? dashboardSummary.projectRenewalData[selectedMonth] || (selectedMonth === currentMonth ? [] : [])
+    dashboardSummary && selectedMonth && dashboardSummary?.projectRenewalData && dashboardSummary?.projectRenewalData[selectedMonth]
+      ? dashboardSummary?.projectRenewalData[selectedMonth]
       : [];
 
   // Remove old transformation for leadAnalyticsChartDataMap
