@@ -120,7 +120,7 @@ export const ProjectCard: React.FC<Props> = ({
               href="#"
               className="font-medium underline 2xl:text-[1vw] 2xl:leading-[1.4vw]"
             >
-              {project?.data?.client.name}
+              {project?.data?.client?.name || "Unknown Client"}
             </Link>
           </div>
           <div className="text-right">
