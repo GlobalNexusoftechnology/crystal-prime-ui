@@ -96,7 +96,7 @@ export function ProjectManagement() {
           updated_at: project.updated_at,
           deleted: project.deleted,
           deleted_at: project.deleted_at,
-          created_by: project.client.name,
+          created_by: project.client?.name || "Unknown",
           client: project.client || null,
           milestones: project.milestones || [],
           attachments: project.attachments || [],
