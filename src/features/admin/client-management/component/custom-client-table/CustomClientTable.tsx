@@ -114,6 +114,9 @@ export function CustomClientTable({
 
   const totalPages = paginationData ? paginationData.totalPages : Math.ceil(tableData.length / pageSize);
 
+  // Use correct current page for Pagination
+  const effectiveCurrentPage = paginationData ? paginationData.page : currentPage;
+
   const handlePageChange = (page: number) => {
     if (onPageChange) {
       // Server-side pagination
@@ -433,7 +436,7 @@ export function CustomClientTable({
         </table>
       </div>
         <Pagination
-          currentPage={currentPage}
+          currentPage={effectiveCurrentPage}
           totalPages={totalPages}
           onPageChange={handlePageChange}
         />
