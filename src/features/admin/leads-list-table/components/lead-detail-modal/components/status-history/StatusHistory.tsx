@@ -67,7 +67,7 @@ export function StatusHistory({
   });
 
   const statusOptions =
-    allStatusesData?.map((status) => ({
+    allStatusesData?.data?.list?.map((status) => ({
       label: status?.name,
       value: status?.id.toString(),
     })) || [];

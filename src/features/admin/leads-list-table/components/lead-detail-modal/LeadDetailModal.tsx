@@ -83,7 +83,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               <div className="flex flex-col">
                 {data?.email ? (
                   Array.isArray(data?.email[0]) &&
-                  data?.email[0].map((email: string, index: number) => (
+                  data?.email[0]?.map((email: string, index: number) => (
                     <div
                       key={index}
                       className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw] mb-2"
@@ -208,7 +208,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           {/* Tabs */}
           <div className="flex justify-between items-center">
             <div className="flex space-x-4">
-              {tabs.map((tab) => (
+              {tabs?.length > 0 && tabs.map((tab) => (
                 <button
                   key={tab}
                   className={`pb-2 2xl:pb-[0.5vw] 2xl:gap-[2vw] font-medium text-[1rem] 2xl:text-[1vw] ${

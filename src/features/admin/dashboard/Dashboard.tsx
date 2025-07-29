@@ -11,7 +11,6 @@ import {
 import { AnalyticalCard } from "../analytical-card";
 import {
   useDashboardSummaryQuery,
-  Category,
   useAllDailyTaskQuery,
   useDeleteDailyTaskMutation,
   useUpdateDailyTaskMutation,
@@ -118,20 +117,35 @@ export default function Dashboard() {
   });
 
   // ProjectRenewalList month selection logic
-  const renewalMonthOptions = dashboardSummary?.projectRenewalData?.length
-    ? dashboardSummary.projectRenewalData.map((cat: Category) => cat.category)
+  const renewalMonthOptions = dashboardSummary?.projectRenewalData
+    ? Object.keys(dashboardSummary.projectRenewalData)
     : [];
+  
+  // Get current month name
+  const getCurrentMonth = () => {
+    const months = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+    return months[new Date().getMonth()];
+  };
+
+  const currentMonth = getCurrentMonth();
+  
+  // Add current month to options if it doesn't exist
+  const allMonthOptions = renewalMonthOptions.includes(currentMonth) 
+    ? renewalMonthOptions 
+    : [currentMonth, ...renewalMonthOptions];
+  
   const [selectedMonth, setSelectedMonth] = useState(
-    renewalMonthOptions[0] || ""
+    currentMonth
   );
   const handleMonthChange = (month: string) => setSelectedMonth(month);
 
-  // Filter data for selected month
+  // Get data for selected month
   const renewalDataForSelectedMonth =
     dashboardSummary && selectedMonth
-      ? dashboardSummary.projectRenewalData.filter(
-          (cat: Category) => cat.category === selectedMonth
-        )
+      ? dashboardSummary.projectRenewalData[selectedMonth] || (selectedMonth === currentMonth ? [] : [])
       : [];
 
   // Remove old transformation for leadAnalyticsChartDataMap
@@ -157,17 +171,16 @@ export default function Dashboard() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const statsData = dashboardSummary as any || {};
-  console.log('statsData:', statsData);
   const analyticalCards = dashboardSummary?.stats
-    ? dashboardSummary.stats.map((card) => ({
+    ? dashboardSummary?.stats?.map((card) => ({
         ...card,
         icon: <AnalyticalCardIcon />,
       }))
     : [
-        { count: statsData.myTaskCount, title: "My Task", subtitle: "Open & In Process", icon: <AnalyticalCardIcon /> },
-        { count: statsData.todayFollowups, title: "Today Follow up", subtitle: "Due Today", icon: <AnalyticalCardIcon /> },
-        { count: statsData.projectCount, title: "Project", subtitle: "Assigned Projects", icon: <AnalyticalCardIcon /> },
-        { count: statsData.performanceRatio, title: "Performance Ratio", subtitle: "Completed/Assigned", icon: <AnalyticalCardIcon /> },
+        { count: statsData?.myTaskCount, title: "My Task", subtitle: "Open & In Process", icon: <AnalyticalCardIcon /> },
+        { count: statsData?.todayFollowups, title: "Today Follow up", subtitle: "Due Today", icon: <AnalyticalCardIcon /> },
+        { count: statsData?.projectCount, title: "Project", subtitle: "Assigned Projects", icon: <AnalyticalCardIcon /> },
+        { count: statsData?.performanceRatio, title: "Performance Ratio", subtitle: "Completed/Assigned", icon: <AnalyticalCardIcon /> },
       ];
 
   const dailyTaskList: DailyTaskRow[] = (dailyTasks || []).map((task) => {
@@ -175,13 +188,13 @@ export default function Dashboard() {
       task.priority ?? ""
     );
     return {
-      id: task.id,
-      name: task.task_title,
-      description: task.description || "-",
-      status: task.status || "-",
-      due: task.entry_date || "-",
+      id: task?.id,
+      name: task?.task_title,
+      description: task?.description || "-",
+      status: task?.status || "-",
+      due: task?.entry_date || "-",
       priority: validPriority
-        ? (task.priority as "High" | "Medium" | "Low")
+        ? (task?.priority as "High" | "Medium" | "Low")
         : "Medium",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       projectId: (task as any)?.projectId || "",
@@ -225,32 +238,32 @@ export default function Dashboard() {
 
   // LeadAnalyticsChart
   const leadAnalyticsDataMap = {
-    weekly: (dashboardSummary?.leadAnalytics?.weekly ?? []).map((item) => ({
-      name: item.status,
-      value: item.count,
+    weekly: (dashboardSummary?.leadAnalytics?.weekly ?? [])?.map((item) => ({
+      name: item?.status,
+      value: item?.count,
     })),
-    monthly: (dashboardSummary?.leadAnalytics?.monthly ?? []).map((item) => ({
-      name: item.status,
-      value: item.count,
+    monthly: (dashboardSummary?.leadAnalytics?.monthly ?? [])?.map((item) => ({
+      name: item?.status,
+      value: item?.count,
     })),
-    yearly: (dashboardSummary?.leadAnalytics?.yearly ?? []).map((item) => ({
-      name: item.status,
-      value: item.count,
+    yearly: (dashboardSummary?.leadAnalytics?.yearly ?? [])?.map((item) => ({
+      name: item?.status,
+      value: item?.count,
     })),
   };
 
   // LeadTypeChart
   const leadTypeDataMap = {
     weekly: (dashboardSummary?.leadType?.weekly ?? []).map((item) => ({
-      name: item.type ?? "Unknown",
-      value: item.count,
+      name: item?.type ?? "",
+      value: item?.count,
     })),
     monthly: (dashboardSummary?.leadType?.monthly ?? []).map((item) => ({
-      name: item.type ?? "Unknown",
+      name: item.type ?? "",
       value: item.count,
     })),
     yearly: (dashboardSummary?.leadType?.yearly ?? []).map((item) => ({
-      name: item.type ?? "Unknown",
+      name: item.type ?? "",
       value: item.count,
     })),
   };
@@ -283,18 +296,18 @@ export default function Dashboard() {
   return (
     <div className="p-6 md:p-8 bg-[#fafbfc] min-h-screen">
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-1">Welcome</h1>
-        <p className="text-gray-500 text-base">
+        <h1 className="text-2xl 2xl:text-[1.5vw] 2xl:leading-[2vw] font-semibold text-gray-900 mb-1 2xl:mb-[0.25vw]">Welcome</h1>
+        <p className="text-gray-500 text-base 2xl:text-[1vw]">
           Wishing you a productive and fulfilling day ahead!
         </p>
       </div>
-      <div className="flex gap-4 2xl:gap-[1vw] flex-wrap mb-4 2xl:mb-[1vw]">
-        {analyticalCards.map((card, idx) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
+        {analyticalCards?.length > 0 && analyticalCards.map((card, idx) => (
           <AnalyticalCard key={idx} data={card} />
         ))}
       </div>
       {userRole.toLowerCase() === "admin" ? (
-        <div className="flex flex-wrap gap-6 my-6">
+        <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
           <ProjectSnapshotChart
             data={projectSnapshotArray}
             colors={["#3B82F6", "#10B981", "#F59E42"]}
@@ -308,7 +321,7 @@ export default function Dashboard() {
             data={renewalDataForSelectedMonth}
             selectedMonth={selectedMonth}
             onMonthChange={handleMonthChange}
-            monthOptions={renewalMonthOptions}
+            monthOptions={allMonthOptions}
           />
           <ExpensesOverviewChart dataMap={expensesDataMap} />
         </div>
@@ -353,16 +366,16 @@ export default function Dashboard() {
             });
           }}
           initialValues={{
-            project_id: editTask.project?.id || "",
+            project_id: editTask?.project?.id || "",
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            assigned_to: editTask.user?.id || (editTask as any)?.assigned_to || "",
-            task_title: editTask.task_title || "",
-            entry_date: editTask.entry_date || "",
-            description: editTask.description || "",
-            hours_spent: editTask.hours_spent || undefined,
-            status: editTask.status || "",
-            remarks: editTask.remarks || "",
-            priority: editTask.priority || "Medium",
+            assigned_to: editTask?.user?.id || (editTask as any)?.assigned_to || "",
+            task_title: editTask?.task_title || "",
+            entry_date: editTask?.entry_date || "",
+            description: editTask?.description || "",
+            hours_spent: editTask?.hours_spent || undefined,
+            status: editTask?.status || "",
+            remarks: editTask?.remarks || "",
+            priority: editTask?.priority || "Medium",
           }}
           isPending={isUpdating}
           isEdit={true}

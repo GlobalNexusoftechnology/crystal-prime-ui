@@ -66,7 +66,7 @@ export const LeadAnalyticsChart: React.FC<LeadAnalyticsChartProps> = ({ dataMap 
           </button>
           {open && (
             <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded shadow z-10 min-w-[8rem]">
-              {dropdownOptions.map((option) => (
+              {dropdownOptions?.length > 0 && dropdownOptions.map((option) => (
                 <button
                   key={option.value}
                   className={`block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 ${

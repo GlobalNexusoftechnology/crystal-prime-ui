@@ -42,7 +42,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
   const { allTypesData } = useAllTypesQuery();
 
   const projectTypeOptions =
-    allTypesData?.map((type) => ({
+    allTypesData?.data?.list?.map((type) => ({
       label: type?.name,
       value: type?.id.toString(),
     })) || [];
@@ -86,7 +86,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
         project_type: values.project_type,
         estimated_days: values.estimated_days ? Number(values.estimated_days) : 0,
         description: values.description,
-        milestones: values.milestones.map((milestone) => ({
+        milestones: values.milestones?.map((milestone) => ({
           ...(milestone.id ? { id: milestone.id } : {}),
           name: milestone.name,
           description: milestone.description,

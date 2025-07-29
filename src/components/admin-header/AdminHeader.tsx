@@ -158,7 +158,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
           ) : !notifications || notifications.length === 0 ? (
             <div className="text-center py-4">No notifications</div>
           ) : (
-            notifications.map((notification: INotification) => (
+            notifications.length > 0 && notifications.map((notification: INotification) => (
               <div 
                 key={notification.id} 
                 className={`border rounded-xl p-4 shadow-sm ${!notification.isRead ? 'bg-blue-50' : ''} relative group cursor-pointer`}

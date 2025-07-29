@@ -4,16 +4,18 @@ import {
   DashboardIcon,
   EILogIcon,
   LeadManagementIcon,
-  ProjectManagementIcon,  
+  ProjectManagementIcon,
+  ReportIcon,
   SettingsIcon,
   StaffManagementIcon,
   UserListRoundedIcon,
 } from "@/features";
+import { TbReportAnalytics } from "react-icons/tb";
 
 type TSidebarPermission = {
   module: string;
   actions: string;
-}
+};
 
 /**
  * Interface representing a sidebar link in the admin panel.
@@ -32,7 +34,7 @@ export interface IAdminSidebarLink {
    */
   permission: TSidebarPermission;
   /**
-   * Optional sublinks for dropdown/section links.
+   * Optional nested links for sub-navigation.
    */
   links?: IAdminSidebarLink[];
 }
@@ -80,11 +82,11 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     permission: { module: "STAFF_MANAGEMENT", actions: "VIEW" },
   },
   {
-   path: "/admin/client-management",
-   name: "Client Management",
-   icon: <UserListRoundedIcon />,
-   activeIcon: <UserListRoundedIcon color="#034A9F" />,
-   permission: { module: "CLIENT_MANAGEMENT", actions: "VIEW" },
+    path: "/admin/client-management",
+    name: "Client Management",
+    icon: <UserListRoundedIcon />,
+    activeIcon: <UserListRoundedIcon color="#034A9F" />,
+    permission: { module: "CLIENT_MANAGEMENT", actions: "VIEW" },
   },
   {
     path: "/admin/ei-log-management",
@@ -95,44 +97,16 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   },
   {
     name: "Reports",
-    path: "#reports",
-    icon: <DashboardIcon />,
-    activeIcon: <DashboardIcon color="#034A9F" />,
+    path: "/admin/reports",
+    icon: <ReportIcon />,
+    activeIcon: <ReportIcon color="#034A9F" />,
     permission: { module: "REPORTS", actions: "VIEW" },
     links: [
       {
-        path: "/admin/reports/staff-performance",
-        name: "Staff Performance",
-        icon: <StaffManagementIcon />,
-        activeIcon: <StaffManagementIcon color="#034A9F" />,
-        permission: { module: "STAFF_PERFORMANCE_REPORT", actions: "VIEW" },
-      },
-      {
-        path: "/admin/reports/project-performance",
-        name: "Project Performance",
-        icon: <ProjectManagementIcon />,
-        activeIcon: <ProjectManagementIcon color="#034A9F" />,
-        permission: { module: "PROJECT_PERFORMANCE_REPORT", actions: "VIEW" },
-      },
-      {
-        path: "/admin/reports/lead-analytics",
-        name: "Lead Analytics",
-        icon: <LeadManagementIcon />,
-        activeIcon: <LeadManagementIcon color="#034A9F" />,
-        permission: { module: "LEAD_ANALYTICS_REPORT", actions: "VIEW" },
-      },
-      {
-        path: "/admin/reports/business-analysis",
-        name: "Business Analysis",
-        icon: <DashboardIcon />,
-        activeIcon: <DashboardIcon color="#034A9F" />,
-        permission: { module: "BUSINESS_ANALYSIS_REPORT", actions: "VIEW" },
-      },
-      {
-        path: "/admin/reports/public-business-dashboard",
-        name: "PB Dashboard",
-        icon: <DashboardIcon />,
-        activeIcon: <DashboardIcon color="#034A9F" />,
+        path: "/admin/reports/public-business-report",
+        name: "Public Business Report",
+        icon: <TbReportAnalytics className="w-full h-full" />,
+        activeIcon: <TbReportAnalytics className="w-full h-full" color="#034A9F" />,
         permission: { module: "PUBLIC_BUSINESS_DASHBOARD", actions: "VIEW" },
       },
     ],
@@ -142,6 +116,6 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     name: "Settings",
     icon: <SettingsIcon />,
     activeIcon: <SettingsIcon color="#034A9F" />,
-    permission: { module: "SETTINGS", actions: "VIEW" }, 
+    permission: { module: "SETTINGS", actions: "VIEW" },
   },
 ];

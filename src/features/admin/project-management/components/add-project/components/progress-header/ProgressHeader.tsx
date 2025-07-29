@@ -12,7 +12,7 @@ const steps = [
 export function ProgressHeader({ step }: { step: number }) {
   return (
     <ul className="progress">
-      {steps.map((item, idx) => {
+      {steps?.length > 0 && steps.map((item, idx) => {
         const isActive = step === item.id;
         const isBefore = step > item.id;
         return (

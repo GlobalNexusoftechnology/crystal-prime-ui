@@ -132,7 +132,7 @@ export function Step2MilestoneSetup({
     ? [{ label: "Loading...", value: "" }]
     : usersError || !allUsersData
       ? [{ label: "Error loading users", value: "" }]
-      : (allUsersData as IUsersDetails[]).map((user: IUsersDetails) => ({
+      : (allUsersData?.data?.list || [])?.map((user: IUsersDetails) => ({
           label: `${user.first_name} ${user.last_name}`,
           value: user.id,
         }));
@@ -255,7 +255,7 @@ export function Step2MilestoneSetup({
     );
     if (selectedTemplate) {
       console.log("Selected template found:", selectedTemplate);
-      const mappedMilestones: Milestone[] = (selectedTemplate.project_milestone_master || []).map((m, idx) => ({
+      const mappedMilestones: Milestone[] = (selectedTemplate.project_milestone_master || [])?.map((m, idx) => ({
         id: m.id || String(idx),
         name: m.name,
         description: m.description || "",
@@ -263,7 +263,7 @@ export function Step2MilestoneSetup({
         status: m.status || "Open",
         start_date: m.start_date || "",
         end_date: m.end_date || "",
-        tasks: (m.project_task_master || []).map((t, tIdx) => ({
+        tasks: (m.project_task_master || [])?.map((t, tIdx) => ({
           id: t.id || String(tIdx),
           title: t.title,
           description: t.description,
@@ -309,12 +309,12 @@ export function Step2MilestoneSetup({
 
   // Add expandedMilestones state
   const [expandedMilestones, setExpandedMilestones] = useState<string[]>(
-    milestones.map((m) => m.id)
+    milestones?.map((m) => m.id)
   );
   const [autoMilestoneCreated, setAutoMilestoneCreated] = useState(false);
 
   useEffect(() => {
-    setExpandedMilestones(milestones.map((m) => m.id));
+    setExpandedMilestones(milestones?.map((m) => m.id));
   }, [milestones]);
 
   // Default open logic for milestone and task, and auto-create if none exist
@@ -416,7 +416,7 @@ export function Step2MilestoneSetup({
     }
     
     setMilestones((prev) =>
-      prev.map((m) => (m.id === editMilestone.id ? { ...editMilestone } : m))
+      prev?.map((m) => (m?.id === editMilestone?.id ? { ...editMilestone } : m))
     );
     setEditingId(null);
     setEditMilestone(null);
@@ -459,9 +459,9 @@ export function Step2MilestoneSetup({
     // If this is a new task (empty title), remove it from the list
     if (editTask && (!editTask.title || editTask.title.trim() === "") && editingTask) {
       setMilestones((prev) =>
-        prev.map((m) =>
-          m.id === editingTask.milestoneId
-            ? { ...m, tasks: m.tasks.filter((t) => t.id !== editTask.id) }
+        prev?.map((m) =>
+          m.id === editingTask?.milestoneId
+            ? { ...m, tasks: m?.tasks?.filter((t) => t.id !== editTask.id) }
             : m
         )
       );
@@ -484,12 +484,12 @@ export function Step2MilestoneSetup({
       return; // Don't save if validation fails, errors are already displayed
     }
     setMilestones((prev) =>
-      prev.map((m) =>
-        m.id === editingTask.milestoneId
+      prev?.map((m) =>
+        m.id === editingTask?.milestoneId
           ? {
               ...m,
-              tasks: m.tasks.map((t) =>
-                t.id === editTask.id
+              tasks: m.tasks?.map((t) =>
+                t?.id === editTask?.id
                   ? {
                       ...t,
                       title: editTask.title || "",
@@ -515,9 +515,9 @@ export function Step2MilestoneSetup({
   };
   const handleDeleteTask = (milestoneId: string, taskId: string) => {
     setMilestones((prev) =>
-      prev.map((m) =>
-        m.id === milestoneId
-          ? { ...m, tasks: m.tasks.filter((t) => t.id !== taskId) }
+      prev?.map((m) =>
+        m?.id === milestoneId
+          ? { ...m, tasks: m?.tasks?.filter((t) => t.id !== taskId) }
           : m
       )
     );
@@ -546,8 +546,8 @@ export function Step2MilestoneSetup({
       due_date: emptyDate,
     };
     setMilestones((prev) =>
-      prev.map((m) =>
-        m.id === milestoneId ? { ...m, tasks: [...m.tasks, newTask] } : m
+      prev?.map((m) =>
+        m?.id === milestoneId ? { ...m, tasks: [...m?.tasks, newTask] } : m
       )
     );
     setEditingTask({ milestoneId, taskId: newTask.id });
@@ -601,7 +601,7 @@ export function Step2MilestoneSetup({
   const filteredProjectTemplateOptions =
     allProjectTemplatesData?.templates
       ?.filter((tpl) => !projectType || tpl.project_type === projectType)
-      .map((tpl) => ({
+      ?.map((tpl) => ({
         label: tpl.name,
         value: tpl.id,
       })) || [];
@@ -673,7 +673,7 @@ export function Step2MilestoneSetup({
             <thead>
               <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
                 <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
                   <span>Milestone Name</span>
                   <button
                     className="text-purple-500 hover:text-purple-700 text-lg"
@@ -684,15 +684,16 @@ export function Step2MilestoneSetup({
                     <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                   </button>
                 </th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">Description</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[10vw]">Estimated Start Date</th>
                 <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Estimated End Date</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
-              {milestones.map((milestone) => (
+              {milestones?.length > 0 && milestones?.map((milestone) => (
                 <React.Fragment key={milestone.id}>
                   <Milestone
                     milestone={milestone}
@@ -720,7 +721,7 @@ export function Step2MilestoneSetup({
                           <thead>
                             <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
                             <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                              <th className="px-8 2xl:px-[2vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[13rem] 2xl:min-w-[13vw]">
+                              <th className="px-8 2xl:px-[2vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
                                 <span>Task Name</span>
                                 <button
                                   className="text-purple-500 hover:text-purple-700 text-lg"
@@ -731,10 +732,11 @@ export function Step2MilestoneSetup({
                                   <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                                 </button>
                               </th>
-                              <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
+                              <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Description</th>
                               <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
                               <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
                               <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
+                              <th></th>
                             </tr>
                           </thead>
                           <tbody>

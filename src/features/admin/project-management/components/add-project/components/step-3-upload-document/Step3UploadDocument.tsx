@@ -105,7 +105,7 @@ export function Step3UploadDocument({
     <div className="flex flex-col gap-8 2xl:gap-[2vw]">
       {files.length > 0 && (
         <div className="flex mt-2 gap-4 2xl:gap-[1vw]">
-          {files.map((f, idx) => (
+          {files?.length > 0 && files?.map((f, idx) => (
             <div key={idx} className="flex items-center gap-2">
               <span className="text-primary">{f.name}</span>
               <button
@@ -126,7 +126,7 @@ export function Step3UploadDocument({
       )}
       {/* Upload Area */}
       <div
-        className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg bg-gray-50 p-12 2xl:p-[4vw] mx-auto w-full max-w-2xl min-h-[300px] cursor-pointer"
+        className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg bg-gray-50 p-12 2xl:p-[4vw] mx-auto w-full min-h-[300px] cursor-pointer"
         onClick={() => inputRef.current?.click()}
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}

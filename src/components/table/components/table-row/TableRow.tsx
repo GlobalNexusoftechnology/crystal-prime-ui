@@ -66,7 +66,7 @@ export function TableRow<
               ref={actionRef}
               className={`left-[45%] top-[50%] translate-y-[-70%]  absolute bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-fit min-w-[8rem] 2xl:min-w-[8vw]`}
             >
-              {actions.map((action, actionIndex) => (
+              {actions.length > 0 && actions.map((action, actionIndex) => (
                 <button
                   key={actionIndex}
                   className={`block w-full px-4 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] 2xl:px-[1vw] py-1 2xl:py-[0.25vw] text-left hover:bg-gray-100 ${
@@ -84,7 +84,7 @@ export function TableRow<
           )}
         </td>
       )}
-      {columns.map((col, index) => (
+      {columns.length > 0 && columns.map((col, index) => (
         <TableCell key={index} row={row} col={col} index={index} />
       ))}
     </tr>
@@ -115,7 +115,7 @@ export function TableCell<T extends { id: string | number }>({
     if (Array.isArray(emailValue)) {
       return (
         <div className="flex flex-col gap-1">
-          {emailValue.map((email, idx) => (
+          {emailValue.length > 0 && emailValue.map((email, idx) => (
             <a 
               key={idx}
               href={`mailto:${String(email)}`}
@@ -135,7 +135,7 @@ export function TableCell<T extends { id: string | number }>({
       
     return (
       <div className="flex flex-col gap-1">
-        {emails.map((email, idx) => (
+        {emails.length > 0 && emails.map((email, idx) => (
           <a 
             key={idx}
             href={`mailto:${email}`}

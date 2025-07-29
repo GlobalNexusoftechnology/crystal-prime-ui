@@ -24,7 +24,7 @@ export function Breadcrumb({ idToName = {} }: { idToName?: Record<string, string
   return (
     <nav className="text-[1rem] 2xl:text-[1vw] text-gray-500" aria-label="Breadcrumb">
       <ol className="flex flex-wrap gap-2 2xl:gap-[0.1vw] items-center">
-        {breadcrumbItems.map((item, index) => {
+        {breadcrumbItems.length > 0 && breadcrumbItems.map((item, index) => {
           const isLast = index === breadcrumbItems.length - 1;
 
           return (

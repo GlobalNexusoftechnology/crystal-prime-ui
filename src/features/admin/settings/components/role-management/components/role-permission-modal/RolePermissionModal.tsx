@@ -91,7 +91,7 @@ export function RolePermissionModal({
       )
       return {
         ...prev,
-        [key]: allSelected ? [] : [...ACTIONS.map((action) => action.value)],
+        [key]: allSelected ? [] : [...ACTIONS?.map((action) => action.value)],
       }
     })
   }
@@ -175,7 +175,7 @@ export function RolePermissionModal({
             </p>
           )}
 
-          {MODULES.map((mod: TOptionItem, idx) => (
+          {MODULES?.map((mod: TOptionItem, idx) => (
             <div key={mod.value} className="mb-4">
               <div className="flex items-start mb-2 text-[1rem] 2xl:text-[1vw]">
                 <span className="font-medium text-gray-800">
@@ -195,7 +195,7 @@ export function RolePermissionModal({
                   <span>All</span>
                 </label>
 
-                {ACTIONS.map((perm) => (
+                {ACTIONS?.map((perm) => (
                   <label
                     key={perm.value}
                     className="flex items-center space-x-2 text-gray-700"

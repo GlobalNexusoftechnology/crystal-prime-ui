@@ -82,7 +82,7 @@ export function Settings() {
           Settings
         </button>
         <div className="flex gap-4 2xl:gap-[1vw] overflow-x-auto">
-          {tabs.map((tab) => (
+          {tabs?.length > 0 && tabs.map((tab) => (
             <button
               key={tab.key}
               className={`p-2 2xl:p-[0.5vw] w-fit whitespace-nowrap rounded 2xl:rounded-[0.25vw] font-medium ${

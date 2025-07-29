@@ -16,6 +16,7 @@ import { DeleteModal } from "@/components";
 
 export function LeadTypes() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedType, setSelectedType] = useState<{
     id: string;
     name: string;
@@ -32,7 +33,7 @@ export function LeadTypes() {
     setSearchTerm(value);
   };
 
-  const { allTypesData, fetchAllTypes } = useAllTypesQuery();
+  const { allTypesData, fetchAllTypes } = useAllTypesQuery({ page: currentPage });
 
   const { onDeleteTypes } = useDeleteTypeMutation({
     onSuccessCallback: (data) => {
@@ -49,7 +50,7 @@ export function LeadTypes() {
   });
 
   // Prepare full list from API
-  const fullTypesList: IAllTypesList[] = (allTypesData ?? []).map(
+  const fullTypesList: IAllTypesList[] = (allTypesData?.data?.list ?? []).map(
     (lead) => ({
       id: lead?.id || "N/A",
       name: lead?.name || "N/A",
@@ -57,6 +58,9 @@ export function LeadTypes() {
       updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
     })
   );
+
+  // Extract pagination data
+  const paginationData = allTypesData?.data?.pagination;
 
   // Filter list based on search term (case-insensitive)
   const filteredTypesList = useMemo(() => {
@@ -142,6 +146,8 @@ export function LeadTypes() {
           data={filteredTypesList}
           columns={ILeadTypesListTableColumn}
           actions={leadTypesAction}
+          paginationData={paginationData}
+          onPageChange={setCurrentPage}
         />
       </div>
       {isAddModalOpen && (

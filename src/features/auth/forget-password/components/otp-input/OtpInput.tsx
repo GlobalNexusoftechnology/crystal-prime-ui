@@ -8,11 +8,12 @@ type OtpInputProps = {
 };
 
 /**
- * Renders a 5-digit OTP input component with auto-focus behavior.
+ * Renders a 6-digit OTP input component with auto-focus behavior.
  * Accepts value and onChange props for Formik/Yup integration.
  */
 export function OtpInput({ value, onChange }: OtpInputProps) {
   const inputRefs = [
+    useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -30,10 +31,10 @@ export function OtpInput({ value, onChange }: OtpInputProps) {
 
     const otpChars = value.split("");
     otpChars[index] = val;
-    const updatedOtp = otpChars.join("").slice(0, 5);
+    const updatedOtp = otpChars.join("").slice(0, 6);
     onChange(updatedOtp);
 
-    if (val && index < 4) {
+    if (val && index < 5) {
       inputRefs[index + 1].current?.focus();
     }
   };
@@ -53,7 +54,7 @@ export function OtpInput({ value, onChange }: OtpInputProps) {
         Enter OTP
       </h1>
       <div className="flex gap-2 justify-start">
-        {inputRefs.map((ref, index) => (
+        {inputRefs?.length > 0 && inputRefs.map((ref, index) => (
           <input
             key={index}
             ref={ref}

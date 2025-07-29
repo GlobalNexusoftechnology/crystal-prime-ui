@@ -32,6 +32,7 @@ export function Dropdown({
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [menuStyles, setMenuStyles] = useState<React.CSSProperties>({});
+  const [search, setSearch] = useState("");
 
   const selectedOption = options.find((opt) => opt.value === value);
 
@@ -51,22 +52,18 @@ export function Dropdown({
     function updateMenuPosition() {
       if (isOpen && dropdownRef.current) {
         const rect = dropdownRef.current.getBoundingClientRect();
-        console.log("Dropdown rect:", rect);
         setMenuStyles({
           position: "absolute",
           top: rect.bottom + window.scrollY,
           left: rect.left + window.scrollX,
           width: rect.width,
           zIndex: 9999,
-          background: "white", // debug
-          border: "1px solid #ccc", // debug
+          background: "white",
+          border: "1px solid #ccc",
         });
-      } else {
-        console.log("Dropdown ref not set or not open");
       }
     }
     if (isOpen) {
-      console.log("Dropdown opened");
       setTimeout(updateMenuPosition, 0);
       window.addEventListener("resize", updateMenuPosition);
       window.addEventListener("scroll", updateMenuPosition, true);
@@ -82,7 +79,15 @@ export function Dropdown({
   const handleSelect = (val: string) => {
     onChange(val);
     setIsOpen(false);
+    setSearch("");
   };
+
+  // Filter options by search
+  const filteredOptions = search
+    ? options.filter((option) =>
+        option.label.toLowerCase().includes(search.toLowerCase())
+      )
+    : options;
 
   return (
     <div className={`${dropdownWidth} relative`} ref={dropdownRef}>
@@ -136,20 +141,34 @@ export function Dropdown({
               overflow: "auto",
             }}
           >
-            {options.map((option) => (
-              <div
-                key={option.value}
-                style={{
-                  padding: "8px 16px",
-                  cursor: "pointer",
-                  background: value === option.value ? "#F8F8F8" : undefined,
-                  fontWeight: value === option.value ? "bold" : undefined,
-                }}
-                onMouseDown={() => handleSelect(option.value)}
-              >
-                {option.label}
-              </div>
-            ))}
+            <div className="p-2 border-b">
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search..."
+                className="w-full px-2 py-1 border rounded"
+                autoFocus
+              />
+            </div>
+            {filteredOptions.length === 0 ? (
+              <div className="px-4 py-2 text-gray-400">No options</div>
+            ) : (
+              filteredOptions.length > 0 && filteredOptions.map((option) => (
+                <div
+                  key={option.value}
+                  style={{
+                    padding: "8px 16px",
+                    cursor: "pointer",
+                    background: value === option.value ? "#F8F8F8" : undefined,
+                    fontWeight: value === option.value ? "bold" : undefined,
+                  }}
+                  onMouseDown={() => handleSelect(option.value)}
+                >
+                  {option.label}
+                </div>
+              ))
+            )}
           </div>,
           document.body
         )}
@@ -158,17 +177,31 @@ export function Dropdown({
         <div
           className={`absolute z-10 mt-1 2xl:mt-[0.25vw] w-full bg-yellow-100 border border-yellow-500 ${dropdownBorderRadius} shadow-lg max-h-60 overflow-auto`}
         >
-          {options.map((option) => (
-            <div
-              key={option.value}
-              className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] 2xl:text-[0.9vw] cursor-pointer hover:bg-gray-100 ${
-                value === option.value ? "bg-gray-100 font-semibold" : ""
-              }`}
-              onMouseDown={() => handleSelect(option.value)}
-            >
-              {option.label}
-            </div>
-          ))}
+          <div className="p-2 border-b">
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search..."
+              className="w-full px-2 py-1 border rounded"
+              autoFocus
+            />
+          </div>
+          {filteredOptions.length === 0 ? (
+            <div className="px-4 py-2 text-gray-400">No options</div>
+          ) : (
+            filteredOptions.length > 0 && filteredOptions.map((option) => (
+              <div
+                key={option.value}
+                className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] 2xl:text-[0.9vw] cursor-pointer hover:bg-gray-100 ${
+                  value === option.value ? "bg-gray-100 font-semibold" : ""
+                }`}
+                onMouseDown={() => handleSelect(option.value)}
+              >
+                {option.label}
+              </div>
+            ))
+          )}
         </div>
       )}
 

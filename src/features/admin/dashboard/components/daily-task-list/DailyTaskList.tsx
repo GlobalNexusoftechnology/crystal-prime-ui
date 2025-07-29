@@ -51,7 +51,7 @@ export const DailyTaskList: React.FC<DailyTaskListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {tasks.map((task, idx) => (
+          {tasks?.length > 0 && tasks.map((task, idx) => (
             <tr key={idx} className="border-b last:border-0">
               <td className="py-2 px-2 font-medium text-gray-900">
                 {task.name}

@@ -58,7 +58,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
     description: "",
     income: "",
     expense: "",
-    payment_mode: "Cash",
+    payment_mode: "",
     attachment: "",
   });
   const [isUploading, setIsUploading] = useState(false);
@@ -86,7 +86,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
         description: "",
         income: "",
         expense: "",
-        payment_mode: "Cash",
+        payment_mode: "",
         attachment: "",
       });
     }
@@ -101,7 +101,6 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
       queryClient.invalidateQueries({ queryKey: ['all-ei-logs-query-key'], exact: false });
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to create EI Log:", err);
       toast.error(err.message);
     },
   });
@@ -137,13 +136,13 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
     },
   });
 
-  const typeOptions = (allEILogTypesData?.data || []).map((type) => ({
+  const typeOptions = (allEILogTypesData?.data?.list || [])?.map((type) => ({
     key: type.id,
     label: type.name,
     value: type.id,
   }));
 
-  const headOptions = (allEILogHeadsData?.data || []).map((head) => ({
+  const headOptions = (allEILogHeadsData?.data?.list || [])?.map((head) => ({
     key: head.id,
     label: head.name,
     value: head.id,
@@ -163,7 +162,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
       modalTitle="Back to EI Logs"
       isOpen={isOpen}
       onClose={onClose}
-      modalClassName="w-full sm:w-[40rem]"
+      modalClassName="w-full sm:w-[40rem] 2xl:w-[40vw]"
     >
       <Formik<EILogFormValues>
         enableReinitialize
@@ -277,7 +276,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
                     }
                   />
                 </div>
-                <div className="mt-2">
+                <div>
                   <UploadDocument
                     label="Attachment (Optional)"
                     placeholder={

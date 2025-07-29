@@ -45,7 +45,9 @@ export function EditProject({ projectId }: EditProjectProps) {
         client_id: projectDetailData.client?.id || "",
         name: projectDetailData.name || "",
         description: projectDetailData.description || "",
-        project_type: projectDetailData.project_type || "",
+        project_type: typeof projectDetailData.project_type === "object" && projectDetailData.project_type !== null && "id" in projectDetailData.project_type
+          ? (projectDetailData.project_type as { id: string }).id
+          : projectDetailData.project_type || "",
         budget: projectDetailData.budget || 0,
         estimated_cost: projectDetailData.estimated_cost || 0,
         cost_of_labour: projectDetailData.cost_of_labour || 0,
@@ -62,7 +64,7 @@ export function EditProject({ projectId }: EditProjectProps) {
       setInitialFormValues(formValues);
 
       // Transform milestones from API response to local format
-      const milestones: Milestone[] = (projectDetailData.milestones || []).map((milestone) => ({
+      const milestones: Milestone[] = (projectDetailData?.milestones || [])?.map((milestone) => ({
         id: milestone.id || "",
         name: milestone.name || "",
         description: milestone.description || "",
@@ -70,7 +72,7 @@ export function EditProject({ projectId }: EditProjectProps) {
         status: milestone.status || "",
         start_date: milestone.start_date || "",
         end_date: milestone.end_date || "",
-        tasks: (milestone.tasks || []).map((task) => ({
+        tasks: (milestone.tasks || [])?.map((task) => ({
           id: task.id || "",
           title: task.title || "",
           description: task.description || "",
@@ -82,7 +84,7 @@ export function EditProject({ projectId }: EditProjectProps) {
       setTransformedMilestones(milestones);
 
       // Transform existing attachments to File objects
-      const attachments: File[] = (projectDetailData.attachments || []).map((attachment) => 
+      const attachments: File[] = (projectDetailData.attachments || [])?.map((attachment) => 
         createFileFromAttachment(attachment)
       );
       setExistingAttachments(attachments);

@@ -96,7 +96,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
   };
 
   const roleOptions =
-    rolesList?.map((roleData) => ({
+    rolesList?.data?.list?.map((roleData) => ({
       label: roleData?.role,
       value: roleData?.id.toString(),
     })) || [];

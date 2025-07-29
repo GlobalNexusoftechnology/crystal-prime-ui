@@ -81,14 +81,7 @@ export function Task({
       editingTask.taskId === task.id &&
       editTask ? (
         <>
-          <td className="px-2 2xl:px-[0.5vw] py-4 2xl:py-[1vw] text-right flex gap-2 2xl:gap-[0.5vw]">
-            <button onClick={onSave} className="text-green-600" title="Save">
-              <HiCheck className="w-6 2xl:w-[1.5w] h-6 2xl:h-[1.5vw]" />
-            </button>
-            <button onClick={onCancel} className="text-red-600" title="Cancel">
-              <HiXMark className="w-6 2xl:w-[1.5w] h-6 2xl:h-[1.5vw]" />
-            </button>
-          </td>
+         <td></td>
           <td className="p-2 2xl:p-[0.5vw] pl-32 2xl:pl-[8vw] font-medium">
             <InputField
               value={editTask.title}
@@ -126,6 +119,14 @@ export function Task({
               minDate={milestoneStartDate}
               maxDate={milestoneEndDate}
             />
+          </td>
+          <td className="px-2 2xl:px-[0.5vw] py-4 2xl:py-[1vw] text-right flex gap-2 2xl:gap-[0.5vw]">
+            <button onClick={onSave} className="text-green-600" title="Save">
+              <HiCheck className="w-6 2xl:w-[1.5w] h-6 2xl:h-[1.5vw]" />
+            </button>
+            <button onClick={onCancel} className="text-red-600" title="Cancel">
+              <HiXMark className="w-6 2xl:w-[1.5w] h-6 2xl:h-[1.5vw]" />
+            </button>
           </td>
         </>
       ) : (

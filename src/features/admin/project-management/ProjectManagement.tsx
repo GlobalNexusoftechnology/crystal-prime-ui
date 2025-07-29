@@ -76,7 +76,7 @@ export function ProjectManagement() {
     if (!filteredProjects) return [];
     return filteredProjects
       .filter((project) => mapProjectStatusToStage(project.status) === stage)
-      .map((project) => ({
+      ?.map((project) => ({
         status: true,
         message: "Project found",
         success: true as const,
@@ -96,7 +96,7 @@ export function ProjectManagement() {
           updated_at: project.updated_at,
           deleted: project.deleted,
           deleted_at: project.deleted_at,
-          created_by: project.client.name,
+          created_by: project.client?.name || "Unknown",
           client: project.client || null,
           milestones: project.milestones || [],
           attachments: project.attachments || [],
@@ -154,7 +154,7 @@ export function ProjectManagement() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 2xl:gap-[2vw]">
-        {(["open", "inProgress", "completed"] as const).map((stage) => (
+        {(["open", "inProgress", "completed"] as const)?.map((stage) => (
           <ProjectStageSection
             key={stage}
             projects={getProjectsByStage(stage)}

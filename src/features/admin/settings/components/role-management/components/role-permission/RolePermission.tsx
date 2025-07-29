@@ -15,7 +15,7 @@ export function RolePermission({ permissions }: { permissions: string[] }) {
             <th className="p-2 2xl:p-[0.5vw] text-left text-gray-700">
               Modules
             </th>
-            {ACTIONS.map((action) => (
+            {ACTIONS?.map((action) => (
               <th
                 key={action.value}
                 className="p-2 2xl:p-[0.5vw] text-left text-gray-700"
@@ -26,7 +26,7 @@ export function RolePermission({ permissions }: { permissions: string[] }) {
           </tr>
         </thead>
         <tbody>
-          {MODULES.map((module) => (
+          {MODULES?.map((module) => (
             <ModulePermissionRow
               key={module.value}
               moduleId={module.value}
@@ -50,7 +50,7 @@ function ModulePermissionRow({
   return (
     <tr className="hover:bg-gray-100 transition-colors duration-150 bg-white text-[1rem] 2xl:text-[1vw]">
       <td className="p-2 2xl:p-[0.5vw]">{moduleName}</td>
-      {ACTIONS.map((action) => {
+      {ACTIONS?.map((action) => {
         const actionCode = actionCodes.has(action.value) ? "Yes" : "No"
         return (
           <td

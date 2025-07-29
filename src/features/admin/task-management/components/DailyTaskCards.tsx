@@ -11,7 +11,7 @@ export function DailyTaskCards() {
   return (
     <main className="p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-5 bg-white rounded-xl">
-        {TaskManagementList.map((section) => (
+        {TaskManagementList?.length > 0 && TaskManagementList?.map((section) => (
           <div
             key={section.id}
             className="border border-[#D7D7D7] rounded-xl p-4 h-auto "
@@ -25,7 +25,7 @@ export function DailyTaskCards() {
             </div>
 
             {/* Tasks */}
-            {section.tasks.map((task) => {
+            {section?.tasks?.length > 0 && section?.tasks?.map((task) => {
               if (task.type === "detailed") {
                 return (
                   <div

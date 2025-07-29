@@ -151,6 +151,17 @@ import {
   IEILogFilters,
   IUploadEILogFromExcelResponse,
   IDeleteDailyTaskEntryResponse,
+  StaffPerformanceReportResponse,
+  ProjectPerformanceReportResponse,
+  LeadReportResponse,
+  BusinessAnalysisParams,
+  BusinessAnalysisReportResponse,
+  PublicDashboardParams,
+  PublicDashboardReportResponse,
+  IForgotPasswordPayload,
+  IForgotPasswordResponse,
+  IVerifyOtpPayload,
+  IVerifyOtpResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -239,7 +250,6 @@ import {
   fetchAllClientDownloadExcelUrl,
   fetchClientDownloadTemplateExcelUrl,
   uploadClientFromExcelUrl,
-  fetchAllProjectFollowUpUrl,
   createProjectFollowUpUrl,
   createMilestoneUrl,
   updateMilestoneUrl,
@@ -282,6 +292,18 @@ import {
   fetchEILogDownloadTemplateExcelUrl,
   uploadEILogFromExcelUrl,
   uploadEILogAttachmentUrl,
+  staffPerformanceReportUrl,
+  projectPerformanceReportUrl,
+  leadReportUrl,
+  businessAnalysisReportUrl,
+  publicDashboardReportUrl,
+  fetchPublicDashboardReportExcelUrl,
+  fetchProjectPerformanceReportExcelUrl,
+  fetchStaffPerformanceReportExcelUrl,
+  fetchLeadReportExcelUrl,
+  fetchBusinessAnalysisReportExcelUrl,
+  forgotPasswordUrl,
+  verifyOtpUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -861,19 +883,15 @@ export class CommunityClient extends ApiClient {
   }
 
     // all client follow ups
-  public fetchAllProjectFollowUp = async () => {
-    const response = await this.get<IAllProjectFollowUpResponse>(
-      fetchAllProjectFollowUpUrl(),
-      {
-        requiresAuth: false,
-      }
-    )
-
-    if (!response?.success) {
-      throw response?.error
-    }
-
-    return response?.data.data
+  public fetchAllProjectFollowUp = async (filters: { project_task_id?: string } = {}) => {
+    const params = new URLSearchParams();
+    if (filters.project_task_id) params.append('project_task_id', filters.project_task_id);
+    const url = params.toString()
+      ? `/client-followups?${params.toString()}`
+      : `/client-followups`;
+    const response = await this.get<IAllProjectFollowUpResponse>(url, { requiresAuth: false });
+    if (!response?.success) throw response?.error;
+    return response?.data.data;
   }
   /**
    * Fetches a list of all leads.
@@ -887,6 +905,7 @@ export class CommunityClient extends ApiClient {
     referenceDate?: string;
     followupFrom?: string;
     followupTo?: string;
+    page?: number;
   } = {}) => {
     // Build query string from filters
     const params = new URLSearchParams();
@@ -897,6 +916,7 @@ export class CommunityClient extends ApiClient {
     if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
     if (filters.followupFrom) params.append('followupFrom', filters.followupFrom);
     if (filters.followupTo) params.append('followupTo', filters.followupTo);
+    if (filters.page) params.append('page', filters.page.toString());
     const url = params.toString() ? `${fetchAllLeadsListUrl()}?${params.toString()}` : fetchAllLeadsListUrl();
 
     const response = await this.get<IAllLeadResponse>(url);
@@ -908,8 +928,12 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   }
 
-  public fetchAllSources = async () => {
-    const response = await this.get<IAllSourcesResponse>(fetchAllSourcesUrl())
+  public fetchAllSources = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllSourcesUrl()}?${params.toString()}` : fetchAllSourcesUrl();
+    
+    const response = await this.get<IAllSourcesResponse>(url)
 
     if (!response?.success) {
       throw response?.errorData
@@ -918,14 +942,18 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
-  public fetchAllTypes = async () => {
-    const response = await this.get<IAllTypesResponse>(fetchAllTypesUrl())
+  public fetchAllTypes = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllTypesUrl()}?${params.toString()}` : fetchAllTypesUrl();
+    
+    const response = await this.get<IAllTypesResponse>(url)
 
     if (!response?.success) {
       throw response?.errorData
     }
 
-    return response?.data.data
+    return response?.data
   }
 
   // All lead attachment
@@ -1002,13 +1030,25 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   }
 
-  public fetchAllUserDownloadExcel = async () => {
-    const response = await this.get<Blob>(
-      fetchAllUserDownloadExcelUrl(),
-      {
-        responseType: 'blob'
-      }
-    )
+  public fetchAllUserDownloadExcel = async (searchText?: string) => {
+    const url = searchText
+      ? `${fetchAllUserDownloadExcelUrl()}?searchText=${encodeURIComponent(searchText)}`
+      : fetchAllUserDownloadExcelUrl();
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchAllStatuses = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllStatusesUrl()}?${params.toString()}` : fetchAllStatusesUrl();
+    
+    const response = await this.get<IAllStatusesResponse>(url, {
+      requiresAuth: false,
+    })
 
     if (!response?.success) {
       throw response?.errorData
@@ -1017,23 +1057,12 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
-  public fetchAllStatuses = async () => {
-    const response = await this.get<IAllStatusesResponse>(
-      fetchAllStatusesUrl(),
-      {
-        requiresAuth: false,
-      }
-    )
-
-    if (!response?.success) {
-      throw response?.errorData
-    }
-
-    return response?.data?.data
-  }
-
-  public fetchAllRoleList = async () => {
-    const response = await this.get<IAllRoleResponse>(fetchAllRoleListUrl(), {
+  public fetchAllRoleList = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllRoleListUrl()}?${params.toString()}` : fetchAllRoleListUrl();
+    
+    const response = await this.get<IAllRoleResponse>(url, {
       requiresAuth: false,
     })
 
@@ -1041,20 +1070,20 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData
     }
 
-    return response?.data.data
+    return response?.data
   }
   // staff
 
-  public fetchAllUsers = async () => {
-    const response = await this.get<IAllUsersResponse>(fetchAllUsersUrl(), {
-      requiresAuth: false,
-    })
-
+  public fetchAllUsers = async (searchText?: string, page?: number) => {
+    const params = new URLSearchParams();
+    if (searchText) params.append('searchText', searchText);
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllUsersUrl()}?${params.toString()}` : fetchAllUsersUrl();
+    const response = await this.get<IAllUsersResponse>(url, { requiresAuth: false });
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-
-    return response?.data.data
+    return response?.data;
   }
 
   //post
@@ -1237,19 +1266,21 @@ export class CommunityClient extends ApiClient {
 
   //get
 
-  public fetchAllClient = async () => {
-    const response = await this.get<IAllClientResponse>(
-      fetchAllClientUrl(),
-      {
-        requiresAuth: false,
-      }
-    );
+  public fetchAllClient = async (searchText?: string, page?: number) => {
+    const params = new URLSearchParams();
+    if (searchText) params.append('searchText', searchText);
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllClientUrl()}?${params.toString()}` : fetchAllClientUrl();
+
+    const response = await this.get<IAllClientResponse>(url, {
+      requiresAuth: false,
+    });
 
     if (!response?.success) {
       throw response?.errorData;
     }
 
-    return response?.data.data;
+    return response?.data;
   };
 
   public getProjectDetailById = async (id: string) => {
@@ -1556,13 +1587,12 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchAllClientDownloadExcel = async () => {
-    const response = await this.get<Blob>(
-      fetchAllClientDownloadExcelUrl(),
-      {
-        responseType: 'blob'
-      }
-    );
+  public fetchAllClientDownloadExcel = async (searchText?: string) => {
+    const url = searchText
+      ? `${fetchAllClientDownloadExcelUrl()}?searchText=${encodeURIComponent(searchText)}`
+      : fetchAllClientDownloadExcelUrl();
+
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
 
     if (!response?.success) {
       throw response?.errorData;
@@ -1774,9 +1804,11 @@ export class CommunityClient extends ApiClient {
     to?: string;
     projectId?: string;
     search?: string;
+    taskId?: string;
   } = {}): Promise<IDailyTaskEntryResponse[]> => {
     const params = new URLSearchParams();
     if (filters.projectId) params.append('projectId', filters.projectId);
+    if (filters.taskId) params.append('taskId', filters.taskId);
     if (filters.status) params.append('status', filters.status);
     if (filters.priority) params.append('priority', filters.priority);
     if (filters.from) params.append('from', filters.from);
@@ -1811,8 +1843,12 @@ export class CommunityClient extends ApiClient {
   }
 
   // EI Log Type Master Methods
-  public fetchAllEILogTypes = async () => {
-    const response = await this.get<IAllEILogTypesResponse>(fetchAllEILogTypesUrl());
+  public fetchAllEILogTypes = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllEILogTypesUrl()}?${params.toString()}` : fetchAllEILogTypesUrl();
+    
+    const response = await this.get<IAllEILogTypesResponse>(url);
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -1852,8 +1888,12 @@ export class CommunityClient extends ApiClient {
   };
 
   // EI Log Head Master Methods
-  public fetchAllEILogHeads = async () => {
-    const response = await this.get<IAllEILogHeadsResponse>(fetchAllEILogHeadsUrl());
+  public fetchAllEILogHeads = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append('page', page.toString());
+    const url = params.toString() ? `${fetchAllEILogHeadsUrl()}?${params.toString()}` : fetchAllEILogHeadsUrl();
+    
+    const response = await this.get<IAllEILogHeadsResponse>(url);
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -1904,6 +1944,7 @@ export class CommunityClient extends ApiClient {
     if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
     if (filters.fromDate) params.append('fromDate', filters.fromDate);
     if (filters.toDate) params.append('toDate', filters.toDate);
+    if (filters.page) params.append('page', filters.page.toString());
     const url = params.toString() ? `${fetchAllEILogsUrl()}?${params.toString()}` : fetchAllEILogsUrl();
 
     const response = await this.get<IAllEILogResponse>(url);
@@ -1916,7 +1957,7 @@ export class CommunityClient extends ApiClient {
   public createEILog = async (payload: ICreateEILogPayload) => {
     const response = await this.post<ICreateEILogResponse>(createEILogUrl(), payload);
     if (!response?.success) {
-      throw response?.errorData;
+      throw response?.response?.data;
     }
     return response?.data;
   };
@@ -1955,6 +1996,7 @@ export class CommunityClient extends ApiClient {
     if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
     if (filters.fromDate) params.append('fromDate', filters.fromDate);
     if (filters.toDate) params.append('toDate', filters.toDate);
+    if (filters.page) params.append('page', filters.page.toString());
     const url = params.toString() ? `${fetchAllEILogsDownloadExcelUrl()}?${params.toString()}` : fetchAllEILogsDownloadExcelUrl();
 
     const response = await this.get<Blob>(url, { responseType: 'blob' });
@@ -1980,7 +2022,7 @@ export class CommunityClient extends ApiClient {
       requiresAuth: true,
     });
     if (!response?.success) {
-      throw response?.errorData;
+      throw response;
     }
     return response?.data;
   };
@@ -2003,8 +2045,158 @@ export class CommunityClient extends ApiClient {
 
     return response?.data
   }
-}
 
+  public fetchStaffPerformanceReport = async (params: { userId: string; startDate?: string; endDate?: string }) => {
+    const url = staffPerformanceReportUrl();
+    const response = await this.get<StaffPerformanceReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchProjectPerformanceReport = async (params: { projectId?: string; clientId?: string; fromDate?: string; toDate?: string }) => {
+    const url = projectPerformanceReportUrl();
+    const response = await this.get<ProjectPerformanceReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchLeadReport = async (params?: { 
+    fromDate?: string; 
+    toDate?: string; 
+    sourceId?: string; 
+    statusId?: string;
+    userId?: string;
+    typeId?: string;
+  }) => {
+    const url = leadReportUrl();
+    const response = await this.get<LeadReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchLeadReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchLeadReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchBusinessAnalysisReport = async (params?: BusinessAnalysisParams) => {
+    const url = businessAnalysisReportUrl();
+    const response = await this.get<BusinessAnalysisReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  }
+
+  public fetchPublicDashboardReport = async (params?: PublicDashboardParams) => {
+    const url = publicDashboardReportUrl();
+    const response = await this.get<PublicDashboardReportResponse>(url, { params });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  }
+
+  public fetchPublicDashboardReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchPublicDashboardReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchProjectPerformanceReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchProjectPerformanceReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchStaffPerformanceReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchStaffPerformanceReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchBusinessAnalysisReportExcel = async (params?: Record<string, string>) => {
+    let url = fetchBusinessAnalysisReportExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  /**
+   * Sends forgot password request to the user's email.
+   * @param payload - email
+   * @returns message
+   */
+  public forgotPassword = async (payload: IForgotPasswordPayload) => {
+    const response = await this.post<IForgotPasswordResponse>(
+      forgotPasswordUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  /**
+   * Verifies OTP for password reset.
+   * @param payload - email and otp
+   * @returns message
+   */
+  public verifyOtp = async (payload: IVerifyOtpPayload) => {
+    const response = await this.post<IVerifyOtpResponse>(
+      verifyOtpUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+}
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.

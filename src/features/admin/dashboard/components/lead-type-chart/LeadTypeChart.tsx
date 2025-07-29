@@ -88,7 +88,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const legendItems = (chartData ?? []).map((d, idx) => ({
+  const legendItems = (chartData ?? [])?.map((d, idx) => ({
     name: d.name,
     color: colors[idx % colors.length],
   }));
@@ -127,7 +127,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
           </button>
           {open && (
             <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded shadow z-10 min-w-[8rem]">
-              {dropdownOptions.map((option) => (
+              {dropdownOptions?.length > 0 && dropdownOptions.map((option) => (
                 <button
                   key={option.value}
                   className={`block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 ${
@@ -169,7 +169,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
                   labelLine={false}
                   isAnimationActive={false}
                 >
-                  {(chartData ?? []).map((entry, idx) => (
+                  {(chartData ?? [])?.map((entry, idx) => (
                     <Cell
                       key={`cell-${idx}`}
                       fill={colors[idx % colors.length]}
@@ -183,7 +183,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
         {/* Legend */}
         <div className="flex flex-wrap justify-center flex-col gap-4">
           <div className="flex gap-4 flex-wrap">
-            {legendItems.map((item) => (
+            {legendItems?.length > 0 && legendItems.map((item) => (
               <div
                 key={item.name}
                 className="flex items-center gap-2 text-base 2xl:text-[1vw] mb-2"

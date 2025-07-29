@@ -29,7 +29,7 @@ export function RadioButton({
 }: RadioButtonProps) {
   return (
     <div className={`flex flex-col gap-4 2xl:gap-[0.8vw] ${className}`}>
-      {options.map((option) => (
+      {options.length > 0 && options.map((option) => (
         <label
           key={option.value}
           className={`flex items-center gap-3 2xl:gap-[0.6vw] cursor-pointer text-base 2xl:text-[0.9vw] ${labelClassName}`}

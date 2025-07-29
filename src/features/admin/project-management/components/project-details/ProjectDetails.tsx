@@ -59,16 +59,16 @@ export function ProjectDetails({
               name: projectDetailData.name,
               project_type:
                 typeof projectDetailData.project_type === "object" && projectDetailData.project_type !== null && "id" in projectDetailData.project_type
-                  ? (projectDetailData.project_type as { id: string }).id
+                  ? (projectDetailData?.project_type as { id: string }).id
                   : projectDetailData.project_type || "",
-              contact_person: projectDetailData.client.contact_person,
-              description: projectDetailData.description || "",
+              contact_person: projectDetailData?.client?.contact_person || "",
+              description: projectDetailData?.description || "",
               created_at: formatIndiaTime(
-                projectDetailData.created_at,
+                projectDetailData?.created_at,
                 "toReadable"
               ),
               updated_at: formatIndiaTime(
-                projectDetailData.updated_at,
+                projectDetailData?.updated_at,
                 "toReadable"
               ),
             }}
@@ -87,11 +87,11 @@ export function ProjectDetails({
         <div>
           <ClientInfo
             clientInfoData={{
-              client_name: projectDetailData.client.name || "",
-              company_name: projectDetailData.client.company_name,
-              contact_person: projectDetailData.client.contact_person,
-              phone: projectDetailData.client.contact_number,
-              email: projectDetailData.client.email,
+              client_name: projectDetailData.client?.name || "",
+              company_name: projectDetailData.client?.company_name || "",
+              contact_person: projectDetailData.client?.contact_person || "",
+              phone: projectDetailData.client?.contact_number || "",
+              email: projectDetailData.client?.email || "",
             }}
           />
           <ProjectEstimate

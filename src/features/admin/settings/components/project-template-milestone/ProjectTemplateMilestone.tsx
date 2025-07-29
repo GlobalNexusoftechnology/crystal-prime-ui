@@ -14,13 +14,13 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
     if (values.milestones && values.milestones.length > 0) {
       // Open all milestones by default
       return Object.fromEntries(
-        values.milestones.map((m: Milestone, idx: number) => [(m.id || String(idx)), true])
+        values?.milestones?.map((m: Milestone, idx: number) => [(m.id || String(idx)), true])
       );
     }
     return {};
   });
   const [editingMilestoneId, setEditingMilestoneId] = useState<string | null>(() => {
-    if (values.milestones && values.milestones.length === 1 && !values.milestones[0].id) {
+    if (values?.milestones && values.milestones.length === 1 && !values.milestones[0].id) {
       return "0";
     }
     return null;
@@ -31,7 +31,7 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
     if (values.milestones && values.milestones.length > 0) {
       setOpenMilestones(
         Object.fromEntries(
-          values.milestones.map((m: Milestone, idx: number) => [(m.id || String(idx)), true])
+          values?.milestones?.map((m: Milestone, idx: number) => [(m.id || String(idx)), true])
         )
       );
     }

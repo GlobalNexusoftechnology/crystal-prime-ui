@@ -10,10 +10,14 @@ const ALL_SOURCES_QUERY_KEY = "all-sources-query-key";
 /**
  * This hook fetches a list of all the sources from the backend.
  */
-export const useAllSourcesQuery = () => {
+export interface SourcesFilters {
+  page?: number;
+}
+
+export const useAllSourcesQuery = (filters: SourcesFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
-    queryKey: [ALL_SOURCES_QUERY_KEY],
-    queryFn: COMMUNITY_CLIENT.fetchAllSources,
+    queryKey: [ALL_SOURCES_QUERY_KEY, filters],
+    queryFn: () => COMMUNITY_CLIENT.fetchAllSources(filters.page),
     networkMode: "always",
   });
 

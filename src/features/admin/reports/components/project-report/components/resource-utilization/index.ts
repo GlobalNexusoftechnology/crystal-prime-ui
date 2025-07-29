@@ -1,0 +1,1 @@
+export { ResourceUtilizationTable } from './ResourceUtilizationTable'; 

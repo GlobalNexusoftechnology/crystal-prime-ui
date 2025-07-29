@@ -54,7 +54,6 @@ const validationSchema = Yup.object().shape({
   assigned_to: Yup.string().required("Assigned To is required"),
   other_contact: Yup.string()
     .matches(/^[0-9]{8,15}$/, "Other Contact must be 8 to 15 digits")
-    .required("Other Contact is required"),
 });
 
 export function EditLeadModal({
@@ -105,25 +104,25 @@ export function EditLeadModal({
   };
 
   const sourceOptions =
-    allSourcesData?.data?.map((source) => ({
+    allSourcesData?.data?.list?.map((source) => ({
       label: source?.name,
       value: source.id.toString(),
     })) || [];
 
   const statusOptions =
-    allStatusesData?.map((status) => ({
+    allStatusesData?.data?.list?.map((status) => ({
       label: status?.name,
       value: status?.id.toString(),
     })) || [];
 
   const userOptions =
-    allUsersData?.map((user) => ({
+    allUsersData?.data?.list?.map((user) => ({
       label: `${user?.first_name} ${user?.last_name}`,
       value: user?.id.toString(),
     })) || [];
 
   const typeOptions =
-    allTypesData?.map((type) => ({
+    allTypesData?.data?.list?.map((type) => ({
       label: type?.name,
       value: type?.id.toString(),
     })) || [];
@@ -140,7 +139,7 @@ export function EditLeadModal({
       typeof lead.email === "string"
         ? lead.email
             .split(",")
-            .map((email: string) => email.trim())
+            ?.map((email: string) => email?.trim())
             .filter((email: string) => email !== "")
         : Array.isArray(lead.email)
         ? lead.email
@@ -184,7 +183,7 @@ export function EditLeadModal({
               });
 
               if (values.escalate_to) {
-                const newAssignee = allUsersData?.find(
+                const newAssignee = allUsersData?.data?.list?.find(
                   (user) => user.id.toString() === values.assigned_to
                 );
 
@@ -288,7 +287,7 @@ export function EditLeadModal({
                         <label className="block text-[0.9rem] font-medium text-gray-700">
                           Emails
                         </label>
-                        {values.email.map((_, index) => (
+                        {values?.email?.map((_, index) => (
                           <div key={index} className="flex gap-2">
                             <InputField
                               placeholder="Enter Email"

@@ -10,6 +10,7 @@ export interface DailyTaskFilters {
   to?: string;
   projectId?: string;
   search?: string;
+  taskId?: string;
 }
 
 export const useAllDailyTaskQuery = (filters: DailyTaskFilters = {}) => {

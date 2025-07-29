@@ -1,0 +1,1 @@
+export { CommentTabs } from "./CommentTabs";
