@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ProjectDropdown } from "../project-dropdown";
 import { useRouter } from "next/navigation";
 import { IProjectDetailResponse, useAllProjectsQuery, useDeleteProjectMutation } from "@/services";
-import { formatIndiaTime } from "@/utils";
+import { formatDate } from "@/utils";
 import { DeleteModal } from "@/components";
 
 type Props = {
@@ -83,7 +83,7 @@ export const ProjectCard: React.FC<Props> = ({
       >
         <div className="flex justify-between items-start" ref={dropdownRef}>
           <div>
-            <p className="text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-600">
+            <p className="text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] underline text-gray-600">
               Project Name
             </p>
             <h3 className="font-medium text-base 2xl:text-[1.1vw] 2xl:leading-[1.5vw]">
@@ -111,9 +111,9 @@ export const ProjectCard: React.FC<Props> = ({
           </div>
         </div>
 
-        <div className="flex justify-between mt-2 2xl:mt-[0.5vw] text-[0.9rem] 2xl:text-[0.875vw] 2xl:leading-[1.2vw]">
+        <div className="flex flex-wrap gap-2 2xl:gap-[0.5vw] justify-between mt-2 2xl:mt-[0.5vw] text-[0.9rem] 2xl:text-[0.875vw] 2xl:leading-[1.2vw]">
           <div>
-            <p className="text-gray-600 2xl:text-[1vw] 2xl:leading-[1.4vw]">
+            <p className="text-gray-600 2xl:text-[1vw] underline 2xl:leading-[1.4vw]">
               Client Name
             </p>
             <Link
@@ -123,21 +123,21 @@ export const ProjectCard: React.FC<Props> = ({
               {project?.data?.client?.name || "Unknown Client"}
             </Link>
           </div>
-          <div className="text-right">
-            <p className="text-gray-600 2xl:text-[1vw] 2xl:leading-[1.4vw]">
-              {project.data.status === "completed"
+          <div className="text-left">
+            <p className="text-gray-600 2xl:text-[1vw] underline 2xl:leading-[1.4vw]">
+              {project.data.status === "completed" || project.data.status === "Completed"
                 ? "Actual End Date"
                 : "Expected End Date"}
             </p>
             <p className="font-semibold 2xl:text-[1vw] 2xl:leading-[1.4vw]">
-              {formatIndiaTime(project.data.end_date?.toString() ?? "", "toReadable")}
+              {formatDate(project.data.end_date?.toString() ?? "")}
             </p>
           </div>
         </div>
 
         <div className="mt-2 2xl:mt-[0.5vw] text-[0.9rem] 2xl:text-[0.875vw]">
           <div className="flex justify-between">
-            <p className="text-gray-600 2xl:text-[1vw] 2xl:leading-[1.4vw]">
+            <p className="text-gray-600 2xl:text-[1vw] underline 2xl:leading-[1.4vw]">
               Project status
             </p>
             <p className="text-right 2xl:text-[1vw] 2xl:leading-[1.4vw]">
