@@ -8,6 +8,7 @@ import { IAllRoleList, IDeleteRoleResponse, useAllRoleListQuery, useDeleteRoleMu
 import { IApiError } from "@/utils"
 import { Pagination } from "@/components/table/components/pagination/Pagination";
 import { DeleteModal } from "@/components";
+import toast from "react-hot-toast"
 // import { ILeadSourcesListTable } from "@/constants";
 // import { IRoleListTable } from "@/constants/tables/role-list-table";
 
@@ -38,13 +39,13 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
 
   const { onDeleteRole } = useDeleteRoleMutation({
     onSuccessCallback: (data: IDeleteRoleResponse) => {
-      console.log("Role deleted successfully", data)
+      toast.success(data?.message)
       refetchRoles()
       setShowDeleteModal(false);
       setDeleteId(null);
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to delete lead:", err)
+      toast.error(err?.message)
       setShowDeleteModal(false);
       setDeleteId(null);
     },

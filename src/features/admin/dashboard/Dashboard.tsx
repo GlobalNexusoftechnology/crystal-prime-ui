@@ -50,7 +50,7 @@ export default function Dashboard() {
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
-  const userRole = activeSession?.user?.role.role || "";
+  const userRole = activeSession?.user?.role?.role || "";
   // Daily Task Filters
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [priorityFilter, setPriorityFilter] = useState<string>("");
@@ -144,8 +144,8 @@ export default function Dashboard() {
 
   // Get data for selected month
   const renewalDataForSelectedMonth =
-    dashboardSummary && selectedMonth
-      ? dashboardSummary.projectRenewalData[selectedMonth] || (selectedMonth === currentMonth ? [] : [])
+    dashboardSummary && selectedMonth && dashboardSummary?.projectRenewalData && dashboardSummary?.projectRenewalData[selectedMonth]
+      ? dashboardSummary?.projectRenewalData[selectedMonth]
       : [];
 
   // Remove old transformation for leadAnalyticsChartDataMap
