@@ -61,7 +61,7 @@ export function BasicProjectInfo({
             </span>
           </div>
         </div>
-        <div>
+        <div className="flex flex-wrap gap-2 2xl:gap-[0.5vw]">
           {(Array.isArray(data.assignedTeam) && data.assignedTeam.length > 0) ? (
             data?.assignedTeam?.map((member) => {
               const randomColor =
@@ -79,7 +79,7 @@ export function BasicProjectInfo({
               return (
                 <div
                   key={member.id}
-                  className="flex items-center gap-2 2xl:gap-[0.5vw]"
+                  className="flex items-center"
                 >
                   <p
                     className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
