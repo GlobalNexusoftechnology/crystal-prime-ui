@@ -33,6 +33,22 @@ export function InputField({
   const [isFocused, setIsFocused] = useState(false);
   const isTextArea = type === "textarea";
 
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setIsFocused(true)
+    // Call parent's onFocus if provided
+    if (props.onFocus) {
+      props.onFocus(e)
+    }
+  }
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setIsFocused(false)
+    // Call parent's onBlur if provided
+    if (props.onBlur) {
+      props.onBlur(e)
+    }
+  }
+
   return (
     <div className="w-full">
       {/* Label */}
@@ -54,7 +70,7 @@ export function InputField({
             : "border-gray-300"
         } ${
           isTextArea ? textAreaBorderRadius : inputBorderRadius
-        } px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] bg-white transition focus-within:ring-1 focus-within:ring-primary ${className}`}
+        } px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] bg-white transition ${className}`}
       >
         {/* Left Icon */}
         {icon && <span className="mr-3 text-gray-500">{icon}</span>}
@@ -65,9 +81,9 @@ export function InputField({
             className={`w-full bg-transparent outline-none resize-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${textAreaHeight}`}
             disabled={disabled}
             required={isRequired}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
             {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
         ) : (
           <input
@@ -75,9 +91,9 @@ export function InputField({
             className="w-full bg-transparent outline-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={disabled}
             required={isRequired}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
             {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
           />
         )}
 
