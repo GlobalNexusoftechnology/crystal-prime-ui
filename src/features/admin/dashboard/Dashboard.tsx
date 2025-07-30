@@ -50,7 +50,7 @@ export default function Dashboard() {
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
-  const userRole = activeSession?.user?.role.role || "";
+  const userRole = activeSession?.user?.role?.role || "";
   // Daily Task Filters
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [priorityFilter, setPriorityFilter] = useState<string>("");

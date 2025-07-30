@@ -5,9 +5,12 @@ import { Button, InputField, ModalOverlay } from "@/components"
 import { MODULES, ACTIONS, TOptionItem } from "@/constants"
 import { IApiError } from "@/utils"
 import {
+  ICreateRoleResponse,
+  IUpdateRoleResponse,
   useCreateRoleMutation,
   useUpdateRoleMutation,
 } from "@/services"
+import toast from "react-hot-toast"
 
 interface RolePermissionModalProps {
   onClose: () => void
@@ -35,22 +38,23 @@ export function RolePermissionModal({
 
   const isEditMode = mode === "edit";
 
-  const handleCommonSuccessCallback = () => {
+  const handleCommonSuccessCallback = (response: ICreateRoleResponse | IUpdateRoleResponse) => {
+    toast.success(response?.message)
     refetchRoles()
     onClose()
   }
 
   const { createRole, isPending: creating } = useCreateRoleMutation({
-    onSuccessCallback: handleCommonSuccessCallback,
+    onSuccessCallback: (response: ICreateRoleResponse)=> handleCommonSuccessCallback(response),
     onErrorCallback: (err: IApiError) => {
-      console.error("Create failed:", err)
+      toast.error(err?.message)
     },
   })
 
   const { updateRole, isPending: updating } = useUpdateRoleMutation({
-    onSuccessCallback: handleCommonSuccessCallback,
+    onSuccessCallback: (response: IUpdateRoleResponse)=> handleCommonSuccessCallback(response),
     onErrorCallback: (err: IApiError) => {
-      console.error("Update failed:", err)
+      toast.error(err?.message)
     },
   })
 
