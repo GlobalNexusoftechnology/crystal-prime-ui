@@ -191,14 +191,14 @@ export function CustomClientTable({
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase">
+            <tr className="bg-gray-200">
+              <th className="px-4 2xl:px-[1vw] py-4 2xl:py-[1vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase">
                 Actions
               </th>
               {clientListColumn.length > 0 && clientListColumn.map((col) => (
                 <th
                   key={col.header}
-                  className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase ${col.headerClass}`}
+                  className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase ${col.headerClass}`}
                 >
                   {col.header}
                 </th>
@@ -256,19 +256,19 @@ export function CustomClientTable({
                       colSpan={clientListColumn.length + 1}
                       className="p-4 2xl:p-[1vw] bg-gray-50 rounded-b-lg 2xl:rounded-b-[0.75vw]"
                     >
-                      <h3 className="mb-4 2xl:mb-[1vw] 2xl:text-[1vw]">
+                      <h3 className="mb-4 2xl:mb-[1vw] 2xl:text-[1vw] font-semibold">
                         Client Contact Details
                       </h3>
                       <table className="bg-white border rounded shadow-sm">
-                        <thead className="bg-gray-100">
+                        <thead className="bg-gray-200">
                           <tr>
-                            <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase">
+                            <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase">
                               Action
                             </th>
                             {clientContactDetailsColumns.length > 0 && clientContactDetailsColumns.map((col) => (
                               <th
                                 key={col.header}
-                                className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-500 uppercase ${col.headerClass}`}
+                                className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase ${col.headerClass}`}
                               >
                                 {col.header}
                               </th>

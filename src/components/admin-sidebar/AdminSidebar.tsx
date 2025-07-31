@@ -63,14 +63,14 @@ export function AdminSidebar({
             const isActive = pathName === link.path;
             return (
               <React.Fragment key={index}>
-                <li className="flex items-center relative group px-4">
+                <li className="flex items-center relative group px-4 2xl:px-[1vw]">
                   {isActive ? (
                     <div className="absolute left-0 w-[4px] 2xl:w-[0.4vw] rounded-full h-[80%] bg-primary"></div>
                   ) : null}
                   <button
                     onClick={() => handleRedirect(link.path)}
-                    className={`flex items-center gap-3 2xl:gap-[0.8vw] px-4 2xl:px-[1vw] py-3 2xl:py-[0.8vw] rounded-lg 2xl:rounded-[0.5vw] transition w-full text-left ${
-                      isActive ? "text-primary" : null
+                    className={`flex items-center gap-3 2xl:gap-[0.8vw] px-4 2xl:px-[1vw] py-3 2xl:py-[0.8vw] transition w-full text-left ${
+                      isActive ? "text-primary underline" : null
                     }`}
                   >
                     <span className="w-8 2xl:w-[2vw] h-8 2xl:h-[2vw]">

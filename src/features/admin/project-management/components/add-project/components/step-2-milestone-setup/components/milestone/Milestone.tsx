@@ -78,7 +78,7 @@ export function Milestone({
   }, [menuOpen, milestone.id, setMenuOpen]);
 
   return (
-    <tr className="bg-white rounded-lg 2xl:rounded-[0.5vw] shadow">
+    <tr className="bg-white">
       {editingId === milestone.id && editMilestone ? (
         <>
           <td></td>
@@ -147,7 +147,7 @@ export function Milestone({
         </>
       ) : (
         <>
-          <td className="p-2 2xl:p-[0.5vw] text-left relative">
+          <td className="p-2 2xl:p-[0.5vw] text-left relative bg-gray-200">
             <button
               className="text-gray-400 hover:text-blue-600"
               title="Menu"
@@ -178,7 +178,7 @@ export function Milestone({
               </div>
             )}
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 2xl:p-[0.5vw] bg-gray-200">
             <div className="flex items-center gap-4 2xl:gap-[1vw]">
               <button
                 onClick={() => onToggle(milestone.id)}
@@ -205,12 +205,12 @@ export function Milestone({
               </div>
             </div>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] min-w-[10rem] 2xl:min-w-[10vw] bg-gray-200">
             <span className="text-gray-600">
               {milestone.description || "No description"}
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] min-w-[14rem] 2xl:min-w-[14vw]">
+          <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] min-w-[14rem] 2xl:min-w-[14vw] bg-gray-200">
             <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
               {milestone.assigned_to ? (
                 (() => {
@@ -237,12 +237,12 @@ export function Milestone({
               )}
             </div>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw] bg-gray-200">
             <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold">
               {milestone.status}
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw] bg-gray-200">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <span className="text-[0.9rem] 2xl:text-[0.9vw]">
                 {milestone.start_date
@@ -251,7 +251,7 @@ export function Milestone({
               </span>
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
+          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw] bg-gray-200">
             <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
               <span className="text-[0.9rem] 2xl:text-[0.9vw]">
                 {milestone.end_date
