@@ -103,9 +103,9 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
 
         {/* Data table */}
         <div>
-          <div className="overflow-x-auto border rounded-md shadow-sm">
+          <div className="overflow-x-auto border rounded-lg 2xl:rounded-[0.75vw] shadow-sm">
             <table className="w-full text-[0.9rem] 2xl:text-[0.9vw] text-left border-collapse">
-              <thead className="bg-white  uppercase text-[0.9rem] 2xl:text-[0.9vw]">
+              <thead className="bg-gray-200  uppercase text-[0.9rem] 2xl:text-[0.9vw]">
                 <tr>
                   <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">
                     SR NO

@@ -12,7 +12,7 @@ export function TableHeader<T>({
 
   return (
     <th
-      className={`p-3 2xl:p-[0.75vw] whitespace-nowrap ${column.sortable ? "cursor-pointer" : ""} ${column.headerClassName || ""}`}
+      className={`p-3 2xl:p-[0.75vw] bg-gray-200 whitespace-nowrap ${column.sortable ? "cursor-pointer" : ""} ${column.headerClassName || ""}`}
       onClick={() => column.sortable && onSort(column?.accessor)}
     >
       <div className="flex items-center text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] gap-4 2xl:gap-[1vw] whitespace-nowrap">

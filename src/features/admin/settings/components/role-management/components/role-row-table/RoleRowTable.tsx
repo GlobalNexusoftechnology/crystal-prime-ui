@@ -88,7 +88,7 @@ export function RoleRowTable({
   return (
     <>
       <tr
-        className="bg-white hover:bg-gray-50 transition-colors"
+        className="bg-white border-b hover:bg-gray-50 transition-colors"
         onClick={onToggle}
       >
         <td className="p-3 2xl:p-[0.75vw] flex items-center gap-2 2xl:gap-[0.5vw]">

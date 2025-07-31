@@ -86,7 +86,7 @@ export const ProjectCard: React.FC<Props> = ({
             <p className="text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] underline text-gray-600">
               Project Name
             </p>
-            <h3 className="font-medium text-base 2xl:text-[1.1vw] 2xl:leading-[1.5vw]">
+            <h3 className="font-medium break-all text-base 2xl:text-[1.1vw] 2xl:leading-[1.5vw]">
               {project.data.name}
             </h3>
           </div>

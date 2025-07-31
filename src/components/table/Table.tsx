@@ -83,11 +83,11 @@ export function Table<T extends { id: string | number }>({
         <table className="w-full text-[0.9rem] 2xl:text-[0.875vw] text-left border-gray-200">
           <thead className="text-gray-700">
             <tr>
-              <th className="min-w-[5rem] 2xl:min-w-[5vw] p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
+              <th className="min-w-[5rem] 2xl:min-w-[5vw] bg-gray-200 p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
                 Sr No
               </th>
               {actions && actions.length > 0 && (
-                <th className="min-w-[6rem] p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
+                <th className="min-w-[6rem] bg-gray-200 p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
                   Action
                 </th>
               )}
