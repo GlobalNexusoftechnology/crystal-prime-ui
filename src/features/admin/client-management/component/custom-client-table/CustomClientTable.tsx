@@ -188,7 +188,7 @@ export function CustomClientTable({
 
   return (
     <div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto border rounded-lg 2xl:rounded-[0.75vw]">
         <table className="min-w-full bg-white rounded-lg shadow-md">
           <thead className="bg-gray-50">
             <tr className="bg-gray-200">
