@@ -116,7 +116,7 @@ export function LeadSources() {
     : "";
 
   return (
-    <div className="bg-[#F8F8F8] p-5 2xl:p-[1.25vw]rounded-xl 2xl:rounded-[0.75vw] border 2xl:border-[0.1vw] border-gray-300">
+    <div className="bg-[#F8F8F8] p-5 2xl:p-[1.25vw] rounded-xl 2xl:rounded-[0.75vw] border 2xl:border-[0.1vw] border-gray-300">
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
         <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
           Leads Source List
