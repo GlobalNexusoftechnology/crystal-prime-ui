@@ -327,8 +327,8 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-6 md:p-8 bg-[#fafbfc] min-h-screen">
-      <div className="mb-6">
+    <div className="p-6 md:p-8 2xl:p-[2vw] bg-[#fafbfc] border 2xl:border-[0.1vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw] min-h-screen">
+      <div className="mb-6 2xl:mb-[1.5vw]">
         <h1 className="text-2xl 2xl:text-[1.5vw] 2xl:leading-[2vw] font-semibold text-gray-900 mb-1 2xl:mb-[0.25vw]">
           Welcome
         </h1>

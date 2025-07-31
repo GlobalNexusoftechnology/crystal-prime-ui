@@ -57,7 +57,7 @@ export function AdminSidebar({
           </div>
         )}
       </div>
-      <ul className="w-full h-full flex flex-col justify-between gap-4 2xl:gap-[1vw] overflow-scroll admin-sidebar-links-container">
+      <ul className="w-full h-full flex flex-col justify-between gap-4 2xl:gap-[1vw] overflow-scroll">
         <div className="flex flex-col gap-4 2xl:gap-[1vw]">
           {adminSidebarLinks.length > 0 &&  adminSidebarLinks.map((link, index) => {
             const isActive = pathName === link.path;
