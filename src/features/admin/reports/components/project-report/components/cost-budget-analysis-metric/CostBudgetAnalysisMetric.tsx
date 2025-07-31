@@ -1,36 +1,53 @@
+"use client";
+
 import { ProjectPerformanceReportResponse } from "@/services";
 
-export function CostBudgetAnalysisMetric({ data }: { data: ProjectPerformanceReportResponse["data"]["costBudgetAnalysis"] }) {
+export function CostBudgetAnalysisMetric({
+  data,
+}: {
+  data: ProjectPerformanceReportResponse["data"]["costBudgetAnalysis"];
+}) {
   if (!data) return null;
+
   return (
-    <div className="border-b 2xl:border-[0.1vw] p-6 2xl:p-[1vw]">
-      <h3 className="text-xl 2xl:text-[1.25vw] mb-4 2xl:mb-[1vw] font-medium">Cost & Budget Analysis</h3>
-      <div className="flex flex-col gap-6 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
-        <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
-          <div className="flex flex-col">
-            <span className="font-light">Budget</span>
-            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.budget ?? '-'}</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="font-light">Estimated Cost</span>
-            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.estimatedCost ?? '-'}</span>
-          </div>
+    <div className="border-b border-gray-400 2xl:border-[0.1vw] p-4 2xl:p-[1vw]">
+      <h3 className="text-[1.2rem] font-medium 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">
+        Cost & Budget Analysis
+      </h3>
+
+      <div className="flex flex-wrap gap-4 2xl:gap-[1vw] text-[0.9rem] 2xl:text-[0.875vw]">
+
+        {/* Budget */}
+        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+          <p className="font-light mb-2 2xl:mb-[0.5vw]">Budget</p>
+          <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.budget ?? "-"}</p>
         </div>
-        <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
-          <div className="flex flex-col">
-            <span className="font-light">Actual Cost</span>
-            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.actualCost ?? '-'}</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="font-light">Budget Utilization</span>
-            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.budgetUtilization ?? '-'}</span>
-          </div>
-          <div className="flex flex-col">
-            <span className="font-light">Overrun</span>
-            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">{data.overrun ?? '-'}</span>
-          </div>
+
+        {/* Estimated Cost */}
+        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+          <p className="font-light mb-2 2xl:mb-[0.5vw]">Estimated Cost</p>
+          <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.estimatedCost ?? "-"}</p>
         </div>
+
+        {/* Actual Cost */}
+        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+          <p className="font-light mb-2 2xl:mb-[0.5vw]">Actual Cost</p>
+          <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.actualCost ?? "-"}</p>
+        </div>
+
+        {/* Budget Utilization */}
+        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+          <p className="font-light mb-2 2xl:mb-[0.5vw]">Budget Utilization</p>
+          <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.budgetUtilization ?? "-"}</p>
+        </div>
+
+        {/* Overrun */}
+        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+          <p className="font-light mb-2 2xl:mb-[0.5vw]">Overrun</p>
+          <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.overrun ?? "-"}</p>
+        </div>
+
       </div>
     </div>
   );
-} 
+}
