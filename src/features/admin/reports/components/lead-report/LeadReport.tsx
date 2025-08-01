@@ -81,7 +81,7 @@ export function LeadReport() {
         setToDate={setToDate}
       />
       <div className="grid grid-cols-1 xl:grid-cols-2">
-        <div className="flex flex-col border-r gap-8 2xl:gap-[2vw] 2xl:border-r-[0.1vw] pr-4 2xl:pr-[1vw]">
+        <div className="flex flex-col border-r gap-8 2xl:gap-[2vw] border-gray-400 2xl:border-r-[0.1vw] p-6 2xl:p-[1.5vw]">
           <LeadFunnelChart data={leadReportData?.leadFunnelChart} />
           <LeadMetricsGrid data={leadReportData?.kpiMetrics} />
           <StaffConversionPerformance

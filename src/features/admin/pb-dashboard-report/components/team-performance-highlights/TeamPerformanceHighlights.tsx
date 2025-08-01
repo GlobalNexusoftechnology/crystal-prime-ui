@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { FiInfo } from "react-icons/fi";
 
@@ -9,9 +10,9 @@ interface TeamPerformanceHighlightsProps {
   };
 }
 
-export const TeamPerformanceHighlights: React.FC<
-  TeamPerformanceHighlightsProps
-> = ({ data }) => {
+export const TeamPerformanceHighlights: React.FC<TeamPerformanceHighlightsProps> = ({
+  data,
+}) => {
   const metrics = [
     { label: "Top Performer", value: data.topPerformer, link: "#" },
     {
@@ -26,23 +27,29 @@ export const TeamPerformanceHighlights: React.FC<
   ];
 
   return (
-    <div className="border-b p-6 2xl:p-[1.5vw] pt-0 2xl:pt-0">
-      <h2 className="text-[1.1rem] 2xl:text-[1.1vw] font-medium mb-4">
+    <div className="border-b border-gray-400 2xl:border-b-[0.1vw] p-6 2xl:p-[1.5vw]">
+      <h2 className="text-[1.1rem] 2xl:text-[1.1vw] font-semibold mb-6 2xl:mb-[1.5vw]">
         Team & Performance Highlights
       </h2>
-      <div className="flex flex-wrap gap-6">
-        {metrics?.length > 0 && metrics?.map((metric, idx) => (
-          <div key={idx} className="flex items-start gap-3">
-            <FiInfo className="text-gray-400" size={20} />
+
+      <div className="flex flex-wrap gap-4 2xl:gap-[1.25vw]">
+        {metrics.map((metric, idx) => (
+          <div
+            key={idx}
+            className="border border-gray-300 2xl:border-b-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] flex items-start gap-3 2xl:gap-[0.75vw]"
+          >
+            <FiInfo className="text-gray-400 w-5 h-5 2xl:w-[1.1vw] 2xl:h-[1.1vw]" />
             <div>
-              <div className="text-gray-700 text-sm">{metric.label}</div>
+              <div className="text-gray-500 text-sm 2xl:text-[0.85vw]">
+                {metric.label}
+              </div>
               {metric.link ? (
-                <a
+                <Link
                   href={metric.link}
-                  className="font-medium underline text-[1rem] 2xl:text-[1vw] cursor-pointer"
+                  className="font-medium underline text-[1rem] 2xl:text-[1vw] text-black"
                 >
                   {metric.value}
-                </a>
+                </Link>
               ) : (
                 <span className="text-gray-900 font-medium text-[1rem] 2xl:text-[1vw]">
                   {metric.value}

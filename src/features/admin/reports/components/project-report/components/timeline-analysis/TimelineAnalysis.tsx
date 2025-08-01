@@ -28,7 +28,7 @@ export const TimelineAnalysis: React.FC<{
   ];
 
   return (
-    <div className="border-b 2xl:border-[0.1vw] p-6 2xl:p-[1vw]">
+    <div className="border-b border-gray-400 2xl:border-b-[0.1vw] p-6 2xl:p-[1.5vw]">
       <div className="bg-white rounded-xl border border-gray-300 p-6 flex flex-col items-center gap-8 w-full">
         <div className="flex items-center justify-between mb-2 w-full">
           <span className="font-semibold text-[1rem] 2xl:text-[1vw]">Timeline Analysis</span>

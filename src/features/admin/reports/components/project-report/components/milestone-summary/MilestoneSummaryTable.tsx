@@ -29,8 +29,8 @@ export function MilestoneSummaryTable({
 }) {
   if (!data) return null;
   return (
-    <div className="border-b 2xl:border-[0.1vw] p-6 2xl:p-[1vw]">
-      <h3 className="text-xl 2xl:text-[1.25vw] mb-4 2xl:mb-[1vw] font-medium">
+    <div className="border-b border-gray-400 2xl:border-b-[0.1vw] p-6 2xl:p-[1.5vw]">
+      <h3 className="text-[1.1rem] 2xl:text-[1.1vw] mb-4 2xl:mb-[1vw] font-semibold">
         Milestone Summary
       </h3>
       <Table

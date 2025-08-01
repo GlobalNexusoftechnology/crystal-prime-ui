@@ -44,9 +44,8 @@ export function PBDashboardReport() {
     return <div>Error loading dashboard</div>;
 
   return (
-    <div className="flex flex-col gap-6 2xl:gap-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw] bg-white px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw]">
-            <Breadcrumb />
-
+    <div className="flex flex-col gap-4 2xl:gap-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw] bg-white p-6 2xl:p-[1.5vw]">
+      <Breadcrumb />
       <div className="flex justify-between items-center">
         <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
           Public Business Dashboard
@@ -72,15 +71,17 @@ export function PBDashboardReport() {
         setToDate={setToDate}
       />
       <div className="grid grid-cols-1 xl:grid-cols-2">
-        <div className="flex flex-col gap-8 border-r 2xl:border-r-[0.1vw]">
+        <div className="flex flex-col border-gray-400 border-r 2xl:border-r-[0.1vw]">
           <BusinessOverview data={publicDashboardData.businessOverview} />
-          <div className="flex flex-col gap-4 2xl:gap-[1vw] pr-4 2xl:pr-[1vw]">
-            <h2 className="text-xl font-semibold mb-2">Trend Charts</h2>
+          <div className="flex flex-col gap-4 2xl:gap-[1vw] p-6 2xl:p-[1.5vw]">
+            <h2 className="text-[1.1rem] 2xl:text-[1.1vw] font-semibold mb-2">
+              Trend Charts
+            </h2>
             <ExpensesOverviewChart data={publicDashboardData.trendChart} />
             <MonthlyLeadsChart data={publicDashboardData.monthlyLeadsChart} />
           </div>
         </div>
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col">
           <LeadClientInterest data={publicDashboardData.leadClientInterest} />
           <TeamPerformanceHighlights
             data={publicDashboardData.teamPerformance}

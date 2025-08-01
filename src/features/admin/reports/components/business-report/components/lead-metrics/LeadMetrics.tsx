@@ -58,7 +58,7 @@ export const LeadMetrics: React.FC<LeadMetricsProps> = ({ data }) => {
   ];
 
   return (
-    <div className="border-b 2xl:border-b-[0.1vw] pr-6 2xl:pr-[1.5vw] pb-6 2xl:pb-[1.5vw]">
+    <div className="border-b 2xl:border-b-[0.1vw] p-6 2xl:p-[1.5vw]">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-8 w-full">
         {metrics?.length > 0 && metrics?.map((metric, idx) => (
           <div key={idx} className="flex items-start gap-4">

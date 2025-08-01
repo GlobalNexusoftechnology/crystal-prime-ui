@@ -7,45 +7,54 @@ type StaffInfoCardProps = {
 
 export function StaffInfoCard({ staffInfo }: StaffInfoCardProps) {
   if (!staffInfo) return null;
+
   return (
-    <div className="border-b 2xl:border-[0.1vw] p-6 2xl:p-[1vw]">
-      <h3 className="text-[1.2rem] 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw] font-medium">
+    <div className="p-6 2xl:p-[1.5vw] border-b border-gray-400 2xl:border-b-[0.1vw]">
+      <h3 className="text-[1.1rem] 2xl:text-[1.1vw] font-semibold mb-6 2xl:mb-[1.5vw] text-[#1a2341]">
         Staff Basic Info
       </h3>
-      <div className="flex flex-col gap-6 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
-        <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
-          <div className="flex flex-col">
-            <span className="font-light">First Name</span>
-            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">
-              {staffInfo.firstName}
-            </span>
-          </div>
-          <div className="flex flex-col">
-            <span className="font-light">Last Name</span>
-            <span className="underline text-[1rem] 2xl:text-[1vw] font-medium">
-              {staffInfo.lastName}
-            </span>
-          </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 2xl:gap-[1.25vw]">
+        {/* First Name */}
+        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
+          <p className="text-sm 2xl:text-[0.85vw] text-gray-500 mb-1">
+            First Name
+          </p>
+          <p className="text-[1rem] 2xl:text-[1vw] font-medium underline text-[#1a2341]">
+            {staffInfo.firstName}
+          </p>
         </div>
-        <div className="flex flex-wrap gap-12 2xl:gap-[3vw]">
-          <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1vw] text-primary">
-            <FiPhone className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-            <a
-              href={`tel:${staffInfo.phone}`}
-              className="underline text-textColor font-medium"
-            >
-              {staffInfo.phone}
-            </a>
-          </div>
-          <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1vw] text-primary">
-            <FiMail className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-            <a
-              href={`mailto:${staffInfo.email}`}
-              className="underline text-textColor font-medium"
-            >
-              {staffInfo.email}
-            </a>
-          </div>
+
+        {/* Last Name */}
+        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
+          <p className="text-sm 2xl:text-[0.85vw] text-gray-500 mb-1">
+            Last Name
+          </p>
+          <p className="text-[1rem] 2xl:text-[1vw] font-medium underline text-[#1a2341]">
+            {staffInfo.lastName}
+          </p>
+        </div>
+
+        {/* Phone */}
+        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] flex items-center gap-3">
+          <FiPhone className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw] text-primary" />
+          <a
+            href={`tel:${staffInfo.phone}`}
+            className="underline text-[1rem] 2xl:text-[1vw] font-medium text-[#1a2341]"
+          >
+            {staffInfo.phone}
+          </a>
+        </div>
+
+        {/* Email */}
+        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] flex items-center gap-3">
+          <FiMail className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw] text-primary" />
+          <a
+            href={`mailto:${staffInfo.email}`}
+            className="underline text-[1rem] 2xl:text-[1vw] font-medium text-[#1a2341]"
+          >
+            {staffInfo.email}
+          </a>
         </div>
       </div>
     </div>
