@@ -54,7 +54,7 @@ export const ProjectRenewalList: React.FC<ProjectRenewalListProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-300 w-[46%] 2xl:w-[46%]">
+    <div className="bg-white rounded-xl p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-300 w-full h-full">
       <div className="flex justify-between items-center mb-4 2xl:mb-[1vw]">
         <span className="font-medium text-lg 2xl:text-[1vw] text-gray-700">
           Project Renewal

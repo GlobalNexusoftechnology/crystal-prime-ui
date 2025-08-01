@@ -43,7 +43,7 @@ export const ProjectSnapshotChart: React.FC<ProjectSnapshotChartProps> = ({
 
   return (
     <div
-      className="bg-white rounded-xl p-4 border 2xl:border-[0.1vw] border-gray-300 flex flex-col items-center min-w-[260px] max-w-[320px]"
+      className="bg-white rounded-xl p-4 border 2xl:border-[0.1vw] border-gray-300 flex flex-col items-center w-full h-full"
       style={{ boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}
     >
       <div className="w-full flex justify-between items-center mb-2">

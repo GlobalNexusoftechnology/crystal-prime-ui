@@ -38,7 +38,6 @@ export function AddLeadStatusModal({
       toast.success(response.message);
     },
     onErrorCallback: (err: IApiError) => {
-      console.error("Failed to create lead status:", err);
       toast.error(err.message);
     },
   });
@@ -117,7 +116,7 @@ export function AddLeadStatusModal({
                       name="color"
                       as={InputField}
                       type="text"
-                      className="border-none bg-transparent border-none ring-none focus:none"
+                      className="bg-transparent border-none ring-none focus:none"
                       placeholder="#000000"
                     />
                     <Field

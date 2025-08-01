@@ -98,11 +98,11 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
 
   return (
     <div
-      className="bg-white rounded-xl p-4 border 2xl:border-[0.1vw] border-gray-300 flex flex-col items-center min-w-[550px] max-w-[700px]"
+      className="bg-white rounded-xl p-4 border 2xl:border-[0.1vw] border-gray-300 flex flex-col items-center w-full"
     >
-      <div className="flex justify-between items-center w-full mb-2">
-        <span className="font-medium text-lg text-gray-900">Lead Type</span>
-        <div className="flex items-center gap-2 relative" ref={dropdownRef}>
+      <div className="flex justify-between items-center w-full mb-2 2xl:mb-[0.5vw]">
+        <span className="font-medium text-lg 2xl:text-[1.2vw] text-gray-900">Lead Type</span>
+        <div className="flex items-center gap-2 2xl:gap-[0.5vw] relative" ref={dropdownRef}>
           <button
             type="button"
             className="text-base text-gray-700 font-medium bg-transparent outline-none flex items-center gap-1"
@@ -145,8 +145,8 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
           )}
         </div>
       </div>
-      <div className="w-full flex flex-col md:flex-row gap-8">
-        <div className="w-full flex flex-col justify-center">
+      <div className="w-full flex flex-col md:flex-row gap-4">
+        <div className="w-full lg:w-[55%] flex flex-col justify-center">
           {allUnknown ? (
             <div className="text-center text-gray-500 py-8">No lead type data available for this period.</div>
           ) : (chartData ?? []).length === 0 ? (
@@ -181,7 +181,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
           )}
         </div>
         {/* Legend */}
-        <div className="flex flex-wrap justify-center flex-col gap-4">
+        <div className="w-full md:auto lg:w-[45%] flex flex-wrap justify-center flex-col gap-4">
           <div className="flex gap-4 flex-wrap">
             {legendItems?.length > 0 && legendItems.map((item) => (
               <div

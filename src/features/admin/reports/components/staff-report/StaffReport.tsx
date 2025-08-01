@@ -103,7 +103,7 @@ export function StaffReport() {
         setToDate={setToDate}
       />
       <div className="grid grid-cols-1 xl:grid-cols-2">
-        <div className="flex flex-col border-r 2xl:border-r-[0.1vw]">
+        <div className="flex flex-col border-gray-400 border-0 lg:border-r 2xl:border-r-[0.1vw]">
           <StaffInfoCard staffInfo={data?.staffInfo} />
           <TaskSummary taskSummary={data?.taskSummary} />
         </div>

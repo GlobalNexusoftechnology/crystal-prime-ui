@@ -50,7 +50,7 @@ export default function Dashboard() {
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
-  const userRole = activeSession?.user?.role.role || "";
+  const userRole = activeSession?.user?.role?.role || "";
   // Daily Task Filters
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [priorityFilter, setPriorityFilter] = useState<string>("");
@@ -120,32 +120,43 @@ export default function Dashboard() {
   const renewalMonthOptions = dashboardSummary?.projectRenewalData
     ? Object.keys(dashboardSummary.projectRenewalData)
     : [];
-  
+
   // Get current month name
   const getCurrentMonth = () => {
     const months = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
     return months[new Date().getMonth()];
   };
 
   const currentMonth = getCurrentMonth();
-  
+
   // Add current month to options if it doesn't exist
-  const allMonthOptions = renewalMonthOptions.includes(currentMonth) 
-    ? renewalMonthOptions 
+  const allMonthOptions = renewalMonthOptions.includes(currentMonth)
+    ? renewalMonthOptions
     : [currentMonth, ...renewalMonthOptions];
-  
-  const [selectedMonth, setSelectedMonth] = useState(
-    currentMonth
-  );
+
+  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
   const handleMonthChange = (month: string) => setSelectedMonth(month);
 
   // Get data for selected month
   const renewalDataForSelectedMonth =
-    dashboardSummary && selectedMonth
-      ? dashboardSummary.projectRenewalData[selectedMonth] || (selectedMonth === currentMonth ? [] : [])
+    dashboardSummary &&
+    selectedMonth &&
+    dashboardSummary?.projectRenewalData &&
+    dashboardSummary?.projectRenewalData[selectedMonth]
+      ? dashboardSummary?.projectRenewalData[selectedMonth]
       : [];
 
   // Remove old transformation for leadAnalyticsChartDataMap
@@ -170,17 +181,37 @@ export default function Dashboard() {
   if (error || !dashboardSummary) return <div>Error loading dashboard</div>;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const statsData = dashboardSummary as any || {};
+  const statsData = (dashboardSummary as any) || {};
   const analyticalCards = dashboardSummary?.stats
     ? dashboardSummary?.stats?.map((card) => ({
         ...card,
         icon: <AnalyticalCardIcon />,
       }))
     : [
-        { count: statsData?.myTaskCount, title: "My Task", subtitle: "Open & In Process", icon: <AnalyticalCardIcon /> },
-        { count: statsData?.todayFollowups, title: "Today Follow up", subtitle: "Due Today", icon: <AnalyticalCardIcon /> },
-        { count: statsData?.projectCount, title: "Project", subtitle: "Assigned Projects", icon: <AnalyticalCardIcon /> },
-        { count: statsData?.performanceRatio, title: "Performance Ratio", subtitle: "Completed/Assigned", icon: <AnalyticalCardIcon /> },
+        {
+          count: statsData?.myTaskCount,
+          title: "My Task",
+          subtitle: "Open & In Process",
+          icon: <AnalyticalCardIcon />,
+        },
+        {
+          count: statsData?.todayFollowups,
+          title: "Today Follow up",
+          subtitle: "Due Today",
+          icon: <AnalyticalCardIcon />,
+        },
+        {
+          count: statsData?.projectCount,
+          title: "Project",
+          subtitle: "Assigned Projects",
+          icon: <AnalyticalCardIcon />,
+        },
+        {
+          count: statsData?.performanceRatio,
+          title: "Performance Ratio",
+          subtitle: "Completed/Assigned",
+          icon: <AnalyticalCardIcon />,
+        },
       ];
 
   const dailyTaskList: DailyTaskRow[] = (dailyTasks || []).map((task) => {
@@ -217,7 +248,9 @@ export default function Dashboard() {
     {
       label: "View",
       onClick: (row: DailyTaskRow) => {
-        router.push(`/admin/project-management/${row.projectId}/${row.milestoneId}/${row.taskId}`);
+        router.push(
+          `/admin/project-management/${row.projectId}/${row.milestoneId}/${row.taskId}`
+        );
       },
       className: "text-blue-500 whitespace-nowrap",
     },
@@ -294,35 +327,50 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-6 md:p-8 bg-[#fafbfc] min-h-screen">
-      <div className="mb-6">
-        <h1 className="text-2xl 2xl:text-[1.5vw] 2xl:leading-[2vw] font-semibold text-gray-900 mb-1 2xl:mb-[0.25vw]">Welcome</h1>
+    <div className="p-6 md:p-8 2xl:p-[2vw] bg-[#fafbfc] border 2xl:border-[0.1vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw] min-h-screen">
+      <div className="mb-6 2xl:mb-[1.5vw]">
+        <h1 className="text-2xl 2xl:text-[1.5vw] 2xl:leading-[2vw] font-semibold text-gray-900 mb-1 2xl:mb-[0.25vw]">
+          Welcome
+        </h1>
         <p className="text-gray-500 text-base 2xl:text-[1vw]">
           Wishing you a productive and fulfilling day ahead!
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
-        {analyticalCards?.length > 0 && analyticalCards.map((card, idx) => (
-          <AnalyticalCard key={idx} data={card} />
-        ))}
+        {analyticalCards?.length > 0 &&
+          analyticalCards.map((card, idx) => (
+            <AnalyticalCard key={idx} data={card} />
+          ))}
       </div>
       {userRole.toLowerCase() === "admin" ? (
-        <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
-          <ProjectSnapshotChart
-            data={projectSnapshotArray}
-            colors={["#3B82F6", "#10B981", "#F59E42"]}
-          />
-          <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
-          <LeadTypeChart
-            chartDataMap={leadTypeDataMap}
-            colors={["#6366F1", "#F59E42", "#10B981", "#EF4444"]}
-          />
-          <ProjectRenewalList
-            data={renewalDataForSelectedMonth}
-            selectedMonth={selectedMonth}
-            onMonthChange={handleMonthChange}
-            monthOptions={allMonthOptions}
-          />
+        <div>
+          <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
+            <div className="w-full lg:w-[30%]">
+              <ProjectSnapshotChart
+                data={projectSnapshotArray}
+                colors={["#3B82F6", "#10B981", "#F59E42"]}
+              />
+            </div>
+            <div className="w-full lg:w-[70%]">
+              <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
+            </div>
+          </div>
+          <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
+            <div className="w-full lg:w-[50%]">
+              <LeadTypeChart
+                chartDataMap={leadTypeDataMap}
+                colors={["#6366F1", "#F59E42", "#10B981", "#EF4444"]}
+              />
+            </div>
+            <div className="w-full lg:w-[50%]">
+              <ProjectRenewalList
+                data={renewalDataForSelectedMonth}
+                selectedMonth={selectedMonth}
+                onMonthChange={handleMonthChange}
+                monthOptions={allMonthOptions}
+              />
+            </div>
+          </div>
           <ExpensesOverviewChart dataMap={expensesDataMap} />
         </div>
       ) : null}
@@ -367,8 +415,9 @@ export default function Dashboard() {
           }}
           initialValues={{
             project_id: editTask?.project?.id || "",
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            assigned_to: editTask?.user?.id || (editTask as any)?.assigned_to || "",
+            assigned_to:
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              editTask?.user?.id || (editTask as any)?.assigned_to || "",
             task_title: editTask?.task_title || "",
             entry_date: editTask?.entry_date || "",
             description: editTask?.description || "",

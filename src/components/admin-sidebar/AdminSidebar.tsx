@@ -57,19 +57,19 @@ export function AdminSidebar({
           </div>
         )}
       </div>
-      <ul className="w-full h-full flex flex-col justify-between gap-4 2xl:gap-[1vw] overflow-scroll admin-sidebar-links-container">
-        <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+      <ul className="w-full h-full flex flex-col justify-between gap-4 2xl:gap-[1vw] overflow-scroll">
+        <div className="flex flex-col">
           {adminSidebarLinks.length > 0 &&  adminSidebarLinks.map((link, index) => {
             const isActive = pathName === link.path;
             return (
               <React.Fragment key={index}>
-                <li className="flex items-center relative group px-4">
+                <li className="flex items-center relative group border-b px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
                   {isActive ? (
                     <div className="absolute left-0 w-[4px] 2xl:w-[0.4vw] rounded-full h-[80%] bg-primary"></div>
                   ) : null}
                   <button
                     onClick={() => handleRedirect(link.path)}
-                    className={`flex items-center gap-3 2xl:gap-[0.8vw] px-4 2xl:px-[1vw] py-3 2xl:py-[0.8vw] rounded-lg 2xl:rounded-[0.5vw] transition w-full text-left ${
+                    className={`flex items-center gap-3 2xl:gap-[0.8vw] px-4 2xl:px-[1vw] py-3 2xl:py-[0.8vw] transition w-full text-left ${
                       isActive ? "text-primary" : null
                     }`}
                   >
@@ -87,11 +87,11 @@ export function AdminSidebar({
                 </li>
                 {/* Render child links if present */}
                 {Array.isArray(link.links) && link.links.length > 0 && !isVisibleSidebar && (
-                  <ul className="ml-10 2xl:ml-[2vw] flex flex-col gap-2">
+                  <ul className="flex flex-col gap-2">
                     {link.links.length > 0 &&  link.links.map((child, childIdx) => {
                       const isChildActive = pathName === child.path;
                       return (
-                        <li key={childIdx} className="flex items-center relative group">
+                        <li key={childIdx} className="flex items-center pl-10 2xl:pl-[2vw] py-2 2xl:py-[0.5vw] border-b relative group">
                           {isChildActive ? (
                             <div className="absolute left-0 w-[4px] 2xl:w-[0.4vw] rounded-full h-[80%] bg-primary"></div>
                           ) : null}

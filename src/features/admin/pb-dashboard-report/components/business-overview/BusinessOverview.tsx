@@ -21,18 +21,23 @@ export const BusinessOverview: React.FC<BusinessOverviewProps> = ({ data }) => {
   ];
 
   return (
-    <div className="border-b pb-6 2xl:pb-[1.5vw]">
-      <h2 className="text-[1.1rem] 2xl:text-[1.1vw] font-medium mb-4 2xl:mb-[1vw]">Business Overview</h2>
-      <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw]">
-        {metrics?.length > 0 && metrics?.map((metric, idx) => (
-          <div key={idx} className="flex items-start gap-3 2xl:gap-[0.75vw]">
-            <FiInfo className="text-gray-400 w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.25vw]" />
-            {/* 2xl: text-[1vw] for icon if needed, but react-icons uses size prop */}
+    <div className="border-b border-gray-400 2xl:border-b-[0.1vw] p-6 2xl:p-[1.25vw]">
+      <h2 className="text-[1.1rem] 2xl:text-[1.1vw] font-semibold mb-6 2xl:mb-[1.5vw]">
+        Business Overview
+      </h2>
+
+      <div className="flex flex-wrap gap-4 2xl:gap-[1.25vw]">
+        {metrics.map((metric, idx) => (
+          <div
+            key={idx}
+            className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] flex items-start gap-3 2xl:gap-[0.75vw]"
+          >
+            <FiInfo className="text-gray-400 w-5 h-5 2xl:w-[1.1vw] 2xl:h-[1.1vw]" />
             <div>
-              <div className="text-gray-700 text-sm 2xl:text-[0.85vw]">{metric.label}</div>
+              <div className="text-gray-500 text-sm 2xl:text-[0.85vw]">{metric.label}</div>
               <a
                 href={metric.link}
-                className="font-semibold underline text-[1rem] 2xl:text-[1vw] cursor-pointer"
+                className="font-medium underline text-[1rem] 2xl:text-[1vw] text-black"
               >
                 {metric.value}
               </a>

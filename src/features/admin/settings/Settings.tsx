@@ -69,7 +69,7 @@ export function Settings() {
   );
 
   return (
-    <div className="p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw]">
+    <div className="p-4 2xl:p-[1vw] bg-white border 2xl:border-[0.1vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw]">
       {/* Navigation Buttons to switch between settings views */}
       <div className="flex flex-row gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
         <button

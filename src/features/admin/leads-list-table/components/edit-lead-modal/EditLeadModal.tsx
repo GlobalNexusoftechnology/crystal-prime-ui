@@ -359,14 +359,14 @@ export function EditLeadModal({
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                     <Dropdown
-                      label="Source ID"
+                      label="Source"
                       options={sourceOptions}
                       value={values.source_id}
                       onChange={(val) => setFieldValue("source_id", val)}
                       error={touched.source_id ? errors.source_id : undefined}
                     />
                     <Dropdown
-                      label="Status ID"
+                      label="Status"
                       options={statusOptions}
                       value={values.status_id}
                       onChange={(val) => setFieldValue("status_id", val)}

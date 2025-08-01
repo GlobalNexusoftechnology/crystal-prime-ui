@@ -77,14 +77,14 @@ export const BusinessReport: React.FC = () => {
         setToDate={setToDate}
       />
       <div className="grid grid-cols-1 xl:grid-cols-2">
-        <div className="flex flex-col border-r gap-8 2xl:gap-[2vw] 2xl:border-r-[0.1vw]">
+        <div className="flex flex-col border-r border-gray-400 2xl:border-r-[0.1vw]">
           <LeadFunnelChart data={businessAnalysisData.leadFunnelMetrics} />
           <LeadMetrics data={businessAnalysisData.leadFunnelMetrics} />
           <TeamStaffPerformance
             data={businessAnalysisData.teamStaffPerformance}
           />
         </div>
-        <div className="flex flex-col gap-8 2xl:gap-[2vw]">
+        <div className="flex flex-col">
           <ProjectDeliveryPerformance
             data={businessAnalysisData.projectDeliveryMetrics}
           />
@@ -92,7 +92,9 @@ export const BusinessReport: React.FC = () => {
         </div>
       </div>
       <div>
-        <div className="text-2xl font-bold mb-4">Monthly Trend Snapshot</div>
+        <div className="text-[1.1rem] 2xl:text-[1.1vw] font-semibold mb-4">
+          Monthly Trend Snapshot
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="col-span-1">
             <ProjectSnapshotChart data={businessAnalysisData.monthlyTrends} />

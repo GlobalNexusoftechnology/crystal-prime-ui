@@ -11,10 +11,6 @@ body {
   background: var(--background);
 }
 
-.admin-sidebar-links-container::-webkit-scrollbar {
-  width: 0;
-}
-
 @layer utilities {
   .scrollbar-none {
     -ms-overflow-style: none; /* IE and Edge */
