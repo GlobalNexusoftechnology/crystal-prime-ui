@@ -32,7 +32,7 @@ export function FollowUpPerformance({ followUpPerformance }: FollowUpPerformance
               <IoInformationCircleOutline className="w-5 h-5 2xl:w-[1vw] 2xl:h-[1vw]" />
               {metric.label}
             </span>
-            <span className="text-[1.1rem] 2xl:text-[1vw] font-semibold text-blue-900 underline">
+            <span className="text-[1rem] 2xl:text-[1vw] font-semibold  underline">
               {followUpPerformance[metric.key]}
             </span>
           </div>

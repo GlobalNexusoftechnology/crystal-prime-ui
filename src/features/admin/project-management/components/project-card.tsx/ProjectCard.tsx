@@ -81,7 +81,7 @@ export const ProjectCard: React.FC<Props> = ({
       <div
         className={`relative rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] shadow-md ${bgColor}`}
       >
-        <div className="flex justify-between items-start" ref={dropdownRef}>
+        <div className="flex justify-between items-start border-b border-gray-400 pb-2 2xl:pb-[0.5vw]" ref={dropdownRef}>
           <div>
             <p className="text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] underline text-gray-600">
               Project Name
@@ -111,8 +111,8 @@ export const ProjectCard: React.FC<Props> = ({
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2 2xl:gap-[0.5vw] justify-between mt-2 2xl:mt-[0.5vw] text-[0.9rem] 2xl:text-[0.875vw] 2xl:leading-[1.2vw]">
-          <div>
+        <div className="flex border-b border-gray-400 flex-wrap gap-2 2xl:gap-[0.5vw] justify-between text-[0.9rem] 2xl:text-[0.875vw] 2xl:leading-[1.2vw]">
+          <div className="py-2 2xl:py-[0.5vw]">
             <p className="text-gray-600 2xl:text-[1vw] underline 2xl:leading-[1.4vw]">
               Client Name
             </p>
@@ -123,7 +123,8 @@ export const ProjectCard: React.FC<Props> = ({
               {project?.data?.client?.name || "Unknown Client"}
             </Link>
           </div>
-          <div className="text-left">
+          <div className="w-[1px] 2xl:w-[0.1vw] h-[3.7rem] 2xl:h-[3.7vw] bg-gray-400"/>
+          <div className="text-left py-2 2xl:py-[0.5vw]">
             <p className="text-gray-600 2xl:text-[1vw] underline 2xl:leading-[1.4vw]">
               {project.data.status === "completed" || project.data.status === "Completed"
                 ? "Actual End Date"
