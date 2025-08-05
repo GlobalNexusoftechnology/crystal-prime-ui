@@ -148,48 +148,38 @@ export const ProjectRenewalList: React.FC<ProjectRenewalListProps> = ({
                 </div>
 
                 {/* Expanded Content */}
-                {isExpanded && firstProject && (
+                {isExpanded && (
                   <div className="ml-5 2xl:ml-[1.25vw] space-y-3 2xl:space-y-[0.75vw]">
-                    {/* First Project (Expanded) */}
-                    <div className="space-y-2 2xl:space-y-[0.5vw]">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-gray-800 text-sm 2xl:text-[0.9vw]">
-                          {firstProject.name}
-                        </span>
-                        <span className="text-gray-500 text-sm 2xl:text-[0.85vw]">
-                          {firstProject.date}
-                        </span>
-                      </div>
-                      <div className="space-y-1 2xl:space-y-[0.25vw]">
-                        <div className="flex items-center justify-between">
-                          <span className="text-gray-500 text-sm 2xl:text-[0.85vw]">
-                            Project Status
-                          </span>
-                          <span className="text-gray-500 text-sm 2xl:text-[0.85vw]">
-                            {firstProject.status}%
-                          </span>
-                        </div>
-                        <div className="w-full h-1 2xl:h-[0.25vw] bg-gray-200 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-purple-600 rounded-full transition-all duration-300"
-                            style={{ width: `${firstProject.status}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Other Projects */}
-                    {cat?.projects?.length > 0 && cat?.projects.slice(1)?.map((proj, idx) => (
+                    {/* All Projects with Status */}
+                    {cat?.projects?.length > 0 && cat?.projects.map((proj, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between"
+                        className="space-y-2 2xl:space-y-[0.5vw]"
                       >
-                        <span className="font-bold text-gray-800 text-sm 2xl:text-[0.9vw]">
-                          {proj.name}
-                        </span>
-                        <span className="text-gray-500 text-sm 2xl:text-[0.85vw]">
-                          {proj.date}
-                        </span>
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-gray-800 text-sm 2xl:text-[0.9vw]">
+                            {proj.name}
+                          </span>
+                          <span className="text-gray-500 text-sm 2xl:text-[0.85vw]">
+                            {proj.date}
+                          </span>
+                        </div>
+                        <div className="space-y-1 2xl:space-y-[0.25vw]">
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-500 text-sm 2xl:text-[0.85vw]">
+                              Project Status
+                            </span>
+                            <span className="text-gray-500 text-sm 2xl:text-[0.85vw]">
+                              {proj.status}%
+                            </span>
+                          </div>
+                          <div className="w-full h-1 2xl:h-[0.25vw] bg-gray-200 rounded-full overflow-hidden">
+                            <div
+                              className="h-full bg-purple-600 rounded-full transition-all duration-300"
+                              style={{ width: `${proj.status}%` }}
+                            ></div>
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>

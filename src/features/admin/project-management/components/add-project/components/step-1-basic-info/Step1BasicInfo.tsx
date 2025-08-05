@@ -48,14 +48,28 @@ export function Step1BasicInfo({
     })) || [];
 
   // Helper to ensure string for DatePicker
-  const toDateString = (val: string | Date | undefined) =>
-    val
-      ? typeof val === "string"
-        ? val
-        : val instanceof Date && !isNaN(val.getTime())
-        ? val.toISOString().slice(0, 10)
-        : ""
-      : "";
+  const toDateString = (val: string | Date | undefined) => {
+    if (!val) return "";
+    
+    if (typeof val === "string") {
+      // If it's already a valid date string in YYYY-MM-DD format, return it
+      if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+        return val;
+      }
+      // Try to parse and format the date
+      const date = new Date(val);
+      if (!isNaN(date.getTime())) {
+        return date.toISOString().slice(0, 10);
+      }
+      return "";
+    }
+    
+    if (val instanceof Date && !isNaN(val.getTime())) {
+      return val.toISOString().slice(0, 10);
+    }
+    
+    return "";
+  };
 
   // Calculate Estimated Cost
   let estimatedCost = "";
@@ -293,7 +307,14 @@ export function Step1BasicInfo({
         <Checkbox
           label="Is Renewal?"
           checked={values.is_renewal}
-          onChange={(e) => setFieldValue("is_renewal", e.target.checked)}
+          onChange={(e) => {
+            setFieldValue("is_renewal", e.target.checked);
+            // Clear renewal fields when is_renewal is unchecked
+            if (!e.target.checked) {
+              setFieldValue("renewal_date", undefined);
+              setFieldValue("renewal_type", undefined);
+            }
+          }}
           name="is_renewal"
         />
       </div>
@@ -324,7 +345,7 @@ export function Step1BasicInfo({
                   ? errors.renewal_date
                   : undefined
               }
-              minDate={new Date().toISOString().slice(0, 10)}
+              minDate={undefined}
             />
           </div>
         </div>
