@@ -117,6 +117,7 @@ const validationSchema = Yup.object({
 
 function validate(values: IAddProjectFormValues) {
   const errors: Partial<Record<keyof IAddProjectFormValues, string>> = {};
+  
   try {
     const valuesForValidation = { ...values };
     if (!values.is_renewal) {
@@ -184,7 +185,6 @@ function validate(values: IAddProjectFormValues) {
       if (isNaN(renewalDate.getTime())) {
         errors.renewal_date = "Invalid date";
       }
-
     }
   }
   return errors;
@@ -565,6 +565,7 @@ export function AddProject({
           onSubmit={handleSubmit}
           validateOnChange={true}
           validateOnBlur={true}
+          validateOnMount={false}
         >
           {(formik) => (
             <Form>

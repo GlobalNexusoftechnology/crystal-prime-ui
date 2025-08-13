@@ -17,7 +17,7 @@ export function TaskSummary({ taskSummary }: TaskSummaryProps) {
       <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw] text-[0.95rem] 2xl:text-[0.875vw]">
         <InfoItem label="Total Task Assigned" value={taskSummary.totalTasksAssigned} />
         <InfoItem label="Completed Task" value={taskSummary.completedTasks} />
-        <InfoItem label="Completion Rate" value={`${taskSummary.completionRate}%`} />
+        <InfoItem label="Completion Rate" value={`${taskSummary.completionRate}`} />
         <InfoItem label="Avg Day To Complete" value={taskSummary.avgDaysToComplete} />
         <InfoItem label="Delayed Task" value={taskSummary.delayedTasks} />
       </div>

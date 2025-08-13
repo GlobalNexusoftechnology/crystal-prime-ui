@@ -56,8 +56,8 @@ export function EditProject({ projectId }: EditProjectProps) {
         start_date: projectDetailData.start_date ? new Date(projectDetailData.start_date).toISOString().slice(0, 10) : undefined,
         end_date: projectDetailData.end_date ? new Date(projectDetailData.end_date).toISOString().slice(0, 10) : undefined,
         template_id: projectDetailData.template_id || null,
-        renewal_type: projectDetailData.renewal_type || null,
-        renewal_date: projectDetailData.renewal_date ? new Date(projectDetailData.renewal_date).toISOString().slice(0, 10) : undefined,
+        renewal_type: projectDetailData.is_renewal ? (projectDetailData.renewal_type || null) : null,
+        renewal_date: projectDetailData.is_renewal && projectDetailData.renewal_date ? new Date(projectDetailData.renewal_date).toISOString().slice(0, 10) : undefined,
         is_renewal: projectDetailData.is_renewal || false,
         milestoneOption: "milestone", // Default value for edit mode
       };
