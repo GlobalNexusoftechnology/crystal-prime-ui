@@ -41,19 +41,24 @@ export function ProjectTemplateCard({
   taskCount,
   estimatedDays,
   projectType,
-  refetchAllProjectTemplates
+  refetchAllProjectTemplates,
 }: ProjectTemplateCardProps) {
   const router = useRouter();
-  
+
   const { allTypesData } = useAllTypesQuery();
 
-  const projectTypeName = allTypesData?.data?.list?.find(type => type.id?.toString() === projectType)?.name || projectType;
+  const projectTypeName =
+    allTypesData?.data?.list?.find(
+      (type) => type.id?.toString() === projectType
+    )?.name || projectType;
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { onDeleteProjectTemplate } = useDeleteProjectTemplateMutation({
     onSuccessCallback: (response) => {
-      toast.success(response.message || "Project template deleted successfully");
+      toast.success(
+        response.message || "Project template deleted successfully"
+      );
       refetchAllProjectTemplates();
       setShowDeleteModal(false);
     },
@@ -82,7 +87,7 @@ export function ProjectTemplateCard({
   return (
     <div
       onClick={handleClickOnView}
-      className=" flex flex-col gap-3 2xl:gap-[0.75vw] bg-[#BAD8FD] p-[1.5rem] 2xl:p-[1.5vw] rounded-2xl 2xl:rounded-[1vw] w-full md:w-[52vw] lg:w-[38vw] xl:w-[26vw] shadow-md relative"
+      className=" flex flex-col bg-[#BAD8FD] p-[1.5rem] 2xl:p-[1.5vw] rounded-2xl 2xl:rounded-[1vw] w-full md:w-[52vw] lg:w-[38vw] xl:w-[26vw] shadow-md relative"
     >
       {/* More options */}
       <div
@@ -107,7 +112,7 @@ export function ProjectTemplateCard({
         />
       </div>
 
-      <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
+      <div className="flex flex-col gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw]">
         {/* Template Name */}
         <p className="text-[0.9rem] 2xl:text-[0.9vw] text-black ">
           Template Name
@@ -139,8 +144,8 @@ export function ProjectTemplateCard({
       </div>
 
       {/* Bottom Info */}
-      <div className="flex sm:justify-between flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
+      <div className="flex sm:justify-between flex-col gap-3 sm:flex-row sm:items-center border-b border-gray-400">
+        <div className="flex flex-col gap-2 2xl:gap-[0.5vw] py-2 2xl:py-[0.5vw]">
           <p className="text-[0.9rem] 2xl:text-[0.9vw] text-black">
             Estimated Days
           </p>
@@ -148,7 +153,8 @@ export function ProjectTemplateCard({
             {estimatedDays} Days
           </p>
         </div>
-        <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
+        <div className="w-[1px] h-full bg-gray-400"></div>
+        <div className="flex flex-col gap-2 2xl:gap-[0.5vw] py-2 2xl:py-[0.5vw]">
           <p className="text-[0.9rem] 2xl:text-[0.9vw] text-black">
             Project Type
           </p>
