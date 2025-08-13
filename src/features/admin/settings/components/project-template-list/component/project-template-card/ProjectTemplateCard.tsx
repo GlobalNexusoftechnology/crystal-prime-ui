@@ -118,8 +118,8 @@ export function ProjectTemplateCard({
       </div>
 
       {/* Milestone & Tasks */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-[1.5vw]">
-        <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-[1.5vw] border-y border-gray-400">
+        <div className="flex items-center gap-2 2xl:gap-[0.5vw] py-2 2xl:py-[0.5vw]">
           <div className="h-5 w-5 2xl:h-[1.5vw] 2xl:w-[1.5vw]">
             <TbTargetArrow className="h-full w-full text-gray-600" />
           </div>
@@ -127,7 +127,8 @@ export function ProjectTemplateCard({
             {milestoneCount} Milestone
           </p>
         </div>
-        <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+        <div className="w-[1px] h-full bg-gray-400"></div>
+        <div className="flex items-center gap-2 2xl:gap-[0.5vw] py-2 2xl:py-[0.5vw]">
           <div className="h-5 w-5 2xl:h-[1.5vw] 2xl:w-[1.5vw]">
             <ToDoListIcon className="h-full w-full" />
           </div>

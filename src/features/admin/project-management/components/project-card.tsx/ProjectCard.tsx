@@ -113,7 +113,7 @@ export const ProjectCard: React.FC<Props> = ({
 
         <div className="flex border-b border-gray-400 flex-wrap gap-2 2xl:gap-[0.5vw] justify-between text-[0.9rem] 2xl:text-[0.875vw] 2xl:leading-[1.2vw]">
           <div className="py-2 2xl:py-[0.5vw]">
-            <p className="text-gray-600 2xl:text-[1vw] underline 2xl:leading-[1.4vw]">
+            <p className="text-gray-600 2xl:text-[1vw] 2xl:leading-[1.4vw]">
               Client Name
             </p>
             <Link
