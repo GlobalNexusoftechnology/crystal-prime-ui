@@ -223,6 +223,7 @@ export function CustomClientTable({
                         )}
                       </button>
                       <ActionDropdown
+                        className=" w-[15rem] 2xl:w-[15vw]"
                         options={actions?.map((action) => ({
                           label: action?.label,
                           onClick: () => action?.onClick(row),

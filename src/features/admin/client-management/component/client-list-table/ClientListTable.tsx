@@ -16,7 +16,7 @@ import {
 import { usePermission, useDebounce } from "@/utils/hooks";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
-import { CustomClientTable } from "..";
+import { CreateClientCredentialModal, CustomClientTable } from "..";
 import { downloadBlobFile } from "@/utils";
 import { ImDownload2 } from "react-icons/im";
 import { DeleteModal } from "@/components/modal/DeleteModal";
@@ -37,6 +37,9 @@ export function ClientListTable(): JSX.Element {
   const [selectedClient, setSelectedClient] = useState<IClientListProps | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isCreateCredentialOpen, setIsCreateCredentialOpen] = useState(false);
+  const [credentialPrefillEmail, setCredentialPrefillEmail] = useState<string | null>(null);
+  const [credentialClientId, setCredentialClientId] = useState<string | null>(null);
 
   const { hasPermission } = usePermission();
 
@@ -80,6 +83,16 @@ export function ClientListTable(): JSX.Element {
       className: "text-red-500",
     });
   }
+
+  // Add Create Client Credentials action
+  clientListActions.push({
+    label: "Create Client Credentials",
+    onClick: (row) => {
+      setCredentialPrefillEmail(row.email || "");
+      setCredentialClientId(row.id || "");
+      setIsCreateCredentialOpen(true);
+    },
+  });
 
   const { onDeleteClient, isPending: isDeletePending } = useDeleteClientMutation({
     onSuccessCallback: (data) => {
@@ -261,6 +274,14 @@ export function ClientListTable(): JSX.Element {
           selectedClient={selectedClient}
           onUpdateClient={updateClient}
           isUpdatePending={isUpdatePending}
+        />
+      )}
+      {isCreateCredentialOpen && (
+        <CreateClientCredentialModal
+          isOpen={isCreateCredentialOpen}
+          onClose={() => setIsCreateCredentialOpen(false)}
+          prefillEmail={credentialPrefillEmail || undefined}
+          clientId={credentialClientId || undefined}
         />
       )}
       <DeleteModal

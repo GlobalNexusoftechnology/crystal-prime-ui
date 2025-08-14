@@ -29,6 +29,9 @@ export const changePasswordUrl = () => "/users/change-password";
 export const forgotPasswordUrl = () => "/auth/forgot-password";
 export const verifyOtpUrl = () => "/auth/verify-otp";
 
+// Client Credential APIs url
+export const createClientCredentialUrl = () => "/users/client/credentials";
+
 // leads APIs url
 export const createLeadUrl = () => "/leads";
 

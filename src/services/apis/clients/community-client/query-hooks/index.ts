@@ -36,6 +36,7 @@ export { useAllLeadAttachmentQuery } from "./useAllLeadAttachmentQuery";
 export { useCreateLeadAttachmentMutation } from "./useCreateLeadAttachmentMutation";
 export { useAllUsersQuery } from "./useAllUsersQuery";
 export { useCreateUserMutation } from "./useCreateUserMutation";
+export { useCreateClientCredentialMutation } from "./useCreateClientCredentialMutation";
 export { useUserDetailQuery } from "./useUserDetailQuery";
 export { useUpdateUserMutation } from "./useUpdateUserMutation";
 export { useDeleteUserMutation } from "./useDeleteUserMutation";

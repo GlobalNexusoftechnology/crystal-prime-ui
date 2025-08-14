@@ -58,6 +58,8 @@ import {
   IProjectDetailResponse,
   IRegisterPayload,
   IRegisterResponse,
+  ICreateClientCredentialPayload,
+  ICreateClientCredentialResponse,
   IResetPasswordPayload,
   IResetPasswordResponse,
   IRoleDetailsResponse,
@@ -172,6 +174,7 @@ import {
   getLeadDetailByIdUrl,
   getProjectDetailByIdUrl,
   registerUrl,
+  createClientCredentialUrl,
   resetPasswordUrl,
   loginUrl,
   sentOtpUrl,
@@ -767,6 +770,25 @@ export class CommunityClient extends ApiClient {
       registerUrl(),
       payload,
       { requiresAuth: false }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data
+  }
+
+  /**
+   * Creates client credentials for a client.
+   * @param payload - client credential information
+   * @returns client credential creation status
+   */
+  public createClientCredential = async (payload: ICreateClientCredentialPayload) => {
+    const response = await this.post<ICreateClientCredentialResponse>(
+      createClientCredentialUrl(),
+      payload,
+      { requiresAuth: true }
     )
 
     if (!response?.success) {

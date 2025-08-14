@@ -692,6 +692,23 @@ export interface IRegisterResponse {
   password: string;
 }
 
+// Client Credential types
+export interface ICreateClientCredentialPayload {
+  email: string;
+  password: string;
+  clientId: string;
+}
+
+export interface ICreateClientCredentialResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: {
+    email: string;
+    message: string;
+  };
+}
+
 // reset password
 export interface IResetPasswordPayload {
   email: string;
