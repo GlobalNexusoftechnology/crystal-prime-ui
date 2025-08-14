@@ -277,13 +277,13 @@ export function MilestoneRow({
                         onClick={() => {
                           const tasks =
                             formik.values.milestones[index]?.tasks || [];
-                          const lastTask = tasks[tasks.length - 1];
+                          const firstTask = tasks[0];
                           if (
                             tasks.length === 0 ||
-                            (lastTask &&
-                              lastTask.title &&
-                              lastTask.estimated_days &&
-                              lastTask.description)
+                            (firstTask &&
+                              firstTask.title &&
+                              firstTask.estimated_days &&
+                              firstTask.description)
                           ) {
                             const newTask = {
                               id: "",
@@ -291,11 +291,11 @@ export function MilestoneRow({
                               estimated_days: "",
                               description: "",
                             };
-                            taskArrayHelpers.push(newTask);
-                            setEditingTaskId(String(tasks.length)); // Use the new task's index as the editing key
+                            taskArrayHelpers.unshift(newTask);
+                            setEditingTaskId("0"); // Use the first index as the editing key
                           } else {
                             toast.error(
-                              "Please complete the previous task before adding a new one."
+                              "Please complete the current task before adding a new one."
                             );
                           }
                         }}

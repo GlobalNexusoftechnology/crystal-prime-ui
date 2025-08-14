@@ -68,10 +68,10 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                     type="button"
                     onClick={() => {
                       const milestones = values.milestones || [];
-                      const lastMilestone = milestones[milestones.length - 1];
+                      const firstMilestone = milestones[0];
                       if (
                         milestones.length === 0 ||
-                        (lastMilestone && lastMilestone.name && lastMilestone.estimated_days && lastMilestone.description)
+                        (firstMilestone && firstMilestone.name && firstMilestone.estimated_days && firstMilestone.description)
                       ) {
                         const newMilestone = {
                           id: "",
@@ -80,11 +80,10 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                           description: "",
                           tasks: [],
                         };
-                        arrayHelpers.push(newMilestone);
-                        const newKey = String(milestones.length);
-                        setEditingMilestoneId(newKey);
+                        arrayHelpers.unshift(newMilestone);
+                        setEditingMilestoneId("0");
                       } else {
-                        toast.error("Please complete the previous milestone before adding a new one.");
+                        toast.error("Please complete the current milestone before adding a new one.");
                       }
                     }}
                   >
