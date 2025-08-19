@@ -2356,6 +2356,45 @@ export interface ITicketData {
   updated_at: string;
   image_url?: string | null;
   remark: string;
+  project?: {
+    id: string;
+    name: string;
+    description: string;
+    status: string;
+    budget: string;
+    estimated_cost: string;
+    actual_cost?: string | null;
+    cost_of_labour: string;
+    overhead_cost: string;
+    extra_cost: string;
+    start_date: string;
+    end_date: string;
+    actual_start_date: string;
+    actual_end_date?: string | null;
+    renewal_type?: string | null;
+    renewal_date?: string | null;
+    is_renewal: boolean;
+  };
+  task?: {
+    id: string;
+    title: string;
+    description: string;
+    due_date?: string | null;
+    status: string;
+    assigned_to: string;
+    milestone?: {
+      id: string;
+      name: string;
+      description: string;
+      start_date: string;
+      end_date: string;
+      actual_date?: string | null;
+      estimated_date?: string | null;
+      assigned_to?: string | null;
+      status: string;
+      remark?: string | null;
+    };
+  } | null;
 }
 
 export interface ITicketDetailResponse {

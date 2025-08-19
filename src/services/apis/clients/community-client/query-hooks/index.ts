@@ -156,6 +156,7 @@ export { useVerifyOtpMutation } from "./useVerifyOtpMutation";
 
 // Ticket Management
 export { useAllTicketsQuery } from "./useAllTicketsQuery";
+export { useAllTicketsAcrossProjectsQuery } from "./useAllTicketsAcrossProjectsQuery";
 export { useCreateTicketMutation } from "./useCreateTicketMutation";
 export { useUpdateTicketMutation } from "./useUpdateTicketMutation";
 export { useDeleteTicketMutation } from "./useDeleteTicketMutation";

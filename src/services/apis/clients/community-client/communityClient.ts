@@ -316,6 +316,7 @@ import {
   forgotPasswordUrl,
   verifyOtpUrl,
   fetchAllTicketsUrl,
+  fetchAllTicketsAcrossProjectsUrl,
   createTicketUrl,
   getTicketDetailByIdUrl,
   updateTicketUrl,
@@ -2256,6 +2257,41 @@ export class CommunityClient extends ApiClient {
     const url = params.toString() 
       ? `${fetchAllTicketsUrl(projectId)}?${params.toString()}`
       : fetchAllTicketsUrl(projectId);
+
+    const response = await this.get<IAllTicketsResponse>(
+      url,
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data.list;
+  };
+
+  public fetchAllTicketsAcrossProjects = async (
+    filters: {
+      searchText?: string;
+      status?: string;
+      priority?: string;
+      page?: number;
+      limit?: number;
+    } = {}
+  ) => {
+    // Build query string from filters
+    const params = new URLSearchParams();
+    if (filters.searchText) params.append('searchText', filters.searchText);
+    if (filters.status && filters.status !== 'All Status') params.append('status', filters.status);
+    if (filters.priority && filters.priority !== 'All Priority') params.append('priority', filters.priority);
+    if (filters.page) params.append('page', filters.page.toString());
+    if (filters.limit) params.append('limit', filters.limit.toString());
+
+    const url = params.toString() 
+      ? `${fetchAllTicketsAcrossProjectsUrl()}?${params.toString()}`
+      : fetchAllTicketsAcrossProjectsUrl();
 
     const response = await this.get<IAllTicketsResponse>(
       url,

@@ -337,6 +337,7 @@ export const fetchBusinessAnalysisReportExcelUrl = () =>
 
 // Ticket Management URLs
 export const fetchAllTicketsUrl = (projectId: string) => `/tickets/project/${projectId}`;
+export const fetchAllTicketsAcrossProjectsUrl = () => "/tickets";
 export const createTicketUrl = () => "/tickets";
 export const getTicketDetailByIdUrl = (id: string) => `/tickets/${id}`;
 export const updateTicketUrl = (id: string) => `/tickets/${id}`;
