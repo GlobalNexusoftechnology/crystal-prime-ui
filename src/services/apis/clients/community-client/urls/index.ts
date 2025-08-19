@@ -334,3 +334,10 @@ export const fetchStaffPerformanceReportExcelUrl = () =>
 export const fetchLeadReportExcelUrl = () => "/reports/leads/export/excel";
 export const fetchBusinessAnalysisReportExcelUrl = () =>
   "/reports/business-analysis/export/excel";
+
+// Ticket Management URLs
+export const fetchAllTicketsUrl = (projectId: string) => `/tickets/project/${projectId}`;
+export const createTicketUrl = () => "/tickets";
+export const getTicketDetailByIdUrl = (id: string) => `/tickets/${id}`;
+export const updateTicketUrl = (id: string) => `/tickets/${id}`;
+export const deleteTicketUrl = (id: string) => `/tickets/${id}`;

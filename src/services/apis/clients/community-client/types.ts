@@ -2342,3 +2342,91 @@ export interface IVerifyOtpPayload {
 export interface IVerifyOtpResponse {
   message: string;
 }
+
+// Ticket Management Types
+export interface ITicketData {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  project_id: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+  image_url?: string | null;
+  remark: string;
+}
+
+export interface ITicketDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketData;
+}
+
+export interface IAllTicketsResponse {
+  status: string;
+  message: string;
+  data: {
+    list: ITicketData[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
+}
+
+export interface ICreateTicketPayload {
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  project_id: string;
+  image_url?: string;
+  image_file?: File;
+  remark: string;
+}
+
+export interface ICreateTicketResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketData;
+}
+
+export interface IUpdateTicketPayload {
+  id: string;
+  payload: Partial<ICreateTicketPayload>;
+}
+
+export interface IUpdateTicketRequestPayload {
+  id: string;
+  payload: Partial<ICreateTicketPayload>;
+}
+
+export interface IUpdateTicketResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketData;
+}
+
+export interface IDeleteTicketResponse {
+  status: boolean;
+  message: string;
+  success: true;
+}
+
+export interface ITicketFilters {
+  searchText?: string;
+  status?: string;
+  priority?: string;
+  createdBy?: string;
+  dateRange?: string;
+  fromDate?: string;
+  toDate?: string;
+  page?: number;
+}

@@ -105,11 +105,32 @@ export function TableCell<T extends { id: string | number }>({
   const value = row[col.accessor];
   const initials = typeof value === 'string' ? getInitials(value) : '';
   const isAssignedTo = col.accessor === "assigned_to";
-  const isStatusColumn = col.accessor === "status_id";
+  const isStatusColumn = col.accessor === "status_id" || col.accessor === "status";
   const isEmailColumn = col.accessor === "email";
   const isColorColumn = col.accessor === "color";
   const randomColor = typeof value === 'string' ? getRandomColor(value) : '#000000';
-  const statusColor = isStatusColumn && (row as { color?: string })?.color ? String((row as { color?: string }).color) : '#888888';
+  const getStatusColor = (statusValue: string) => {
+    const statusLower = statusValue.toLowerCase();
+    switch (statusLower) {
+      case "pending":
+        return "#fbbf24"; // yellow
+      case "in progress":
+      case "in_progress":
+        return "#3b82f6"; // blue
+      case "completed":
+        return "#10b981"; // green
+      case "open":
+        return "#f59e0b"; // amber
+      case "closed":
+        return "#6b7280"; // gray
+      default:
+        return "#888888"; // default gray
+    }
+  };
+  
+  const statusColor = isStatusColumn && typeof value === 'string' 
+    ? getStatusColor(value) 
+    : (row as { color?: string })?.color || '#888888';
 
   const renderEmailCell = (emailValue: unknown) => {
     if (Array.isArray(emailValue)) {
@@ -169,7 +190,7 @@ export function TableCell<T extends { id: string | number }>({
         </div>
       ) : isStatusColumn && typeof value === "string" ? (
         <span
-          className="inline-block px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] rounded-full text-white text-[0.8rem] 2xl:text-[0.8vw]"
+          className="inline-block px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-white text-[0.8rem] 2xl:text-[0.8vw] font-medium shadow-sm"
           style={{ backgroundColor: statusColor }}
         >
           {value}

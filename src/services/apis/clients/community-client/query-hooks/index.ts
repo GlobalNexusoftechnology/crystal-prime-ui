@@ -153,3 +153,10 @@ export { useLeadReportExcelQuery } from './useLeadReportExcelQuery';
 export { useBusinessAnalysisReportExcelQuery } from './useBusinessAnalysisReportExcelQuery';
 export { useForgotPasswordMutation } from "./useForgotPasswordMutation";
 export { useVerifyOtpMutation } from "./useVerifyOtpMutation";
+
+// Ticket Management
+export { useAllTicketsQuery } from "./useAllTicketsQuery";
+export { useCreateTicketMutation } from "./useCreateTicketMutation";
+export { useUpdateTicketMutation } from "./useUpdateTicketMutation";
+export { useDeleteTicketMutation } from "./useDeleteTicketMutation";
+export { useTicketDetailQuery } from "./useTicketDetailQuery";

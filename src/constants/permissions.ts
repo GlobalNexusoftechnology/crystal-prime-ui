@@ -21,6 +21,7 @@ export enum EModule {
   LEAD_ANALYTICS_REPORT = "LEAD_ANALYTICS_REPORT",
   BUSINESS_ANALYSIS_REPORT = "BUSINESS_ANALYSIS_REPORT",
   PUBLIC_BUSINESS_DASHBOARD = "PUBLIC_BUSINESS_DASHBOARD",
+  MY_PROJECTS = "MY_PROJECTS",
 }
 
 export enum EAction {
@@ -59,6 +60,7 @@ export const MODULES: TOptionItem[] = [
   { key: EModule.LEAD_ANALYTICS_REPORT, label: "Lead Analytics Report", value: "29" },
   { key: EModule.BUSINESS_ANALYSIS_REPORT, label: "Business Analysis Report", value: "30" },
   { key: EModule.PUBLIC_BUSINESS_DASHBOARD, label: "Public Business Dashboard", value: "31" },
+  { key: EModule.MY_PROJECTS, label: "My Projects Module", value: "32" },
 ];
 
 export const ACTIONS: TOptionItem[] = [
