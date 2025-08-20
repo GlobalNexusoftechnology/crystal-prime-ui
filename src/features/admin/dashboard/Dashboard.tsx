@@ -112,7 +112,11 @@ export default function Dashboard() {
       status: supportTicketStatusFilter,
       priority: supportTicketPriorityFilter,
     }),
-    [supportTicketSearchQuery, supportTicketStatusFilter, supportTicketPriorityFilter]
+    [
+      supportTicketSearchQuery,
+      supportTicketStatusFilter,
+      supportTicketPriorityFilter,
+    ]
   );
 
   const statusOptions = [
@@ -162,19 +166,19 @@ export default function Dashboard() {
   // Handle escape key to close image modal
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && showImageModal) {
+      if (event.key === "Escape" && showImageModal) {
         handleCloseImageModal();
       }
     };
 
     if (showImageModal) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden"; // Prevent background scrolling
     }
 
     return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
     };
   }, [showImageModal]);
 
@@ -385,7 +389,9 @@ export default function Dashboard() {
           <Dropdown
             options={statusOptionsForCell}
             value={String((value as string) ?? "")}
-            onChange={(val) => updateTicketStatus({ id: String(row.id), status: val })}
+            onChange={(val) =>
+              updateTicketStatus({ id: String(row.id), status: val })
+            }
             dropdownWidth="w-[10rem] 2xl:w-[10vw]"
           />
         </div>
@@ -393,8 +399,8 @@ export default function Dashboard() {
     },
     { header: "PRIORITY", accessor: "priority" },
     { header: "TITLE", accessor: "title" },
-    { 
-      header: "IMAGE", 
+    {
+      header: "IMAGE",
       accessor: "image",
       cell: ({ value }) => {
         const img = (value as string) ?? null;
@@ -403,23 +409,24 @@ export default function Dashboard() {
         }
         return (
           <div className="flex items-center justify-center">
-            <div 
+            <div
               className="relative w-12 h-12 2xl:w-[3vw] 2xl:h-[3vw] cursor-pointer hover:opacity-80 transition-opacity group"
               onClick={() => handleImageClick(img)}
             >
-              <Image 
-                src={img} 
-                alt="Ticket attachment" 
+              <Image
+                src={img}
+                alt="Ticket attachment"
                 fill
                 className="object-cover rounded-lg"
                 unoptimized
                 onError={(e) => {
                   // Hide the image and show fallback text
                   const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  const fallback = target.parentElement?.querySelector('.image-fallback');
+                  target.style.display = "none";
+                  const fallback =
+                    target.parentElement?.querySelector(".image-fallback");
                   if (fallback) {
-                    fallback.classList.remove('hidden');
+                    fallback.classList.remove("hidden");
                   }
                 }}
               />
@@ -434,7 +441,7 @@ export default function Dashboard() {
             </div>
           </div>
         );
-      }
+      },
     },
     { header: "PROJECT", accessor: "projectName" },
     { header: "TASK", accessor: "taskName" },
@@ -446,9 +453,13 @@ export default function Dashboard() {
       label: "View",
       onClick: (row: SupportTicketRow) => {
         // Navigate to task route if both IDs exist; else fallback to project page
-        const hasTaskRoute = Boolean(row.projectId && row.milestoneId && row.taskId);
+        const hasTaskRoute = Boolean(
+          row.projectId && row.milestoneId && row.taskId
+        );
         if (hasTaskRoute) {
-          router.push(`/admin/project-management/${row.projectId}/${row.milestoneId}/${row.taskId}`);
+          router.push(
+            `/admin/project-management/${row.projectId}/${row.milestoneId}/${row.taskId}`
+          );
         } else if (row.projectId) {
           router.push(`/admin/project-management/${row.projectId}`);
         }
@@ -574,124 +585,127 @@ export default function Dashboard() {
           </div>
           <ExpensesOverviewChart dataMap={expensesDataMap} />
         </div>
-      ) : null}
-      <div className="my-6 2xl:my-[1.5vw]">
-        <SupportTicketTable
-          userRole={userRole}
-          supportTicketsLoading={supportTicketsLoading}
-          supportTicketsError={supportTicketsError}
-          supportTicketsErrorObj={supportTicketsErrorObj}
-          supportTicketList={supportTicketList}
-          supportTicketListColumn={supportTicketListColumn}
-          supportTicketListAction={supportTicketListAction}
-          statusOptions={statusOptions}
-          statusFilter={supportTicketStatusFilter}
-          handleStatusChange={handleSupportTicketStatusChange}
-          priorityOptions={priorityOptions}
-          priorityFilter={supportTicketPriorityFilter}
-          handlePriorityChange={handleSupportTicketPriorityChange}
-          handleSearch={handleSupportTicketSearch}
-        />
-      </div>
-      <DailyTaskTable
-        userRole={userRole}
-        dailyTasksLoading={dailyTasksLoading}
-        dailyTasksError={dailyTasksError}
-        dailyTasksErrorObj={dailyTasksErrorObj}
-        dailyTaskList={dailyTaskList}
-        dailyTaskListColumn={dailyTaskListColumn}
-        dailyTaskListAction={dailyTaskListAction}
-        statusOptions={statusOptions}
-        statusFilter={statusFilter}
-        handleStatusChange={handleStatusChange}
-        priorityOptions={priorityOptions}
-        priorityFilter={priorityFilter}
-        handlePriorityChange={handlePriorityChange}
-        handleSearch={handleSearch}
-        fromDate={fromDate}
-        setFromDate={setFromDate}
-        toDate={toDate}
-        setToDate={setToDate}
-        handleClearDates={handleClearDates}
-      />
-      {showEditModal && editTask && (
-        <AddDailyTaskModal
-          isOpen={showEditModal}
-          onClose={() => {
-            setShowEditModal(false);
-            setEditTask(null);
-          }}
-          onSubmit={async (values) => {
-            updateDailyTask({
-              id: editTask.id || "",
-              payload: {
-                ...values,
-                hours_spent: values.hours_spent
-                  ? Number(values.hours_spent)
-                  : undefined,
-              },
-            });
-          }}
-          initialValues={{
-            project_id: editTask?.project?.id || "",
-            assigned_to:
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              editTask?.user?.id || (editTask as any)?.assigned_to || "",
-            task_title: editTask?.task_title || "",
-            entry_date: editTask?.entry_date || "",
-            description: editTask?.description || "",
-            hours_spent: editTask?.hours_spent || undefined,
-            status: editTask?.status || "",
-            remarks: editTask?.remarks || "",
-            priority: editTask?.priority || "Medium",
-          }}
-          isPending={isUpdating}
-          isEdit={true}
-        />
-      )}
-      {/* Delete Modal */}
-      {showDeleteModal && (
-        <DeleteModal
-          isOpen={showDeleteModal}
-          onClose={() => setShowDeleteModal(false)}
-          onConfirm={() => {
-            if (deleteId) deleteDailyTask(deleteId);
-          }}
-          isLoading={isDeleting}
-          title="Delete Daily Task"
-          message="Are you sure you want to delete this daily task? This action cannot be undone."
-        />
-      )}
-
-      {/* Image Modal */}
-      {showImageModal && selectedImage && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-          onClick={handleCloseImageModal}
-        >
-          <div 
-            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="absolute top-4 right-4 z-10">
-              <button
-                onClick={handleCloseImageModal}
-                className="bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75 transition-all"
-              >
-                ×
-              </button>
-            </div>
-            <div className="relative w-full h-full">
-              <Image
-                src={selectedImage}
-                alt="Ticket attachment"
-                width={800}
-                height={600}
-                className="w-full h-auto max-h-[90vh] object-contain"
-                unoptimized
-              />
-            </div>
+      ) : (
+        <div>
+          <div className="my-6 2xl:my-[1.5vw]">
+            <SupportTicketTable
+              userRole={userRole}
+              supportTicketsLoading={supportTicketsLoading}
+              supportTicketsError={supportTicketsError}
+              supportTicketsErrorObj={supportTicketsErrorObj}
+              supportTicketList={supportTicketList}
+              supportTicketListColumn={supportTicketListColumn}
+              supportTicketListAction={supportTicketListAction}
+              statusOptions={statusOptions}
+              statusFilter={supportTicketStatusFilter}
+              handleStatusChange={handleSupportTicketStatusChange}
+              priorityOptions={priorityOptions}
+              priorityFilter={supportTicketPriorityFilter}
+              handlePriorityChange={handleSupportTicketPriorityChange}
+              handleSearch={handleSupportTicketSearch}
+            />
           </div>
+          <DailyTaskTable
+            userRole={userRole}
+            dailyTasksLoading={dailyTasksLoading}
+            dailyTasksError={dailyTasksError}
+            dailyTasksErrorObj={dailyTasksErrorObj}
+            dailyTaskList={dailyTaskList}
+            dailyTaskListColumn={dailyTaskListColumn}
+            dailyTaskListAction={dailyTaskListAction}
+            statusOptions={statusOptions}
+            statusFilter={statusFilter}
+            handleStatusChange={handleStatusChange}
+            priorityOptions={priorityOptions}
+            priorityFilter={priorityFilter}
+            handlePriorityChange={handlePriorityChange}
+            handleSearch={handleSearch}
+            fromDate={fromDate}
+            setFromDate={setFromDate}
+            toDate={toDate}
+            setToDate={setToDate}
+            handleClearDates={handleClearDates}
+          />
+          {showEditModal && editTask && (
+            <AddDailyTaskModal
+              isOpen={showEditModal}
+              onClose={() => {
+                setShowEditModal(false);
+                setEditTask(null);
+              }}
+              onSubmit={async (values) => {
+                updateDailyTask({
+                  id: editTask.id || "",
+                  payload: {
+                    ...values,
+                    hours_spent: values.hours_spent
+                      ? Number(values.hours_spent)
+                      : undefined,
+                  },
+                });
+              }}
+              initialValues={{
+                project_id: editTask?.project?.id || "",
+                assigned_to:
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  editTask?.user?.id || (editTask as any)?.assigned_to || "",
+                task_title: editTask?.task_title || "",
+                entry_date: editTask?.entry_date || "",
+                description: editTask?.description || "",
+                hours_spent: editTask?.hours_spent || undefined,
+                status: editTask?.status || "",
+                remarks: editTask?.remarks || "",
+                priority: editTask?.priority || "Medium",
+              }}
+              isPending={isUpdating}
+              isEdit={true}
+            />
+          )}
+          {/* Delete Modal */}
+          {showDeleteModal && (
+            <DeleteModal
+              isOpen={showDeleteModal}
+              onClose={() => setShowDeleteModal(false)}
+              onConfirm={() => {
+                if (deleteId) deleteDailyTask(deleteId);
+              }}
+              isLoading={isDeleting}
+              title="Delete Daily Task"
+              message="Are you sure you want to delete this daily task? This action cannot be undone."
+            />
+          )}
+
+          {/* Image Modal */}
+          {showImageModal && selectedImage && (
+            <div
+              className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+              onClick={handleCloseImageModal}
+            >
+              <div
+                className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="absolute top-4 right-4 z-10">
+                  <button
+                    onClick={handleCloseImageModal}
+                    className="bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75 transition-all"
+                  >
+                    ×
+                  </button>
+                </div>
+                <div className="relative w-full h-full">
+                  <Image
+                    src={selectedImage}
+                    alt="Ticket attachment"
+                    width={800}
+                    height={600}
+                    className="w-full h-auto max-h-[90vh] object-contain"
+                    unoptimized
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
