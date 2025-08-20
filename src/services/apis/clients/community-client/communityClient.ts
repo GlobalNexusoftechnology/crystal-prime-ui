@@ -62,6 +62,8 @@ import {
   ICreateClientCredentialResponse,
   IResetPasswordPayload,
   IResetPasswordResponse,
+  IChangeClientPasswordPayload,
+  IChangeClientPasswordResponse,
   IRoleDetailsResponse,
   ISentOtpPayload,
   ISentOtpResponse,
@@ -175,6 +177,7 @@ import {
 } from "./types";
 import {
   changePasswordUrl,
+  changeClientPasswordUrl,
   createLeadUrl,
   createProjectUrl,
   fetchAllLeadsListUrl,
@@ -449,6 +452,20 @@ export class CommunityClient extends ApiClient {
 
     if (!response?.success) {
       throw response?.error
+    }
+    return response?.data
+  }
+
+  // change client password (admin-side reset for a client)
+  public changeClientPassword = async (payload: IChangeClientPasswordPayload) => {
+    const response = await this.post<IChangeClientPasswordResponse>(
+      changeClientPasswordUrl(),
+      payload,
+      { requiresAuth: true }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
     }
     return response?.data
   }

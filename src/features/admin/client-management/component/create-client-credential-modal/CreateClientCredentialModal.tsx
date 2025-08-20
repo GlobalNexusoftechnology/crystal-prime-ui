@@ -14,14 +14,16 @@ interface CreateClientCredentialModalProps {
   onClose: () => void;
   prefillEmail?: string;
   clientId?: string;
+  onCreated?: () => void;
 }
 
-export function CreateClientCredentialModal({ isOpen, onClose, prefillEmail, clientId }: CreateClientCredentialModalProps) {
+export function CreateClientCredentialModal({ isOpen, onClose, prefillEmail, clientId, onCreated }: CreateClientCredentialModalProps) {
   const [showPassword, setShowPassword] = useState(false);
   
   const { onCreateClientCredential, isPending } = useCreateClientCredentialMutation({
     onSuccessCallback: () => {
       toast.success("Client credentials created successfully");
+      onCreated?.();
       onClose();
     },
     onErrorCallback: (err: IApiError) => {

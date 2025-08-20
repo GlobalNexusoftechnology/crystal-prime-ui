@@ -727,6 +727,18 @@ export interface IChangePasswordPayload {
   newPassword: string;
 }
 
+// change client password
+export interface IChangeClientPasswordPayload {
+  userId: string;
+  password: string;
+}
+
+export interface IChangeClientPasswordResponse {
+  status: boolean;
+  message: string;
+  success: true;
+}
+
 export interface IChangePasswordResponse {
   message: string;
   status: string;
@@ -1335,6 +1347,23 @@ export interface ICreateClientResponse {
   data: ICreateClientPayload;
 }
 
+export interface IClientUser {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  email: string;
+  first_name: string | null;
+  last_name: string | null;
+  phone_number: string | null;
+  dob: string | null;
+  otp: string | null;
+  otpExpiresAt: string | null;
+  isOtpVerified: boolean;
+  password: string;
+}
+
 export interface IClientList {
   id: string;
   created_at: string;
@@ -1351,6 +1380,8 @@ export interface IClientList {
   lead_id: null; 
   client_details?: IClientDetails[];
   gst_number?: string;
+  isCredential?: boolean;
+  user?: IClientUser;
 }
 
 export interface IAllClientResponse {
