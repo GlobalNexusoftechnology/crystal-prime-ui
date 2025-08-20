@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Button, SearchBar, Table, ModalOverlay, Dropdown } from "@/components";
+import { Button, SearchBar, Table, ModalOverlay, Dropdown, DeleteModal } from "@/components";
 import { Breadcrumb } from "../../../breadcrumb";
 import {
   useAllTicketsQuery,
@@ -36,6 +36,8 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
   const [selectedTicket, setSelectedTicket] = useState<ITicketData | null>(
     null
   );
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [ticketToDelete, setTicketToDelete] = useState<ITicketData | null>(null);
 
   // Fetch project details
   const { projectDetailData: projectData, isLoading: projectLoading } =
@@ -89,12 +91,15 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
   };
 
   const handleDeleteTicket = (ticket: ITicketData) => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete the ticket "${ticket.title}"?`
-      )
-    ) {
-      deleteTicket(ticket.id);
+    setTicketToDelete(ticket);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDeleteTicket = () => {
+    if (ticketToDelete) {
+      deleteTicket(ticketToDelete.id);
+      setShowDeleteModal(false);
+      setTicketToDelete(null);
     }
   };
 
@@ -417,6 +422,20 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
           )}
         </div>
       </ModalOverlay>
+
+      {/* Delete Confirmation Modal */}
+      <DeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setTicketToDelete(null);
+        }}
+        onConfirm={confirmDeleteTicket}
+        isLoading={false}
+        title="Delete Ticket"
+        message="Are you sure you want to delete this ticket "
+        itemName={ticketToDelete?.title}
+      />
     </section>
   );
 };
