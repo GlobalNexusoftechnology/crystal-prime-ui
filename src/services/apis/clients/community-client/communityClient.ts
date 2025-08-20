@@ -320,6 +320,7 @@ import {
   createTicketUrl,
   getTicketDetailByIdUrl,
   updateTicketUrl,
+  updateTicketStatusUrl,
   deleteTicketUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
@@ -2325,6 +2326,23 @@ export class CommunityClient extends ApiClient {
     const response = await this.put<IUpdateTicketResponse>(
       updateTicketUrl(id),
       payload,
+      {
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  // Update only status (PATCH /tickets/:id/status)
+  public updateTicketStatus = async (id: string, status: string) => {
+    const response = await this.put<IUpdateTicketResponse>(
+      updateTicketStatusUrl(id),
+      { status },
       {
         requiresAuth: true,
       }

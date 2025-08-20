@@ -1,6 +1,6 @@
 import React from "react";
 import { Dropdown, Table, Loading, SearchBar } from "@/components";
-import { ITableAction } from "@/constants/table";
+import { ITableAction, ITableColumn } from "@/constants/table";
 
 export interface SupportTicketRow {
   id: string | number;
@@ -13,7 +13,7 @@ interface SupportTicketTableProps {
   supportTicketsError: boolean;
   supportTicketsErrorObj: unknown;
   supportTicketList: SupportTicketRow[];
-  supportTicketListColumn: { header: string; accessor: string }[];
+  supportTicketListColumn: ITableColumn<SupportTicketRow>[];
   supportTicketListAction: ITableAction<SupportTicketRow>[];
   statusOptions: { label: string; value: string }[];
   statusFilter: string;

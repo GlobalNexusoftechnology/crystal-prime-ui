@@ -342,3 +342,5 @@ export const createTicketUrl = () => "/tickets";
 export const getTicketDetailByIdUrl = (id: string) => `/tickets/${id}`;
 export const updateTicketUrl = (id: string) => `/tickets/${id}`;
 export const deleteTicketUrl = (id: string) => `/tickets/${id}`;
+// Update Ticket Status
+export const updateTicketStatusUrl = (id: string) => `/tickets/${id}/status`;

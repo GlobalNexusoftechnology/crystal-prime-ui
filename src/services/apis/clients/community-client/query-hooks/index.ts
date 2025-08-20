@@ -159,5 +159,6 @@ export { useAllTicketsQuery } from "./useAllTicketsQuery";
 export { useAllTicketsAcrossProjectsQuery } from "./useAllTicketsAcrossProjectsQuery";
 export { useCreateTicketMutation } from "./useCreateTicketMutation";
 export { useUpdateTicketMutation } from "./useUpdateTicketMutation";
+export { useUpdateTicketStatusMutation } from "./useUpdateTicketStatusMutation";
 export { useDeleteTicketMutation } from "./useDeleteTicketMutation";
 export { useTicketDetailQuery } from "./useTicketDetailQuery";

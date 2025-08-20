@@ -15,14 +15,16 @@ import {
   useDeleteDailyTaskMutation,
   useUpdateDailyTaskMutation,
   useAllTicketsAcrossProjectsQuery,
+  useUpdateTicketStatusMutation,
   useAuthStore,
 } from "@/services";
 import type { IDailyTaskEntryResponse } from "@/services";
 import { AnalyticalCardIcon } from "@/features";
 import { AddDailyTaskModal, DeleteModal } from "@/components";
+import { Dropdown } from "@/components";
 import DailyTaskTable from "./components/DailyTaskTable";
 import { SupportTicketTable } from "./components";
-import type { ITableAction } from "@/constants/table";
+import type { ITableAction, ITableColumn } from "@/constants/table";
 import type { DailyTaskRow } from "./components/DailyTaskTable";
 import type { SupportTicketRow } from "./components/SupportTicketTable";
 import { useDebounce } from "@/utils/hooks";
@@ -120,6 +122,12 @@ export default function Dashboard() {
     { label: "Completed", value: "Completed" },
     { label: "Closed", value: "Closed" },
   ];
+  const statusOptionsForCell = [
+    { label: "Open", value: "open" },
+    { label: "In Progress", value: "In Progress" },
+    { label: "Completed", value: "Completed" },
+    { label: "Closed", value: "Closed" },
+  ];
   const priorityOptions = [
     { label: "All Priority", value: "" },
     { label: "High", value: "high" },
@@ -196,6 +204,8 @@ export default function Dashboard() {
     status: supportTicketFilters.status,
     priority: supportTicketFilters.priority,
   });
+
+  const { updateTicketStatus } = useUpdateTicketStatusMutation();
 
   // ProjectRenewalList month selection logic
   const renewalMonthOptions = dashboardSummary?.projectRenewalData
@@ -366,25 +376,39 @@ export default function Dashboard() {
     }
   );
 
-  const supportTicketListColumn: { header: string; accessor: string; cell?: ({ value }: { value: string | null }) => React.ReactNode }[] = [
-    { header: "STATUS", accessor: "status" },
+  const supportTicketListColumn: ITableColumn<SupportTicketRow>[] = [
+    {
+      header: "STATUS",
+      accessor: "status",
+      cell: ({ row, value }) => (
+        <div className="min-w-[9rem]">
+          <Dropdown
+            options={statusOptionsForCell}
+            value={String((value as string) ?? "")}
+            onChange={(val) => updateTicketStatus({ id: String(row.id), status: val })}
+            dropdownWidth="w-[10rem] 2xl:w-[10vw]"
+          />
+        </div>
+      ),
+    },
     { header: "PRIORITY", accessor: "priority" },
     { header: "TITLE", accessor: "title" },
     { 
       header: "IMAGE", 
       accessor: "image",
-      cell: ({ value }: { value: string | null }) => {
-        if (!value) {
+      cell: ({ value }) => {
+        const img = (value as string) ?? null;
+        if (!img) {
           return <span className="text-gray-400 text-xs">No image</span>;
         }
         return (
           <div className="flex items-center justify-center">
             <div 
               className="relative w-12 h-12 2xl:w-[3vw] 2xl:h-[3vw] cursor-pointer hover:opacity-80 transition-opacity group"
-              onClick={() => handleImageClick(value)}
+              onClick={() => handleImageClick(img)}
             >
               <Image 
-                src={value} 
+                src={img} 
                 alt="Ticket attachment" 
                 fill
                 className="object-cover rounded-lg"
