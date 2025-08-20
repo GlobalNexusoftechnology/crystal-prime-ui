@@ -12,6 +12,7 @@ import {
   useCreateTicketMutation,
   useUpdateTicketMutation,
   useUploadMultipleAttachmentsMutation,
+  useProjectDetailQuery,
 } from "@/services";
 import { IApiError } from "@/utils";
 import { ITicketData } from "@/services/apis/clients/community-client/types";
@@ -26,6 +27,7 @@ interface GenerateTicketModalProps {
   projectName?: string;
   mode?: "create" | "edit";
   ticket?: ITicketData | null;
+  taskId?: string; // Auto-select this task when creating ticket
 }
 
 const priorityOptions = [
@@ -55,10 +57,24 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
   projectId,
   mode = "create",
   ticket,
+  taskId,
 }) => {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
+
+  // Fetch project details to get tasks
+  const { projectDetailData } = useProjectDetailQuery(projectId);
+
+  // Extract all tasks from all milestones
+  const allTasks = projectDetailData?.milestones?.flatMap(milestone => 
+    milestone.tasks?.map(task => ({
+      ...task,
+      milestoneName: milestone.name
+    })) || []
+  ) || [];
+
+
 
   const { createTicket, isPending: isCreating } = useCreateTicketMutation({
     onSuccessCallback: (response) => {
@@ -109,17 +125,32 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
       description: mode === "edit" && ticket ? ticket.description : "",
       status: mode === "edit" && ticket ? ticket.status : "open",
       priority: mode === "edit" && ticket ? ticket.priority : "",
+      task_id: mode === "edit" && ticket ? ticket.task?.id || "" : taskId || "",
       remark: mode === "edit" && ticket ? ticket.remark : "",
     },
     validationSchema,
     enableReinitialize: mode === "edit",
     onSubmit: (values) => {
+      // Check if ticket title matches any task title
+      const matchingTask = allTasks.find(task => 
+        task.title.toLowerCase() === values.title.toLowerCase()
+      );
+      
+      // Find task with title "tickets" (auto-add for tickets task)
+      const ticketsTask = allTasks.find(task => 
+        task.title.toLowerCase() === "tickets"
+      );
+      
+      // Use provided taskId, or matching task ID, or tickets task ID, or existing task_id
+      const finalTaskId = values.task_id || matchingTask?.id || ticketsTask?.id || undefined;
+
       if (mode === "edit" && ticket) {
         const payload = {
           title: values.title,
           description: values.description,
           status: values.status,
           priority: values.priority,
+          task_id: finalTaskId,
           remark: values.remark,
           image_url: uploadedImageUrl || imageUrl || ticket.image_url || undefined,
           project_id: projectId,
@@ -129,6 +160,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
         const payload = {
           ...values,
           project_id: projectId,
+          task_id: finalTaskId,
           image_file: imageFile || undefined,
           image_url: uploadedImageUrl || imageUrl || undefined,
         };
@@ -200,7 +232,6 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
             error={formik.touched.priority ? formik.errors.priority : undefined}
           />
         </div>
-
         <div className="space-y-4">
           <div>
             <label className="block text-sm 2xl:text-[0.875vw] font-medium text-gray-700 mb-2">

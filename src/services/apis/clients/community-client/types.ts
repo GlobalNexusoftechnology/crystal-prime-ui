@@ -2455,6 +2455,7 @@ export interface ICreateTicketPayload {
   status: string;
   priority: string;
   project_id: string;
+  task_id?: string;
   image_url?: string;
   image_file?: File;
   remark: string;
