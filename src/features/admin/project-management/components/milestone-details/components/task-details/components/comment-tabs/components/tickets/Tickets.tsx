@@ -1,11 +1,8 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
-import { SearchBar, Dropdown, ModalOverlay } from "@/components";
-import {
-  useAllTicketsQuery,
-  ITicketData,
-} from "@/services";
+import { Dropdown, ModalOverlay } from "@/components";
+import { useAllTicketsQuery, ITicketData } from "@/services";
 import { formatDate } from "@/utils";
 
 interface ITicketsProps {
@@ -13,7 +10,6 @@ interface ITicketsProps {
 }
 
 export function Tickets({ projectId }: ITicketsProps) {
-  const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [priorityFilter, setPriorityFilter] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -25,7 +21,6 @@ export function Tickets({ projectId }: ITicketsProps) {
     isLoading: ticketsLoading,
     error,
   } = useAllTicketsQuery(projectId, {
-    searchText: searchQuery,
     status: statusFilter,
     priority: priorityFilter,
   });
@@ -109,15 +104,6 @@ export function Tickets({ projectId }: ITicketsProps) {
 
       {/* Filters Section */}
       <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw] justify-between items-start md:items-center">
-        <div className="w-full md:w-auto">
-          <SearchBar
-            onSearch={setSearchQuery}
-            value={searchQuery}
-            bgColor="white"
-            width="w-full min-w-[12rem] md:w-[25vw] 2xl:w-[20vw]"
-            placeholder="Search tickets..."
-          />
-        </div>
         <div className="flex flex-col sm:flex-row gap-3 2xl:gap-[0.75vw] w-full md:w-auto">
           <div className="w-full sm:w-48 2xl:w-[12vw]">
             <Dropdown
@@ -152,11 +138,11 @@ export function Tickets({ projectId }: ITicketsProps) {
       ) : filteredTickets.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-gray-500 mb-4 2xl:text-[1.1vw]">
-            {searchQuery || statusFilter || priorityFilter
+            {statusFilter || priorityFilter
               ? "No tickets found matching your filters."
               : "No tickets found for this project."}
           </p>
-          {!searchQuery && !statusFilter && !priorityFilter && (
+          {!statusFilter && !priorityFilter && (
             <p className="text-gray-400 2xl:text-[1.1vw]">
               No tickets available for this project.
             </p>
@@ -169,32 +155,44 @@ export function Tickets({ projectId }: ITicketsProps) {
               key={ticket.id}
               className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
             >
-                             {/* Header with title */}
-               <div className="flex flex-wrap justify-between items-start gap-4 2xl:gap-[1vw]">
-                 <div className="flex-1">
-                   <h4 className="font-semibold text-[1rem] 2xl:text-[1.1vw] text-[#1D2939] mb-2 2xl:mb-[0.5vw]">
-                     {ticket.title}
-                   </h4>
-                   <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
-                     <span>
-                       <span className="2xl:text-[1.1vw] font-normal">Status: </span>
-                       <span className={`underline 2xl:text-[1.1vw] ${getStatusColor(ticket.status)}`}>
-                         {ticket.status}
-                       </span>
-                     </span>
-                     <span>
-                       <span className="2xl:text-[1.1vw] font-normal">Priority: </span>
-                       <span className={`underline 2xl:text-[1.1vw] ${getPriorityColor(ticket.priority)}`}>
-                         {ticket.priority}
-                       </span>
-                     </span>
-                   </div>
-                 </div>
-               </div>
+              {/* Header with title */}
+              <div className="flex flex-wrap justify-between items-start gap-4 2xl:gap-[1vw]">
+                <div className="flex-1">
+                  <h4 className="font-semibold text-[1rem] 2xl:text-[1.1vw] text-[#1D2939] mb-2 2xl:mb-[0.5vw]">
+                    {ticket.title}
+                  </h4>
+                  <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
+                    <span>
+                      <span className="2xl:text-[1.1vw] font-normal">
+                        Status:{" "}
+                      </span>
+                      <span
+                        className={`underline 2xl:text-[1.1vw] ${getStatusColor(
+                          ticket.status
+                        )}`}
+                      >
+                        {ticket.status}
+                      </span>
+                    </span>
+                    <span>
+                      <span className="2xl:text-[1.1vw] font-normal">
+                        Priority:{" "}
+                      </span>
+                      <span
+                        className={`underline 2xl:text-[1.1vw] ${getPriorityColor(
+                          ticket.priority
+                        )}`}
+                      >
+                        {ticket.priority}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
 
               {/* Description */}
               <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw]">
-                {ticket.description || 'No description provided'}
+                {ticket.description || "No description provided"}
               </p>
 
               {/* Remark */}
@@ -233,7 +231,7 @@ export function Tickets({ projectId }: ITicketsProps) {
         </div>
       )}
 
-             {/* Image Popup Modal */}
+      {/* Image Popup Modal */}
       <ModalOverlay
         isOpen={isImageModalOpen}
         onClose={() => {
