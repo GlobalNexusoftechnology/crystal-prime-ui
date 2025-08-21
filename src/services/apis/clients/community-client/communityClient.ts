@@ -58,8 +58,12 @@ import {
   IProjectDetailResponse,
   IRegisterPayload,
   IRegisterResponse,
+  ICreateClientCredentialPayload,
+  ICreateClientCredentialResponse,
   IResetPasswordPayload,
   IResetPasswordResponse,
+  IChangeClientPasswordPayload,
+  IChangeClientPasswordResponse,
   IRoleDetailsResponse,
   ISentOtpPayload,
   ISentOtpResponse,
@@ -146,6 +150,14 @@ import {
   ICreateEILogResponse,
   IUpdateEILogPayload,
   IUpdateEILogResponse,
+  // Ticket Management Types
+  IAllTicketsResponse,
+  ICreateTicketPayload,
+  ICreateTicketResponse,
+  IUpdateTicketRequestPayload,
+  IUpdateTicketResponse,
+  IDeleteTicketResponse,
+  ITicketDetailResponse,
   IDeleteEILogResponse,
   IEILogDetailResponse,
   IEILogFilters,
@@ -165,6 +177,7 @@ import {
 } from "./types";
 import {
   changePasswordUrl,
+  changeClientPasswordUrl,
   createLeadUrl,
   createProjectUrl,
   fetchAllLeadsListUrl,
@@ -172,6 +185,7 @@ import {
   getLeadDetailByIdUrl,
   getProjectDetailByIdUrl,
   registerUrl,
+  createClientCredentialUrl,
   resetPasswordUrl,
   loginUrl,
   sentOtpUrl,
@@ -304,6 +318,13 @@ import {
   fetchBusinessAnalysisReportExcelUrl,
   forgotPasswordUrl,
   verifyOtpUrl,
+  fetchAllTicketsUrl,
+  fetchAllTicketsAcrossProjectsUrl,
+  createTicketUrl,
+  getTicketDetailByIdUrl,
+  updateTicketUrl,
+  updateTicketStatusUrl,
+  deleteTicketUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -431,6 +452,20 @@ export class CommunityClient extends ApiClient {
 
     if (!response?.success) {
       throw response?.error
+    }
+    return response?.data
+  }
+
+  // change client password (admin-side reset for a client)
+  public changeClientPassword = async (payload: IChangeClientPasswordPayload) => {
+    const response = await this.post<IChangeClientPasswordResponse>(
+      changeClientPasswordUrl(),
+      payload,
+      { requiresAuth: true }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
     }
     return response?.data
   }
@@ -767,6 +802,25 @@ export class CommunityClient extends ApiClient {
       registerUrl(),
       payload,
       { requiresAuth: false }
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data
+  }
+
+  /**
+   * Creates client credentials for a client.
+   * @param payload - client credential information
+   * @returns client credential creation status
+   */
+  public createClientCredential = async (payload: ICreateClientCredentialPayload) => {
+    const response = await this.post<ICreateClientCredentialResponse>(
+      createClientCredentialUrl(),
+      payload,
+      { requiresAuth: true }
     )
 
     if (!response?.success) {
@@ -2195,6 +2249,152 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
     return response?.data;
+  };
+
+  // Ticket Management Methods
+  // -----------------------------------------------------
+
+  public fetchAllTickets = async (
+    projectId: string,
+    filters: {
+      searchText?: string;
+      status?: string;
+      priority?: string;
+      page?: number;
+      limit?: number;
+    } = {}
+  ) => {
+    // Build query string from filters
+    const params = new URLSearchParams();
+    if (filters.searchText) params.append('searchText', filters.searchText);
+    if (filters.status && filters.status !== 'All Status') params.append('status', filters.status);
+    if (filters.priority && filters.priority !== 'All Priority') params.append('priority', filters.priority);
+    if (filters.page) params.append('page', filters.page.toString());
+    if (filters.limit) params.append('limit', filters.limit.toString());
+
+    const url = params.toString() 
+      ? `${fetchAllTicketsUrl(projectId)}?${params.toString()}`
+      : fetchAllTicketsUrl(projectId);
+
+    const response = await this.get<IAllTicketsResponse>(
+      url,
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data.list;
+  };
+
+  public fetchAllTicketsAcrossProjects = async (
+    filters: {
+      searchText?: string;
+      status?: string;
+      priority?: string;
+      page?: number;
+      limit?: number;
+    } = {}
+  ) => {
+    // Build query string from filters
+    const params = new URLSearchParams();
+    if (filters.searchText) params.append('searchText', filters.searchText);
+    if (filters.status && filters.status !== 'All Status') params.append('status', filters.status);
+    if (filters.priority && filters.priority !== 'All Priority') params.append('priority', filters.priority);
+    if (filters.page) params.append('page', filters.page.toString());
+    if (filters.limit) params.append('limit', filters.limit.toString());
+
+    const url = params.toString() 
+      ? `${fetchAllTicketsAcrossProjectsUrl()}?${params.toString()}`
+      : fetchAllTicketsAcrossProjectsUrl();
+
+    const response = await this.get<IAllTicketsResponse>(
+      url,
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response?.data.data.list;
+  };
+
+  public createTicket = async (payload: ICreateTicketPayload) => {
+    const response = await this.post<ICreateTicketResponse>(
+      createTicketUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  public updateTicket = async ({ id, payload }: IUpdateTicketRequestPayload) => {
+    const response = await this.put<IUpdateTicketResponse>(
+      updateTicketUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  // Update only status (PATCH /tickets/:id/status)
+  public updateTicketStatus = async (id: string, status: string) => {
+    const response = await this.put<IUpdateTicketResponse>(
+      updateTicketStatusUrl(id),
+      { status },
+      {
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  public deleteTicket = async (id: string) => {
+    const response = await this.del<IDeleteTicketResponse>(
+      deleteTicketUrl(id),
+      {
+        requiresAuth: false,
+      }
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public getTicketDetailById = async (id: string) => {
+    const response = await this.get<ITicketDetailResponse>(
+      getTicketDetailByIdUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
   };
 }
 

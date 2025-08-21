@@ -29,7 +29,7 @@ interface EditContactData {
 
 interface CustomClientTableProps {
   data: IClientList[];
-  actions: {
+  actions: (row: IClientList) => {
     label: string;
     onClick: (client: IClientList) => void;
     className?: string;
@@ -223,7 +223,8 @@ export function CustomClientTable({
                         )}
                       </button>
                       <ActionDropdown
-                        options={actions?.map((action) => ({
+                        className=" w-[15rem] 2xl:w-[15vw]"
+                        options={actions(row)?.map((action) => ({
                           label: action?.label,
                           onClick: () => action?.onClick(row),
                           className: action?.className,
@@ -245,6 +246,8 @@ export function CustomClientTable({
                           ? formatDateToDDMMYYYY(value as string)
                           : Array.isArray(value)
                           ? value.length
+                          : typeof value === "object" && value !== null
+                          ? JSON.stringify(value)
                           : value}
                       </td>
                     );

@@ -11,6 +11,7 @@ import {
   useMilestoneTaskDetailQuery,
 } from "@/services";
 import { CommentTabs } from "./components";
+import { Tickets } from "./components/comment-tabs/components";
 
 export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
   const [status, setStatus] = useState(taskData.status || "Open");
@@ -75,18 +76,15 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
           />
         </div>
       </div>
-      <CommentTabs projectId={taskData?.milestone?.project?.id}
-        assignedTo={taskData?.assigned_to || ""}
-        originalTitle={taskData.title}
-        originalDescription={taskData.description || ""}
-        taskId={taskData.id}/>
-      {/* <DailyTask
-        projectId={taskData?.milestone?.project?.id}
-        assignedTo={taskData?.assigned_to || ""}
-        originalTitle={taskData.title}
-        originalDescription={taskData.description || ""}
-        taskId={taskData.id}
-      /> */}
+      {taskData.title === "Tickets" ? 
+        <Tickets projectId={taskData?.milestone?.project?.id || ""} />
+      :
+        <CommentTabs projectId={taskData?.milestone?.project?.id}
+          assignedTo={taskData?.assigned_to || ""}
+          originalTitle={taskData.title}
+          originalDescription={taskData.description || ""}
+          taskId={taskData.id}/>
+      }
     </section>
   );
 }

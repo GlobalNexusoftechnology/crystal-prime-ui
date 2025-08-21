@@ -29,6 +29,11 @@ export const changePasswordUrl = () => "/users/change-password";
 export const forgotPasswordUrl = () => "/auth/forgot-password";
 export const verifyOtpUrl = () => "/auth/verify-otp";
 
+// Client Credential APIs url
+export const createClientCredentialUrl = () => "/users/client/credentials";
+
+export const changeClientPasswordUrl = () => "/users/client/change-password";
+
 // leads APIs url
 export const createLeadUrl = () => "/leads";
 
@@ -331,3 +336,13 @@ export const fetchStaffPerformanceReportExcelUrl = () =>
 export const fetchLeadReportExcelUrl = () => "/reports/leads/export/excel";
 export const fetchBusinessAnalysisReportExcelUrl = () =>
   "/reports/business-analysis/export/excel";
+
+// Ticket Management URLs
+export const fetchAllTicketsUrl = (projectId: string) => `/tickets/project/${projectId}`;
+export const fetchAllTicketsAcrossProjectsUrl = () => "/tickets";
+export const createTicketUrl = () => "/tickets";
+export const getTicketDetailByIdUrl = (id: string) => `/tickets/${id}`;
+export const updateTicketUrl = (id: string) => `/tickets/${id}`;
+export const deleteTicketUrl = (id: string) => `/tickets/${id}`;
+// Update Ticket Status
+export const updateTicketStatusUrl = (id: string) => `/tickets/${id}/status`;

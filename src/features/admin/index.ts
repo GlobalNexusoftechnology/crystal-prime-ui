@@ -4,6 +4,7 @@ export * from "./lead-management";
 export * from "./analytical-card";
 export * from "./leads-list-table";
 export * from "./project-management";
+export * from "./my-projects";
 export * from "./staff-management";
 export * from "./follow-up-management";
 export * from "./settings";

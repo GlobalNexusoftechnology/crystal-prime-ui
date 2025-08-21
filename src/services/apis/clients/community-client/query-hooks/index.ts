@@ -36,6 +36,8 @@ export { useAllLeadAttachmentQuery } from "./useAllLeadAttachmentQuery";
 export { useCreateLeadAttachmentMutation } from "./useCreateLeadAttachmentMutation";
 export { useAllUsersQuery } from "./useAllUsersQuery";
 export { useCreateUserMutation } from "./useCreateUserMutation";
+export { useCreateClientCredentialMutation } from "./useCreateClientCredentialMutation";
+export { useChangeClientPasswordMutation } from "./useChangeClientPasswordMutation";
 export { useUserDetailQuery } from "./useUserDetailQuery";
 export { useUpdateUserMutation } from "./useUpdateUserMutation";
 export { useDeleteUserMutation } from "./useDeleteUserMutation";
@@ -152,3 +154,12 @@ export { useLeadReportExcelQuery } from './useLeadReportExcelQuery';
 export { useBusinessAnalysisReportExcelQuery } from './useBusinessAnalysisReportExcelQuery';
 export { useForgotPasswordMutation } from "./useForgotPasswordMutation";
 export { useVerifyOtpMutation } from "./useVerifyOtpMutation";
+
+// Ticket Management
+export { useAllTicketsQuery } from "./useAllTicketsQuery";
+export { useAllTicketsAcrossProjectsQuery } from "./useAllTicketsAcrossProjectsQuery";
+export { useCreateTicketMutation } from "./useCreateTicketMutation";
+export { useUpdateTicketMutation } from "./useUpdateTicketMutation";
+export { useUpdateTicketStatusMutation } from "./useUpdateTicketStatusMutation";
+export { useDeleteTicketMutation } from "./useDeleteTicketMutation";
+export { useTicketDetailQuery } from "./useTicketDetailQuery";

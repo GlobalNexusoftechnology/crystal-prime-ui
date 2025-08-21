@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   ExpensesOverviewChart,
   LeadAnalyticsChart,
@@ -14,16 +14,23 @@ import {
   useAllDailyTaskQuery,
   useDeleteDailyTaskMutation,
   useUpdateDailyTaskMutation,
+  useAllTicketsAcrossProjectsQuery,
+  useUpdateTicketStatusMutation,
   useAuthStore,
 } from "@/services";
 import type { IDailyTaskEntryResponse } from "@/services";
 import { AnalyticalCardIcon } from "@/features";
 import { AddDailyTaskModal, DeleteModal } from "@/components";
+import { Dropdown } from "@/components";
 import DailyTaskTable from "./components/DailyTaskTable";
-import type { ITableAction } from "@/constants/table";
+import { SupportTicketTable } from "./components";
+import type { ITableAction, ITableColumn } from "@/constants/table";
 import type { DailyTaskRow } from "./components/DailyTaskTable";
+import type { SupportTicketRow } from "./components/SupportTicketTable";
 import { useDebounce } from "@/utils/hooks";
 import { useRouter } from "next/navigation";
+import { formatDate } from "@/utils/helpers/formatDate";
+import Image from "next/image";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -33,6 +40,8 @@ export default function Dashboard() {
   // Move all hooks to the top
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [showImageModal, setShowImageModal] = useState(false);
   const { deleteDailyTask, isPending: isDeleting } = useDeleteDailyTaskMutation(
     {
       onSuccessCallback: () => {
@@ -80,17 +89,54 @@ export default function Dashboard() {
     [searchQuery, statusFilter, priorityFilter, fromDate, toDate]
   );
 
+  // Support Ticket Filters
+  const [supportTicketStatusFilter, setSupportTicketStatusFilter] =
+    useState<string>("");
+  const [supportTicketPriorityFilter, setSupportTicketPriorityFilter] =
+    useState<string>("");
+  const [supportTicketSearchInput, setSupportTicketSearchInput] = useState("");
+
+  const { debouncedValue: supportTicketSearchQuery } = useDebounce({
+    initialValue: supportTicketSearchInput,
+    delay: 500,
+    onChangeCb: () => {},
+  });
+
+  const handleSupportTicketSearch = (query: string) => {
+    setSupportTicketSearchInput(query.toLowerCase());
+  };
+
+  const supportTicketFilters = useMemo(
+    () => ({
+      searchText: supportTicketSearchQuery,
+      status: supportTicketStatusFilter,
+      priority: supportTicketPriorityFilter,
+    }),
+    [
+      supportTicketSearchQuery,
+      supportTicketStatusFilter,
+      supportTicketPriorityFilter,
+    ]
+  );
+
   const statusOptions = [
     { label: "All Status", value: "" },
-    { label: "Pending", value: "Pending" },
+    { label: "Open", value: "open" },
     { label: "In Progress", value: "In Progress" },
     { label: "Completed", value: "Completed" },
+    { label: "Closed", value: "Closed" },
+  ];
+  const statusOptionsForCell = [
+    { label: "Open", value: "open" },
+    { label: "In Progress", value: "In Progress" },
+    { label: "Completed", value: "Completed" },
+    { label: "Closed", value: "Closed" },
   ];
   const priorityOptions = [
     { label: "All Priority", value: "" },
-    { label: "High", value: "High" },
-    { label: "Medium", value: "Medium" },
-    { label: "Low", value: "Low" },
+    { label: "High", value: "high" },
+    { label: "Medium", value: "medium" },
+    { label: "Low", value: "low" },
   ];
 
   // Filter handler
@@ -100,6 +146,41 @@ export default function Dashboard() {
     setFromDate("");
     setToDate("");
   };
+
+  // Support Ticket Filter handlers
+  const handleSupportTicketStatusChange = (value: string) =>
+    setSupportTicketStatusFilter(value);
+  const handleSupportTicketPriorityChange = (value: string) =>
+    setSupportTicketPriorityFilter(value);
+
+  const handleImageClick = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+    setShowImageModal(true);
+  };
+
+  const handleCloseImageModal = () => {
+    setShowImageModal(false);
+    setSelectedImage(null);
+  };
+
+  // Handle escape key to close image modal
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && showImageModal) {
+        handleCloseImageModal();
+      }
+    };
+
+    if (showImageModal) {
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden"; // Prevent background scrolling
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [showImageModal]);
 
   // Fetch daily tasks with filters
   const {
@@ -115,6 +196,20 @@ export default function Dashboard() {
     to: filters.toDate,
     search: filters.searchText,
   });
+
+  // Fetch support tickets with filters
+  const {
+    ticketsData: supportTickets,
+    isLoading: supportTicketsLoading,
+    isError: supportTicketsError,
+    error: supportTicketsErrorObj,
+  } = useAllTicketsAcrossProjectsQuery({
+    searchText: supportTicketFilters.searchText,
+    status: supportTicketFilters.status,
+    priority: supportTicketFilters.priority,
+  });
+
+  const { updateTicketStatus } = useUpdateTicketStatusMutation();
 
   // ProjectRenewalList month selection logic
   const renewalMonthOptions = dashboardSummary?.projectRenewalData
@@ -256,6 +351,123 @@ export default function Dashboard() {
     },
   ];
 
+  // Support Ticket Data Transformation
+  const supportTicketList: SupportTicketRow[] = (supportTickets || []).map(
+    (ticket) => {
+      const validPriority = ["high", "medium", "low"].includes(
+        ticket.priority ?? ""
+      );
+      return {
+        id: ticket?.id,
+        title: ticket?.title,
+        description: ticket?.description || "-",
+        status: ticket?.status || "-",
+        priority: validPriority
+          ? (ticket?.priority as "high" | "medium" | "low")
+          : "medium",
+        projectId: ticket?.project?.id || "",
+        projectName: ticket?.project?.name || "-",
+        createdBy: ticket?.created_by || "-",
+        createdAt: ticket?.created_at ? formatDate(ticket.created_at) : "-",
+        updatedAt: ticket?.updated_at ? formatDate(ticket.updated_at) : "-",
+        taskName: ticket?.task?.title || "-",
+        remark: ticket?.remark || "-",
+        image: ticket?.image_url || null,
+        // Deep links
+        milestoneId: ticket?.task?.milestone?.id || "",
+        taskId: ticket?.task?.id || "",
+      };
+    }
+  );
+
+  const supportTicketListColumn: ITableColumn<SupportTicketRow>[] = [
+    {
+      header: "STATUS",
+      accessor: "status",
+      cell: ({ row, value }) => (
+        <div className="min-w-[9rem]">
+          <Dropdown
+            options={statusOptionsForCell}
+            value={String((value as string) ?? "")}
+            onChange={(val) =>
+              updateTicketStatus({ id: String(row.id), status: val })
+            }
+            dropdownWidth="w-[10rem] 2xl:w-[10vw]"
+          />
+        </div>
+      ),
+    },
+    { header: "PRIORITY", accessor: "priority" },
+    { header: "TITLE", accessor: "title" },
+    {
+      header: "IMAGE",
+      accessor: "image",
+      cell: ({ value }) => {
+        const img = (value as string) ?? null;
+        if (!img) {
+          return <span className="text-gray-400 text-xs">No image</span>;
+        }
+        return (
+          <div className="flex items-center justify-center">
+            <div
+              className="relative w-12 h-12 2xl:w-[3vw] 2xl:h-[3vw] cursor-pointer hover:opacity-80 transition-opacity group"
+              onClick={() => handleImageClick(img)}
+            >
+              <Image
+                src={img}
+                alt="Ticket attachment"
+                fill
+                className="object-cover rounded-lg"
+                unoptimized
+                onError={(e) => {
+                  // Hide the image and show fallback text
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = "none";
+                  const fallback =
+                    target.parentElement?.querySelector(".image-fallback");
+                  if (fallback) {
+                    fallback.classList.remove("hidden");
+                  }
+                }}
+              />
+              <div className="hidden image-fallback absolute inset-0 items-center justify-center bg-gray-100 rounded-lg">
+                <span className="text-gray-400 text-xs">Failed to load</span>
+              </div>
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
+                <span className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  Click to view
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      },
+    },
+    { header: "PROJECT", accessor: "projectName" },
+    { header: "TASK", accessor: "taskName" },
+    { header: "CREATED AT", accessor: "createdAt" },
+  ];
+
+  const supportTicketListAction: ITableAction<SupportTicketRow>[] = [
+    {
+      label: "View",
+      onClick: (row: SupportTicketRow) => {
+        // Navigate to task route if both IDs exist; else fallback to project page
+        const hasTaskRoute = Boolean(
+          row.projectId && row.milestoneId && row.taskId
+        );
+        if (hasTaskRoute) {
+          router.push(
+            `/admin/project-management/${row.projectId}/${row.milestoneId}/${row.taskId}`
+          );
+        } else if (row.projectId) {
+          router.push(`/admin/project-management/${row.projectId}`);
+        }
+      },
+      className: "text-blue-500 whitespace-nowrap",
+    },
+  ];
+
   // ProjectSnapshotChart
   const projectSnapshotArray = [
     {
@@ -342,6 +554,56 @@ export default function Dashboard() {
             <AnalyticalCard key={idx} data={card} />
           ))}
       </div>
+      <div className="my-6 2xl:my-[1.5vw]">
+        <SupportTicketTable
+          userRole={userRole}
+          supportTicketsLoading={supportTicketsLoading}
+          supportTicketsError={supportTicketsError}
+          supportTicketsErrorObj={supportTicketsErrorObj}
+          supportTicketList={supportTicketList}
+          supportTicketListColumn={supportTicketListColumn}
+          supportTicketListAction={supportTicketListAction}
+          statusOptions={statusOptions}
+          statusFilter={supportTicketStatusFilter}
+          handleStatusChange={handleSupportTicketStatusChange}
+          priorityOptions={priorityOptions}
+          priorityFilter={supportTicketPriorityFilter}
+          handlePriorityChange={handleSupportTicketPriorityChange}
+          handleSearch={handleSupportTicketSearch}
+        />
+      </div>
+
+      {/* Image Modal */}
+      {showImageModal && selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          onClick={handleCloseImageModal}
+        >
+          <div
+            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="absolute top-4 right-4 z-10">
+              <button
+                onClick={handleCloseImageModal}
+                className="bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75 transition-all"
+              >
+                ×
+              </button>
+            </div>
+            <div className="relative w-full h-full">
+              <Image
+                src={selectedImage}
+                alt="Ticket attachment"
+                width={800}
+                height={600}
+                className="w-full h-auto max-h-[90vh] object-contain"
+                unoptimized
+              />
+            </div>
+          </div>
+        </div>
+      )}
       {userRole.toLowerCase() === "admin" ? (
         <div>
           <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
@@ -373,75 +635,78 @@ export default function Dashboard() {
           </div>
           <ExpensesOverviewChart dataMap={expensesDataMap} />
         </div>
-      ) : null}
-      <DailyTaskTable
-        userRole={userRole}
-        dailyTasksLoading={dailyTasksLoading}
-        dailyTasksError={dailyTasksError}
-        dailyTasksErrorObj={dailyTasksErrorObj}
-        dailyTaskList={dailyTaskList}
-        dailyTaskListColumn={dailyTaskListColumn}
-        dailyTaskListAction={dailyTaskListAction}
-        statusOptions={statusOptions}
-        statusFilter={statusFilter}
-        handleStatusChange={handleStatusChange}
-        priorityOptions={priorityOptions}
-        priorityFilter={priorityFilter}
-        handlePriorityChange={handlePriorityChange}
-        handleSearch={handleSearch}
-        fromDate={fromDate}
-        setFromDate={setFromDate}
-        toDate={toDate}
-        setToDate={setToDate}
-        handleClearDates={handleClearDates}
-      />
-      {showEditModal && editTask && (
-        <AddDailyTaskModal
-          isOpen={showEditModal}
-          onClose={() => {
-            setShowEditModal(false);
-            setEditTask(null);
-          }}
-          onSubmit={async (values) => {
-            updateDailyTask({
-              id: editTask.id || "",
-              payload: {
-                ...values,
-                hours_spent: values.hours_spent
-                  ? Number(values.hours_spent)
-                  : undefined,
-              },
-            });
-          }}
-          initialValues={{
-            project_id: editTask?.project?.id || "",
-            assigned_to:
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              editTask?.user?.id || (editTask as any)?.assigned_to || "",
-            task_title: editTask?.task_title || "",
-            entry_date: editTask?.entry_date || "",
-            description: editTask?.description || "",
-            hours_spent: editTask?.hours_spent || undefined,
-            status: editTask?.status || "",
-            remarks: editTask?.remarks || "",
-            priority: editTask?.priority || "Medium",
-          }}
-          isPending={isUpdating}
-          isEdit={true}
-        />
-      )}
-      {/* Delete Modal */}
-      {showDeleteModal && (
-        <DeleteModal
-          isOpen={showDeleteModal}
-          onClose={() => setShowDeleteModal(false)}
-          onConfirm={() => {
-            if (deleteId) deleteDailyTask(deleteId);
-          }}
-          isLoading={isDeleting}
-          title="Delete Daily Task"
-          message="Are you sure you want to delete this daily task? This action cannot be undone."
-        />
+      ) : (
+        <div>
+          <DailyTaskTable
+            userRole={userRole}
+            dailyTasksLoading={dailyTasksLoading}
+            dailyTasksError={dailyTasksError}
+            dailyTasksErrorObj={dailyTasksErrorObj}
+            dailyTaskList={dailyTaskList}
+            dailyTaskListColumn={dailyTaskListColumn}
+            dailyTaskListAction={dailyTaskListAction}
+            statusOptions={statusOptions}
+            statusFilter={statusFilter}
+            handleStatusChange={handleStatusChange}
+            priorityOptions={priorityOptions}
+            priorityFilter={priorityFilter}
+            handlePriorityChange={handlePriorityChange}
+            handleSearch={handleSearch}
+            fromDate={fromDate}
+            setFromDate={setFromDate}
+            toDate={toDate}
+            setToDate={setToDate}
+            handleClearDates={handleClearDates}
+          />
+          {showEditModal && editTask && (
+            <AddDailyTaskModal
+              isOpen={showEditModal}
+              onClose={() => {
+                setShowEditModal(false);
+                setEditTask(null);
+              }}
+              onSubmit={async (values) => {
+                updateDailyTask({
+                  id: editTask.id || "",
+                  payload: {
+                    ...values,
+                    hours_spent: values.hours_spent
+                      ? Number(values.hours_spent)
+                      : undefined,
+                  },
+                });
+              }}
+              initialValues={{
+                project_id: editTask?.project?.id || "",
+                assigned_to:
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  editTask?.user?.id || (editTask as any)?.assigned_to || "",
+                task_title: editTask?.task_title || "",
+                entry_date: editTask?.entry_date || "",
+                description: editTask?.description || "",
+                hours_spent: editTask?.hours_spent || undefined,
+                status: editTask?.status || "",
+                remarks: editTask?.remarks || "",
+                priority: editTask?.priority || "Medium",
+              }}
+              isPending={isUpdating}
+              isEdit={true}
+            />
+          )}
+          {/* Delete Modal */}
+          {showDeleteModal && (
+            <DeleteModal
+              isOpen={showDeleteModal}
+              onClose={() => setShowDeleteModal(false)}
+              onConfirm={() => {
+                if (deleteId) deleteDailyTask(deleteId);
+              }}
+              isLoading={isDeleting}
+              title="Delete Daily Task"
+              message="Are you sure you want to delete this daily task? This action cannot be undone."
+            />
+          )}
+        </div>
       )}
     </div>
   );

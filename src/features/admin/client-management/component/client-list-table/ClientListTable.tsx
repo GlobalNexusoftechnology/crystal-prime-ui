@@ -2,7 +2,7 @@
 
 import { useState, useRef, JSX } from "react";
 import { Button, SearchBar } from "@/components";
-import { EAction, EModule, IClientListProps, ITableAction } from "@/constants";
+import { EAction, EModule, ITableAction } from "@/constants";
 import { Breadcrumb, ExportIcon } from "@/features";
 import { AddClientModal } from "../add-client-modal";
 import {
@@ -12,11 +12,12 @@ import {
   useAllClientDownloadExcelQuery,
   useClientDownloadTemplateExcelQuery,
   useUploadClientFromExcelMutation,
+  IClientList,
 } from "@/services";
 import { usePermission, useDebounce } from "@/utils/hooks";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
-import { CustomClientTable } from "..";
+import { CreateClientCredentialModal, CustomClientTable, ChangeClientPasswordModal } from "..";
 import { downloadBlobFile } from "@/utils";
 import { ImDownload2 } from "react-icons/im";
 import { DeleteModal } from "@/components/modal/DeleteModal";
@@ -34,22 +35,27 @@ import { DeleteModal } from "@/components/modal/DeleteModal";
  */
 export function ClientListTable(): JSX.Element {
   const [isAddClientModalOpen, setIsAddClientModalOpen] = useState(false);
-  const [selectedClient, setSelectedClient] = useState<IClientListProps | null>(null);
+  const [selectedClient, setSelectedClient] = useState<IClientList | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isCreateCredentialOpen, setIsCreateCredentialOpen] = useState(false);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [credentialPrefillEmail, setCredentialPrefillEmail] = useState<string | null>(null);
+  const [credentialClientId, setCredentialClientId] = useState<string | null>(null);
+  const [credentialUserId, setCredentialUserId] = useState<string | null>(null);
 
   const { hasPermission } = usePermission();
 
   const canEditClient = hasPermission(EModule.CLIENT_MANAGEMENT, EAction.EDIT);
   const canDeleteClient = hasPermission(EModule.CLIENT_MANAGEMENT, EAction.DELETE);
 
-  const clientListActions: ITableAction<IClientListProps>[] = [];
+  const clientListActions: ITableAction<IClientList>[] = [];
 
   /**
    * Handles editing a client.
    * @param client - The client to edit
    */
-  const handleEdit = (client: IClientListProps) => {
+  const handleEdit = (client: IClientList) => {
     setSelectedClient(client);
     setIsAddClientModalOpen(true);
   };
@@ -80,6 +86,49 @@ export function ClientListTable(): JSX.Element {
       className: "text-red-500",
     });
   }
+
+  // Row-specific actions: Create Credentials or Change Password
+  const buildRowActions = (row: IClientList): ITableAction<IClientList>[] => {
+    const base: ITableAction<IClientList>[] = [];
+    if (canEditClient) {
+      base.push({ label: "Edit", onClick: handleEdit, className: "text-blue-500" });
+    }
+    if (canDeleteClient) {
+      base.push({
+        label: "Delete",
+        onClick: () => {
+          setDeleteId(row.id);
+          setShowDeleteModal(true);
+        },
+        className: "text-red-500",
+      });
+    }
+
+    const hasCredentials = Boolean(row.isCredential);
+    if (hasCredentials) {
+      base.push({
+        label: "Change Password",
+        onClick: () => {
+          setCredentialPrefillEmail(row.email || "");
+          setCredentialClientId(row.id || "");
+          setCredentialUserId(row.user?.id || "");
+          setIsChangePasswordOpen(true);
+        },
+      });
+    } else {
+      base.push({
+        label: "Create Client Credentials",
+        onClick: () => {
+          setCredentialPrefillEmail(row.email || "");
+          setCredentialClientId(row.id || "");
+          setCredentialUserId(row.user?.id || "");
+          setIsCreateCredentialOpen(true);
+        },
+      });
+    }
+
+    return base;
+  };
 
   const { onDeleteClient, isPending: isDeletePending } = useDeleteClientMutation({
     onSuccessCallback: (data) => {
@@ -247,7 +296,7 @@ export function ClientListTable(): JSX.Element {
       </div>
       <CustomClientTable
         data={filteredClients}
-        actions={clientListActions}
+        actions={buildRowActions}
         onEdit={handleEdit}
         onDelete={handleDelete}
         refetch={refetchClient}
@@ -261,6 +310,25 @@ export function ClientListTable(): JSX.Element {
           selectedClient={selectedClient}
           onUpdateClient={updateClient}
           isUpdatePending={isUpdatePending}
+        />
+      )}
+      {isCreateCredentialOpen && (
+        <CreateClientCredentialModal
+          isOpen={isCreateCredentialOpen}
+          onClose={() => setIsCreateCredentialOpen(false)}
+          prefillEmail={credentialPrefillEmail || undefined}
+          clientId={credentialClientId || undefined}
+          onCreated={() => {
+            refetchClient();
+          }}
+        />
+      )}
+      {isChangePasswordOpen && (
+        <ChangeClientPasswordModal
+          isOpen={isChangePasswordOpen}
+          onClose={() => setIsChangePasswordOpen(false)}
+          clientEmail={credentialPrefillEmail || undefined}
+          userId={credentialUserId || undefined}
         />
       )}
       <DeleteModal

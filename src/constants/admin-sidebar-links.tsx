@@ -75,6 +75,13 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" },
   },
   {
+    path: "/admin/my-projects",
+    name: "My Projects",
+    icon: <ProjectManagementIcon />,
+    activeIcon: <ProjectManagementIcon color="#034A9F" />,
+    permission: { module: "MY_PROJECTS", actions: "VIEW" },
+  },
+  {
     path: "/admin/staff-management",
     name: "Staff Management",
     icon: <StaffManagementIcon />,

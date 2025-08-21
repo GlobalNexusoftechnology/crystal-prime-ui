@@ -7,6 +7,7 @@ interface Step3UploadDocumentProps {
   isPending: boolean,
   onNext: (files: File[], removedIds: string[]) => void;
   initialFiles?: File[];
+  mode?: "create" | "edit";
 }
 
 export function Step3UploadDocument({
@@ -14,6 +15,7 @@ export function Step3UploadDocument({
   onNext,
   initialFiles,
   isPending,
+  mode = "create",
 }: Step3UploadDocumentProps) {
   const [files, setFiles] = useState<File[]>(initialFiles || []);
   const [removedAttachmentIds, setRemovedAttachmentIds] = useState<string[]>([]);
@@ -147,6 +149,11 @@ export function Step3UploadDocument({
           <span className="text-[0.9rem] text-red-400">
             Supported: PDF, Word, Excel, Images – Max 2MB each
           </span>
+          {mode === "edit" && (
+            <span className="text-[0.9rem] text-blue-600">
+              Documents are optional - you can proceed without uploading any files
+            </span>
+          )}
 
           {error && <span className="text-red-600 mt-2">{error}</span>}
         </div>
@@ -163,7 +170,7 @@ export function Step3UploadDocument({
           title="Next"
           
           onClick={() => onNext(files, removedAttachmentIds)}
-          disabled={files.length === 0 || isPending}
+          disabled={isPending}
           width="w-full md:w-[10rem] 2xl:w-[10vw]"
         />
       </div>
