@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Button, SearchBar, Table, ModalOverlay, Dropdown, DeleteModal } from "@/components";
+import { Button, Table, ModalOverlay, Dropdown, DeleteModal } from "@/components";
 import { Breadcrumb } from "../../../breadcrumb";
 import {
   useAllTicketsQuery,
@@ -25,7 +25,6 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
   projectId,
 }) => {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [priorityFilter, setPriorityFilter] = useState<string>("");
   const [isGenerateTicketModalOpen, setIsGenerateTicketModalOpen] =
@@ -50,7 +49,6 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
     error,
     isError,
   } = useAllTicketsQuery(projectId, {
-    searchText: searchQuery,
     status: statusFilter,
     priority: priorityFilter,
   });
@@ -316,15 +314,6 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
 
       {/* Filters Section */}
       <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw] justify-between items-start md:items-center">
-        <div className="w-full md:w-auto">
-          <SearchBar
-            onSearch={setSearchQuery}
-            value={searchQuery}
-            bgColor="white"
-            width="w-full min-w-[12rem] md:w-[25vw] 2xl:w-[20vw]"
-            placeholder="Search tickets..."
-          />
-        </div>
         <div className="flex flex-col sm:flex-row gap-3 2xl:gap-[0.75vw] w-full md:w-auto">
           <div className="w-full sm:w-48 2xl:w-[12vw]">
             <Dropdown
@@ -363,11 +352,11 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
       ) : filteredTickets.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-gray-500 mb-4">
-            {searchQuery || statusFilter || priorityFilter
+            {statusFilter || priorityFilter
               ? "No tickets found matching your filters."
               : "No tickets found for this project."}
           </p>
-          {!searchQuery && !statusFilter && !priorityFilter && (
+          { !statusFilter && !priorityFilter && (
             <Button
               title="Generate First Ticket"
               variant="primary"
