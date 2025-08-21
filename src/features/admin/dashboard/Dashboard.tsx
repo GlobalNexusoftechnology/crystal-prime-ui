@@ -554,6 +554,56 @@ export default function Dashboard() {
             <AnalyticalCard key={idx} data={card} />
           ))}
       </div>
+      <div className="my-6 2xl:my-[1.5vw]">
+        <SupportTicketTable
+          userRole={userRole}
+          supportTicketsLoading={supportTicketsLoading}
+          supportTicketsError={supportTicketsError}
+          supportTicketsErrorObj={supportTicketsErrorObj}
+          supportTicketList={supportTicketList}
+          supportTicketListColumn={supportTicketListColumn}
+          supportTicketListAction={supportTicketListAction}
+          statusOptions={statusOptions}
+          statusFilter={supportTicketStatusFilter}
+          handleStatusChange={handleSupportTicketStatusChange}
+          priorityOptions={priorityOptions}
+          priorityFilter={supportTicketPriorityFilter}
+          handlePriorityChange={handleSupportTicketPriorityChange}
+          handleSearch={handleSupportTicketSearch}
+        />
+      </div>
+
+      {/* Image Modal */}
+      {showImageModal && selectedImage && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+          onClick={handleCloseImageModal}
+        >
+          <div
+            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="absolute top-4 right-4 z-10">
+              <button
+                onClick={handleCloseImageModal}
+                className="bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75 transition-all"
+              >
+                ×
+              </button>
+            </div>
+            <div className="relative w-full h-full">
+              <Image
+                src={selectedImage}
+                alt="Ticket attachment"
+                width={800}
+                height={600}
+                className="w-full h-auto max-h-[90vh] object-contain"
+                unoptimized
+              />
+            </div>
+          </div>
+        </div>
+      )}
       {userRole.toLowerCase() === "admin" ? (
         <div>
           <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
@@ -587,24 +637,6 @@ export default function Dashboard() {
         </div>
       ) : (
         <div>
-          <div className="my-6 2xl:my-[1.5vw]">
-            <SupportTicketTable
-              userRole={userRole}
-              supportTicketsLoading={supportTicketsLoading}
-              supportTicketsError={supportTicketsError}
-              supportTicketsErrorObj={supportTicketsErrorObj}
-              supportTicketList={supportTicketList}
-              supportTicketListColumn={supportTicketListColumn}
-              supportTicketListAction={supportTicketListAction}
-              statusOptions={statusOptions}
-              statusFilter={supportTicketStatusFilter}
-              handleStatusChange={handleSupportTicketStatusChange}
-              priorityOptions={priorityOptions}
-              priorityFilter={supportTicketPriorityFilter}
-              handlePriorityChange={handleSupportTicketPriorityChange}
-              handleSearch={handleSupportTicketSearch}
-            />
-          </div>
           <DailyTaskTable
             userRole={userRole}
             dailyTasksLoading={dailyTasksLoading}
@@ -673,38 +705,6 @@ export default function Dashboard() {
               title="Delete Daily Task"
               message="Are you sure you want to delete this daily task? This action cannot be undone."
             />
-          )}
-
-          {/* Image Modal */}
-          {showImageModal && selectedImage && (
-            <div
-              className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-              onClick={handleCloseImageModal}
-            >
-              <div
-                className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="absolute top-4 right-4 z-10">
-                  <button
-                    onClick={handleCloseImageModal}
-                    className="bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75 transition-all"
-                  >
-                    ×
-                  </button>
-                </div>
-                <div className="relative w-full h-full">
-                  <Image
-                    src={selectedImage}
-                    alt="Ticket attachment"
-                    width={800}
-                    height={600}
-                    className="w-full h-auto max-h-[90vh] object-contain"
-                    unoptimized
-                  />
-                </div>
-              </div>
-            </div>
           )}
         </div>
       )}
