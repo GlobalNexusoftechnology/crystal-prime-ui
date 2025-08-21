@@ -76,7 +76,7 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
           />
         </div>
       </div>
-      {taskData.title === "Tickets" ? 
+      {taskData.title.toLowerCase() === "tickets" ? 
         <Tickets projectId={taskData?.milestone?.project?.id || ""} />
       :
         <CommentTabs projectId={taskData?.milestone?.project?.id}
