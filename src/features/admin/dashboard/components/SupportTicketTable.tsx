@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, Table, Loading, SearchBar } from "@/components";
+import { Dropdown, Table, Loading } from "@/components";
 import { ITableAction, ITableColumn } from "@/constants/table";
 
 export interface SupportTicketRow {
@@ -37,7 +37,6 @@ export const SupportTicketTable: React.FC<SupportTicketTableProps> = ({
   priorityOptions,
   priorityFilter,
   handlePriorityChange,
-  handleSearch,
 }) => {
   if (supportTicketsLoading) return <Loading />;
   if (supportTicketsError)
@@ -58,11 +57,6 @@ export const SupportTicketTable: React.FC<SupportTicketTableProps> = ({
           Support Tickets
         </h1>
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
-          <SearchBar
-            onSearch={handleSearch}
-            bgColor="white"
-            width="w-full min-w-[12rem] md:w-[25vw]"
-          />
           <Dropdown
             options={statusOptions}
             value={statusFilter}
