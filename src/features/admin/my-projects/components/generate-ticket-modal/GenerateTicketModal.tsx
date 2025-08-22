@@ -40,7 +40,7 @@ const priorityOptions = [
 const statusOptions = [
   { label: "Open", value: "open" },
   { label: "In Progress", value: "in_progress" },
-  { label: "Resolved", value: "resolved" },
+  { label: "Completed", value: "completed" },
   { label: "Closed", value: "closed" },
 ];
 
