@@ -28,7 +28,7 @@ export const ModalOverlay: React.FC<ModalOverlayProps> = ({
     }`}>
       {/* Overlay */}
       <div
-        className="absolute inset-0 bg-black bg-opacity-50"
+        className="absolute inset-0 bg-black bg-opacity-50 top-[-1rem] 2xl:top-[-1vw]"
         onClick={onClose}
       ></div>
 
