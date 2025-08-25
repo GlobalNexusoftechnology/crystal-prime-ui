@@ -134,6 +134,16 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
   // Table columns configuration
   const columns: ITableColumn<TicketTableData>[] = [
     {
+      header: "IMAGE",
+      accessor: "image",
+      headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
+    },
+    {
+      header: "STATUS",
+      accessor: "status",
+      headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
+    },
+    {
       header: "TITLE",
       accessor: "title",
       headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
@@ -144,11 +154,6 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
       headerClassName: "min-w-[15rem] 2xl:min-w-[15vw]",
     },
     {
-      header: "STATUS",
-      accessor: "status",
-      headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
-    },
-    {
       header: "PRIORITY",
       accessor: "priority",
       headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
@@ -157,11 +162,6 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
       header: "REMARK",
       accessor: "remark",
       headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
-    },
-    {
-      header: "IMAGE",
-      accessor: "image",
-      headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
     },
     {
       header: "CREATED",
