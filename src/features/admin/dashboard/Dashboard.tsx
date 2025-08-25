@@ -397,8 +397,6 @@ export default function Dashboard() {
         </div>
       ),
     },
-    { header: "PRIORITY", accessor: "priority" },
-    { header: "TITLE", accessor: "title" },
     {
       header: "IMAGE",
       accessor: "image",
@@ -443,6 +441,9 @@ export default function Dashboard() {
         );
       },
     },
+    { header: "PRIORITY", accessor: "priority" },
+    { header: "TITLE", accessor: "title" },
+
     { header: "PROJECT", accessor: "projectName" },
     { header: "TASK", accessor: "taskName" },
     { header: "CREATED AT", accessor: "createdAt" },
