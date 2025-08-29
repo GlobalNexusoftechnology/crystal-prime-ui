@@ -48,11 +48,11 @@ export function TableRow<
 
   return (
     <tr className="border-t 2xl:border-[0.1vw] border-gray-200 hover:bg-gray-50 relative whitespace-nowrap">
-      <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">
+      <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700 text-center">
         {String(index + 1).padStart(1, "0")}
       </td>
       {actions.length > 0 && (
-        <td className="p-3 2xl:p-[0.75vw] relative">
+        <td className="p-3 2xl:p-[0.75vw] relative text-center">
           <button
             ref={buttonRef}
             onClick={() => setOpenActionId(isOpen ? null : row.id)}
@@ -172,7 +172,7 @@ export function TableCell<T extends { id: string | number }>({
   return (
     <td
       key={index}
-      className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700"
+      className="text-center p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700"
     >
       {col.cell ? (
         col.cell({ row, value })

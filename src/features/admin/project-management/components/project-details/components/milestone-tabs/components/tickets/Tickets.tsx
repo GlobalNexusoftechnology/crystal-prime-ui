@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { HiOutlineDotsVertical } from "react-icons/hi";
 import { formatDateToDDMMYYYY } from "@/utils";
 import { useRouter } from "next/navigation";
 import { ITicketData } from "@/services";
+import Image from "next/image";
 
 export interface Ticket {
   id: string;
@@ -32,6 +33,8 @@ export function Tickets({
   canViewTicket = true,
 }: TicketsProps) {
   const router = useRouter();
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   const menuRef = useRef<HTMLDivElement | null>(null);
 
@@ -58,6 +61,16 @@ export function Tickets({
     router.push(
       `/admin/project-management/${projectId}/${milestoneId}/tickets/${ticketId}`
     );
+  };
+
+  const handleImageClick = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+    setIsImageModalOpen(true);
+  };
+
+  const handleCloseImageModal = () => {
+    setIsImageModalOpen(false);
+    setSelectedImage(null);
   };
 
   const getStatusColor = (status: string) => {
@@ -91,7 +104,8 @@ export function Tickets({
   };
 
   return (
-    <tr className="border-t border-gray-200">
+    <>
+      <tr className="border-t border-gray-200">
       <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.9vw] text-left relative">
         <button
           className="text-gray-400 hover:text-blue-600"
@@ -144,6 +158,22 @@ export function Tickets({
       <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
         {ticket.remark || '-'}
       </td>
+      <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw]">
+        {ticket.image_url ? (
+          <div className="flex justify-center">
+            <Image
+              src={ticket.image_url}
+              alt="Ticket attachment"
+              width={60}
+              height={60}
+              className="w-15 h-15 object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => handleImageClick(ticket.image_url!)}
+            />
+          </div>
+        ) : (
+          <span className="text-gray-400 text-sm">No image</span>
+        )}
+      </td>
       <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] 2xl:text-[0.9vw]">
         <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
           <span className="text-[0.9rem] 2xl:text-[0.9vw]">
@@ -152,5 +182,37 @@ export function Tickets({
         </span>
       </td>
     </tr>
+    {/* Image Modal */}
+    {isImageModalOpen && selectedImage && (
+      <div
+        className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+        onClick={handleCloseImageModal}
+      >
+        <div
+          className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="absolute top-4 right-4 z-10">
+            <button
+              onClick={handleCloseImageModal}
+              className="bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75 transition-all"
+            >
+              ×
+            </button>
+          </div>
+          <div className="relative w-full h-full">
+            <Image
+              src={selectedImage}
+              alt="Ticket attachment"
+              width={800}
+              height={600}
+              className="w-full h-auto max-h-[90vh] object-contain"
+              unoptimized
+            />
+          </div>
+        </div>
+      </div>
+    )}
+  </>
   );
 }
