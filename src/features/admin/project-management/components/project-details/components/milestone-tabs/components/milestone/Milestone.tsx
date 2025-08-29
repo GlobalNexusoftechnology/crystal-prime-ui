@@ -5,6 +5,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TreeStructureIcon } from "@/features";
 import { formatDateToDDMMYYYY, getInitials, getRandomColor } from "@/utils";
 import { useRouter } from "next/navigation";
+import { ITicketData } from "@/services";
 
 export interface Task {
   id: string;
@@ -25,6 +26,7 @@ export interface Milestone {
   end_date: string;
   projectId: string;
   tasks: Task[];
+  tickets?: ITicketData[];
 }
 
 interface MilestoneProps {
@@ -213,6 +215,14 @@ export function Milestone({
                     onClick={() => handleRedirectView(milestone.id)}
                   >
                     View
+                  </button>
+                )}
+                {milestone.tickets && milestone.tickets.length > 0 && (
+                  <button
+                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                    onClick={() => handleRedirectView(milestone.id)}
+                  >
+                    View Tickets ({milestone.tickets.length})
                   </button>
                 )}
                 {canEditMilestone && (
