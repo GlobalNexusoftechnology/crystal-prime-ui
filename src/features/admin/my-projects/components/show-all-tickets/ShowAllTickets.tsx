@@ -178,6 +178,17 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
   // Table actions configuration
   const tableActions: ITableAction<TicketTableData>[] = [
     {
+      label: "View",
+      onClick: (row) => {
+        const originalTicket = filteredTickets.find(
+          (ticket) => ticket.id === row.id
+        );
+        if (originalTicket) {
+          router.push(`/admin/my-projects/${originalTicket?.project?.id}/${originalTicket.id}`);
+        }
+      },
+    },
+    {
       label: "Edit",
       onClick: (row) => {
         const originalTicket = filteredTickets.find(
