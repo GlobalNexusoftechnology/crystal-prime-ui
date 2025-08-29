@@ -373,8 +373,8 @@ export default function Dashboard() {
         taskName: ticket?.task?.title || "-",
         remark: ticket?.remark || "-",
         image: ticket?.image_url || null,
-        // Deep links
-        milestoneId: ticket?.task?.milestone?.id || "",
+        // Deep links - updated to match API response structure
+        milestoneId: ticket?.milestone?.id || "",
         taskId: ticket?.task?.id || "",
       };
     }
@@ -453,13 +453,13 @@ export default function Dashboard() {
     {
       label: "View",
       onClick: (row: SupportTicketRow) => {
-        // Navigate to task route if both IDs exist; else fallback to project page
-        const hasTaskRoute = Boolean(
-          row.projectId && row.milestoneId && row.taskId
+        // Navigate to ticket route if both IDs exist; else fallback to project page
+        const hasTicketRoute = Boolean(
+          row.projectId && row.milestoneId && row.id
         );
-        if (hasTaskRoute) {
+        if (hasTicketRoute) {
           router.push(
-            `/admin/project-management/${row.projectId}/${row.milestoneId}/${row.taskId}`
+            `/admin/project-management/${row.projectId}/${row.milestoneId}/tickets/${row.id}`
           );
         } else if (row.projectId) {
           router.push(`/admin/project-management/${row.projectId}`);

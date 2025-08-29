@@ -2387,6 +2387,19 @@ export interface ITicketData {
   updated_at: string;
   image_url?: string | null;
   remark: string;
+  assigned_to?: string | null;
+  milestone?: {
+    id: string;
+    name: string;
+    description: string;
+    start_date: string;
+    end_date: string;
+    actual_date?: string | null;
+    estimated_date?: string | null;
+    assigned_to?: string | null;
+    status: string;
+    remark?: string | null;
+  };
   project?: {
     id: string;
     name: string;

@@ -76,6 +76,30 @@ export function buildUniversalIdToNameMapping(entity: any): Record<string, strin
       ]
     );
   }
+  // If it's a ticket
+  if (entity?.title && entity?.id && entity?.project_id && entity?.project) {
+    const mapping: Record<string, string> = {};
+    
+    // Add project mapping
+    if (entity.project?.id && entity.project?.name) {
+      mapping[entity.project.id] = entity.project.name;
+    }
+    
+    // Add ticket mapping
+    mapping[entity.id] = entity.title;
+    
+    // Add task mapping if available
+    if (entity.task?.id && entity.task?.title) {
+      mapping[entity.task.id] = entity.task.title;
+    }
+    
+    // Add milestone mapping if available
+    if (entity.task?.milestone?.id && entity.task?.milestone?.name) {
+      mapping[entity.task.milestone.id] = entity.task.milestone.name;
+    }
+    
+    return mapping;
+  }
   // Fallback: empty mapping
   return {};
 } 

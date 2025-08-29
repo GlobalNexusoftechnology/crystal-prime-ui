@@ -1,2 +1,2 @@
 export { MilestoneDetails  } from "./MilestoneDetails"
-export { TaskDetails  } from "./components"
+export { TaskDetails, TicketDetails  } from "./components"
