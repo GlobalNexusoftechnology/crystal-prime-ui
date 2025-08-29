@@ -12,7 +12,7 @@ export function TableHeader<T>({
 
   return (
     <th
-      className={`text-center p-3 2xl:p-[0.75vw] bg-gray-200 whitespace-nowrap ${
+      className={`text-center p-3 2xl:p-[0.75vw] bg-gray-200 whitespace-nowrap border-r border-gray-300 ${
         column.sortable ? "cursor-pointer" : ""
       } ${column.headerClassName || ""}`}
       onClick={() => column.sortable && onSort(column?.accessor)}

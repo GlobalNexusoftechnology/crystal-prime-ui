@@ -10,7 +10,7 @@ import {
   useAuthStore,
   useCreateLeadStatusHistoryMutation,
 } from "@/services";
-import { IApiError } from "@/utils";
+import { formatIndiaTime, IApiError } from "@/utils";
 import { useQueryClient } from '@tanstack/react-query';
 
 // ✅ Validation schema
@@ -126,11 +126,14 @@ export function StatusHistory({
               </div>
               <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
                 <p className="text-[1rem] 2xl:text-[1vw]">Created At:</p>
-                <p className="text-[1rem] 2xl:text-[1vw]">{statusHistory?.created_at}</p>
+                <p className="text-[1rem] 2xl:text-[1vw]">{formatIndiaTime(
+                      `${statusHistory?.created_at}`,
+                      "toReadable"
+                    )}</p>
               </div>
             </div>
             <h1 className="text-[1rem] 2xl:text-[1vw]">{statusHistory?.status_remarks}</h1>
-            <h1 className="text-primary underline text-[1rem] 2xl:text-[1vw]">
+            <h1 className="text-primary underline text-[1rem] 2xl:text-[1vw] capitalize">
               Assigned To: {statusHistory?.changed_by?.first_name}{" "}
               {statusHistory?.changed_by?.last_name}
             </h1>

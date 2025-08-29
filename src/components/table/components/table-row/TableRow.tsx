@@ -48,11 +48,11 @@ export function TableRow<
 
   return (
     <tr className="border-t 2xl:border-[0.1vw] border-gray-200 hover:bg-gray-50 relative whitespace-nowrap">
-      <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700 text-center">
+      <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700 text-center border-r border-gray-200 capitalize">
         {String(index + 1).padStart(1, "0")}
       </td>
       {actions.length > 0 && (
-        <td className="p-3 2xl:p-[0.75vw] relative text-center">
+        <td className="p-3 2xl:p-[0.75vw] relative text-center border-r border-gray-200 capitalize">
           <button
             ref={buttonRef}
             onClick={() => setOpenActionId(isOpen ? null : row.id)}
@@ -108,6 +108,8 @@ export function TableCell<T extends { id: string | number }>({
   const isStatusColumn = col.accessor === "status_id" || col.accessor === "status";
   const isEmailColumn = col.accessor === "email";
   const isColorColumn = col.accessor === "color";
+  const isPriorityColumn = col.accessor === "priority";
+  const isTypeColumn = col.accessor === "type";
   const randomColor = typeof value === 'string' ? getRandomColor(value) : '#000000';
   const getStatusColor = (statusValue: string) => {
     const statusLower = statusValue.toLowerCase();
@@ -131,6 +133,30 @@ export function TableCell<T extends { id: string | number }>({
   const statusColor = isStatusColumn && typeof value === 'string' 
     ? getStatusColor(value) 
     : (row as { color?: string })?.color || '#888888';
+
+  const getCellBackgroundColor = () => {
+    if (isStatusColumn) {
+      // Use the status_color from row data if available, otherwise fallback to calculated color
+      return (row as { status_color?: string })?.status_color || getStatusColor(String(value));
+    }
+    if (isPriorityColumn && typeof value === 'string') {
+      const priority = value.toLowerCase();
+      switch (priority) {
+        case 'high':
+          return '#fef2f2'; // light red
+        case 'medium':
+          return '#fffbeb'; // light yellow
+        case 'low':
+          return '#f0fdf4'; // light green
+        default:
+          return 'transparent';
+      }
+    }
+    if (isTypeColumn && typeof value === 'string') {
+      return '#f8fafc'; // light gray
+    }
+    return 'transparent';
+  };
 
   const renderEmailCell = (emailValue: unknown) => {
     if (Array.isArray(emailValue)) {
@@ -172,7 +198,10 @@ export function TableCell<T extends { id: string | number }>({
   return (
     <td
       key={index}
-      className="text-center p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700"
+      className={`text-center p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700 border-r border-gray-200 ${
+        isEmailColumn ? '' : 'capitalize'
+      }`}
+      style={{ backgroundColor: getCellBackgroundColor() }}
     >
       {col.cell ? (
         col.cell({ row, value })

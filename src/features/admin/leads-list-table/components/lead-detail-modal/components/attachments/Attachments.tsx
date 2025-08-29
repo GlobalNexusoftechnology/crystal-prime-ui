@@ -158,7 +158,7 @@ export function Attachments({
                   {getInitials(attachment?.uploaded_by?.first_name)}
                   {getInitials(attachment?.uploaded_by?.last_name)}
                 </p>
-                <p className="underline font-medium text-textColor text-[1rem] 2xl:text-[1vw]">
+                <p className="underline font-medium text-textColor text-[1rem] 2xl:text-[1vw] capitalize">
                   {attachment?.uploaded_by?.first_name} {attachment?.uploaded_by?.last_name}
                 </p>
               </div>
