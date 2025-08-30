@@ -25,7 +25,6 @@ export function LeadManagement() {
   const { onUploadLeadFromExcel, isPending } = useUploadLeadFromExcelMutation({
     onSuccessCallback: (response) => {
       toast.success(response?.message);
-      leadsRefetch();
       setAddLeadModalOpen(false);
     },
     onErrorCallback: (error: IApiError) => {

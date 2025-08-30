@@ -1,4 +1,4 @@
-import { IUploadLeadFromExcelResponse, useMutation } from "@/services";
+import { IUploadLeadFromExcelResponse, useMutation, useQueryClient } from "@/services";
 import { COMMUNITY_CLIENT } from "../communityClient";
 import { IApiError, ErrorEventsEnum, errorLogToRemoteUtil } from "@/utils";
 
@@ -13,12 +13,16 @@ export const useUploadLeadFromExcelMutation = ({
   onSuccessCallback,
   onErrorCallback,
 }: IUploadAttachmentOptions) => {
+  const queryClient = useQueryClient();
+  
   const { mutate, isPending, error } = useMutation({
     mutationKey: [UPLOAD_LEAD_FROM_EXCEL_MUTATION_KEY],
     networkMode: "always",
     retry: false,
     mutationFn: COMMUNITY_CLIENT.uploadLeadFromExcel,
     onSuccess: (response) => {
+      // Invalidate and refetch leads list queries
+      queryClient.invalidateQueries({ queryKey: ['leads-list-query-key'] });
       onSuccessCallback(response);
     },
     onError: (err: IApiError) => {
