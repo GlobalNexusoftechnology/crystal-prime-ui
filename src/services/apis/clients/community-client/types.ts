@@ -439,20 +439,20 @@ export interface ISentOtpResponse {
 
 export interface ICreateLeadPayload {
   first_name: string;
-  last_name: string;
-  company: string;
+  last_name?: string;
+  company?: string;
   phone: string;
-  other_contact: string;
+  other_contact?: string;
   escalate_to: boolean;
-  email: string[];
-  location: string;
+  email?: string[];
+  location?: string;
   budget?: number | null;
   possibility_of_conversion?: number | null;
-  requirement: string;
-  source_id: string;
-  status_id: string;
-  type_id: string;
-  assigned_to: string;
+  requirement?: string;
+  source_id?: string;
+  status_id?: string;
+  type_id?: string;
+  assigned_to?: string;
 }
 
 export interface ICreateRolePayload {

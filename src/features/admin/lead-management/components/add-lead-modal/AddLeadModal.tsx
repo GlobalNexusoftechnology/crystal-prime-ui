@@ -1,4 +1,4 @@
-import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
+import { Button, Dropdown, InputField, ModalOverlay, NumberInput } from "@/components";
 import {
   ICreateLeadPayload,
   ICreateLeadResponse,
@@ -24,7 +24,7 @@ interface IAddLeadModalProps {
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
-  company: Yup.string().required("Company is required"),
+  company: Yup.string().optional(),
   phone: Yup.string()
     .min(10, "Phone must be at least 10 digits")
     .max(15, "Phone must be at most 15 digits")
@@ -35,16 +35,24 @@ const validationSchema = Yup.object().shape({
         .email("Invalid email address")
         .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
     )
-    .min(1, "At least one email is required")
-    .required("Email is required"),
-  location: Yup.string().required("Location is required"),
-  requirement: Yup.string().required("Requirement is required"),
-  source_id: Yup.string().required("Source is required"),
-  status_id: Yup.string().required("Status is required"),
-  type_id: Yup.string().required("Type is required"),
-  assigned_to: Yup.string().required("Assigned To is required"),
+    .test('emails', 'At least one valid email is required if emails are provided', function(value) {
+      if (!value || value.length === 0) return true; // Allow empty array
+      const validEmails = value.filter((email: string | undefined) => email && email.trim() !== '' && Yup.string().email().isValidSync(email));
+      return validEmails.length > 0;
+    })
+    .optional(),
+  location: Yup.string().optional(),
+  requirement: Yup.string().optional(),
+  source_id: Yup.string().optional(),
+  status_id: Yup.string().optional(),
+  type_id: Yup.string().optional(),
+  assigned_to: Yup.string().optional(),
   other_contact: Yup.string()
-    .matches(/^[0-9]{8,15}$/, "Other Contact must be 8 to 15 digits"),});
+    .matches(/^[0-9]{8,15}$/, "Other Contact must be 8 to 15 digits")
+    .optional(),
+  budget: Yup.number().optional(),
+  possibility_of_conversion: Yup.number().nullable().optional(),
+});
 
 export function AddLeadModal({
   setAddLeadModalOpen,
@@ -120,7 +128,7 @@ export function AddLeadModal({
               email: [""],
               location: "",
               budget: 0,
-              possibility_of_conversion: null,
+              possibility_of_conversion: 0,
               requirement: "",
               source_id: "",
               status_id: "",
@@ -129,7 +137,30 @@ export function AddLeadModal({
             }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
-              createLead(values);
+              const { source_id, status_id, type_id, assigned_to, email, ...rest } = values;
+              
+              // Filter out empty emails
+              const filteredEmails = (email || []).filter(email => email.trim() !== '');
+              
+              const payload = {
+                ...rest,
+                budget: values.budget ?? 0,
+                possibility_of_conversion: values.possibility_of_conversion ?? 0,
+                // Only include email if there are valid emails
+                ...(filteredEmails.length > 0 && { email: filteredEmails }),
+                // Filter out empty strings for optional fields
+                ...(values.last_name && { last_name: values.last_name }),
+                ...(values.company && { company: values.company }),
+                ...(values.other_contact && { other_contact: values.other_contact }),
+                ...(values.location && { location: values.location }),
+                ...(values.requirement && { requirement: values.requirement }),
+                ...(source_id && { source_id }),
+                ...(status_id && { status_id }),
+                ...(type_id && { type_id }),
+                ...(assigned_to && { assigned_to }),
+              };
+              
+              createLead(payload);
             }}
           >
             {({ values, handleChange, setFieldValue, errors, touched }) => (
@@ -159,11 +190,10 @@ export function AddLeadModal({
                     name="company"
                     value={values?.company}
                     onChange={handleChange}
-                    error={touched?.company && errors?.company}
                   />
                   <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
                     <label className="2xl:text-[1vw] text-gray-700 block">
-                      Phone
+                      Phone <span className="text-red-500">*</span>
                     </label>
                     <PhoneInput
                       country="in"
@@ -190,23 +220,20 @@ export function AddLeadModal({
                       if (digitsOnly.length > 15) digitsOnly = digitsOnly.slice(0, 15);
                       setFieldValue("other_contact", digitsOnly);
                     }}
-                    error={touched.other_contact && errors.other_contact}
+
                   />
-                  <InputField
-                    label="Possibility of Conversion (%)"
-                    placeholder="Enter Possibility of Conversion"
-                    name="possibility_of_conversion"
-                    type="number"
-                    min="0"
-                    max="100"
-                    value={values.possibility_of_conversion ?? ""}
-                    onChange={(e) => {
-                      setFieldValue(
-                        "possibility_of_conversion",
-                        e.target.value === "" ? 0 : Number(e.target.value)
-                      );
-                    }}
-                  />
+                  <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
+                    <label className="text-[0.9rem] font-medium text-gray-700">
+                      Possibility of Conversion (%)
+                    </label>
+                    <NumberInput
+                      value={values.possibility_of_conversion || 0}
+                      onChange={(value) => setFieldValue("possibility_of_conversion", value)}
+                      min={0}
+                      max={100}
+                      placeholder="Enter Possibility of Conversion"
+                    />
+                  </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <div
@@ -222,7 +249,7 @@ export function AddLeadModal({
                             placeholder="Enter Email"
                             name={`email.${index}`}
                             type="email"
-                            value={values.email[index]}
+                            value={values.email?.[index] || ""}
                             onChange={handleChange}
                             error={
                               touched.email &&
@@ -234,7 +261,7 @@ export function AddLeadModal({
                             <button
                               type="button"
                               onClick={() => {
-                                const newEmails = [...values.email];
+                                const newEmails = [...(values.email || [])];
                                 newEmails.splice(index, 1);
                                 setFieldValue("email", newEmails);
                               }}
@@ -248,7 +275,7 @@ export function AddLeadModal({
                       <button
                         type="button"
                         onClick={() => {
-                          setFieldValue("email", [...values.email, ""]);
+                          setFieldValue("email", [...(values.email || []), ""]);
                         }}
                         className="flex items-center gap-1 text-[0.9rem] text-blue-600 hover:text-blue-800"
                       >
@@ -263,51 +290,47 @@ export function AddLeadModal({
                     name="location"
                     value={values.location}
                     onChange={handleChange}
-                    error={touched.location && errors.location}
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
-                  <InputField
-                    label="Budget"
-                    placeholder="Enter Budget"
-                    name="budget"
-                    type="number"
-                    value={values.budget ?? 0}
-                    onChange={(e) => {
-                      setFieldValue("budget", parseFloat(e.target.value));
-                    }}
-                  />
+                  <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
+                    <label className="text-[0.9rem] font-medium text-gray-700">
+                      Budget
+                    </label>
+                    <NumberInput
+                      value={values.budget || 0}
+                      onChange={(value) => setFieldValue("budget", value)}
+                      min={0}
+                      placeholder="Enter Budget"
+                    />
+                  </div>
                   <Dropdown
                     label="Assigned To"
                     options={userOptions}
-                    value={values.assigned_to}
+                    value={values.assigned_to || ""}
                     onChange={(val) => setFieldValue("assigned_to", val)}
-                    error={touched.assigned_to ? errors.assigned_to : undefined}
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <Dropdown
                     label="Source"
                     options={sourceOptions}
-                    value={values.source_id}
+                    value={values.source_id || ""}
                     onChange={(val) => setFieldValue("source_id", val)}
-                    error={touched.source_id ? errors.source_id : undefined}
                   />
                   <Dropdown
                     label="Status"
                     options={statusOptions}
-                    value={values.status_id}
+                    value={values.status_id || ""}
                     onChange={(val) => setFieldValue("status_id", val)}
-                    error={touched.status_id ? errors.status_id : undefined}
                   />
                 </div>
                 <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                   <Dropdown
                     label="Type"
                     options={typeOptions}
-                    value={values.type_id}
+                    value={values.type_id || ""}
                     onChange={(val) => setFieldValue("type_id", val)}
-                    error={touched.type_id ? errors.type_id : undefined}
                   />
                 </div>
                 <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
@@ -318,7 +341,6 @@ export function AddLeadModal({
                     type="textarea"
                     value={values.requirement}
                     onChange={handleChange}
-                    error={touched.requirement && errors.requirement}
                   />
                 </div>
                 <div className="flex justify-between mt-6 2xl:mt-[1.5vw] space-x-4">
