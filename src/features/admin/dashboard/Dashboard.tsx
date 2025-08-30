@@ -121,22 +121,18 @@ export default function Dashboard() {
 
   const statusOptions = [
     { label: "All Status", value: "" },
-    { label: "Open", value: "open" },
+    { label: "Open", value: "Open" },
     { label: "In Progress", value: "In Progress" },
     { label: "Completed", value: "Completed" },
     { label: "Closed", value: "Closed" },
   ];
-  const statusOptionsForCell = [
-    { label: "Open", value: "open" },
-    { label: "In Progress", value: "In Progress" },
-    { label: "Completed", value: "Completed" },
-    { label: "Closed", value: "Closed" },
-  ];
+
   const priorityOptions = [
     { label: "All Priority", value: "" },
-    { label: "High", value: "high" },
-    { label: "Medium", value: "medium" },
     { label: "Low", value: "low" },
+    { label: "Medium", value: "medium" },
+    { label: "High", value: "high" },
+    { label: "Critical", value: "critical" },
   ];
 
   // Filter handler
@@ -387,7 +383,7 @@ export default function Dashboard() {
       cell: ({ row, value }) => (
         <div className="min-w-[9rem]">
           <Dropdown
-            options={statusOptionsForCell}
+            options={statusOptions}
             value={String((value as string) ?? "")}
             onChange={(val) =>
               updateTicketStatus({ id: String(row.id), status: val })
@@ -445,7 +441,6 @@ export default function Dashboard() {
     { header: "TITLE", accessor: "title" },
 
     { header: "PROJECT", accessor: "projectName" },
-    { header: "TASK", accessor: "taskName" },
     { header: "CREATED AT", accessor: "createdAt" },
   ];
 
