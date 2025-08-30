@@ -37,12 +37,6 @@ const priorityOptions = [
   { label: "Critical", value: "critical" },
 ];
 
-const statusOptions = [
-  { label: "Open", value: "open" },
-  { label: "In Progress", value: "in_progress" },
-  { label: "Completed", value: "completed" },
-  { label: "Closed", value: "closed" },
-];
 
 const validationSchema = Yup.object({
   title: Yup.string().required("Title is required"),
@@ -187,11 +181,11 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       modalTitle={mode === "edit" ? "Edit Ticket" : "Generate Ticket"}
-      modalClassName="w-full md:w-[31rem] 2xl:w-[31vw]"
+      modalClassName="w-full md:w-[31rem] 2xl:w-[31vw] bg-white"
     >
       <form
         onSubmit={formik.handleSubmit}
-        className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+        className="h-[85vh] md:h-auto lg:h-[45vw] 2xl:h-[50vw] overflow-y-auto flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
       >
         <InputField
           label="Title"
@@ -206,6 +200,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
         <InputField
           label="Description"
           name="description"
+          type="textarea"
           placeholder="Enter ticket description"
           value={formik.values.description}
           onChange={formik.handleChange}
@@ -215,15 +210,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
           }
         />
 
-        <div className="grid grid-cols-2 gap-4">
-          <Dropdown
-            label="Status"
-            options={statusOptions}
-            value={formik.values.status}
-            onChange={(value) => formik.setFieldValue("status", value)}
-            error={formik.touched.status ? formik.errors.status : undefined}
-          />
-
+        <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
           <Dropdown
             label="Priority"
             options={priorityOptions}
@@ -234,7 +221,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
         </div>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm 2xl:text-[0.875vw] font-medium text-gray-700 mb-2">
+            <label className="block text-[1vw] 2xl:text-[1vw] text-gray-700 mb-2 2xl:mb-[0.5vw]">
               Upload Image
             </label>
             <UploadFileInput
@@ -242,10 +229,10 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
               placeholder="Choose image file"
             />
             {isUploading && (
-              <p className="text-sm text-blue-600 mt-1">Uploading image...</p>
+              <p className="text-sm 2xl:text-[0.875vw] text-blue-600 mt-1 2xl:mt-[0.25vw]">Uploading image...</p>
             )}
             {uploadedImageUrl && (
-              <p className="text-sm text-green-600 mt-1">
+              <p className="text-sm 2xl:text-[0.875vw] text-green-600 mt-1 2xl:mt-[0.25vw]">
                 ✓ Image uploaded successfully
               </p>
             )}
@@ -255,6 +242,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
         <InputField
           label="Remark"
           name="remark"
+          type="textarea"
           placeholder="Enter additional remarks"
           value={formik.values.remark}
           onChange={formik.handleChange}
