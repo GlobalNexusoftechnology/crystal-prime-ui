@@ -2472,6 +2472,7 @@ export interface ICreateTicketPayload {
   image_url?: string;
   image_file?: File;
   remark: string;
+  assigned_to?: string | null;
 }
 
 export interface ICreateTicketResponse {

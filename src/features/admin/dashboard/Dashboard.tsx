@@ -381,7 +381,7 @@ export default function Dashboard() {
       header: "STATUS",
       accessor: "status",
       cell: ({ row, value }) => (
-        <div className="min-w-[9rem]">
+        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
           <Dropdown
             options={statusOptions}
             value={String((value as string) ?? "")}

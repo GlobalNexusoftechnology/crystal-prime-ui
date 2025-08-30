@@ -902,25 +902,28 @@ export function MilestoneTabs({
                                 <thead>
                                   <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
                                     <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                                    <th className=" px-2 2xl:px-[0.5vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                    <th className=" px-2 2xl:px-[0.5vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-center flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
                                       <span>Ticket Title</span>
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
                                       Description
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                      Assigned To
+                                    </th>
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
                                       Status
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
                                       Priority
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
                                       Remark
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
                                       Image
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
                                       Created Date
                                     </th>
                                   </tr>
