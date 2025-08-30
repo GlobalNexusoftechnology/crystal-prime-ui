@@ -89,8 +89,6 @@ export function TicketComments({
   }
 
   const handleCreateComment = (values: ICreateTicketCommentPayload) => {
-    console.log('Form values:', values); // Debug log
-    console.log('Remark value:', values.remark); // Debug remark specifically
     if (!values.title && !values.description && !values.remark) {
       toast.error('Please provide at least a title, description, or remark');
       return;
@@ -129,18 +127,18 @@ export function TicketComments({
                       >
                         <div className="flex justify-between gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
                           <span>
-                            <span className="underline text-[1.1rem] 2xl:text-[1.1vw] font-normal">
+                            <span className="underline text-[1.1rem] 2xl:text-[1.1vw] font-normal capitalize">
                               {comment.title || "No Title"}
                             </span>
                           </span>
                           <div className="flex justify-end flex-wrap gap-6 2xl:gap-[1.5vw]">
                             <span className="underline">
-                              <span className="2xl:text-[1.1vw] font-normal">
+                              <span className="2xl:text-[1.1vw] font-normal capitalize">
                                 By: {comment.user.first_name} {comment.user.last_name}
                               </span>
                             </span>
                             <span className="underline text-primary">
-                              <span className="2xl:text-[1.1vw] font-normal">
+                              <span className="2xl:text-[1.1vw] font-normal capitalize">
                                 Status: {comment.status}
                               </span>
                             </span>
@@ -148,18 +146,18 @@ export function TicketComments({
                               Created: {formatIndiaTime(comment.created_at, "toReadable")}
                             </span>
                             <span className="underline text-yellow-600">
-                              <span className="2xl:text-[1.1vw] font-normal">
+                              <span className="2xl:text-[1.1vw] font-normal capitalize">
                                 Priority: {comment.priority}
                               </span>
                             </span>
                           </div>
                         </div>
                         {comment.description && (
-                          <div className="mb-2 2xl:mb-[0.5vw]">
+                          <div className="mb-2 2xl:mb-[0.5vw] capitalize">
                             {comment.description}
                           </div>
                         )}
-                        <div className="mb-2 2xl:mb-[0.5vw]">
+                        <div className="mb-2 2xl:mb-[0.5vw] capitalize">
                           <strong>Remark:</strong>{" "}
                           <p>{comment.remark || "No remark provided"}</p>
                         </div>
