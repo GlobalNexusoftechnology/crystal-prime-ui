@@ -1817,7 +1817,7 @@ export class CommunityClient extends ApiClient {
 
   // Ticket Comments API methods
   public createTicketComment = async (payload: ICreateTicketCommentPayload): Promise<ITicketCommentResponse> => {
-    const response = await this.post<ITicketCommentResponse>(createTicketCommentUrl(), payload);
+    const response = await this.post<ITicketCommentResponse>(createTicketCommentUrl(), payload, { requiresAuth: true });
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -1825,7 +1825,7 @@ export class CommunityClient extends ApiClient {
   }
 
   public updateTicketComment = async (commentId: string, payload: Partial<ICreateTicketCommentPayload>): Promise<ITicketCommentResponse> => {
-    const response = await this.put<ITicketCommentResponse>(updateTicketCommentUrl(commentId), payload);
+    const response = await this.put<ITicketCommentResponse>(updateTicketCommentUrl(commentId), payload, { requiresAuth: true });
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -1833,14 +1833,14 @@ export class CommunityClient extends ApiClient {
   }
 
   public deleteTicketComment = async (commentId: string): Promise<void> => {
-    const response = await this.del<void>(deleteTicketCommentUrl(commentId));
+    const response = await this.del<void>(deleteTicketCommentUrl(commentId), { requiresAuth: true });
     if (!response?.success) {
       throw response?.errorData;
     }
   }
 
   public getTicketCommentDetail = async (commentId: string): Promise<ITicketCommentResponse> => {
-    const response = await this.get<ITicketCommentResponse>(getTicketCommentDetailUrl(commentId));
+    const response = await this.get<ITicketCommentResponse>(getTicketCommentDetailUrl(commentId), { requiresAuth: true });
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -1848,11 +1848,11 @@ export class CommunityClient extends ApiClient {
   }
 
   public getAllTicketComments = async (ticketId: string): Promise<ITicketCommentResponse[]> => {
-    const response = await this.get<IAllTicketCommentsResponse>(getAllTicketCommentsUrl(ticketId));
+    const response = await this.get<IAllTicketCommentsResponse>(getAllTicketCommentsUrl(ticketId), { requiresAuth: true });
     if (!response?.success) {
       throw response?.errorData;
     }
-    return response?.data.data;
+    return response?.data.data.list;
   }
 
   public updateTaskStatus = async (taskId: string, status: string) => {

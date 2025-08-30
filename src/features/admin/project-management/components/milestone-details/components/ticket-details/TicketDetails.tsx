@@ -5,14 +5,13 @@ import { Breadcrumb } from "@/features";
 import { ITicketData } from "@/services";
 import { formatIndiaTime } from "@/utils";
 import { HeaderDetails } from "../../../header-details";
-import { TicketInfo, TicketEstimate } from "./components";
+import { TicketInfo, TicketEstimate, TicketCommentTab } from "./components";
 import {
   useUpdateTicketStatusMutation,
   useTicketDetailQuery,
   useProjectDetailQuery,
   useMilestoneDetailQuery,
 } from "@/services";
-import { CommentTabs } from "../task-details/components";
 import { useParams } from "next/navigation";
 
 export function TicketDetails({ ticketData }: { ticketData: ITicketData }) {
@@ -102,9 +101,7 @@ export function TicketDetails({ ticketData }: { ticketData: ITicketData }) {
           />
         </div>
       </div>
-      <CommentTabs 
-        projectId={ticketData?.project_id || ""}
-        assignedTo={ticketData?.assigned_to || ""}
+      <TicketCommentTab 
         originalTitle={ticketData.title}
         originalDescription={ticketData.description || ""}
         taskId={ticketData.id}

@@ -2544,7 +2544,9 @@ export interface ITicketCommentResponse {
     description: string;
     status: string;
     priority: string;
-    assigned_to: string;
+    assigned_to: string | null;
+    image_url?: string;
+    remark?: string;
     created_at: string;
     updated_at: string;
     deleted: boolean;
@@ -2552,10 +2554,33 @@ export interface ITicketCommentResponse {
     project: {
       id: string;
       name: string;
+      description?: string;
+      status?: string;
+      budget?: string;
+      estimated_cost?: string;
+      actual_cost?: string | null;
+      cost_of_labour?: string;
+      overhead_cost?: string;
+      extra_cost?: string;
+      start_date?: string;
+      end_date?: string;
+      actual_start_date?: string | null;
+      actual_end_date?: string | null;
+      renewal_type?: string | null;
+      renewal_date?: string | null;
+      is_renewal?: boolean;
     };
     milestone: {
       id: string;
       name: string;
+      description?: string;
+      start_date?: string;
+      end_date?: string;
+      actual_date?: string | null;
+      estimated_date?: string | null;
+      assigned_to?: string;
+      status?: string;
+      remark?: string | null;
     };
   };
   user: {
@@ -2563,6 +2588,12 @@ export interface ITicketCommentResponse {
     first_name: string;
     last_name: string;
     email: string;
+    phone_number?: string | null;
+    dob?: string | null;
+    otp?: string | null;
+    otpExpiresAt?: string | null;
+    isOtpVerified?: boolean;
+    password?: string;
   };
 }
 
@@ -2577,7 +2608,10 @@ export interface IAllTicketCommentsResponse {
   status: boolean;
   message: string;
   success: true;
-  data: ITicketCommentResponse[];
+  data: {
+    list: ITicketCommentResponse[];
+    total: number;
+  };
 }
 
 export interface IUpdateTicketCommentPayload {
