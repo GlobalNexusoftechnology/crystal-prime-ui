@@ -346,3 +346,14 @@ export const updateTicketUrl = (id: string) => `/tickets/${id}`;
 export const deleteTicketUrl = (id: string) => `/tickets/${id}`;
 // Update Ticket Status
 export const updateTicketStatusUrl = (id: string) => `/tickets/${id}/status`;
+
+// Ticket Comments API's
+export const createTicketCommentUrl = () => "/ticket-comments";
+export const updateTicketCommentUrl = (commentId: string) =>
+  `/ticket-comments/${commentId}`;
+export const deleteTicketCommentUrl = (commentId: string) =>
+  `/ticket-comments/${commentId}`;
+export const getTicketCommentDetailUrl = (commentId: string) =>
+  `/ticket-comments/${commentId}`;
+export const getAllTicketCommentsUrl = (ticketId: string) =>
+  `/ticket-comments/ticket/${ticketId}`;

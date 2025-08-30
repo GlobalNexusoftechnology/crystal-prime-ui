@@ -2514,3 +2514,87 @@ export interface ITicketFilters {
   toDate?: string;
   page?: number;
 }
+
+// Ticket Comments APIs Types
+// -----------------------------------------------------
+
+export interface ICreateTicketCommentPayload {
+  ticket_id: string;
+  title?: string;
+  description?: string;
+  status?: string;
+  priority?: string;
+  remark?: string;
+}
+
+export interface ITicketCommentResponse {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  remark: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  ticket: {
+    id: string;
+    title: string;
+    description: string;
+    status: string;
+    priority: string;
+    assigned_to: string;
+    created_at: string;
+    updated_at: string;
+    deleted: boolean;
+    deleted_at: string | null;
+    project: {
+      id: string;
+      name: string;
+    };
+    milestone: {
+      id: string;
+      name: string;
+    };
+  };
+  user: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+}
+
+export interface ICreateTicketCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketCommentResponse;
+}
+
+export interface IAllTicketCommentsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketCommentResponse[];
+}
+
+export interface IUpdateTicketCommentPayload {
+  id: string;
+  payload: Partial<ICreateTicketCommentPayload>;
+}
+
+export interface IUpdateTicketCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketCommentResponse;
+}
+
+export interface IDeleteTicketCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketCommentResponse;
+}

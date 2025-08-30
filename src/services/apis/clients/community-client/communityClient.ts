@@ -128,6 +128,9 @@ import {
   ICreateTaskCommentPayload,
   ITaskCommentResponse,
   IAllTaskCommentsResponse,
+  ICreateTicketCommentPayload,
+  ITicketCommentResponse,
+  IAllTicketCommentsResponse,
   ICreateDailyTaskEntryPayload,
   ICreateDailyTaskEntryResponse,
   IUpdateDailyTaskEntryPayload,
@@ -280,6 +283,11 @@ import {
   deleteTaskCommentUrl,
   getTaskCommentDetailUrl,
   getAllTaskCommentsUrl,
+  createTicketCommentUrl,
+  updateTicketCommentUrl,
+  deleteTicketCommentUrl,
+  getTicketCommentDetailUrl,
+  getAllTicketCommentsUrl,
   updateTaskStatusUrl,
   createDailyTaskEntryUrl,
   updateDailyTaskEntryUrl,
@@ -1801,6 +1809,46 @@ export class CommunityClient extends ApiClient {
 
   public getAllTaskComments = async (taskId: string): Promise<ITaskCommentResponse[]> => {
     const response = await this.get<IAllTaskCommentsResponse>(getAllTaskCommentsUrl(taskId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data;
+  }
+
+  // Ticket Comments API methods
+  public createTicketComment = async (payload: ICreateTicketCommentPayload): Promise<ITicketCommentResponse> => {
+    const response = await this.post<ITicketCommentResponse>(createTicketCommentUrl(), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public updateTicketComment = async (commentId: string, payload: Partial<ICreateTicketCommentPayload>): Promise<ITicketCommentResponse> => {
+    const response = await this.put<ITicketCommentResponse>(updateTicketCommentUrl(commentId), payload);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public deleteTicketComment = async (commentId: string): Promise<void> => {
+    const response = await this.del<void>(deleteTicketCommentUrl(commentId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+  }
+
+  public getTicketCommentDetail = async (commentId: string): Promise<ITicketCommentResponse> => {
+    const response = await this.get<ITicketCommentResponse>(getTicketCommentDetailUrl(commentId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public getAllTicketComments = async (ticketId: string): Promise<ITicketCommentResponse[]> => {
+    const response = await this.get<IAllTicketCommentsResponse>(getAllTicketCommentsUrl(ticketId));
     if (!response?.success) {
       throw response?.errorData;
     }
