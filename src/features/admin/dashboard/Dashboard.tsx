@@ -16,6 +16,8 @@ import {
   useUpdateDailyTaskMutation,
   useAllTicketsAcrossProjectsQuery,
   useUpdateTicketStatusMutation,
+  useUpdateTicketMutation,
+  useAllUsersQuery,
   useAuthStore,
 } from "@/services";
 import type { IDailyTaskEntryResponse } from "@/services";
@@ -31,6 +33,7 @@ import { useDebounce } from "@/utils/hooks";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/helpers/formatDate";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -199,6 +202,7 @@ export default function Dashboard() {
     isLoading: supportTicketsLoading,
     isError: supportTicketsError,
     error: supportTicketsErrorObj,
+    ticketsRefetch: refetchSupportTickets,
   } = useAllTicketsAcrossProjectsQuery({
     searchText: supportTicketFilters.searchText,
     status: supportTicketFilters.status,
@@ -206,6 +210,39 @@ export default function Dashboard() {
   });
 
   const { updateTicketStatus } = useUpdateTicketStatusMutation();
+  
+  // Fetch all users for assignment dropdown
+  const { allUsersData: usersData, isLoading: isLoadingUsers } = useAllUsersQuery();
+  
+  // Update ticket mutation for assignment changes
+  const { updateTicket, isPending: isUpdatingTicket } = useUpdateTicketMutation({
+    onSuccessCallback: (data) => {
+      toast.success(data.message);
+      // Refetch tickets to get updated data
+      refetchSupportTickets();
+    },
+    onErrorCallback: (error) => {
+      // Show specific error message if available
+      const errorMessage = error?.message || error?.response?.data?.message || "Failed to update ticket assignment. Please try again.";
+      toast.error(errorMessage);
+    },
+  });
+
+  // Prepare user options for assignment dropdown
+  const userOptions = React.useMemo(() => {
+    const options = [
+      { label: "None", value: "" }
+    ];
+    
+    if (usersData?.data?.list) {
+      options.push(...usersData.data.list.map((user) => ({
+        label: `${user.first_name} ${user.last_name}`,
+        value: user.id,
+      })));
+    }
+    
+    return options;
+  }, [usersData]);
 
   // ProjectRenewalList month selection logic
   const renewalMonthOptions = dashboardSummary?.projectRenewalData
@@ -361,6 +398,7 @@ export default function Dashboard() {
         priority: validPriority
           ? (ticket?.priority as "high" | "medium" | "low")
           : "medium",
+        assignedTo: ticket?.assigned_to || null,
         projectId: ticket?.project?.id || "",
         projectName: ticket?.project?.name || "-",
         createdBy: ticket?.created_by || "-",
@@ -390,6 +428,39 @@ export default function Dashboard() {
             }
             dropdownWidth="w-[10rem] 2xl:w-[10vw]"
           />
+        </div>
+      ),
+    },
+    {
+      header: "ASSIGNED TO",
+      accessor: "assignedTo",
+      cell: ({ row, value }) => (
+        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
+          {isLoadingUsers ? (
+            <span className="text-gray-400 text-sm">Loading...</span>
+          ) : isUpdatingTicket ? (
+            <span className="text-blue-500 text-sm">Updating...</span>
+          ) : (
+            <Dropdown
+              options={userOptions}
+              value={value ? String(value) : ""}
+              onChange={(val) => {
+                // Prepare the API payload
+                const apiPayload = {
+                  assigned_to: val === "" ? null : val,
+                };
+                
+                const requestPayload = {
+                  id: String(row.id),
+                  payload: apiPayload
+                };
+                
+                // Make the API call
+                updateTicket(requestPayload);
+              }}
+              dropdownWidth="w-[15rem] 2xl:w-[15vw]"
+            />
+          )}
         </div>
       ),
     },
