@@ -92,10 +92,10 @@ export function Task({
   }, [menuOpen, setMenuOpen, task.id]);
 
   return (
-    <tr className="border-t border-gray-200">
+    <tr className="border-t border-gray-200 2xl:border-[0.05vw]">
       {editingTask === task.id && editTask ? (
         <>
-          <td className="px-2 py-4 text-right flex gap-2">
+          <td className="px-2 py-4 2xl:px-[0.5vw] 2xl:py-[1vw] flex gap-2 2xl:gap-[0.5vw]">
             <button onClick={onSave} className="text-green-600" title="Save">
               <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
             </button>
@@ -137,7 +137,7 @@ export function Task({
           </td>
           <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]">
             <div className="flex flex-col">
-              <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
+              <span className="bg-blue-100 text-blue-600 px-3 py-1 2xl:px-[0.75vw] 2xl:py-[0.25vw] rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
                 {task.status}
               </span>
             </div>
@@ -154,20 +154,20 @@ export function Task({
         </>
       ) : (
         <>
-          <td className="py-2 text-right relative">
+          <td className="py-2 2xl:py-[0.5vw] text-right relative">
             <button
               className="text-gray-400 hover:text-blue-600"
               title="Menu"
               type="button"
               onClick={() => setMenuOpen(menuOpen === task.id ? null : task.id)}
             >
-              <HiOutlineDotsVertical className="w-6 h-6" />
+              <HiOutlineDotsVertical className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
             </button>
             {menuOpen === task.id && (
-              <div ref={menuRef} className="absolute left-[80%] bottom-[20%] mt-2 bg-white border rounded shadow z-10 min-w-[100px]">
+              <div ref={menuRef} className="absolute left-[80%] bottom-[20%] mt-2 2xl:mt-[0.5vw] bg-white border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px] 2xl:min-w-[5vw]">
                 {canViewTask && (
                   <button
-                    className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-1 2xl:px-[1vw] 2xl:py-[0.25vw] hover:bg-gray-100 text-sm 2xl:text-[0.875vw]"
                     onClick={() =>
                       handleRedirectView(
                         task.projectId || "",
@@ -181,7 +181,7 @@ export function Task({
                 )}
                 {canEditTask && (
                   <button
-                    className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-1 2xl:px-[1vw] 2xl:py-[0.25vw] hover:bg-gray-100 text-sm 2xl:text-[0.875vw]"
                     onClick={() => onEdit(task)}
                   >
                     Edit
@@ -189,7 +189,7 @@ export function Task({
                 )}
                 {canDeleteTask && (
                   <button
-                    className="block w-full text-left px-4 py-1 2xl:[0.25vw] hover:bg-gray-100 text-red-600"
+                    className="block w-full text-left px-4 py-1 2xl:px-[1vw] 2xl:py-[0.25vw] hover:bg-gray-100 text-red-600 text-sm 2xl:text-[0.875vw]"
                     onClick={() => onDelete(task.id)}
                   >
                     Delete
@@ -198,31 +198,31 @@ export function Task({
               </div>
             )}
           </td>
-          <td className="pl-8 py-2 text-[0.9rem] font-medium">{task.name}</td>
-          <td className="py-2 text-[0.9rem]">{task.description}</td>
-          <td className="py-2 text-[0.9rem]">
-            <div className="flex items-center gap-2">
+          <td className="pl-8 py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.875vw] text-center font-medium">{task.name}</td>
+          <td className="py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.875vw] text-center">{task.description}</td>
+          <td className="py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.875vw]">
+            <div className="flex items-center justify-center gap-2 2xl:gap-[0.5vw]">
               <p
-                className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full"
+                className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.875vw] rounded-full"
                 style={{
                   backgroundColor: getRandomColor(task.assigned_to || ""),
                 }}
               >
                 {getUserInitials(task.assigned_to)}
               </p>
-              <p className="px-3 py-1 text-[0.9rem]">
+              <p className="px-3 py-1 2xl:px-[0.75vw] 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.875vw]">
                 {getUserName(task.assigned_to)}
               </p>
             </div>
           </td>
-          <td className="py-2">
-            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">
+          <td className="py-2 2xl:py-[0.5vw] text-center">
+            <span className="bg-blue-100 text-blue-600 px-3 py-1 2xl:px-[0.75vw] 2xl:py-[0.25vw] rounded-full text-xs 2xl:text-[0.75vw] font-semibold">
               {task.status}
             </span>
           </td>
-          <td className="py-2">
-            <span className="flex items-center gap-2">
-              <span className="text-[0.9rem]">{task.due_date}</span>
+          <td className="py-2 2xl:py-[0.5vw] text-center">
+            <span className="flex items-center justify-center gap-2 2xl:gap-[0.5vw]">
+              <span className="text-[0.9rem] 2xl:text-[0.875vw]">{task.due_date}</span>
             </span>
           </td>
         </>

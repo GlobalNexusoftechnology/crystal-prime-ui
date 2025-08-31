@@ -289,19 +289,19 @@ export function TaskTabs({
 
   return (
     <div className="flex flex-col gap-6 2xl:gap-[2vw] p-4 2xl:px-[1vw]">
-      <h1 className="text-[1.2rem] 2xl:text-[1.2vw]">Task</h1>
+      <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">Task</h1>
       {/* Task Table */}
       <div className="mb-4 2xl:mb-[1vw]">
-        <div className="overflow-x-auto">
-          <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
+        <div className="overflow-x-auto border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw]">
+          <table className="w-full border-collapse">
             <thead>
-              <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw] ">
-                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                <th className="text-left px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
-                  <span>Task Name</span>
+              <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw] bg-gray-200 2xl:bg-gray-100">
+                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center border-r border-gray-300 2xl:border-r-[0.05vw]"></th>
+                <th className="text-left px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] flex items-center justify-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw] border-r border-gray-300 2xl:border-r-[0.05vw]">
+                  <span className="font-medium">Task Name</span>
                   {canAddTask && (
                     <button
-                      className="text-purple-500 hover:text-purple-700 text-lg"
+                      className="text-purple-500 hover:text-purple-700 text-lg 2xl:text-[1.125vw] transition-colors duration-200"
                       title="Add Task"
                       type="button"
                       onClick={handleAddTask}
@@ -310,10 +310,10 @@ export function TaskTabs({
                     </button>
                   )}
                 </th>
-                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">Description</th>
-                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
-                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">Status</th>
-                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
+                <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[15rem] 2xl:min-w-[15vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Description</th>
+                <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[14rem] 2xl:min-w-[14vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Assigned To</th>
+                <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[8rem] 2xl:min-w-[8vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Status</th>
+                <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
               </tr>
             </thead>
             <tbody>
