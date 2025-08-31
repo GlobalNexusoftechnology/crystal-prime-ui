@@ -359,6 +359,14 @@ export default function Dashboard() {
     const validPriority = ["High", "Medium", "Low"].includes(
       task.priority ?? ""
     );
+    
+    // Get staff name from assigned_to
+    const getStaffName = (assignedTo: string) => {
+      if (!usersData?.data?.list) return "-";
+      const user = usersData.data.list.find((u) => u.id === assignedTo);
+      return user ? `${user.first_name} ${user.last_name}` : "-";
+    };
+
     return {
       id: task?.id,
       name: task?.task_title,
@@ -374,6 +382,11 @@ export default function Dashboard() {
       milestoneId: (task as any)?.milestoneId || "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       taskId: (task as any)?.taskId || "",
+      // New columns for project and client info
+      projectName: task?.project?.name || "-",
+      clientName: task?.project?.client?.name || "-",
+      clientNumber: task?.project?.client?.contact_number || "-",
+      staffName: getStaffName(task?.assigned_to || ""),
     };
   });
 
@@ -382,6 +395,14 @@ export default function Dashboard() {
     { header: "PRIORITY", accessor: "priority" },
     { header: "TASK NAME", accessor: "name" },
     { header: "DESCRIPTION", accessor: "description" },
+    // Show staff name for admin users
+    ...(userRole.toLowerCase() === "admin" ? [{ header: "STAFF NAME", accessor: "staffName" }] : []),
+    // Show project and client info for staff users (non-admin)
+    ...(userRole.toLowerCase() !== "admin" ? [
+      { header: "PROJECT NAME", accessor: "projectName" },
+      { header: "CLIENT NAME", accessor: "clientName" },
+      { header: "CLIENT NUMBER", accessor: "clientNumber" },
+    ] : []),
     { header: "DUE DATE", accessor: "due" },
   ];
 

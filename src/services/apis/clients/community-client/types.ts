@@ -1751,7 +1751,8 @@ export interface IUpdateDailyTaskEntryPayload {
 export interface IDailyTaskEntryResponse {
   id: string;
   project: IProjectResponse;
-  user: IUsersDetails;
+  user?: IUsersDetails;
+  assigned_to?: string;
   task_title: string;
   entry_date: string;
   description?: string;

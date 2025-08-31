@@ -5,6 +5,18 @@ import { ITableAction } from "@/constants/table";
 
 export interface DailyTaskRow {
   id: string | number;
+  name?: string;
+  description?: string;
+  status?: string;
+  due?: string;
+  priority?: string;
+  projectId?: string;
+  milestoneId?: string;
+  taskId?: string;
+  projectName?: string;
+  clientName?: string;
+  clientNumber?: string;
+  staffName?: string;
   [key: string]: unknown;
 }
 
