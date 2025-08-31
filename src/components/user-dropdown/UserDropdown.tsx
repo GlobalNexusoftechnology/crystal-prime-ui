@@ -49,7 +49,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ name }) => {
         <span className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full bg-primary">
           {getInitials(name)}
         </span>
-        <span className="font-medium 2xl:text-[1vw] text-black">{name}</span>
+        <span className="font-medium 2xl:text-[1vw] text-black capitalize">{name}</span>
         <FiChevronDown
           className={`w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.25vw] transition-transform ${
             open ? "rotate-180" : ""
