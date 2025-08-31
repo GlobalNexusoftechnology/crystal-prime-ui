@@ -188,7 +188,7 @@ export function CustomClientTable({
 
   return (
     <div>
-      <div className="overflow-x-auto border 2xl:border-[0.05vw] border-gray-300 rounded-lg 2xl:rounded-[0.75vw]">
+      <div className="overflow-x-auto border border-gray-300 rounded-lg 2xl:rounded-[0.75vw]">
         <table className="min-w-full bg-white rounded-lg shadow-md border-collapse">
           <thead className="bg-gray-50">
             <tr className="bg-gray-200">
@@ -262,7 +262,7 @@ export function CustomClientTable({
                       <h3 className="mb-4 2xl:mb-[1vw] 2xl:text-[1vw] font-semibold">
                         Client Contact Details
                       </h3>
-                      <table className="bg-white border-2 border-gray-300 rounded shadow-sm border-collapse">
+                      <table className="bg-white border border-gray-300 rounded shadow-sm border-collapse">
                         <thead className="bg-gray-200">
                           <tr>
                             <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase border border-gray-300">
