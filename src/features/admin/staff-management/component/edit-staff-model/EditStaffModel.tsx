@@ -168,7 +168,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
           errors,
           touched,
         }) => (
-          <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
+          <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-gray-200">
             <h1 className="text-lg 2xl:text-[1.125vw] font-semibold">Edit Staff</h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">

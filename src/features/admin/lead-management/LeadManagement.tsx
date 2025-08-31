@@ -138,7 +138,7 @@ export function LeadManagement() {
                       Add Lead Manually
                     </p>
                     <div
-                      className="flex flex-col items-center justify-center border-2 border-dashed 2xl:border-[0.1vw] 2xl:border-dashed rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] 2xl:h-[15vw] text-center hover:shadow transition bg-customGray"
+                      className="flex flex-col items-center justify-center border-2 border-dashed 2xl:border-[0.05vw] 2xl:border-dashed rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] 2xl:h-[15vw] text-center hover:shadow transition bg-customGray"
                       onClick={() => handleOpenForm("addForm")}
                     >
                       <div className="w-[16rem] h-[7rem] 2xl:w-[17vw] 2xl:h-[8vw] pb-4 2xl:pb-[1vw]">

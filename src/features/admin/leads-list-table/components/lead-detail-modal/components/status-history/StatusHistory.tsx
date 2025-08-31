@@ -117,7 +117,7 @@ export function StatusHistory({
         allLeadStatusHistoryData?.map((statusHistory, index) => (
           <div
             key={index}
-            className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+            className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
           >
             <div className="text-darkBlue flex justify-between flex-col gap-2 2xl:gap-[1vw]">
               <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">

@@ -207,7 +207,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
       <div className="flex items-center gap-4 2xl:gap-[1vw]">
         {/* Support Tickets Icon */}
         <div
-          className="relative cursor-pointer border 2xl:border-[0.1vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw] hover:bg-gray-100 transition-colors"
+          className="relative cursor-pointer border 2xl:border-[0.05vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw] hover:bg-gray-100 transition-colors"
           onClick={() => setShowSupportTickets(!showSupportTickets)}
           title="View All Open Tickets"
         >
@@ -221,7 +221,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
 
         {/* Notifications Icon */}
         <div
-          className="relative cursor-pointer border 2xl:border-[0.1vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw]"
+          className="relative cursor-pointer border 2xl:border-[0.05vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw]"
           onClick={() => {
             setShowNotifications(!showNotifications);
             markNotificationAsRead(); // 🔁 Call API to mark all as read
@@ -375,7 +375,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
                   {openTickets.map((ticket: ITicketData) => (
                     <button
                       key={ticket.id}
-                      className="flex flex-col gap-3 2xl:gap-[0.75vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full cursor-pointer hover:bg-gray-100 transition-colors text-left"
+                      className="flex flex-col gap-3 2xl:gap-[0.75vw] bg-customGray border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full cursor-pointer hover:bg-gray-100 transition-colors text-left"
                       onClick={() => handleTicketClick(ticket)}
                       style={{ cursor: "pointer" }}
                     >

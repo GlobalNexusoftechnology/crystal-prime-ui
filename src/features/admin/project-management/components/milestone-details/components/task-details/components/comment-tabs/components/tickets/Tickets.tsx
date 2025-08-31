@@ -153,7 +153,7 @@ export function Tickets({ projectId }: ITicketsProps) {
           {filteredTickets.map((ticket: ITicketData) => (
             <div
               key={ticket.id}
-              className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
+              className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
             >
               {/* Header with title */}
               <div className="flex flex-wrap justify-between items-start gap-4 2xl:gap-[1vw]">

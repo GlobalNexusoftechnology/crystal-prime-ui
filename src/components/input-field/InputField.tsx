@@ -62,7 +62,7 @@ export function InputField({
       <div
         className={`flex items-${
           isTextArea ? "start" : "center"
-        } border 2xl:border-[0.1vw] ${
+        } border 2xl:border-[0.05vw] ${
           error
             ? "border-red-500"
             : isFocused

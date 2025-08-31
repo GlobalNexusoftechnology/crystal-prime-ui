@@ -283,7 +283,7 @@ export function Milestone({
               </span>
               <div className="flex items-center gap-1 2xl:gap-[0.25vw]">
                 <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
-                <p className="border-2 2xl:border-[0.1vw] border-dotted border-primary rounded-full text-[0.9rem] 2xl:text-[0.9vw] px-2 2xl:px-[0.5vw] py-0 2xl:py-[0.4vw] text-primary">
+                <p className="border-2 2xl:border-[0.05vw] border-dotted border-primary rounded-full text-[0.9rem] 2xl:text-[0.9vw] px-2 2xl:px-[0.5vw] py-0 2xl:py-[0.4vw] text-primary">
                   {milestone.tasks.length}
                 </p>
               </div>

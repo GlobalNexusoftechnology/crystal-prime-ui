@@ -44,7 +44,7 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ name }) => {
     <div ref={dropdownRef} className="relative inline-block text-left">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center gap-2 2xl:gap-[0.5vw] bg-customGray border 2xl:border-[0.1vw] border-gray-300 px-4 py-2 2xl:px-[1vw] 2xl:py-[0.25vw] rounded-xl 2xl:rounded-[0.75vw] shadow-sm hover:bg-gray-50 transition-all"
+        className="flex items-center gap-2 2xl:gap-[0.5vw] bg-customGray border 2xl:border-[0.05vw] border-gray-300 px-4 py-2 2xl:px-[1vw] 2xl:py-[0.25vw] rounded-xl 2xl:rounded-[0.75vw] shadow-sm hover:bg-gray-50 transition-all"
       >
         <span className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full bg-primary">
           {getInitials(name)}

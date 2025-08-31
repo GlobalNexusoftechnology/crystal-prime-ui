@@ -91,7 +91,7 @@ export function RoleRowTable({
         className="bg-white border-b hover:bg-gray-50 transition-colors"
         onClick={onToggle}
       >
-        <td className="p-3 2xl:p-[0.75vw] flex items-center gap-2 2xl:gap-[0.5vw]">
+        <td className="p-3 2xl:p-[0.75vw] flex items-center gap-2 2xl:gap-[0.5vw] border border-gray-300">
           {isExpanded ? (
             <ChevronDown className="w-[1.2rem] h-[1.2rem] 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
           ) : (
@@ -101,14 +101,14 @@ export function RoleRowTable({
             {index + 1}
           </td>
         </td>
-        <td className="p-3 2xl:p-[0.75vw]">{role.role}</td>
-        <td className="p-3 2xl:p-[0.75vw]">
+        <td className="p-3 2xl:p-[0.75vw] border border-gray-300">{role.role}</td>
+        <td className="p-3 2xl:p-[0.75vw] border border-gray-300">
           {new Date(role.created_at).toLocaleDateString()}
         </td>
-        <td className="p-3 2xl:p-[0.75vw]">
+        <td className="p-3 2xl:p-[0.75vw] border border-gray-300">
           {new Date(role.updated_at).toLocaleDateString()}
         </td>
-        <td className="p-3 2xl:p-[0.75vw] relative" ref={actionRef}>
+        <td className="p-3 2xl:p-[0.75vw] relative border border-gray-300" ref={actionRef}>
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -120,7 +120,7 @@ export function RoleRowTable({
           </button>
 
           {isOpen && (
-            <div className="absolute right-[95%] top-[-40%] bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-32 2xl:w-[10vw]">
+            <div className="absolute right-[95%] top-[-40%] bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.05vw] w-32 2xl:w-[10vw]">
               {actions?.length > 0 && actions?.map((action, index) => (
                 <button
                   key={index}
@@ -141,7 +141,7 @@ export function RoleRowTable({
 
       {isExpanded && (
         <tr className="bg-gray-50">
-          <td colSpan={6}>
+          <td colSpan={6} className="border border-gray-300">
             <RolePermission permissions={role.permissions} />
           </td>
         </tr>

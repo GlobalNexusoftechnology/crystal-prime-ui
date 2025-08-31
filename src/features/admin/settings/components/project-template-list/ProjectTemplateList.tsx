@@ -15,7 +15,7 @@ export function ProjectTemplateList() {
   const templates = Array.isArray(allProjectTemplatesData?.templates) ? allProjectTemplatesData.templates : [];
 
   return (
-    <div className=" flex flex-col gap-4 2xl:gap-[1vw] bg-[#F8F8F8] rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.1vw] border-borderGray p-3 sm:p-4 2xl:p-[1vw]">
+    <div className=" flex flex-col gap-4 2xl:gap-[1vw] bg-[#F8F8F8] rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.05vw] border-borderGray p-3 sm:p-4 2xl:p-[1vw]">
       <div className="flex flex-col sm:flex-row gap-4 2xl:gap-[1vw] sm:items-center">
         <p className="text-xl 2xl:text-[1.25vw] font-normal">
           Project Template List

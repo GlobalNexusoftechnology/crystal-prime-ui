@@ -47,7 +47,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
         ref={containerRef}
       >
         {/* Lead Info Header */}
-        <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
+        <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-gray-200">
           <div className="flex flex-col md:flex-row gap-4 justify-between">
             <div className="flex flex-col">
               <p className=" text-[1rem] 2xl:text-[1vw]">First Name</p>
@@ -204,7 +204,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:px-[1vw] bg-white border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
+        <div className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:px-[1vw] bg-white border 2xl:border-[0.05vw] rounded-xl 2xl:rounded-[0.75vw]">
           {/* Tabs */}
           <div className="flex justify-between items-center">
             <div className="flex space-x-4">

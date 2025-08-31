@@ -76,7 +76,7 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
 
   return (
     <>
-      <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
+      <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] rounded-xl 2xl:rounded-[0.75vw]">
         {/* Header and action controls */}
         <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
           <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
@@ -103,23 +103,23 @@ export function RoleManagementListTable({}: LeadsListTableProps) {
 
         {/* Data table */}
         <div>
-          <div className="overflow-x-auto border rounded-lg 2xl:rounded-[0.75vw] shadow-sm">
+          <div className="overflow-x-auto border-2 border-gray-300 rounded-lg 2xl:rounded-[0.75vw] shadow-sm">
             <table className="w-full text-[0.9rem] 2xl:text-[0.9vw] text-left border-collapse">
               <thead className="bg-gray-200  uppercase text-[0.9rem] 2xl:text-[0.9vw]">
                 <tr>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">
+                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase border border-gray-300">
                     SR NO
                   </th>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">
+                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase border border-gray-300">
                     Role Name
                   </th>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">
+                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase border border-gray-300">
                     Created At
                   </th>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">
+                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase border border-gray-300">
                     Updated At
                   </th>
-                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase">
+                  <th className="p-3 min-w-[12rem] max-w-[12vw] uppercase border border-gray-300">
                     Action
                   </th>
                 </tr>

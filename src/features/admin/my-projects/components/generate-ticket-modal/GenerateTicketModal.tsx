@@ -185,7 +185,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
     >
       <form
         onSubmit={formik.handleSubmit}
-        className="h-[85vh] md:h-auto lg:h-[45vw] 2xl:h-[50vw] overflow-y-auto flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+        className="h-[85vh] md:h-auto lg:h-[45vw] 2xl:h-[50vw] overflow-y-auto flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
       >
         <InputField
           label="Title"

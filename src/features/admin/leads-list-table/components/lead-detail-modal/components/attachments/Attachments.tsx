@@ -101,7 +101,7 @@ export function Attachments({
       {showForm ? (
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw]"
+          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw]"
         >
           <UploadDocument
             label="Upload Document"
@@ -133,7 +133,7 @@ export function Attachments({
          allLeadAttachmentData?.map((attachment, idx) => (
           <div
             key={idx}
-            className="flex gap-6 2xl:gap-[2vw] text-darkBlue bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] flex-col md:flex-row justify-between "
+            className="flex gap-6 2xl:gap-[2vw] text-darkBlue bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] flex-col md:flex-row justify-between "
           >
             <div className="w-[70%] flex flex-col gap-4 2xl:gap-[1vw] ">
               <div className="text-primary flex items-center underline scrollbar-hidden overflow-x-auto">

@@ -113,7 +113,7 @@ export function AddLeadModal({
       onClose={handleCancel}
     >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
-        <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
+        <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-gray-200">
           <h2 className="text-lg 2xl:text-[1.125vw] font-semibold">
             Lead Information
           </h2>

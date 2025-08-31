@@ -188,17 +188,17 @@ export function CustomClientTable({
 
   return (
     <div>
-      <div className="overflow-x-auto border rounded-lg 2xl:rounded-[0.75vw]">
-        <table className="min-w-full bg-white rounded-lg shadow-md">
+      <div className="overflow-x-auto border 2xl:border-[0.05vw] border-gray-300 rounded-lg 2xl:rounded-[0.75vw]">
+        <table className="min-w-full bg-white rounded-lg shadow-md border-collapse">
           <thead className="bg-gray-50">
             <tr className="bg-gray-200">
-              <th className="px-4 2xl:px-[1vw] py-4 2xl:py-[1vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase">
+              <th className="px-4 2xl:px-[1vw] py-4 2xl:py-[1vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase border border-gray-300">
                 Actions
               </th>
               {clientListColumn.length > 0 && clientListColumn.map((col) => (
                 <th
                   key={col.header}
-                  className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase ${col.headerClass}`}
+                  className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase border border-gray-300 ${col.headerClass}`}
                 >
                   {col.header}
                 </th>
@@ -213,7 +213,7 @@ export function CustomClientTable({
                     idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                   }`}
                 >
-                  <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                  <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
                     <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
                       <button onClick={() => handleRowClick(row.id)}>
                         {expandedRowId === row.id ? (
@@ -240,7 +240,7 @@ export function CustomClientTable({
                     return (
                       <td
                         key={col.accessor}
-                        className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]"
+                        className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300"
                       >
                         {col.accessor === "created_at"
                           ? formatDateToDDMMYYYY(value as string)
@@ -257,21 +257,21 @@ export function CustomClientTable({
                   <tr key={`${row.id}-details`}>
                     <td
                       colSpan={clientListColumn.length + 1}
-                      className="p-4 2xl:p-[1vw] bg-gray-50 rounded-b-lg 2xl:rounded-b-[0.75vw]"
+                      className="pl-24 2xl:pl-[6vw] p-4 2xl:p-[1vw] bg-gray-50 rounded-b-lg 2xl:rounded-b-[0.75vw]"
                     >
                       <h3 className="mb-4 2xl:mb-[1vw] 2xl:text-[1vw] font-semibold">
                         Client Contact Details
                       </h3>
-                      <table className="bg-white border rounded shadow-sm">
+                      <table className="bg-white border-2 border-gray-300 rounded shadow-sm border-collapse">
                         <thead className="bg-gray-200">
                           <tr>
-                            <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase">
+                            <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase border border-gray-300">
                               Action
                             </th>
                             {clientContactDetailsColumns.length > 0 && clientContactDetailsColumns.map((col) => (
                               <th
                                 key={col.header}
-                                className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase ${col.headerClass}`}
+                                className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase border border-gray-300 ${col.headerClass}`}
                               >
                                 {col.header}
                               </th>
@@ -289,7 +289,7 @@ export function CustomClientTable({
                                 key={`${row.id}-${contact.client_id}`}
                                 className="hover:bg-blue-50 transition-colors duration-150"
                               >
-                                <td>
+                                <td className="border border-gray-300">
                                   {isEditing ? (
                                     <div className="flex gap-2">
                                       <button
@@ -341,7 +341,7 @@ export function CustomClientTable({
                                 </td>
                                 {isEditing ? (
                                   <>
-                                    <td>
+                                    <td className="border border-gray-300">
                                       <input
                                         className="border rounded px-2 py-1 w-full"
                                         value={editContactData.contact_person}
@@ -353,7 +353,7 @@ export function CustomClientTable({
                                         }
                                       />
                                     </td>
-                                    <td>
+                                    <td className="border border-gray-300">
                                       <input
                                         className="border rounded px-2 py-1 w-full"
                                         value={editContactData.designation}
@@ -365,7 +365,7 @@ export function CustomClientTable({
                                         }
                                       />
                                     </td>
-                                    <td>
+                                    <td className="border border-gray-300">
                                       <input
                                         className="border rounded px-2 py-1 w-full"
                                         value={
@@ -379,7 +379,7 @@ export function CustomClientTable({
                                         }
                                       />
                                     </td>
-                                    <td>
+                                    <td className="border border-gray-300">
                                       <input
                                         className="border rounded px-2 py-1 w-full"
                                         value={
@@ -393,7 +393,7 @@ export function CustomClientTable({
                                         }
                                       />
                                     </td>
-                                    <td>
+                                    <td className="border border-gray-300">
                                       <input
                                         className="border rounded px-2 py-1 w-full"
                                         value={editContactData.email}
@@ -408,19 +408,19 @@ export function CustomClientTable({
                                   </>
                                 ) : (
                                   <>
-                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
                                       {contact.contact_person}
                                     </td>
-                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
                                       {contact.designation}
                                     </td>
-                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
                                       {contact.client_contact}
                                     </td>
-                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
                                       {contact.other_contact}
                                     </td>
-                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
                                       {contact.email}
                                     </td>
                                   </>
