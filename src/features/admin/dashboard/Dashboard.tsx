@@ -123,10 +123,18 @@ export default function Dashboard() {
   );
 
   const statusOptions = [
+    { label: "All Status", value: "" },
     { label: "Open", value: "open" },
     { label: "In Progress", value: "in_progress" },
     { label: "Completed", value: "completed" },
     { label: "Closed", value: "closed" },
+  ];
+  
+  const dailyTaskStatusOptions = [
+    { label: "All Status", value: "" },
+    { label: "Pending", value: "Pending" },
+    { label: "In Progress", value: "In Progress" },
+    { label: "Completed", value: "Completed" },
   ];
 
   const priorityOptions = [
@@ -653,7 +661,7 @@ export default function Dashboard() {
           dailyTaskList={dailyTaskList}
           dailyTaskListColumn={dailyTaskListColumn}
           dailyTaskListAction={dailyTaskListAction}
-          statusOptions={statusOptions}
+          statusOptions={dailyTaskStatusOptions}
           statusFilter={statusFilter}
           handleStatusChange={handleStatusChange}
           priorityOptions={priorityOptions}
