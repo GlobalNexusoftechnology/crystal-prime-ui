@@ -1194,6 +1194,20 @@ export interface IProjectMilestoneResponse {
   status: string;
   remark?: string;
   tasks?: IProjectTaskResponse[];
+  tickets?: {
+    id: string;
+    title: string;
+    description: string;
+    status: string;
+    priority: string;
+    assigned_to: string | null;
+    image_url?: string;
+    remark: string;
+    created_at: string;
+    updated_at: string;
+    deleted: boolean;
+    deleted_at: string | null;
+  }[];
   created_at: string;
   updated_at: string;
   deleted: boolean;

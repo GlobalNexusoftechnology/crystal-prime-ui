@@ -73,7 +73,7 @@ export function Step4Preview({
       {/* Milestone Table */}
       <div className="mb-4 2xl:mb-[1vw]">
         <h3 className="text-lg 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">Milestones</h3>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto border mt-4 2xl:mt-[0.5vw] border-gray-300 rounded-lg 2xl:rounded-[0.75vw]">
           <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
             <thead>
               <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
