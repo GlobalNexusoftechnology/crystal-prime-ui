@@ -87,7 +87,7 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
             value={priorityFilter}
             onChange={handlePriorityChange}
             dropdownWidth="w-full md:w-fit"
-          />
+          />         
         </div>
       </div>
       <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] my-4 2xl:my-[1vw]">
