@@ -31,7 +31,7 @@ interface DailyTaskTableProps {
 }
 
 const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
-  userRole,
+  // userRole,
   dailyTasksLoading,
   dailyTasksError,
   dailyTasksErrorObj,
@@ -44,20 +44,22 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
   priorityOptions,
   priorityFilter,
   handlePriorityChange,
-//   handleSearch,
+  //   handleSearch,
   fromDate,
   setFromDate,
   toDate,
   setToDate,
   handleClearDates,
 }) => {
-  if (userRole.toLowerCase() === "admin") return null;
-  if (dailyTasksLoading) return <Loading/>;
+  // if (userRole.toLowerCase() === "admin") return null;
+  if (dailyTasksLoading) return <Loading />;
   if (dailyTasksError)
     return (
       <div className="text-red-500">
-        Error loading daily tasks: {" "}
-        {typeof dailyTasksErrorObj === "object" && dailyTasksErrorObj && "message" in dailyTasksErrorObj
+        Error loading daily tasks:{" "}
+        {typeof dailyTasksErrorObj === "object" &&
+        dailyTasksErrorObj &&
+        "message" in dailyTasksErrorObj
           ? (dailyTasksErrorObj as { message: string }).message
           : "Unknown error"}
       </div>
@@ -128,4 +130,4 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
   );
 };
 
-export default DailyTaskTable; 
+export default DailyTaskTable;
