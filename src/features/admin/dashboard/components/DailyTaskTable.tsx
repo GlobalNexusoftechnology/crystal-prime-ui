@@ -17,6 +17,7 @@ export interface DailyTaskRow {
   clientName?: string;
   clientNumber?: string;
   staffName?: string;
+  created_at?: string;
   [key: string]: unknown;
 }
 

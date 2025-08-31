@@ -387,6 +387,7 @@ export default function Dashboard() {
       clientName: task?.project?.client?.name || "-",
       clientNumber: task?.project?.client?.contact_number || "-",
       staffName: getStaffName(task?.assigned_to || ""),
+      created_at: task?.created_at ? formatDate(task.created_at) : "-",
     };
   });
 
@@ -403,7 +404,7 @@ export default function Dashboard() {
       { header: "CLIENT NAME", accessor: "clientName" },
       { header: "CLIENT NUMBER", accessor: "clientNumber" },
     ] : []),
-    { header: "DUE DATE", accessor: "due" },
+    { header: "CREATED AT", accessor: "created_at" },
   ];
 
   const dailyTaskListAction: ITableAction<DailyTaskRow>[] = [

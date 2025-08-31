@@ -399,7 +399,7 @@ export function Step2MilestoneSetup({
       });
       setMilestones(mappedMilestones);
     }
-  }, [initialMilestones, templateApplied, mode]);
+  }, [initialMilestones, templateApplied, mode, milestones.length]);
 
   // Reset template applied flag when template changes
   useEffect(() => {
