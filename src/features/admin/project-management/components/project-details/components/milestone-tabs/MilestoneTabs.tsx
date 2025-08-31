@@ -764,7 +764,7 @@ export function MilestoneTabs({
       {/* Tab Contents */}
       <div>
         {activeTab === "Milestones" && (
-          <div className="mb-4 2xl:mb-[1vw]">
+          <div className="mb-4 2xl:mb-[1vw] border 2xl:border-[0.05vw] border-gray-300 rounded-lg 2xl:rounded-[0.75vw]">
             <div className="overflow-x-auto">
               <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
                 <thead>

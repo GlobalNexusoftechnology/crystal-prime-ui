@@ -103,6 +103,7 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
 
   // Filter options
   const statusOptions = [
+    { label: "All Status", value: "" },
     { label: "Open", value: "open" },
     { label: "In Progress", value: "in_progress" },
     { label: "Completed", value: "completed" },
