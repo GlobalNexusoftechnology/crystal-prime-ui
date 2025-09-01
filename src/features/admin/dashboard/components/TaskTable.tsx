@@ -9,6 +9,7 @@ export interface TaskRow {
   title?: string;
   description?: string;
   status?: string;
+  priority?: "Critical" | "High" | "Medium" | "Low";
   due_date?: string;
   assigned_to?: string;
   milestoneId?: string;
@@ -46,6 +47,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   // Internal state for search and filters
   const [searchInput, setSearchInput] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [priorityFilter, setPriorityFilter] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -64,12 +66,21 @@ const TaskTable: React.FC<TaskTableProps> = ({
     { label: "Completed", value: "Completed" },
   ];
 
+  const priorityOptions = [
+    { label: "All Priority", value: "" },
+    { label: "Critical", value: "Critical" },
+    { label: "High", value: "High" },
+    { label: "Medium", value: "Medium" },
+    { label: "Low", value: "Low" },
+  ];
+
   // Filter handlers
   const handleSearch = (query: string) => {
     setSearchInput(query.toLowerCase());
   };
 
   const handleStatusChange = (value: string) => setStatusFilter(value);
+  const handlePriorityChange = (value: string) => setPriorityFilter(value);
   
   const handleClearDates = () => {
     setFromDate("");
@@ -92,6 +103,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
       // Status filter
       const statusMatch = !statusFilter || task.status === statusFilter;
 
+      // Priority filter
+      const priorityMatch = !priorityFilter || task.priority === priorityFilter;
+
       // Date filter
       let dateMatch = true;
       if (fromDate || toDate) {
@@ -111,9 +125,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
         }
       }
 
-      return searchMatch && statusMatch && dateMatch;
+      return searchMatch && statusMatch && priorityMatch && dateMatch;
     });
-  }, [taskList, searchQuery, statusFilter, fromDate, toDate]);
+  }, [taskList, searchQuery, statusFilter, priorityFilter, fromDate, toDate]);
 
   if (tasksLoading) return <Loading />;
   if (tasksError)
@@ -185,6 +199,12 @@ const TaskTable: React.FC<TaskTableProps> = ({
           options={statusOptions}
           value={statusFilter}
           onChange={handleStatusChange}
+          dropdownWidth="w-full md:w-fit"
+        />
+        <Dropdown
+          options={priorityOptions}
+          value={priorityFilter}
+          onChange={handlePriorityChange}
           dropdownWidth="w-full md:w-fit"
         />
       </div>

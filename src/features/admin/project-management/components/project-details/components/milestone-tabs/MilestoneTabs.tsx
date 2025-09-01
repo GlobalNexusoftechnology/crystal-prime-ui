@@ -25,6 +25,7 @@ type LocalTask = {
   description: string;
   assigned_to: string;
   status: string;
+  priority?: "Critical" | "High" | "Medium" | "Low";
   due_date: string;
 };
 
@@ -82,6 +83,13 @@ export function MilestoneTabs({
     { label: "Completed", value: "Completed" },
     { label: "Cancelled", value: "Cancelled" },
     { label: "On Hold", value: "On Hold" },
+  ];
+
+  const priorityOptions = [
+    { label: "Critical", value: "Critical" },
+    { label: "High", value: "High" },
+    { label: "Medium", value: "Medium" },
+    { label: "Low", value: "Low" },
   ];
 
   // Delete milestone mutation
@@ -217,6 +225,7 @@ export function MilestoneTabs({
                     description: data.description || "",
                     assigned_to: data.assigned_to || "",
                     status: data.status || "Open",
+                    priority: data.priority,
                     due_date: data.due_date || "",
                   },
                 ],
@@ -256,6 +265,7 @@ export function MilestoneTabs({
                         description: data.description || "",
                         assigned_to: data.assigned_to || "",
                         status: data.status || "Open",
+                        priority: data.priority,
                         due_date: data.due_date || "",
                       }
                     : t
@@ -560,6 +570,7 @@ export function MilestoneTabs({
         assigned_to:
           editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
         status: editTask.status,
+        priority: editTask.priority,
         due_date: editTask.due_date,
         milestone_id: editingTask.milestoneId,
       };
@@ -572,6 +583,7 @@ export function MilestoneTabs({
         assigned_to:
           editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
         status: editTask.status,
+        priority: editTask.priority,
         due_date: editTask.due_date,
         milestone_id: editingTask.milestoneId,
       };
@@ -604,6 +616,7 @@ export function MilestoneTabs({
       description: "",
       assigned_to: "--",
       status: "Open",
+      priority: "Medium",
       due_date: new Date().toISOString().slice(0, 10),
     };
     setMilestones((prev) =>
@@ -857,6 +870,9 @@ export function MilestoneTabs({
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
                                     Status
                                   </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                    Priority
+                                  </th>
                                   <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
                                     Due Date
                                   </th>
@@ -880,6 +896,7 @@ export function MilestoneTabs({
                                       setMenuOpen={setTaskMenu}
                                       userOptions={userOptions}
                                       statusOptions={statusOptions}
+                                      priorityOptions={priorityOptions}
                                       milestoneId={milestone.id}
                                       projectId={projectId}
                                       errors={taskErrors}

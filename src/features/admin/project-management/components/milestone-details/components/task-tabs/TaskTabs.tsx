@@ -19,6 +19,7 @@ interface TaskType {
     description: string;
     assigned_to: string;
     status: string;
+    priority?: "Critical" | "High" | "Medium" | "Low";
     due_date: string;
     projectId?: string;
     milestoneId?: string;
@@ -57,6 +58,13 @@ export function TaskTabs({
     { label: "Completed", value: "Completed" },
   ];
 
+  const priorityOptions = [
+    { label: "Critical", value: "Critical" },
+    { label: "High", value: "High" },
+    { label: "Medium", value: "Medium" },
+    { label: "Low", value: "Low" },
+  ];
+
   // Delete task mutation
   const { onDeleteMilestoneTask } = useDeleteMilestoneTaskMutation({
     onSuccessCallback: () => {
@@ -83,6 +91,7 @@ export function TaskTabs({
         description: data.description || '',
         assigned_to: data.assigned_to || '',
         status: data.status || 'Open',
+        priority: data.priority,
         due_date: data.due_date || '',
         projectId: undefined,
         milestoneId: milestoneId,
@@ -114,6 +123,7 @@ export function TaskTabs({
                 description: data.description || '',
                 assigned_to: data.assigned_to || '',
                 status: data.status || 'Open',
+                priority: data.priority,
                 due_date: data.due_date || '',
                 projectId: t.projectId,
                 milestoneId: t.milestoneId,
@@ -220,6 +230,7 @@ export function TaskTabs({
         description: editTask.description,
         assigned_to: editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
         status: editTask.status,
+        priority: editTask.priority,
         due_date: editTask.due_date,
         milestone_id: milestoneId || editTask.milestoneId || '',
       };
@@ -231,6 +242,7 @@ export function TaskTabs({
         description: editTask.description,
         assigned_to: editTask.assigned_to === "--" ? undefined : editTask.assigned_to,
         status: editTask.status,
+        priority: editTask.priority,
         due_date: editTask.due_date,
         milestone_id: milestoneId || editTask.milestoneId || '',
       };
@@ -257,6 +269,7 @@ export function TaskTabs({
       description: "",
       assigned_to: "--",
       status: "Open",
+      priority: "Medium",
       due_date: new Date().toISOString().slice(0, 10),
       milestoneId: milestoneId,
     };
@@ -284,6 +297,9 @@ export function TaskTabs({
     }
     if (taskErrors.due_date && updatedTask.due_date) {
       setTaskErrors(prev => ({ ...prev, due_date: "" }));
+    }
+    if (taskErrors.priority && updatedTask.priority) {
+      setTaskErrors(prev => ({ ...prev, priority: "" }));
     }
   };
 
@@ -313,6 +329,7 @@ export function TaskTabs({
                 <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[15rem] 2xl:min-w-[15vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Description</th>
                 <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[14rem] 2xl:min-w-[14vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Assigned To</th>
                 <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[8rem] 2xl:min-w-[8vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Status</th>
+                <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[8rem] 2xl:min-w-[8vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Priority</th>
                 <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
               </tr>
             </thead>
@@ -332,6 +349,7 @@ export function TaskTabs({
                   setMenuOpen={setTaskMenu}
                   userOptions={userOptions}
                   statusOptions={statusOptions}
+                  priorityOptions={priorityOptions}
                   errors={taskErrors}
                   canViewTask={canViewTask}
                   canEditTask={canEditTask}

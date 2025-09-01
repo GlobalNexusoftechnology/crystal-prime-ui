@@ -12,6 +12,7 @@ export interface Task {
   description: string;
   assigned_to: string;
   status: string;
+  priority?: "Critical" | "High" | "Medium" | "Low";
   due_date: string;
 }
 
@@ -29,6 +30,7 @@ interface TaskProps {
   setMenuOpen: (menu: { milestoneId: string; taskId: string } | null) => void;
   userOptions: { label: string; value: string }[];
   statusOptions: { label: string; value: string }[];
+  priorityOptions: { label: string; value: string }[];
   milestoneId: string;
   errors?: { [key: string]: string };
   canViewTask?: boolean;
@@ -49,6 +51,8 @@ export function Task({
   menuOpen,
   setMenuOpen,
   userOptions,
+  statusOptions,
+  priorityOptions,
   milestoneId,
   errors = {},
   canViewTask = true,
@@ -96,6 +100,22 @@ export function Task({
     return getInitials(userName);
   };
 
+  // Helper function to get priority color
+  const getPriorityColor = (priority?: string) => {
+    switch (priority) {
+      case "Critical":
+        return "bg-red-200 text-red-800";
+      case "High":
+        return "bg-red-100 text-red-600";
+      case "Medium":
+        return "bg-yellow-100 text-yellow-600";
+      case "Low":
+        return "bg-green-100 text-green-600";
+      default:
+        return "bg-yellow-100 text-yellow-600";
+    }
+  };
+
   return (
     <tr className="border-t border-gray-200">
       {editingTask &&
@@ -138,9 +158,22 @@ export function Task({
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
             <div className="flex flex-col">
-              <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold w-fit">
-                {task.status}
-              </span>
+              <Dropdown
+                options={statusOptions}
+                value={editTask.status}
+                onChange={(val) => onChange({ ...editTask, status: val })}
+                error={errors.status}
+              />
+            </div>
+          </td>
+          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
+            <div className="flex flex-col">
+              <Dropdown
+                options={priorityOptions}
+                value={editTask.priority || ""}
+                onChange={(val) => onChange({ ...editTask, priority: val as "Critical" | "High" | "Medium" | "Low" | undefined })}
+                error={errors.priority}
+              />
             </div>
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
@@ -209,6 +242,7 @@ export function Task({
                         description: task.description || "",
                         assigned_to: task.assigned_to || "",
                         status: task.status || "",
+                        priority: task.priority,
                         due_date: task.due_date || "",
                       })
                     }
@@ -251,6 +285,11 @@ export function Task({
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw]">
             <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold">
               {task.status}
+            </span>
+          </td>
+          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw]">
+            <span className={`px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold ${getPriorityColor(task.priority)}`}>
+              {task.priority || "Medium"}
             </span>
           </td>
           <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] 2xl:text-[0.9vw]">

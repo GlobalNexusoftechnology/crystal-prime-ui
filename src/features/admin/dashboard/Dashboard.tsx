@@ -17,6 +17,7 @@ import {
   useUpdateTicketMutation,
   useAllUsersQuery,
   useUpdateTaskStatusMutation,
+  useUpdateMilestoneTaskMutation,
   useCreateMilestoneTaskMutation,
   useAuthStore,
 } from "@/services";
@@ -96,6 +97,8 @@ export default function Dashboard() {
     { label: "High", value: "high" },
     { label: "Critical", value: "critical" },
   ];
+
+
 
   // Support Ticket Filter handlers
   const handleSupportTicketStatusChange = (value: string) =>
@@ -287,6 +290,22 @@ export default function Dashboard() {
   // Remove old transformation for leadAnalyticsChartDataMap
   // Prepare safe dataMap for LeadAnalyticsChart
 
+  // Update task mutation
+  const { onUpdateMilestoneTask } = useUpdateMilestoneTaskMutation({
+    onSuccessCallback: () => {
+      toast.success("Task updated successfully");
+      // Refetch projects to get updated task data
+      if (typeof window !== "undefined") {
+        window.location.reload();
+      }
+    },
+    onErrorCallback: (error) => {
+      const errorMessage =
+        error?.message || "Failed to update task. Please try again.";
+      toast.error(errorMessage);
+    },
+  });
+
   // Create task mutation
   const { onCreateMilestoneTask, isPending: isCreatingTask } =
     useCreateMilestoneTaskMutation({
@@ -326,6 +345,7 @@ export default function Dashboard() {
             title: task.title,
             description: task.description || "-",
             status: task.status || "-",
+            priority: task.priority || "Medium",
             due_date: task.due_date ? formatDate(task.due_date) : "-",
             assigned_to: task.assigned_to || "",
             milestoneId: milestone.id || "",
@@ -412,6 +432,42 @@ export default function Dashboard() {
     },
     { header: "TASK NAME", accessor: "title" },
     { header: "DESCRIPTION", accessor: "description" },
+    {
+      header: "PRIORITY",
+      accessor: "priority",
+      cell: ({ row, value }) => (
+        <div className="flex justify-center">
+          <Dropdown
+            options={[
+              { label: "Critical", value: "Critical" },
+              { label: "High", value: "High" },
+              { label: "Medium", value: "Medium" },
+              { label: "Low", value: "Low" },
+            ]}
+            value={String((value as string) ?? "Medium")}
+            onChange={(val) => {
+              // Find the task to get its milestone ID
+              const task = taskList.find(t => t.id === row.id);
+              if (task && task.milestoneId) {
+                onUpdateMilestoneTask({
+                  taskId: String(row.id),
+                  payload: {
+                    priority: val as "Critical" | "High" | "Medium" | "Low",
+                    title: task.title || "",
+                    description: task.description || "",
+                    assigned_to: task.assigned_to || "",
+                    status: task.status || "",
+                    due_date: task.due_date || "",
+                    milestone_id: task.milestoneId,
+                  }
+                });
+              }
+            }}
+            dropdownWidth="w-[10rem] 2xl:w-[10vw]"
+          />
+        </div>
+      ),
+    },
     // Show staff name for admin users
     ...(userRole.toLowerCase() === "admin"
       ? [{ header: "STAFF NAME", accessor: "staffName" }]
@@ -780,6 +836,7 @@ export default function Dashboard() {
                 description: values.description,
                 due_date: values.due_date,
                 status: values.status,
+                priority: values.priority,
                 assigned_to: values.assigned_to,
                 milestone_id: values.milestone_id,
               });
@@ -789,6 +846,7 @@ export default function Dashboard() {
               description: "",
               due_date: new Date().toISOString().slice(0, 10),
               status: "Open",
+              priority: "Medium",
               assigned_to: "",
               milestone_id: "",
             }}

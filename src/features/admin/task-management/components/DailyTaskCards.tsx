@@ -48,6 +48,7 @@ export function DailyTaskCards() {
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-5 sm:gap-0 sm:items-center sm:justify-between mt-5 sm:mt-0 lg:mt-0 2xl:mt-5 text-[0.9rem] pt-5">
                       {/* Priority */}
                       <select className="bg-[#0880EA] text-white  py-1 rounded-md text-[0.9rem] 2xl:text-[1vw] focus:outline-none">
+                        <option className="2xl:text-xs">Critical</option>
                         <option className="2xl:text-xs">High</option>
                         <option className="2xl:text-xs">Medium</option>
                         <option className="2xl:text-xs">Low</option>

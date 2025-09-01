@@ -18,6 +18,13 @@ const statusOptions = [
   { label: "Completed", value: "Completed" },
 ];
 
+const priorityOptions = [
+  { label: "Critical", value: "Critical" },
+  { label: "High", value: "High" },
+  { label: "Medium", value: "Medium" },
+  { label: "Low", value: "Low" },
+];
+
 export interface AddTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -59,6 +66,7 @@ export function AddTaskModal({
       milestone_id: Yup.string().required("Milestone is required"),
       assigned_to: Yup.string().required("Assigned to is required"),
       status: Yup.string().required("Status is required"),
+      priority: Yup.string().required("Priority is required"),
       due_date: Yup.string().required("Due date is required"),
     }),
     enableReinitialize: true,
@@ -136,6 +144,13 @@ export function AddTaskModal({
             error={formik.touched.status ? formik.errors.status : undefined}
           />
         </div>
+        <Dropdown
+          label="Priority"
+          options={priorityOptions}
+          value={formik.values.priority || ""}
+          onChange={(value) => formik.setFieldValue("priority", value)}
+          error={formik.touched.priority ? formik.errors.priority : undefined}
+        />
         <InputField
           label="Task Title"
           name="title"

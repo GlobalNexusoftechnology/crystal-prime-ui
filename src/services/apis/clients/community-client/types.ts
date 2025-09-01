@@ -1144,6 +1144,7 @@ export interface ICreateProjectTask {
   due_date?: string; 
   status?: string;
   assigned_to?: string;
+  priority?: "Critical" | "High" | "Medium" | "Low";
   milestone_id: string;
 }
 
@@ -1154,6 +1155,7 @@ export interface IProjectTaskResponse  {
   due_date?: string; 
   status?: string;
   assigned_to?: string;
+  priority?: "Critical" | "High" | "Medium" | "Low";
   created_at: string;
   updated_at: string;
   deleted: boolean;
@@ -1276,6 +1278,7 @@ export interface ICreateProjectPayload {
       description?: string;
       assigned_to?: string;
       status?: string;
+      priority?: "Critical" | "High" | "Medium" | "Low";
       due_date?: string;
     }>;
   }>;
