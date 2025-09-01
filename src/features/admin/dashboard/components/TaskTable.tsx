@@ -15,6 +15,8 @@ export interface TaskRow {
   projectId?: string;
   projectName?: string;
   milestoneName?: string;
+  clientName?: string;
+  clientNumber?: string;
   staffName?: string;
   created_at?: string;
   updated_at?: string;
@@ -83,6 +85,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
         task.description?.toLowerCase().includes(searchQuery) ||
         task.projectName?.toLowerCase().includes(searchQuery) ||
         task.milestoneName?.toLowerCase().includes(searchQuery) ||
+        task.clientName?.toLowerCase().includes(searchQuery) ||
+        task.clientNumber?.toLowerCase().includes(searchQuery) ||
         task.staffName?.toLowerCase().includes(searchQuery);
 
       // Status filter

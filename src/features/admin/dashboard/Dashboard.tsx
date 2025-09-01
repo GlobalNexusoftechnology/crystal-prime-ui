@@ -47,11 +47,9 @@ export default function Dashboard() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [showImageModal, setShowImageModal] = useState(false);
 
-
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
   const userRole = activeSession?.user?.role?.role || "";
-
 
   // Support Ticket Filters
   const [supportTicketStatusFilter, setSupportTicketStatusFilter] =
@@ -90,8 +88,6 @@ export default function Dashboard() {
     { label: "Completed", value: "completed" },
     { label: "Closed", value: "closed" },
   ];
-  
-
 
   const priorityOptions = [
     { label: "All Priority", value: "" },
@@ -100,8 +96,6 @@ export default function Dashboard() {
     { label: "High", value: "high" },
     { label: "Critical", value: "critical" },
   ];
-  
-
 
   // Support Ticket Filter handlers
   const handleSupportTicketStatusChange = (value: string) =>
@@ -138,8 +132,6 @@ export default function Dashboard() {
     };
   }, [showImageModal]);
 
-
-
   const handleProjectChange = (projectId: string) => {
     setSelectedProjectId(projectId);
   };
@@ -159,22 +151,22 @@ export default function Dashboard() {
 
   const { updateTicketStatus } = useUpdateTicketStatusMutation();
 
-
-
   // Task status update hook
-  const { onUpdateTaskStatus, isPending: isUpdatingTaskStatus } = useUpdateTaskStatusMutation({
-    onSuccessCallback: () => {
-      toast.success("Task status updated successfully");
-      // Refetch projects to get updated task data
-      if (typeof window !== 'undefined') {
-        window.location.reload();
-      }
-    },
-    onErrorCallback: (error) => {
-      const errorMessage = error?.message || "Failed to update task status. Please try again.";
-      toast.error(errorMessage);
-    },
-  });
+  const { onUpdateTaskStatus, isPending: isUpdatingTaskStatus } =
+    useUpdateTaskStatusMutation({
+      onSuccessCallback: () => {
+        toast.success("Task status updated successfully");
+        // Refetch projects to get updated task data
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
+      },
+      onErrorCallback: (error) => {
+        const errorMessage =
+          error?.message || "Failed to update task status. Please try again.";
+        toast.error(errorMessage);
+      },
+    });
 
   // Fetch all users for assignment dropdown
   const { allUsersData: usersData, isLoading: isLoadingUsers } =
@@ -228,16 +220,18 @@ export default function Dashboard() {
     if (!selectedProjectId) {
       return [{ label: "Select a project first", value: "" }];
     }
-    
+
     if (!projectsData) {
       return [{ label: "Loading projects...", value: "" }];
     }
-    
-    const selectedProject = projectsData.find(project => project.id === selectedProjectId);
+
+    const selectedProject = projectsData.find(
+      (project) => project.id === selectedProjectId
+    );
     if (!selectedProject?.milestones) {
       return [{ label: "No milestones found", value: "" }];
     }
-    
+
     return [
       { label: "Select a milestone", value: "" },
       ...selectedProject.milestones.map((milestone) => ({
@@ -293,23 +287,23 @@ export default function Dashboard() {
   // Remove old transformation for leadAnalyticsChartDataMap
   // Prepare safe dataMap for LeadAnalyticsChart
 
-
-
   // Create task mutation
-  const { onCreateMilestoneTask, isPending: isCreatingTask } = useCreateMilestoneTaskMutation({
-    onSuccessCallback: () => {
-      toast.success("Task created successfully");
-      setShowAddTaskModal(false);
-      // Refetch projects to get updated task data
-      if (typeof window !== 'undefined') {
-        window.location.reload();
-      }
-    },
-    onErrorCallback: (error) => {
-      const errorMessage = error?.message || "Failed to create task. Please try again.";
-      toast.error(errorMessage);
-    },
-  });
+  const { onCreateMilestoneTask, isPending: isCreatingTask } =
+    useCreateMilestoneTaskMutation({
+      onSuccessCallback: () => {
+        toast.success("Task created successfully");
+        setShowAddTaskModal(false);
+        // Refetch projects to get updated task data
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
+      },
+      onErrorCallback: (error) => {
+        const errorMessage =
+          error?.message || "Failed to create task. Please try again.";
+        toast.error(errorMessage);
+      },
+    });
 
   // Task Data Transformation - Extract tasks from projects data
   const taskList: TaskRow[] = React.useMemo(() => {
@@ -332,12 +326,14 @@ export default function Dashboard() {
             title: task.title,
             description: task.description || "-",
             status: task.status || "-",
-            due_date: task.due_date || "-",
+            due_date: task.due_date ? formatDate(task.due_date) : "-",
             assigned_to: task.assigned_to || "",
             milestoneId: milestone.id || "",
             projectId: project.id || "",
             projectName: project.name || "-",
             milestoneName: milestone.name || "-",
+            clientName: project.client?.name || "-",
+            clientNumber: project.client?.contact_number || "-",
             staffName: getStaffName(task.assigned_to || ""),
             created_at: task.created_at ? formatDate(task.created_at) : "-",
             updated_at: task.updated_at ? formatDate(task.updated_at) : "-",
@@ -386,10 +382,6 @@ export default function Dashboard() {
         },
       ];
 
-
-
-
-
   const taskListColumn: ITableColumn<TaskRow>[] = [
     {
       header: "STATUS",
@@ -409,7 +401,7 @@ export default function Dashboard() {
               onChange={(val) =>
                 onUpdateTaskStatus({
                   taskId: String(row.id),
-                  status: val
+                  status: val,
                 })
               }
               dropdownWidth="w-[10rem] 2xl:w-[10vw]"
@@ -421,10 +413,14 @@ export default function Dashboard() {
     { header: "TASK NAME", accessor: "title" },
     { header: "DESCRIPTION", accessor: "description" },
     // Show staff name for admin users
-    ...(userRole.toLowerCase() === "admin" ? [{ header: "STAFF NAME", accessor: "staffName" }] : []),
+    ...(userRole.toLowerCase() === "admin"
+      ? [{ header: "STAFF NAME", accessor: "staffName" }]
+      : []),
     // Show project and milestone info for staff users (non-admin)
     { header: "PROJECT NAME", accessor: "projectName" },
     { header: "MILESTONE NAME", accessor: "milestoneName" },
+    { header: "CLIENT NAME", accessor: "clientName" },
+    { header: "CLIENT NUMBER", accessor: "clientNumber" },
     { header: "DUE DATE", accessor: "due_date" },
     { header: "CREATED AT", accessor: "created_at" },
   ];
@@ -697,9 +693,6 @@ export default function Dashboard() {
         />
       </div>
       <div>
-       
-
-
         {/* Task Table Component */}
         <div className="mt-6 2xl:mt-[1.5vw]">
           <TaskTable
@@ -713,7 +706,6 @@ export default function Dashboard() {
             onAddTask={() => setShowAddTaskModal(true)}
           />
         </div>
-        
 
         {/* Image Modal */}
         {showImageModal && selectedImage && (
@@ -777,8 +769,6 @@ export default function Dashboard() {
           <ExpensesOverviewChart dataMap={expensesDataMap} />
         </div>
 
-
-
         {/* Add Task Modal */}
         {showAddTaskModal && (
           <AddTaskModal
@@ -811,7 +801,6 @@ export default function Dashboard() {
             onProjectChange={handleProjectChange}
           />
         )}
-
       </div>
     </div>
   );
