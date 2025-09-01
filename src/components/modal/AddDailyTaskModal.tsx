@@ -39,6 +39,11 @@ export interface AddDailyTaskModalProps {
   initialValues: ICreateDailyTaskEntryPayload & { remarks: string };
   isPending?: boolean;
   isEdit?: boolean;
+  showProjectAndUserSelection?: boolean;
+  projectOptions?: { label: string; value: string }[];
+  userOptions?: { label: string; value: string }[];
+  isLoadingProjects?: boolean;
+  isLoadingUsers?: boolean;
 }
 
 export function AddDailyTaskModal({
@@ -48,6 +53,9 @@ export function AddDailyTaskModal({
   initialValues,
   isPending = false,
   isEdit = false,
+  showProjectAndUserSelection = false,
+  projectOptions = [],
+  userOptions = [],
 }: AddDailyTaskModalProps) {
   // Track if user has edited title/description
   const userEditedTitle = useRef(false);
@@ -59,6 +67,10 @@ export function AddDailyTaskModal({
       hours_spent: decimalToHHMM(initialValues.hours_spent as number),
     },
     validationSchema: Yup.object().shape({
+      ...(showProjectAndUserSelection && {
+        project_id: Yup.string().required("Project is required"),
+        assigned_to: Yup.string().required("Assigned to is required"),
+      }),
       hours_spent: Yup.string()
         .matches(/^\d{1,2}:\d{2}$/, "Format must be hh:mm")
         .test("valid-time", "Invalid time", (val) => {
@@ -105,6 +117,24 @@ export function AddDailyTaskModal({
         onSubmit={formik.handleSubmit}
         className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
       >
+        {showProjectAndUserSelection && (
+          <div className="grid grid-cols-2 gap-4">
+            <Dropdown
+              label="Project"
+              options={projectOptions}
+              value={formik.values.project_id || ""}
+              onChange={(value) => formik.setFieldValue("project_id", value)}
+              error={formik.touched.project_id ? formik.errors.project_id : undefined}
+            />
+            <Dropdown
+              label="Assigned To"
+              options={userOptions}
+              value={formik.values.assigned_to || ""}
+              onChange={(value) => formik.setFieldValue("assigned_to", value)}
+              error={formik.touched.assigned_to ? formik.errors.assigned_to : undefined}
+            />
+          </div>
+        )}
         <InputField
           label="Task Title"
           name="task_title"

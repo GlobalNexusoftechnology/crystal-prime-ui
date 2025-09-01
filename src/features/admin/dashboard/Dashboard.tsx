@@ -15,6 +15,8 @@ import {
   useDeleteDailyTaskMutation,
   useUpdateDailyTaskMutation,
   useUpdateDailyTaskStatusMutation,
+  useCreateDailyTaskMutation,
+  useAllProjectsQuery,
   useAllTicketsAcrossProjectsQuery,
   useUpdateTicketStatusMutation,
   useUpdateTicketMutation,
@@ -41,6 +43,7 @@ export default function Dashboard() {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editTask, setEditTask] =
     useState<Partial<IDailyTaskEntryResponse> | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
   // Move all hooks to the top
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -235,6 +238,10 @@ export default function Dashboard() {
   const { allUsersData: usersData, isLoading: isLoadingUsers } =
     useAllUsersQuery();
 
+  // Fetch all projects for project selection
+  const { allProjectsData: projectsData, isLoading: isLoadingProjects } =
+    useAllProjectsQuery();
+
   // Update ticket mutation for assignment changes
   const { updateTicket, isPending: isUpdatingTicket } = useUpdateTicketMutation(
     {
@@ -256,19 +263,23 @@ export default function Dashboard() {
 
   // Prepare user options for assignment dropdown
   const userOptions = React.useMemo(() => {
-    const options = [{ label: "None", value: "" }];
+    if (!usersData?.data?.list) return [];
 
-    if (usersData?.data?.list) {
-      options.push(
-        ...usersData.data.list.map((user) => ({
-          label: `${user.first_name} ${user.last_name}`,
-          value: user.id,
-        }))
-      );
-    }
-
-    return options;
+    return usersData.data.list.map((user) => ({
+      label: `${user.first_name} ${user.last_name}`,
+      value: user.id,
+    }));
   }, [usersData]);
+
+  // Prepare project options for project selection
+  const projectOptions = React.useMemo(() => {
+    if (!projectsData) return [];
+
+    return projectsData.map((project) => ({
+      label: project.name,
+      value: project.id,
+    }));
+  }, [projectsData]);
 
   // ProjectRenewalList month selection logic
   const renewalMonthOptions = dashboardSummary?.projectRenewalData
@@ -330,6 +341,19 @@ export default function Dashboard() {
       },
     }
   );
+
+  // Create daily task mutation
+  const { createDailyTask, isPending: isCreating } = useCreateDailyTaskMutation({
+    onSuccessCallback: (response) => {
+      toast.success(response.message || "Daily task created successfully");
+      setShowAddModal(false);
+      refetchDailyTasks();
+    },
+    onErrorCallback: (error) => {
+      const errorMessage = error?.message || "Failed to create daily task. Please try again.";
+      toast.error(errorMessage);
+    },
+  });
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !dashboardSummary) return <div>Error loading dashboard</div>;
@@ -708,6 +732,7 @@ export default function Dashboard() {
         />
       </div>
       <div>
+       
         <DailyTaskTable
           userRole={userRole}
           dailyTasksLoading={dailyTasksLoading}
@@ -728,6 +753,7 @@ export default function Dashboard() {
           toDate={toDate}
           setToDate={setToDate}
           handleClearDates={handleClearDates}
+          onAddDailyTask={() => setShowAddModal(true)}
         />
 
         {/* Image Modal */}
@@ -825,6 +851,45 @@ export default function Dashboard() {
             }}
             isPending={isUpdating}
             isEdit={true}
+          />
+        )}
+
+        {/* Add Daily Task Modal */}
+        {showAddModal && (
+          <AddDailyTaskModal
+            isOpen={showAddModal}
+            onClose={() => setShowAddModal(false)}
+            onSubmit={async (values) => {
+              await createDailyTask({
+                project_id: values.project_id,
+                assigned_to: values.assigned_to,
+                task_title: values.task_title,
+                entry_date: values.entry_date,
+                description: values.description,
+                hours_spent: values.hours_spent,
+                status: values.status,
+                remarks: values.remarks,
+                priority: values.priority,
+              });
+            }}
+            initialValues={{
+              project_id: "",
+              assigned_to: "",
+              task_title: "",
+              entry_date: new Date().toISOString().slice(0, 10),
+              description: "",
+              hours_spent: undefined,
+              status: "",
+              remarks: "",
+              priority: "Medium",
+            }}
+            isPending={isCreating}
+            isEdit={false}
+            showProjectAndUserSelection={true}
+            projectOptions={projectOptions}
+            userOptions={userOptions}
+            isLoadingProjects={isLoadingProjects}
+            isLoadingUsers={isLoadingUsers}
           />
         )}
         {/* Delete Modal */}

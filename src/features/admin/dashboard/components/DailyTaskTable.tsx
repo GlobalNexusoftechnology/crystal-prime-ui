@@ -1,6 +1,6 @@
 import React from "react";
 import { Dropdown, DatePicker, Button, Table, Loading } from "@/components";
-import { FiX } from "react-icons/fi";
+import { FiX, FiPlus } from "react-icons/fi";
 import { ITableAction, ITableColumn } from "@/constants/table";
 
 export interface DailyTaskRow {
@@ -41,6 +41,7 @@ interface DailyTaskTableProps {
   toDate: string;
   setToDate: (date: string) => void;
   handleClearDates: () => void;
+  onAddDailyTask?: () => void;
 }
 
 const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
@@ -63,6 +64,7 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
   toDate,
   setToDate,
   handleClearDates,
+  onAddDailyTask,
 }) => {
   // if (userRole.toLowerCase() === "admin") return null;
   if (dailyTasksLoading) return <Loading />;
@@ -89,18 +91,15 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[25vw]"
           /> */}
-          <Dropdown
-            options={statusOptions}
-            value={statusFilter}
-            onChange={handleStatusChange}
-            dropdownWidth="w-full md:w-fit"
-          />
-          <Dropdown
-            options={priorityOptions}
-            value={priorityFilter}
-            onChange={handlePriorityChange}
-            dropdownWidth="w-full md:w-fit"
-          />         
+          {onAddDailyTask && (
+            <Button
+              title="Add Daily Task"
+              variant="primary"
+              onClick={onAddDailyTask}
+              width="w-auto"
+              leftIcon={<FiPlus className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw] mt-[1px] 2xl:mt-[0.1vw]" />}
+            />
+          )}
         </div>
       </div>
       <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] my-4 2xl:my-[1vw]">
@@ -133,6 +132,18 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
             />
           </div>
         )}
+        <Dropdown
+            options={statusOptions}
+            value={statusFilter}
+            onChange={handleStatusChange}
+            dropdownWidth="w-full md:w-fit"
+          />
+          <Dropdown
+            options={priorityOptions}
+            value={priorityFilter}
+            onChange={handlePriorityChange}
+            dropdownWidth="w-full md:w-fit"
+          />
       </div>
       <Table
         data={dailyTaskList}
