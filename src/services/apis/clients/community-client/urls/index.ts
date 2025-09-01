@@ -292,6 +292,7 @@ export const deleteDailyTaskEntryUrl = (id: string) => `/daily-task/${id}`;
 export const getDailyTaskEntryDetailUrl = (id: string) => `/daily-task/${id}`;
 export const getAllDailyTaskEntriesUrl = (projectId?: string) =>
   projectId ? `/daily-task?projectId=${projectId}` : "/daily-task";
+export const updateDailyTaskStatusUrl = (id: string) => `/daily-task/${id}/status`;
 
 export const dashboardSummaryUrl = () => "/dashboard/summary";
 

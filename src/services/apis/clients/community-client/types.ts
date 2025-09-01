@@ -1800,6 +1800,19 @@ export interface IDeleteDailyTaskEntryResponse {
   success: true;
 }
 
+export interface IUpdateDailyTaskStatusPayload {
+  status: string;
+}
+
+export interface IUpdateDailyTaskStatusResponse {
+  status: string;
+  message: string;
+  data: {
+    id: string;
+    status: string;
+  };
+}
+
 export interface IUploadMultipleAttachmentsOptions {
   onSuccessCallback: (data: IUploadMultipleAttachmentResponse) => void;
   onErrorCallback?: (err: IApiError) => void;

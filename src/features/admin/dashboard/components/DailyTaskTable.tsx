@@ -1,7 +1,7 @@
 import React from "react";
 import { Dropdown, DatePicker, Button, Table, Loading } from "@/components";
 import { FiX } from "react-icons/fi";
-import { ITableAction } from "@/constants/table";
+import { ITableAction, ITableColumn } from "@/constants/table";
 
 export interface DailyTaskRow {
   id: string | number;
@@ -27,7 +27,7 @@ interface DailyTaskTableProps {
   dailyTasksError: boolean;
   dailyTasksErrorObj: unknown;
   dailyTaskList: DailyTaskRow[];
-  dailyTaskListColumn: { header: string; accessor: string }[];
+  dailyTaskListColumn: ITableColumn<DailyTaskRow>[];
   dailyTaskListAction: ITableAction<DailyTaskRow>[];
   statusOptions: { label: string; value: string }[];
   statusFilter: string;

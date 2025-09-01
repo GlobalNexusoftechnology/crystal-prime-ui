@@ -166,6 +166,8 @@ import {
   IEILogFilters,
   IUploadEILogFromExcelResponse,
   IDeleteDailyTaskEntryResponse,
+  IUpdateDailyTaskStatusPayload,
+  IUpdateDailyTaskStatusResponse,
   StaffPerformanceReportResponse,
   ProjectPerformanceReportResponse,
   LeadReportResponse,
@@ -333,6 +335,7 @@ import {
   updateTicketUrl,
   updateTicketStatusUrl,
   deleteTicketUrl,
+  updateDailyTaskStatusUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -1921,7 +1924,15 @@ export class CommunityClient extends ApiClient {
     if (!response?.success) {
       throw response?.errorData;
     }
-    return response?.data.data;
+    return response?.data?.data;
+  };
+
+  public updateDailyTaskStatus = async (id: string, payload: IUpdateDailyTaskStatusPayload): Promise<IUpdateDailyTaskStatusResponse> => {
+    const response = await this.put<IUpdateDailyTaskStatusResponse>(updateDailyTaskStatusUrl(id), payload);
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
   };
 
   public uploadMultipleAttachments = async (formData: FormData) => {

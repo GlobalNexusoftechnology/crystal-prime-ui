@@ -14,6 +14,7 @@ import {
   useAllDailyTaskQuery,
   useDeleteDailyTaskMutation,
   useUpdateDailyTaskMutation,
+  useUpdateDailyTaskStatusMutation,
   useAllTicketsAcrossProjectsQuery,
   useUpdateTicketStatusMutation,
   useUpdateTicketMutation,
@@ -218,6 +219,18 @@ export default function Dashboard() {
 
   const { updateTicketStatus } = useUpdateTicketStatusMutation();
 
+  // Daily task status update hook
+  const { updateDailyTaskStatus, isPending: isUpdatingDailyTaskStatus } = useUpdateDailyTaskStatusMutation({
+    onSuccessCallback: (response) => {
+      toast.success(response.message);
+      refetchDailyTasks();
+    },
+    onErrorCallback: (error) => {
+      const errorMessage = error?.message || "Failed to update daily task status. Please try again.";
+      toast.error(errorMessage);
+    },
+  });
+
   // Fetch all users for assignment dropdown
   const { allUsersData: usersData, isLoading: isLoadingUsers } =
     useAllUsersQuery();
@@ -391,8 +404,30 @@ export default function Dashboard() {
     };
   });
 
-  const dailyTaskListColumn: { header: string; accessor: string }[] = [
-    { header: "STATUS", accessor: "status" },
+  const dailyTaskListColumn: ITableColumn<DailyTaskRow>[] = [
+    {
+      header: "STATUS",
+      accessor: "status",
+      cell: ({ row, value }) => (
+        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
+          {isUpdatingDailyTaskStatus ? (
+            <span className="text-blue-500 text-sm">Updating...</span>
+          ) : (
+            <Dropdown
+              options={dailyTaskStatusOptions}
+              value={String((value as string) ?? "")}
+              onChange={(val) =>
+                updateDailyTaskStatus({
+                  id: String(row.id),
+                  payload: { status: val }
+                })
+              }
+              dropdownWidth="w-[10rem] 2xl:w-[10vw]"
+            />
+          )}
+        </div>
+      ),
+    },
     { header: "PRIORITY", accessor: "priority" },
     { header: "TASK NAME", accessor: "name" },
     { header: "DESCRIPTION", accessor: "description" },
