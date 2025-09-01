@@ -11,27 +11,26 @@ import {
 import { AnalyticalCard } from "../analytical-card";
 import {
   useDashboardSummaryQuery,
-  useAllDailyTaskQuery,
-  useDeleteDailyTaskMutation,
-  useUpdateDailyTaskMutation,
-  useUpdateDailyTaskStatusMutation,
-  useCreateDailyTaskMutation,
   useAllProjectsQuery,
   useAllTicketsAcrossProjectsQuery,
   useUpdateTicketStatusMutation,
   useUpdateTicketMutation,
   useAllUsersQuery,
+  useUpdateTaskStatusMutation,
+  useCreateMilestoneTaskMutation,
   useAuthStore,
 } from "@/services";
-import type { IDailyTaskEntryResponse } from "@/services";
+
 import { AnalyticalCardIcon } from "@/features";
-import { AddDailyTaskModal, DeleteModal } from "@/components";
+import { AddTaskModal } from "@/components";
 import { Dropdown } from "@/components";
-import DailyTaskTable from "./components/DailyTaskTable";
+
 import { SupportTicketTable } from "./components";
+import TaskTable from "./components/TaskTable";
 import type { ITableAction, ITableColumn } from "@/constants/table";
-import type { DailyTaskRow } from "./components/DailyTaskTable";
+
 import type { SupportTicketRow } from "./components/SupportTicketTable";
+import type { TaskRow } from "./components/TaskTable";
 import { useDebounce } from "@/utils/hooks";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/helpers/formatDate";
@@ -40,29 +39,14 @@ import toast from "react-hot-toast";
 
 export default function Dashboard() {
   const router = useRouter();
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [editTask, setEditTask] =
-    useState<Partial<IDailyTaskEntryResponse> | null>(null);
-  const [showAddModal, setShowAddModal] = useState(false);
+
+  const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<string>("");
   // Move all hooks to the top
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [showImageModal, setShowImageModal] = useState(false);
-  const { deleteDailyTask, isPending: isDeleting } = useDeleteDailyTaskMutation(
-    {
-      onSuccessCallback: () => {
-        setShowDeleteModal(false);
-        setDeleteId(null);
-        refetchDailyTasks();
-      },
-      onErrorCallback: () => {
-        setShowDeleteModal(false);
-        setDeleteId(null);
-        // Optionally show a toast or error message
-      },
-    }
-  );
+
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
@@ -107,12 +91,7 @@ export default function Dashboard() {
     { label: "Closed", value: "closed" },
   ];
   
-  const dailyTaskStatusOptions = [
-    { label: "All Status", value: "" },
-    { label: "Pending", value: "Pending" },
-    { label: "In Progress", value: "In Progress" },
-    { label: "Completed", value: "Completed" },
-  ];
+
 
   const priorityOptions = [
     { label: "All Priority", value: "" },
@@ -159,14 +138,11 @@ export default function Dashboard() {
     };
   }, [showImageModal]);
 
-  // Fetch daily tasks
-  const {
-    data: dailyTasks,
-    isLoading: dailyTasksLoading,
-    isError: dailyTasksError,
-    error: dailyTasksErrorObj,
-    refetchDailyTasks,
-  } = useAllDailyTaskQuery({});
+
+
+  const handleProjectChange = (projectId: string) => {
+    setSelectedProjectId(projectId);
+  };
 
   // Fetch support tickets with filters
   const {
@@ -183,14 +159,19 @@ export default function Dashboard() {
 
   const { updateTicketStatus } = useUpdateTicketStatusMutation();
 
-  // Daily task status update hook
-  const { updateDailyTaskStatus, isPending: isUpdatingDailyTaskStatus } = useUpdateDailyTaskStatusMutation({
-    onSuccessCallback: (response) => {
-      toast.success(response.message);
-      refetchDailyTasks();
+
+
+  // Task status update hook
+  const { onUpdateTaskStatus, isPending: isUpdatingTaskStatus } = useUpdateTaskStatusMutation({
+    onSuccessCallback: () => {
+      toast.success("Task status updated successfully");
+      // Refetch projects to get updated task data
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
     },
     onErrorCallback: (error) => {
-      const errorMessage = error?.message || "Failed to update daily task status. Please try again.";
+      const errorMessage = error?.message || "Failed to update task status. Please try again.";
       toast.error(errorMessage);
     },
   });
@@ -242,6 +223,30 @@ export default function Dashboard() {
     }));
   }, [projectsData]);
 
+  // Prepare milestone options based on selected project from projects data
+  const milestoneOptions = React.useMemo(() => {
+    if (!selectedProjectId) {
+      return [{ label: "Select a project first", value: "" }];
+    }
+    
+    if (!projectsData) {
+      return [{ label: "Loading projects...", value: "" }];
+    }
+    
+    const selectedProject = projectsData.find(project => project.id === selectedProjectId);
+    if (!selectedProject?.milestones) {
+      return [{ label: "No milestones found", value: "" }];
+    }
+    
+    return [
+      { label: "Select a milestone", value: "" },
+      ...selectedProject.milestones.map((milestone) => ({
+        label: milestone.name,
+        value: milestone.id || "",
+      })),
+    ];
+  }, [selectedProjectId, projectsData]);
+
   // ProjectRenewalList month selection logic
   const renewalMonthOptions = dashboardSummary?.projectRenewalData
     ? Object.keys(dashboardSummary.projectRenewalData)
@@ -288,33 +293,61 @@ export default function Dashboard() {
   // Remove old transformation for leadAnalyticsChartDataMap
   // Prepare safe dataMap for LeadAnalyticsChart
 
-  const { updateDailyTask, isPending: isUpdating } = useUpdateDailyTaskMutation(
-    {
-      onSuccessCallback: () => {
-        setShowEditModal(false);
-        setEditTask(null);
-        refetchDailyTasks();
-      },
-      onErrorCallback: () => {
-        setShowEditModal(false);
-        setEditTask(null);
-        // Optionally show a toast or error message
-      },
-    }
-  );
 
-  // Create daily task mutation
-  const { createDailyTask, isPending: isCreating } = useCreateDailyTaskMutation({
-    onSuccessCallback: (response) => {
-      toast.success(response.message || "Daily task created successfully");
-      setShowAddModal(false);
-      refetchDailyTasks();
+
+  // Create task mutation
+  const { onCreateMilestoneTask, isPending: isCreatingTask } = useCreateMilestoneTaskMutation({
+    onSuccessCallback: () => {
+      toast.success("Task created successfully");
+      setShowAddTaskModal(false);
+      // Refetch projects to get updated task data
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
     },
     onErrorCallback: (error) => {
-      const errorMessage = error?.message || "Failed to create daily task. Please try again.";
+      const errorMessage = error?.message || "Failed to create task. Please try again.";
       toast.error(errorMessage);
     },
   });
+
+  // Task Data Transformation - Extract tasks from projects data
+  const taskList: TaskRow[] = React.useMemo(() => {
+    if (!projectsData) return [];
+
+    const allTasks: TaskRow[] = [];
+
+    projectsData.forEach((project) => {
+      project.milestones?.forEach((milestone) => {
+        milestone.tasks?.forEach((task) => {
+          // Get staff name from assigned_to
+          const getStaffName = (assignedTo: string) => {
+            if (!usersData?.data?.list) return "-";
+            const user = usersData.data.list.find((u) => u.id === assignedTo);
+            return user ? `${user.first_name} ${user.last_name}` : "-";
+          };
+
+          allTasks.push({
+            id: task.id,
+            title: task.title,
+            description: task.description || "-",
+            status: task.status || "-",
+            due_date: task.due_date || "-",
+            assigned_to: task.assigned_to || "",
+            milestoneId: milestone.id || "",
+            projectId: project.id || "",
+            projectName: project.name || "-",
+            milestoneName: milestone.name || "-",
+            staffName: getStaffName(task.assigned_to || ""),
+            created_at: task.created_at ? formatDate(task.created_at) : "-",
+            updated_at: task.updated_at ? formatDate(task.updated_at) : "-",
+          });
+        });
+      });
+    });
+
+    return allTasks;
+  }, [projectsData, usersData]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !dashboardSummary) return <div>Error loading dashboard</div>;
@@ -353,58 +386,30 @@ export default function Dashboard() {
         },
       ];
 
-  const dailyTaskList: DailyTaskRow[] = (dailyTasks || []).map((task) => {
-    const validPriority = ["High", "Medium", "Low"].includes(
-      task.priority ?? ""
-    );
-    
-    // Get staff name from assigned_to
-    const getStaffName = (assignedTo: string) => {
-      if (!usersData?.data?.list) return "-";
-      const user = usersData.data.list.find((u) => u.id === assignedTo);
-      return user ? `${user.first_name} ${user.last_name}` : "-";
-    };
 
-    return {
-      id: task?.id,
-      name: task?.task_title,
-      description: task?.description || "-",
-      status: task?.status || "-",
-      due: task?.entry_date || "-",
-      priority: validPriority
-        ? (task?.priority as "High" | "Medium" | "Low")
-        : "Medium",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      projectId: (task as any)?.projectId || "",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      milestoneId: (task as any)?.milestoneId || "",
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      taskId: (task as any)?.taskId || "",
-      // New columns for project and client info
-      projectName: task?.project?.name || "-",
-      clientName: task?.project?.client?.name || "-",
-      clientNumber: task?.project?.client?.contact_number || "-",
-      staffName: getStaffName(task?.assigned_to || ""),
-      created_at: task?.created_at ? formatDate(task.created_at) : "-",
-    };
-  });
 
-  const dailyTaskListColumn: ITableColumn<DailyTaskRow>[] = [
+
+
+  const taskListColumn: ITableColumn<TaskRow>[] = [
     {
       header: "STATUS",
       accessor: "status",
       cell: ({ row, value }) => (
         <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
-          {isUpdatingDailyTaskStatus ? (
+          {isUpdatingTaskStatus ? (
             <span className="text-blue-500 text-sm">Updating...</span>
           ) : (
             <Dropdown
-              options={dailyTaskStatusOptions}
+              options={[
+                { label: "Open", value: "Open" },
+                { label: "In Progress", value: "In Progress" },
+                { label: "Completed", value: "Completed" },
+              ]}
               value={String((value as string) ?? "")}
               onChange={(val) =>
-                updateDailyTaskStatus({
-                  id: String(row.id),
-                  payload: { status: val }
+                onUpdateTaskStatus({
+                  taskId: String(row.id),
+                  status: val
                 })
               }
               dropdownWidth="w-[10rem] 2xl:w-[10vw]"
@@ -413,24 +418,23 @@ export default function Dashboard() {
         </div>
       ),
     },
-    { header: "PRIORITY", accessor: "priority" },
-    { header: "TASK NAME", accessor: "name" },
+    { header: "TASK NAME", accessor: "title" },
     { header: "DESCRIPTION", accessor: "description" },
     // Show staff name for admin users
     ...(userRole.toLowerCase() === "admin" ? [{ header: "STAFF NAME", accessor: "staffName" }] : []),
-    // Show project and client info for staff users (non-admin)
-      { header: "PROJECT NAME", accessor: "projectName" },
-      { header: "CLIENT NAME", accessor: "clientName" },
-      { header: "CLIENT NUMBER", accessor: "clientNumber" },
+    // Show project and milestone info for staff users (non-admin)
+    { header: "PROJECT NAME", accessor: "projectName" },
+    { header: "MILESTONE NAME", accessor: "milestoneName" },
+    { header: "DUE DATE", accessor: "due_date" },
     { header: "CREATED AT", accessor: "created_at" },
   ];
 
-  const dailyTaskListAction: ITableAction<DailyTaskRow>[] = [
+  const taskListAction: ITableAction<TaskRow>[] = [
     {
       label: "View",
-      onClick: (row: DailyTaskRow) => {
+      onClick: (row: TaskRow) => {
         router.push(
-          `/admin/project-management/${row.projectId}/${row.milestoneId}/${row.taskId}`
+          `/admin/project-management/${row.projectId}/${row.milestoneId}/${row.id}`
         );
       },
       className: "text-blue-500 whitespace-nowrap",
@@ -694,16 +698,22 @@ export default function Dashboard() {
       </div>
       <div>
        
-        <DailyTaskTable
-          userRole={userRole}
-          dailyTasksLoading={dailyTasksLoading}
-          dailyTasksError={dailyTasksError}
-          dailyTasksErrorObj={dailyTasksErrorObj}
-          dailyTaskList={dailyTaskList}
-          dailyTaskListColumn={dailyTaskListColumn}
-          dailyTaskListAction={dailyTaskListAction}
-          onAddDailyTask={() => setShowAddModal(true)}
-        />
+
+
+        {/* Task Table Component */}
+        <div className="mt-6 2xl:mt-[1.5vw]">
+          <TaskTable
+            userRole={userRole}
+            tasksLoading={isLoadingProjects}
+            tasksError={false}
+            tasksErrorObj={null}
+            taskList={taskList}
+            taskListColumn={taskListColumn}
+            taskListAction={taskListAction}
+            onAddTask={() => setShowAddTaskModal(true)}
+          />
+        </div>
+        
 
         {/* Image Modal */}
         {showImageModal && selectedImage && (
@@ -767,93 +777,41 @@ export default function Dashboard() {
           <ExpensesOverviewChart dataMap={expensesDataMap} />
         </div>
 
-        {showEditModal && editTask && (
-          <AddDailyTaskModal
-            isOpen={showEditModal}
-            onClose={() => {
-              setShowEditModal(false);
-              setEditTask(null);
-            }}
+
+
+        {/* Add Task Modal */}
+        {showAddTaskModal && (
+          <AddTaskModal
+            isOpen={showAddTaskModal}
+            onClose={() => setShowAddTaskModal(false)}
             onSubmit={async (values) => {
-              updateDailyTask({
-                id: editTask.id || "",
-                payload: {
-                  ...values,
-                  hours_spent: values.hours_spent
-                    ? Number(values.hours_spent)
-                    : undefined,
-                },
+              await onCreateMilestoneTask({
+                title: values.title,
+                description: values.description,
+                due_date: values.due_date,
+                status: values.status,
+                assigned_to: values.assigned_to,
+                milestone_id: values.milestone_id,
               });
             }}
             initialValues={{
-              project_id: editTask?.project?.id || "",
-              assigned_to:
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                editTask?.user?.id || (editTask as any)?.assigned_to || "",
-              task_title: editTask?.task_title || "",
-              entry_date: editTask?.entry_date || "",
-              description: editTask?.description || "",
-              hours_spent: editTask?.hours_spent || undefined,
-              status: editTask?.status || "",
-              remarks: editTask?.remarks || "",
-              priority: editTask?.priority || "Medium",
+              title: "",
+              description: "",
+              due_date: new Date().toISOString().slice(0, 10),
+              status: "Open",
+              assigned_to: "",
+              milestone_id: "",
             }}
-            isPending={isUpdating}
-            isEdit={true}
+            isPending={isCreatingTask}
+            isEdit={false}
+            projectOptions={projectOptions}
+            milestoneOptions={milestoneOptions}
+            userOptions={userOptions}
+            selectedProjectId={selectedProjectId}
+            onProjectChange={handleProjectChange}
           />
         )}
 
-        {/* Add Daily Task Modal */}
-        {showAddModal && (
-          <AddDailyTaskModal
-            isOpen={showAddModal}
-            onClose={() => setShowAddModal(false)}
-            onSubmit={async (values) => {
-              await createDailyTask({
-                project_id: values.project_id,
-                assigned_to: values.assigned_to,
-                task_title: values.task_title,
-                entry_date: values.entry_date,
-                description: values.description,
-                hours_spent: values.hours_spent,
-                status: values.status,
-                remarks: values.remarks,
-                priority: values.priority,
-              });
-            }}
-            initialValues={{
-              project_id: "",
-              assigned_to: "",
-              task_title: "",
-              entry_date: new Date().toISOString().slice(0, 10),
-              description: "",
-              hours_spent: undefined,
-              status: "",
-              remarks: "",
-              priority: "Medium",
-            }}
-            isPending={isCreating}
-            isEdit={false}
-            showProjectAndUserSelection={true}
-            projectOptions={projectOptions}
-            userOptions={userOptions}
-            isLoadingProjects={isLoadingProjects}
-            isLoadingUsers={isLoadingUsers}
-          />
-        )}
-        {/* Delete Modal */}
-        {showDeleteModal && (
-          <DeleteModal
-            isOpen={showDeleteModal}
-            onClose={() => setShowDeleteModal(false)}
-            onConfirm={() => {
-              if (deleteId) deleteDailyTask(deleteId);
-            }}
-            isLoading={isDeleting}
-            title="Delete Daily Task"
-            message="Are you sure you want to delete this daily task? This action cannot be undone."
-          />
-        )}
       </div>
     </div>
   );

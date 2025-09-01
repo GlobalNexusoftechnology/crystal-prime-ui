@@ -255,7 +255,7 @@ export const updateMilestoneUrl = (milestoneId: string) =>
   `/project-milestones/${milestoneId}`;
 export const deleteMilestoneUrl = (milestoneId: string) =>
   `/project-milestones/${milestoneId}`;
-export const getMilestoneDetailUrl = (milestoneId: string) =>
+export const getMilestoneDetailUrl = (milestoneId: string) => 
   `/project-milestones/${milestoneId}`;
 export const getAllMilestonesUrl = (projectId: string) =>
   `/project-milestones/${projectId}`;

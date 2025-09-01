@@ -97,6 +97,7 @@ export { useDeleteProjectTemplateMilestoneMutation } from "./useDeleteProjectTem
 export { useDeleteProjectTemplateMilestoneTaskMutation } from "./useDeleteProjectTemplateMilestoneTaskMutation";
 
 export { useMilestoneDetailQuery } from "./useMilestoneDetailQuery";
+export { useAllMilestonesQuery } from "./useAllMilestonesQuery";
 export { useDeleteMilestoneMutation } from "./useDeleteMilestoneMutation";
 export { useCreateMilestoneMutation } from "./useCreateMilestoneMutation";
 export { useUpdateMilestoneMutation } from "./useUpdateMilestoneMutation";
@@ -118,6 +119,7 @@ export { useDeleteTicketCommentMutation } from "./useDeleteTicketCommentMutation
 export { useTicketCommentDetailQuery } from "./useTicketCommentDetailQuery";
 
 export { useUpdateTaskStatusMutation } from "./useUpdateTaskStatusMutation";
+
 
 export { useCreateDailyTaskMutation } from "./useCreateDailyTaskMutation";
 export { useAllDailyTaskQuery } from "./useAllDailyTaskQuery";

@@ -6,3 +6,4 @@ export { LeadAnalyticsChart } from "./lead-analytics-chart";
 export { ProjectSnapshotChart } from "./project-snapshot-chart";
 export { StatsCards } from "./stats-cards";
 export { SupportTicketTable } from "./SupportTicketTable";
+export { default as TaskTable } from "./TaskTable";
