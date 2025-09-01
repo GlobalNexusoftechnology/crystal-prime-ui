@@ -1,6 +1,5 @@
 import { Button, Dropdown, InputField, ModalOverlay, NumberInput } from "@/components";
 import {
-  ICreateLeadPayload,
   ICreateLeadResponse,
   useAllSourcesQuery,
   useAllStatusesQuery,
@@ -14,12 +13,30 @@ import toast from "react-hot-toast";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import * as Yup from "yup";
-import { Plus, X } from "lucide-react";
+
 import { useQueryClient } from "@tanstack/react-query";
 
 interface IAddLeadModalProps {
   setAddLeadModalOpen: (open: boolean) => void;
   leadsRefetch?: () => void;
+}
+
+interface IAddLeadFormValues {
+  first_name: string;
+  last_name: string;
+  company: string;
+  phone: string;
+  other_contact: string;
+  escalate_to: boolean;
+  email: string;
+  location: string;
+  budget: number;
+  possibility_of_conversion: number;
+  requirement: string;
+  source_id: string;
+  status_id: string;
+  type_id: string;
+  assigned_to: string;
 }
 
 const validationSchema = Yup.object().shape({
@@ -29,17 +46,9 @@ const validationSchema = Yup.object().shape({
     .min(10, "Phone must be at least 10 digits")
     .max(15, "Phone must be at most 15 digits")
     .required("Phone number is required"),
-  email: Yup.array()
-    .of(
-      Yup.string()
-        .email("Invalid email address")
-        .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
-    )
-    .test('emails', 'At least one valid email is required if emails are provided', function(value) {
-      if (!value || value.length === 0) return true; // Allow empty array
-      const validEmails = value.filter((email: string | undefined) => email && email.trim() !== '' && Yup.string().email().isValidSync(email));
-      return validEmails.length > 0;
-    })
+  email: Yup.string()
+    .email("Invalid email address")
+    .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
     .optional(),
   location: Yup.string().optional(),
   requirement: Yup.string().optional(),
@@ -117,7 +126,7 @@ export function AddLeadModal({
           <h2 className="text-lg 2xl:text-[1.125vw] font-semibold">
             Lead Information
           </h2>
-          <Formik<ICreateLeadPayload>
+          <Formik<IAddLeadFormValues>
             initialValues={{
               first_name: "",
               last_name: "",
@@ -125,7 +134,7 @@ export function AddLeadModal({
               phone: "",
               other_contact: "",
               escalate_to: false,
-              email: [""],
+              email: "",
               location: "",
               budget: 0,
               possibility_of_conversion: 0,
@@ -139,15 +148,12 @@ export function AddLeadModal({
             onSubmit={(values) => {
               const { source_id, status_id, type_id, assigned_to, email, ...rest } = values;
               
-              // Filter out empty emails
-              const filteredEmails = (email || []).filter(email => email.trim() !== '');
-              
               const payload = {
                 ...rest,
                 budget: values.budget ?? 0,
                 possibility_of_conversion: values.possibility_of_conversion ?? 0,
-                // Only include email if there are valid emails
-                ...(filteredEmails.length > 0 && { email: filteredEmails }),
+                // Only include email if it's not empty
+                ...(email && email.trim() !== '' && { email: [email] }),
                 // Filter out empty strings for optional fields
                 ...(values.last_name && { last_name: values.last_name }),
                 ...(values.company && { company: values.company }),
@@ -236,54 +242,15 @@ export function AddLeadModal({
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
-                  <div
-                    className={`w-full grid grid-cols-1 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative`}
-                  >
-                    <div className="space-y-2">
-                      <label className="text-[0.9rem] font-medium text-gray-700">
-                        Emails
-                      </label>
-                      {values?.email?.map((_, index) => (
-                        <div key={index} className="flex gap-2">
-                          <InputField
-                            placeholder="Enter Email"
-                            name={`email.${index}`}
-                            type="email"
-                            value={values.email?.[index] || ""}
-                            onChange={handleChange}
-                            error={
-                              touched.email &&
-                              Array.isArray(errors.email) &&
-                              errors.email[index]
-                            }
-                          />
-                          {index > 0 && (
-                            <button
-                              type="button"
-                              onClick={() => {
-                                const newEmails = [...(values.email || [])];
-                                newEmails.splice(index, 1);
-                                setFieldValue("email", newEmails);
-                              }}
-                              className="p-2 text-red-500 hover:text-red-700"
-                            >
-                              <X className="w-5 h-5" />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFieldValue("email", [...(values.email || []), ""]);
-                        }}
-                        className="flex items-center gap-1 text-[0.9rem] text-blue-600 hover:text-blue-800"
-                      >
-                        <Plus className="w-4 h-4" />
-                        Add Another Email
-                      </button>
-                    </div>
-                  </div>
+                  <InputField
+                    label="Email"
+                    placeholder="Enter Email"
+                    name="email"
+                    type="email"
+                    value={values.email}
+                    onChange={handleChange}
+                    error={touched.email && errors.email}
+                  />
                   <InputField
                     label="Location"
                     placeholder="Enter Location"
