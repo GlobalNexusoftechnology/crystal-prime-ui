@@ -1,5 +1,6 @@
 import { Button, Dropdown, InputField, ModalOverlay, NumberInput } from "@/components";
 import {
+  ICreateLeadPayload,
   ICreateLeadResponse,
   useAllSourcesQuery,
   useAllStatusesQuery,
@@ -21,23 +22,7 @@ interface IAddLeadModalProps {
   leadsRefetch?: () => void;
 }
 
-interface IAddLeadFormValues {
-  first_name: string;
-  last_name: string;
-  company: string;
-  phone: string;
-  other_contact: string;
-  escalate_to: boolean;
-  email: string;
-  location: string;
-  budget: number;
-  possibility_of_conversion: number;
-  requirement: string;
-  source_id: string;
-  status_id: string;
-  type_id: string;
-  assigned_to: string;
-}
+
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
@@ -126,7 +111,7 @@ export function AddLeadModal({
           <h2 className="text-lg 2xl:text-[1.125vw] font-semibold">
             Lead Information
           </h2>
-          <Formik<IAddLeadFormValues>
+          <Formik<ICreateLeadPayload>
             initialValues={{
               first_name: "",
               last_name: "",
@@ -153,7 +138,7 @@ export function AddLeadModal({
                 budget: values.budget ?? 0,
                 possibility_of_conversion: values.possibility_of_conversion ?? 0,
                 // Only include email if it's not empty
-                ...(email && email.trim() !== '' && { email: [email] }),
+                ...(email && email.trim() !== '' && { email }),
                 // Filter out empty strings for optional fields
                 ...(values.last_name && { last_name: values.last_name }),
                 ...(values.company && { company: values.company }),

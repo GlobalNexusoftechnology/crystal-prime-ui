@@ -74,28 +74,14 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
               </p>
             </Link>
             <Link
-              href={`mailto:${
-                Array.isArray(data.email) ? data.email[0] : data.email
-              }`}
+              href={`mailto:${data.email || ""}`}
               className="flex items-start gap-2 2xl:gap-[0.5vw] text-[1rem] 2xl:text-[1vw]"
             >
               <MailIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw] mt-1" />
               <div className="flex flex-col">
-                {data?.email ? (
-                  Array.isArray(data?.email[0]) &&
-                  data?.email[0]?.map((email: string, index: number) => (
-                    <div
-                      key={index}
-                      className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw] mb-2"
-                    >
-                      <p>{String(email).trim()}</p>
-                    </div>
-                  ))
-                ) : (
-                  <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
-                    {String(data.email || "").trim()}
-                  </p>
-                )}
+                <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
+                  {String(data.email || "").trim() || "N/A"}
+                </p>
               </div>
             </Link>
           </div>

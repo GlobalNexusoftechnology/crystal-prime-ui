@@ -208,12 +208,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         last_name: lead?.last_name || "N/A",
         phone: lead?.phone || "N/A",
         other_contact: lead?.other_contact || "N/A",
-        email: lead?.email
-          ? String(lead.email)
-              .split(/,\s*/)
-              ?.map((email) => email.trim())
-              .filter(Boolean)
-          : [],
+        email: lead?.email || "N/A",
         company: lead?.company || "N/A",
         location: lead?.location || "N/A",
         budget: lead?.budget || "N/A",
@@ -247,7 +242,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     last_name: leadDetailById?.last_name || "null",
     phone: leadDetailById?.phone || "null",
     other_contact: leadDetailById?.other_contact || "null",
-    email: leadDetailById?.email ? [leadDetailById?.email] : [],
+    email: leadDetailById?.email || "",
     company: leadDetailById?.company || "null",
     requirement: leadDetailById?.requirement || "null",
     location: leadDetailById?.location || "null",

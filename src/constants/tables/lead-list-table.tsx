@@ -8,7 +8,7 @@ export interface ILeadsListProps {
   company: string;
   phone: string;
   other_contact: string;
-  email: string[];
+  email: string;
   location: string;
   budget: string;
   possibility_of_conversion?: number | null;
@@ -30,7 +30,7 @@ export interface ILeadsListDetailsProps {
   company: string;
   phone: string;
   other_contact: string;
-  email: string[];
+  email: string;
   location: string;
   budget: string;
   possibility_of_conversion?: number | null;

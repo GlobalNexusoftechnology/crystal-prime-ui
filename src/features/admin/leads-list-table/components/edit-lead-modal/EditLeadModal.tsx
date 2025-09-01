@@ -7,6 +7,7 @@ import {
   NumberInput,
 } from "@/components";
 import {
+  ICreateLeadPayload,
   IUpdateLeadResponse,
   useAllSourcesQuery,
   useAllStatusesQuery,
@@ -30,23 +31,7 @@ interface IEditLeadModalProps {
   lead: any; // Adjust type as needed
 }
 
-interface IEditLeadFormValues {
-  first_name: string;
-  last_name: string;
-  company: string;
-  phone: string;
-  other_contact: string;
-  escalate_to: boolean;
-  email: string;
-  location: string;
-  budget: number;
-  possibility_of_conversion: number;
-  requirement: string;
-  source_id: string;
-  status_id: string;
-  type_id: string;
-  assigned_to: string;
-}
+
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
@@ -145,7 +130,7 @@ export function EditLeadModal({
     })) || [];
 
   // Normalize initialValues to handle undefined nested fields
-  const initialValues: IEditLeadFormValues = {
+  const initialValues: ICreateLeadPayload = {
     first_name: lead.first_name || "",
     last_name: lead.last_name || "",
     company: lead.company || "",
@@ -180,11 +165,11 @@ export function EditLeadModal({
           <h2 className="text-[1rem] 2xl:text-[1.3vw] font-semibold">
             Edit Lead Information
           </h2>
-          <Formik<IEditLeadFormValues>
+          <Formik<ICreateLeadPayload>
             key={lead.id} // Ensures Formik reinitializes when lead changes
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={(values: IEditLeadFormValues) => {
+            onSubmit={(values: ICreateLeadPayload) => {
               const { source_id, status_id, type_id, assigned_to, email, ...rest } = values;
               
               const payload = {
@@ -192,7 +177,7 @@ export function EditLeadModal({
                 budget: values.budget ?? 0,
                 possibility_of_conversion: values.possibility_of_conversion ?? 0,
                 // Only include email if it's not empty
-                ...(email && email.trim() !== '' && { email: [email] }),
+                ...(email && email.trim() !== '' && { email }),
                 // Filter out empty strings for optional fields
                 ...(values.last_name && { last_name: values.last_name }),
                 ...(values.company && { company: values.company }),
