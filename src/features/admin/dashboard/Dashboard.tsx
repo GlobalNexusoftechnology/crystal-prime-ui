@@ -17,7 +17,6 @@ import {
   useUpdateTicketMutation,
   useAllUsersQuery,
   useUpdateTaskStatusMutation,
-  useUpdateMilestoneTaskMutation,
   useCreateMilestoneTaskMutation,
   useAuthStore,
 } from "@/services";
@@ -43,6 +42,8 @@ export default function Dashboard() {
 
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState<string>("");
+  const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>("");
+  const [selectedAssignedTo, setSelectedAssignedTo] = useState<string>("");
   // Move all hooks to the top
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -98,8 +99,6 @@ export default function Dashboard() {
     { label: "Critical", value: "critical" },
   ];
 
-
-
   // Support Ticket Filter handlers
   const handleSupportTicketStatusChange = (value: string) =>
     setSupportTicketStatusFilter(value);
@@ -137,6 +136,7 @@ export default function Dashboard() {
 
   const handleProjectChange = (projectId: string) => {
     setSelectedProjectId(projectId);
+    setSelectedMilestoneId(""); // Reset milestone when project changes
   };
 
   // Fetch support tickets with filters
@@ -178,6 +178,36 @@ export default function Dashboard() {
   // Fetch all projects for project selection
   const { allProjectsData: projectsData, isLoading: isLoadingProjects } =
     useAllProjectsQuery();
+
+  // Set default selections when data is loaded
+  useEffect(() => {
+    if (projectsData && projectsData.length > 0 && !selectedProjectId) {
+      setSelectedProjectId(projectsData[0].id);
+    }
+  }, [projectsData, selectedProjectId]);
+
+  useEffect(() => {
+    if (selectedProjectId && projectsData) {
+      const selectedProject = projectsData.find(
+        (project) => project.id === selectedProjectId
+      );
+      if (selectedProject?.milestones && selectedProject.milestones.length > 0 && !selectedMilestoneId) {
+        // Filter out support milestones and select the first non-support milestone
+        const filteredMilestones = selectedProject.milestones.filter(
+          (milestone) => !milestone.name?.toLowerCase().includes("support")
+        );
+        if (filteredMilestones.length > 0) {
+          setSelectedMilestoneId(filteredMilestones[0].id || "");
+        }
+      }
+    }
+  }, [selectedProjectId, projectsData, selectedMilestoneId]);
+
+  useEffect(() => {
+    if (usersData?.data?.list && usersData.data.list.length > 0 && !selectedAssignedTo) {
+      setSelectedAssignedTo(usersData.data.list[0].id);
+    }
+  }, [usersData, selectedAssignedTo]);
 
   // Update ticket mutation for assignment changes
   const { updateTicket, isPending: isUpdatingTicket } = useUpdateTicketMutation(
@@ -235,9 +265,18 @@ export default function Dashboard() {
       return [{ label: "No milestones found", value: "" }];
     }
 
+    // Filter out support milestones
+    const filteredMilestones = selectedProject.milestones.filter(
+      (milestone) => !milestone.name?.toLowerCase().includes("support")
+    );
+
+    if (filteredMilestones.length === 0) {
+      return [{ label: "No milestones found", value: "" }];
+    }
+
     return [
       { label: "Select a milestone", value: "" },
-      ...selectedProject.milestones.map((milestone) => ({
+      ...filteredMilestones.map((milestone) => ({
         label: milestone.name,
         value: milestone.id || "",
       })),
@@ -290,21 +329,7 @@ export default function Dashboard() {
   // Remove old transformation for leadAnalyticsChartDataMap
   // Prepare safe dataMap for LeadAnalyticsChart
 
-  // Update task mutation
-  const { onUpdateMilestoneTask } = useUpdateMilestoneTaskMutation({
-    onSuccessCallback: () => {
-      toast.success("Task updated successfully");
-      // Refetch projects to get updated task data
-      if (typeof window !== "undefined") {
-        window.location.reload();
-      }
-    },
-    onErrorCallback: (error) => {
-      const errorMessage =
-        error?.message || "Failed to update task. Please try again.";
-      toast.error(errorMessage);
-    },
-  });
+
 
   // Create task mutation
   const { onCreateMilestoneTask, isPending: isCreatingTask } =
@@ -435,44 +460,36 @@ export default function Dashboard() {
     {
       header: "PRIORITY",
       accessor: "priority",
-      cell: ({ row, value }) => (
-        <div className="flex justify-center">
-          <Dropdown
-            options={[
-              { label: "Critical", value: "Critical" },
-              { label: "High", value: "High" },
-              { label: "Medium", value: "Medium" },
-              { label: "Low", value: "Low" },
-            ]}
-            value={String((value as string) ?? "Medium")}
-            onChange={(val) => {
-              // Find the task to get its milestone ID
-              const task = taskList.find(t => t.id === row.id);
-              if (task && task.milestoneId) {
-                onUpdateMilestoneTask({
-                  taskId: String(row.id),
-                  payload: {
-                    priority: val as "Critical" | "High" | "Medium" | "Low",
-                    title: task.title || "",
-                    description: task.description || "",
-                    assigned_to: task.assigned_to || "",
-                    status: task.status || "",
-                    due_date: task.due_date || "",
-                    milestone_id: task.milestoneId,
-                  }
-                });
-              }
-            }}
-            dropdownWidth="w-[10rem] 2xl:w-[10vw]"
-          />
-        </div>
-      ),
+      cell: ({ value }) => {
+        const getPriorityColor = (priority?: string) => {
+          switch (priority) {
+            case "Critical":
+              return "bg-red-200 text-red-800";
+            case "High":
+              return "bg-red-100 text-red-600";
+            case "Medium":
+              return "bg-yellow-100 text-yellow-600";
+            case "Low":
+              return "bg-green-100 text-green-600";
+            default:
+              return "bg-yellow-100 text-yellow-600";
+          }
+        };
+
+        return (
+          <div className="flex justify-center">
+            <span
+              className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(
+                value as string
+              )}`}
+            >
+              {(value as string) || "Medium"}
+            </span>
+          </div>
+        );
+      },
     },
-    // Show staff name for admin users
-    ...(userRole.toLowerCase() === "admin"
-      ? [{ header: "STAFF NAME", accessor: "staffName" }]
-      : []),
-    // Show project and milestone info for staff users (non-admin)
+    { header: "STAFF NAME", accessor: "staffName" },
     { header: "PROJECT NAME", accessor: "projectName" },
     { header: "MILESTONE NAME", accessor: "milestoneName" },
     { header: "CLIENT NAME", accessor: "clientName" },
@@ -847,8 +864,8 @@ export default function Dashboard() {
               due_date: new Date().toISOString().slice(0, 10),
               status: "Open",
               priority: "Medium",
-              assigned_to: "",
-              milestone_id: "",
+              assigned_to: selectedAssignedTo,
+              milestone_id: selectedMilestoneId,
             }}
             isPending={isCreatingTask}
             isEdit={false}
