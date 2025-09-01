@@ -39,6 +39,7 @@ export function MilestoneDetails({ milestoneData }: { milestoneData: IProjectMil
           description: task.description || "",
           assigned_to: task.assigned_to || "",
           status: task.status || "",
+          priority: task.priority || "Medium",
           due_date: task.due_date || "",
           milestoneId: milestoneData.id,
           projectId: milestoneData.project.id || ""

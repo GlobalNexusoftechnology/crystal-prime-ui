@@ -191,7 +191,11 @@ export default function Dashboard() {
       const selectedProject = projectsData.find(
         (project) => project.id === selectedProjectId
       );
-      if (selectedProject?.milestones && selectedProject.milestones.length > 0 && !selectedMilestoneId) {
+      if (
+        selectedProject?.milestones &&
+        selectedProject.milestones.length > 0 &&
+        !selectedMilestoneId
+      ) {
         // Filter out support milestones and select the first non-support milestone
         const filteredMilestones = selectedProject.milestones.filter(
           (milestone) => !milestone.name?.toLowerCase().includes("support")
@@ -204,7 +208,11 @@ export default function Dashboard() {
   }, [selectedProjectId, projectsData, selectedMilestoneId]);
 
   useEffect(() => {
-    if (usersData?.data?.list && usersData.data.list.length > 0 && !selectedAssignedTo) {
+    if (
+      usersData?.data?.list &&
+      usersData.data.list.length > 0 &&
+      !selectedAssignedTo
+    ) {
       setSelectedAssignedTo(usersData.data.list[0].id);
     }
   }, [usersData, selectedAssignedTo]);
@@ -328,8 +336,6 @@ export default function Dashboard() {
 
   // Remove old transformation for leadAnalyticsChartDataMap
   // Prepare safe dataMap for LeadAnalyticsChart
-
-
 
   // Create task mutation
   const { onCreateMilestoneTask, isPending: isCreatingTask } =
@@ -461,28 +467,9 @@ export default function Dashboard() {
       header: "PRIORITY",
       accessor: "priority",
       cell: ({ value }) => {
-        const getPriorityColor = (priority?: string) => {
-          switch (priority) {
-            case "Critical":
-              return "bg-red-200 text-red-800";
-            case "High":
-              return "bg-red-100 text-red-600";
-            case "Medium":
-              return "bg-yellow-100 text-yellow-600";
-            case "Low":
-              return "bg-green-100 text-green-600";
-            default:
-              return "bg-yellow-100 text-yellow-600";
-          }
-        };
-
         return (
           <div className="flex justify-center">
-            <span
-              className={`px-2 py-1 rounded-full text-xs font-medium ${getPriorityColor(
-                value as string
-              )}`}
-            >
+            <span className={`px-2 py-1 text-xs font-medium `}>
               {(value as string) || "Medium"}
             </span>
           </div>

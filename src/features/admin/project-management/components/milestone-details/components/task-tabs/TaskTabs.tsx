@@ -328,8 +328,8 @@ export function TaskTabs({
                 </th>
                 <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[15rem] 2xl:min-w-[15vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Description</th>
                 <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[14rem] 2xl:min-w-[14vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Assigned To</th>
-                <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[8rem] 2xl:min-w-[8vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Status</th>
-                <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[8rem] 2xl:min-w-[8vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Priority</th>
+                <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[15rem] 2xl:min-w-[15vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Status</th>
+                <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[15rem] 2xl:min-w-[15vw] border-r border-gray-300 2xl:border-r-[0.05vw]">Priority</th>
                 <th className="text-center px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] font-medium min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
               </tr>
             </thead>
