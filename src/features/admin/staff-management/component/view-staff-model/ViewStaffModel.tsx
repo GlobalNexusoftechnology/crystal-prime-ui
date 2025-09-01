@@ -27,7 +27,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
         modalClassName="w-full md:w-[76%] lg:w-[66%] xl:w-[44%] 2xl:w-[40vw]"
       >
         <form className="flex flex-col justify-between gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw]rounded-xl 2xl:rounded-[0.75vw]">
-          <div className="bg-white flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:p-[1vw] border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw]">
+          <div className="bg-white flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:p-[1vw] border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw]">
             <div className="flex flex-col md:flex-row gap-1 justify-between 2xl:gap-[0.25vw]">
               <div className="flex flex-col gap-1 2xl:gap-[0.25vw]">
                 <span className="text-[0.9rem] 2xl:text-[0.875vw] text-gray-600">
@@ -63,7 +63,7 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
             </div>
           </div>
 
-          <div className="bg-white flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw]">
+          <div className="bg-white flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw]">
             <div className="flex flex-col gap-3 md:flex-row md:gap-1 justify-between 2xl:gap-[0.25vw]">
               <div className="flex flex-col ">
                 <span className="text-[0.9rem] 2xl:text-[0.875vw] text-gray-600">

@@ -47,12 +47,12 @@ export function TableRow<
   }, [isOpen, setOpenActionId]);
 
   return (
-    <tr className="border-t 2xl:border-[0.1vw] border-gray-200 hover:bg-gray-50 relative whitespace-nowrap">
-      <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">
+    <tr className="border-t 2xl:border-[0.05vw] border-gray-200 hover:bg-gray-50 relative whitespace-nowrap">
+      <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700 text-center border-r border-gray-200 capitalize">
         {String(index + 1).padStart(1, "0")}
       </td>
       {actions.length > 0 && (
-        <td className="p-3 2xl:p-[0.75vw] relative">
+        <td className="p-3 2xl:p-[0.75vw] relative text-center border-r border-gray-200 capitalize">
           <button
             ref={buttonRef}
             onClick={() => setOpenActionId(isOpen ? null : row.id)}
@@ -64,7 +64,7 @@ export function TableRow<
           {isOpen && (
             <div
               ref={actionRef}
-              className={`left-[45%] top-[50%] translate-y-[-70%]  absolute bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.1vw] w-fit min-w-[8rem] 2xl:min-w-[8vw]`}
+              className={`left-[45%] top-[50%] translate-y-[-70%]  absolute bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.05vw] w-fit min-w-[8rem] 2xl:min-w-[8vw]`}
             >
               {actions.length > 0 && actions.map((action, actionIndex) => (
                 <button
@@ -105,11 +105,58 @@ export function TableCell<T extends { id: string | number }>({
   const value = row[col.accessor];
   const initials = typeof value === 'string' ? getInitials(value) : '';
   const isAssignedTo = col.accessor === "assigned_to";
-  const isStatusColumn = col.accessor === "status_id";
+  const isStatusColumn = col.accessor === "status_id" || col.accessor === "status";
   const isEmailColumn = col.accessor === "email";
   const isColorColumn = col.accessor === "color";
+  const isPriorityColumn = col.accessor === "priority";
+  const isTypeColumn = col.accessor === "type";
   const randomColor = typeof value === 'string' ? getRandomColor(value) : '#000000';
-  const statusColor = isStatusColumn && (row as { color?: string })?.color ? String((row as { color?: string }).color) : '#888888';
+  const getStatusColor = (statusValue: string) => {
+    const statusLower = statusValue.toLowerCase();
+    switch (statusLower) {
+      case "pending":
+        return "#fbbf24"; // yellow
+      case "in progress":
+      case "in_progress":
+        return "#3b82f6"; // blue
+      case "completed":
+        return "#10b981"; // green
+      case "open":
+        return "#f59e0b"; // amber
+      case "closed":
+        return "#6b7280"; // gray
+      default:
+        return "#888888"; // default gray
+    }
+  };
+  
+  const statusColor = isStatusColumn && typeof value === 'string' 
+    ? getStatusColor(value) 
+    : (row as { color?: string })?.color || '#888888';
+
+  const getCellBackgroundColor = () => {
+    if (isStatusColumn) {
+      // Use the status_color from row data if available, otherwise fallback to calculated color
+      return (row as { status_color?: string })?.status_color || getStatusColor(String(value));
+    }
+    if (isPriorityColumn && typeof value === 'string') {
+      const priority = value.toLowerCase();
+      switch (priority) {
+        case 'high':
+          return '#fef2f2'; // light red
+        case 'medium':
+          return '#fffbeb'; // light yellow
+        case 'low':
+          return '#f0fdf4'; // light green
+        default:
+          return 'transparent';
+      }
+    }
+    if (isTypeColumn && typeof value === 'string') {
+      return '#f8fafc'; // light gray
+    }
+    return 'transparent';
+  };
 
   const renderEmailCell = (emailValue: unknown) => {
     if (Array.isArray(emailValue)) {
@@ -151,7 +198,10 @@ export function TableCell<T extends { id: string | number }>({
   return (
     <td
       key={index}
-      className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700"
+      className={`text-center p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700 border-r border-gray-200 ${
+        isEmailColumn ? '' : 'capitalize'
+      }`}
+      style={{ backgroundColor: getCellBackgroundColor() }}
     >
       {col.cell ? (
         col.cell({ row, value })
@@ -169,7 +219,7 @@ export function TableCell<T extends { id: string | number }>({
         </div>
       ) : isStatusColumn && typeof value === "string" ? (
         <span
-          className="inline-block px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] rounded-full text-white text-[0.8rem] 2xl:text-[0.8vw]"
+          className="inline-block px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-white text-[0.8rem] 2xl:text-[0.8vw] font-medium shadow-sm"
           style={{ backgroundColor: statusColor }}
         >
           {value}

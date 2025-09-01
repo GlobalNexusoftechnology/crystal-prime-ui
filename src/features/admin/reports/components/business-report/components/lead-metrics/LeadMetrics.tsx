@@ -61,7 +61,7 @@ export const LeadMetrics: React.FC<LeadMetricsProps> = ({ data }) => {
     <div className="border-b border-gray-400 2xl:border-b-[0.1vw] p-6 2xl:p-[1.5vw]">
       <div className="flex flex-wrap gap-4 2xl:gap-[1.5vw] w-full">
         {metrics?.length > 0 && metrics?.map((metric, idx) => (
-          <div key={idx} className="flex items-start gap-4 border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
+          <div key={idx} className="flex items-start gap-4 border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
             <div>
               <div className="2xl:text-[1vw] font-light text-gray-800">
                 {metric.label}

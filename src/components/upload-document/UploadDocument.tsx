@@ -48,7 +48,7 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
       )}
       <div
         onClick={handleFileClick}
-        className={`w-full cursor-pointer px-3 2xl:px-[0.75vw] py-[0.6rem] 2xl:py-[0.6vw] border 2xl:text-[0.9vw] 2xl:border-[0.1vw] rounded-md 2xl:rounded-[0.375vw] bg-white text-gray-600 border-gray-300 hover:border-gray-400 transition ${className}`}
+        className={`w-full cursor-pointer px-3 2xl:px-[0.75vw] py-[0.6rem] 2xl:py-[0.6vw] border 2xl:text-[0.9vw] 2xl:border-[0.05vw] rounded-md 2xl:rounded-[0.375vw] bg-white text-gray-600 border-gray-300 hover:border-gray-400 transition ${className}`}
       >
         {truncateName(selectedFileName || placeholder || "Upload Attachment")}
         <input

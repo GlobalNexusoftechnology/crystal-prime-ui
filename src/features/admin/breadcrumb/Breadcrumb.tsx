@@ -11,13 +11,24 @@ export function Breadcrumb({ idToName = {} }: { idToName?: Record<string, string
   const pathname = usePathname();
   const segments = pathname.split("/").filter(Boolean).slice(1); // Remove the first segment
 
+  // Check if we're in a support ticket view within a milestone
+  const isSupportTicketView = pathname.includes('/tickets/') && segments.length >= 5;
+
   const breadcrumbItems = segments.map((segment, index) => {
     const href = "/admin/" + segments.slice(0, index + 1).join("/");
     const name = idToName[segment] ||
       decodeURIComponent(segment).replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+    
+    // For support ticket view, make last 3 links non-clickable
+    let shouldBeClickable = index !== segments.length - 1; // Default: all except last
+    if (isSupportTicketView) {
+      // Make last 3 items non-clickable (support, tickets, ticket title)
+      shouldBeClickable = index < segments.length - 3;
+    }
+    
     return {
       name,
-      href: index === segments.length - 1 ? undefined : href,
+      href: shouldBeClickable ? href : undefined,
     };
   });
 
@@ -31,7 +42,7 @@ export function Breadcrumb({ idToName = {} }: { idToName?: Record<string, string
             <li key={index} className="flex items-center">
               <div className="flex items-center gap-1 text-gray-500">
                 <TbFolder className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-                {item.href && !isLast ? (
+                {item.href ? (
                   <Link
                     href={item.href}
                     className="hover:underline capitalize"

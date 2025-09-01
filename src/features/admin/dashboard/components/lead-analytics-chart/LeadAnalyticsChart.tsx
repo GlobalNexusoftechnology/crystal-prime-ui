@@ -53,7 +53,7 @@ export const LeadAnalyticsChart: React.FC<LeadAnalyticsChartProps> = ({
   }, []);
 
   return (
-    <div className="w-full bg-white p-4 2xl:p-[1vw] border border-gray-300 rounded-xl 2xl:rounded-[0.75vw] 2xl:border-[0.1vw]">
+    <div className="w-full h-full bg-white p-4 2xl:p-[1vw] border border-gray-300 rounded-xl 2xl:rounded-[0.75vw] 2xl:border-[0.05vw]">
       <div className="flex flex-col">
         <div className="flex justify-between items-center mb-4 2xl:mb-[1vw]">
           <span className="font-semibold text-[1.1rem] 2xl:text-[1.1vw] text-gray-900">

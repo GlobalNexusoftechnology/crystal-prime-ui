@@ -439,20 +439,20 @@ export interface ISentOtpResponse {
 
 export interface ICreateLeadPayload {
   first_name: string;
-  last_name: string;
-  company: string;
+  last_name?: string;
+  company?: string;
   phone: string;
-  other_contact: string;
+  other_contact?: string;
   escalate_to: boolean;
-  email: string[];
-  location: string;
+  email?: string[];
+  location?: string;
   budget?: number | null;
   possibility_of_conversion?: number | null;
-  requirement: string;
-  source_id: string;
-  status_id: string;
-  type_id: string;
-  assigned_to: string;
+  requirement?: string;
+  source_id?: string;
+  status_id?: string;
+  type_id?: string;
+  assigned_to?: string;
 }
 
 export interface ICreateRolePayload {
@@ -692,6 +692,23 @@ export interface IRegisterResponse {
   password: string;
 }
 
+// Client Credential types
+export interface ICreateClientCredentialPayload {
+  email: string;
+  password: string;
+  clientId: string;
+}
+
+export interface ICreateClientCredentialResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: {
+    email: string;
+    message: string;
+  };
+}
+
 // reset password
 export interface IResetPasswordPayload {
   email: string;
@@ -708,6 +725,18 @@ export interface IResetPasswordResponse {
 export interface IChangePasswordPayload {
   oldPassword: string;
   newPassword: string;
+}
+
+// change client password
+export interface IChangeClientPasswordPayload {
+  userId: string;
+  password: string;
+}
+
+export interface IChangeClientPasswordResponse {
+  status: boolean;
+  message: string;
+  success: true;
 }
 
 export interface IChangePasswordResponse {
@@ -1165,6 +1194,20 @@ export interface IProjectMilestoneResponse {
   status: string;
   remark?: string;
   tasks?: IProjectTaskResponse[];
+  tickets?: {
+    id: string;
+    title: string;
+    description: string;
+    status: string;
+    priority: string;
+    assigned_to: string | null;
+    image_url?: string;
+    remark: string;
+    created_at: string;
+    updated_at: string;
+    deleted: boolean;
+    deleted_at: string | null;
+  }[];
   created_at: string;
   updated_at: string;
   deleted: boolean;
@@ -1318,6 +1361,23 @@ export interface ICreateClientResponse {
   data: ICreateClientPayload;
 }
 
+export interface IClientUser {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  email: string;
+  first_name: string | null;
+  last_name: string | null;
+  phone_number: string | null;
+  dob: string | null;
+  otp: string | null;
+  otpExpiresAt: string | null;
+  isOtpVerified: boolean;
+  password: string;
+}
+
 export interface IClientList {
   id: string;
   created_at: string;
@@ -1334,6 +1394,8 @@ export interface IClientList {
   lead_id: null; 
   client_details?: IClientDetails[];
   gst_number?: string;
+  isCredential?: boolean;
+  user?: IClientUser;
 }
 
 export interface IAllClientResponse {
@@ -1703,7 +1765,8 @@ export interface IUpdateDailyTaskEntryPayload {
 export interface IDailyTaskEntryResponse {
   id: string;
   project: IProjectResponse;
-  user: IUsersDetails;
+  user?: IUsersDetails;
+  assigned_to?: string;
   task_title: string;
   entry_date: string;
   description?: string;
@@ -1735,6 +1798,19 @@ export interface IDeleteDailyTaskEntryResponse {
   status: boolean;
   message: string;
   success: true;
+}
+
+export interface IUpdateDailyTaskStatusPayload {
+  status: string;
+}
+
+export interface IUpdateDailyTaskStatusResponse {
+  status: string;
+  message: string;
+  data: {
+    id: string;
+    status: string;
+  };
 }
 
 export interface IUploadMultipleAttachmentsOptions {
@@ -2324,4 +2400,264 @@ export interface IVerifyOtpPayload {
 
 export interface IVerifyOtpResponse {
   message: string;
+}
+
+// Ticket Management Types
+export interface ITicketData {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  project_id: string;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+  image_url?: string | null;
+  remark: string;
+  assigned_to?: string | null;
+  milestone?: {
+    id: string;
+    name: string;
+    description: string;
+    start_date: string;
+    end_date: string;
+    actual_date?: string | null;
+    estimated_date?: string | null;
+    assigned_to?: string | null;
+    status: string;
+    remark?: string | null;
+  };
+  project?: {
+    id: string;
+    name: string;
+    description: string;
+    status: string;
+    budget: string;
+    estimated_cost: string;
+    actual_cost?: string | null;
+    cost_of_labour: string;
+    overhead_cost: string;
+    extra_cost: string;
+    start_date: string;
+    end_date: string;
+    actual_start_date: string;
+    actual_end_date?: string | null;
+    renewal_type?: string | null;
+    renewal_date?: string | null;
+    is_renewal: boolean;
+  };
+  task?: {
+    id: string;
+    title: string;
+    description: string;
+    due_date?: string | null;
+    status: string;
+    assigned_to: string;
+    milestone?: {
+      id: string;
+      name: string;
+      description: string;
+      start_date: string;
+      end_date: string;
+      actual_date?: string | null;
+      estimated_date?: string | null;
+      assigned_to?: string | null;
+      status: string;
+      remark?: string | null;
+    };
+  } | null;
+}
+
+export interface ITicketDetailResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketData;
+}
+
+export interface IAllTicketsResponse {
+  status: string;
+  message: string;
+  data: {
+    list: ITicketData[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
+}
+
+export interface ICreateTicketPayload {
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  project_id: string;
+  task_id?: string;
+  image_url?: string;
+  image_file?: File;
+  remark: string;
+  assigned_to?: string | null;
+}
+
+export interface ICreateTicketResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketData;
+}
+
+export interface IUpdateTicketPayload {
+  id: string;
+  payload: Partial<ICreateTicketPayload>;
+}
+
+export interface IUpdateTicketRequestPayload {
+  id: string;
+  payload: Partial<ICreateTicketPayload>;
+}
+
+export interface IUpdateTicketResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketData;
+}
+
+export interface IDeleteTicketResponse {
+  status: boolean;
+  message: string;
+  success: true;
+}
+
+export interface ITicketFilters {
+  searchText?: string;
+  status?: string;
+  priority?: string;
+  createdBy?: string;
+  dateRange?: string;
+  fromDate?: string;
+  toDate?: string;
+  page?: number;
+}
+
+// Ticket Comments APIs Types
+// -----------------------------------------------------
+
+export interface ICreateTicketCommentPayload {
+  ticket_id: string;
+  title?: string;
+  description?: string;
+  status?: string;
+  priority?: string;
+  remark?: string;
+}
+
+export interface ITicketCommentResponse {
+  id: string;
+  title: string;
+  description: string;
+  status: string;
+  priority: string;
+  remark: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  ticket: {
+    id: string;
+    title: string;
+    description: string;
+    status: string;
+    priority: string;
+    assigned_to: string | null;
+    image_url?: string;
+    remark?: string;
+    created_at: string;
+    updated_at: string;
+    deleted: boolean;
+    deleted_at: string | null;
+    project: {
+      id: string;
+      name: string;
+      description?: string;
+      status?: string;
+      budget?: string;
+      estimated_cost?: string;
+      actual_cost?: string | null;
+      cost_of_labour?: string;
+      overhead_cost?: string;
+      extra_cost?: string;
+      start_date?: string;
+      end_date?: string;
+      actual_start_date?: string | null;
+      actual_end_date?: string | null;
+      renewal_type?: string | null;
+      renewal_date?: string | null;
+      is_renewal?: boolean;
+    };
+    milestone: {
+      id: string;
+      name: string;
+      description?: string;
+      start_date?: string;
+      end_date?: string;
+      actual_date?: string | null;
+      estimated_date?: string | null;
+      assigned_to?: string;
+      status?: string;
+      remark?: string | null;
+    };
+  };
+  user: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number?: string | null;
+    dob?: string | null;
+    otp?: string | null;
+    otpExpiresAt?: string | null;
+    isOtpVerified?: boolean;
+    password?: string;
+  };
+}
+
+export interface ICreateTicketCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketCommentResponse;
+}
+
+export interface IAllTicketCommentsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: {
+    list: ITicketCommentResponse[];
+    total: number;
+  };
+}
+
+export interface IUpdateTicketCommentPayload {
+  id: string;
+  payload: Partial<ICreateTicketCommentPayload>;
+}
+
+export interface IUpdateTicketCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketCommentResponse;
+}
+
+export interface IDeleteTicketCommentResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ITicketCommentResponse;
 }

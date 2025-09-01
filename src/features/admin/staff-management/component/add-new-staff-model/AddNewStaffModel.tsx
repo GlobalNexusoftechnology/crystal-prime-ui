@@ -128,7 +128,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
             errors,
             touched,
           }) => (
-            <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
+            <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-gray-200">
               <h1 className="text-lg 2xl:text-[1.125vw] font-semibold">
                 Add New Staff
               </h1>

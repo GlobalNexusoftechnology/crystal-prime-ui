@@ -36,6 +36,8 @@ export { useAllLeadAttachmentQuery } from "./useAllLeadAttachmentQuery";
 export { useCreateLeadAttachmentMutation } from "./useCreateLeadAttachmentMutation";
 export { useAllUsersQuery } from "./useAllUsersQuery";
 export { useCreateUserMutation } from "./useCreateUserMutation";
+export { useCreateClientCredentialMutation } from "./useCreateClientCredentialMutation";
+export { useChangeClientPasswordMutation } from "./useChangeClientPasswordMutation";
 export { useUserDetailQuery } from "./useUserDetailQuery";
 export { useUpdateUserMutation } from "./useUpdateUserMutation";
 export { useDeleteUserMutation } from "./useDeleteUserMutation";
@@ -108,11 +110,19 @@ export { useUpdateMilestoneTaskMutation } from "./useUpdateMilestoneTaskMutation
 export { useCreateTaskCommentMutation } from "./useCreateTaskCommentMutation";
 export { useGetAllTaskCommentsQuery } from "./useGetAllTaskCommentsQuery";
 
+// ticket comments
+export { useCreateTicketCommentMutation } from "./useCreateTicketCommentMutation";
+export { useGetAllTicketCommentsQuery } from "./useGetAllTicketCommentsQuery";
+export { useUpdateTicketCommentMutation } from "./useUpdateTicketCommentMutation";
+export { useDeleteTicketCommentMutation } from "./useDeleteTicketCommentMutation";
+export { useTicketCommentDetailQuery } from "./useTicketCommentDetailQuery";
+
 export { useUpdateTaskStatusMutation } from "./useUpdateTaskStatusMutation";
 
 export { useCreateDailyTaskMutation } from "./useCreateDailyTaskMutation";
 export { useAllDailyTaskQuery } from "./useAllDailyTaskQuery";
 export { useUpdateDailyTaskMutation } from "./useUpdateDailyTaskMutation";
+export { useUpdateDailyTaskStatusMutation } from "./useUpdateDailyTaskStatusMutation";
 
 export { useDashboardSummaryQuery } from "./useDashboardSummaryQuery";
 export { useUploadMultipleAttachmentsMutation } from "./useUploadMultipleAttachmentsMutation";
@@ -152,3 +162,12 @@ export { useLeadReportExcelQuery } from './useLeadReportExcelQuery';
 export { useBusinessAnalysisReportExcelQuery } from './useBusinessAnalysisReportExcelQuery';
 export { useForgotPasswordMutation } from "./useForgotPasswordMutation";
 export { useVerifyOtpMutation } from "./useVerifyOtpMutation";
+
+// Ticket Management
+export { useAllTicketsQuery } from "./useAllTicketsQuery";
+export { useAllTicketsAcrossProjectsQuery } from "./useAllTicketsAcrossProjectsQuery";
+export { useCreateTicketMutation } from "./useCreateTicketMutation";
+export { useUpdateTicketMutation } from "./useUpdateTicketMutation";
+export { useUpdateTicketStatusMutation } from "./useUpdateTicketStatusMutation";
+export { useDeleteTicketMutation } from "./useDeleteTicketMutation";
+export { useTicketDetailQuery } from "./useTicketDetailQuery";

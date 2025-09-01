@@ -27,6 +27,9 @@ export function HeaderDetails({
   const isTaskView = /^\/admin\/project-management\/[^/]+\/[^/]+\/[^/]+$/.test(
     pathname
   );
+  const isTicketView = /^\/admin\/project-management\/[^/]+\/[^/]+\/tickets\/[^/]+$/.test(
+    pathname
+  );
 
   return (
     <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw]">
@@ -34,13 +37,22 @@ export function HeaderDetails({
         <h2 className="text-[1.5rem] 2xl:text-[1.5vw] font-medium">{title}</h2>
       </div>
       <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw]">
-        {isTaskView ? (
+        {isTaskView || isTicketView ? (
           <StatusDropdown
-            options={[
-              { label: "Open", value: "Open" },
-              { label: "In Progress", value: "In Progress" },
-              { label: "Completed", value: "Completed" },
-            ]}
+            options={
+              isTicketView
+                ? [
+                    { label: "Open", value: "open" },
+                    { label: "In Progress", value: "in_progress" },
+                    { label: "Completed", value: "completed" },
+                    { label: "Closed", value: "closed" },
+                  ]
+                : [
+                    { label: "Open", value: "Open" },
+                    { label: "In Progress", value: "In Progress" },
+                    { label: "Completed", value: "Completed" },
+                  ]
+            }
             value={status}
             onChange={onStatusChange || (() => {})}
           />

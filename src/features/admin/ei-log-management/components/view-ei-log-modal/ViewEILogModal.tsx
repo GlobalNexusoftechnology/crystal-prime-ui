@@ -45,7 +45,7 @@ export const ViewEILogModal: React.FC<ViewEILogModalProps> = ({
     >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         {/* Card Content */}
-        <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
+        <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-gray-200">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <p className="text-[1rem] 2xl:text-[1vw] text-gray-600">EI Type</p>

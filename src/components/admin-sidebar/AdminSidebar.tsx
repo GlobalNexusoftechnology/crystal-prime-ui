@@ -3,8 +3,6 @@ import React from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { IAdminSidebarLink, ImageRegistry } from "@/constants";
-import { useAuthStore } from "@/services";
-import { CgLogOut } from "react-icons/cg";
 
 interface IAdminSidebarProps {
   adminSidebarLinks: IAdminSidebarLink[];
@@ -17,21 +15,10 @@ export function AdminSidebar({
 }: IAdminSidebarProps) {
   const pathName = usePathname();
   const router = useRouter();
-  const { removeSession } = useAuthStore();
 
   // Function to handle navigation
   const handleRedirect = (link: string) => {
-    if (link === "/admin/logout") {
-      handleLogout();
-    } else {
-      router.push(link);
-    }
-  };
-
-  // Logout function
-  const handleLogout = () => {
-    removeSession();
-    router.push("/login"); // Redirect to login page
+    router.push(link);
   };
 
   return (
@@ -118,21 +105,6 @@ export function AdminSidebar({
               </React.Fragment>
             );
           })}
-        </div>
-        <div
-          onClick={handleLogout}
-          className={`${
-            isVisibleSidebar ? "justify-center" : "justify-start"
-          } flex items-center gap-4 2xl:gap-[1vw] p-6 2xl:p-[1.5vw]  cursor-pointer`}
-        >
-          <CgLogOut className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
-          <h1
-            className={`${
-              isVisibleSidebar ? "hidden" : "flex"
-            } text-base 2xl:text-[1vw]`}
-          >
-            Logout
-          </h1>
         </div>
       </ul>
     </aside>

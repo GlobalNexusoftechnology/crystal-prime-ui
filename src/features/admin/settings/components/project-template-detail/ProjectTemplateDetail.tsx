@@ -92,7 +92,7 @@ export function ProjectTemplateDetail({
 
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw] justify-between bg-white rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.1vw] border-borderGray p-4 2xl:p-[1vw]">
+    <div className="flex flex-col gap-4 2xl:gap-[1vw] justify-between bg-white rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.05vw] border-borderGray p-4 2xl:p-[1vw]">
       <div className="flex items-start justify-between">
         <div>
         <Breadcrumb idToName={idToName} />

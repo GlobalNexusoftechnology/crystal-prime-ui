@@ -111,8 +111,8 @@ export const ProjectCard: React.FC<Props> = ({
           </div>
         </div>
 
-        <div className="flex border-b border-gray-400 flex-wrap gap-2 2xl:gap-[0.5vw] justify-between text-[0.9rem] 2xl:text-[0.875vw] 2xl:leading-[1.2vw]">
-          <div className="py-2 2xl:py-[0.5vw]">
+        <div className="flex border-b border-gray-400 flex-nowrap gap-2 h-[5.2rem] 2xl:h-[5.2vw] overflow-hidden 2xl:gap-[0.5vw] items-center justify-between text-[0.9rem] 2xl:text-[0.875vw] 2xl:leading-[1.2vw]">
+          <div className="py-2 2xl:py-[0.5vw] w-[45%]">
             <p className="text-gray-600 2xl:text-[1vw] 2xl:leading-[1.4vw]">
               Client Name
             </p>
@@ -123,7 +123,7 @@ export const ProjectCard: React.FC<Props> = ({
               {project?.data?.client?.name || "Unknown Client"}
             </Link>
           </div>
-          <div className="w-[1px] 2xl:w-[0.1vw] h-[3.7rem] 2xl:h-[3.7vw] bg-gray-400"/>
+          <div className="w-[1px] 2xl:w-[0.1vw] h-[10rem] 2xl:h-[10vw] bg-gray-400"/>
           <div className="text-left py-2 2xl:py-[0.5vw]">
             <p className="text-gray-600 2xl:text-[1vw] underline 2xl:leading-[1.4vw]">
               {project.data.status === "completed" || project.data.status === "Completed"

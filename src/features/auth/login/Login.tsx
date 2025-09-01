@@ -30,7 +30,12 @@ const togglePasswordVisibility = () => {
     });
 
     toast.success(response?.message || "Login successful 🎉");
-    router.push("/admin/dashboard");
+    const role = loginData?.user?.role?.role?.toLowerCase?.() || "";
+    if (role === "client") {
+      router.push("/admin/my-projects");
+    } else {
+      router.push("/admin/dashboard");
+    }
   };
 
   const handleErrorCallback = (error: IApiError) => {

@@ -33,13 +33,26 @@ const createFileFromAttachment = (attachment: {
 };
 
 export function EditProject({ projectId }: EditProjectProps) {
-  const { projectDetailData, isLoading, error } = useProjectDetailQuery(projectId);
+  const { projectDetailData, isLoading, error, refetch } = useProjectDetailQuery(projectId);
   const [initialFormValues, setInitialFormValues] = useState<IAddProjectFormValues | null>(null);
   const [transformedMilestones, setTransformedMilestones] = useState<Milestone[]>([]);
   const [existingAttachments, setExistingAttachments] = useState<File[]>([]);
 
+  // Store original project data to preserve tickets
+  const [originalProjectData, setOriginalProjectData] = useState<typeof projectDetailData | null>(null);
+
+  // Force refetch on component mount to ensure fresh data
+  useEffect(() => {
+    refetch();
+  }, [projectId, refetch]);
+
   useEffect(() => {
     if (projectDetailData) {
+      // Store original data on first load to preserve tickets
+      if (!originalProjectData) {
+        setOriginalProjectData(projectDetailData);
+      }
+
       // Transform project detail data to form values
       const formValues: IAddProjectFormValues = {
         client_id: projectDetailData.client?.id || "",
@@ -64,23 +77,51 @@ export function EditProject({ projectId }: EditProjectProps) {
       setInitialFormValues(formValues);
 
       // Transform milestones from API response to local format
-      const milestones: Milestone[] = (projectDetailData?.milestones || [])?.map((milestone) => ({
-        id: milestone.id || "",
-        name: milestone.name || "",
-        description: milestone.description || "",
-        assigned_to: milestone.assigned_to || "",
-        status: milestone.status || "",
-        start_date: milestone.start_date || "",
-        end_date: milestone.end_date || "",
-        tasks: (milestone.tasks || [])?.map((task) => ({
-          id: task.id || "",
-          title: task.title || "",
-          description: task.description || "",
-          assigned_to: task.assigned_to || "",
-          status: task.status || "",
-          due_date: task.due_date || "",
-        })),
-      }));
+      const milestones: Milestone[] = (projectDetailData?.milestones || [])?.map((milestone) => {
+        // Find corresponding milestone in original data to preserve tickets
+        let originalMilestone = null;
+        if (originalProjectData && originalProjectData.milestones) {
+          originalMilestone = originalProjectData.milestones.find((orig) => 
+            orig.name === milestone.name && orig.name === "Support"
+          );
+        }
+
+        // Use tickets from original milestone if current milestone has no tickets
+        const ticketsToUse = (milestone.tickets && milestone.tickets.length > 0) 
+          ? milestone.tickets 
+          : (originalMilestone && originalMilestone.tickets) 
+            ? originalMilestone.tickets 
+            : [];
+
+        return {
+          id: milestone.id || "",
+          name: milestone.name || "",
+          description: milestone.description || "",
+          assigned_to: milestone.assigned_to || "",
+          status: milestone.status || "",
+          start_date: milestone.start_date || "",
+          end_date: milestone.end_date || "",
+          tasks: (milestone.tasks || [])?.map((task) => ({
+            id: task.id || "",
+            title: task.title || "",
+            description: task.description || "",
+            assigned_to: task.assigned_to || "",
+            status: task.status || "",
+            due_date: task.due_date || "",
+          })),
+          tickets: ticketsToUse.map((ticket) => ({
+            id: ticket.id || "",
+            title: ticket.title || "",
+            description: ticket.description || "",
+            assigned_to: ticket.assigned_to || null,
+            status: ticket.status || "",
+            priority: ticket.priority || "",
+            remark: ticket.remark || "",
+            image_url: ticket.image_url || "",
+            created_at: ticket.created_at || "",
+          })),
+        };
+      });
       setTransformedMilestones(milestones);
 
       // Transform existing attachments to File objects
@@ -89,7 +130,7 @@ export function EditProject({ projectId }: EditProjectProps) {
       );
       setExistingAttachments(attachments);
     }
-  }, [projectDetailData]);
+  }, [projectDetailData, originalProjectData]);
 
   if (isLoading) {
     return (

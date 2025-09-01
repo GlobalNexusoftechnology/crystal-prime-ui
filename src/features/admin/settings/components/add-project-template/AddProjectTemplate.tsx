@@ -141,7 +141,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
         onSubmit={formik.handleSubmit}
         className="flex flex-col gap-4 2xl:gap-[1vw]"
       >
-        <div className="rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.1vw] border-borderGray p-4 2xl:p-[1vw] bg-white">
+        <div className="rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.05vw] border-borderGray p-4 2xl:p-[1vw] bg-white">
           <h1 className="text-[1.1rem] 2xl:text-[1.1vw] font-medium mb-4">
             Project Info
           </h1>
@@ -212,7 +212,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               }}
               onBlur={formik.handleBlur}
               placeholder="Write something..."
-              className="w-full p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-borderGray rounded-md 2xl:rounded-[0.375vw]"
+              className="w-full p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-borderGray rounded-md 2xl:rounded-[0.375vw]"
             />
             {formik.touched.description && formik.errors.description && (
               <span className="text-red-500 text-[0.9rem] 2xl:text-[0.875vw]">

@@ -25,7 +25,7 @@ export const SourceWiseConversionRate: React.FC<SourceWiseConversionRateProps> =
       </div>
       <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw]">
         {sourceData.map((source, idx) => (
-          <div key={idx} className="flex flex-col items-start gap-2 2xl:gap-[0.5vw] px-6 2xl:px-[1.5vw] py-2 2xl:py-[0.5vw] border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] shadow-sm bg-white">
+          <div key={idx} className="flex flex-col items-start gap-2 2xl:gap-[0.5vw] px-6 2xl:px-[1.5vw] py-2 2xl:py-[0.5vw] border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] shadow-sm bg-white">
             <span className="text-[1rem] 2xl:text-[1vw] font-light text-[#1a2341] mb-1">
               {source.label}
             </span>

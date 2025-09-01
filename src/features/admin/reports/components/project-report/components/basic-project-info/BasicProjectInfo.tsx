@@ -18,43 +18,43 @@ export function BasicProjectInfo({
       <div className="flex flex-wrap gap-4 2xl:gap-[1vw] text-[0.9rem] 2xl:text-[0.875vw]">
 
         {/* Project Type */}
-        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
           <p className="font-light mb-2 2xl:mb-[0.5vw]">Project Type</p>
           <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.projectType ?? "-"}</p>
         </div>
 
         {/* Project Manager */}
-        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
           <p className="font-light mb-2 2xl:mb-[0.5vw]">Project Manager</p>
           <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.projectManager?.name ?? "-"}</p>
         </div>
 
         {/* Estimated Start Date */}
-        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
           <p className="font-light mb-2 2xl:mb-[0.5vw]">Estimated Start Date</p>
           <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.estimatedStartDate ?? "-"}</p>
         </div>
 
         {/* Estimated End Date */}
-        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
           <p className="font-light mb-2 2xl:mb-[0.5vw]">Estimated End Date</p>
           <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.estimatedEndDate ?? "-"}</p>
         </div>
 
         {/* Project Phase */}
-        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
           <p className="font-light mb-2 2xl:mb-[0.5vw]">Project Phase</p>
           <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.projectPhase ?? "-"}</p>
         </div>
 
         {/* Current Status */}
-        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
           <p className="font-light mb-2 2xl:mb-[0.5vw]">Current Status</p>
           <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.currentStatus ?? "-"}</p>
         </div>
 
         {/* Assigned Team Count */}
-        <div className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
+        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
           <p className="font-light mb-2 2xl:mb-[0.5vw]">Team Members</p>
           <p className="underline text-[1rem] 2xl:text-[1.1vw]">{data.assignedTeam?.length ?? "-"}</p>
         </div>

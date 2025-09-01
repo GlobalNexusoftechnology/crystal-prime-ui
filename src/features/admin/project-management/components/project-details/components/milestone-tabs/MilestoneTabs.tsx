@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Milestone, Task } from "./components";
+import { Milestone, Task, Tickets } from "./components";
 import { AddSquareIcon } from "@/features";
 import {
   useDeleteMilestoneMutation,
@@ -12,6 +12,7 @@ import {
   useUpdateMilestoneTaskMutation,
   useAllUsersQuery,
   IProjectTaskResponse,
+  ITicketData,
 } from "@/services";
 import toast from "react-hot-toast";
 import { usePermission } from "@/utils/hooks/usePermission";
@@ -49,6 +50,7 @@ export function MilestoneTabs({
   const [milestoneMenu, setMilestoneMenu] = useState<string | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [taskMenu, setTaskMenu] = useState<any>(null);
+  const [ticketMenu, setTicketMenu] = useState<{ milestoneId: string; ticketId: string } | null>(null);
   const [expandedMilestones, setExpandedMilestones] = useState<string[]>(
     milestoneData?.map((m: Milestone) => m?.id)
   );
@@ -762,7 +764,7 @@ export function MilestoneTabs({
       {/* Tab Contents */}
       <div>
         {activeTab === "Milestones" && (
-          <div className="mb-4 2xl:mb-[1vw]">
+          <div className="mb-4 2xl:mb-[1vw] border 2xl:border-[0.05vw] border-gray-300 rounded-lg 2xl:rounded-[0.75vw]">
             <div className="overflow-x-auto">
               <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
                 <thead>
@@ -824,7 +826,7 @@ export function MilestoneTabs({
                         canViewMilestone={canViewMilestone}
                       />
                       {(expandedMilestones.includes(milestone.id) ||
-                        editingId === milestone.id) && (
+                        editingId === milestone.id) && milestone.name !== "Support" && (
                         <tr className="bg-gray-50 2xl:bg-gray-100]">
                           <td colSpan={7} className="p-0">
                             <table>
@@ -892,6 +894,57 @@ export function MilestoneTabs({
                           </td>
                         </tr>
                       )}
+                        {/* Tickets Section - Conditional Rendering */}
+                        {milestone.tickets && milestone.tickets.length > 0 && (
+                          <tr className="bg-gray-50 2xl:bg-gray-100]">
+                            <td colSpan={7} className="p-0">
+                              <table>
+                                <thead>
+                                  <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
+                                    <th className=" px-2 2xl:px-[0.5vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-center flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                      <span>Ticket Title</span>
+                                    </th>
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                      Description
+                                    </th>
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                      Assigned To
+                                    </th>
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                      Status
+                                    </th>
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                      Priority
+                                    </th>
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                      Remark
+                                    </th>
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                      Image
+                                    </th>
+                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                      Created Date
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {milestone.tickets.map((ticket: ITicketData) => (
+                                    <Tickets
+                                      key={ticket.id}
+                                      ticket={ticket}
+                                      projectId={projectId}
+                                      milestoneId={milestone.id}
+                                      menuOpen={ticketMenu}
+                                      setMenuOpen={setTicketMenu}
+                                      canViewTicket={true}
+                                    />
+                                  ))}
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        )}
                     </React.Fragment>
                   ))}
                 </tbody>

@@ -88,7 +88,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
       {showForm ? (
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
         >
           <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw]">
             <Dropdown
@@ -138,7 +138,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
         followupData?.map((followup, idx) => (
           <div
             key={idx}
-            className="flex flex-col gap-2 md:gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.1vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+            className="flex flex-col gap-2 md:gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
           >
             <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
               <div className="text-darkBlue flex justify-between items-center gap-4 2xl:gap-[1vw]">

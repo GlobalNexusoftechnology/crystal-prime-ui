@@ -33,7 +33,7 @@ export function TaskMetricsChart({
       </h3>
 
       {/* Chart Section */}
-      <div className="w-full border border-gray-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] 2xl:border-[0.1vw] bg-white">
+      <div className="w-full border border-gray-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] 2xl:border-[0.05vw] bg-white">
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={barData} barSize={40}>
             <XAxis
@@ -62,7 +62,7 @@ export function TaskMetricsChart({
       {/* Metrics Cards */}
       <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mt-6 2xl:mt-[1.5vw] text-gray-800">
         {/* Avg Task Completion Time */}
-        <div className="border border-gray-300 rounded-lg p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1 2xl:rounded-[0.5vw] 2xl:border-[0.1vw]">
+        <div className="border border-gray-300 rounded-lg p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1 2xl:rounded-[0.5vw] 2xl:border-[0.05vw]">
           <p className="font-light mb-2 2xl:mb-[0.5vw]">Avg Task Completion Time</p>
           <p className="underline text-[1rem] 2xl:text-[1.1vw] font-medium">
             {data.avgTaskCompletionTime ?? "-"}
@@ -70,7 +70,7 @@ export function TaskMetricsChart({
         </div>
 
         {/* Task Reassignment Count */}
-        <div className="border border-gray-300 rounded-lg p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1 2xl:rounded-[0.5vw] 2xl:border-[0.1vw]">
+        <div className="border border-gray-300 rounded-lg p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1 2xl:rounded-[0.5vw] 2xl:border-[0.05vw]">
           <p className="font-light mb-2 2xl:mb-[0.5vw]">Task Reassignment Count</p>
           <p className="underline text-[1rem] 2xl:text-[1.1vw] font-medium">
             {data.taskReassignmentCount ?? "-"}
@@ -78,7 +78,7 @@ export function TaskMetricsChart({
         </div>
 
         {/* Top Performer */}
-        <div className="border border-gray-300 rounded-lg p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1 2xl:rounded-[0.5vw] 2xl:border-[0.1vw]">
+        <div className="border border-gray-300 rounded-lg p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1 2xl:rounded-[0.5vw] 2xl:border-[0.05vw]">
           <p className="font-light mb-2 2xl:mb-[0.5vw]">Top Performer</p>
           <p className="underline text-[1rem] 2xl:text-[1.1vw] font-medium">
             {topPerformer?.name || "-"} ({topPerformer?.tasksCompleted || 0} Tasks Completed)

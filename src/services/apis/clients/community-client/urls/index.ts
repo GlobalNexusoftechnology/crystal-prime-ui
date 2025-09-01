@@ -29,6 +29,11 @@ export const changePasswordUrl = () => "/users/change-password";
 export const forgotPasswordUrl = () => "/auth/forgot-password";
 export const verifyOtpUrl = () => "/auth/verify-otp";
 
+// Client Credential APIs url
+export const createClientCredentialUrl = () => "/users/client/credentials";
+
+export const changeClientPasswordUrl = () => "/users/client/change-password";
+
 // leads APIs url
 export const createLeadUrl = () => "/leads";
 
@@ -287,6 +292,7 @@ export const deleteDailyTaskEntryUrl = (id: string) => `/daily-task/${id}`;
 export const getDailyTaskEntryDetailUrl = (id: string) => `/daily-task/${id}`;
 export const getAllDailyTaskEntriesUrl = (projectId?: string) =>
   projectId ? `/daily-task?projectId=${projectId}` : "/daily-task";
+export const updateDailyTaskStatusUrl = (id: string) => `/daily-task/${id}/status`;
 
 export const dashboardSummaryUrl = () => "/dashboard/summary";
 
@@ -331,3 +337,24 @@ export const fetchStaffPerformanceReportExcelUrl = () =>
 export const fetchLeadReportExcelUrl = () => "/reports/leads/export/excel";
 export const fetchBusinessAnalysisReportExcelUrl = () =>
   "/reports/business-analysis/export/excel";
+
+// Ticket Management URLs
+export const fetchAllTicketsUrl = (projectId: string) => `/tickets/project/${projectId}`;
+export const fetchAllTicketsAcrossProjectsUrl = () => "/tickets";
+export const createTicketUrl = () => "/tickets";
+export const getTicketDetailByIdUrl = (id: string) => `/tickets/${id}`;
+export const updateTicketUrl = (id: string) => `/tickets/${id}`;
+export const deleteTicketUrl = (id: string) => `/tickets/${id}`;
+// Update Ticket Status
+export const updateTicketStatusUrl = (id: string) => `/tickets/${id}/status`;
+
+// Ticket Comments API's
+export const createTicketCommentUrl = () => "/ticket-comments";
+export const updateTicketCommentUrl = (commentId: string) =>
+  `/ticket-comments/${commentId}`;
+export const deleteTicketCommentUrl = (commentId: string) =>
+  `/ticket-comments/${commentId}`;
+export const getTicketCommentDetailUrl = (commentId: string) =>
+  `/ticket-comments/${commentId}`;
+export const getAllTicketCommentsUrl = (ticketId: string) =>
+  `/ticket-comments/ticket/${ticketId}`;

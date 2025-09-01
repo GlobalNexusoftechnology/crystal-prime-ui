@@ -61,7 +61,7 @@ export const MonthlyLeadsChart: React.FC<MonthlyLeadsChartProps> = ({ data }) =>
   const yDomain: [number, number] = [0, Math.max(50, maxValue + 10)];
   
   return (
-    <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] border border-gray-300 2xl:border-[0.1vw] p-6 w-full">
+    <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] border border-gray-300 2xl:border-[0.05vw] p-6 w-full">
       <div className="text-[1rem] 2xl:text-[1vw] font-medium text-black mb-2">
         Monthly Leads Chart
       </div>

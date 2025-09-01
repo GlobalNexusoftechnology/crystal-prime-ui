@@ -5,6 +5,7 @@ import { HiOutlineDotsVertical } from "react-icons/hi";
 import { TreeStructureIcon } from "@/features";
 import { formatDateToDDMMYYYY, getInitials, getRandomColor } from "@/utils";
 import { useRouter } from "next/navigation";
+import { ITicketData } from "@/services";
 
 export interface Task {
   id: string;
@@ -25,6 +26,7 @@ export interface Milestone {
   end_date: string;
   projectId: string;
   tasks: Task[];
+  tickets?: ITicketData[];
 }
 
 interface MilestoneProps {
@@ -121,7 +123,10 @@ export function Milestone({
                 onChange={(e) =>
                   onChange({ ...editMilestone, name: e.target.value })
                 }
-                className={`${errors.name ? "border-red-500" : ""}`}
+                className={`${errors.name ? "border-red-500" : ""} ${
+                  editMilestone.name === "Support" ? "bg-gray-100 cursor-not-allowed" : ""
+                }`}
+                disabled={editMilestone.name === "Support"}
               />
               {errors.name && (
                 <span className="text-red-500 text-xs 2xl:text-[0.8vw] mt-1 2xl:mt-[0.25vw]">
@@ -137,6 +142,8 @@ export function Milestone({
                 onChange({ ...editMilestone, description: e.target.value })
               }
               placeholder="Description"
+              className={editMilestone.name === "Support" ? "bg-gray-100 cursor-not-allowed" : ""}
+              disabled={editMilestone.name === "Support"}
             />
           </td>
           <td className="p-2 2xl:p-[0.5vw]">
@@ -207,29 +214,52 @@ export function Milestone({
                 ref={menuRef}
                 className="absolute left-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px]"
               >
-                {canViewMilestone && (
-                  <button
-                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                    onClick={() => handleRedirectView(milestone.id)}
-                  >
-                    View
-                  </button>
-                )}
-                {canEditMilestone && (
-                  <button
-                    className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100"
-                    onClick={() => onEdit(milestone)}
-                  >
-                    Edit
-                  </button>
-                )}
-                {canDeleteMilestone && (
-                  <button
-                    className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100 text-red-600"
-                    onClick={() => onDelete(milestone.id)}
-                  >
-                    Delete
-                  </button>
+                {milestone.name === "Support" ? (
+                  // For Support milestone, show only Edit action
+                  canEditMilestone && (
+                    <button
+                      className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100"
+                      onClick={() => onEdit(milestone)}
+                    >
+                      Edit
+                    </button>
+                  )
+                ) : (
+                  // For other milestones, show all actions
+                  <>
+                    {canViewMilestone && (
+                      <button
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                        onClick={() => handleRedirectView(milestone.id)}
+                      >
+                        View
+                      </button>
+                    )}
+                    {milestone.tickets && milestone.tickets.length > 0 && (
+                      <button
+                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                        onClick={() => handleRedirectView(milestone.id)}
+                      >
+                        View Tickets ({milestone.tickets.length})
+                      </button>
+                    )}
+                    {canEditMilestone && (
+                      <button
+                        className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100"
+                        onClick={() => onEdit(milestone)}
+                      >
+                        Edit
+                      </button>
+                    )}
+                    {canDeleteMilestone && (
+                      <button
+                        className="block w-full text-left px-4 2xl:px-[1vw] py-1 2xl:py-[0.25vw] hover:bg-gray-100 text-red-600"
+                        onClick={() => onDelete(milestone.id)}
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -253,7 +283,7 @@ export function Milestone({
               </span>
               <div className="flex items-center gap-1 2xl:gap-[0.25vw]">
                 <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
-                <p className="border-2 2xl:border-[0.1vw] border-dotted border-primary rounded-full text-[0.9rem] 2xl:text-[0.9vw] px-2 2xl:px-[0.5vw] py-0 2xl:py-[0.4vw] text-primary">
+                <p className="border-2 2xl:border-[0.05vw] border-dotted border-primary rounded-full text-[0.9rem] 2xl:text-[0.9vw] px-2 2xl:px-[0.5vw] py-0 2xl:py-[0.4vw] text-primary">
                   {milestone.tasks.length}
                 </p>
               </div>

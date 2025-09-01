@@ -1,0 +1,1 @@
+export { TicketCommentTab } from "./TicketCommentTab";

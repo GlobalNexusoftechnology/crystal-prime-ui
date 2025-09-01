@@ -209,6 +209,17 @@ export interface Milestone {
   start_date: string;
   end_date: string;
   tasks: Task[];
+  tickets?: {
+    id: string;
+    title: string;
+    description: string;
+    assigned_to: string | null;
+    status: string;
+    priority: string;
+    remark: string;
+    image_url?: string;
+    created_at?: string;
+  }[];
 }
 
 export function AddProject({
@@ -621,6 +632,7 @@ export function AddProject({
         <Step3UploadDocument
           onBack={() => setStep(2)}
           isPending={isPending}
+          mode={mode}
           onNext={(files: File[], removedIds: string[]) => {
             // Remove files if any were deleted
             if (removedIds.length > 0) {
@@ -637,8 +649,10 @@ export function AddProject({
               setRemovedAttachmentIds(removedIds);
               onUploadMultipleAttachments(formData);
               // Do NOT setStep(4) here; move to step 4 in onSuccessCallback above
-            } else if (removedIds.length === 0) {
-              // No files to upload or remove, just proceed to next step
+            } else {
+              // No files to upload, just proceed to next step
+              setUploadedFiles(files);
+              setRemovedAttachmentIds(removedIds);
               setStep(4);
             }
           }}
