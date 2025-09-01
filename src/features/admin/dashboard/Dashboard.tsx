@@ -67,34 +67,7 @@ export default function Dashboard() {
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
   const userRole = activeSession?.user?.role?.role || "";
-  // Daily Task Filters
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [priorityFilter, setPriorityFilter] = useState<string>("");
-  const [searchInput, setSearchInput] = useState("");
 
-  const { debouncedValue: searchQuery } = useDebounce({
-    initialValue: searchInput,
-    delay: 500,
-    onChangeCb: () => {},
-  });
-
-  const handleSearch = (query: string) => {
-    setSearchInput(query.toLowerCase());
-  };
-
-  const [fromDate, setFromDate] = useState<string>("");
-  const [toDate, setToDate] = useState<string>("");
-
-  const filters = useMemo(
-    () => ({
-      searchText: searchQuery,
-      status: statusFilter,
-      priority: priorityFilter,
-      fromDate: fromDate || undefined,
-      toDate: toDate || undefined,
-    }),
-    [searchQuery, statusFilter, priorityFilter, fromDate, toDate]
-  );
 
   // Support Ticket Filters
   const [supportTicketStatusFilter, setSupportTicketStatusFilter] =
@@ -148,14 +121,8 @@ export default function Dashboard() {
     { label: "High", value: "high" },
     { label: "Critical", value: "critical" },
   ];
+  
 
-  // Filter handler
-  const handleStatusChange = (value: string) => setStatusFilter(value);
-  const handlePriorityChange = (value: string) => setPriorityFilter(value);
-  const handleClearDates = () => {
-    setFromDate("");
-    setToDate("");
-  };
 
   // Support Ticket Filter handlers
   const handleSupportTicketStatusChange = (value: string) =>
@@ -192,20 +159,14 @@ export default function Dashboard() {
     };
   }, [showImageModal]);
 
-  // Fetch daily tasks with filters
+  // Fetch daily tasks
   const {
     data: dailyTasks,
     isLoading: dailyTasksLoading,
     isError: dailyTasksError,
     error: dailyTasksErrorObj,
     refetchDailyTasks,
-  } = useAllDailyTaskQuery({
-    status: filters.status,
-    priority: filters.priority,
-    from: filters.fromDate,
-    to: filters.toDate,
-    search: filters.searchText,
-  });
+  } = useAllDailyTaskQuery({});
 
   // Fetch support tickets with filters
   const {
@@ -741,18 +702,6 @@ export default function Dashboard() {
           dailyTaskList={dailyTaskList}
           dailyTaskListColumn={dailyTaskListColumn}
           dailyTaskListAction={dailyTaskListAction}
-          statusOptions={dailyTaskStatusOptions}
-          statusFilter={statusFilter}
-          handleStatusChange={handleStatusChange}
-          priorityOptions={priorityOptions}
-          priorityFilter={priorityFilter}
-          handlePriorityChange={handlePriorityChange}
-          handleSearch={handleSearch}
-          fromDate={fromDate}
-          setFromDate={setFromDate}
-          toDate={toDate}
-          setToDate={setToDate}
-          handleClearDates={handleClearDates}
           onAddDailyTask={() => setShowAddModal(true)}
         />
 
