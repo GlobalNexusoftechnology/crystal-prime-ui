@@ -118,7 +118,7 @@ export function AddDailyTaskModal({
         className="flex flex-col gap-6 2xl:gap-[1.5vw] overflow-auto h-[30rem] 2xl:h-[30vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
       >
         {showProjectAndUserSelection && (
-          <div className="grid grid-cols-1md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Dropdown
               label="Project"
               options={projectOptions}
@@ -159,7 +159,7 @@ export function AddDailyTaskModal({
           onBlur={formik.handleBlur}
           error={formik.touched.description ? formik.errors.description : undefined}
         />
-        <div className="grid grid-cols-1md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <HoursSpentInput
             value={formik.values.hours_spent || ""}
             onChange={formik.handleChange}
