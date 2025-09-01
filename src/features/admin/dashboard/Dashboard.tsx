@@ -434,11 +434,9 @@ export default function Dashboard() {
     // Show staff name for admin users
     ...(userRole.toLowerCase() === "admin" ? [{ header: "STAFF NAME", accessor: "staffName" }] : []),
     // Show project and client info for staff users (non-admin)
-    ...(userRole.toLowerCase() !== "admin" ? [
       { header: "PROJECT NAME", accessor: "projectName" },
       { header: "CLIENT NAME", accessor: "clientName" },
       { header: "CLIENT NUMBER", accessor: "clientNumber" },
-    ] : []),
     { header: "CREATED AT", accessor: "created_at" },
   ];
 
