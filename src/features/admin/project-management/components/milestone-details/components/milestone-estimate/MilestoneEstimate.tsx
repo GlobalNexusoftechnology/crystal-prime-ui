@@ -15,15 +15,15 @@ export function MilestoneEstimate({ milestoneEstimateData }: MilestoneEstimatePr
       <div className="flex flex-col gap-8 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
         {/* Dates Section */}
         <div className="flex flex-wrap gap-12 2xl:gap-[3vw] items-start">
-          <div className="flex flex-col">
+          <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
             <p className="font-light">Estimated Start Date</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">{milestoneEstimateData.start_date}</p>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
             <p className="font-light">Actual Date</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">{milestoneEstimateData.actual_start}</p>
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
             <p className="font-light">Estimated End Date</p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">{milestoneEstimateData.end_date}</p>
           </div>

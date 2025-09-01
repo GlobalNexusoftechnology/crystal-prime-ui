@@ -26,7 +26,7 @@ export function FollowUpPerformance({ followUpPerformance }: FollowUpPerformance
         {metrics.map((metric) => (
           <div
             key={metric.key}
-            className="flex flex-col gap-1 border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]"
+            className="flex flex-col gap-1 border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]"
           >
             <span className="flex items-center gap-2 text-gray-600 text-sm font-medium">
               <IoInformationCircleOutline className="w-5 h-5 2xl:w-[1vw] 2xl:h-[1vw]" />

@@ -110,11 +110,19 @@ export { useUpdateMilestoneTaskMutation } from "./useUpdateMilestoneTaskMutation
 export { useCreateTaskCommentMutation } from "./useCreateTaskCommentMutation";
 export { useGetAllTaskCommentsQuery } from "./useGetAllTaskCommentsQuery";
 
+// ticket comments
+export { useCreateTicketCommentMutation } from "./useCreateTicketCommentMutation";
+export { useGetAllTicketCommentsQuery } from "./useGetAllTicketCommentsQuery";
+export { useUpdateTicketCommentMutation } from "./useUpdateTicketCommentMutation";
+export { useDeleteTicketCommentMutation } from "./useDeleteTicketCommentMutation";
+export { useTicketCommentDetailQuery } from "./useTicketCommentDetailQuery";
+
 export { useUpdateTaskStatusMutation } from "./useUpdateTaskStatusMutation";
 
 export { useCreateDailyTaskMutation } from "./useCreateDailyTaskMutation";
 export { useAllDailyTaskQuery } from "./useAllDailyTaskQuery";
 export { useUpdateDailyTaskMutation } from "./useUpdateDailyTaskMutation";
+export { useUpdateDailyTaskStatusMutation } from "./useUpdateDailyTaskStatusMutation";
 
 export { useDashboardSummaryQuery } from "./useDashboardSummaryQuery";
 export { useUploadMultipleAttachmentsMutation } from "./useUploadMultipleAttachmentsMutation";

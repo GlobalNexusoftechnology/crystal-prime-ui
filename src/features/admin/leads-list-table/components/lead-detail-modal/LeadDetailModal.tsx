@@ -47,18 +47,18 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
         ref={containerRef}
       >
         {/* Lead Info Header */}
-        <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.1vw] border-gray-200">
+        <div className="flex flex-col gap-4 2xl:gap-[1vw] bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-gray-200">
           <div className="flex flex-col md:flex-row gap-4 justify-between">
             <div className="flex flex-col">
               <p className=" text-[1rem] 2xl:text-[1vw]">First Name</p>
-              <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1.1rem] 2xl:text-[1.1vw]">
-                {data.first_name}
+              <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1.1rem] 2xl:text-[1.1vw] capitalize">
+                {data.first_name || "N/A"}
               </p>
             </div>
             <div className="flex flex-col">
               <p className=" text-[1rem] 2xl:text-[1vw]">Last Name</p>
-              <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1.1rem] 2xl:text-[1.1vw]">
-                {data.last_name}
+              <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1.1rem] 2xl:text-[1.1vw] capitalize">
+                {data.last_name || "N/A"}
               </p>
             </div>
           </div>
@@ -70,7 +70,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             >
               <PhoneIcon className="h-6 w-6 2xl:h-[1.5vw] 2xl:w-[1.5vw]" />
               <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
-                {data.phone}
+                {data.phone || "N/A"}
               </p>
             </Link>
             <Link
@@ -104,8 +104,8 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 bg-white border border-gray-200 p-4 2xl:p-[1vw] rounded-lg 2xl:rounded-[0.5vw] text-[1rem] 2xl:text-[1vw] text-gray-700">
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Created By</p>
-            <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data.created_by}
+            <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw] capitalize">
+              {data.created_by || "N/A"}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
@@ -116,14 +116,14 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Location</p>
-            <p className=" text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data?.location}
+            <p className=" text-textColor text-[1rem] 2xl:text-[1vw] capitalize">
+              {data?.location || "N/A"}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-[0.9rem] 2xl:text-[0.875vw]">Updated By</p>
-            <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data.updated_by}
+            <p className="underline underline-offset-2 2xl:underline-offset-4 text-textColor text-[1rem] 2xl:text-[1vw] capitalize">
+              {data.updated_by || "N/A"}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
@@ -134,14 +134,14 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-[0.9rem] 2xl:text-[0.875vw]">Source Name</p>
-            <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data.source.name}
+            <p className="text-textColor text-[1rem] 2xl:text-[1vw] capitalize">
+              {data.source?.name || "N/A"}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-[0.9rem] 2xl:text-[0.875vw]">Budget</p>
-            <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data.budget}
+            <p className="text-textColor text-[1rem] 2xl:text-[1vw] capitalize">
+              {data.budget || "N/A"}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
@@ -156,8 +156,8 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-[0.9rem] 2xl:text-[0.875vw]">Other Contact</p>
-            <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data?.other_contact}
+            <p className="text-textColor text-[1rem] 2xl:text-[1vw] capitalize">
+              {data?.other_contact || "N/A"}
             </p>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
@@ -174,15 +174,15 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
                 {getInitials(data.assignedTo.first_name)}
                 {getInitials(data.assignedTo.last_name)}
               </p>
-              <p className="underline underline-offset-2 2xl:underline-offset-4 font-medium text-textColor text-[1rem] 2xl:text-[1vw]">
-                {data?.assignedTo?.first_name} {data?.assignedTo?.last_name}
+              <p className="underline underline-offset-2 2xl:underline-offset-4 font-medium text-textColor text-[1rem] 2xl:text-[1vw] capitalize">
+                {data?.assignedTo?.first_name || "N/A"} {data?.assignedTo?.last_name || ""}
               </p>
             </div>
           </div>
           <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
             <p className="text-[0.9rem] 2xl:text-[0.875vw]">Type Name</p>
-            <p className="text-textColor text-[1rem] 2xl:text-[1vw]">
-              {data.type.name}
+            <p className="text-textColor text-[1rem] 2xl:text-[1vw] capitalize">
+              {data.type?.name || "N/A"}
             </p>
           </div>
           <div className="flex flex-col justify-center relative group">
@@ -204,7 +204,7 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:px-[1vw] bg-white border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
+        <div className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:px-[1vw] bg-white border 2xl:border-[0.05vw] rounded-xl 2xl:rounded-[0.75vw]">
           {/* Tabs */}
           <div className="flex justify-between items-center">
             <div className="flex space-x-4">

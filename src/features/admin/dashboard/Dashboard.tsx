@@ -14,8 +14,13 @@ import {
   useAllDailyTaskQuery,
   useDeleteDailyTaskMutation,
   useUpdateDailyTaskMutation,
+  useUpdateDailyTaskStatusMutation,
+  useCreateDailyTaskMutation,
+  useAllProjectsQuery,
   useAllTicketsAcrossProjectsQuery,
   useUpdateTicketStatusMutation,
+  useUpdateTicketMutation,
+  useAllUsersQuery,
   useAuthStore,
 } from "@/services";
 import type { IDailyTaskEntryResponse } from "@/services";
@@ -31,12 +36,14 @@ import { useDebounce } from "@/utils/hooks";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/helpers/formatDate";
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function Dashboard() {
   const router = useRouter();
   const [showEditModal, setShowEditModal] = useState(false);
   const [editTask, setEditTask] =
     useState<Partial<IDailyTaskEntryResponse> | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
   // Move all hooks to the top
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -60,34 +67,7 @@ export default function Dashboard() {
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
   const userRole = activeSession?.user?.role?.role || "";
-  // Daily Task Filters
-  const [statusFilter, setStatusFilter] = useState<string>("");
-  const [priorityFilter, setPriorityFilter] = useState<string>("");
-  const [searchInput, setSearchInput] = useState("");
 
-  const { debouncedValue: searchQuery } = useDebounce({
-    initialValue: searchInput,
-    delay: 500,
-    onChangeCb: () => {},
-  });
-
-  const handleSearch = (query: string) => {
-    setSearchInput(query.toLowerCase());
-  };
-
-  const [fromDate, setFromDate] = useState<string>("");
-  const [toDate, setToDate] = useState<string>("");
-
-  const filters = useMemo(
-    () => ({
-      searchText: searchQuery,
-      status: statusFilter,
-      priority: priorityFilter,
-      fromDate: fromDate || undefined,
-      toDate: toDate || undefined,
-    }),
-    [searchQuery, statusFilter, priorityFilter, fromDate, toDate]
-  );
 
   // Support Ticket Filters
   const [supportTicketStatusFilter, setSupportTicketStatusFilter] =
@@ -122,30 +102,27 @@ export default function Dashboard() {
   const statusOptions = [
     { label: "All Status", value: "" },
     { label: "Open", value: "open" },
+    { label: "In Progress", value: "in_progress" },
+    { label: "Completed", value: "completed" },
+    { label: "Closed", value: "closed" },
+  ];
+  
+  const dailyTaskStatusOptions = [
+    { label: "All Status", value: "" },
+    { label: "Pending", value: "Pending" },
     { label: "In Progress", value: "In Progress" },
     { label: "Completed", value: "Completed" },
-    { label: "Closed", value: "Closed" },
-  ];
-  const statusOptionsForCell = [
-    { label: "Open", value: "open" },
-    { label: "In Progress", value: "In Progress" },
-    { label: "Completed", value: "Completed" },
-    { label: "Closed", value: "Closed" },
-  ];
-  const priorityOptions = [
-    { label: "All Priority", value: "" },
-    { label: "High", value: "high" },
-    { label: "Medium", value: "medium" },
-    { label: "Low", value: "low" },
   ];
 
-  // Filter handler
-  const handleStatusChange = (value: string) => setStatusFilter(value);
-  const handlePriorityChange = (value: string) => setPriorityFilter(value);
-  const handleClearDates = () => {
-    setFromDate("");
-    setToDate("");
-  };
+  const priorityOptions = [
+    { label: "All Priority", value: "" },
+    { label: "Low", value: "low" },
+    { label: "Medium", value: "medium" },
+    { label: "High", value: "high" },
+    { label: "Critical", value: "critical" },
+  ];
+  
+
 
   // Support Ticket Filter handlers
   const handleSupportTicketStatusChange = (value: string) =>
@@ -182,20 +159,14 @@ export default function Dashboard() {
     };
   }, [showImageModal]);
 
-  // Fetch daily tasks with filters
+  // Fetch daily tasks
   const {
     data: dailyTasks,
     isLoading: dailyTasksLoading,
     isError: dailyTasksError,
     error: dailyTasksErrorObj,
     refetchDailyTasks,
-  } = useAllDailyTaskQuery({
-    status: filters.status,
-    priority: filters.priority,
-    from: filters.fromDate,
-    to: filters.toDate,
-    search: filters.searchText,
-  });
+  } = useAllDailyTaskQuery({});
 
   // Fetch support tickets with filters
   const {
@@ -203,6 +174,7 @@ export default function Dashboard() {
     isLoading: supportTicketsLoading,
     isError: supportTicketsError,
     error: supportTicketsErrorObj,
+    ticketsRefetch: refetchSupportTickets,
   } = useAllTicketsAcrossProjectsQuery({
     searchText: supportTicketFilters.searchText,
     status: supportTicketFilters.status,
@@ -210,6 +182,65 @@ export default function Dashboard() {
   });
 
   const { updateTicketStatus } = useUpdateTicketStatusMutation();
+
+  // Daily task status update hook
+  const { updateDailyTaskStatus, isPending: isUpdatingDailyTaskStatus } = useUpdateDailyTaskStatusMutation({
+    onSuccessCallback: (response) => {
+      toast.success(response.message);
+      refetchDailyTasks();
+    },
+    onErrorCallback: (error) => {
+      const errorMessage = error?.message || "Failed to update daily task status. Please try again.";
+      toast.error(errorMessage);
+    },
+  });
+
+  // Fetch all users for assignment dropdown
+  const { allUsersData: usersData, isLoading: isLoadingUsers } =
+    useAllUsersQuery();
+
+  // Fetch all projects for project selection
+  const { allProjectsData: projectsData, isLoading: isLoadingProjects } =
+    useAllProjectsQuery();
+
+  // Update ticket mutation for assignment changes
+  const { updateTicket, isPending: isUpdatingTicket } = useUpdateTicketMutation(
+    {
+      onSuccessCallback: (data) => {
+        toast.success(data.message);
+        // Refetch tickets to get updated data
+        refetchSupportTickets();
+      },
+      onErrorCallback: (error) => {
+        // Show specific error message if available
+        const errorMessage =
+          error?.message ||
+          error?.response?.data?.message ||
+          "Failed to update ticket assignment. Please try again.";
+        toast.error(errorMessage);
+      },
+    }
+  );
+
+  // Prepare user options for assignment dropdown
+  const userOptions = React.useMemo(() => {
+    if (!usersData?.data?.list) return [];
+
+    return usersData.data.list.map((user) => ({
+      label: `${user.first_name} ${user.last_name}`,
+      value: user.id,
+    }));
+  }, [usersData]);
+
+  // Prepare project options for project selection
+  const projectOptions = React.useMemo(() => {
+    if (!projectsData) return [];
+
+    return projectsData.map((project) => ({
+      label: project.name,
+      value: project.id,
+    }));
+  }, [projectsData]);
 
   // ProjectRenewalList month selection logic
   const renewalMonthOptions = dashboardSummary?.projectRenewalData
@@ -272,6 +303,19 @@ export default function Dashboard() {
     }
   );
 
+  // Create daily task mutation
+  const { createDailyTask, isPending: isCreating } = useCreateDailyTaskMutation({
+    onSuccessCallback: (response) => {
+      toast.success(response.message || "Daily task created successfully");
+      setShowAddModal(false);
+      refetchDailyTasks();
+    },
+    onErrorCallback: (error) => {
+      const errorMessage = error?.message || "Failed to create daily task. Please try again.";
+      toast.error(errorMessage);
+    },
+  });
+
   if (isLoading) return <div>Loading...</div>;
   if (error || !dashboardSummary) return <div>Error loading dashboard</div>;
 
@@ -313,6 +357,14 @@ export default function Dashboard() {
     const validPriority = ["High", "Medium", "Low"].includes(
       task.priority ?? ""
     );
+    
+    // Get staff name from assigned_to
+    const getStaffName = (assignedTo: string) => {
+      if (!usersData?.data?.list) return "-";
+      const user = usersData.data.list.find((u) => u.id === assignedTo);
+      return user ? `${user.first_name} ${user.last_name}` : "-";
+    };
+
     return {
       id: task?.id,
       name: task?.task_title,
@@ -328,15 +380,49 @@ export default function Dashboard() {
       milestoneId: (task as any)?.milestoneId || "",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       taskId: (task as any)?.taskId || "",
+      // New columns for project and client info
+      projectName: task?.project?.name || "-",
+      clientName: task?.project?.client?.name || "-",
+      clientNumber: task?.project?.client?.contact_number || "-",
+      staffName: getStaffName(task?.assigned_to || ""),
+      created_at: task?.created_at ? formatDate(task.created_at) : "-",
     };
   });
 
-  const dailyTaskListColumn: { header: string; accessor: string }[] = [
-    { header: "STATUS", accessor: "status" },
+  const dailyTaskListColumn: ITableColumn<DailyTaskRow>[] = [
+    {
+      header: "STATUS",
+      accessor: "status",
+      cell: ({ row, value }) => (
+        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
+          {isUpdatingDailyTaskStatus ? (
+            <span className="text-blue-500 text-sm">Updating...</span>
+          ) : (
+            <Dropdown
+              options={dailyTaskStatusOptions}
+              value={String((value as string) ?? "")}
+              onChange={(val) =>
+                updateDailyTaskStatus({
+                  id: String(row.id),
+                  payload: { status: val }
+                })
+              }
+              dropdownWidth="w-[10rem] 2xl:w-[10vw]"
+            />
+          )}
+        </div>
+      ),
+    },
     { header: "PRIORITY", accessor: "priority" },
     { header: "TASK NAME", accessor: "name" },
     { header: "DESCRIPTION", accessor: "description" },
-    { header: "DUE DATE", accessor: "due" },
+    // Show staff name for admin users
+    ...(userRole.toLowerCase() === "admin" ? [{ header: "STAFF NAME", accessor: "staffName" }] : []),
+    // Show project and client info for staff users (non-admin)
+      { header: "PROJECT NAME", accessor: "projectName" },
+      { header: "CLIENT NAME", accessor: "clientName" },
+      { header: "CLIENT NUMBER", accessor: "clientNumber" },
+    { header: "CREATED AT", accessor: "created_at" },
   ];
 
   const dailyTaskListAction: ITableAction<DailyTaskRow>[] = [
@@ -365,6 +451,7 @@ export default function Dashboard() {
         priority: validPriority
           ? (ticket?.priority as "high" | "medium" | "low")
           : "medium",
+        assignedTo: ticket?.assigned_to || null,
         projectId: ticket?.project?.id || "",
         projectName: ticket?.project?.name || "-",
         createdBy: ticket?.created_by || "-",
@@ -373,8 +460,8 @@ export default function Dashboard() {
         taskName: ticket?.task?.title || "-",
         remark: ticket?.remark || "-",
         image: ticket?.image_url || null,
-        // Deep links
-        milestoneId: ticket?.task?.milestone?.id || "",
+        // Deep links - updated to match API response structure
+        milestoneId: ticket?.milestone?.id || "",
         taskId: ticket?.task?.id || "",
       };
     }
@@ -385,15 +472,48 @@ export default function Dashboard() {
       header: "STATUS",
       accessor: "status",
       cell: ({ row, value }) => (
-        <div className="min-w-[9rem]">
+        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
           <Dropdown
-            options={statusOptionsForCell}
+            options={statusOptions}
             value={String((value as string) ?? "")}
             onChange={(val) =>
               updateTicketStatus({ id: String(row.id), status: val })
             }
             dropdownWidth="w-[10rem] 2xl:w-[10vw]"
           />
+        </div>
+      ),
+    },
+    {
+      header: "ASSIGNED TO",
+      accessor: "assignedTo",
+      cell: ({ row, value }) => (
+        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
+          {isLoadingUsers ? (
+            <span className="text-gray-400 text-sm">Loading...</span>
+          ) : isUpdatingTicket ? (
+            <span className="text-blue-500 text-sm">Updating...</span>
+          ) : (
+            <Dropdown
+              options={userOptions}
+              value={value ? String(value) : ""}
+              onChange={(val) => {
+                // Prepare the API payload
+                const apiPayload = {
+                  assigned_to: val === "" ? null : val,
+                };
+
+                const requestPayload = {
+                  id: String(row.id),
+                  payload: apiPayload,
+                };
+
+                // Make the API call
+                updateTicket(requestPayload);
+              }}
+              dropdownWidth="w-[15rem] 2xl:w-[15vw]"
+            />
+          )}
         </div>
       ),
     },
@@ -445,7 +565,6 @@ export default function Dashboard() {
     { header: "TITLE", accessor: "title" },
 
     { header: "PROJECT", accessor: "projectName" },
-    { header: "TASK", accessor: "taskName" },
     { header: "CREATED AT", accessor: "createdAt" },
   ];
 
@@ -453,13 +572,13 @@ export default function Dashboard() {
     {
       label: "View",
       onClick: (row: SupportTicketRow) => {
-        // Navigate to task route if both IDs exist; else fallback to project page
-        const hasTaskRoute = Boolean(
-          row.projectId && row.milestoneId && row.taskId
+        // Navigate to ticket route if both IDs exist; else fallback to project page
+        const hasTicketRoute = Boolean(
+          row.projectId && row.milestoneId && row.id
         );
-        if (hasTaskRoute) {
+        if (hasTicketRoute) {
           router.push(
-            `/admin/project-management/${row.projectId}/${row.milestoneId}/${row.taskId}`
+            `/admin/project-management/${row.projectId}/${row.milestoneId}/tickets/${row.id}`
           );
         } else if (row.projectId) {
           router.push(`/admin/project-management/${row.projectId}`);
@@ -540,7 +659,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-6 md:p-8 2xl:p-[2vw] bg-[#fafbfc] border 2xl:border-[0.1vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw] min-h-screen">
+    <div className="p-6 md:p-8 2xl:p-[2vw] bg-[#fafbfc] border 2xl:border-[0.05vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw] min-h-screen">
       <div className="mb-6 2xl:mb-[1.5vw]">
         <h1 className="text-2xl 2xl:text-[1.5vw] 2xl:leading-[2vw] font-semibold text-gray-900 mb-1 2xl:mb-[0.25vw]">
           Welcome
@@ -573,39 +692,50 @@ export default function Dashboard() {
           handleSearch={handleSupportTicketSearch}
         />
       </div>
+      <div>
+       
+        <DailyTaskTable
+          userRole={userRole}
+          dailyTasksLoading={dailyTasksLoading}
+          dailyTasksError={dailyTasksError}
+          dailyTasksErrorObj={dailyTasksErrorObj}
+          dailyTaskList={dailyTaskList}
+          dailyTaskListColumn={dailyTaskListColumn}
+          dailyTaskListAction={dailyTaskListAction}
+          onAddDailyTask={() => setShowAddModal(true)}
+        />
 
-      {/* Image Modal */}
-      {showImageModal && selectedImage && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-          onClick={handleCloseImageModal}
-        >
+        {/* Image Modal */}
+        {showImageModal && selectedImage && (
           <div
-            className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
+            onClick={handleCloseImageModal}
           >
-            <div className="absolute top-4 right-4 z-10">
-              <button
-                onClick={handleCloseImageModal}
-                className="bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75 transition-all"
-              >
-                ×
-              </button>
-            </div>
-            <div className="relative w-full h-full">
-              <Image
-                src={selectedImage}
-                alt="Ticket attachment"
-                width={800}
-                height={600}
-                className="w-full h-auto max-h-[90vh] object-contain"
-                unoptimized
-              />
+            <div
+              className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="absolute top-4 right-4 z-10">
+                <button
+                  onClick={handleCloseImageModal}
+                  className="bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75 transition-all"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="relative w-full h-full">
+                <Image
+                  src={selectedImage}
+                  alt="Ticket attachment"
+                  width={800}
+                  height={600}
+                  className="w-full h-auto max-h-[90vh] object-contain"
+                  unoptimized
+                />
+              </div>
             </div>
           </div>
-        </div>
-      )}
-      {userRole.toLowerCase() === "admin" ? (
+        )}
         <div>
           <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
             <div className="w-full lg:w-[30%]">
@@ -636,79 +766,95 @@ export default function Dashboard() {
           </div>
           <ExpensesOverviewChart dataMap={expensesDataMap} />
         </div>
-      ) : (
-        <div>
-          <DailyTaskTable
-            userRole={userRole}
-            dailyTasksLoading={dailyTasksLoading}
-            dailyTasksError={dailyTasksError}
-            dailyTasksErrorObj={dailyTasksErrorObj}
-            dailyTaskList={dailyTaskList}
-            dailyTaskListColumn={dailyTaskListColumn}
-            dailyTaskListAction={dailyTaskListAction}
-            statusOptions={statusOptions}
-            statusFilter={statusFilter}
-            handleStatusChange={handleStatusChange}
-            priorityOptions={priorityOptions}
-            priorityFilter={priorityFilter}
-            handlePriorityChange={handlePriorityChange}
-            handleSearch={handleSearch}
-            fromDate={fromDate}
-            setFromDate={setFromDate}
-            toDate={toDate}
-            setToDate={setToDate}
-            handleClearDates={handleClearDates}
+
+        {showEditModal && editTask && (
+          <AddDailyTaskModal
+            isOpen={showEditModal}
+            onClose={() => {
+              setShowEditModal(false);
+              setEditTask(null);
+            }}
+            onSubmit={async (values) => {
+              updateDailyTask({
+                id: editTask.id || "",
+                payload: {
+                  ...values,
+                  hours_spent: values.hours_spent
+                    ? Number(values.hours_spent)
+                    : undefined,
+                },
+              });
+            }}
+            initialValues={{
+              project_id: editTask?.project?.id || "",
+              assigned_to:
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                editTask?.user?.id || (editTask as any)?.assigned_to || "",
+              task_title: editTask?.task_title || "",
+              entry_date: editTask?.entry_date || "",
+              description: editTask?.description || "",
+              hours_spent: editTask?.hours_spent || undefined,
+              status: editTask?.status || "",
+              remarks: editTask?.remarks || "",
+              priority: editTask?.priority || "Medium",
+            }}
+            isPending={isUpdating}
+            isEdit={true}
           />
-          {showEditModal && editTask && (
-            <AddDailyTaskModal
-              isOpen={showEditModal}
-              onClose={() => {
-                setShowEditModal(false);
-                setEditTask(null);
-              }}
-              onSubmit={async (values) => {
-                updateDailyTask({
-                  id: editTask.id || "",
-                  payload: {
-                    ...values,
-                    hours_spent: values.hours_spent
-                      ? Number(values.hours_spent)
-                      : undefined,
-                  },
-                });
-              }}
-              initialValues={{
-                project_id: editTask?.project?.id || "",
-                assigned_to:
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  editTask?.user?.id || (editTask as any)?.assigned_to || "",
-                task_title: editTask?.task_title || "",
-                entry_date: editTask?.entry_date || "",
-                description: editTask?.description || "",
-                hours_spent: editTask?.hours_spent || undefined,
-                status: editTask?.status || "",
-                remarks: editTask?.remarks || "",
-                priority: editTask?.priority || "Medium",
-              }}
-              isPending={isUpdating}
-              isEdit={true}
-            />
-          )}
-          {/* Delete Modal */}
-          {showDeleteModal && (
-            <DeleteModal
-              isOpen={showDeleteModal}
-              onClose={() => setShowDeleteModal(false)}
-              onConfirm={() => {
-                if (deleteId) deleteDailyTask(deleteId);
-              }}
-              isLoading={isDeleting}
-              title="Delete Daily Task"
-              message="Are you sure you want to delete this daily task? This action cannot be undone."
-            />
-          )}
-        </div>
-      )}
+        )}
+
+        {/* Add Daily Task Modal */}
+        {showAddModal && (
+          <AddDailyTaskModal
+            isOpen={showAddModal}
+            onClose={() => setShowAddModal(false)}
+            onSubmit={async (values) => {
+              await createDailyTask({
+                project_id: values.project_id,
+                assigned_to: values.assigned_to,
+                task_title: values.task_title,
+                entry_date: values.entry_date,
+                description: values.description,
+                hours_spent: values.hours_spent,
+                status: values.status,
+                remarks: values.remarks,
+                priority: values.priority,
+              });
+            }}
+            initialValues={{
+              project_id: "",
+              assigned_to: "",
+              task_title: "",
+              entry_date: new Date().toISOString().slice(0, 10),
+              description: "",
+              hours_spent: undefined,
+              status: "",
+              remarks: "",
+              priority: "Medium",
+            }}
+            isPending={isCreating}
+            isEdit={false}
+            showProjectAndUserSelection={true}
+            projectOptions={projectOptions}
+            userOptions={userOptions}
+            isLoadingProjects={isLoadingProjects}
+            isLoadingUsers={isLoadingUsers}
+          />
+        )}
+        {/* Delete Modal */}
+        {showDeleteModal && (
+          <DeleteModal
+            isOpen={showDeleteModal}
+            onClose={() => setShowDeleteModal(false)}
+            onConfirm={() => {
+              if (deleteId) deleteDailyTask(deleteId);
+            }}
+            isLoading={isDeleting}
+            title="Delete Daily Task"
+            message="Are you sure you want to delete this daily task? This action cannot be undone."
+          />
+        )}
+      </div>
     </div>
   );
 }

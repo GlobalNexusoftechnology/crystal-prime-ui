@@ -106,10 +106,10 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
     { label: "All Status", value: "" },
     { label: "Open", value: "open" },
     { label: "In Progress", value: "in_progress" },
-    { label: "Resolved", value: "resolved" },
+    { label: "Completed", value: "completed" },
     { label: "Closed", value: "closed" },
   ];
-
+  
   const priorityOptions = [
     { label: "All Priority", value: "" },
     { label: "Low", value: "low" },
@@ -177,6 +177,17 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
 
   // Table actions configuration
   const tableActions: ITableAction<TicketTableData>[] = [
+    {
+      label: "View",
+      onClick: (row) => {
+        const originalTicket = filteredTickets.find(
+          (ticket) => ticket.id === row.id
+        );
+        if (originalTicket) {
+          router.push(`/admin/my-projects/${originalTicket?.project?.id}/${originalTicket.id}`);
+        }
+      },
+    },
     {
       label: "Edit",
       onClick: (row) => {

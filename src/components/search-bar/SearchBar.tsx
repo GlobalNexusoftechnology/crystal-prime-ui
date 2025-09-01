@@ -38,7 +38,7 @@ export function SearchBar({
   const inputValue = value !== undefined ? value : query;
 
   return (
-    <div className={`bg-${bgColor} focus-within:border-primary relative flex items-center border 2xl:border-[0.1vw] border-gray-300 px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] rounded-xl 2xl:rounded-[0.75vw] ${width}`}>
+    <div className={`bg-${bgColor} focus-within:border-primary relative flex items-center border 2xl:border-[0.05vw] border-gray-300 px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] rounded-xl 2xl:rounded-[0.75vw] ${width}`}>
       {/* Search Icon */}
       <span
         className="cursor-pointer"

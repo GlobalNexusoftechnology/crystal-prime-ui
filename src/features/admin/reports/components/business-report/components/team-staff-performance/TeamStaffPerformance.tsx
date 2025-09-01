@@ -28,7 +28,7 @@ export const TeamStaffPerformance: React.FC<TeamStaffPerformanceProps> = ({ data
       </div>
       <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw] w-full">
         {metrics.map((metric, idx) => (
-          <div key={idx} className="flex flex-col items-start gap-2 2xl:gap-[0.5vw] p-4 2xl:p-[1vw] border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw]">
+          <div key={idx} className="flex flex-col items-start gap-2 2xl:gap-[0.5vw] p-4 2xl:p-[1vw] border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw]">
             <div className="text-gray-800 font-light 2xl:text-[1vw]">
               {metric.label}
             </div>

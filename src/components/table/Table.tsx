@@ -79,15 +79,15 @@ export function Table<T extends { id: string | number }>({
 
   return (
     <div>
-      <div className="scrollbar-style overflow-x-auto border bg-white 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw]">
+      <div className="scrollbar-style overflow-x-auto border bg-white 2xl:border-[0.05vw] rounded-xl 2xl:rounded-[0.75vw]">
         <table className="w-full text-[0.9rem] 2xl:text-[0.875vw] text-left border-gray-200">
           <thead className="text-gray-700">
             <tr>
-              <th className="min-w-[5rem] 2xl:min-w-[5vw] bg-gray-200 p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
+              <th className="text-center min-w-[5rem] 2xl:min-w-[5vw] bg-gray-200 p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase border-r border-gray-300">
                 Sr No
               </th>
               {actions && actions.length > 0 && (
-                <th className="min-w-[6rem] bg-gray-200 p-3 2xl:p-[0.75vw] text-left text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase">
+                <th className="text-center min-w-[6rem] bg-gray-200 p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase border-r border-gray-300">
                   Action
                 </th>
               )}

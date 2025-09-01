@@ -209,6 +209,17 @@ export interface Milestone {
   start_date: string;
   end_date: string;
   tasks: Task[];
+  tickets?: {
+    id: string;
+    title: string;
+    description: string;
+    assigned_to: string | null;
+    status: string;
+    priority: string;
+    remark: string;
+    image_url?: string;
+    created_at?: string;
+  }[];
 }
 
 export function AddProject({

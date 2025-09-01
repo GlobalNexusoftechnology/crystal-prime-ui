@@ -1,10 +1,11 @@
-"use client"
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Dropdown, Button } from "@/components";
 import { AddSquareIcon } from "@/features";
 import { Milestone, Task } from "./components";
 import { IUsersDetails, useAllUsersQuery } from "@/services";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 interface ProjectTaskMaster {
   id: string;
@@ -56,6 +57,17 @@ export interface Milestone {
   start_date: string;
   end_date: string;
   tasks: Task[];
+  tickets?: {
+    id: string;
+    title: string;
+    description: string;
+    assigned_to: string | null;
+    status: string;
+    priority: string;
+    remark: string;
+    image_url?: string;
+    created_at?: string;
+  }[];
 }
 
 interface Step2MilestoneSetupProps {
@@ -70,7 +82,7 @@ interface Step2MilestoneSetupProps {
   setProjectTemplate: (id: string) => void;
   projectStartDate: string;
   projectEndDate: string;
-  mode?: 'create' | 'edit';
+  mode?: "create" | "edit";
   projectType: string;
 }
 
@@ -83,7 +95,7 @@ const statusOptions = [
 
 // No-op: leave date fields empty by default
 function getEmptyDate() {
-  return '';
+  return "";
 }
 
 export function Step2MilestoneSetup({
@@ -99,10 +111,17 @@ export function Step2MilestoneSetup({
   projectStartDate,
   projectEndDate,
   projectType,
-  mode = 'create',
+  mode = "create",
 }: Step2MilestoneSetupProps) {
   // Editable milestone state
-  const [milestones, setMilestones] = useState<Milestone[]>(initialMilestones || []);
+  const [milestones, setMilestones] = useState<Milestone[]>([]);
+
+  // Reset milestones when initialMilestones changes (for edit mode)
+  useEffect(() => {
+    if (initialMilestones && initialMilestones.length > 0) {
+      setMilestones(initialMilestones);
+    }
+  }, [initialMilestones]);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editMilestone, setEditMilestone] = useState<Milestone | null>(null);
   // Task editing state
@@ -122,20 +141,28 @@ export function Step2MilestoneSetup({
   const [templateApplied, setTemplateApplied] = useState(false);
 
   // Validation state
-  const [milestoneErrors, setMilestoneErrors] = useState<{[key: string]: string}>({});
+  const [milestoneErrors, setMilestoneErrors] = useState<{
+    [key: string]: string;
+  }>({});
   // taskErrors: { [milestoneId_taskId]: { title: string, ... } }
-  const [taskErrors, setTaskErrors] = useState<{[key: string]: {[key: string]: string}}>({});
+  const [taskErrors, setTaskErrors] = useState<{
+    [key: string]: { [key: string]: string };
+  }>({});
 
   // Fetch users for userOptions
-  const { allUsersData, isLoading: usersLoading, isError: usersError } = useAllUsersQuery();
+  const {
+    allUsersData,
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useAllUsersQuery();
   const userOptions = usersLoading
     ? [{ label: "Loading...", value: "" }]
     : usersError || !allUsersData
-      ? [{ label: "Error loading users", value: "" }]
-      : (allUsersData?.data?.list || [])?.map((user: IUsersDetails) => ({
-          label: `${user.first_name} ${user.last_name}`,
-          value: user.id,
-        }));
+    ? [{ label: "Error loading users", value: "" }]
+    : (allUsersData?.data?.list || [])?.map((user: IUsersDetails) => ({
+        label: `${user.first_name} ${user.last_name}`,
+        value: user.id,
+      }));
 
   // Add counters for deterministic IDs
   const milestoneIdCounter = useRef(1);
@@ -143,10 +170,13 @@ export function Step2MilestoneSetup({
 
   // Validation functions
   const validateMilestone = (milestone: Milestone) => {
-    const errors: {[key: string]: string} = {};
-    
+    const errors: { [key: string]: string } = {};
+
     if (!milestone.name || milestone.name.trim() === "") {
       errors.name = "Milestone name is required";
+    } else if (mode === "edit" && milestone.name !== "Support") {
+      errors.name =
+        "Only 'Support' milestone can be created for a project in edit mode";
     }
     if (!milestone.description || milestone.description.trim() === "") {
       errors.description = "Milestone description is required";
@@ -175,13 +205,13 @@ export function Step2MilestoneSetup({
       errors.start_date = "Milestone start date cannot be after end date";
       errors.end_date = "Milestone end date cannot be before start date";
     }
-    
+
     setMilestoneErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const validateTask = (task: Task, milestoneId: string) => {
-    const errors: {[key: string]: string} = {};
+    const errors: { [key: string]: string } = {};
     if (!task.title || task.title.trim() === "") {
       errors.title = "Task title is required";
     }
@@ -198,7 +228,7 @@ export function Step2MilestoneSetup({
       errors.due_date = "Due date is required";
     } else {
       // Link due date to milestone
-      const milestone = milestones.find(m => m.id === milestoneId);
+      const milestone = milestones.find((m) => m.id === milestoneId);
       if (milestone) {
         if (milestone.start_date && task.due_date < milestone.start_date) {
           errors.due_date = "Due date cannot be before milestone start date";
@@ -208,41 +238,48 @@ export function Step2MilestoneSetup({
         }
       }
     }
-    setTaskErrors(prev => ({ ...prev, [`${milestoneId}_${task.id}`]: errors }));
+    setTaskErrors((prev) => ({
+      ...prev,
+      [`${milestoneId}_${task.id}`]: errors,
+    }));
     return Object.keys(errors).length === 0;
   };
 
   const isMilestoneValid = (milestone: Milestone) => {
-    return milestone.name && 
-           milestone.name.trim() !== "" && 
-           milestone.description &&
-           milestone.description.trim() !== "" &&
-           milestone.assigned_to && 
-           milestone.assigned_to !== "--" &&
-           milestone.status &&
-           milestone.start_date &&
-           milestone.end_date;
+    return (
+      milestone.name &&
+      milestone.name.trim() !== "" &&
+      milestone.description &&
+      milestone.description.trim() !== "" &&
+      milestone.assigned_to &&
+      milestone.assigned_to !== "--" &&
+      milestone.status &&
+      milestone.start_date &&
+      milestone.end_date
+    );
   };
 
   const isTaskValid = (task: Task) => {
-    return task.title && 
-           task.title.trim() !== "" && 
-           task.description && 
-           task.description.trim() !== "" &&
-           task.assigned_to && 
-           task.assigned_to !== "--" &&
-           task.status &&
-           task.due_date;
+    return (
+      task.title &&
+      task.title.trim() !== "" &&
+      task.description &&
+      task.description.trim() !== "" &&
+      task.assigned_to &&
+      task.assigned_to !== "--" &&
+      task.status &&
+      task.due_date
+    );
   };
 
   const hasIncompleteMilestone = () => {
-    return milestones.some(m => !isMilestoneValid(m));
+    return milestones.some((m) => !isMilestoneValid(m));
   };
 
   const hasIncompleteTask = (milestoneId: string) => {
-    const milestone = milestones.find(m => m.id === milestoneId);
+    const milestone = milestones.find((m) => m.id === milestoneId);
     if (!milestone) return false;
-    return milestone.tasks.some(t => !isTaskValid(t));
+    return milestone.tasks.some((t) => !isTaskValid(t));
   };
 
   // Auto-populate milestones/tasks when a template is selected
@@ -255,7 +292,9 @@ export function Step2MilestoneSetup({
     );
     if (selectedTemplate) {
       console.log("Selected template found:", selectedTemplate);
-      const mappedMilestones: Milestone[] = (selectedTemplate.project_milestone_master || [])?.map((m, idx) => ({
+      const mappedMilestones: Milestone[] = (
+        selectedTemplate.project_milestone_master || []
+      )?.map((m, idx) => ({
         id: m.id || String(idx),
         name: m.name,
         description: m.description || "",
@@ -281,26 +320,86 @@ export function Step2MilestoneSetup({
 
   // Initialize milestones from existing data (for edit mode)
   useEffect(() => {
-    if (initialMilestones && initialMilestones.length > 0 && milestones.length === 0 && !templateApplied) {
-      setMilestones(initialMilestones.map(m => ({
-        id: m.id || "",
-        name: m.name,
-        description: m.description || "",
-        assigned_to: m.assigned_to || "",
-        status: m.status || "Open",
-        start_date: m.start_date || "",
-        end_date: m.end_date || "",
-        tasks: (m.tasks || []).map(t => ({
-          id: t.id || "",
-          title: t.title,
-          description: t.description || "",
-          assigned_to: t.assigned_to || "",
-          status: t.status || "Open",
-          due_date: t.due_date || "",
-        })),
-      })));
+    // For edit mode, always use initialMilestones if available and not template applied
+    if (
+      mode === "edit" &&
+      initialMilestones &&
+      initialMilestones.length > 0 &&
+      !templateApplied
+    ) {
+      const mappedMilestones = initialMilestones.map((m) => {
+        return {
+          id: m.id || "",
+          name: m.name,
+          description: m.description || "",
+          assigned_to: m.assigned_to || "",
+          status: m.status || "Open",
+          start_date: m.start_date || "",
+          end_date: m.end_date || "",
+          tasks: (m.tasks || []).map((t) => ({
+            id: t.id || "",
+            title: t.title,
+            description: t.description || "",
+            assigned_to: t.assigned_to || "",
+            status: t.status || "Open",
+            due_date: t.due_date || "",
+          })),
+          tickets: (m.tickets || []).map((ticket) => ({
+            id: ticket.id || "",
+            title: ticket.title || "",
+            description: ticket.description || "",
+            assigned_to: ticket.assigned_to || null,
+            status: ticket.status || "",
+            priority: ticket.priority || "",
+            remark: ticket.remark || "",
+            image_url: ticket.image_url || "",
+            created_at: ticket.created_at || "",
+          })),
+        };
+      });
+      setMilestones(mappedMilestones);
     }
-  }, [initialMilestones, milestones.length, templateApplied]);
+    // For create mode, only initialize if milestones array is empty
+    else if (
+      mode === "create" &&
+      initialMilestones &&
+      initialMilestones.length > 0 &&
+      milestones.length === 0 &&
+      !templateApplied
+    ) {
+      const mappedMilestones = initialMilestones.map((m) => {
+        return {
+          id: m.id || "",
+          name: m.name,
+          description: m.description || "",
+          assigned_to: m.assigned_to || "",
+          status: m.status || "Open",
+          start_date: m.start_date || "",
+          end_date: m.end_date || "",
+          tasks: (m.tasks || []).map((t) => ({
+            id: t.id || "",
+            title: t.title,
+            description: t.description || "",
+            assigned_to: t.assigned_to || "",
+            status: t.status || "Open",
+            due_date: t.due_date || "",
+          })),
+          tickets: (m.tickets || []).map((ticket) => ({
+            id: ticket.id || "",
+            title: ticket.title || "",
+            description: ticket.description || "",
+            assigned_to: ticket.assigned_to || null,
+            status: ticket.status || "",
+            priority: ticket.priority || "",
+            remark: ticket.remark || "",
+            image_url: ticket.image_url || "",
+            created_at: ticket.created_at || "",
+          })),
+        };
+      });
+      setMilestones(mappedMilestones);
+    }
+  }, [initialMilestones, templateApplied, mode, milestones.length]);
 
   // Reset template applied flag when template changes
   useEffect(() => {
@@ -319,24 +418,24 @@ export function Step2MilestoneSetup({
 
   // Default open logic for milestone and task, and auto-create if none exist
   useEffect(() => {
-    if (mode !== 'create') return; // Only run auto-create/auto-edit in create mode
-    if (milestoneOption === 'milestone') {
+    if (mode !== "create") return; // Only run auto-create/auto-edit in create mode
+    if (milestoneOption === "milestone") {
       if (milestones.length === 0 && !autoMilestoneCreated) {
         const emptyDate = getEmptyDate();
         const newTask = {
           id: `task-${taskIdCounter.current++}`,
-          title: '',
-          description: '',
-          assigned_to: '--',
-          status: 'Open',
+          title: "",
+          description: "",
+          assigned_to: "--",
+          status: "Open",
           due_date: emptyDate,
         };
         const newMilestone = {
           id: `milestone-${milestoneIdCounter.current++}`,
-          name: '',
-          description: '',
-          assigned_to: '--',
-          status: 'Open',
+          name: "",
+          description: "",
+          assigned_to: "--",
+          status: "Open",
           start_date: emptyDate,
           end_date: emptyDate,
           tasks: [newTask],
@@ -353,7 +452,10 @@ export function Step2MilestoneSetup({
         setEditingId(milestones[0].id);
         setEditMilestone({ ...milestones[0] });
         if (milestones[0].tasks && milestones[0].tasks.length > 0) {
-          setEditingTask({ milestoneId: milestones[0].id, taskId: milestones[0].tasks[0].id });
+          setEditingTask({
+            milestoneId: milestones[0].id,
+            taskId: milestones[0].tasks[0].id,
+          });
           setEditTask({ ...milestones[0].tasks[0] });
         } else {
           setEditingTask(null);
@@ -367,17 +469,21 @@ export function Step2MilestoneSetup({
 
   // Reset autoMilestoneCreated when leaving milestoneOption
   useEffect(() => {
-    if (milestoneOption !== 'milestone') {
+    if (milestoneOption !== "milestone") {
       setAutoMilestoneCreated(false);
     }
   }, [milestoneOption]);
 
   // When editing a milestone, if its dates are empty, auto-populate from project dates
   useEffect(() => {
-    if (editMilestone && (!editMilestone.start_date || !editMilestone.end_date)) {
+    if (
+      editMilestone &&
+      (!editMilestone.start_date || !editMilestone.end_date)
+    ) {
       setEditMilestone({
         ...editMilestone,
-        start_date: editMilestone.start_date || projectStartDate || getEmptyDate(),
+        start_date:
+          editMilestone.start_date || projectStartDate || getEmptyDate(),
         end_date: editMilestone.end_date || projectEndDate || getEmptyDate(),
       });
     }
@@ -400,7 +506,10 @@ export function Step2MilestoneSetup({
   };
   const handleCancel = () => {
     // If this is a new milestone (empty name), remove it from the list
-    if (editMilestone && (!editMilestone.name || editMilestone.name.trim() === "")) {
+    if (
+      editMilestone &&
+      (!editMilestone.name || editMilestone.name.trim() === "")
+    ) {
       setMilestones((prev) => prev.filter((m) => m.id !== editMilestone.id));
     }
     setEditingId(null);
@@ -409,12 +518,20 @@ export function Step2MilestoneSetup({
   };
   const handleSave = () => {
     if (!editMilestone) return;
-    
+
+    // Only allow Support milestone in edit mode
+    if (mode === "edit" && editMilestone.name !== "Support") {
+      toast.error(
+        "Only 'Support' milestone can be created for a project in edit mode."
+      );
+      return;
+    }
+
     // Validate milestone before saving
     if (!validateMilestone(editMilestone)) {
       return; // Don't save if validation fails, errors are already displayed
     }
-    
+
     setMilestones((prev) =>
       prev?.map((m) => (m?.id === editMilestone?.id ? { ...editMilestone } : m))
     );
@@ -430,9 +547,20 @@ export function Step2MilestoneSetup({
   const handleAddMilestone = () => {
     // Check if there's an incomplete milestone
     if (hasIncompleteMilestone()) {
-      toast.error("Please complete the current milestone before adding a new one.");
+      toast.error(
+        "Please complete the current milestone before adding a new one."
+      );
       return;
     }
+
+    // Only allow Support milestone in edit mode
+    if (mode === "edit") {
+      toast.error(
+        "Only 'Support' milestone can be created for a project in edit mode."
+      );
+      return;
+    }
+
     const newMilestone = {
       id: `milestone-${milestoneIdCounter.current++}`,
       name: "",
@@ -457,7 +585,11 @@ export function Step2MilestoneSetup({
   };
   const handleCancelTask = () => {
     // If this is a new task (empty title), remove it from the list
-    if (editTask && (!editTask.title || editTask.title.trim() === "") && editingTask) {
+    if (
+      editTask &&
+      (!editTask.title || editTask.title.trim() === "") &&
+      editingTask
+    ) {
       setMilestones((prev) =>
         prev?.map((m) =>
           m.id === editingTask?.milestoneId
@@ -468,7 +600,7 @@ export function Step2MilestoneSetup({
     }
     // Remove errors for this task
     if (editingTask) {
-      setTaskErrors(prev => {
+      setTaskErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[`${editingTask.milestoneId}_${editTask?.id}`];
         return newErrors;
@@ -507,7 +639,7 @@ export function Step2MilestoneSetup({
     setEditingTask(null);
     setEditTask(null);
     // Remove errors for this task
-    setTaskErrors(prev => {
+    setTaskErrors((prev) => {
       const newErrors = { ...prev };
       delete newErrors[`${editingTask.milestoneId}_${editTask.id}`];
       return newErrors;
@@ -526,9 +658,11 @@ export function Step2MilestoneSetup({
   // Add new task
   const handleAddTask = (milestoneId: string) => {
     // Check if milestone is valid before allowing task add
-    const milestone = milestones.find(m => m.id === milestoneId);
+    const milestone = milestones.find((m) => m.id === milestoneId);
     if (!milestone || !isMilestoneValid(milestone)) {
-      toast.error("Please complete and save the milestone before adding a task.");
+      toast.error(
+        "Please complete and save the milestone before adding a task."
+      );
       return;
     }
     // Check if there's an incomplete task in this milestone
@@ -558,40 +692,69 @@ export function Step2MilestoneSetup({
   // Handle milestone change with error clearing
   const handleMilestoneChange = (updatedMilestone: Milestone) => {
     setEditMilestone(updatedMilestone);
-    
+
     // Clear specific field errors when user makes changes
-    if (milestoneErrors.name && updatedMilestone.name && updatedMilestone.name.trim() !== "") {
-      setMilestoneErrors(prev => ({ ...prev, name: "" }));
+    if (
+      milestoneErrors.name &&
+      updatedMilestone.name &&
+      updatedMilestone.name.trim() !== ""
+    ) {
+      setMilestoneErrors((prev) => ({ ...prev, name: "" }));
     }
-    if (milestoneErrors.description && updatedMilestone.description && updatedMilestone.description.trim() !== "") {
-      setMilestoneErrors(prev => ({ ...prev, description: "" }));
+    if (
+      milestoneErrors.description &&
+      updatedMilestone.description &&
+      updatedMilestone.description.trim() !== ""
+    ) {
+      setMilestoneErrors((prev) => ({ ...prev, description: "" }));
     }
-    if (milestoneErrors.assigned_to && updatedMilestone.assigned_to && updatedMilestone.assigned_to !== "--") {
-      setMilestoneErrors(prev => ({ ...prev, assigned_to: "" }));
+    if (
+      milestoneErrors.assigned_to &&
+      updatedMilestone.assigned_to &&
+      updatedMilestone.assigned_to !== "--"
+    ) {
+      setMilestoneErrors((prev) => ({ ...prev, assigned_to: "" }));
     }
     if (milestoneErrors.status && updatedMilestone.status) {
-      setMilestoneErrors(prev => ({ ...prev, status: "" }));
+      setMilestoneErrors((prev) => ({ ...prev, status: "" }));
     }
     if (milestoneErrors.start_date && updatedMilestone.start_date) {
-      setMilestoneErrors(prev => ({ ...prev, start_date: "" }));
+      setMilestoneErrors((prev) => ({ ...prev, start_date: "" }));
     }
     if (milestoneErrors.end_date && updatedMilestone.end_date) {
-      setMilestoneErrors(prev => ({ ...prev, end_date: "" }));
+      setMilestoneErrors((prev) => ({ ...prev, end_date: "" }));
     }
   };
 
   // Handle task change with error clearing
   const handleTaskChange = (updatedTask: Task, milestoneId?: string) => {
     setEditTask(updatedTask);
-    const key = `${milestoneId || editingTask?.milestoneId || ''}_${updatedTask.id}`;
+    const key = `${milestoneId || editingTask?.milestoneId || ""}_${
+      updatedTask.id
+    }`;
     if (taskErrors[key]) {
       const newErrors = { ...taskErrors[key] };
-      if (newErrors.title && updatedTask.title && updatedTask.title.trim() !== "") newErrors.title = "";
-      if (newErrors.description && updatedTask.description && updatedTask.description.trim() !== "") newErrors.description = "";
-      if (newErrors.assigned_to && updatedTask.assigned_to && updatedTask.assigned_to !== "--") newErrors.assigned_to = "";
+      if (
+        newErrors.title &&
+        updatedTask.title &&
+        updatedTask.title.trim() !== ""
+      )
+        newErrors.title = "";
+      if (
+        newErrors.description &&
+        updatedTask.description &&
+        updatedTask.description.trim() !== ""
+      )
+        newErrors.description = "";
+      if (
+        newErrors.assigned_to &&
+        updatedTask.assigned_to &&
+        updatedTask.assigned_to !== "--"
+      )
+        newErrors.assigned_to = "";
       if (newErrors.status && updatedTask.status) newErrors.status = "";
       if (newErrors.due_date && updatedTask.due_date) newErrors.due_date = "";
-      setTaskErrors(prev => ({ ...prev, [key]: newErrors }));
+      setTaskErrors((prev) => ({ ...prev, [key]: newErrors }));
     }
   };
 
@@ -609,22 +772,26 @@ export function Step2MilestoneSetup({
   // When user clicks next, pass milestones to parent
   const handleNext = () => {
     // Validate all milestones and tasks before proceeding
-    const incompleteMilestones = milestones.filter(m => !isMilestoneValid(m));
-    const incompleteTasks = milestones.flatMap(m => 
-      m.tasks.filter(t => !isTaskValid(t))
+    const incompleteMilestones = milestones.filter((m) => !isMilestoneValid(m));
+    const incompleteTasks = milestones.flatMap((m) =>
+      m.tasks.filter((t) => !isTaskValid(t))
     );
 
     if (incompleteMilestones.length > 0) {
-      toast.error(`Please complete ${incompleteMilestones.length} milestone(s) before proceeding.`);
+      toast.error(
+        `Please complete ${incompleteMilestones.length} milestone(s) before proceeding.`
+      );
       return;
     }
 
     if (incompleteTasks.length > 0) {
-      toast.error(`Please complete ${incompleteTasks.length} task(s) before proceeding.`);
+      toast.error(
+        `Please complete ${incompleteTasks.length} task(s) before proceeding.`
+      );
       return;
     }
 
-    const backendMilestones: Milestone[] = milestones.map(m => ({
+    const backendMilestones: Milestone[] = milestones.map((m) => ({
       id: m.id,
       name: m.name,
       description: m.description,
@@ -632,7 +799,7 @@ export function Step2MilestoneSetup({
       status: m.status,
       start_date: m.start_date,
       end_date: m.end_date,
-      tasks: m.tasks.map(t => ({
+      tasks: m.tasks.map((t) => ({
         id: t.id,
         title: t.title,
         description: t.description,
@@ -640,6 +807,18 @@ export function Step2MilestoneSetup({
         status: t.status,
         due_date: t.due_date,
       })),
+      tickets:
+        m.tickets?.map((ticket) => ({
+          id: ticket.id,
+          title: ticket.title,
+          description: ticket.description,
+          assigned_to: ticket.assigned_to,
+          status: ticket.status,
+          priority: ticket.priority,
+          remark: ticket.remark,
+          image_url: ticket.image_url,
+          created_at: ticket.created_at,
+        })) || [],
     }));
     onNext(backendMilestones);
   };
@@ -651,11 +830,13 @@ export function Step2MilestoneSetup({
         <div className="mb-4 2xl:mb-[1vw]">
           <Dropdown
             label="Project Template"
-            options={projectTemplateLoading
-              ? [{ label: "Loading...", value: "" }]
-              : projectTemplateError
+            options={
+              projectTemplateLoading
+                ? [{ label: "Loading...", value: "" }]
+                : projectTemplateError
                 ? [{ label: "Error loading templates", value: "" }]
-                : filteredProjectTemplateOptions}
+                : filteredProjectTemplateOptions
+            }
             value={projectTemplate}
             onChange={(value) => {
               setProjectTemplate(value);
@@ -668,7 +849,7 @@ export function Step2MilestoneSetup({
       {/* Milestone Table */}
       <div className="mb-4 2xl:mb-[1vw]">
         <h1 className="text-[1.2rem] 2xl:text-[1.2vw]">Milestone</h1>
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto border mt-4 2xl:mt-[0.5vw] border-gray-300 rounded-lg 2xl:rounded-[0.75vw]">
           <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
             <thead>
               <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
@@ -684,90 +865,220 @@ export function Step2MilestoneSetup({
                     <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
                   </button>
                 </th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">Description</th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[10vw]">Estimated Start Date</th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">Estimated End Date</th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                  Description
+                </th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">
+                  Assigned To
+                </th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                  Status
+                </th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[10vw]">
+                  Estimated Start Date
+                </th>
+                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                  Estimated End Date
+                </th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
-              {milestones?.length > 0 && milestones?.map((milestone) => (
-                <React.Fragment key={milestone.id}>
-                  <Milestone
-                    milestone={milestone}
-                    editingId={editingId}
-                    editMilestone={editMilestone}
-                    onEdit={handleEdit}
-                    onDelete={handleDeleteMilestone}
-                    onSave={handleSave}
-                    onCancel={handleCancel}
-                    onChange={handleMilestoneChange}
-                    onToggle={toggleMilestone}
-                    expanded={expandedMilestones.includes(milestone.id)}
-                    menuOpen={milestoneMenu}
-                    setMenuOpen={setMilestoneMenu}
-                    userOptions={userOptions}
-                    statusOptions={statusOptions}
-                    errors={milestoneErrors}
-                    projectStartDate={projectStartDate}
-                    projectEndDate={projectEndDate}
-                  />
-                  {(expandedMilestones.includes(milestone.id) || editingId === milestone.id) && (
-                    <tr className="bg-gray-50 2xl:bg-gray-100">
-                      <td colSpan={7} className="p-0">
-                        <table className="w-fit">
-                          <thead>
-                            <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
-                            <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                              <th className="px-8 2xl:px-[2vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
-                                <span>Task Name</span>
-                                <button
-                                  className="text-purple-500 hover:text-purple-700 text-lg"
-                                  title="Add Task"
-                                  type="button"
-                                  onClick={() => handleAddTask(milestone.id)}
-                                >
-                                  <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
-                                </button>
-                              </th>
-                              <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">Description</th>
-                              <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">Assigned To</th>
-                              <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Status</th>
-                              <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">Due Date</th>
-                              <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {milestone.tasks.map((task) => (
-                              <Task
-                                key={task.id}
-                                task={task}
-                                editingTask={editingTask}
-                                editTask={editTask}
-                                onEdit={handleEditTask}
-                                onDelete={handleDeleteTask}
-                                onSave={handleSaveTask}
-                                onCancel={handleCancelTask}
-                                onChange={(t) => handleTaskChange(t, milestone.id)}
-                                menuOpen={taskMenu}
-                                setMenuOpen={setTaskMenu}
-                                userOptions={userOptions}
-                                statusOptions={statusOptions}
-                                milestoneId={milestone.id}
-                                errors={editingTask && editingTask.milestoneId === milestone.id && editingTask.taskId === task.id ? (taskErrors[`${milestone.id}_${task.id}`] || {}) : {}}
-                                milestoneStartDate={milestone.start_date}
-                                milestoneEndDate={milestone.end_date}
-                              />
-                            ))}
-                          </tbody>
-                        </table>
-                      </td>
-                    </tr>
-                  )}
-                </React.Fragment>
-              ))}
+              {milestones?.length > 0 &&
+                milestones?.map((milestone) => (
+                  <React.Fragment key={milestone.id}>
+                    <Milestone
+                      milestone={milestone}
+                      editingId={editingId}
+                      editMilestone={editMilestone}
+                      onEdit={handleEdit}
+                      onDelete={handleDeleteMilestone}
+                      onSave={handleSave}
+                      onCancel={handleCancel}
+                      onChange={handleMilestoneChange}
+                      onToggle={toggleMilestone}
+                      expanded={expandedMilestones.includes(milestone.id)}
+                      menuOpen={milestoneMenu}
+                      setMenuOpen={setMilestoneMenu}
+                      userOptions={userOptions}
+                      statusOptions={statusOptions}
+                      errors={milestoneErrors}
+                      projectStartDate={projectStartDate}
+                      projectEndDate={projectEndDate}
+                    />
+                    {(expandedMilestones.includes(milestone.id) ||
+                      editingId === milestone.id) &&
+                      milestone.tasks &&
+                      milestone.tasks.length > 0 && (
+                        <tr className="bg-gray-50 2xl:bg-gray-100">
+                          <td colSpan={7} className="p-0">
+                            <table className="w-fit">
+                              <thead>
+                                <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
+                                  <th className="px-8 2xl:px-[2vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                    <span>Task Name</span>
+                                    <button
+                                      className="text-purple-500 hover:text-purple-700 text-lg"
+                                      title="Add Task"
+                                      type="button"
+                                      onClick={() =>
+                                        handleAddTask(milestone.id)
+                                      }
+                                    >
+                                      <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                                    </button>
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                    Description
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">
+                                    Assigned To
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    Status
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    Due Date
+                                  </th>
+                                  <th></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {milestone.tasks.map((task) => (
+                                  <Task
+                                    key={task.id}
+                                    task={task}
+                                    editingTask={editingTask}
+                                    editTask={editTask}
+                                    onEdit={handleEditTask}
+                                    onDelete={handleDeleteTask}
+                                    onSave={handleSaveTask}
+                                    onCancel={handleCancelTask}
+                                    onChange={(t) =>
+                                      handleTaskChange(t, milestone.id)
+                                    }
+                                    menuOpen={taskMenu}
+                                    setMenuOpen={setTaskMenu}
+                                    userOptions={userOptions}
+                                    statusOptions={statusOptions}
+                                    milestoneId={milestone.id}
+                                    errors={
+                                      editingTask &&
+                                      editingTask.milestoneId ===
+                                        milestone.id &&
+                                      editingTask.taskId === task.id
+                                        ? taskErrors[
+                                            `${milestone.id}_${task.id}`
+                                          ] || {}
+                                        : {}
+                                    }
+                                    milestoneStartDate={milestone.start_date}
+                                    milestoneEndDate={milestone.end_date}
+                                  />
+                                ))}
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      )}
+
+                    {/* Tickets Section - Conditional Rendering for Support Milestone */}
+                    {(expandedMilestones.includes(milestone.id) ||
+                      editingId === milestone.id) &&
+                      milestone.name === "Support" &&
+                      milestone.tickets &&
+                      milestone.tickets.length > 0 && (
+                        <tr className="bg-gray-50 2xl:bg-gray-100">
+                          <td colSpan={7} className="p-0">
+                            <table className="w-fit">
+                              <thead>
+                                <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
+                                  <th className="px-8 2xl:px-[2vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-center flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                    <span>Ticket Title</span>
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                    Description
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                    Assigned To
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    Status
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    Priority
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                    Remark
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                    Image
+                                  </th>
+                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    Created Date
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {milestone.tickets?.map((ticket) => (
+                                  <tr
+                                    key={ticket.id}
+                                    className="hover:bg-blue-50 transition-colors duration-150"
+                                  >
+                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></td>
+                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                      {ticket.title}
+                                    </td>
+                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                      {ticket.description}
+                                    </td>
+                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                      {ticket.assigned_to || "None"}
+                                    </td>
+                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                      {ticket.status}
+                                    </td>
+                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                      {ticket.priority}
+                                    </td>
+                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                      {ticket.remark}
+                                    </td>
+                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                      {ticket.image_url ? (
+                                        <div className="flex justify-center">
+                                          <Image
+                                            src={ticket.image_url}
+                                            alt="Ticket attachment"
+                                            width={60}
+                                            height={60}
+                                            className="w-15 h-15 object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
+                                          />
+                                        </div>
+                                      ) : (
+                                        <span className="text-gray-400 text-sm ">
+                                          No image
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                      {ticket.created_at
+                                        ? new Date(
+                                            ticket.created_at
+                                          ).toLocaleDateString()
+                                        : "N/A"}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      )}
+                  </React.Fragment>
+                ))}
             </tbody>
           </table>
         </div>

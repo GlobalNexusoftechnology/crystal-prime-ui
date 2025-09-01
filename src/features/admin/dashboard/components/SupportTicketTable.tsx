@@ -51,7 +51,7 @@ export const SupportTicketTable: React.FC<SupportTicketTableProps> = ({
       </div>
     );
   return (
-    <div className="p-4 2xl:p-[1vw] flex flex-col gap-4 border 2xl:border-[0.1vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw]">
+    <div className="p-4 2xl:p-[1vw] flex flex-col gap-4 border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw]">
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
         <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
           Support Tickets

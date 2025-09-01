@@ -128,6 +128,9 @@ import {
   ICreateTaskCommentPayload,
   ITaskCommentResponse,
   IAllTaskCommentsResponse,
+  ICreateTicketCommentPayload,
+  ITicketCommentResponse,
+  IAllTicketCommentsResponse,
   ICreateDailyTaskEntryPayload,
   ICreateDailyTaskEntryResponse,
   IUpdateDailyTaskEntryPayload,
@@ -163,6 +166,8 @@ import {
   IEILogFilters,
   IUploadEILogFromExcelResponse,
   IDeleteDailyTaskEntryResponse,
+  IUpdateDailyTaskStatusPayload,
+  IUpdateDailyTaskStatusResponse,
   StaffPerformanceReportResponse,
   ProjectPerformanceReportResponse,
   LeadReportResponse,
@@ -280,6 +285,11 @@ import {
   deleteTaskCommentUrl,
   getTaskCommentDetailUrl,
   getAllTaskCommentsUrl,
+  createTicketCommentUrl,
+  updateTicketCommentUrl,
+  deleteTicketCommentUrl,
+  getTicketCommentDetailUrl,
+  getAllTicketCommentsUrl,
   updateTaskStatusUrl,
   createDailyTaskEntryUrl,
   updateDailyTaskEntryUrl,
@@ -325,6 +335,7 @@ import {
   updateTicketUrl,
   updateTicketStatusUrl,
   deleteTicketUrl,
+  updateDailyTaskStatusUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -1807,6 +1818,46 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   }
 
+  // Ticket Comments API methods
+  public createTicketComment = async (payload: ICreateTicketCommentPayload): Promise<ITicketCommentResponse> => {
+    const response = await this.post<ITicketCommentResponse>(createTicketCommentUrl(), payload, { requiresAuth: true });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public updateTicketComment = async (commentId: string, payload: Partial<ICreateTicketCommentPayload>): Promise<ITicketCommentResponse> => {
+    const response = await this.put<ITicketCommentResponse>(updateTicketCommentUrl(commentId), payload, { requiresAuth: true });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public deleteTicketComment = async (commentId: string): Promise<void> => {
+    const response = await this.del<void>(deleteTicketCommentUrl(commentId), { requiresAuth: true });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+  }
+
+  public getTicketCommentDetail = async (commentId: string): Promise<ITicketCommentResponse> => {
+    const response = await this.get<ITicketCommentResponse>(getTicketCommentDetailUrl(commentId), { requiresAuth: true });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public getAllTicketComments = async (ticketId: string): Promise<ITicketCommentResponse[]> => {
+    const response = await this.get<IAllTicketCommentsResponse>(getAllTicketCommentsUrl(ticketId), { requiresAuth: true });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data.data.list;
+  }
+
   public updateTaskStatus = async (taskId: string, status: string) => {
     const response = await this.put<{ status: string }>(
       updateTaskStatusUrl(taskId),
@@ -1873,7 +1924,15 @@ export class CommunityClient extends ApiClient {
     if (!response?.success) {
       throw response?.errorData;
     }
-    return response?.data.data;
+    return response?.data?.data;
+  };
+
+  public updateDailyTaskStatus = async (id: string, payload: IUpdateDailyTaskStatusPayload): Promise<IUpdateDailyTaskStatusResponse> => {
+    const response = await this.put<IUpdateDailyTaskStatusResponse>(updateDailyTaskStatusUrl(id), payload);
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
   };
 
   public uploadMultipleAttachments = async (formData: FormData) => {

@@ -45,7 +45,7 @@ export const ExpensesOverviewChart: React.FC<ExpensesOverviewChartProps> = ({
   }));
 
   return (
-    <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] border border-gray-300 2xl:border-[0.1vw] p-4">
+    <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] border border-gray-300 2xl:border-[0.05vw] p-4">
       <div className="font-semibold mb-2 flex items-center gap-4">
         Expenses Overview
         <span className="flex items-center gap-4 ml-auto">

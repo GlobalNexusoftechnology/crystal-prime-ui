@@ -35,7 +35,7 @@ export function MilestoneInfo({ milestoneInfoData }: ProjectInfoProps) {
       </h3>
       <div className="flex flex-col gap-8 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
         <div className="flex gap-12 2xl:gap-[3vw] items-start">
-          <div className="flex flex-col">
+          <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
             <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
               Milestone Name
             </p>
@@ -43,7 +43,7 @@ export function MilestoneInfo({ milestoneInfoData }: ProjectInfoProps) {
               {milestoneInfoData.name}
             </p>
           </div>
-          <div className="flex flex-col ">
+          <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
             <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
               Assigned To
             </p>
@@ -64,7 +64,7 @@ export function MilestoneInfo({ milestoneInfoData }: ProjectInfoProps) {
             </div>
           </div>
         </div>
-        <div className="flex flex-col">
+        <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
           <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
             Description
           </p>
@@ -73,7 +73,7 @@ export function MilestoneInfo({ milestoneInfoData }: ProjectInfoProps) {
           </p>
         </div>
         <div className="flex gap-12 2xl:gap-[3vw] items-center">
-          <div className="flex flex-col">
+          <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
             <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
               Created At
             </p>
@@ -81,7 +81,7 @@ export function MilestoneInfo({ milestoneInfoData }: ProjectInfoProps) {
               {milestoneInfoData.created_at}
             </p>
           </div>
-          <div className="flex flex-col ">
+          <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
             <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
               Updated At
             </p>

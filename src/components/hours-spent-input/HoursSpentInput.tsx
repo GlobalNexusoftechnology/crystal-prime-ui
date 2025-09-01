@@ -56,7 +56,7 @@ export const HoursSpentInput: React.FC<HoursSpentInputProps> = ({
   return (
     <div className="flex flex-col">
       <label className="mb-2 2xl:mb-[0.5vw]">{label}</label>
-      <div className="flex gap-2 2xl:gap-[0.5vw] items-center border 2xl:border-[0.1vw] border-gray-300 bg-white px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] rounded-md 2xl:rounded-[0.375vw]">
+      <div className="flex gap-2 2xl:gap-[0.5vw] items-center border 2xl:border-[0.05vw] border-gray-300 bg-white px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] rounded-md 2xl:rounded-[0.375vw]">
         <input
           type="number"
           min={minHours}

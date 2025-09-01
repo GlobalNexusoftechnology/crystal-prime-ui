@@ -30,7 +30,7 @@ export const BusinessOverview: React.FC<BusinessOverviewProps> = ({ data }) => {
         {metrics.map((metric, idx) => (
           <div
             key={idx}
-            className="border border-gray-300 2xl:border-[0.1vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] flex items-start gap-3 2xl:gap-[0.75vw]"
+            className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] flex items-start gap-3 2xl:gap-[0.75vw]"
           >
             <FiInfo className="text-gray-400 w-5 h-5 2xl:w-[1.1vw] 2xl:h-[1.1vw]" />
             <div>

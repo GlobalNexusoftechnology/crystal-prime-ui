@@ -246,7 +246,7 @@ export function EILogsListTable({
     : "";
 
   return (
-    <div className="bg-customGray p-5 2xl:p-[1.25vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.375vw]">
+    <div className="bg-customGray p-5 2xl:p-[1.25vw] border 2xl:border-[0.05vw] rounded-xl 2xl:rounded-[0.375vw]">
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
         <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
           EI Logs List

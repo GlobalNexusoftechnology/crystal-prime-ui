@@ -44,7 +44,7 @@ export function PBDashboardReport() {
     return <div>Error loading dashboard</div>;
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw] border 2xl:border-[0.1vw] rounded-xl 2xl:rounded-[0.75vw] bg-white p-6 2xl:p-[1.5vw]">
+    <div className="flex flex-col gap-4 2xl:gap-[1vw] border 2xl:border-[0.05vw] rounded-xl 2xl:rounded-[0.75vw] bg-white p-6 2xl:p-[1.5vw]">
       <Breadcrumb />
       <div className="flex justify-between items-center">
         <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
