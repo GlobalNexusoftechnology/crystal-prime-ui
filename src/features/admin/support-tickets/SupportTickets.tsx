@@ -70,7 +70,6 @@ export function SupportTickets() {
     { label: "Open", value: "open" },
     { label: "In Progress", value: "in_progress" },
     { label: "Completed", value: "completed" },
-    { label: "Closed", value: "closed" },
   ];
 
   const priorityOptions = [
