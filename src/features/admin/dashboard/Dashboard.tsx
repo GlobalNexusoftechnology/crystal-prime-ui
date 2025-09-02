@@ -47,15 +47,16 @@ export default function Dashboard() {
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>("");
   const [selectedAssignedTo, setSelectedAssignedTo] = useState<string>("");
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
-  const [editInitialValues, setEditInitialValues] = useState<ICreateProjectTask>({
-    title: "",
-    description: "",
-    due_date: new Date().toISOString().slice(0, 10),
-    status: "Open",
-    priority: "Medium",
-    assigned_to: "",
-    milestone_id: "",
-  });
+  const [editInitialValues, setEditInitialValues] =
+    useState<ICreateProjectTask>({
+      title: "",
+      description: "",
+      due_date: new Date().toISOString().slice(0, 10),
+      status: "Open",
+      priority: "Medium",
+      assigned_to: "",
+      milestone_id: "",
+    });
   // Move all hooks to the top
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -497,7 +498,9 @@ export default function Dashboard() {
       cell: ({ value }) => {
         return (
           <div className="flex justify-center">
-            <span className={`px-2 2xl:px-[0.5vw] py-1 2xl:py-[0.5vw] text-xs 2xl:text-[0.9vw] font-medium `}>
+            <span
+              className={`px-2 2xl:px-[0.5vw] py-1 2xl:py-[0.5vw] text-xs 2xl:text-[0.9vw] font-medium `}
+            >
               {(value as string) || "Medium"}
             </span>
           </div>
@@ -505,12 +508,17 @@ export default function Dashboard() {
       },
     },
     { header: "TASK NAME", accessor: "title" },
-    { header: "DESCRIPTION", accessor: "description",
+    {
+      header: "DESCRIPTION",
+      accessor: "description",
       cell: ({ value }) => {
-      return (
-        <p className="w-[15rem] 2xl:w-[15vw] text-left text-wrap text-sm 2xl:text-[0.9vw]">{value as string}</p>
-      );
-    }, },
+        return (
+          <p className="w-[15rem] 2xl:w-[15vw] text-left text-wrap text-sm 2xl:text-[0.9vw]">
+            {value as string}
+          </p>
+        );
+      },
+    },
     { header: "STAFF NAME", accessor: "staffName" },
     { header: "PROJECT NAME", accessor: "projectName" },
     { header: "MILESTONE NAME", accessor: "milestoneName" },
@@ -555,12 +563,12 @@ export default function Dashboard() {
           due_date: dueRaw,
           status:
             (task?.status as "Open" | "In Progress" | "Completed") ||
-            ((row.status as "Open" | "In Progress" | "Completed") ||
-              "Open"),
+            (row.status as "Open" | "In Progress" | "Completed") ||
+            "Open",
           priority:
             (task?.priority as "Critical" | "High" | "Medium" | "Low") ||
-            ((row.priority as "Critical" | "High" | "Medium" | "Low") ||
-              "Medium"),
+            (row.priority as "Critical" | "High" | "Medium" | "Low") ||
+            "Medium",
           assigned_to: task?.assigned_to || "",
           milestone_id: row.milestoneId || "",
         });
@@ -609,7 +617,11 @@ export default function Dashboard() {
       cell: ({ row, value }) => (
         <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
           <SimpleDropdown
-            options={statusOptions}
+            options={[
+              { label: "Open", value: "open" },
+              { label: "In Progress", value: "in_progress" },
+              { label: "Completed", value: "completed" },
+            ]}
             value={String((value as string) ?? "")}
             onChange={(val) =>
               updateTicketStatus({ id: String(row.id), status: val })
@@ -936,15 +948,19 @@ export default function Dashboard() {
                 });
               }
             }}
-            initialValues={editingTaskId ? editInitialValues : {
-              title: "",
-              description: "",
-              due_date: new Date().toISOString().slice(0, 10),
-              status: "Open",
-              priority: "Medium",
-              assigned_to: selectedAssignedTo || "",
-              milestone_id: selectedMilestoneId || "",
-            }}
+            initialValues={
+              editingTaskId
+                ? editInitialValues
+                : {
+                    title: "",
+                    description: "",
+                    due_date: new Date().toISOString().slice(0, 10),
+                    status: "Open",
+                    priority: "Medium",
+                    assigned_to: selectedAssignedTo || "",
+                    milestone_id: selectedMilestoneId || "",
+                  }
+            }
             isPending={editingTaskId ? isUpdatingMilestoneTask : isCreatingTask}
             isEdit={Boolean(editingTaskId)}
             projectOptions={projectOptions}
