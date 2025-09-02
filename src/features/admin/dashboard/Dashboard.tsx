@@ -18,8 +18,10 @@ import {
   useAllUsersQuery,
   useUpdateTaskStatusMutation,
   useCreateMilestoneTaskMutation,
+  useUpdateMilestoneTaskMutation,
   useAuthStore,
 } from "@/services";
+import type { ICreateProjectTask } from "@/services";
 
 import { AnalyticalCardIcon } from "@/features";
 import { AddTaskModal } from "@/components";
@@ -44,6 +46,16 @@ export default function Dashboard() {
   const [selectedProjectId, setSelectedProjectId] = useState<string>("");
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>("");
   const [selectedAssignedTo, setSelectedAssignedTo] = useState<string>("");
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [editInitialValues, setEditInitialValues] = useState<ICreateProjectTask>({
+    title: "",
+    description: "",
+    due_date: new Date().toISOString().slice(0, 10),
+    status: "Open",
+    priority: "Medium",
+    assigned_to: "",
+    milestone_id: "",
+  });
   // Move all hooks to the top
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -355,6 +367,24 @@ export default function Dashboard() {
       },
     });
 
+  // Update task mutation
+  const { onUpdateMilestoneTask, isPending: isUpdatingMilestoneTask } =
+    useUpdateMilestoneTaskMutation({
+      onSuccessCallback: () => {
+        toast.success("Task updated successfully");
+        setShowAddTaskModal(false);
+        setEditingTaskId(null);
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
+      },
+      onErrorCallback: (error) => {
+        const errorMessage =
+          error?.message || "Failed to update task. Please try again.";
+        toast.error(errorMessage);
+      },
+    });
+
   // Task Data Transformation - Extract tasks from projects data
   const taskList: TaskRow[] = React.useMemo(() => {
     if (!projectsData) return [];
@@ -494,6 +524,46 @@ export default function Dashboard() {
         );
       },
       className: "text-blue-500 whitespace-nowrap",
+    },
+    {
+      label: "Edit",
+      onClick: (row: TaskRow) => {
+        // Find raw task data from projectsData to avoid formatted fields
+        const project = projectsData?.find((p) => p.id === row.projectId);
+        const milestone = project?.milestones?.find(
+          (m) => m.id === row.milestoneId
+        );
+        const task = milestone?.tasks?.find((t) => t.id === row.id);
+
+        // Fallbacks if data is missing
+        const dueRaw = task?.due_date
+          ? new Date(task.due_date).toISOString().slice(0, 10)
+          : new Date().toISOString().slice(0, 10);
+
+        setSelectedProjectId(row.projectId || "");
+        setSelectedMilestoneId(row.milestoneId || "");
+        setSelectedAssignedTo(task?.assigned_to ?? "");
+
+        setEditInitialValues({
+          title: task?.title || row.title || "",
+          description: task?.description || (row.description as string) || "",
+          due_date: dueRaw,
+          status:
+            (task?.status as "Open" | "In Progress" | "Completed") ||
+            ((row.status as "Open" | "In Progress" | "Completed") ||
+              "Open"),
+          priority:
+            (task?.priority as "Critical" | "High" | "Medium" | "Low") ||
+            ((row.priority as "Critical" | "High" | "Medium" | "Low") ||
+              "Medium"),
+          assigned_to: task?.assigned_to || "",
+          milestone_id: row.milestoneId || "",
+        });
+
+        setEditingTaskId(String(row.id));
+        setShowAddTaskModal(true);
+      },
+      className: "text-amber-600 whitespace-nowrap",
     },
   ];
 
@@ -835,28 +905,43 @@ export default function Dashboard() {
           <AddTaskModal
             isOpen={showAddTaskModal}
             onClose={() => setShowAddTaskModal(false)}
-            onSubmit={async (values) => {
-              await onCreateMilestoneTask({
-                title: values.title,
-                description: values.description,
-                due_date: values.due_date,
-                status: values.status,
-                priority: values.priority,
-                assigned_to: values.assigned_to,
-                milestone_id: values.milestone_id,
-              });
+            onSubmit={async (values: ICreateProjectTask) => {
+              if (editingTaskId) {
+                await onUpdateMilestoneTask({
+                  taskId: editingTaskId,
+                  payload: {
+                    title: values.title,
+                    description: values.description,
+                    due_date: values.due_date,
+                    status: values.status,
+                    priority: values.priority,
+                    assigned_to: values.assigned_to,
+                    milestone_id: values.milestone_id,
+                  },
+                });
+              } else {
+                await onCreateMilestoneTask({
+                  title: values.title,
+                  description: values.description,
+                  due_date: values.due_date,
+                  status: values.status,
+                  priority: values.priority,
+                  assigned_to: values.assigned_to,
+                  milestone_id: values.milestone_id,
+                });
+              }
             }}
-            initialValues={{
+            initialValues={editingTaskId ? editInitialValues : {
               title: "",
               description: "",
               due_date: new Date().toISOString().slice(0, 10),
               status: "Open",
               priority: "Medium",
-              assigned_to: selectedAssignedTo,
-              milestone_id: selectedMilestoneId,
+              assigned_to: selectedAssignedTo || "",
+              milestone_id: selectedMilestoneId || "",
             }}
-            isPending={isCreatingTask}
-            isEdit={false}
+            isPending={editingTaskId ? isUpdatingMilestoneTask : isCreatingTask}
+            isEdit={Boolean(editingTaskId)}
             projectOptions={projectOptions}
             milestoneOptions={milestoneOptions}
             userOptions={userOptions}
