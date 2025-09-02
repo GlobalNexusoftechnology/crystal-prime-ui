@@ -798,37 +798,38 @@ export default function Dashboard() {
             </div>
           </div>
         )}
-        <div>
-          <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
-            <div className="w-full lg:w-[30%]">
-              <ProjectSnapshotChart
-                data={projectSnapshotArray}
-                colors={["#3B82F6", "#10B981", "#F59E42"]}
-              />
+        {userRole.toLocaleLowerCase() === "admin" && (
+          <div>
+            <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
+              <div className="w-full lg:w-[30%]">
+                <ProjectSnapshotChart
+                  data={projectSnapshotArray}
+                  colors={["#3B82F6", "#10B981", "#F59E42"]}
+                />
+              </div>
+              <div className="w-full lg:w-[70%]">
+                <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
+              </div>
             </div>
-            <div className="w-full lg:w-[70%]">
-              <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
+            <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
+              <div className="w-full lg:w-[50%]">
+                <LeadTypeChart
+                  chartDataMap={leadTypeDataMap}
+                  colors={["#6366F1", "#F59E42", "#10B981", "#EF4444"]}
+                />
+              </div>
+              <div className="w-full lg:w-[50%]">
+                <ProjectRenewalList
+                  data={renewalDataForSelectedMonth}
+                  selectedMonth={selectedMonth}
+                  onMonthChange={handleMonthChange}
+                  monthOptions={allMonthOptions}
+                />
+              </div>
             </div>
+            <ExpensesOverviewChart dataMap={expensesDataMap} />
           </div>
-          <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
-            <div className="w-full lg:w-[50%]">
-              <LeadTypeChart
-                chartDataMap={leadTypeDataMap}
-                colors={["#6366F1", "#F59E42", "#10B981", "#EF4444"]}
-              />
-            </div>
-            <div className="w-full lg:w-[50%]">
-              <ProjectRenewalList
-                data={renewalDataForSelectedMonth}
-                selectedMonth={selectedMonth}
-                onMonthChange={handleMonthChange}
-                monthOptions={allMonthOptions}
-              />
-            </div>
-          </div>
-          <ExpensesOverviewChart dataMap={expensesDataMap} />
-        </div>
-
+        )}
         {/* Add Task Modal */}
         {showAddTaskModal && (
           <AddTaskModal
