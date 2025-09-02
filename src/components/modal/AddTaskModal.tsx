@@ -12,11 +12,11 @@ import {
 import { useRef, useEffect } from "react";
 import { ICreateProjectTask } from "@/services";
 
-const statusOptions = [
-  { label: "Open", value: "Open" },
-  { label: "In Progress", value: "In Progress" },
-  { label: "Completed", value: "Completed" },
-];
+// const statusOptions = [
+//   { label: "Open", value: "Open" },
+//   { label: "In Progress", value: "In Progress" },
+//   { label: "Completed", value: "Completed" },
+// ];
 
 const priorityOptions = [
   { label: "Critical", value: "Critical" },
@@ -149,14 +149,13 @@ export function AddTaskModal({
             datePickerWidth="w-full"
             error={formik.touched.due_date ? formik.errors.due_date : undefined}
           />
-
-          <Dropdown
+          {/* <Dropdown
             label="Status"
             options={statusOptions}
             value={formik.values.status || ""}
             onChange={(value) => formik.setFieldValue("status", value)}
             error={formik.touched.status ? formik.errors.status : undefined}
-          />
+          /> */}
         </div>
         <Dropdown
           label="Priority"
