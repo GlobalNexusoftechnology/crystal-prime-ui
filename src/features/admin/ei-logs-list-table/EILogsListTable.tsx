@@ -332,7 +332,7 @@ export function EILogsListTable({
             onChange={handleHeadChange}
             dropdownWidth="w-full md:w-fit"
           />
-            <Dropdown
+            <SimpleDropdown
               options={paymentModeOptions}
               value={selectedPaymentMode}
               onChange={handlePaymentModeChange}

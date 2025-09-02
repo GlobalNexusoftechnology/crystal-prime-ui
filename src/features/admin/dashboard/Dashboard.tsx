@@ -497,7 +497,7 @@ export default function Dashboard() {
       cell: ({ value }) => {
         return (
           <div className="flex justify-center">
-            <span className={`px-2 py-1 text-xs font-medium `}>
+            <span className={`px-2 2xl:px-[0.5vw] py-1 2xl:py-[0.5vw] text-xs 2xl:text-[0.9vw] font-medium `}>
               {(value as string) || "Medium"}
             </span>
           </div>
@@ -505,7 +505,12 @@ export default function Dashboard() {
       },
     },
     { header: "TASK NAME", accessor: "title" },
-    { header: "DESCRIPTION", accessor: "description" },
+    { header: "DESCRIPTION", accessor: "description",
+      cell: ({ value }) => {
+      return (
+        <p className="w-[15rem] 2xl:w-[15vw] text-left text-wrap text-sm 2xl:text-[0.9vw]">{value as string}</p>
+      );
+    }, },
     { header: "STAFF NAME", accessor: "staffName" },
     { header: "PROJECT NAME", accessor: "projectName" },
     { header: "MILESTONE NAME", accessor: "milestoneName" },
