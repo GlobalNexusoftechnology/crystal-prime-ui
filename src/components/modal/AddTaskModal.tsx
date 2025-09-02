@@ -156,7 +156,6 @@ export function AddTaskModal({
             onChange={(value) => formik.setFieldValue("status", value)}
             error={formik.touched.status ? formik.errors.status : undefined}
           /> */}
-        </div>
         <Dropdown
           label="Priority"
           options={priorityOptions}
@@ -164,6 +163,7 @@ export function AddTaskModal({
           onChange={(value) => formik.setFieldValue("priority", value)}
           error={formik.touched.priority ? formik.errors.priority : undefined}
         />
+        </div>
         <InputField
           label="Task Title"
           name="title"
