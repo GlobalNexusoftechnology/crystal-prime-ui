@@ -55,6 +55,10 @@ export default function Dashboard() {
       assigned_to: "",
       milestone_id: "",
     });
+  
+  // State to track which descriptions are expanded
+  const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(new Set());
+  
   // Move all hooks to the top
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -493,11 +497,37 @@ export default function Dashboard() {
     {
       header: "DESCRIPTION",
       accessor: "description",
-      cell: ({ value }) => {
+      cell: ({ value, row }) => {
+        const description = value as string;
+        const isExpanded = expandedDescriptions.has(String(row.id));
+        
+        const words = description?.split(' ') || [];
+        const shouldTruncate = words.length > 10;
+        const displayText = isExpanded ? description : words.slice(0, 10).join(' ') + (shouldTruncate ? '...' : '');
+        
+        const toggleExpanded = () => {
+          const newExpanded = new Set(expandedDescriptions);
+          if (isExpanded) {
+            newExpanded.delete(String(row.id));
+          } else {
+            newExpanded.add(String(row.id));
+          }
+          setExpandedDescriptions(newExpanded);
+        };
+
         return (
-          <p className="w-[15rem] 2xl:w-[15vw] text-left text-wrap text-sm 2xl:text-[0.9vw]">
-            {value as string}
-          </p>
+          <div className="w-[20rem] 2xl:w-[20vw] text-left text-sm 2xl:text-[0.9vw]">
+            <div className="text-wrap">{displayText}
+            {shouldTruncate && (
+              <button
+                onClick={toggleExpanded}
+                className="text-blue-500 hover:text-blue-700 text-xs 2xl:text-[0.75vw] font-medium underline relative left-1 bottom-[1px] 2xl:bottom-[0.1vw]"
+              >
+                {isExpanded ? 'Read less' : 'Read more'}
+              </button>
+            )}
+            </div>
+          </div>
         );
       },
     },
