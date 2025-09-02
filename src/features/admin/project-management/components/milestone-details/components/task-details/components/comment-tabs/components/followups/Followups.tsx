@@ -1,7 +1,7 @@
 "use client";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, DatePicker, Dropdown, InputField, ModalOverlay } from "@/components";
+import { Button, DatePicker, Dropdown, InputField, ModalOverlay, SimpleDropdown } from "@/components";
 import {
   ICreateProjectFollowUpResponse,
   ProjectFollowupStatus,
@@ -162,7 +162,7 @@ export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
               />
             </div>
             <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw]">
-              <Dropdown
+              <SimpleDropdown
                 label="Status"
                 options={statusOptions}
                 value={formik.values.status || "PENDING"}

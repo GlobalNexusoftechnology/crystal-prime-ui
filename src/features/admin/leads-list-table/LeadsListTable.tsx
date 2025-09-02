@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
-import { Button, Dropdown, SearchBar, Table, DatePicker } from "@/components";
+import { Button, Dropdown, SearchBar, Table, DatePicker, SimpleDropdown } from "@/components";
 import {
   EAction,
   EModule,
@@ -451,7 +451,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           onChange={handleTypeChange}
           dropdownWidth="w-full md:w-fit"
         />
-        <Dropdown
+        <SimpleDropdown
           options={dateRangeOptions}
           value={dateRangeFilter}
           onChange={handleDateRangeChange}

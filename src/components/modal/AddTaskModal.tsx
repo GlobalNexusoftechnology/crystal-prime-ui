@@ -8,6 +8,7 @@ import {
   ModalOverlay,
   Dropdown,
   DatePicker,
+  SimpleDropdown,
 } from "@/components";
 import { useRef, useEffect } from "react";
 import { ICreateProjectTask } from "@/services";
@@ -156,7 +157,7 @@ export function AddTaskModal({
             onChange={(value) => formik.setFieldValue("status", value)}
             error={formik.touched.status ? formik.errors.status : undefined}
           /> */}
-        <Dropdown
+        <SimpleDropdown
           label="Priority"
           options={priorityOptions}
           value={formik.values.priority || ""}

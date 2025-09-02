@@ -2,7 +2,7 @@
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, InputField, ModalOverlay, Dropdown } from "@/components";
+import { Button, InputField, ModalOverlay, Dropdown, SimpleDropdown } from "@/components";
 import { HoursSpentInput } from "@/components/hours-spent-input";
 import { useRef, useEffect } from "react";
 import { ICreateDailyTaskEntryPayload } from "@/services";
@@ -166,7 +166,7 @@ export function AddDailyTaskModal({
             onBlur={formik.handleBlur}
             error={formik.touched.hours_spent ? formik.errors.hours_spent : undefined}
           />
-          <Dropdown
+          <SimpleDropdown
             label="Status"
             options={statusOptions}
             value={formik.values.status || ""}
@@ -174,7 +174,7 @@ export function AddDailyTaskModal({
             error={formik.touched.status ? formik.errors.status : undefined}
           />
         </div>
-        <Dropdown
+        <SimpleDropdown
           label="Priority"
           options={priorityOptions}
           value={formik.values.priority || ""}

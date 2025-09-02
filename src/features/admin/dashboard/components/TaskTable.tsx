@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Dropdown, DatePicker, Button, Table, Loading, SearchBar } from "@/components";
+import { DatePicker, Button, Table, Loading, SearchBar, SimpleDropdown } from "@/components";
 import { FiX, FiPlus } from "react-icons/fi";
 import { ITableAction, ITableColumn } from "@/constants/table";
 import { useDebounce } from "@/utils/hooks";
@@ -195,13 +195,13 @@ const TaskTable: React.FC<TaskTableProps> = ({
             />
           </div>
         )}
-        <Dropdown
+        <SimpleDropdown
           options={statusOptions}
           value={statusFilter}
           onChange={handleStatusChange}
           dropdownWidth="w-full md:w-fit"
         />
-        <Dropdown
+        <SimpleDropdown
           options={priorityOptions}
           value={priorityFilter}
           onChange={handlePriorityChange}

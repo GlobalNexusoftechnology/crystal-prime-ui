@@ -1,4 +1,4 @@
-import { DatePicker, Dropdown } from "@/components";
+import { DatePicker, Dropdown, InputField } from "@/components";
 
 interface ProjectSearchFilterProps {
   projects: { id: string; name: string; client_id: string }[];
@@ -19,7 +19,7 @@ export function ProjectSearchFilter({
   selectedProject,
   setSelectedProject,
   selectedClient,
-  setSelectedClient,
+  // setSelectedClient,
   fromDate,
   setFromDate,
   toDate,
@@ -30,21 +30,15 @@ export function ProjectSearchFilter({
     value: project.id,
   }));
 
-  const clientOptions = (clients || [])?.map((client) => ({
-    label: client.name,
-    value: client.id,
-  }));
+  // const clientOptions = (clients || [])?.map((client) => ({
+  //   label: client.name,
+  //   value: client.id,
+  // }));
 
-  // Filter client options to only show the relevant client when a project is selected
-  const filteredClientOptions = selectedProject
-    ? clientOptions.filter((client) => {
-        // Find the selected project to get its client_id
-        const project = projects.find((p) => p.id === selectedProject);
-        return project && project.client_id
-          ? client.value === project.client_id
-          : true;
-      })
-    : clientOptions;
+  // Determine client name (read-only) based on selected project or selected client
+  const selectedProjectClientId = projects.find((p) => p.id === selectedProject)?.client_id;
+  const clientIdToShow = selectedProjectClientId || selectedClient;
+  const clientNameToShow = clients.find((c) => c.id === clientIdToShow)?.name || "";
 
   return (
     <form className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 2xl:gap-[1vw] mb-6 2xl:mb-[1vw]">
@@ -58,12 +52,12 @@ export function ProjectSearchFilter({
         />
       </div>
       <div>
-        <Dropdown
+        <InputField
           label="Client Name"
-          options={filteredClientOptions}
-          value={selectedClient}
-          onChange={setSelectedClient}
-          dropdownWidth="w-full"
+          value={clientNameToShow}
+          placeholder="Client Name"
+          disabled
+          readOnly
         />
       </div>
       <div>

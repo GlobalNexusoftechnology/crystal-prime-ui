@@ -1,5 +1,5 @@
 import React from "react";
-import { Dropdown, Table, Loading } from "@/components";
+import { Table, Loading, SimpleDropdown } from "@/components";
 import { ITableAction, ITableColumn } from "@/constants/table";
 
 export interface SupportTicketRow {
@@ -57,13 +57,13 @@ export const SupportTicketTable: React.FC<SupportTicketTableProps> = ({
           Support Tickets
         </h1>
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
-          <Dropdown
+          <SimpleDropdown
             options={statusOptions}
             value={statusFilter}
             onChange={handleStatusChange}
             dropdownWidth="w-full md:w-fit"
           />
-          <Dropdown
+          <SimpleDropdown
             options={priorityOptions}
             value={priorityFilter}
             onChange={handlePriorityChange}

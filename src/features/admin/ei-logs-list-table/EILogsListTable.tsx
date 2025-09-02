@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { SearchBar, Button, Table, Dropdown, DatePicker } from "@/components";
+import { SearchBar, Button, Table, Dropdown, DatePicker, SimpleDropdown } from "@/components";
 import {
   EAction,
   EModule,
@@ -338,7 +338,7 @@ export function EILogsListTable({
               onChange={handlePaymentModeChange}
               dropdownWidth="w-full md:w-fit"
             />
-          <Dropdown
+          <SimpleDropdown
             options={dateRangeOptions}
             value={dateRangeFilter}
             onChange={(val: string) =>

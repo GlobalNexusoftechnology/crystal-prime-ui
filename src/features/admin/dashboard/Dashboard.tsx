@@ -24,7 +24,7 @@ import {
 import type { ICreateProjectTask } from "@/services";
 
 import { AnalyticalCardIcon } from "@/features";
-import { AddTaskModal } from "@/components";
+import { AddTaskModal, SimpleDropdown } from "@/components";
 import { Dropdown } from "@/components";
 
 import { SupportTicketTable } from "./components";
@@ -100,7 +100,7 @@ export default function Dashboard() {
     { label: "Open", value: "open" },
     { label: "In Progress", value: "in_progress" },
     { label: "Completed", value: "completed" },
-    { label: "Closed", value: "closed" },
+    // { label: "Closed", value: "closed" },
   ];
 
   const priorityOptions = [
@@ -472,7 +472,7 @@ export default function Dashboard() {
           {isUpdatingTaskStatus ? (
             <span className="text-blue-500 text-sm">Updating...</span>
           ) : (
-            <Dropdown
+            <SimpleDropdown
               options={[
                 { label: "Open", value: "Open" },
                 { label: "In Progress", value: "In Progress" },
@@ -491,8 +491,6 @@ export default function Dashboard() {
         </div>
       ),
     },
-    { header: "TASK NAME", accessor: "title" },
-    { header: "DESCRIPTION", accessor: "description" },
     {
       header: "PRIORITY",
       accessor: "priority",
@@ -506,6 +504,8 @@ export default function Dashboard() {
         );
       },
     },
+    { header: "TASK NAME", accessor: "title" },
+    { header: "DESCRIPTION", accessor: "description" },
     { header: "STAFF NAME", accessor: "staffName" },
     { header: "PROJECT NAME", accessor: "projectName" },
     { header: "MILESTONE NAME", accessor: "milestoneName" },
@@ -603,7 +603,7 @@ export default function Dashboard() {
       accessor: "status",
       cell: ({ row, value }) => (
         <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
-          <Dropdown
+          <SimpleDropdown
             options={statusOptions}
             value={String((value as string) ?? "")}
             onChange={(val) =>
