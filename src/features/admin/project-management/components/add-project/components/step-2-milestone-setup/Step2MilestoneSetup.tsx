@@ -1123,11 +1123,11 @@ export function Step2MilestoneSetup({
                                             alt="Ticket attachment"
                                             width={60}
                                             height={60}
-                                            className="w-15 h-15 object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
+                                            className="w-15 2xl:w-[3vw] h-15 2xl:h-[3vw] object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
                                           />
                                         </div>
                                       ) : (
-                                        <span className="text-gray-400 text-sm ">
+                                        <span className="text-gray-400 text-sm 2xl:text-[0.9vw]">
                                           No image
                                         </span>
                                       )}

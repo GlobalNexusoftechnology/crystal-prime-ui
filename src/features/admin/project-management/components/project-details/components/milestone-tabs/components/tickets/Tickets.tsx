@@ -218,7 +218,7 @@ export function Tickets({
                 value={assignedTo}
                 onChange={handleAssignmentChange}
                 dropdownWidth="w-[15rem] 2xl:w-[15vw]"
-                dropdownBorderRadius="rounded-md"
+                dropdownBorderRadius="rounded-md 2xl:rounded-[0.25vw]"
               />
             </div>
           )}
@@ -245,12 +245,12 @@ export function Tickets({
               alt="Ticket attachment"
               width={60}
               height={60}
-              className="w-15 h-15 object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
+              className="w-15 2xl:w-[3vw] h-15 2xl:h-[3vw] object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => handleImageClick(ticket.image_url!)}
             />
           </div>
         ) : (
-          <span className="text-gray-400 text-sm ">No image</span>
+          <span className="text-gray-400 text-sm 2xl:text-[0.9vw]">No image</span>
         )}
       </td>
       <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] 2xl:text-[0.9vw]">
