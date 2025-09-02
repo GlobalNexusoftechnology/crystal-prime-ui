@@ -18,3 +18,5 @@ export * from "./ei-log-management";
 export * from "./ei-logs-list-table";
 export * from "./reports";
 export * from "./pb-dashboard-report";
+export * from "./support-tickets";
+export * from "./common";

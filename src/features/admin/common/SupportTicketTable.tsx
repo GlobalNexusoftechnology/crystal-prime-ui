@@ -8,7 +8,6 @@ export interface SupportTicketRow {
 }
 
 interface SupportTicketTableProps {
-  userRole: string;
   supportTicketsLoading: boolean;
   supportTicketsError: boolean;
   supportTicketsErrorObj: unknown;
@@ -21,7 +20,6 @@ interface SupportTicketTableProps {
   priorityOptions: { label: string; value: string }[];
   priorityFilter: string;
   handlePriorityChange: (value: string) => void;
-  handleSearch: (value: string) => void;
 }
 
 export const SupportTicketTable: React.FC<SupportTicketTableProps> = ({
@@ -54,7 +52,7 @@ export const SupportTicketTable: React.FC<SupportTicketTableProps> = ({
     <div className="p-4 2xl:p-[1vw] flex flex-col gap-4 border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw]">
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
         <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
-          Support Tickets
+          Support Tickets list
         </h1>
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           <SimpleDropdown

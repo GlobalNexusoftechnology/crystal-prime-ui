@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Button, Table, ModalOverlay, Dropdown, DeleteModal } from "@/components";
+import { Button, Table, ModalOverlay, DeleteModal, SimpleDropdown } from "@/components";
 import { Breadcrumb } from "../../../breadcrumb";
 import {
   useAllTicketsQuery,
@@ -107,7 +107,6 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
     { label: "Open", value: "open" },
     { label: "In Progress", value: "in_progress" },
     { label: "Completed", value: "completed" },
-    { label: "Closed", value: "closed" },
   ];
   
   const priorityOptions = [
@@ -327,14 +326,14 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
       <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw] justify-between items-start md:items-center">
         <div className="flex flex-col sm:flex-row gap-3 2xl:gap-[0.75vw] w-full md:w-auto">
           <div className="w-full sm:w-48 2xl:w-[12vw]">
-            <Dropdown
+            <SimpleDropdown
               options={statusOptions}
               value={statusFilter}
               onChange={(value) => setStatusFilter(value)}
             />
           </div>
           <div className="w-full sm:w-48 2xl:w-[12vw]">
-            <Dropdown
+            <SimpleDropdown
               options={priorityOptions}
               value={priorityFilter}
               onChange={(value) => setPriorityFilter(value)}

@@ -11,6 +11,8 @@ import {
   UserListRoundedIcon,
 } from "@/features";
 import { TbReportAnalytics } from "react-icons/tb";
+import { LuTicket } from "react-icons/lu";
+
 
 type TSidebarPermission = {
   module: string;
@@ -62,14 +64,14 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   },
   {
     path: "/admin/lead-management",
-    name: "Lead",
+    name: "Leads",
     icon: <LeadManagementIcon />,
     activeIcon: <LeadManagementIcon color="#034A9F" />,
     permission: { module: "LEAD_MANAGEMENT", actions: "VIEW" },
   },
   {
     path: "/admin/project-management",
-    name: "Project",
+    name: "Projects",
     icon: <ProjectManagementIcon />,
     activeIcon: <ProjectManagementIcon color="#034A9F" />,
     permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" },
@@ -83,21 +85,21 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   },
   {
     path: "/admin/staff-management",
-    name: "Staff",
+    name: "Staffs",
     icon: <StaffManagementIcon />,
     activeIcon: <StaffManagementIcon color="#034A9F" />,
     permission: { module: "STAFF_MANAGEMENT", actions: "VIEW" },
   },
   {
     path: "/admin/client-management",
-    name: "Client",
+    name: "Clients",
     icon: <UserListRoundedIcon />,
     activeIcon: <UserListRoundedIcon color="#034A9F" />,
     permission: { module: "CLIENT_MANAGEMENT", actions: "VIEW" },
   },
   {
     path: "/admin/ei-log-management",
-    name: "EI Log",
+    name: "EI Logs",
     icon: <EILogIcon />,
     activeIcon: <EILogIcon color="#034A9F" />,
     permission: { module: "EI_LOG_MANAGEMENT", actions: "VIEW" },
@@ -117,6 +119,13 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
         permission: { module: "PUBLIC_BUSINESS_DASHBOARD", actions: "VIEW" },
       },
     ],
+  },
+  {
+    path: "/admin/support-tickets",
+    name: "Support Tickets",
+    icon: <LuTicket className="w-full h-full"/>,
+    activeIcon: <LuTicket className="w-full h-full" color="#034A9F" />,
+    permission: { module: "SUPPORT_TICKETS", actions: "VIEW" },
   },
   {
     path: "/admin/settings",

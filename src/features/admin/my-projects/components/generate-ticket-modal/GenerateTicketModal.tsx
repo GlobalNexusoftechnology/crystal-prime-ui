@@ -5,8 +5,8 @@ import {
   ModalOverlay,
   Button,
   InputField,
-  Dropdown,
   UploadFileInput,
+  SimpleDropdown,
 } from "@/components";
 import {
   useCreateTicketMutation,
@@ -211,7 +211,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
         />
 
         <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
-          <Dropdown
+          <SimpleDropdown
             label="Priority"
             options={priorityOptions}
             value={formik.values.priority}

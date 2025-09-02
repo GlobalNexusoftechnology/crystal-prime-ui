@@ -23,21 +23,19 @@ import {
 } from "@/services";
 import type { ICreateProjectTask } from "@/services";
 
-import { AnalyticalCardIcon } from "@/features";
+import { AnalyticalCardIcon, SupportTicketTable } from "@/features";
 import { AddTaskModal, SimpleDropdown } from "@/components";
 import { Dropdown } from "@/components";
 
-import { SupportTicketTable } from "./components";
 import TaskTable from "./components/TaskTable";
 import type { ITableAction, ITableColumn } from "@/constants/table";
 
-import type { SupportTicketRow } from "./components/SupportTicketTable";
 import type { TaskRow } from "./components/TaskTable";
-import { useDebounce } from "@/utils/hooks";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/helpers/formatDate";
 import Image from "next/image";
 import toast from "react-hot-toast";
+import { SupportTicketRow } from "../common/SupportTicketTable";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -71,29 +69,14 @@ export default function Dashboard() {
     useState<string>("");
   const [supportTicketPriorityFilter, setSupportTicketPriorityFilter] =
     useState<string>("");
-  const [supportTicketSearchInput, setSupportTicketSearchInput] = useState("");
-
-  const { debouncedValue: supportTicketSearchQuery } = useDebounce({
-    initialValue: supportTicketSearchInput,
-    delay: 500,
-    onChangeCb: () => {},
-  });
-
-  const handleSupportTicketSearch = (query: string) => {
-    setSupportTicketSearchInput(query.toLowerCase());
-  };
 
   const supportTicketFilters = useMemo(
     () => ({
-      searchText: supportTicketSearchQuery,
+      searchText: "",
       status: supportTicketStatusFilter,
       priority: supportTicketPriorityFilter,
     }),
-    [
-      supportTicketSearchQuery,
-      supportTicketStatusFilter,
-      supportTicketPriorityFilter,
-    ]
+    [supportTicketStatusFilter, supportTicketPriorityFilter]
   );
 
   const statusOptions = [
@@ -101,7 +84,6 @@ export default function Dashboard() {
     { label: "Open", value: "open" },
     { label: "In Progress", value: "in_progress" },
     { label: "Completed", value: "completed" },
-    // { label: "Closed", value: "closed" },
   ];
 
   const priorityOptions = [
@@ -821,24 +803,24 @@ export default function Dashboard() {
             <AnalyticalCard key={idx} data={card} />
           ))}
       </div>
-      <div className="my-6 2xl:my-[1.5vw]">
-        <SupportTicketTable
-          userRole={userRole}
-          supportTicketsLoading={supportTicketsLoading}
-          supportTicketsError={supportTicketsError}
-          supportTicketsErrorObj={supportTicketsErrorObj}
-          supportTicketList={supportTicketList}
-          supportTicketListColumn={supportTicketListColumn}
-          supportTicketListAction={supportTicketListAction}
-          statusOptions={statusOptions}
-          statusFilter={supportTicketStatusFilter}
-          handleStatusChange={handleSupportTicketStatusChange}
-          priorityOptions={priorityOptions}
-          priorityFilter={supportTicketPriorityFilter}
-          handlePriorityChange={handleSupportTicketPriorityChange}
-          handleSearch={handleSupportTicketSearch}
-        />
-      </div>
+      {userRole.toLocaleLowerCase() !== "admin" && (
+        <div className="my-6 2xl:my-[1.5vw]">
+          <SupportTicketTable
+            supportTicketsLoading={supportTicketsLoading}
+            supportTicketsError={supportTicketsError}
+            supportTicketsErrorObj={supportTicketsErrorObj}
+            supportTicketList={supportTicketList}
+            supportTicketListColumn={supportTicketListColumn}
+            supportTicketListAction={supportTicketListAction}
+            statusOptions={statusOptions}
+            statusFilter={supportTicketStatusFilter}
+            handleStatusChange={handleSupportTicketStatusChange}
+            priorityOptions={priorityOptions}
+            priorityFilter={supportTicketPriorityFilter}
+            handlePriorityChange={handleSupportTicketPriorityChange}
+          />
+        </div>
+      )}
       <div>
         {/* Task Table Component */}
         <div className="mt-6 2xl:mt-[1.5vw]">

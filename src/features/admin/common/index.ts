@@ -1,0 +1,1 @@
+export { SupportTicketTable } from "./SupportTicketTable";
