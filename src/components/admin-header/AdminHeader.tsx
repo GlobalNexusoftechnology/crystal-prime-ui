@@ -45,6 +45,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
   const firstName = activeSession?.user?.first_name;
   const lastName = activeSession?.user?.last_name;
   const userName = firstName && lastName ? `${firstName} ${lastName}` : null;
+  const isClient = activeSession?.user?.role?.role?.toLowerCase() === "client";
 
   const unreadCount =
     notifications?.filter((n: INotification) => !n.isRead).length || 0;
@@ -206,18 +207,20 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
       </div>
       <div className="flex items-center gap-4 2xl:gap-[1vw]">
         {/* Support Tickets Icon */}
-        <div
-          className="relative cursor-pointer border 2xl:border-[0.05vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw] hover:bg-gray-100 transition-colors"
-          onClick={() => setShowSupportTickets(!showSupportTickets)}
-          title="View All Open Tickets"
-        >
-          <SupportTicketsIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
-          {openTickets.length > 0 && (
-            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {openTickets.length}
-            </span>
-          )}
-        </div>
+        {!isClient && (
+          <div
+            className="relative cursor-pointer border 2xl:border-[0.05vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw] hover:bg-gray-100 transition-colors"
+            onClick={() => setShowSupportTickets(!showSupportTickets)}
+            title="View All Open Tickets"
+          >
+            <SupportTicketsIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+            {openTickets.length > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                {openTickets.length}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Notifications Icon */}
         <div
