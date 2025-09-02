@@ -21,6 +21,7 @@ import {
   useAuthStore,
   useUploadMultipleAttachmentsMutation,
 } from "@/services";
+import { useProjectStore } from "@/services/stores";
 import {
   IClientInfo,
   IDocumentInfo,
@@ -83,11 +84,13 @@ const initialValues: IAddProjectFormValues = {
 const validationSchema = Yup.object({
   name: Yup.string()
     .required("Project Name is required")
-    .matches(/^[a-zA-Z0-9 .,'-]*$/, "No special characters allowed in Project Name."),
+    .matches(
+      /^[a-zA-Z0-9 .,'-]*$/,
+      "No special characters allowed in Project Name."
+    ),
   project_type: Yup.string().required("Project Type is required"),
   client_id: Yup.string().required("Client is required"),
-  description: Yup.string()
-    .required("Description is required"),
+  description: Yup.string().required("Description is required"),
   start_date: Yup.date()
     .typeError("Estimated Start Date is required")
     .required("Estimated Start Date is required"),
@@ -117,7 +120,7 @@ const validationSchema = Yup.object({
 
 function validate(values: IAddProjectFormValues) {
   const errors: Partial<Record<keyof IAddProjectFormValues, string>> = {};
-  
+
   try {
     const valuesForValidation = { ...values };
     if (!values.is_renewal) {
@@ -136,7 +139,10 @@ function validate(values: IAddProjectFormValues) {
         yupError as { inner: Array<{ path?: string; message: string }> }
       ).inner.forEach((err) => {
         if (err.path && !errors[err.path as keyof IAddProjectFormValues]) {
-          if ((err.path === 'renewal_date' || err.path === 'renewal_type') && !values.is_renewal) {
+          if (
+            (err.path === "renewal_date" || err.path === "renewal_type") &&
+            !values.is_renewal
+          ) {
             // skip
           } else {
             errors[err.path as keyof IAddProjectFormValues] = err.message;
@@ -229,21 +235,60 @@ export function AddProject({
   existingMilestones = [],
   existingAttachments = [],
 }: AddProjectProps) {
-  const router = useRouter()
-  const [step, setStep] = useState(1);
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [uploadedFiles, setUploadedFiles] =
-    useState<File[]>(existingAttachments); // Initialize with existing attachments
-  const [, setRemovedAttachmentIds] = useState<string[]>([]); // Track removed existing attachments
-  const [milestoneOption, setMilestoneOption] = useState("milestone");
-  const [milestones, setMilestones] = useState<Milestone[]>(existingMilestones);
-  const [basicInfo, setBasicInfo] = useState<IAddProjectFormValues | null>(
-    propInitialFormValues || null
-  );
-  const [selectedProjectTemplate, setSelectedProjectTemplate] =
-    useState<string>(propInitialFormValues?.template_id || "");
   const [createdProjectId, setCreatedProjectId] = useState<string | null>(null);
-  const [uploadedFileUrls, setUploadedFileUrls] = useState<string[]>([]); // Store uploaded file URLs
+  const [, setRemovedAttachmentIds] = useState<string[]>([]); // Track removed existing attachments
+
+  // Use project store for create mode, local state for edit mode
+  const {
+    currentStep: createCurrentStep,
+    basicInfo: createBasicInfo,
+    milestones: createMilestones,
+    milestoneOption: createMilestoneOption,
+    selectedProjectTemplate: createSelectedProjectTemplate,
+    uploadedFiles: createUploadedFiles,
+    uploadedFileUrls: createUploadedFileUrls,
+    setCurrentStep: setCreateCurrentStep,
+    setBasicInfo: setCreateBasicInfo,
+    setMilestones: setCreateMilestones,
+    setMilestoneOption: setCreateMilestoneOption,
+    setSelectedProjectTemplate: setCreateSelectedProjectTemplate,
+    setUploadedFiles: setCreateUploadedFiles,
+    setUploadedFileUrls: setCreateUploadedFileUrls,
+    goToPreviousStep: createGoToPreviousStep,
+    clearProjectCreation,
+  } = useProjectStore();
+
+  // Local state for edit mode
+  const [editCurrentStep, setEditCurrentStep] = useState(1);
+  const [editBasicInfo, setEditBasicInfo] = useState<IAddProjectFormValues | null>(propInitialFormValues || null);
+  const [editMilestones, setEditMilestones] = useState<Milestone[]>(existingMilestones);
+  const [editMilestoneOption, setEditMilestoneOption] = useState("milestone");
+  const [editSelectedProjectTemplate, setEditSelectedProjectTemplate] = useState(propInitialFormValues?.template_id || "");
+  const [editUploadedFiles, setEditUploadedFiles] = useState<File[]>(existingAttachments);
+  const [editUploadedFileUrls, setEditUploadedFileUrls] = useState<string[]>([]);
+
+  // Use appropriate state based on mode
+  const currentStep = mode === "edit" ? editCurrentStep : createCurrentStep;
+  const basicInfo = mode === "edit" ? editBasicInfo : createBasicInfo;
+  const milestones = mode === "edit" ? editMilestones : createMilestones;
+  const milestoneOption = mode === "edit" ? editMilestoneOption : createMilestoneOption;
+  const selectedProjectTemplate = mode === "edit" ? editSelectedProjectTemplate : createSelectedProjectTemplate;
+  const uploadedFiles = mode === "edit" ? editUploadedFiles : createUploadedFiles;
+  const uploadedFileUrls = mode === "edit" ? editUploadedFileUrls : createUploadedFileUrls;
+
+  // Use appropriate setters based on mode
+  const setCurrentStep = mode === "edit" ? setEditCurrentStep : setCreateCurrentStep;
+  const setBasicInfo = mode === "edit" ? setEditBasicInfo : setCreateBasicInfo;
+  const setMilestones = mode === "edit" ? setEditMilestones : setCreateMilestones;
+  const setMilestoneOption = mode === "edit" ? setEditMilestoneOption : setCreateMilestoneOption;
+  const setSelectedProjectTemplate = mode === "edit" ? setEditSelectedProjectTemplate : setCreateSelectedProjectTemplate;
+  const setUploadedFiles = mode === "edit" ? setEditUploadedFiles : setCreateUploadedFiles;
+  const setUploadedFileUrls = mode === "edit" ? setEditUploadedFileUrls : setCreateUploadedFileUrls;
+  const goToPreviousStep = mode === "edit" ? () => setEditCurrentStep(Math.max(editCurrentStep - 1, 1)) : createGoToPreviousStep;
+
+
   const {
     allClientData,
     isLoading: clientLoading,
@@ -282,6 +327,8 @@ export function AddProject({
       if (projectIdToUse) {
         setCreatedProjectId(projectIdToUse);
         setIsModalOpen(true);
+        // Clear project store when project is successfully created
+        clearProjectCreation();
       } else {
         console.error("No project ID in response");
         console.error(
@@ -309,6 +356,8 @@ export function AddProject({
       if (projectIdToUse) {
         setCreatedProjectId(projectIdToUse);
         setIsModalOpen(true);
+        // Clear project store when project is successfully updated
+        clearProjectCreation();
       }
     },
     onErrorCallback: () => {},
@@ -319,7 +368,7 @@ export function AddProject({
       onSuccessCallback: (data) => {
         setUploadedFileUrls(data.data || []);
         toast.success("Attachment(s) uploaded successfully.");
-        setStep(4); // Move to preview step after upload
+        setCurrentStep(4); // Move to preview step after upload
       },
       onErrorCallback: (err) => {
         console.error("Upload failed", err);
@@ -349,20 +398,22 @@ export function AddProject({
     let newFileUrlIdx = 0;
     const attachments = uploadedFiles?.map((file) => {
       // Check if this is an existing attachment (has originalAttachment metadata)
-      const originalAttachment = (file as File & {
-        originalAttachment?: {
-          file_path?: string;
-          file_type?: string;
-          file_name?: string;
-          uploaded_by?: {
+      const originalAttachment = (
+        file as File & {
+          originalAttachment?: {
+            file_path?: string;
+            file_type?: string;
+            file_name?: string;
+            uploaded_by?: {
+              id?: string;
+              first_name?: string;
+              last_name?: string;
+            };
+            created_at?: string;
             id?: string;
-            first_name?: string;
-            last_name?: string;
           };
-          created_at?: string;
-          id?: string;
-        };
-      }).originalAttachment;
+        }
+      ).originalAttachment;
 
       if (originalAttachment && mode === "edit") {
         // For existing attachments, preserve the original file_path
@@ -400,11 +451,13 @@ export function AddProject({
       client_id: basicInfo.client_id,
       budget: basicInfo.budget !== "" ? Number(basicInfo.budget) : undefined,
       is_renewal: basicInfo.is_renewal,
-      ...(basicInfo.is_renewal && basicInfo.renewal_date && !isNaN(new Date(basicInfo.renewal_date).getTime())
+      ...(basicInfo.is_renewal &&
+      basicInfo.renewal_date &&
+      !isNaN(new Date(basicInfo.renewal_date).getTime())
         ? { renewal_date: basicInfo.renewal_date }
         : {}),
       ...(basicInfo.is_renewal && basicInfo.renewal_type
-        ? { renewal_type: basicInfo.renewal_type }
+        ? { renewal_type: basicInfo.renewal_type as ProjectRenewalType }
         : {}),
       template_id: finalTemplateId,
       estimated_cost:
@@ -444,19 +497,19 @@ export function AddProject({
   ) => {
     setBasicInfo(values);
     setMilestoneOption(values.milestoneOption);
-    setStep(2);
+    setCurrentStep(2);
     actions.setSubmitting(false);
   };
 
   const handleMilestoneNext = (milestonesData: Milestone[]) => {
     setMilestones(milestonesData);
-    setStep(3);
+    setCurrentStep(3);
   };
 
   const handleFinalSubmit = () => {
     // Debug logs to check mapping before submission
-    console.log('DEBUG: uploadedFiles', uploadedFiles);
-    console.log('DEBUG: uploadedFileUrls', uploadedFileUrls);
+    console.log("DEBUG: uploadedFiles", uploadedFiles);
+    console.log("DEBUG: uploadedFileUrls", uploadedFileUrls);
     const payload = assemblePayload();
 
     if (payload) {
@@ -505,33 +558,39 @@ export function AddProject({
         ? String(basicInfo.overhead_cost)
         : "",
     budget: basicInfo?.budget !== undefined ? String(basicInfo.budget) : "",
-    extra_cost: basicInfo?.extra_cost !== undefined ? String(basicInfo.extra_cost) : "",
+    extra_cost:
+      basicInfo?.extra_cost !== undefined ? String(basicInfo.extra_cost) : "",
   };
   let newFileUrlIdxForDocs = 0;
   const documents: IDocumentInfo[] = uploadedFiles?.map((file) => {
     // Check if this is an existing attachment (has originalAttachment metadata)
-    const originalAttachment = (file as File & {
-      originalAttachment?: {
-        file_path?: string;
-        file_type?: string;
-        file_name?: string;
-        uploaded_by?: {
-          id?: string;
-          first_name?: string;
-          last_name?: string;
+    const originalAttachment = (
+      file as File & {
+        originalAttachment?: {
+          file_path?: string;
+          file_type?: string;
+          file_name?: string;
+          uploaded_by?: {
+            id?: string;
+            first_name?: string;
+            last_name?: string;
+          };
+          created_at?: string;
         };
-        created_at?: string;
-      };
-    }).originalAttachment;
+      }
+    ).originalAttachment;
 
     if (originalAttachment && mode === "edit") {
       // For existing attachments, use the original uploaded_by information
       return {
         name: file.name,
         uploaded_by: originalAttachment.uploaded_by?.first_name
-          ? `${originalAttachment.uploaded_by.first_name} ${originalAttachment.uploaded_by.last_name || ""}`
+          ? `${originalAttachment.uploaded_by.first_name} ${
+              originalAttachment.uploaded_by.last_name || ""
+            }`
           : userId,
-        created_at: originalAttachment.created_at || new Date().toLocaleString(),
+        created_at:
+          originalAttachment.created_at || new Date().toLocaleString(),
         file_path: originalAttachment.file_path || file.name,
       };
     } else {
@@ -549,6 +608,14 @@ export function AddProject({
 
   useEffect(() => {}, [isModalOpen, createdProjectId]);
 
+
+
+  // Clear project store when user navigates back to project list
+  const handleBackNavigation = () => {
+    clearProjectCreation();
+    router.back();
+  };
+
   const onRemoveAttachments = (removedIds: string[]) => {
     if (removedIds.length > 0) {
       toast.success("Attachment(s) removed successfully.");
@@ -558,7 +625,7 @@ export function AddProject({
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
       <div
-        onClick={() => router.back()}
+        onClick={handleBackNavigation}
         className="flex gap-2 2xl:gap-[0.5vw] items-center 2xl:text-[1vw] font-medium cursor-pointer"
       >
         <FaArrowLeftLong className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
@@ -567,8 +634,8 @@ export function AddProject({
       <h1 className="text-2xl 2xl:text-[1.8vw] font-medium">
         {mode === "edit" ? "Edit Project" : "Create Project"}
       </h1>
-      <ProgressHeader step={step} />
-      {step === 1 && (
+      <ProgressHeader step={currentStep} />
+      {currentStep === 1 && (
         <Formik
           initialValues={basicInfo || propInitialFormValues || initialValues}
           validationSchema={validationSchema}
@@ -599,9 +666,11 @@ export function AddProject({
           )}
         </Formik>
       )}
-      {step === 2 && (
+      {currentStep === 2 && (
         <Step2MilestoneSetup
-          onBack={() => setStep(1)}
+          onBack={() => {
+            goToPreviousStep();
+          }}
           onNext={handleMilestoneNext}
           milestoneOption={milestoneOption}
           projectTemplateLoading={projectTemplateLoading}
@@ -628,9 +697,9 @@ export function AddProject({
           mode={mode}
         />
       )}
-      {step === 3 && (
+      {currentStep === 3 && (
         <Step3UploadDocument
-          onBack={() => setStep(2)}
+          onBack={() => goToPreviousStep()}
           isPending={isPending}
           mode={mode}
           onNext={(files: File[], removedIds: string[]) => {
@@ -653,20 +722,20 @@ export function AddProject({
               // No files to upload, just proceed to next step
               setUploadedFiles(files);
               setRemovedAttachmentIds(removedIds);
-              setStep(4);
+              setCurrentStep(4);
             }
           }}
           initialFiles={uploadedFiles}
         />
       )}
-      {step === 4 && (
+      {currentStep === 4 && (
         <Step4Preview
           projectInfo={projectInfo}
           clientInfo={clientInfo}
           estimates={estimates}
           documents={documents}
           milestones={milestones}
-          onBack={() => setStep(3)}
+          onBack={() => goToPreviousStep()}
           onSubmit={handleFinalSubmit}
         />
       )}
@@ -681,4 +750,3 @@ export function AddProject({
     </section>
   );
 }
-
