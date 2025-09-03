@@ -19,12 +19,13 @@ import {
   useUpdateTaskStatusMutation,
   useCreateMilestoneTaskMutation,
   useUpdateMilestoneTaskMutation,
+  useDeleteMilestoneTaskMutation,
   useAuthStore,
 } from "@/services";
 import type { ICreateProjectTask } from "@/services";
 
 import { AnalyticalCardIcon, SupportTicketTable } from "@/features";
-import { AddTaskModal, SimpleDropdown } from "@/components";
+import { AddTaskModal, SimpleDropdown, DeleteModal } from "@/components";
 import { Dropdown } from "@/components";
 
 import TaskTable from "./components/TaskTable";
@@ -41,6 +42,8 @@ export default function Dashboard() {
   const router = useRouter();
 
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<TaskRow | null>(null);
   const [selectedProjectId, setSelectedProjectId] = useState<string>("");
   const [selectedMilestoneId, setSelectedMilestoneId] = useState<string>("");
   const [selectedAssignedTo, setSelectedAssignedTo] = useState<string>("");
@@ -338,6 +341,40 @@ export default function Dashboard() {
     setSelectedTaskStatus(newStatus);
   };
 
+  // Handler for deleting a task
+  const handleDeleteTask = async () => {
+    if (!taskToDelete) return;
+    
+    try {
+      // Find the project and milestone to get the task data
+      const project = projectsData?.find((p) => p.id === taskToDelete.projectId);
+      const milestone = project?.milestones?.find((m) => m.id === taskToDelete.milestoneId);
+      const taskToDeleteData = milestone?.tasks?.find((t) => t.id === taskToDelete.id);
+
+      if (!taskToDeleteData) {
+        toast.error("Task not found");
+        return;
+      }
+
+      // Call the delete mutation
+      await onDeleteMilestoneTask(String(taskToDelete.id));
+
+      toast.success("Task deleted successfully");
+      
+      // Close modal and reset state
+      setShowDeleteModal(false);
+      setTaskToDelete(null);
+      
+      // Refresh the page to show updated data
+      if (typeof window !== "undefined") {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error deleting task:", error);
+      toast.error("Failed to delete task. Please try again.");
+    }
+  };
+
   // Add current month to options if it doesn't exist
   const allMonthOptions = renewalMonthOptions.includes(currentMonth)
     ? renewalMonthOptions
@@ -390,6 +427,22 @@ export default function Dashboard() {
       onErrorCallback: (error) => {
         const errorMessage =
           error?.message || "Failed to update task. Please try again.";
+        toast.error(errorMessage);
+      },
+    });
+
+  // Delete task mutation
+  const { onDeleteMilestoneTask, isPending: isDeletingTask } =
+    useDeleteMilestoneTaskMutation({
+      onSuccessCallback: () => {
+        toast.success("Task deleted successfully");
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
+      },
+      onErrorCallback: (error) => {
+        const errorMessage =
+          error?.message || "Failed to delete task. Please try again.";
         toast.error(errorMessage);
       },
     });
@@ -640,6 +693,14 @@ export default function Dashboard() {
         setShowAddTaskModal(true);
       },
       className: "text-amber-600 whitespace-nowrap",
+    },
+    {
+      label: "Delete",
+      onClick: (row: TaskRow) => {
+        setTaskToDelete(row);
+        setShowDeleteModal(true);
+      },
+      className: "text-red-600 whitespace-nowrap",
     },
   ];
 
@@ -1031,6 +1092,22 @@ export default function Dashboard() {
             userOptions={userOptions}
             selectedProjectId={selectedProjectId}
             onProjectChange={handleProjectChange}
+          />
+        )}
+
+        {/* Delete Modal */}
+        {showDeleteModal && taskToDelete && (
+          <DeleteModal
+            isOpen={showDeleteModal}
+            onClose={() => {
+              setShowDeleteModal(false);
+              setTaskToDelete(null);
+            }}
+            onConfirm={handleDeleteTask}
+            title="Delete Task"
+            message="Are you sure you want to delete the task "
+            itemName={taskToDelete.title}
+            isLoading={isDeletingTask}
           />
         )}
       </div>
