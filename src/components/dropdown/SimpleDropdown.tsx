@@ -17,6 +17,7 @@ interface DropdownProps {
   isRequired?: boolean;
   dropdownBorderRadius?: string;
   dropdownWidth?: string;
+  buttonClassName?: string;
 }
 
 export function SimpleDropdown({
@@ -27,7 +28,8 @@ export function SimpleDropdown({
   label,
   isRequired = false,
   dropdownBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
-  dropdownWidth = "w-full"
+  dropdownWidth = "w-full",
+  buttonClassName
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -92,7 +94,7 @@ export function SimpleDropdown({
       <div
         className={`border 2xl:border-[0.05vw] focus:outline-none focus:ring-1 ${
           error ? "focus:ring-red-500" : "focus:ring-primary"
-        } ${error ? "border-red-500" : "border-gray-300"} ${dropdownBorderRadius} 2xl:text-[1vw] px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] flex items-center gap-6 2xl:gap-[1.5vw] justify-between cursor-pointer bg-white`}
+        } ${error ? "border-red-500" : "border-gray-300"} ${dropdownBorderRadius} 2xl:text-[1vw] px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] flex items-center gap-6 2xl:gap-[1.5vw] justify-between cursor-pointer bg-white ${buttonClassName}`}
         onClick={toggleDropdown}
         tabIndex={0}
         onKeyDown={(e) => {

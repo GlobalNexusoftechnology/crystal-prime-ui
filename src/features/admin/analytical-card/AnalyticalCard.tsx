@@ -1,13 +1,17 @@
 import { AnalyticalCardData } from "@/constants";
 import { AnalyticalCardIcon } from "@/features";
+import { ReactNode } from "react";
 
 interface AnalyticalCardDataProps {
-  data: AnalyticalCardData;
+  data: AnalyticalCardData & {
+    customContent?: ReactNode;
+  };
 }
 
 /**
  * Reusable card component that displays analytical summary data such as counts, titles, and subtitles.
  * Accepts a single `data` prop of type `AnalyticalCardData` to render the content dynamically.
+ * Optionally accepts customContent to display custom elements like dropdowns.
  */
 
 export function AnalyticalCard({ data }: AnalyticalCardDataProps) {
@@ -18,19 +22,23 @@ export function AnalyticalCard({ data }: AnalyticalCardDataProps) {
           <AnalyticalCardIcon className="h-full w-full" />
         </div>
         <div className="flex">
-          <h2 className="text-[1.3rem] 2xl:text-[1.3vw] font-semibold">
-            {data.count}
-          </h2>
+            <h2 className="text-[1.3rem] 2xl:text-[1.3vw] font-semibold">
+              {data.count}
+            </h2>
         </div>
       </div>
-      <div className="flex flex-col">
-        <p className="text-[0.9rem] 2xl:text-[0.875vw] text-gray-700 font-medium">
-          {data.title}
-        </p>
+      {data.customContent ? (
+        data.customContent
+      ) : (
+        <div className="flex flex-col">
+          <p className="text-[0.9rem] 2xl:text-[0.875vw] text-gray-700 font-medium">
+            {data.title}
+          </p>
           <p className="text-[0.6rem] 2xl:text-[0.6vw] text-gray-400 ">
             {data.subtitle}
           </p>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

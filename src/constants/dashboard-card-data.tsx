@@ -10,6 +10,7 @@ export interface AnalyticalCardData {
   title: string;
   subtitle: string;
   icon: ReactNode;
+  customContent?: ReactNode;
 }
 
 /**

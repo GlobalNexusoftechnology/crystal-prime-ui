@@ -59,6 +59,9 @@ export default function Dashboard() {
   // State to track which descriptions are expanded
   const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(new Set());
   
+  // State for task status filter
+  const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("completed");
+  
   // Move all hooks to the top
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
@@ -316,6 +319,25 @@ export default function Dashboard() {
 
   const currentMonth = getCurrentMonth();
 
+  // Helper function to get task count by status
+  const getTaskCountByStatus = (status: string) => {
+    switch (status) {
+      case "completed":
+        return `${statsData?.taskStat?.completedTasks || 0} Task`;
+      case "inprogress":
+        return `${statsData?.taskStat?.inprogressTasks || 0} Task`;
+      case "open":
+        return `${statsData?.taskStat?.openTasks || 0} Task`;
+      default:
+        return `${statsData?.taskStat?.totalTasks || 0} Task`;
+    }
+  };
+
+  // Handler for task status change
+  const handleTaskStatusChange = (newStatus: string) => {
+    setSelectedTaskStatus(newStatus);
+  };
+
   // Add current month to options if it doesn't exist
   const allMonthOptions = renewalMonthOptions.includes(currentMonth)
     ? renewalMonthOptions
@@ -425,10 +447,32 @@ export default function Dashboard() {
       }))
     : [
         {
-          count: statsData?.myTaskCount,
+          count: statsData?.taskStat?.totalTasks,
           title: "My Task",
           subtitle: "Open & In Process",
           icon: <AnalyticalCardIcon />,
+        },
+        {
+          count: getTaskCountByStatus(selectedTaskStatus),
+          title: "All Task",
+          subtitle: "All Task",
+          icon: <AnalyticalCardIcon />,
+          customContent: (
+            <div className="flex flex-col items-start gap-2">
+              <SimpleDropdown
+                options={[
+                  { label: "Completed", value: "completed" },
+                  { label: "In Progress", value: "inprogress" },
+                  { label: "Open", value: "open" },
+                ]}
+                value={selectedTaskStatus}
+                onChange={(newStatus) => handleTaskStatusChange(newStatus)}
+                dropdownWidth="w-40 2xl:w-[11.5vw]"
+                dropdownBorderRadius="rounded-md"
+                buttonClassName="text-sm"
+              />
+            </div>
+          ),
         },
         {
           count: statsData?.todayFollowups,
