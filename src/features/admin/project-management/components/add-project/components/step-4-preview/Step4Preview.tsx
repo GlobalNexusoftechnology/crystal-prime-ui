@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components";
 import { PreviewMilestone } from "./components";
 import { IClientInfo, IDocumentInfo, IEstimates, IProjectInfo } from "@/constants";
-import { useAllUsersQuery } from "@/services";
+import { useAllUsersQuery, useAuthStore } from "@/services";
 // Add local types for editing
 export interface Task {
   id: string;
@@ -50,6 +50,9 @@ export function Step4Preview({
   onSubmit,
 }: Step4PreviewProps) {
   const { allUsersData } = useAllUsersQuery();
+  const { activeSession } = useAuthStore();
+  const userRole = activeSession?.user?.role.role;
+  const isAdmin = userRole === "admin";
 
   const mappedUsers = (allUsersData?.data?.list ?? []).map(user => ({
     id: user.id,
@@ -66,7 +69,7 @@ export function Step4Preview({
         </div>
         <div>
           <ClientInfo clientInfoData={clientInfo} />
-          <ProjectEstimate projectEstimateData={estimates} />
+          {isAdmin &&<ProjectEstimate projectEstimateData={estimates} />}
         </div>
       </div>
 

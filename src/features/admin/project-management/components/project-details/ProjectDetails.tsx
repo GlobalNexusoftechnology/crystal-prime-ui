@@ -9,7 +9,7 @@ import {
   ProjectInfo,
 } from "./components";
 import { HeaderDetails } from "../header-details";
-import { IProjectResponse } from "@/services";
+import { IProjectResponse, useAuthStore } from "@/services";
 import { formatIndiaTime } from "@/utils";
 import { buildIdToNameMapping } from "@/utils/helpers/buildIdToNameMapping";
 
@@ -36,6 +36,10 @@ export function ProjectDetails({
     projectDetailData.client ? [projectDetailData.client] : [],
     [safeProject]
   );
+  const { activeSession } = useAuthStore();
+  const userRole = activeSession?.user?.role.role;
+  const isAdmin = userRole === "admin";
+
   return (
     <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
       <Breadcrumb idToName={idToName} />
@@ -94,6 +98,7 @@ export function ProjectDetails({
               email: projectDetailData.client?.email || "",
             }}
           />
+{isAdmin &&
           <ProjectEstimate
             projectEstimateData={{
               start_date: projectDetailData.start_date
@@ -133,7 +138,7 @@ export function ProjectDetails({
                 ? String(projectDetailData.extra_cost)
                 : "",
             }}
-          />
+          />}
         </div>
       </div>
       <MilestoneTabs
