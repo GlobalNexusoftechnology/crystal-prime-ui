@@ -81,7 +81,7 @@ export const HoursSpentInput: React.FC<HoursSpentInputProps> = ({
           name={name + "_minutes"}
         />
       </div>
-      {error && <span className="text-red-500 text-xs mt-1">{error}</span>}
+      {error && <span className="text-red-500 text-xs mt-1 2xl:mt-[0.25vw]">{error}</span>}
     </div>
   );
 };
