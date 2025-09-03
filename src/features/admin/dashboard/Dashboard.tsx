@@ -63,7 +63,7 @@ export default function Dashboard() {
   const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(new Set());
   
   // State for task status filter
-  const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("completed");
+  const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("");
   
   // Move all hooks to the top
 
@@ -521,6 +521,7 @@ export default function Dashboard() {
             <div className="flex flex-col items-start gap-2">
               <SimpleDropdown
                 options={[
+                  { label: "All Task", value: "" },
                   { label: "Completed", value: "completed" },
                   { label: "In Progress", value: "inprogress" },
                   { label: "Open", value: "open" },
