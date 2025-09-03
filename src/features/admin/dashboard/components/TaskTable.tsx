@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { DatePicker, Button, Table, Loading, SearchBar, SimpleDropdown } from "@/components";
+import { DatePicker, Button, Table, Loading, SearchBar, SimpleDropdown, Dropdown } from "@/components";
 import { FiX, FiPlus } from "react-icons/fi";
 import { ITableAction, ITableColumn } from "@/constants/table";
 import { useDebounce } from "@/utils/hooks";
@@ -48,6 +48,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const [searchInput, setSearchInput] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
+  const [staffFilter, setStaffFilter] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -74,6 +75,18 @@ const TaskTable: React.FC<TaskTableProps> = ({
     { label: "Low", value: "Low" },
   ];
 
+  // Build staff options from taskList (unique by staffName)
+  const staffOptions = useMemo(() => {
+    const uniqueNames = Array.from(
+      new Set(
+        (taskList || [])
+          .map((t) => t.staffName?.trim())
+          .filter((name): name is string => Boolean(name && name.length > 0))
+      )
+    );
+    return [{ label: "All Staff", value: "" }, ...uniqueNames.map((name) => ({ label: name, value: name }))];
+  }, [taskList]);
+
   // Filter handlers
   const handleSearch = (query: string) => {
     setSearchInput(query.toLowerCase());
@@ -81,6 +94,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
   const handleStatusChange = (value: string) => setStatusFilter(value);
   const handlePriorityChange = (value: string) => setPriorityFilter(value);
+  const handleStaffChange = (value: string) => setStaffFilter(value);
   
   const handleClearDates = () => {
     setFromDate("");
@@ -106,6 +120,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
       // Priority filter
       const priorityMatch = !priorityFilter || task.priority === priorityFilter;
 
+      // Staff filter (by staffName shown in table)
+      const staffMatch = !staffFilter || task.staffName === staffFilter;
+
       // Date filter
       let dateMatch = true;
       if (fromDate || toDate) {
@@ -125,9 +142,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
         }
       }
 
-      return searchMatch && statusMatch && priorityMatch && dateMatch;
+      return searchMatch && statusMatch && priorityMatch && staffMatch && dateMatch;
     });
-  }, [taskList, searchQuery, statusFilter, priorityFilter, fromDate, toDate]);
+  }, [taskList, searchQuery, statusFilter, priorityFilter, staffFilter, fromDate, toDate]);
 
   if (tasksLoading) return <Loading />;
   if (tasksError)
@@ -205,6 +222,12 @@ const TaskTable: React.FC<TaskTableProps> = ({
           options={priorityOptions}
           value={priorityFilter}
           onChange={handlePriorityChange}
+          dropdownWidth="w-full md:w-fit"
+        />
+        <Dropdown
+          options={staffOptions}
+          value={staffFilter}
+          onChange={handleStaffChange}
           dropdownWidth="w-full md:w-fit"
         />
       </div>
