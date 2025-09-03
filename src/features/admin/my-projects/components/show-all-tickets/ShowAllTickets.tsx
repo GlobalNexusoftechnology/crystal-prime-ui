@@ -143,6 +143,11 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
       headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
     },
     {
+      header: "PRIORITY",
+      accessor: "priority",
+      headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
+    },
+    {
       header: "TITLE",
       accessor: "title",
       headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
@@ -151,11 +156,6 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
       header: "DESCRIPTION",
       accessor: "description",
       headerClassName: "min-w-[15rem] 2xl:min-w-[15vw]",
-    },
-    {
-      header: "PRIORITY",
-      accessor: "priority",
-      headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
     },
     {
       header: "REMARK",

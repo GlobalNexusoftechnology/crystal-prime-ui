@@ -17,9 +17,11 @@ import {
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/";
+import { useAuthStore } from "@/services";
 
 export function SupportTickets() {
   const router = useRouter();
+  const { activeSession } = useAuthStore();
 
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [priorityFilter, setPriorityFilter] = useState<string>("");
@@ -80,8 +82,17 @@ export function SupportTickets() {
     { label: "Critical", value: "critical" },
   ];
 
-  const supportTicketList: SupportTicketRow[] = (supportTickets || []).map(
-    (ticket) => {
+  const supportTicketList: SupportTicketRow[] = (supportTickets || [])
+    .filter((ticket) => {
+      // Show completed tickets only to admin users (not clients)
+      const userRole = activeSession?.user?.role?.role?.toLowerCase?.();
+      if (userRole === "client") {
+        return ticket.status !== "completed";
+      }
+      // Admin users can see all tickets including completed ones
+      return true;
+    })
+    .map((ticket) => {
       const validPriority = ["high", "medium", "low"].includes(
         ticket.priority ?? ""
       );
@@ -105,8 +116,7 @@ export function SupportTickets() {
         milestoneId: ticket?.milestone?.id || "",
         taskId: ticket?.task?.id || "",
       };
-    }
-  );
+    });
 
   const supportTicketListColumn: ITableColumn<SupportTicketRow>[] = [
     {
