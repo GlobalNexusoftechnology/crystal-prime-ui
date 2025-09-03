@@ -409,7 +409,6 @@ export default function Dashboard() {
             const user = usersData.data.list.find((u) => u.id === assignedTo);
             return user ? `${user.first_name} ${user.last_name}` : "-";
           };
-
           allTasks.push({
             id: task.id,
             title: task.title,
@@ -427,9 +426,17 @@ export default function Dashboard() {
             staffName: getStaffName(task.assigned_to || ""),
             created_at: task.created_at ? formatDate(task.created_at) : "-",
             updated_at: task.updated_at ? formatDate(task.updated_at) : "-",
+            // Add raw date for sorting
+            rawCreatedAt: task.created_at,
           });
         });
       });
+    });
+
+    // Sort tasks by creation date (newest first)
+    allTasks.sort((a, b) => {
+      if (!a.rawCreatedAt || !b.rawCreatedAt) return 0;
+      return new Date(b.rawCreatedAt).getTime() - new Date(a.rawCreatedAt).getTime();
     });
 
     return allTasks;

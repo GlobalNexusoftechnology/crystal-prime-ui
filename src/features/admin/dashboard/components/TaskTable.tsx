@@ -21,6 +21,7 @@ export interface TaskRow {
   staffName?: string;
   created_at?: string;
   updated_at?: string;
+  rawCreatedAt?: string;
   [key: string]: unknown;
 }
 
