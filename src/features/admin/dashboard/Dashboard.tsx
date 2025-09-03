@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ExpensesOverviewChart,
   LeadAnalyticsChart,
@@ -12,9 +12,6 @@ import { AnalyticalCard } from "../analytical-card";
 import {
   useDashboardSummaryQuery,
   useAllProjectsQuery,
-  useAllTicketsAcrossProjectsQuery,
-  useUpdateTicketStatusMutation,
-  useUpdateTicketMutation,
   useAllUsersQuery,
   useUpdateTaskStatusMutation,
   useCreateMilestoneTaskMutation,
@@ -24,9 +21,8 @@ import {
 } from "@/services";
 import type { ICreateProjectTask } from "@/services";
 
-import { AnalyticalCardIcon, SupportTicketTable } from "@/features";
+import { AnalyticalCardIcon } from "@/features";
 import { AddTaskModal, SimpleDropdown, DeleteModal } from "@/components";
-import { Dropdown } from "@/components";
 
 import TaskTable from "./components/TaskTable";
 import type { ITableAction, ITableColumn } from "@/constants/table";
@@ -34,9 +30,7 @@ import type { ITableAction, ITableColumn } from "@/constants/table";
 import type { TaskRow } from "./components/TaskTable";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/helpers/formatDate";
-import Image from "next/image";
 import toast from "react-hot-toast";
-import { SupportTicketRow } from "../common/SupportTicketTable";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -58,107 +52,23 @@ export default function Dashboard() {
       assigned_to: "",
       milestone_id: "",
     });
-  
+
   // State to track which descriptions are expanded
-  const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(new Set());
-  
+  const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(
+    new Set()
+  );
+
   // State for task status filter
   const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("");
-  
-  // Move all hooks to the top
-
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [showImageModal, setShowImageModal] = useState(false);
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
   const userRole = activeSession?.user?.role?.role || "";
 
-  // Support Ticket Filters
-  const [supportTicketStatusFilter, setSupportTicketStatusFilter] =
-    useState<string>("");
-  const [supportTicketPriorityFilter, setSupportTicketPriorityFilter] =
-    useState<string>("");
-
-  const supportTicketFilters = useMemo(
-    () => ({
-      searchText: "",
-      status: supportTicketStatusFilter,
-      priority: supportTicketPriorityFilter,
-    }),
-    [supportTicketStatusFilter, supportTicketPriorityFilter]
-  );
-
-  const statusOptions = [
-    { label: "All Status", value: "" },
-    { label: "Open", value: "open" },
-    { label: "In Progress", value: "in_progress" },
-    { label: "Completed", value: "completed" },
-  ];
-
-  const priorityOptions = [
-    { label: "All Priority", value: "" },
-    { label: "Low", value: "low" },
-    { label: "Medium", value: "medium" },
-    { label: "High", value: "high" },
-    { label: "Critical", value: "critical" },
-  ];
-
-  // Support Ticket Filter handlers
-  const handleSupportTicketStatusChange = (value: string) =>
-    setSupportTicketStatusFilter(value);
-  const handleSupportTicketPriorityChange = (value: string) =>
-    setSupportTicketPriorityFilter(value);
-
-  const handleImageClick = (imageUrl: string) => {
-    setSelectedImage(imageUrl);
-    setShowImageModal(true);
-  };
-
-  const handleCloseImageModal = () => {
-    setShowImageModal(false);
-    setSelectedImage(null);
-  };
-
-  // Handle escape key to close image modal
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape" && showImageModal) {
-        handleCloseImageModal();
-      }
-    };
-
-    if (showImageModal) {
-      document.addEventListener("keydown", handleEscape);
-      document.body.style.overflow = "hidden"; // Prevent background scrolling
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleEscape);
-      document.body.style.overflow = "unset";
-    };
-  }, [showImageModal]);
-
   const handleProjectChange = (projectId: string) => {
     setSelectedProjectId(projectId);
     setSelectedMilestoneId(""); // Reset milestone when project changes
   };
-
-  // Fetch support tickets with filters
-  const {
-    ticketsData: supportTickets,
-    isLoading: supportTicketsLoading,
-    isError: supportTicketsError,
-    error: supportTicketsErrorObj,
-    ticketsRefetch: refetchSupportTickets,
-  } = useAllTicketsAcrossProjectsQuery({
-    searchText: supportTicketFilters.searchText,
-    status: supportTicketFilters.status,
-    priority: supportTicketFilters.priority,
-  });
-
-  const { updateTicketStatus } = useUpdateTicketStatusMutation();
-
   // Task status update hook
   const { onUpdateTaskStatus, isPending: isUpdatingTaskStatus } =
     useUpdateTaskStatusMutation({
@@ -177,8 +87,7 @@ export default function Dashboard() {
     });
 
   // Fetch all users for assignment dropdown
-  const { allUsersData: usersData, isLoading: isLoadingUsers } =
-    useAllUsersQuery();
+  const { allUsersData: usersData } = useAllUsersQuery();
 
   // Fetch all projects for project selection
   const { allProjectsData: projectsData, isLoading: isLoadingProjects } =
@@ -221,25 +130,6 @@ export default function Dashboard() {
       setSelectedAssignedTo(usersData.data.list[0].id);
     }
   }, [usersData, selectedAssignedTo]);
-
-  // Update ticket mutation for assignment changes
-  const { updateTicket, isPending: isUpdatingTicket } = useUpdateTicketMutation(
-    {
-      onSuccessCallback: (data) => {
-        toast.success(data.message);
-        // Refetch tickets to get updated data
-        refetchSupportTickets();
-      },
-      onErrorCallback: (error) => {
-        // Show specific error message if available
-        const errorMessage =
-          error?.message ||
-          error?.response?.data?.message ||
-          "Failed to update ticket assignment. Please try again.";
-        toast.error(errorMessage);
-      },
-    }
-  );
 
   // Prepare user options for assignment dropdown
   const userOptions = React.useMemo(() => {
@@ -344,12 +234,18 @@ export default function Dashboard() {
   // Handler for deleting a task
   const handleDeleteTask = async () => {
     if (!taskToDelete) return;
-    
+
     try {
       // Find the project and milestone to get the task data
-      const project = projectsData?.find((p) => p.id === taskToDelete.projectId);
-      const milestone = project?.milestones?.find((m) => m.id === taskToDelete.milestoneId);
-      const taskToDeleteData = milestone?.tasks?.find((t) => t.id === taskToDelete.id);
+      const project = projectsData?.find(
+        (p) => p.id === taskToDelete.projectId
+      );
+      const milestone = project?.milestones?.find(
+        (m) => m.id === taskToDelete.milestoneId
+      );
+      const taskToDeleteData = milestone?.tasks?.find(
+        (t) => t.id === taskToDelete.id
+      );
 
       if (!taskToDeleteData) {
         toast.error("Task not found");
@@ -360,11 +256,11 @@ export default function Dashboard() {
       await onDeleteMilestoneTask(String(taskToDelete.id));
 
       toast.success("Task deleted successfully");
-      
+
       // Close modal and reset state
       setShowDeleteModal(false);
       setTaskToDelete(null);
-      
+
       // Refresh the page to show updated data
       if (typeof window !== "undefined") {
         window.location.reload();
@@ -489,7 +385,9 @@ export default function Dashboard() {
     // Sort tasks by creation date (newest first)
     allTasks.sort((a, b) => {
       if (!a.rawCreatedAt || !b.rawCreatedAt) return 0;
-      return new Date(b.rawCreatedAt).getTime() - new Date(a.rawCreatedAt).getTime();
+      return (
+        new Date(b.rawCreatedAt).getTime() - new Date(a.rawCreatedAt).getTime()
+      );
     });
 
     return allTasks;
@@ -605,11 +503,13 @@ export default function Dashboard() {
       cell: ({ value, row }) => {
         const description = value as string;
         const isExpanded = expandedDescriptions.has(String(row.id));
-        
-        const words = description?.split(' ') || [];
+
+        const words = description?.split(" ") || [];
         const shouldTruncate = words.length > 10;
-        const displayText = isExpanded ? description : words.slice(0, 10).join(' ') + (shouldTruncate ? '...' : '');
-        
+        const displayText = isExpanded
+          ? description
+          : words.slice(0, 10).join(" ") + (shouldTruncate ? "..." : "");
+
         const toggleExpanded = () => {
           const newExpanded = new Set(expandedDescriptions);
           if (isExpanded) {
@@ -622,15 +522,16 @@ export default function Dashboard() {
 
         return (
           <div className="w-[20rem] 2xl:w-[20vw] text-left text-sm 2xl:text-[0.9vw]">
-            <div className="text-wrap">{displayText}
-            {shouldTruncate && (
-              <button
-                onClick={toggleExpanded}
-                className="text-blue-500 hover:text-blue-700 text-xs 2xl:text-[0.75vw] font-medium underline relative left-1 bottom-[1px] 2xl:bottom-[0.1vw]"
-              >
-                {isExpanded ? 'Read less' : 'Read more'}
-              </button>
-            )}
+            <div className="text-wrap">
+              {displayText}
+              {shouldTruncate && (
+                <button
+                  onClick={toggleExpanded}
+                  className="text-blue-500 hover:text-blue-700 text-xs 2xl:text-[0.75vw] font-medium underline relative left-1 bottom-[1px] 2xl:bottom-[0.1vw]"
+                >
+                  {isExpanded ? "Read less" : "Read more"}
+                </button>
+              )}
             </div>
           </div>
         );
@@ -702,161 +603,6 @@ export default function Dashboard() {
         setShowDeleteModal(true);
       },
       className: "text-red-600 whitespace-nowrap",
-    },
-  ];
-
-  // Support Ticket Data Transformation
-  const supportTicketList: SupportTicketRow[] = (supportTickets || []).map(
-    (ticket) => {
-      const validPriority = ["high", "medium", "low"].includes(
-        ticket.priority ?? ""
-      );
-      return {
-        id: ticket?.id,
-        title: ticket?.title,
-        description: ticket?.description || "-",
-        status: ticket?.status || "-",
-        priority: validPriority
-          ? (ticket?.priority as "high" | "medium" | "low")
-          : "medium",
-        assignedTo: ticket?.assigned_to || null,
-        projectId: ticket?.project?.id || "",
-        projectName: ticket?.project?.name || "-",
-        createdBy: ticket?.created_by || "-",
-        createdAt: ticket?.created_at ? formatDate(ticket.created_at) : "-",
-        updatedAt: ticket?.updated_at ? formatDate(ticket.updated_at) : "-",
-        taskName: ticket?.task?.title || "-",
-        remark: ticket?.remark || "-",
-        image: ticket?.image_url || null,
-        // Deep links - updated to match API response structure
-        milestoneId: ticket?.milestone?.id || "",
-        taskId: ticket?.task?.id || "",
-      };
-    }
-  );
-
-  const supportTicketListColumn: ITableColumn<SupportTicketRow>[] = [
-    {
-      header: "STATUS",
-      accessor: "status",
-      cell: ({ row, value }) => (
-        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
-          <SimpleDropdown
-            options={[
-              { label: "Open", value: "open" },
-              { label: "In Progress", value: "in_progress" },
-              { label: "Completed", value: "completed" },
-            ]}
-            value={String((value as string) ?? "")}
-            onChange={(val) =>
-              updateTicketStatus({ id: String(row.id), status: val })
-            }
-            dropdownWidth="w-[10rem] 2xl:w-[10vw]"
-          />
-        </div>
-      ),
-    },
-    {
-      header: "ASSIGNED TO",
-      accessor: "assignedTo",
-      cell: ({ row, value }) => (
-        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
-          {isLoadingUsers ? (
-            <span className="text-gray-400 text-sm">Loading...</span>
-          ) : isUpdatingTicket ? (
-            <span className="text-blue-500 text-sm">Updating...</span>
-          ) : (
-            <Dropdown
-              options={userOptions}
-              value={value ? String(value) : ""}
-              onChange={(val) => {
-                // Prepare the API payload
-                const apiPayload = {
-                  assigned_to: val === "" ? null : val,
-                };
-
-                const requestPayload = {
-                  id: String(row.id),
-                  payload: apiPayload,
-                };
-
-                // Make the API call
-                updateTicket(requestPayload);
-              }}
-              dropdownWidth="w-[15rem] 2xl:w-[15vw]"
-            />
-          )}
-        </div>
-      ),
-    },
-    {
-      header: "IMAGE",
-      accessor: "image",
-      cell: ({ value }) => {
-        const img = (value as string) ?? null;
-        if (!img) {
-          return <span className="text-gray-400 text-xs">No image</span>;
-        }
-        return (
-          <div className="flex items-center justify-center">
-            <div
-              className="relative w-12 h-12 2xl:w-[3vw] 2xl:h-[3vw] cursor-pointer hover:opacity-80 transition-opacity group"
-              onClick={() => handleImageClick(img)}
-            >
-              <Image
-                src={img}
-                alt="Ticket attachment"
-                fill
-                className="object-cover rounded-lg"
-                unoptimized
-                onError={(e) => {
-                  // Hide the image and show fallback text
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = "none";
-                  const fallback =
-                    target.parentElement?.querySelector(".image-fallback");
-                  if (fallback) {
-                    fallback.classList.remove("hidden");
-                  }
-                }}
-              />
-              <div className="hidden image-fallback absolute inset-0 items-center justify-center bg-gray-100 rounded-lg">
-                <span className="text-gray-400 text-xs">Failed to load</span>
-              </div>
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
-                <span className="text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  Click to view
-                </span>
-              </div>
-            </div>
-          </div>
-        );
-      },
-    },
-    { header: "PRIORITY", accessor: "priority" },
-    { header: "TITLE", accessor: "title" },
-
-    { header: "PROJECT", accessor: "projectName" },
-    { header: "CREATED AT", accessor: "createdAt" },
-  ];
-
-  const supportTicketListAction: ITableAction<SupportTicketRow>[] = [
-    {
-      label: "View",
-      onClick: (row: SupportTicketRow) => {
-        // Navigate to ticket route if both IDs exist; else fallback to project page
-        const hasTicketRoute = Boolean(
-          row.projectId && row.milestoneId && row.id
-        );
-        if (hasTicketRoute) {
-          router.push(
-            `/admin/project-management/${row.projectId}/${row.milestoneId}/tickets/${row.id}`
-          );
-        } else if (row.projectId) {
-          router.push(`/admin/project-management/${row.projectId}`);
-        }
-      },
-      className: "text-blue-500 whitespace-nowrap",
     },
   ];
 
@@ -946,24 +692,6 @@ export default function Dashboard() {
             <AnalyticalCard key={idx} data={card} />
           ))}
       </div>
-      {userRole.toLocaleLowerCase() !== "admin" && (
-        <div className="my-6 2xl:my-[1.5vw]">
-          <SupportTicketTable
-            supportTicketsLoading={supportTicketsLoading}
-            supportTicketsError={supportTicketsError}
-            supportTicketsErrorObj={supportTicketsErrorObj}
-            supportTicketList={supportTicketList}
-            supportTicketListColumn={supportTicketListColumn}
-            supportTicketListAction={supportTicketListAction}
-            statusOptions={statusOptions}
-            statusFilter={supportTicketStatusFilter}
-            handleStatusChange={handleSupportTicketStatusChange}
-            priorityOptions={priorityOptions}
-            priorityFilter={supportTicketPriorityFilter}
-            handlePriorityChange={handleSupportTicketPriorityChange}
-          />
-        </div>
-      )}
       <div>
         {/* Task Table Component */}
         <div className="mt-6 2xl:mt-[1.5vw]">
@@ -978,38 +706,6 @@ export default function Dashboard() {
             onAddTask={() => setShowAddTaskModal(true)}
           />
         </div>
-
-        {/* Image Modal */}
-        {showImageModal && selectedImage && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"
-            onClick={handleCloseImageModal}
-          >
-            <div
-              className="relative max-w-4xl max-h-[90vh] bg-white rounded-lg overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="absolute top-4 right-4 z-10">
-                <button
-                  onClick={handleCloseImageModal}
-                  className="bg-black bg-opacity-50 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-75 transition-all"
-                >
-                  ×
-                </button>
-              </div>
-              <div className="relative w-full h-full">
-                <Image
-                  src={selectedImage}
-                  alt="Ticket attachment"
-                  width={800}
-                  height={600}
-                  className="w-full h-auto max-h-[90vh] object-contain"
-                  unoptimized
-                />
-              </div>
-            </div>
-          </div>
-        )}
         {userRole.toLocaleLowerCase() === "admin" && (
           <div>
             <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
