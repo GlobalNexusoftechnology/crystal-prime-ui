@@ -7,8 +7,10 @@ import {
   useCreateDailyTaskMutation,
   useAllUsersQuery,
   IDailyTaskEntryResponse,
+  useUpdateDailyTaskStatusMutation,
 } from "@/services";
 import { AddDailyTaskModal } from "@/components";
+import { SimpleDropdown } from "@/components";
 
 type IDailyTaskProps = {
   projectId: string;
@@ -53,6 +55,29 @@ export function DailyTask({
       toast.error(err.message);
     },
   });
+
+  const { updateDailyTaskStatus, isPending: isUpdatingStatus } = useUpdateDailyTaskStatusMutation({
+    onSuccessCallback: () => {
+      toast.success("Status updated successfully");
+      refetchDailyTasks();
+    },
+    onErrorCallback: (err: IApiError) => {
+      toast.error(err.message);
+    },
+  });
+
+  const statusOptions = [
+    { label: "Pending", value: "Pending" },
+    { label: "In Progress", value: "In Progress" },
+    { label: "Completed", value: "Completed" },
+  ];
+
+  const handleStatusChange = (taskId: string, newStatus: string) => {
+    updateDailyTaskStatus({
+      id: taskId,
+      payload: { status: newStatus },
+    });
+  };
 
   // Show error state if task is not found
   if (isError && error?.message?.includes("Task not found")) {
@@ -106,7 +131,7 @@ export function DailyTask({
                 entry_date: new Date().toISOString().slice(0, 10),
                 description: originalDescription || "",
                 hours_spent: undefined,
-                status: "",
+                status: "Pending",
                 remarks: "",
                 priority: "Medium",
               }}
@@ -122,38 +147,49 @@ export function DailyTask({
                     return (
                       <div
                         key={task.id}
-                        className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
+                        className="flex flex-col justify-center gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
                       >
-                        <div className="flex justify-between gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
-                          <span>
+                        <div className="flex justify-between flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
+                          <div className="flex items-center">
                             <span className="underline text-[1.1rem] 2xl:text-[1.1vw] font-normal">
                               {task.task_title || "-"}
                             </span>
-                          </span>
+                          </div>
                           <div className="flex justify-end flex-wrap gap-6 2xl:gap-[1.5vw]">
-                            <span className="underline">
+                            <div className="underline flex items-center">
                               <span className="2xl:text-[1.1vw] font-normal">
                                 Assigned To:{" "}
                                 {task.user
                                   ? `${task.user.first_name} ${task.user.last_name}`
                                   : getUserName(assignedTo)}
                               </span>
-                            </span>
-                            <span className="underline">
+                            </div>
+                            <span className="underline flex items-center">
                               <span className="2xl:text-[1.1vw] font-normal">
                                 Hours Spent: {task.hours_spent}
                               </span>
                             </span>
-                            <span className="underline text-primary">
-                              <span className="2xl:text-[1.1vw] font-normal">
-                                Status: {task.status}
-                              </span>
-                            </span>
-                            <span className="underline text-lightGreen 2xl:text-[1.1vw]">
+                            <div className="flex items-center gap-2">
+                              <span className="2xl:text-[1.1vw] font-normal text-primary">
+                                Status:
+                                </span>
+                                {isUpdatingStatus ? (
+                                  <span className="text-blue-500">Updating...</span>
+                                ) : (
+                                  <SimpleDropdown
+                                    options={statusOptions}
+                                    value={task.status || "Pending"}
+                                    onChange={(newStatus) => handleStatusChange(task.id, newStatus)}
+                                    dropdownWidth="w-40 2xl:w-[12vw]"
+                                    dropdownBorderRadius="rounded-md 2xl:rounded-[0.375vw]"
+                                  />
+                                )}
+                            </div>
+                            <span className="underline flex items-center text-lightGreen 2xl:text-[1.1vw]">
                               Created At:{" "}
                               {formatIndiaTime(task.created_at, "toReadable")}
                             </span>
-                            <span className="underline text-yellow-600">
+                            <span className="underline flex items-center text-yellow-600">
                               <span className="2xl:text-[1.1vw] font-normal">
                                 Priority: {task.priority || "-"}
                               </span>
