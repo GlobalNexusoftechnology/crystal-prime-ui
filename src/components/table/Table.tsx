@@ -25,9 +25,6 @@ export function Table<T extends { id: string | number }>({
   const [currentPage, setCurrentPage] = useState(paginationData?.page || 1);
   const [sortBy, setSortBy] = useState<keyof T | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [openActionId, setOpenActionId] = useState<string | number | null>(
-    null
-  );
 
   // Update current page when pagination data changes
   useMemo(() => {
@@ -69,7 +66,6 @@ export function Table<T extends { id: string | number }>({
   }, [sortedData, currentPage, pageSize, paginationData]);
 
   const handlePageChange = (page: number) => {
-    setOpenActionId(null);
     if (onPageChange) {
       onPageChange(page);
     } else {
@@ -115,8 +111,6 @@ export function Table<T extends { id: string | number }>({
                   columns={columns}
                   actions={actions}
                   index={serialNumber}
-                  openActionId={openActionId}
-                  setOpenActionId={setOpenActionId}
                 />
               );
             })}
