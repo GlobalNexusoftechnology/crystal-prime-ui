@@ -50,6 +50,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [staffFilter, setStaffFilter] = useState("");
+  const [timePeriodFilter, setTimePeriodFilter] = useState("");
+  const [projectFilter, setProjectFilter] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -76,6 +78,14 @@ const TaskTable: React.FC<TaskTableProps> = ({
     { label: "Low", value: "Low" },
   ];
 
+  const timePeriodOptions = [
+    { label: "All Time", value: "" },
+    { label: "Daily", value: "daily" },
+    { label: "Weekly", value: "weekly" },
+    { label: "Monthly", value: "monthly" },
+    { label: "Yearly", value: "yearly" },
+  ];
+
   // Build staff options from taskList (unique by staffName)
   const staffOptions = useMemo(() => {
     const uniqueNames = Array.from(
@@ -88,6 +98,18 @@ const TaskTable: React.FC<TaskTableProps> = ({
     return [{ label: "All Staff", value: "" }, ...uniqueNames.map((name) => ({ label: name, value: name }))];
   }, [taskList]);
 
+  // Build project options from taskList (unique by projectName)
+  const projectOptions = useMemo(() => {
+    const uniqueProjects = Array.from(
+      new Set(
+        (taskList || [])
+          .map((t) => t.projectName?.trim())
+          .filter((name): name is string => Boolean(name && name.length > 0))
+      )
+    );
+    return [{ label: "All Projects", value: "" }, ...uniqueProjects.map((name) => ({ label: name, value: name }))];
+  }, [taskList]);
+
   // Filter handlers
   const handleSearch = (query: string) => {
     setSearchInput(query.toLowerCase());
@@ -96,6 +118,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const handleStatusChange = (value: string) => setStatusFilter(value);
   const handlePriorityChange = (value: string) => setPriorityFilter(value);
   const handleStaffChange = (value: string) => setStaffFilter(value);
+  const handleTimePeriodChange = (value: string) => setTimePeriodFilter(value);
+  const handleProjectChange = (value: string) => setProjectFilter(value);
   
   const handleClearDates = () => {
     setFromDate("");
@@ -124,6 +148,41 @@ const TaskTable: React.FC<TaskTableProps> = ({
       // Staff filter (by staffName shown in table)
       const staffMatch = !staffFilter || task.staffName === staffFilter;
 
+      // Project filter
+      const projectMatch = !projectFilter || task.projectName === projectFilter;
+
+      // Time period filter
+      let timePeriodMatch = true;
+      if (timePeriodFilter) {
+        const taskDate = task.due_date || task.created_at;
+        if (taskDate) {
+          const taskDateObj = new Date(taskDate);
+          const now = new Date();
+          
+          switch (timePeriodFilter) {
+            case 'daily':
+              timePeriodMatch = taskDateObj.toDateString() === now.toDateString();
+              break;
+            case 'weekly':
+              const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+              timePeriodMatch = taskDateObj >= weekAgo;
+              break;
+            case 'monthly':
+              const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+              timePeriodMatch = taskDateObj >= monthAgo;
+              break;
+            case 'yearly':
+              const yearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+              timePeriodMatch = taskDateObj >= yearAgo;
+              break;
+            default:
+              timePeriodMatch = true;
+          }
+        } else {
+          timePeriodMatch = false;
+        }
+      }
+
       // Date filter
       let dateMatch = true;
       if (fromDate || toDate) {
@@ -143,9 +202,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
         }
       }
 
-      return searchMatch && statusMatch && priorityMatch && staffMatch && dateMatch;
+      return searchMatch && statusMatch && priorityMatch && staffMatch && projectMatch && timePeriodMatch && dateMatch;
     });
-  }, [taskList, searchQuery, statusFilter, priorityFilter, staffFilter, fromDate, toDate]);
+  }, [taskList, searchQuery, statusFilter, priorityFilter, staffFilter, projectFilter, timePeriodFilter, fromDate, toDate]);
 
   if (tasksLoading) return <Loading />;
   if (tasksError)
@@ -230,6 +289,18 @@ const TaskTable: React.FC<TaskTableProps> = ({
           value={staffFilter}
           onChange={handleStaffChange}
           dropdownWidth="w-full md:w-fit"
+        />
+        <SimpleDropdown
+          options={timePeriodOptions}
+          value={timePeriodFilter}
+          onChange={handleTimePeriodChange}
+          dropdownWidth="w-full md:w-[15rem] 2xl:w-[15vw]"
+        />
+        <Dropdown
+          options={projectOptions}
+          value={projectFilter}
+          onChange={handleProjectChange}
+          dropdownWidth="w-full md:w-[15rem] 2xl:w-[15vw]"
         />
       </div>
       <Table
