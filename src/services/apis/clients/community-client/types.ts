@@ -1156,6 +1156,7 @@ export interface IProjectTaskResponse  {
   status?: string;
   assigned_to?: string;
   priority?: "Critical" | "High" | "Medium" | "Low";
+  delay_days?: number | null;
   created_at: string;
   updated_at: string;
   deleted: boolean;
