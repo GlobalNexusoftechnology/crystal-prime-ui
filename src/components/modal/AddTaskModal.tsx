@@ -102,7 +102,7 @@ export function AddTaskModal({
       isOpen={isOpen}
       onClose={onClose}
       modalTitle={isEdit ? "Edit Task" : "Add New Task"}
-      modalClassName="w-full md:w-[35rem] 2xl:w-[35vw]"
+      modalClassName="w-full md:w-[45rem] 2xl:w-[45vw]"
     >
       <form
         onSubmit={formik.handleSubmit}
