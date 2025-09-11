@@ -252,16 +252,15 @@ export default function Dashboard() {
         return;
       }
 
-      // Call the delete mutation
-      await onDeleteMilestoneTask(String(taskToDelete.id));
-
-      toast.success("Task deleted successfully");
+      // Call the delete mutation and await completion to avoid race conditions
+      await onDeleteMilestoneTaskAsync(String(taskToDelete.id));
 
       // Close modal and reset state
       setShowDeleteModal(false);
       setTaskToDelete(null);
 
-      // Refresh the page to show updated data
+      // Notify and refresh once
+      toast.success("Task deleted successfully");
       if (typeof window !== "undefined") {
         window.location.reload();
       }
@@ -328,14 +327,10 @@ export default function Dashboard() {
     });
 
   // Delete task mutation
-  const { onDeleteMilestoneTask, isPending: isDeletingTask } =
+  const { onDeleteMilestoneTaskAsync, isPending: isDeletingTask } =
     useDeleteMilestoneTaskMutation({
-      onSuccessCallback: () => {
-        toast.success("Task deleted successfully");
-        if (typeof window !== "undefined") {
-          window.location.reload();
-        }
-      },
+      // Success handled after awaiting mutation in handler to prevent double reload/toast
+      onSuccessCallback: () => {},
       onErrorCallback: (error) => {
         const errorMessage =
           error?.message || "Failed to delete task. Please try again.";
