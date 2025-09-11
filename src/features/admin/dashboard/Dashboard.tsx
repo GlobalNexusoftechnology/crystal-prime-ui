@@ -368,6 +368,7 @@ export default function Dashboard() {
             clientName: project.client?.name || "-",
             clientNumber: project.client?.contact_number || "-",
             staffName: getStaffName(task.assigned_to || ""),
+            delay_days: task.delay_days || 0,
             created_at: task.created_at ? formatDate(task.created_at) : "-",
             updated_at: task.updated_at ? formatDate(task.updated_at) : "-",
             // Add raw date for sorting
@@ -538,6 +539,7 @@ export default function Dashboard() {
     { header: "CLIENT NAME", accessor: "clientName" },
     { header: "CLIENT NUMBER", accessor: "clientNumber" },
     { header: "DUE DATE", accessor: "due_date" },
+    { header: "DELAY DAY", accessor: "delay_days" },
     { header: "CREATED AT", accessor: "created_at" },
   ];
 
