@@ -276,31 +276,31 @@ const TaskTable: React.FC<TaskTableProps> = ({
           options={statusOptions}
           value={statusFilter}
           onChange={handleStatusChange}
-          dropdownWidth="w-full md:w-fit"
+          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
         />
         <SimpleDropdown
           options={priorityOptions}
           value={priorityFilter}
           onChange={handlePriorityChange}
-          dropdownWidth="w-full md:w-fit"
+          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
         />
         <Dropdown
           options={staffOptions}
           value={staffFilter}
           onChange={handleStaffChange}
-          dropdownWidth="w-full md:w-fit"
+          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
         />
         <SimpleDropdown
           options={timePeriodOptions}
           value={timePeriodFilter}
           onChange={handleTimePeriodChange}
-          dropdownWidth="w-full md:w-[15rem] 2xl:w-[15vw]"
+          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
         />
         <Dropdown
           options={projectOptions}
           value={projectFilter}
           onChange={handleProjectChange}
-          dropdownWidth="w-full md:w-[15rem] 2xl:w-[15vw]"
+          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
         />
       </div>
       <Table
