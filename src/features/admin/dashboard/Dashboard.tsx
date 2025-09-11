@@ -121,15 +121,6 @@ export default function Dashboard() {
     }
   }, [selectedProjectId, projectsData, selectedMilestoneId]);
 
-  useEffect(() => {
-    if (
-      usersData?.data?.list &&
-      usersData.data.list.length > 0 &&
-      !selectedAssignedTo
-    ) {
-      setSelectedAssignedTo(usersData.data.list[0].id);
-    }
-  }, [usersData, selectedAssignedTo]);
 
   // Prepare user options for assignment dropdown
   const userOptions = React.useMemo(() => {
@@ -739,7 +730,11 @@ export default function Dashboard() {
         {showAddTaskModal && (
           <AddTaskModal
             isOpen={showAddTaskModal}
-            onClose={() => setShowAddTaskModal(false)}
+            onClose={() => {
+              setShowAddTaskModal(false);
+              setSelectedAssignedTo("");
+              setEditingTaskId(null);
+            }}
             onSubmit={async (values: ICreateProjectTask) => {
               if (editingTaskId) {
                 await onUpdateMilestoneTask({

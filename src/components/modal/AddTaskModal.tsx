@@ -90,16 +90,12 @@ export function AddTaskModal({
   // Set default values when modal opens
   useEffect(() => {
     if (isOpen) {
-      // Set default assigned_to if available and not already set
-      if (initialValues.assigned_to && !formik.values.assigned_to) {
-        formik.setFieldValue("assigned_to", initialValues.assigned_to);
-      }
       // Set default milestone_id if available and not already set
       if (initialValues.milestone_id && !formik.values.milestone_id) {
         formik.setFieldValue("milestone_id", initialValues.milestone_id);
       }
     }
-  }, [isOpen, initialValues.assigned_to, initialValues.milestone_id, formik]);
+  }, [isOpen, initialValues.milestone_id, formik]);
 
   return (
     <ModalOverlay
