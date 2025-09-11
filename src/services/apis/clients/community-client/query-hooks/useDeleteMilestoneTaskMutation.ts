@@ -13,7 +13,7 @@ export const useDeleteMilestoneTaskMutation = ({
   onSuccessCallback,
   onErrorCallback,
 }: IDeleteMilestoneTaskOptions) => {
-  const { mutate, isPending, error } = useMutation({
+  const { mutate, mutateAsync, isPending, error } = useMutation({
     mutationKey: [DELETE_MILESTONE_TASK_MUTATION_KEY],
     networkMode: "always",
     retry: false,
@@ -36,5 +36,6 @@ export const useDeleteMilestoneTaskMutation = ({
     error,
     isPending,
     onDeleteMilestoneTask: mutate,
+    onDeleteMilestoneTaskAsync: mutateAsync,
   };
 }; 
