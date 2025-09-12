@@ -126,18 +126,29 @@ const TaskTable: React.FC<TaskTableProps> = ({
     setToDate("");
   };
 
+  const handleClearAllFilters = () => {
+    setSearchInput("");
+    setStatusFilter("");
+    setPriorityFilter("");
+    setStaffFilter("");
+    setTimePeriodFilter("");
+    setProjectFilter("");
+    setFromDate("");
+    setToDate("");
+  };
+
   // Filter the data based on search and filters
   const filteredTaskList = useMemo(() => {
     return taskList.filter((task) => {
-      // Search filter
+      // Search filter - case insensitive
       const searchMatch = !searchQuery || 
-        task.title?.toLowerCase().includes(searchQuery) ||
-        task.description?.toLowerCase().includes(searchQuery) ||
-        task.projectName?.toLowerCase().includes(searchQuery) ||
-        task.milestoneName?.toLowerCase().includes(searchQuery) ||
-        task.clientName?.toLowerCase().includes(searchQuery) ||
-        task.clientNumber?.toLowerCase().includes(searchQuery) ||
-        task.staffName?.toLowerCase().includes(searchQuery);
+        task.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.projectName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.milestoneName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.clientName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.clientNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.staffName?.toLowerCase().includes(searchQuery.toLowerCase());
 
       // Status filter
       const statusMatch = !statusFilter || task.status === statusFilter;
@@ -151,29 +162,33 @@ const TaskTable: React.FC<TaskTableProps> = ({
       // Project filter
       const projectMatch = !projectFilter || task.projectName === projectFilter;
 
-      // Time period filter
+      // Time period filter - Use only created_at date
       let timePeriodMatch = true;
       if (timePeriodFilter) {
-        const taskDate = task.due_date || task.created_at;
+        const taskDate = task.created_at; // Only use created_at, not due_date
         if (taskDate) {
           const taskDateObj = new Date(taskDate);
           const now = new Date();
           
+          // Set time to start of day for accurate comparison
+          const taskDateStart = new Date(taskDateObj.getFullYear(), taskDateObj.getMonth(), taskDateObj.getDate());
+          const nowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+          
           switch (timePeriodFilter) {
             case 'daily':
-              timePeriodMatch = taskDateObj.toDateString() === now.toDateString();
+              timePeriodMatch = taskDateStart.getTime() === nowStart.getTime();
               break;
             case 'weekly':
-              const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-              timePeriodMatch = taskDateObj >= weekAgo;
+              const weekAgo = new Date(nowStart.getTime() - 7 * 24 * 60 * 60 * 1000);
+              timePeriodMatch = taskDateStart >= weekAgo;
               break;
             case 'monthly':
               const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-              timePeriodMatch = taskDateObj >= monthAgo;
+              timePeriodMatch = taskDateStart >= monthAgo;
               break;
             case 'yearly':
               const yearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-              timePeriodMatch = taskDateObj >= yearAgo;
+              timePeriodMatch = taskDateStart >= yearAgo;
               break;
             default:
               timePeriodMatch = true;
@@ -183,19 +198,24 @@ const TaskTable: React.FC<TaskTableProps> = ({
         }
       }
 
-      // Date filter
+      // Date filter - Use only created_at date for filtering
       let dateMatch = true;
       if (fromDate || toDate) {
-        const taskDate = task.due_date || task.created_at;
+        const taskDate = task.created_at; // Only use created_at, not due_date
         if (taskDate) {
           const taskDateObj = new Date(taskDate);
+          // Set time to start of day for accurate comparison
+          const taskDateStart = new Date(taskDateObj.getFullYear(), taskDateObj.getMonth(), taskDateObj.getDate());
+          
           if (fromDate) {
             const fromDateObj = new Date(fromDate);
-            dateMatch = dateMatch && taskDateObj >= fromDateObj;
+            const fromDateStart = new Date(fromDateObj.getFullYear(), fromDateObj.getMonth(), fromDateObj.getDate());
+            dateMatch = dateMatch && taskDateStart >= fromDateStart;
           }
           if (toDate) {
             const toDateObj = new Date(toDate);
-            dateMatch = dateMatch && taskDateObj <= toDateObj;
+            const toDateStart = new Date(toDateObj.getFullYear(), toDateObj.getMonth(), toDateObj.getDate());
+            dateMatch = dateMatch && taskDateStart <= toDateStart;
           }
         } else {
           dateMatch = false;
@@ -302,6 +322,19 @@ const TaskTable: React.FC<TaskTableProps> = ({
           onChange={handleProjectChange}
           dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
         />
+        {(searchInput || statusFilter || priorityFilter || staffFilter || timePeriodFilter || projectFilter || fromDate || toDate) && (
+          <div>
+            <Button
+              variant="background-white"
+              width="w-full md:w-fit"
+              onClick={handleClearAllFilters}
+              leftIcon={
+                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+              }
+              tooltip="Clear All Filters"
+            />
+          </div>
+        )}
       </div>
       <Table
         data={filteredTaskList}
