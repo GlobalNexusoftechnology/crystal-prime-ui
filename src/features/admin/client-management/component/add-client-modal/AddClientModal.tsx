@@ -59,7 +59,12 @@ export function AddClientModal({
       name: Yup.string().required("Customer name is required"),
       company_name: Yup.string().required("Company name is required"),
       address: Yup.string().required("Address is required"),
-      website: Yup.string().url("Invalid website URL").nullable(),
+      website: Yup.string()
+        .matches(
+          /^$|^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+          "Invalid website URL"
+        )
+        .nullable(),
       contact_person: Yup.string().required("Contact person is required"),
       contact_number: Yup.string().required("Phone number is required"),
       email: Yup.string().email("Invalid email").required("Email is required"),
