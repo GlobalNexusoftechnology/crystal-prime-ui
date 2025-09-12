@@ -11,7 +11,7 @@ import {
   SimpleDropdown,
 } from "@/components";
 import { useRef, useEffect } from "react";
-import { ICreateProjectTask } from "@/services";
+import { ICreateProjectTask, useAuthStore } from "@/services";
 
 // const statusOptions = [
 //   { label: "Open", value: "Open" },
@@ -56,6 +56,11 @@ export function AddTaskModal({
   // Track if user has edited title/description
   const userEditedTitle = useRef(false);
   const userEditedDescription = useRef(false);
+  
+  // Get current user information
+  const { activeSession } = useAuthStore();
+  const currentUserRole = activeSession?.user?.role?.role || "";
+  const currentUserId = activeSession?.user?.id || "";
 
   const formik = useFormik({
     initialValues: {
@@ -89,13 +94,27 @@ export function AddTaskModal({
 
   // Set default values when modal opens
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !isEdit) {
       // Set default milestone_id if available and not already set
       if (initialValues.milestone_id && !formik.values.milestone_id) {
         formik.setFieldValue("milestone_id", initialValues.milestone_id);
       }
+      
+      // Set default assigned_to based on user role
+      if (!formik.values.assigned_to) {
+        const isAdmin = currentUserRole.toLowerCase() === "admin";
+        
+        if (!isAdmin && currentUserId) {
+          // If user is not admin, assign the task to themselves by default
+          const currentUserOption = userOptions.find(option => option.value === currentUserId);
+          if (currentUserOption) {
+            formik.setFieldValue("assigned_to", currentUserId);
+          }
+        }
+        // If user is admin, leave assigned_to empty (no default selection)
+      }
     }
-  }, [isOpen, initialValues.milestone_id, formik]);
+  }, [isOpen, initialValues.milestone_id, currentUserRole, currentUserId, userOptions, isEdit, formik]);
 
   return (
     <ModalOverlay
