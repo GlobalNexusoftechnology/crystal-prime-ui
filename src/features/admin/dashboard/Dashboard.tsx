@@ -392,7 +392,7 @@ export default function Dashboard() {
       }))
     : [
         {
-          count: statsData?.taskStat?.totalTasks,
+          count: statsData?.myTaskCount,
           title: "My Task",
           subtitle: "Open & In Process",
           icon: <AnalyticalCardIcon />,
