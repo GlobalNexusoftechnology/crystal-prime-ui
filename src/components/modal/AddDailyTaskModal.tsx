@@ -3,7 +3,6 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, InputField, ModalOverlay, Dropdown, SimpleDropdown } from "@/components";
-import { HoursSpentInput } from "@/components/hours-spent-input";
 import { useRef, useEffect } from "react";
 import { ICreateDailyTaskEntryPayload } from "@/services";
 
@@ -19,18 +18,7 @@ const statusOptions = [
   { label: "Completed", value: "Completed" },
 ];
 
-const hhmmToDecimal = (hhmm: string) => {
-  if (!hhmm || typeof hhmm !== "string") return undefined;
-  const [h, m] = hhmm.split(":").map(Number);
-  if (isNaN(h) && isNaN(m)) return undefined;
-  return (Number(h) || 0) + ((Number(m) || 0) / 60);
-};
-const decimalToHHMM = (dec?: number) => {
-  if (typeof dec !== "number" || isNaN(dec)) return "";
-  const h = Math.floor(dec);
-  const m = Math.round((dec - h) * 60);
-  return `${h}:${m.toString().padStart(2, "0")}`;
-};
+// Removed hours_spent conversion helpers since field is no longer used
 
 export interface AddDailyTaskModalProps {
   isOpen: boolean;
@@ -64,34 +52,19 @@ export function AddDailyTaskModal({
   const formik = useFormik({
     initialValues: {
       ...initialValues,
-      hours_spent: decimalToHHMM(initialValues.hours_spent as number),
     },
     validationSchema: Yup.object().shape({
       ...(showProjectAndUserSelection && {
         project_id: Yup.string().required("Project is required"),
         assigned_to: Yup.string().required("Assigned to is required"),
       }),
-      hours_spent: Yup.string()
-        .matches(/^\d{1,2}:\d{2}$/, "Format must be hh:mm")
-        .test("valid-time", "Invalid time", (val) => {
-          if (!val) return false;
-          const [h, m] = val.split(":").map(Number);
-          return (
-            !isNaN(h) && !isNaN(m) && h >= 0 && h <= 24 && m >= 0 && m < 60 && (h !== 24 || m === 0)
-          );
-        })
-        .required("Hours spent is required"),
       status: Yup.string().required("Status is required"),
       remarks: Yup.string().required("Remark is required"),
       priority: Yup.string().required("Priority is required"),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
-      const submitValues = {
-        ...values,
-        hours_spent: hhmmToDecimal(values.hours_spent),
-      };
-      await onSubmit(submitValues);
+      await onSubmit(values);
     },
   });
 
@@ -159,21 +132,13 @@ export function AddDailyTaskModal({
           onBlur={formik.handleBlur}
           error={formik.touched.description ? formik.errors.description : undefined}
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <HoursSpentInput
-            value={formik.values.hours_spent || ""}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.hours_spent ? formik.errors.hours_spent : undefined}
-          />
-          <SimpleDropdown
-            label="Status"
-            options={statusOptions}
-            value={formik.values.status || ""}
-            onChange={(value) => formik.setFieldValue("status", value)}
-            error={formik.touched.status ? formik.errors.status : undefined}
-          />
-        </div>
+        <SimpleDropdown
+          label="Status"
+          options={statusOptions}
+          value={formik.values.status || ""}
+          onChange={(value) => formik.setFieldValue("status", value)}
+          error={formik.touched.status ? formik.errors.status : undefined}
+        />
         <SimpleDropdown
           label="Priority"
           options={priorityOptions}
