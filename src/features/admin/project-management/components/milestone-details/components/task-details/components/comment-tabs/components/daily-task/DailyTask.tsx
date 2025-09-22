@@ -118,7 +118,6 @@ export function DailyTask({
                   task_title: values.task_title,
                   entry_date: values.entry_date,
                   description: values.description,
-                  hours_spent: values.hours_spent,
                   status: values.status,
                   remarks: values.remarks,
                   priority: values.priority,
@@ -130,7 +129,6 @@ export function DailyTask({
                 task_title: originalTitle || "",
                 entry_date: new Date().toISOString().slice(0, 10),
                 description: originalDescription || "",
-                hours_spent: undefined,
                 status: "Pending",
                 remarks: "",
                 priority: "Medium",
@@ -164,11 +162,6 @@ export function DailyTask({
                                   : getUserName(assignedTo)}
                               </span>
                             </div>
-                            <span className="underline flex items-center">
-                              <span className="2xl:text-[1.1vw] font-normal">
-                                Hours Spent: {task.hours_spent}
-                              </span>
-                            </span>
                             <div className="flex items-center gap-2">
                               <span className="2xl:text-[1.1vw] font-normal text-primary">
                                 Status:
