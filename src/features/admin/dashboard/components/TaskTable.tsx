@@ -69,6 +69,7 @@ const { activeSession } = useAuthStore()
     { label: "Open", value: "Open" },
     { label: "In Progress", value: "In Progress" },
     { label: "Completed", value: "Completed" },
+    { label: "Approval", value: "Approval" },
   ];
 
   const priorityOptions = [
