@@ -59,11 +59,12 @@ export default function Dashboard() {
   );
 
   // State for task status filter
-  const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("");
+  const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("open");
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
   const userRole = activeSession?.user?.role?.role || "";
+  const currentUserName = `${activeSession?.user?.first_name ?? ""} ${activeSession?.user?.last_name ?? ""}`.trim();
 
   const handleProjectChange = (projectId: string) => {
     setSelectedProjectId(projectId);
@@ -406,7 +407,7 @@ export default function Dashboard() {
             <div className="flex flex-col items-start gap-2">
               <SimpleDropdown
                 options={[
-                  { label: "Open", value: "" },
+                  { label: "Open", value: "open" },
                   { label: "All Task", value: "allTask" },
                   { label: "Completed", value: "completed" },
                   { label: "In Progress", value: "inprogress" },
@@ -693,7 +694,7 @@ export default function Dashboard() {
             taskList={taskList}
             taskListColumn={taskListColumn}
             taskListAction={taskListAction}
-            onAddTask={() => setShowAddTaskModal(true)} currentUserName={""}          />
+            onAddTask={() => setShowAddTaskModal(true)} currentUserName={currentUserName}          />
         </div>
         {userRole.toLocaleLowerCase() === "admin" && (
           <div>

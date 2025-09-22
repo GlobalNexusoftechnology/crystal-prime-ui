@@ -57,7 +57,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 const { activeSession } = useAuthStore()
-  const userRole = activeSession?.user?.role.role
+  const userRole = (activeSession?.user?.role.role ?? "").toLowerCase()
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
     delay: 500,

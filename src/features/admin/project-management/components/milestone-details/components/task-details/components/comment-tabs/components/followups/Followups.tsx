@@ -9,14 +9,14 @@ import {
   useAllUsersQuery,
   useAuthStore,
   useCreateProjectFollowUpMutation,
-  useAllClientQuery,
+  useAllProjectsQuery,
 } from "@/services";
 import { IApiError, formatDate } from "@/utils";
 import toast from "react-hot-toast";
 
 // Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
-  client_id: Yup.string().required("Client is required"),
+  project_id: Yup.string().required("Project is required"),
   user_id: Yup.string().nullable(),
   status: Yup.string().oneOf(
     [
@@ -43,7 +43,7 @@ interface IFollowupsProps {
 export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
   const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery({ project_task_id: taskId });
   const { allUsersData } = useAllUsersQuery();
-  const { allClientData } = useAllClientQuery();
+  const { allProjectsData } = useAllProjectsQuery();
   const { activeSession } = useAuthStore();
   const userId = activeSession?.user?.id;
 
@@ -70,21 +70,21 @@ export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
       value: user?.id.toString(),
     })) || [];
 
-  const clientOptions =
-    allClientData?.data?.list?.map((client) => ({
-      label: client?.name,
-      value: client?.id,
+  const projectOptions =
+    allProjectsData?.map((project) => ({
+      label: project?.name,
+      value: project?.id,
     })) || [];
 
   const formik = useFormik<{
-    client_id: string;
+    project_id: string;
     user_id?: string | null;
     status?: string;
     due_date?: string | null;
     remarks?: string | null;
   }>({
     initialValues: {
-      client_id: clientOptions[0]?.value || "",
+      project_id: projectOptions[0]?.value || "",
       user_id: userId || "",
       status: "PENDING",
       due_date: "",
@@ -92,12 +92,18 @@ export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
     },
     validationSchema,
     onSubmit: async (values) => {
-      if (!values.client_id) {
-        toast.error("Client ID is required");
+      if (!values.project_id) {
+        toast.error("Project is required");
+        return;
+      }
+      const selectedProject = allProjectsData?.find((p) => p.id === values.project_id);
+      const clientId = selectedProject?.client?.id;
+      if (!clientId) {
+        toast.error("Client not found for selected project");
         return;
       }
       await createClientFollowUp({
-        client_id: values.client_id,
+        client_id: clientId,
         user_id: values.user_id || undefined,
         status: values.status || "PENDING",
         due_date: values.due_date || undefined,
@@ -147,11 +153,11 @@ export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
           >
             <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw]">
               <Dropdown
-                label="Client"
-                options={clientOptions}
-                value={formik.values.client_id}
-                onChange={(val) => formik.setFieldValue("client_id", val)}
-                error={formik.touched.client_id ? formik.errors.client_id : undefined}
+                label="Project"
+                options={projectOptions}
+                value={formik.values.project_id}
+                onChange={(val) => formik.setFieldValue("project_id", val)}
+                error={formik.touched.project_id ? formik.errors.project_id : undefined}
               />
               <Dropdown
                 label="Assigned To"
