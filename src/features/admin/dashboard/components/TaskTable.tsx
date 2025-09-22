@@ -3,6 +3,7 @@ import { DatePicker, Button, Table, Loading, SearchBar, SimpleDropdown, Dropdown
 import { FiX, FiPlus } from "react-icons/fi";
 import { ITableAction, ITableColumn } from "@/constants/table";
 import { useDebounce } from "@/utils/hooks";
+import { useAuthStore } from "@/services";
 
 export interface TaskRow {
   id: string | number;
@@ -27,6 +28,7 @@ export interface TaskRow {
 
 interface TaskTableProps {
   userRole: string;
+  currentUserName: string; 
   tasksLoading: boolean;
   tasksError: boolean;
   tasksErrorObj: unknown;
@@ -37,6 +39,7 @@ interface TaskTableProps {
 }
 
 const TaskTable: React.FC<TaskTableProps> = ({
+  currentUserName,
   tasksLoading,
   tasksError,
   tasksErrorObj,
@@ -45,7 +48,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
   taskListAction,
   onAddTask,
 }) => {
-  // Internal state for search and filters
   const [searchInput, setSearchInput] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
@@ -54,15 +56,14 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const [projectFilter, setProjectFilter] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-
-  // Debounced search
+const { activeSession } = useAuthStore()
+  const userRole = activeSession?.user?.role.role
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
     delay: 500,
-    onChangeCb: () => {},
+    onChangeCb: () => { },
   });
 
-  // Filter options
   const statusOptions = [
     { label: "All Status", value: "" },
     { label: "Open", value: "Open" },
@@ -86,7 +87,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
     { label: "Yearly", value: "yearly" },
   ];
 
-  // Build staff options from taskList (unique by staffName)
+  // Staff dropdown options (only admin gets "All Staff")
   const staffOptions = useMemo(() => {
     const uniqueNames = Array.from(
       new Set(
@@ -95,10 +96,13 @@ const TaskTable: React.FC<TaskTableProps> = ({
           .filter((name): name is string => Boolean(name && name.length > 0))
       )
     );
-    return [{ label: "All Staff", value: "" }, ...uniqueNames.map((name) => ({ label: name, value: name }))];
-  }, [taskList]);
+    const options = uniqueNames.map((name) => ({ label: name, value: name }));
 
-  // Build project options from taskList (unique by projectName)
+    return (userRole ?? "").toLowerCase() === "admin"
+      ? [{ label: "All Staff", value: "" }, ...options]
+      : options;
+  }, [taskList, userRole]);
+
   const projectOptions = useMemo(() => {
     const uniqueProjects = Array.from(
       new Set(
@@ -110,17 +114,10 @@ const TaskTable: React.FC<TaskTableProps> = ({
     return [{ label: "All Projects", value: "" }, ...uniqueProjects.map((name) => ({ label: name, value: name }))];
   }, [taskList]);
 
-  // Filter handlers
   const handleSearch = (query: string) => {
     setSearchInput(query.toLowerCase());
   };
 
-  const handleStatusChange = (value: string) => setStatusFilter(value);
-  const handlePriorityChange = (value: string) => setPriorityFilter(value);
-  const handleStaffChange = (value: string) => setStaffFilter(value);
-  const handleTimePeriodChange = (value: string) => setTimePeriodFilter(value);
-  const handleProjectChange = (value: string) => setProjectFilter(value);
-  
   const handleClearDates = () => {
     setFromDate("");
     setToDate("");
@@ -137,11 +134,16 @@ const TaskTable: React.FC<TaskTableProps> = ({
     setToDate("");
   };
 
-  // Filter the data based on search and filters
+  // Filter tasks
   const filteredTaskList = useMemo(() => {
     return taskList.filter((task) => {
-      // Search filter - case insensitive
-      const searchMatch = !searchQuery || 
+      // Restrict non-admins to their own tasks
+      if (userRole !== "admin" && task.staffName !== currentUserName) {
+        return false;
+      }
+
+      const searchMatch =
+        !searchQuery ||
         task.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         task.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         task.projectName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -150,81 +152,56 @@ const TaskTable: React.FC<TaskTableProps> = ({
         task.clientNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         task.staffName?.toLowerCase().includes(searchQuery.toLowerCase());
 
-      // Status filter
       const statusMatch = !statusFilter || task.status === statusFilter;
-
-      // Priority filter
       const priorityMatch = !priorityFilter || task.priority === priorityFilter;
-
-      // Staff filter (by staffName shown in table)
       const staffMatch = !staffFilter || task.staffName === staffFilter;
-
-      // Project filter
       const projectMatch = !projectFilter || task.projectName === projectFilter;
 
-      // Time period filter - Use only created_at date
+      // Time period filter
       let timePeriodMatch = true;
-      if (timePeriodFilter) {
-        const taskDate = task.created_at; // Only use created_at, not due_date
-        if (taskDate) {
-          const taskDateObj = new Date(taskDate);
-          const now = new Date();
-          
-          // Set time to start of day for accurate comparison
-          const taskDateStart = new Date(taskDateObj.getFullYear(), taskDateObj.getMonth(), taskDateObj.getDate());
-          const nowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-          
-          switch (timePeriodFilter) {
-            case 'daily':
-              timePeriodMatch = taskDateStart.getTime() === nowStart.getTime();
-              break;
-            case 'weekly':
-              const weekAgo = new Date(nowStart.getTime() - 7 * 24 * 60 * 60 * 1000);
-              timePeriodMatch = taskDateStart >= weekAgo;
-              break;
-            case 'monthly':
-              const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-              timePeriodMatch = taskDateStart >= monthAgo;
-              break;
-            case 'yearly':
-              const yearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-              timePeriodMatch = taskDateStart >= yearAgo;
-              break;
-            default:
-              timePeriodMatch = true;
-          }
-        } else {
-          timePeriodMatch = false;
+      if (timePeriodFilter && task.created_at) {
+        const taskDateObj = new Date(task.created_at);
+        const now = new Date();
+        const taskDateStart = new Date(taskDateObj.getFullYear(), taskDateObj.getMonth(), taskDateObj.getDate());
+        const nowStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+        switch (timePeriodFilter) {
+          case "daily":
+            timePeriodMatch = taskDateStart.getTime() === nowStart.getTime();
+            break;
+          case "weekly":
+            timePeriodMatch = taskDateStart >= new Date(nowStart.getTime() - 7 * 24 * 60 * 60 * 1000);
+            break;
+          case "monthly":
+            timePeriodMatch = taskDateStart >= new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+            break;
+          case "yearly":
+            timePeriodMatch = taskDateStart >= new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+            break;
+          default:
+            timePeriodMatch = true;
         }
       }
 
-      // Date filter - Use only created_at date for filtering
+      // Date filter
       let dateMatch = true;
-      if (fromDate || toDate) {
-        const taskDate = task.created_at; // Only use created_at, not due_date
-        if (taskDate) {
-          const taskDateObj = new Date(taskDate);
-          // Set time to start of day for accurate comparison
-          const taskDateStart = new Date(taskDateObj.getFullYear(), taskDateObj.getMonth(), taskDateObj.getDate());
-          
-          if (fromDate) {
-            const fromDateObj = new Date(fromDate);
-            const fromDateStart = new Date(fromDateObj.getFullYear(), fromDateObj.getMonth(), fromDateObj.getDate());
-            dateMatch = dateMatch && taskDateStart >= fromDateStart;
-          }
-          if (toDate) {
-            const toDateObj = new Date(toDate);
-            const toDateStart = new Date(toDateObj.getFullYear(), toDateObj.getMonth(), toDateObj.getDate());
-            dateMatch = dateMatch && taskDateStart <= toDateStart;
-          }
-        } else {
-          dateMatch = false;
+      if ((fromDate || toDate) && task.created_at) {
+        const taskDateObj = new Date(task.created_at);
+        const taskDateStart = new Date(taskDateObj.getFullYear(), taskDateObj.getMonth(), taskDateObj.getDate());
+
+        if (fromDate) {
+          const fromDateObj = new Date(fromDate);
+          dateMatch = dateMatch && taskDateStart >= new Date(fromDateObj.getFullYear(), fromDateObj.getMonth(), fromDateObj.getDate());
+        }
+        if (toDate) {
+          const toDateObj = new Date(toDate);
+          dateMatch = dateMatch && taskDateStart <= new Date(toDateObj.getFullYear(), toDateObj.getMonth(), toDateObj.getDate());
         }
       }
 
       return searchMatch && statusMatch && priorityMatch && staffMatch && projectMatch && timePeriodMatch && dateMatch;
     });
-  }, [taskList, searchQuery, statusFilter, priorityFilter, staffFilter, projectFilter, timePeriodFilter, fromDate, toDate]);
+  }, [taskList, searchQuery, statusFilter, priorityFilter, staffFilter, projectFilter, timePeriodFilter, fromDate, toDate, userRole, currentUserName]);
 
   if (tasksLoading) return <Loading />;
   if (tasksError)
@@ -232,8 +209,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
       <div className="text-red-500">
         Error loading tasks:{" "}
         {typeof tasksErrorObj === "object" &&
-        tasksErrorObj &&
-        "message" in tasksErrorObj
+          tasksErrorObj &&
+          "message" in tasksErrorObj
           ? (tasksErrorObj as { message: string }).message
           : "Unknown error"}
       </div>
@@ -242,9 +219,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   return (
     <div className="p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] bg-gray-50">
       <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
-        <h2 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
-          Task List
-        </h2>
+        <h2 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">Task List</h2>
         <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
           <SearchBar
             onSearch={handleSearch}
@@ -262,85 +237,42 @@ const TaskTable: React.FC<TaskTableProps> = ({
           )}
         </div>
       </div>
+
       <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] my-4 2xl:my-[1vw]">
-        <div className="flex flex-col justify-start items-start w-full min-w-[12rem] md:w-[15vw]">
-          <DatePicker
-            label="From Date"
-            value={fromDate}
-            onChange={setFromDate}
-            placeholder="From Date"
-            datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
-          />
-        </div>
-        <DatePicker
-          label="To Date"
-          value={toDate}
-          onChange={setToDate}
-          placeholder="To Date"
-          datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
-        />
+        <DatePicker label="From Date" value={fromDate} onChange={setFromDate} placeholder="From Date" datePickerWidth="w-full min-w-[12rem] md:w-[15vw]" />
+        <DatePicker label="To Date" value={toDate} onChange={setToDate} placeholder="To Date" datePickerWidth="w-full min-w-[12rem] md:w-[15vw]" />
         {(fromDate || toDate) && (
-          <div>
-            <Button
-              variant="background-white"
-              width="w-full md:w-fit"
-              onClick={handleClearDates}
-              leftIcon={
-                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-              }
-              tooltip="Clear Dates"
-            />
-          </div>
+          <Button
+            variant="background-white"
+            width="w-full md:w-fit"
+            onClick={handleClearDates}
+            leftIcon={<FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />}
+            tooltip="Clear Dates"
+          />
         )}
-        <SimpleDropdown
-          options={statusOptions}
-          value={statusFilter}
-          onChange={handleStatusChange}
-          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
-        />
-        <SimpleDropdown
-          options={priorityOptions}
-          value={priorityFilter}
-          onChange={handlePriorityChange}
-          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
-        />
-        <Dropdown
-          options={staffOptions}
-          value={staffFilter}
-          onChange={handleStaffChange}
-          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
-        />
-        <SimpleDropdown
-          options={timePeriodOptions}
-          value={timePeriodFilter}
-          onChange={handleTimePeriodChange}
-          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
-        />
-        <Dropdown
-          options={projectOptions}
-          value={projectFilter}
-          onChange={handleProjectChange}
-          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
-        />
+        <SimpleDropdown options={statusOptions} value={statusFilter} onChange={setStatusFilter} dropdownWidth="w-full min-w-[12rem] md:w-[15vw]" />
+        <SimpleDropdown options={priorityOptions} value={priorityFilter} onChange={setPriorityFilter} dropdownWidth="w-full min-w-[12rem] md:w-[15vw]" />
+
+        {/* Staff filter only for Admin */}
+        {userRole === "admin" && (
+          <Dropdown options={staffOptions} value={staffFilter} onChange={setStaffFilter} dropdownWidth="w-full min-w-[12rem] md:w-[15vw]" />
+        )}
+
+        <SimpleDropdown options={timePeriodOptions} value={timePeriodFilter} onChange={setTimePeriodFilter} dropdownWidth="w-full min-w-[12rem] md:w-[15vw]" />
+        <Dropdown options={projectOptions} value={projectFilter} onChange={setProjectFilter} dropdownWidth="w-full min-w-[12rem] md:w-[15vw]" />
+
         {(searchInput || statusFilter || priorityFilter || staffFilter || timePeriodFilter || projectFilter || fromDate || toDate) && (
-          <div>
-            <Button
-              variant="background-white"
-              width="w-full md:w-fit"
-              onClick={handleClearAllFilters}
-              leftIcon={
-                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
-              }
-              tooltip="Clear All Filters"
-            />
-          </div>
+          <Button
+            variant="background-white"
+            width="w-full md:w-fit"
+            onClick={handleClearAllFilters}
+            leftIcon={<FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />}
+            tooltip="Clear All Filters"
+          />
         )}
       </div>
-      <Table
-        data={filteredTaskList}
-        columns={taskListColumn}
-        actions={taskListAction}
-      />
+
+      <Table data={filteredTaskList} columns={taskListColumn} actions={taskListAction} />
     </div>
   );
 };
