@@ -399,17 +399,18 @@ export default function Dashboard() {
         },
         {
           count: getTaskCountByStatus(selectedTaskStatus),
-          title: "All Task",
-          subtitle: "All Task",
+          title: "Open",
+          subtitle: "Open",
           icon: <AnalyticalCardIcon />,
           customContent: (
             <div className="flex flex-col items-start gap-2">
               <SimpleDropdown
                 options={[
-                  { label: "All Task", value: "" },
+                  { label: "Open", value: "" },
+                  { label: "All Task", value: "allTask" },
                   { label: "Completed", value: "completed" },
                   { label: "In Progress", value: "inprogress" },
-                  { label: "Open", value: "open" },
+                  
                 ]}
                 value={selectedTaskStatus}
                 onChange={(newStatus) => handleTaskStatusChange(newStatus)}
@@ -454,6 +455,7 @@ export default function Dashboard() {
                 { label: "Open", value: "Open" },
                 { label: "In Progress", value: "In Progress" },
                 { label: "Completed", value: "Completed" },
+                { label: "Approval", value: "Approval" },
               ]}
               value={String((value as string) ?? "")}
               onChange={(val) =>
@@ -691,8 +693,7 @@ export default function Dashboard() {
             taskList={taskList}
             taskListColumn={taskListColumn}
             taskListAction={taskListAction}
-            onAddTask={() => setShowAddTaskModal(true)}
-          />
+            onAddTask={() => setShowAddTaskModal(true)} currentUserName={""}          />
         </div>
         {userRole.toLocaleLowerCase() === "admin" && (
           <div>
