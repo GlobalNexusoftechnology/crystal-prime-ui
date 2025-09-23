@@ -1,6 +1,13 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
-import { Button, Dropdown, SearchBar, Table, DatePicker, SimpleDropdown } from "@/components";
+import {
+  Button,
+  Dropdown,
+  SearchBar,
+  Table,
+  DatePicker,
+  SimpleDropdown,
+} from "@/components";
 import {
   EAction,
   EModule,
@@ -20,6 +27,7 @@ import {
   useDeleteLeadMutation,
   useLeadDetailQuery,
   useLeadDownloadTemplateExcelQuery,
+  useAuthStore,
 } from "@/services";
 import { downloadBlobFile, formatDate, IApiError } from "@/utils";
 import { FiPlus, FiX } from "react-icons/fi";
@@ -47,6 +55,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [dateRangeFilter, setDateRangeFilter] = useState<
     "All" | "Daily" | "Weekly" | "Monthly"
   >("All");
+  const [selectedAssignedToId, setSelectedAssignedToId] = useState<string | undefined>(undefined);
+  const [pendingStatusName, setPendingStatusName] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,11 +70,16 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const filters = useMemo(
     () => ({
       searchText: searchQuery,
-      statusId: selectedStatus,
-      typeId: selectedType,
+      statusId:
+        selectedStatus && selectedStatus !== "All Status"
+          ? selectedStatus
+          : undefined,
+      typeId:
+        selectedType && selectedType !== "All Type" ? selectedType : undefined,
       dateRange: dateRangeFilter,
       followupFrom: followupFromDate || undefined,
       followupTo: followupToDate || undefined,
+      assignedToId: selectedAssignedToId || undefined,
       page: currentPage,
     }),
     [
@@ -74,9 +89,72 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       dateRangeFilter,
       followupFromDate,
       followupToDate,
+      selectedAssignedToId,
       currentPage,
     ]
   );
+
+  const { activeSession } = useAuthStore();
+
+  // React to card clicks from LeadManagement cards
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ card?: string }>).detail;
+      const card = (detail?.card || "").toLowerCase();
+      if (card.includes("business")) {
+        // Defer until statuses arrive if needed
+        setPendingStatusName("business done");
+        // clear other filters
+        setDateRangeFilter("All");
+        setFollowupFromDate("");
+        setFollowupToDate("");
+        setSelectedAssignedToId(undefined);
+      } else if (card.includes("today")) {
+        // Filter by today's followups (due_date) not created_at
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        const isoDate = `${yyyy}-${mm}-${dd}`;
+        setFollowupFromDate(isoDate);
+        setFollowupToDate(isoDate);
+        setDateRangeFilter("All");
+        setSelectedStatus("All Status");
+        setSelectedAssignedToId(undefined);
+      } else if (card.includes("assigned")) {
+        // Filter by current user assignments
+        const uid = activeSession?.user?.id;
+        setSelectedAssignedToId(uid || undefined);
+        setSelectedStatus("All Status");
+        setDateRangeFilter("All");
+        setFollowupFromDate("");
+        setFollowupToDate("");
+      } else if (card.includes("total")) {
+        setSelectedStatus("All Status");
+        setDateRangeFilter("All");
+        setFollowupFromDate("");
+        setFollowupToDate("");
+        setSelectedAssignedToId(undefined);
+      }
+      setCurrentPage(1);
+    };
+    window.addEventListener("lead-cards-filter", handler as EventListener);
+    return () =>
+      window.removeEventListener("lead-cards-filter", handler as EventListener);
+  }, [activeSession?.user?.id]);
+
+  // Resolve pending business done once statuses are loaded
+  const { allStatusesData } = useAllStatusesQuery();
+  useEffect(() => {
+    if (!pendingStatusName) return;
+    const list = allStatusesData?.data?.list || [];
+    if (!list || list.length === 0) return;
+    const target = list.find((s: { id?: string; name?: string }) => (s?.name || "").toLowerCase().includes("business"));
+    if (target?.id) {
+      setSelectedStatus(String(target.id));
+      setPendingStatusName(null);
+    }
+  }, [pendingStatusName, allStatusesData]);
 
   const {
     data: allLeadList,
@@ -84,7 +162,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     isError,
     error,
   } = useAllLeadsListQuery(filters);
-  const { allStatusesData } = useAllStatusesQuery();
+  // moved above for dependency usage
   const { allTypesData } = useAllTypesQuery();
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
 
@@ -93,7 +171,14 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedStatus, selectedType, dateRangeFilter, followupFromDate, followupToDate]);
+  }, [
+    searchQuery,
+    selectedStatus,
+    selectedType,
+    dateRangeFilter,
+    followupFromDate,
+    followupToDate,
+  ]);
 
   const { hasPermission } = usePermission();
   const cavAddLeadManagement = hasPermission(
@@ -201,7 +286,9 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
     (lead) => {
-      const status = allStatusesData?.data?.list?.find((s) => s.id === lead?.status?.id);
+      const status = allStatusesData?.data?.list?.find(
+        (s) => s.id === lead?.status?.id
+      );
       return {
         id: lead?.id || "N/A",
         first_name: lead?.first_name || "N/A",

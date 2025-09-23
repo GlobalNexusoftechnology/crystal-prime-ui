@@ -39,25 +39,25 @@ export function LeadManagement() {
 
   const analyticalCards: AnalyticalCardData[] = [
     {
-      count: `${allLeadList?.data?.stats?.totalLeads}`,
+      count: `${allLeadList?.data?.stats?.totalLeads || 0}`,
       title: "Total Leads",
       subtitle: "Total leads in the system",
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data?.stats?.convertedLeads}`,
+      count: `${allLeadList?.data?.stats?.convertedLeads || 0}`,
       title: "Business Done",
       subtitle: "Successful leads closed",
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data?.stats?.todayFollowups}`,
+      count: `${allLeadList?.data?.stats?.todayFollowups || 0}`,
       title: "Today Followups",
       subtitle: "Follow-up scheduled for today",
       icon: <AnalyticalCardIcon />,
     },
     {
-      count: `${allLeadList?.data?.stats?.assignedToMe}`,
+      count: `${allLeadList?.data?.stats?.assignedToMe || 0}`,
       title: "Assigned To Me",
       subtitle: "Leads assigned for follow-up",
       icon: <AnalyticalCardIcon />,
@@ -115,10 +115,24 @@ export function LeadManagement() {
       <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 2xl:gap-[1vw] px-4 2xl:px-[1vw]">
           {analyticalCards?.length > 0 && analyticalCards?.map((card, index) => (
-            <AnalyticalCard key={index} data={card} />
+            <AnalyticalCard
+              key={index}
+              data={card}
+              onClick={() => {
+                const t = card.title?.toLowerCase();
+                const leadsListEl = document.getElementById("leads-list-anchor");
+                if (leadsListEl) leadsListEl.scrollIntoView({ behavior: "smooth" });
+                const ev = new CustomEvent("lead-cards-filter", {
+                  detail: { card: t },
+                });
+                window.dispatchEvent(ev);
+              }}
+            />
           ))}
         </div>
-        <LeadsListTable setAddLeadModalOpen={setAddLeadModalOpen} />
+        <div id="leads-list-anchor">
+          <LeadsListTable setAddLeadModalOpen={setAddLeadModalOpen} />
+        </div>
       </div>
 
       <ModalOverlay
