@@ -49,14 +49,13 @@ export function TableCell<T extends { id: string | number }>({
   index,
 }: TableCellProps<T>) {
   const value = row[col.accessor];
-  const initials = typeof value === 'string' ? getInitials(value) : '';
   const isAssignedTo = col.accessor === "assigned_to";
   const isStatusColumn = col.accessor === "status_id" || col.accessor === "status";
   const isEmailColumn = col.accessor === "email";
+  const isPhoneColumn = col.accessor === "clientNumber" || col.accessor === "phone" || col.accessor === "mobile" || col.accessor === "number" || col.accessor === "contact_number" || col.accessor === "other_contact";
   const isColorColumn = col.accessor === "color";
   const isPriorityColumn = col.accessor === "priority";
   const isTypeColumn = col.accessor === "type";
-  const randomColor = typeof value === 'string' ? getRandomColor(value) : '#000000';
   const getStatusColor = (statusValue: string) => {
     const statusLower = statusValue.toLowerCase();
     switch (statusLower) {
@@ -105,6 +104,9 @@ export function TableCell<T extends { id: string | number }>({
   };
 
   const renderEmailCell = (emailValue: unknown) => {
+    if (emailValue === null || emailValue === undefined) {
+      return <span className="text-gray-500 2xl:text-[0.9vw]">N/A</span>;
+    }
     if (Array.isArray(emailValue)) {
       return (
         <div className="flex flex-col gap-1">
@@ -141,28 +143,113 @@ export function TableCell<T extends { id: string | number }>({
     );
   };
 
+  const renderPhoneCell = (phoneValue: unknown) => {
+    if (phoneValue === null || phoneValue === undefined) {
+      return <span className="text-gray-500 2xl:text-[0.9vw]">N/A</span>;
+    }
+    if (Array.isArray(phoneValue)) {
+      return (
+        <div className="flex flex-col gap-1">
+          {phoneValue.length > 0 && phoneValue.map((phone, idx) => (
+            <a 
+              key={idx}
+              href={`tel:${String(phone)}`}
+              className="text-[0.9rem] 2xl:text-[0.9vw] text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
+              style={{ textDecoration: 'underline' }}
+            >
+              {String(phone)}
+            </a>
+          ))}
+        </div>
+      );
+    }
+    
+    const phones = String(phoneValue)
+      .split(/,\s*/)  // Split by comma followed by optional whitespace
+      .map(phone => phone.trim())
+      .filter(Boolean);
+      
+    return (
+      <div className="flex flex-col gap-1">
+        {phones.length > 0 && phones.map((phone, idx) => (
+          <a 
+            key={idx}
+            href={`tel:${phone}`}
+            className="text-[0.9rem] 2xl:text-[0.9vw] text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
+            style={{ textDecoration: 'underline' }}
+          >
+            {phone}
+          </a>
+        ))}
+      </div>
+    );
+  };
+
   return (
     <td
       key={index}
       className={`text-center p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] text-gray-700 border-r border-gray-200 ${
-        isEmailColumn ? '' : 'capitalize'
+        isEmailColumn || isPhoneColumn ? '' : 'capitalize'
       }`}
       style={{ backgroundColor: getCellBackgroundColor() }}
     >
       {col.cell ? (
         col.cell({ row, value })
-      ) : isAssignedTo && typeof value === "string" ? (
-        <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
-          <p
-            className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
-            style={{ backgroundColor: randomColor }}
-          >
-            {initials}
-          </p>
-          <p className="px-3 py-1 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw]">
-            {value}
-          </p>
-        </div>
+      ) : isAssignedTo ? (
+        value && typeof value === "object" ? (
+          (() => {
+            const user = value as { first_name?: string; last_name?: string; email?: string };
+            const firstName = (user.first_name || "").trim();
+            const lastName = (user.last_name || "").trim();
+            const fullName = [firstName, lastName].filter(Boolean).join(" ");
+            if (!fullName) {
+              return (
+                <span className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">N/A</span>
+              );
+            }
+            const avatarInitials = getInitials(fullName);
+            const avatarColor = getRandomColor(fullName);
+            return (
+              <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+                <p
+                  className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
+                  style={{ backgroundColor: avatarColor }}
+                >
+                  {avatarInitials}
+                </p>
+                <p className="px-3 py-1 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw]">
+                  {fullName}
+                </p>
+              </div>
+            );
+          })()
+        ) : value && typeof value === "string" ? (
+          (() => {
+            const text = String(value).trim();
+            const lower = text.toLowerCase();
+            const isInvalid = !text || lower === "undefined" || lower === "null" || lower === "undefined undefined";
+            if (isInvalid) {
+              return <span className="text-gray-900 text-[0.9rem] 2xl:text-[0.9vw]">N/A</span>;
+            }
+            const avatarInitials = getInitials(text);
+            const avatarColor = getRandomColor(text);
+            return (
+              <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+                <p
+                  className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 h-10 2xl:w-[2.5vw] 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
+                  style={{ backgroundColor: avatarColor }}
+                >
+                  {avatarInitials}
+                </p>
+                <p className="px-3 py-1 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw]">
+                  {text}
+                </p>
+              </div>
+            );
+          })()
+        ) : (
+          <span className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">N/A</span>
+        )
       ) : isStatusColumn && typeof value === "string" ? (
         <span
           className="inline-block px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-white text-[0.8rem] 2xl:text-[0.8vw] font-medium shadow-sm"
@@ -184,6 +271,10 @@ export function TableCell<T extends { id: string | number }>({
         )
       ) : isEmailColumn ? (
         renderEmailCell(value)
+      ) : isPhoneColumn ? (
+        renderPhoneCell(value)
+      ) : value === null || value === undefined ? (
+        <span className="text-gray-500 2xl:text:[0.9vw]">N/A</span>
       ) : (
         (value as React.ReactNode)
       )}

@@ -66,9 +66,9 @@ const dropdownOptions = [
 ];
 
 export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colors }) => {
-  const [selected, setSelected] = useState(dropdownOptions[0].value);
+  const [selected, setSelected] = useState("monthly");
   const [open, setOpen] = useState(false);
-  const [chartData, setChartData] = useState<DataItem[]>(chartDataMap[dropdownOptions[0].value] ?? []);
+  const [chartData, setChartData] = useState<DataItem[]>(chartDataMap["monthly"] ?? []);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

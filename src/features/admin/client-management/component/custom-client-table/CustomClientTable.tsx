@@ -236,19 +236,59 @@ export function CustomClientTable({
                     </div>
                   </td>
                   {clientListColumn.length > 0 && clientListColumn.map((col) => {
-                    const value = row[col.accessor as keyof IClientList];
+                    const value: unknown = row[col.accessor as keyof IClientList];
+                    const isPhoneColumn = col.accessor === "contact_number";
+                    
+                    const renderPhoneNumber = (phoneValue: unknown): React.ReactNode => {
+                      if (!phoneValue) return String(value);
+                      
+                      const phones = String(phoneValue)
+                        .split(/,\s*/)
+                        .map(phone => phone.trim())
+                        .filter(Boolean);
+                        
+                      return (
+                        <div className="flex flex-col gap-1">
+                          {phones.map((phone, idx) => (
+                            <a 
+                              key={idx}
+                              href={`tel:${phone}`}
+                              className="text-[0.9rem] 2xl:text-[0.9vw] text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
+                              style={{ textDecoration: 'underline' }}
+                            >
+                              {phone}
+                            </a>
+                          ))}
+                        </div>
+                      );
+                    };
+
+                    const renderCellValue = (): React.ReactNode => {
+                      if (col.accessor === "created_at") {
+                        return formatDateToDDMMYYYY(value as string);
+                      }
+                      if (isPhoneColumn) {
+                        return renderPhoneNumber(value);
+                      }
+                      if (Array.isArray(value)) {
+                        return String(value.length);
+                      }
+                      if (typeof value === "object" && value !== null) {
+                        const obj = value as { name?: string; first_name?: string };
+                        return obj?.name || obj?.first_name || JSON.stringify(value);
+                      }
+                      if (value !== null && value !== undefined) {
+                        return String(value);
+                      }
+                      return '-';
+                    };
+                    
                     return (
                       <td
                         key={col.accessor}
                         className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300"
                       >
-                        {col.accessor === "created_at"
-                          ? formatDateToDDMMYYYY(value as string)
-                          : Array.isArray(value)
-                          ? value.length
-                          : typeof value === "object" && value !== null
-                          ? JSON.stringify(value)
-                          : value}
+                        {renderCellValue()}
                       </td>
                     );
                   })}
@@ -415,10 +455,48 @@ export function CustomClientTable({
                                       {contact.designation}
                                     </td>
                                     <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
-                                      {contact.client_contact}
+                                      {contact.client_contact ? (
+                                        <div className="flex flex-col gap-1">
+                                          {String(contact.client_contact)
+                                            .split(/,\s*/)
+                                            .map(phone => phone.trim())
+                                            .filter(Boolean)
+                                            .map((phone, idx) => (
+                                              <a 
+                                                key={idx}
+                                                href={`tel:${phone}`}
+                                                className="text-[0.9rem] 2xl:text-[0.9vw] text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
+                                                style={{ textDecoration: 'underline' }}
+                                              >
+                                                {phone}
+                                              </a>
+                                            ))}
+                                        </div>
+                                      ) : (
+                                        contact.client_contact
+                                      )}
                                     </td>
                                     <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
-                                      {contact.other_contact}
+                                      {contact.other_contact ? (
+                                        <div className="flex flex-col gap-1">
+                                          {String(contact.other_contact)
+                                            .split(/,\s*/)
+                                            .map(phone => phone.trim())
+                                            .filter(Boolean)
+                                            .map((phone, idx) => (
+                                              <a 
+                                                key={idx}
+                                                href={`tel:${phone}`}
+                                                className="text-[0.9rem] 2xl:text-[0.9vw] text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
+                                                style={{ textDecoration: 'underline' }}
+                                              >
+                                                {phone}
+                                              </a>
+                                            ))}
+                                        </div>
+                                      ) : (
+                                        contact.other_contact
+                                      )}
                                     </td>
                                     <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
                                       {contact.email}

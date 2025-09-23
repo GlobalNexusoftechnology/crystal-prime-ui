@@ -28,10 +28,10 @@ const dropdownOptions = [
 export const LeadAnalyticsChart: React.FC<LeadAnalyticsChartProps> = ({
   dataMap,
 }) => {
-  const [selected, setSelected] = useState(dropdownOptions[0].value);
+  const [selected, setSelected] = useState("monthly");
   const [open, setOpen] = useState(false);
   const [chartData, setChartData] = useState<DataItem[]>(
-    dataMap[dropdownOptions[0].value] ?? []
+    dataMap["monthly"] ?? []
   );
   const dropdownRef = useRef<HTMLDivElement>(null);
 
