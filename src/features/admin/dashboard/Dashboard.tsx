@@ -512,7 +512,7 @@ export default function Dashboard() {
 
         return (
           <div className="w-[20rem] 2xl:w-[20vw] text-left text-sm 2xl:text-[0.9vw]">
-            <div className="text-wrap">
+            <div className="text-wrap break-words">
               {displayText}
               {shouldTruncate && (
                 <button
