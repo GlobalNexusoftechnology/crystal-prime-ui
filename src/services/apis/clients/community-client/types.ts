@@ -1761,6 +1761,7 @@ export interface ICreateDailyTaskEntryPayload {
   remarks?: string;
   status?: string;
   priority?: "High" | "Medium" | "Low";
+  task_id?: string;
 }
 
 export interface IUpdateDailyTaskEntryPayload {

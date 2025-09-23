@@ -121,6 +121,7 @@ export function DailyTask({
                   status: values.status,
                   remarks: values.remarks,
                   priority: values.priority,
+                  task_id: taskId,
                 });
               }}
               initialValues={{
