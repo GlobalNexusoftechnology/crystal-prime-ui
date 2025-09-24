@@ -83,6 +83,7 @@ const { activeSession } = useAuthStore()
   const timePeriodOptions = [
     { label: "All Time", value: "" },
     { label: "Daily", value: "daily" },
+    { label: "Yesterday", value: "yesterday" },
     { label: "Weekly", value: "weekly" },
     { label: "Monthly", value: "monthly" },
     { label: "Yearly", value: "yearly" },
@@ -170,6 +171,11 @@ const { activeSession } = useAuthStore()
           case "daily":
             timePeriodMatch = taskDateStart.getTime() === nowStart.getTime();
             break;
+          case "yesterday": {
+            const yesterdayStart = new Date(nowStart.getTime() - 24 * 60 * 60 * 1000);
+            timePeriodMatch = taskDateStart.getTime() === yesterdayStart.getTime();
+            break;
+          }
           case "weekly":
             timePeriodMatch = taskDateStart >= new Date(nowStart.getTime() - 7 * 24 * 60 * 60 * 1000);
             break;
