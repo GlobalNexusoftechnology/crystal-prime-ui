@@ -6,7 +6,7 @@ import { IAddProjectFormValues } from "../../AddProject";
 import { ImageRegistry } from "@/constants";
 import Image from "next/image";
 import { Checkbox } from "@/components";
-import { useAllTypesQuery } from "@/services";
+import { useAllTypesQuery, useAuthStore } from "@/services";
 import { differenceInCalendarDays, parseISO } from "date-fns";
 import { CostDisplay } from "./CostDisplay";
 
@@ -36,6 +36,8 @@ export function Step1BasicInfo({
   clientError,
   hideMilestoneTemplateOption = false,
 }: Step1BasicInfoProps) {
+  const { activeSession } = useAuthStore();
+  const isAdmin = (activeSession?.user?.role.role ?? "").toLowerCase() === "admin";
   const isMilestoneSelected = values.milestoneOption === "milestone";
   const isTemplateSelected = values.milestoneOption === "template";
 
@@ -219,89 +221,93 @@ export function Step1BasicInfo({
               : undefined
           }
         />
-        <InputField
-          label="Budget"
-          name="budget"
-          placeholder="Enter Budget"
-          value={values.budget}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={
-            touched.budget && typeof errors.budget === "string"
-              ? errors.budget
-              : undefined
-          }
-          type="number"
-          className="2xl:text-[1vw]"
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
-        <InputField
-          label="Cost Of Labour"
-          name="cost_of_labour"
-          placeholder="Cost Of Labour"
-          value={values.cost_of_labour}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={
-            touched.cost_of_labour && typeof errors.cost_of_labour === "string"
-              ? errors.cost_of_labour
-              : undefined
-          }
-          type="number"
-          className="2xl:text-[1vw]"
-        />
-        <InputField
-          label="Over Head Cost"
-          name="overhead_cost"
-          placeholder="Over Head Cost"
-          value={values.overhead_cost}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={
-            overheadCostError ||
-            (touched.overhead_cost && typeof errors.overhead_cost === "string"
-              ? errors.overhead_cost
-              : undefined)
-          }
-          type="number"
-          className="2xl:text-[1vw]"
-        />
-        <InputField
-          label="Additional Cost"
-          name="extra_cost"
-          placeholder="Additional Cost"
-          value={values.extra_cost}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          type="number"
-          className="2xl:text-[1vw]"
-        />
-        <div className="flex flex-col h-full">
-          <CostDisplay
-            label="Estimated Cost"
-            value={estimatedCost}
-            currency="₹"
-          />
-          {(() => {
-            const est = Number(values.estimated_cost);
-            const bud = Number(values.budget);
-            if (
-              !isNaN(est) &&
-              !isNaN(bud) &&
-              est > bud
-            ) {
-              const diff = est - bud;
-              return (
-                <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] 2xl:mt-[0.5vw] mt-1">
-                  Estimated Cost Exceeds by ₹{diff.toLocaleString("en-IN")}
-                </p>
-              );
+        {isAdmin && (
+          <InputField
+            label="Budget"
+            name="budget"
+            placeholder="Enter Budget"
+            value={values.budget}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={
+              touched.budget && typeof errors.budget === "string"
+                ? errors.budget
+                : undefined
             }
-            return null;
-          })()}
-        </div>
+            type="number"
+            className="2xl:text-[1vw]"
+          />
+        )}
       </div>
+      {isAdmin && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
+          <InputField
+            label="Cost Of Labour"
+            name="cost_of_labour"
+            placeholder="Cost Of Labour"
+            value={values.cost_of_labour}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={
+              touched.cost_of_labour && typeof errors.cost_of_labour === "string"
+                ? errors.cost_of_labour
+                : undefined
+            }
+            type="number"
+            className="2xl:text-[1vw]"
+          />
+          <InputField
+            label="Over Head Cost"
+            name="overhead_cost"
+            placeholder="Over Head Cost"
+            value={values.overhead_cost}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            error={
+              overheadCostError ||
+              (touched.overhead_cost && typeof errors.overhead_cost === "string"
+                ? errors.overhead_cost
+                : undefined)
+            }
+            type="number"
+            className="2xl:text-[1vw]"
+          />
+          <InputField
+            label="Additional Cost"
+            name="extra_cost"
+            placeholder="Additional Cost"
+            value={values.extra_cost}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            type="number"
+            className="2xl:text-[1vw]"
+          />
+          <div className="flex flex-col h-full">
+            <CostDisplay
+              label="Estimated Cost"
+              value={estimatedCost}
+              currency="₹"
+            />
+            {(() => {
+              const est = Number(values.estimated_cost);
+              const bud = Number(values.budget);
+              if (
+                !isNaN(est) &&
+                !isNaN(bud) &&
+                est > bud
+              ) {
+                const diff = est - bud;
+                return (
+                  <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] 2xl:mt-[0.5vw] mt-1">
+                    Estimated Cost Exceeds by ₹{diff.toLocaleString("en-IN")}
+                  </p>
+                );
+              }
+              return null;
+            })()}
+          </div>
+        </div>
+      )}
 
       <div className="mt-4">
         <Checkbox

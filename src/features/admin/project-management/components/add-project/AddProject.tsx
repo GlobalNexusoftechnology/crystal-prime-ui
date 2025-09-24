@@ -81,44 +81,47 @@ const initialValues: IAddProjectFormValues = {
   milestoneOption: "milestone",
 };
 
-const validationSchema = Yup.object({
-  name: Yup.string()
-    .required("Project Name is required")
-    .matches(
-      /^[a-zA-Z0-9 .,'-]*$/,
-      "No special characters allowed in Project Name."
-    ),
-  project_type: Yup.string().required("Project Type is required"),
-  client_id: Yup.string().required("Client is required"),
-  description: Yup.string().required("Description is required"),
-  start_date: Yup.date()
-    .typeError("Estimated Start Date is required")
-    .required("Estimated Start Date is required"),
-  end_date: Yup.date()
-    .typeError("Estimated End Date is required")
-    .required("Estimated End Date is required"),
-  budget: Yup.number()
-    .typeError("Budget must be a number")
-    .required("Budget is required"),
-  estimated_cost: Yup.number()
-    .typeError("Estimated Cost must be a number")
-    .required("Estimated Cost is required"),
-  cost_of_labour: Yup.number()
-    .typeError("Cost Of Labour must be a number")
-    .optional()
-    .transform((value, originalValue) =>
-      originalValue === "" ? undefined : value
-    ),
-  overhead_cost: Yup.number()
-    .typeError("Over Head Cost must be a number")
-    .optional()
-    .transform((value, originalValue) =>
-      originalValue === "" ? undefined : value
-    ),
-  milestoneOption: Yup.string().required("Milestone Option is required"),
-});
+const getValidationSchema = (isAdmin: boolean) =>
+  Yup.object({
+    name: Yup.string()
+      .required("Project Name is required")
+      .matches(
+        /^[a-zA-Z0-9 .,'-]*$/,
+        "No special characters allowed in Project Name."
+      ),
+    project_type: Yup.string().required("Project Type is required"),
+    client_id: Yup.string().required("Client is required"),
+    description: Yup.string().required("Description is required"),
+    start_date: Yup.date()
+      .typeError("Estimated Start Date is required")
+      .required("Estimated Start Date is required"),
+    end_date: Yup.date()
+      .typeError("Estimated End Date is required")
+      .required("Estimated End Date is required"),
+    budget: (isAdmin
+      ? Yup.number().typeError("Budget must be a number").required("Budget is required")
+      : Yup.number().transform((value, originalValue) => (originalValue === "" ? undefined : value)).optional()) as Yup.NumberSchema<number | undefined>,
+    estimated_cost: (isAdmin
+      ? Yup.number().typeError("Estimated Cost must be a number").required("Estimated Cost is required")
+      : Yup.number().transform((value, originalValue) => (originalValue === "" ? undefined : value)).optional()) as Yup.NumberSchema<number | undefined>,
+    cost_of_labour: Yup.number()
+      .typeError("Cost Of Labour must be a number")
+      .optional()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      ),
+    overhead_cost: Yup.number()
+      .typeError("Over Head Cost must be a number")
+      .optional()
+      .transform((value, originalValue) =>
+        originalValue === "" ? undefined : value
+      ),
+    milestoneOption: Yup.string().required("Milestone Option is required"),
+  });
 
-function validate(values: IAddProjectFormValues) {
+function createValidate(isAdmin: boolean) {
+  const schema = getValidationSchema(isAdmin);
+  return function validate(values: IAddProjectFormValues) {
   const errors: Partial<Record<keyof IAddProjectFormValues, string>> = {};
 
   try {
@@ -127,7 +130,7 @@ function validate(values: IAddProjectFormValues) {
       valuesForValidation.renewal_date = undefined;
       valuesForValidation.renewal_type = undefined;
     }
-    validationSchema.validateSync(valuesForValidation, { abortEarly: false });
+    schema.validateSync(valuesForValidation, { abortEarly: false });
   } catch (yupError) {
     if (
       typeof yupError === "object" &&
@@ -145,7 +148,12 @@ function validate(values: IAddProjectFormValues) {
           ) {
             // skip
           } else {
-            errors[err.path as keyof IAddProjectFormValues] = err.message;
+            // Skip admin-only cost fields for non-admins
+            if (!isAdmin && (err.path === "budget" || err.path === "estimated_cost")) {
+              // ignore
+            } else {
+              errors[err.path as keyof IAddProjectFormValues] = err.message;
+            }
           }
         }
       });
@@ -157,7 +165,7 @@ function validate(values: IAddProjectFormValues) {
     errors.name = "No special characters allowed in Project Name.";
   }
   // Custom: Estimated Cost vs Budget
-  if (
+  if (isAdmin &&
     values.estimated_cost !== undefined &&
     values.estimated_cost !== "" &&
     values.budget !== undefined &&
@@ -169,7 +177,7 @@ function validate(values: IAddProjectFormValues) {
   // Custom: Cost of Labour + Overhead Cost vs Estimated Cost
   const sum =
     (Number(values.cost_of_labour) || 0) + (Number(values.overhead_cost) || 0);
-  if (
+  if (isAdmin &&
     values.estimated_cost !== undefined &&
     values.estimated_cost !== "" &&
     sum > Number(values.estimated_cost)
@@ -194,6 +202,7 @@ function validate(values: IAddProjectFormValues) {
     }
   }
   return errors;
+  };
 }
 
 // Add local types for editing
@@ -638,8 +647,8 @@ export function AddProject({
       {currentStep === 1 && (
         <Formik
           initialValues={basicInfo || propInitialFormValues || initialValues}
-          validationSchema={validationSchema}
-          validate={validate}
+          validationSchema={getValidationSchema((activeSession?.user?.role.role ?? "").toLowerCase() === "admin")}
+          validate={createValidate((activeSession?.user?.role.role ?? "").toLowerCase() === "admin")}
           onSubmit={handleSubmit}
           validateOnChange={true}
           validateOnBlur={true}
