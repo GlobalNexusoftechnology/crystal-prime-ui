@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   DatePicker,
   Button,
@@ -20,6 +20,7 @@ export interface TaskRow {
   status?: string;
   priority?: "Critical" | "High" | "Medium" | "Low";
   due_date?: string;
+  rawDueDate?: string;
   assigned_to?: string;
   milestoneId?: string;
   projectId?: string;
@@ -45,6 +46,10 @@ interface TaskTableProps {
   taskListColumn: ITableColumn<TaskRow>[];
   taskListAction: ITableAction<TaskRow>[];
   onAddTask?: () => void;
+  // Optional preset filter controls from parent
+  presetFilter?: "none" | "dueToday";
+  presetTrigger?: number; // change to re-apply preset
+  includeTaskIds?: Set<string>; // include these even if other filters would exclude
 }
 
 const TaskTable: React.FC<TaskTableProps> = ({
@@ -57,6 +62,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
   taskListColumn,
   taskListAction,
   onAddTask,
+  presetFilter = "none",
+  presetTrigger = 0,
+  includeTaskIds,
 }) => {
   const [searchInput, setSearchInput] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
@@ -75,6 +83,30 @@ const TaskTable: React.FC<TaskTableProps> = ({
     delay: 500,
     onChangeCb: () => {},
   });
+
+  // Apply preset filters pushed from parent
+  useEffect(() => {
+    if (presetFilter === "dueToday") {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, "0");
+      const dd = String(today.getDate()).padStart(2, "0");
+      const todayStr = `${yyyy}-${mm}-${dd}`;
+
+      // Clear non-due filters and set due date range to today
+      setSearchInput("");
+      setStatusFilter("");
+      setPriorityFilter("");
+      setStaffFilter("");
+      setTimePeriodFilter("");
+      setProjectFilter("");
+      setFromDate("");
+      setToDate("");
+      setDueFromDate(todayStr);
+      setDueToDate(todayStr);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presetFilter, presetTrigger]);
 
   const statusOptions = [
     { label: "All Status", value: "" },
@@ -161,7 +193,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   // Filter tasks
   const filteredTaskList = useMemo(() => {
     return taskList.filter((task) => {
-      // Restrict non-admins to their own tasks
+      // Restrict non-admins strictly to their own tasks
       if (userRole !== "admin" && task.assigned_to !== currentUserId) {
         return false;
       }
@@ -265,8 +297,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
       // Due date filter
       let dueDateMatch = true;
-      if ((dueFromDate || dueToDate) && task.due_date) {
-        const dueDateObj = new Date(task.due_date);
+      if ((dueFromDate || dueToDate) && (task.rawDueDate || task.due_date)) {
+        const sourceDate = task.rawDueDate || task.due_date!;
+        const dueDateObj = new Date(sourceDate);
         const dueDateStart = new Date(
           dueDateObj.getFullYear(),
           dueDateObj.getMonth(),
@@ -297,7 +330,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
         }
       }
 
-      return (
+      const baseMatch = (
         searchMatch &&
         statusMatch &&
         priorityMatch &&
@@ -307,6 +340,18 @@ const TaskTable: React.FC<TaskTableProps> = ({
         dateMatch &&
         dueDateMatch
       );
+
+      // Include tasks flagged via includeTaskIds when preset is dueToday
+      // Note: Non-admins already pass only if the task is assigned to them (top guard)
+      if (
+        !baseMatch &&
+        presetFilter === "dueToday" &&
+        includeTaskIds?.has(String(task.id))
+      ) {
+        return true;
+      }
+
+      return baseMatch;
     });
   }, [
     taskList,
@@ -322,6 +367,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
     dueToDate,
     userRole,
     currentUserId,
+    includeTaskIds,
+    presetFilter,
   ]);
 
   if (tasksLoading) return <Loading />;

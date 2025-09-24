@@ -19,6 +19,7 @@ import {
   useUpdateMilestoneTaskMutation,
   useDeleteMilestoneTaskMutation,
   useAuthStore,
+  useAllClientFollowUpQuery,
 } from "@/services";
 import type { ICreateProjectTask } from "@/services";
 
@@ -61,6 +62,11 @@ export default function Dashboard() {
 
   // State for task status filter
   const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("open");
+  // Trigger and preset for TaskTable external filter control
+  const [taskTablePreset, setTaskTablePreset] = useState<"none" | "dueToday">(
+    "none"
+  );
+  const [taskTablePresetTrigger, setTaskTablePresetTrigger] = useState<number>(0);
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
@@ -96,6 +102,8 @@ export default function Dashboard() {
   const { allTasksData, isLoading: isLoadingTasks } = useAllTasksQuery();
   // Still fetch projects for dropdowns and routing context
   const { allProjectsData: projectsData } = useAllProjectsQuery();
+  // Fetch all client follow-ups for due-today mapping
+  const { data: allClientFollowups } = useAllClientFollowUpQuery();
 
   // Set default selections when data is loaded
   useEffect(() => {
@@ -375,6 +383,7 @@ export default function Dashboard() {
         status: t.status || "-",
         priority: (t.priority as TaskRow["priority"]) || "Medium",
         due_date: t.due_date ? formatDate(t.due_date) : "-",
+        rawDueDate: t.due_date || "",
         assigned_to: t.assigned_to || "",
         milestoneId: milestone.id || "",
         projectId: project.id || "",
@@ -390,6 +399,30 @@ export default function Dashboard() {
       } as TaskRow;
     });
   }, [allTasksData, usersData]);
+
+  // Build a set of task IDs that have client follow-ups due today
+  const followupDueTodayTaskIds = React.useMemo(() => {
+    const ids = new Set<string>();
+    if (!Array.isArray(allClientFollowups)) return ids;
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+
+    for (const f of allClientFollowups) {
+      const due = (f?.due_date as string | undefined) || "";
+      if (!due) continue;
+      const d = new Date(due);
+      const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      if (dStr === todayStr) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const taskId = (f as any)?.project_task?.id as string | undefined;
+        if (taskId) ids.add(taskId);
+      }
+    }
+    return ids;
+  }, [allClientFollowups]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !dashboardSummary) return <div>Error loading dashboard</div>;
@@ -689,9 +722,26 @@ export default function Dashboard() {
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
         {analyticalCards?.length > 0 &&
-          analyticalCards.map((card, idx) => (
-            <AnalyticalCard key={idx} data={card} />
-          ))}
+          analyticalCards.map((card, idx) => {
+            const title = String(card.title || "");
+            const isTodayFollowUpCard =
+              title === "Today Follow up" ||
+              /follow[- ]?ups? due today/i.test(title);
+            return (
+              <AnalyticalCard
+                key={idx}
+                data={card}
+                onClick={
+                  isTodayFollowUpCard
+                    ? () => {
+                        setTaskTablePreset("dueToday");
+                        setTaskTablePresetTrigger((v) => v + 1);
+                      }
+                    : undefined
+                }
+              />
+            );
+          })}
       </div>
       <div>
         {/* Task Table Component */}
@@ -704,7 +754,7 @@ export default function Dashboard() {
             taskList={taskList}
             taskListColumn={taskListColumn}
             taskListAction={taskListAction}
-            onAddTask={() => setShowAddTaskModal(true)} currentUserName={currentUserName} currentUserId={currentUserId}          />
+            onAddTask={() => setShowAddTaskModal(true)} currentUserName={currentUserName} currentUserId={currentUserId} presetFilter={taskTablePreset} presetTrigger={taskTablePresetTrigger} includeTaskIds={followupDueTodayTaskIds}          />
         </div>
         {userRole.toLocaleLowerCase() === "admin" && (
           <div>
