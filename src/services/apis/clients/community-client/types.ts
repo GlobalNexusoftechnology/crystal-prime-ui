@@ -1172,6 +1172,13 @@ export interface IProjectTaskDetailResponse  {
 }
 
 
+export interface IAllTasksResponse {
+  status: boolean;
+  data: IProjectTaskResponse[];
+  total?: number;
+}
+
+
 
 export interface ICreateProjectMilestone {
   name: string;

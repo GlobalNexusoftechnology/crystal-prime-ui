@@ -270,6 +270,8 @@ export const getMilestoneTaskDetailUrl = (taskId: string) =>
   `/project-task/${taskId}`;
 export const getAllMilestoneTasksUrl = (milestoneId: string) =>
   `/project-task/${milestoneId}`;
+// All tasks across projects
+export const fetchAllTasksUrl = () => "/project-task";
 
 // Task Comments API's
 export const createTaskCommentUrl = () => "/task-comments";

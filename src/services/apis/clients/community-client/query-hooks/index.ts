@@ -119,6 +119,7 @@ export { useDeleteTicketCommentMutation } from "./useDeleteTicketCommentMutation
 export { useTicketCommentDetailQuery } from "./useTicketCommentDetailQuery";
 
 export { useUpdateTaskStatusMutation } from "./useUpdateTaskStatusMutation";
+export { useAllTasksQuery } from "./useAllTasksQuery";
 
 
 export { useCreateDailyTaskMutation } from "./useCreateDailyTaskMutation";

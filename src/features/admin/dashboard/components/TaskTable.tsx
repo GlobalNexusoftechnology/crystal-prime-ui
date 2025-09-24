@@ -36,7 +36,8 @@ export interface TaskRow {
 
 interface TaskTableProps {
   userRole: string;
-  currentUserName: string;
+  currentUserName?: string;
+  currentUserId?: string;
   tasksLoading: boolean;
   tasksError: boolean;
   tasksErrorObj: unknown;
@@ -47,7 +48,8 @@ interface TaskTableProps {
 }
 
 const TaskTable: React.FC<TaskTableProps> = ({
-  currentUserName,
+  // currentUserName,
+  currentUserId,
   tasksLoading,
   tasksError,
   tasksErrorObj,
@@ -160,7 +162,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const filteredTaskList = useMemo(() => {
     return taskList.filter((task) => {
       // Restrict non-admins to their own tasks
-      if (userRole !== "admin" && task.staffName !== currentUserName) {
+      if (userRole !== "admin" && task.assigned_to !== currentUserId) {
         return false;
       }
 
@@ -319,7 +321,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
     dueFromDate,
     dueToDate,
     userRole,
-    currentUserName,
+    currentUserId,
   ]);
 
   if (tasksLoading) return <Loading />;

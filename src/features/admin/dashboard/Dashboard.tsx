@@ -13,6 +13,7 @@ import {
   useDashboardSummaryQuery,
   useAllProjectsQuery,
   useAllUsersQuery,
+  useAllTasksQuery,
   useUpdateTaskStatusMutation,
   useCreateMilestoneTaskMutation,
   useUpdateMilestoneTaskMutation,
@@ -65,6 +66,7 @@ export default function Dashboard() {
   const { activeSession } = useAuthStore();
   const userRole = activeSession?.user?.role?.role || "";
   const currentUserName = `${activeSession?.user?.first_name ?? ""} ${activeSession?.user?.last_name ?? ""}`.trim();
+  const currentUserId = activeSession?.user?.id ?? "";
 
   const handleProjectChange = (projectId: string) => {
     setSelectedProjectId(projectId);
@@ -90,9 +92,10 @@ export default function Dashboard() {
   // Fetch all users for assignment dropdown
   const { allUsersData: usersData } = useAllUsersQuery();
 
-  // Fetch all projects for project selection
-  const { allProjectsData: projectsData, isLoading: isLoadingProjects } =
-    useAllProjectsQuery();
+  // Fetch all tasks directly
+  const { allTasksData, isLoading: isLoadingTasks } = useAllTasksQuery();
+  // Still fetch projects for dropdowns and routing context
+  const { allProjectsData: projectsData } = useAllProjectsQuery();
 
   // Set default selections when data is loaded
   useEffect(() => {
@@ -332,54 +335,61 @@ export default function Dashboard() {
 
   // Task Data Transformation - Extract tasks from projects data
   const taskList: TaskRow[] = React.useMemo(() => {
-    if (!projectsData) return [];
+    const list = (allTasksData as { data?: unknown[] } | undefined)?.data ?? [];
+    if (!Array.isArray(list)) return [];
 
-    const allTasks: TaskRow[] = [];
+    const getStaffName = (assignedTo: string) => {
+      if (!usersData?.data?.list) return "-";
+      const user = usersData.data.list.find((u) => u.id === assignedTo);
+      return user ? `${user.first_name} ${user.last_name}` : "-";
+    };
 
-    projectsData.forEach((project) => {
-      project.milestones?.forEach((milestone) => {
-        milestone.tasks?.forEach((task) => {
-          // Get staff name from assigned_to
-          const getStaffName = (assignedTo: string) => {
-            if (!usersData?.data?.list) return "-";
-            const user = usersData.data.list.find((u) => u.id === assignedTo);
-            return user ? `${user.first_name} ${user.last_name}` : "-";
+    return list.map((task) => {
+      const t = task as {
+        id: string;
+        title: string;
+        description?: string;
+        status?: string;
+        priority?: string;
+        due_date?: string;
+        assigned_to?: string;
+        delay_days?: number | null;
+        created_at?: string;
+        updated_at?: string;
+        milestone?: {
+          id?: string;
+          name?: string;
+          project?: {
+            id?: string;
+            name?: string;
+            client?: { name?: string; contact_number?: string };
           };
-          allTasks.push({
-            id: task.id,
-            title: task.title,
-            description: task.description || "-",
-            status: task.status || "-",
-            priority: task.priority || "Medium",
-            due_date: task.due_date ? formatDate(task.due_date) : "-",
-            assigned_to: task.assigned_to || "",
-            milestoneId: milestone.id || "",
-            projectId: project.id || "",
-            projectName: project.name || "-",
-            milestoneName: milestone.name || "-",
-            clientName: project.client?.name || "-",
-            clientNumber: project.client?.contact_number || "-",
-            staffName: getStaffName(task.assigned_to || ""),
-            delay_days: task.delay_days || 0,
-            created_at: task.created_at ? formatDate(task.created_at) : "-",
-            updated_at: task.updated_at ? formatDate(task.updated_at) : "-",
-            // Add raw date for sorting
-            rawCreatedAt: task.created_at,
-          });
-        });
-      });
+        };
+      };
+      const project = t?.milestone?.project || {};
+      const milestone = t?.milestone || {};
+      return {
+        id: t.id,
+        title: t.title,
+        description: t.description || "-",
+        status: t.status || "-",
+        priority: (t.priority as TaskRow["priority"]) || "Medium",
+        due_date: t.due_date ? formatDate(t.due_date) : "-",
+        assigned_to: t.assigned_to || "",
+        milestoneId: milestone.id || "",
+        projectId: project.id || "",
+        projectName: project.name || "-",
+        milestoneName: milestone.name || "-",
+        clientName: project.client?.name || "-",
+        clientNumber: project.client?.contact_number || "-",
+        staffName: getStaffName(t.assigned_to || ""),
+        delay_days: t.delay_days || 0,
+        created_at: t.created_at ? formatDate(t.created_at) : "-",
+        updated_at: t.updated_at ? formatDate(t.updated_at) : "-",
+        rawCreatedAt: t.created_at,
+      } as TaskRow;
     });
-
-    // Sort tasks by creation date (newest first)
-    allTasks.sort((a, b) => {
-      if (!a.rawCreatedAt || !b.rawCreatedAt) return 0;
-      return (
-        new Date(b.rawCreatedAt).getTime() - new Date(a.rawCreatedAt).getTime()
-      );
-    });
-
-    return allTasks;
-  }, [projectsData, usersData]);
+  }, [allTasksData, usersData]);
 
   if (isLoading) return <div>Loading...</div>;
   if (error || !dashboardSummary) return <div>Error loading dashboard</div>;
@@ -688,13 +698,13 @@ export default function Dashboard() {
         <div className="mt-6 2xl:mt-[1.5vw]">
           <TaskTable
             userRole={userRole}
-            tasksLoading={isLoadingProjects}
+            tasksLoading={isLoadingTasks}
             tasksError={false}
             tasksErrorObj={null}
             taskList={taskList}
             taskListColumn={taskListColumn}
             taskListAction={taskListAction}
-            onAddTask={() => setShowAddTaskModal(true)} currentUserName={currentUserName}          />
+            onAddTask={() => setShowAddTaskModal(true)} currentUserName={currentUserName} currentUserId={currentUserId}          />
         </div>
         {userRole.toLocaleLowerCase() === "admin" && (
           <div>

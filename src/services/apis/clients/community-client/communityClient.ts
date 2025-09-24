@@ -180,6 +180,7 @@ import {
   IForgotPasswordResponse,
   IVerifyOtpPayload,
   IVerifyOtpResponse,
+  IAllTasksResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -281,6 +282,7 @@ import {
   deleteMilestoneTaskUrl,
   getMilestoneTaskDetailUrl,
   getAllMilestoneTasksUrl,
+  fetchAllTasksUrl,
   createTaskCommentUrl,
   updateTaskCommentUrl,
   deleteTaskCommentUrl,
@@ -1773,6 +1775,14 @@ export class CommunityClient extends ApiClient {
 
   public getAllMilestoneTasks = async (milestoneId: string): Promise<IProjectTaskResponse> => {
     const response = await this.get<IProjectTaskResponse>(getAllMilestoneTasksUrl(milestoneId));
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  }
+
+  public fetchAllTasks = async () => {
+    const response = await this.get<IAllTasksResponse>(fetchAllTasksUrl());
     if (!response?.success) {
       throw response?.errorData;
     }
