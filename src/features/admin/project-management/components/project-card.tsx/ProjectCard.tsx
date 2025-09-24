@@ -143,7 +143,15 @@ export const ProjectCard: React.FC<Props> = ({
             </p>
             <p className="text-right 2xl:text-[1vw] 2xl:leading-[1.4vw]">
               {(() => {
-                const milestones = project.data.milestones || [];
+                const allMilestones = project.data.milestones || [];
+                const milestones = allMilestones.filter(m => {
+                  const name = m.name?.toLowerCase();
+                  if (name === "support") {
+                    const ticketsLen = Array.isArray(m.tickets) ? m.tickets.length : 0;
+                    return ticketsLen > 0;
+                  }
+                  return true;
+                });
                 const completed = milestones.filter(m => m.status?.toLowerCase() === "completed").length;
                 return `${completed}/${milestones.length}`;
               })()}
@@ -154,7 +162,15 @@ export const ProjectCard: React.FC<Props> = ({
               className="h-full bg-blue-900"
               style={{
                 width: `${(() => {
-                  const milestones = project.data.milestones || [];
+                  const allMilestones = project.data.milestones || [];
+                  const milestones = allMilestones.filter(m => {
+                    const name = m.name?.toLowerCase();
+                    if (name === "support") {
+                      const ticketsLen = Array.isArray(m.tickets) ? m.tickets.length : 0;
+                      return ticketsLen > 0;
+                    }
+                    return true;
+                  });
                   if (milestones.length === 0) return 0;
                   const completed = milestones.filter(m => m.status?.toLowerCase() === "completed").length;
                   return (completed / milestones.length) * 100;
