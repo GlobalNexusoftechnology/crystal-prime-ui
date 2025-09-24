@@ -202,7 +202,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
           // Set the ref directly
           setFieldValueRef.current = setFieldValue;
           return (
-            <Form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw] border-gray-400">
+            <Form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw] border-gray-400 overflow-y-auto max-h-[80vh]">
               <h1 className="text-md 2xl:text-[1vw] text-gray-900">
                 {eiLogId ? "Edit EI Log" : "Add New EI Log"}
               </h1>
