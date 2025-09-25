@@ -231,6 +231,16 @@ const TaskTable: React.FC<TaskTableProps> = ({
         return false;
       }
 
+      // When preset is 'followups', strictly show only tasks included in includeTaskIds
+      if (presetFilter === "followups") {
+        // If we have an include set, use it as the sole criterion (after role guard)
+        if (includeTaskIds && includeTaskIds.size > 0) {
+          return includeTaskIds.has(String(task.id));
+        }
+        // If no followup ids available, show nothing (after role guard)
+        return false;
+      }
+
       const searchMatch =
         !searchQuery ||
         task.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -374,11 +384,11 @@ const TaskTable: React.FC<TaskTableProps> = ({
         dueDateMatch
       );
 
-      // Include tasks flagged via includeTaskIds when preset is dueToday or followups
+      // Include tasks flagged via includeTaskIds when preset is dueToday
       // Note: Non-admins already pass only if the task is assigned to them (top guard)
       if (
         !baseMatch &&
-        (presetFilter === "dueToday" || presetFilter === "followups") &&
+        presetFilter === "dueToday" &&
         includeTaskIds?.has(String(task.id))
       ) {
         return true;

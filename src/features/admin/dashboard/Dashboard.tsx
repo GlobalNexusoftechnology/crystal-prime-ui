@@ -741,12 +741,14 @@ export default function Dashboard() {
         {analyticalCards?.length > 0 &&
           analyticalCards.map((card, idx) => {
             const title = String(card.title || "");
+            const normalizedTitle = title.trim().toLowerCase();
             const isTodayFollowUpCard =
-              title === "Today Follow up" ||
-              /follow[- ]?ups? due today/i.test(title);
-            const isFollowUpCard = 
-              title === "Follow ups" ||
-              /follow[- ]?ups?/i.test(title);
+              normalizedTitle === "today follow up" ||
+              /follow\s*-?\s*ups?\s*due\s*today/i.test(title);
+            const isFollowUpCard =
+              normalizedTitle === "follow ups" ||
+              normalizedTitle === "follow up" ||
+              /\bfollow\s*-?\s*ups?\b/i.test(title);
 
             return (
               <AnalyticalCard
