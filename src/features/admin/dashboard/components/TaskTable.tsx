@@ -47,7 +47,7 @@ interface TaskTableProps {
   taskListAction: ITableAction<TaskRow>[];
   onAddTask?: () => void;
   // Optional preset filter controls from parent
-  presetFilter?: "none" | "dueToday";
+  presetFilter?: "none" | "dueToday" | "followups";
   presetTrigger?: number; // change to re-apply preset
   includeTaskIds?: Set<string>; // include these even if other filters would exclude
 }
@@ -76,6 +76,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const [toDate, setToDate] = useState("");
   const [dueFromDate, setDueFromDate] = useState("");
   const [dueToDate, setDueToDate] = useState("");
+  
+  // Force reset mechanism for date pickers
+  const [datePickerResetKey, setDatePickerResetKey] = useState(0);
   const { activeSession } = useAuthStore();
   const userRole = (activeSession?.user?.role.role ?? "").toLowerCase();
   const { debouncedValue: searchQuery } = useDebounce({
@@ -86,6 +89,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
   // Apply preset filters pushed from parent
   useEffect(() => {
+    console.log("Preset filter changed:", presetFilter, "Trigger:", presetTrigger);
+    
     if (presetFilter === "dueToday") {
       const today = new Date();
       const yyyy = today.getFullYear();
@@ -104,6 +109,34 @@ const TaskTable: React.FC<TaskTableProps> = ({
       setToDate("");
       setDueFromDate(todayStr);
       setDueToDate(todayStr);
+    } else if (presetFilter === "followups") {
+      // For followups preset, only clear non-date filters
+      // Keep date filters unchanged
+      setSearchInput("");
+      setStatusFilter("");
+      setPriorityFilter("");
+      setStaffFilter("");
+      setTimePeriodFilter("");
+      setProjectFilter("");
+      // Don't clear date filters for followups preset
+      
+      // Debug log to help with testing
+      console.log("Followups preset applied, includeTaskIds:", includeTaskIds);
+    } else if (presetFilter === "none") {
+      // Clear all filters when preset is none
+      setSearchInput("");
+      setStatusFilter("");
+      setPriorityFilter("");
+      setStaffFilter("");
+      setTimePeriodFilter("");
+      setProjectFilter("");
+      setFromDate("");
+      setToDate("");
+      setDueFromDate("");
+      setDueToDate("");
+      
+      // Force reset of date pickers
+      setDatePickerResetKey(prev => prev + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presetFilter, presetTrigger]);
@@ -341,11 +374,11 @@ const TaskTable: React.FC<TaskTableProps> = ({
         dueDateMatch
       );
 
-      // Include tasks flagged via includeTaskIds when preset is dueToday
+      // Include tasks flagged via includeTaskIds when preset is dueToday or followups
       // Note: Non-admins already pass only if the task is assigned to them (top guard)
       if (
         !baseMatch &&
-        presetFilter === "dueToday" &&
+        (presetFilter === "dueToday" || presetFilter === "followups") &&
         includeTaskIds?.has(String(task.id))
       ) {
         return true;
@@ -412,6 +445,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
       <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] my-4 2xl:my-[1vw]">
         <DatePicker
+          key={`from-date-${presetFilter}-${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`}`}
           label="From Date"
           value={fromDate}
           onChange={setFromDate}
@@ -419,6 +453,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
           datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
         />
         <DatePicker
+          key={`to-date-${presetFilter}-${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`}`}
           label="To Date"
           value={toDate}
           onChange={setToDate}
@@ -435,6 +470,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
           />
         )}
         <DatePicker
+          key={`due-from-${presetFilter}-${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`}`}
           label="Due From"
           value={dueFromDate}
           onChange={setDueFromDate}
@@ -442,6 +478,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
           datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
         />
         <DatePicker
+          key={`due-to-${presetFilter}-${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`}`}
           label="Due To"
           value={dueToDate}
           onChange={setDueToDate}

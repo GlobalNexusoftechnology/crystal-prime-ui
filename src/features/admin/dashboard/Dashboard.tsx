@@ -63,10 +63,11 @@ export default function Dashboard() {
   // State for task status filter
   const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("open");
   // Trigger and preset for TaskTable external filter control
-  const [taskTablePreset, setTaskTablePreset] = useState<"none" | "dueToday">(
+  const [taskTablePreset, setTaskTablePreset] = useState<"none" | "dueToday" | "followups">(
     "none"
   );
   const [taskTablePresetTrigger, setTaskTablePresetTrigger] = useState<number>(0);
+
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
@@ -424,6 +425,22 @@ export default function Dashboard() {
     return ids;
   }, [allClientFollowups]);
 
+  // Build a set of task IDs that have client follow-ups (all followups)
+  const followupTaskIds = React.useMemo(() => {
+    const ids = new Set<string>();
+    if (!Array.isArray(allClientFollowups)) return ids;
+
+    for (const f of allClientFollowups) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const taskId = (f as any)?.project_task?.id as string | undefined;
+      if (taskId) ids.add(taskId);
+    }
+    
+    // Debug log to help with testing
+    console.log("Followup task IDs:", Array.from(ids));
+    return ids;
+  }, [allClientFollowups]);
+
   if (isLoading) return <div>Loading...</div>;
   if (error || !dashboardSummary) return <div>Error loading dashboard</div>;
 
@@ -727,6 +744,10 @@ export default function Dashboard() {
             const isTodayFollowUpCard =
               title === "Today Follow up" ||
               /follow[- ]?ups? due today/i.test(title);
+            const isFollowUpCard = 
+              title === "Follow ups" ||
+              /follow[- ]?ups?/i.test(title);
+
             return (
               <AnalyticalCard
                 key={idx}
@@ -735,6 +756,12 @@ export default function Dashboard() {
                   isTodayFollowUpCard
                     ? () => {
                         setTaskTablePreset("dueToday");
+                        setTaskTablePresetTrigger((v) => v + 1);
+                      }
+                    : isFollowUpCard
+                    ? () => {
+                        console.log("Followups card clicked, setting preset to followups");
+                        setTaskTablePreset("followups");
                         setTaskTablePresetTrigger((v) => v + 1);
                       }
                     : undefined
@@ -754,7 +781,12 @@ export default function Dashboard() {
             taskList={taskList}
             taskListColumn={taskListColumn}
             taskListAction={taskListAction}
-            onAddTask={() => setShowAddTaskModal(true)} currentUserName={currentUserName} currentUserId={currentUserId} presetFilter={taskTablePreset} presetTrigger={taskTablePresetTrigger} includeTaskIds={followupDueTodayTaskIds}          />
+            onAddTask={() => setShowAddTaskModal(true)} 
+            currentUserName={currentUserName} 
+            currentUserId={currentUserId} 
+            presetFilter={taskTablePreset} 
+            presetTrigger={taskTablePresetTrigger} 
+            includeTaskIds={taskTablePreset === "dueToday" ? followupDueTodayTaskIds : taskTablePreset === "followups" ? followupTaskIds : undefined}          />
         </div>
         {userRole.toLocaleLowerCase() === "admin" && (
           <div>
