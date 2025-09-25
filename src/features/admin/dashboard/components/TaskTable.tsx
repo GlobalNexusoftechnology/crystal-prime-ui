@@ -401,7 +401,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
               title="Add Task"
               variant="primary"
               onClick={onAddTask}
-              width="w-auto"
+              width="w-full md:w-fit"
               leftIcon={
                 <FiPlus className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw] mt-[1px] 2xl:mt-[0.1vw]" />
               }

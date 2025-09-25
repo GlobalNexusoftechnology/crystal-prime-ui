@@ -498,7 +498,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         </div>
       </div>
       <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw]">
-        <div className="flex flex-col justify-start items-start">
+        <div className="w-full md:w-fit flex flex-col justify-start items-start">
           <DatePicker
             label="Follow Up From"
             value={followupFromDate}

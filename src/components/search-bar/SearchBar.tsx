@@ -29,7 +29,7 @@ export function SearchBar({
   placeholder = "Search",
   onSearch,
   bgColor = "transparent",
-  width = "min-w-[12rem] w-[25vw]",
+  width = "min-w-[15rem] md:min-w-[12rem] w-[25vw]",
   value,
 }: SearchBarProps): JSX.Element {
   const [query, setQuery] = useState(""); // State to store the search query
