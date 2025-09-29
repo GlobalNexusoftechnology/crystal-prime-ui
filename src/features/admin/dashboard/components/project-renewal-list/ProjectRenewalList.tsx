@@ -157,7 +157,12 @@ export const ProjectRenewalList: React.FC<ProjectRenewalListProps> = ({
                         className="space-y-2 2xl:space-y-[0.5vw]"
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-bold text-gray-800 text-sm 2xl:text-[0.9vw]">
+
+                        <h1 className="font-medium text-gray-800 text-[0.8rem] 2xl:text-[0.8vw]">Company Name</h1>
+                        <h1 className="font-bold text-gray-800 text-base 2xl:text-[1vw] capitalize">{proj.company_name}</h1>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-gray-800 text-sm 2xl:text-[0.9vw] capitalize">
                             {proj.name}
                           </span>
                           <span className="text-gray-500 text-sm 2xl:text-[0.85vw]">

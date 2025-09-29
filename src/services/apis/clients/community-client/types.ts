@@ -1904,6 +1904,7 @@ export interface ExpensesData {
 // Add Category and Project interfaces for projectRenewalData
 export interface Project {
   name: string;
+  company_name: string;
   date: string;
   status: number;
 }

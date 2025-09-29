@@ -31,6 +31,31 @@ export function DailyTask({
   showForm,
   setShowForm,
 }: IDailyTaskProps) {
+  // Helper: render plain text with clickable links
+  const renderWithLinks = (text?: string) => {
+    if (!text || text.trim().length === 0) return "No description";
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const parts = text.split(urlRegex);
+    return parts.map((part, index) => {
+      if (urlRegex.test(part)) {
+        // Reset lastIndex due to global regex statefulness when used elsewhere
+        urlRegex.lastIndex = 0;
+        return (
+          <a
+            key={`link-${index}`}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline break-all"
+          >
+            {part}
+          </a>
+        );
+      }
+      return <span key={`text-${index}`}>{part}</span>;
+    });
+  };
+
   const {
     data: dailyTasks,
     refetchDailyTasks,
@@ -195,7 +220,7 @@ export function DailyTask({
                         </div>
                         <div className="mb-2 2xl:mb-[0.5vw]">
                           <strong>Remark:</strong>{" "}
-                          <p>{task.remarks || "No description"}</p>
+                          <p>{renderWithLinks(task.remarks)}</p>
                         </div>
                       </div>
                     );
