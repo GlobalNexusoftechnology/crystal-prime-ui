@@ -387,7 +387,7 @@ export default function Dashboard() {
     });
   }, [allTasksData, usersData]);
 
-  // Build a set of task IDs that have client follow-ups due today
+  // Build a set of task IDs that have client follow-ups created today
   const followupDueTodayTaskIds = React.useMemo(() => {
     const ids = new Set<string>();
     if (!Array.isArray(allClientFollowups)) return ids;
@@ -398,9 +398,9 @@ export default function Dashboard() {
     const todayStr = `${yyyy}-${mm}-${dd}`;
 
     for (const f of allClientFollowups) {
-      const due = (f?.due_date as string | undefined) || "";
-      if (!due) continue;
-      const d = new Date(due);
+      const created = (f?.created_at as string | undefined) || "";
+      if (!created) continue;
+      const d = new Date(created);
       const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
       if (dStr === todayStr) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -422,8 +422,6 @@ export default function Dashboard() {
       if (taskId) ids.add(taskId);
     }
     
-    // Debug log to help with testing
-    console.log("Followup task IDs:", Array.from(ids));
     return ids;
   }, [allClientFollowups]);
 
@@ -749,7 +747,6 @@ export default function Dashboard() {
                       }
                     : isFollowUpCard
                     ? () => {
-                        console.log("Followups card clicked, setting preset to followups");
                         setTaskTablePreset("followups");
                         setTaskTablePresetTrigger((v) => v + 1);
                       }

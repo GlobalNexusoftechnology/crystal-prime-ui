@@ -89,8 +89,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
   // Apply preset filters pushed from parent
   useEffect(() => {
-    console.log("Preset filter changed:", presetFilter, "Trigger:", presetTrigger);
-    
     if (presetFilter === "dueToday") {
       // For dueToday preset, use client followup due dates instead of task due dates
       // Clear all filters and rely on includeTaskIds for filtering
@@ -104,9 +102,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
       setToDate("");
       setDueFromDate("");
       setDueToDate("");
-      
-      // Debug log to help with testing
-      console.log("DueToday preset applied, includeTaskIds:", includeTaskIds);
     } else if (presetFilter === "followups") {
       // For followups preset, only clear non-date filters
       // Keep date filters unchanged
@@ -117,9 +112,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
       setTimePeriodFilter("");
       setProjectFilter("");
       // Don't clear date filters for followups preset
-      
-      // Debug log to help with testing
-      console.log("Followups preset applied, includeTaskIds:", includeTaskIds);
     } else if (presetFilter === "none") {
       // Clear all filters when preset is none
       setSearchInput("");
