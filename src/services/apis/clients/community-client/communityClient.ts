@@ -1761,8 +1761,9 @@ export class CommunityClient extends ApiClient {
   public deleteMilestoneTask = async (taskId: string): Promise<void> => {
     const response = await this.del<void>(deleteMilestoneTaskUrl(taskId));
     if (!response?.success) {
-      throw response?.errorData;
+      throw response?.response?.data;
     }
+    return response?.data;
   }
 
   public getMilestoneTaskDetail = async (taskId: string): Promise<IProjectTaskDetailResponse> => {

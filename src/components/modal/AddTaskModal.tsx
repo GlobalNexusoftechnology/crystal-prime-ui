@@ -164,6 +164,7 @@ export function AddTaskModal({
             placeholder="Select Due Date"
             datePickerWidth="w-full"
             error={formik.touched.due_date ? formik.errors.due_date : undefined}
+            minDate={new Date().toISOString().split('T')[0]}
           />
           {/* <Dropdown
             label="Status"

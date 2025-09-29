@@ -35,7 +35,7 @@ export function TaskDetails({ taskData }: { taskData: IProjectTaskResponse }) {
     }
   };
 
-  const validOptions = ["Open", "In Progress", "Completed"];
+  const validOptions = ["Open", "In Progress", "Completed", "Approval"];
   const safeStatus = validOptions.includes(status) ? status : "Open";
 
   const idToName = buildUniversalIdToNameMapping(taskData);

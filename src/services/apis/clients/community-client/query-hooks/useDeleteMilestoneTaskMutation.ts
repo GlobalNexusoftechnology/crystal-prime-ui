@@ -5,7 +5,7 @@ import { COMMUNITY_CLIENT } from "../communityClient";
 const DELETE_MILESTONE_TASK_MUTATION_KEY = "delete-milestone-task-mutation-key";
 
 interface IDeleteMilestoneTaskOptions {
-  onSuccessCallback: () => void;
+  onSuccessCallback?: () => void;
   onErrorCallback?: (err: IApiError) => void;
 }
 
@@ -19,7 +19,7 @@ export const useDeleteMilestoneTaskMutation = ({
     retry: false,
     mutationFn: COMMUNITY_CLIENT.deleteMilestoneTask,
     onSuccess: () => {
-      onSuccessCallback();
+      onSuccessCallback?.();
     },
     onError: (err: IApiError) => {
       errorLogToRemoteUtil({

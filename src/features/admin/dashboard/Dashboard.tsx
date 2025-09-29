@@ -240,37 +240,12 @@ export default function Dashboard() {
     if (!taskToDelete) return;
 
     try {
-      // Find the project and milestone to get the task data
-      const project = projectsData?.find(
-        (p) => p.id === taskToDelete.projectId
-      );
-      const milestone = project?.milestones?.find(
-        (m) => m.id === taskToDelete.milestoneId
-      );
-      const taskToDeleteData = milestone?.tasks?.find(
-        (t) => t.id === taskToDelete.id
-      );
-
-      if (!taskToDeleteData) {
-        toast.error("Task not found");
-        return;
-      }
-
-      // Call the delete mutation and await completion to avoid race conditions
+      // Call the delete mutation
       await onDeleteMilestoneTaskAsync(String(taskToDelete.id));
-
-      // Close modal and reset state
-      setShowDeleteModal(false);
-      setTaskToDelete(null);
-
-      // Notify and refresh once
-      toast.success("Task deleted successfully");
-      if (typeof window !== "undefined") {
-        window.location.reload();
-      }
-    } catch (error) {
-      console.error("Error deleting task:", error);
-      toast.error("Failed to delete task. Please try again.");
+    } catch (err) {
+      console.error("Error deleting task:", err);
+      // Error handling is done in the mutation's onErrorCallback
+      // No need to show toast here as it will cause duplicate messages
     }
   };
 
@@ -333,12 +308,21 @@ export default function Dashboard() {
   // Delete task mutation
   const { onDeleteMilestoneTaskAsync, isPending: isDeletingTask } =
     useDeleteMilestoneTaskMutation({
-      // Success handled after awaiting mutation in handler to prevent double reload/toast
-      onSuccessCallback: () => {},
+      onSuccessCallback: () => {
+        toast.success("Task deleted successfully");
+        setShowDeleteModal(false);
+        setTaskToDelete(null);
+        // Refetch data to get updated task list
+        if (typeof window !== "undefined") {
+          window.location.reload();
+        }
+      },
       onErrorCallback: (error) => {
-        const errorMessage =
-          error?.message || "Failed to delete task. Please try again.";
+        console.error("Delete task error:", error);
+        const errorMessage = error?.message || "Failed to delete task. Please try again.";
         toast.error(errorMessage);
+        setShowDeleteModal(false);
+        setTaskToDelete(null);
       },
     });
 
