@@ -38,9 +38,10 @@ interface IFollowupsProps {
   showForm: boolean;
   setShowForm: (val: boolean) => void;
   taskId: string;
+  projectId: string;
 }
 
-export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
+export function Followups({ showForm, setShowForm, taskId, projectId }: IFollowupsProps) {
   const { data: followupData, ProjectFollowUp, isLoading } = useAllClientFollowUpQuery({ project_task_id: taskId });
   const { allUsersData } = useAllUsersQuery();
   const { allProjectsData } = useAllProjectsQuery();
@@ -71,10 +72,12 @@ export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
     })) || [];
 
   const projectOptions =
-    allProjectsData?.map((project) => ({
-      label: project?.name,
-      value: project?.id,
-    })) || [];
+    allProjectsData
+      ?.filter((project) => String(project?.id) === String(projectId))
+      .map((project) => ({
+        label: project?.name,
+        value: String(project?.id),
+      })) || [];
 
   const formik = useFormik<{
     project_id: string;
@@ -84,7 +87,7 @@ export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
     remarks?: string | null;
   }>({
     initialValues: {
-      project_id: projectOptions[0]?.value || "",
+      project_id: String(projectId) || "",
       user_id: userId || "",
       status: "PENDING",
       due_date: "",
@@ -96,7 +99,7 @@ export function Followups({ showForm, setShowForm, taskId }: IFollowupsProps) {
         toast.error("Project is required");
         return;
       }
-      const selectedProject = allProjectsData?.find((p) => p.id === values.project_id);
+      const selectedProject = allProjectsData?.find((p) => String(p.id) === String(values.project_id));
       const clientId = selectedProject?.client?.id;
       if (!clientId) {
         toast.error("Client not found for selected project");
