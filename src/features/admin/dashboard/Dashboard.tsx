@@ -411,15 +411,26 @@ export default function Dashboard() {
     return ids;
   }, [allClientFollowups]);
 
-  // Build a set of task IDs that have client follow-ups (all followups)
+  // Build a set of task IDs that have client follow-ups created today
   const followupTaskIds = React.useMemo(() => {
     const ids = new Set<string>();
     if (!Array.isArray(allClientFollowups)) return ids;
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    const todayStr = `${yyyy}-${mm}-${dd}`;
 
     for (const f of allClientFollowups) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const taskId = (f as any)?.project_task?.id as string | undefined;
-      if (taskId) ids.add(taskId);
+      const created = (f?.created_at as string | undefined) || "";
+      if (!created) continue;
+      const d = new Date(created);
+      const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      if (dStr === todayStr) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const taskId = (f as any)?.project_task?.id as string | undefined;
+        if (taskId) ids.add(taskId);
+      }
     }
     
     return ids;
