@@ -223,6 +223,8 @@ export default function Dashboard() {
         return `${statsData?.taskStat?.completedTasks || 0} Task`;
       case "inprogress":
         return `${statsData?.taskStat?.inprogressTasks || 0} Task`;
+      case "approval":
+        return `${statsData?.taskStat?.approvalTasks || 0} Task`;
       case "open":
         return `${statsData?.taskStat?.openTasks || 0} Task`;
       default:
@@ -455,6 +457,7 @@ export default function Dashboard() {
                   { label: "All Task", value: "allTask" },
                   { label: "Completed", value: "completed" },
                   { label: "In Progress", value: "inprogress" },
+                  { label: "Approval", value: "approval" },
                   
                 ]}
                 value={selectedTaskStatus}
