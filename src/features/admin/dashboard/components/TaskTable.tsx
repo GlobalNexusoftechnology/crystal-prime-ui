@@ -92,13 +92,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
     console.log("Preset filter changed:", presetFilter, "Trigger:", presetTrigger);
     
     if (presetFilter === "dueToday") {
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, "0");
-      const dd = String(today.getDate()).padStart(2, "0");
-      const todayStr = `${yyyy}-${mm}-${dd}`;
-
-      // Clear non-due filters and set due date range to today
+      // For dueToday preset, use client followup due dates instead of task due dates
+      // Clear all filters and rely on includeTaskIds for filtering
       setSearchInput("");
       setStatusFilter("");
       setPriorityFilter("");
@@ -107,8 +102,11 @@ const TaskTable: React.FC<TaskTableProps> = ({
       setProjectFilter("");
       setFromDate("");
       setToDate("");
-      setDueFromDate(todayStr);
-      setDueToDate(todayStr);
+      setDueFromDate("");
+      setDueToDate("");
+      
+      // Debug log to help with testing
+      console.log("DueToday preset applied, includeTaskIds:", includeTaskIds);
     } else if (presetFilter === "followups") {
       // For followups preset, only clear non-date filters
       // Keep date filters unchanged
@@ -231,8 +229,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
         return false;
       }
 
-      // When preset is 'followups', strictly show only tasks included in includeTaskIds
-      if (presetFilter === "followups") {
+      // When preset is 'followups' or 'dueToday', strictly show only tasks included in includeTaskIds
+      if (presetFilter === "followups" || presetFilter === "dueToday") {
         // If we have an include set, use it as the sole criterion (after role guard)
         if (includeTaskIds && includeTaskIds.size > 0) {
           return includeTaskIds.has(String(task.id));
@@ -383,16 +381,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
         dateMatch &&
         dueDateMatch
       );
-
-      // Include tasks flagged via includeTaskIds when preset is dueToday
-      // Note: Non-admins already pass only if the task is assigned to them (top guard)
-      if (
-        !baseMatch &&
-        presetFilter === "dueToday" &&
-        includeTaskIds?.has(String(task.id))
-      ) {
-        return true;
-      }
 
       return baseMatch;
     });

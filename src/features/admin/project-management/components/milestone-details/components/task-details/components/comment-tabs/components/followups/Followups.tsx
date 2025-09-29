@@ -184,6 +184,7 @@ export function Followups({ showForm, setShowForm, taskId, projectId }: IFollowu
               onChange={(date) => formik.setFieldValue("due_date", date)}
               placeholder="Next Followup Date"
               error={formik.touched.due_date ? formik.errors.due_date : undefined}
+              minDate={new Date().toISOString().split('T')[0]}
             />
             </div>
             <InputField
