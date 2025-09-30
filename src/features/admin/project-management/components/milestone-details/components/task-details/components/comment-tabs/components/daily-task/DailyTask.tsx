@@ -62,7 +62,7 @@ export function DailyTask({
     isError,
     error,
     isLoading,
-  } = useAllDailyTaskQuery({ projectId, taskId });
+  } = useAllDailyTaskQuery({ taskId });
   const { allUsersData, isLoading: usersLoading } = useAllUsersQuery();
   const getUserName = (userId: string) => {
     if (!allUsersData || usersLoading) return userId;
@@ -153,6 +153,7 @@ export function DailyTask({
                 project_id: projectId,
                 assigned_to: assignedTo,
                 task_title: originalTitle || "",
+                task_id: taskId,
                 entry_date: new Date().toISOString().slice(0, 10),
                 description: originalDescription || "",
                 status: "Pending",

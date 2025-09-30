@@ -1762,13 +1762,12 @@ export interface ICreateDailyTaskEntryPayload {
   project_id: string;
   assigned_to: string;
   task_title: string;
-  entry_date: string; // ISO string
+  task_id: string;
+  entry_date: string;
   description?: string;
-  hours_spent?: number;
-  remarks?: string;
   status?: string;
-  priority?: "High" | "Medium" | "Low";
-  task_id?: string;
+  remarks?: string;
+  priority?: string;
 }
 
 export interface IUpdateDailyTaskEntryPayload {
@@ -1788,6 +1787,7 @@ export interface IDailyTaskEntryResponse {
   hours_spent?: number;
   status: string;
   priority?: "High" | "Medium" | "Low";
+  task_id?: string;
   created_at: string;
   updated_at: string;
   deleted: boolean;

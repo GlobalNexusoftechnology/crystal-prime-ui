@@ -1917,22 +1917,11 @@ export class CommunityClient extends ApiClient {
   };
 
   public getAllDailyTaskEntries = async (filters: {
-    status?: string;
-    priority?: string;
-    from?: string;
-    to?: string;
-    projectId?: string;
-    search?: string;
+ 
     taskId?: string;
   } = {}): Promise<IDailyTaskEntryResponse[]> => {
     const params = new URLSearchParams();
-    if (filters.projectId) params.append('projectId', filters.projectId);
-    if (filters.taskId) params.append('taskId', filters.taskId);
-    if (filters.status) params.append('status', filters.status);
-    if (filters.priority) params.append('priority', filters.priority);
-    if (filters.from) params.append('from', filters.from);
-    if (filters.to) params.append('to', filters.to);
-    if (filters.search) params.append('search', filters.search);
+    if (filters.taskId) params.append('task_id', filters.taskId);
     const url = `/daily-task?${params.toString()}`;
     const response = await this.get<IAllDailyTaskEntriesResponse>(url);
     if (!response?.success) {
