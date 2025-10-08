@@ -44,9 +44,10 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
 
   const firstName = activeSession?.user?.first_name;
   const lastName = activeSession?.user?.last_name;
-  const userName = [firstName, lastName]
-    .filter((part) => typeof part === "string" && part.trim().length > 0)
-    .join(" ") || null;
+  const userName =
+    [firstName, lastName]
+      .filter((part) => typeof part === "string" && part.trim().length > 0)
+      .join(" ") || null;
   const isClient = activeSession?.user?.role?.role?.toLowerCase() === "client";
 
   const unreadCount =
@@ -63,7 +64,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
 
   // Filter to only show open tickets
   const openTickets =
-    ticketsData?.filter(
+    ticketsData?.data.list?.filter(
       (ticket: ITicketData) => ticket.status.toLowerCase() === "open"
     ) || [];
 

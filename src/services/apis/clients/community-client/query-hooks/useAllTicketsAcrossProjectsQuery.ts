@@ -15,6 +15,7 @@ export interface TicketAcrossProjectsFilters {
   priority?: string;
   page?: number;
   limit?: number;
+  userId?: string
 }
 
 export const useAllTicketsAcrossProjectsQuery = (filters: TicketAcrossProjectsFilters = {}) => {

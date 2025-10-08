@@ -23,7 +23,7 @@ export function AllOpenTickets({ isOpen, onClose }: AllOpenTicketsProps) {
   });
 
   // Filter to only show open tickets
-  const openTickets = ticketsData?.filter((ticket: ITicketData) => 
+  const openTickets = ticketsData?.data.list.filter((ticket: ITicketData) => 
     ticket.status.toLowerCase() === "open"
   ) || [];
 

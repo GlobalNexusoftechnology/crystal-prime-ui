@@ -6,6 +6,12 @@ export interface SupportTicketRow {
   id: string | number;
   [key: string]: unknown;
 }
+interface PaginationData {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
 interface SupportTicketTableProps {
   supportTicketsLoading: boolean;
@@ -20,6 +26,8 @@ interface SupportTicketTableProps {
   priorityOptions: { label: string; value: string }[];
   priorityFilter: string;
   handlePriorityChange: (value: string) => void;
+  onPageChange?: (page: number) => void;
+  paginationData: PaginationData | undefined;
 }
 
 export const SupportTicketTable: React.FC<SupportTicketTableProps> = ({
@@ -35,6 +43,8 @@ export const SupportTicketTable: React.FC<SupportTicketTableProps> = ({
   priorityOptions,
   priorityFilter,
   handlePriorityChange,
+  onPageChange,
+  paginationData,
 }) => {
   if (supportTicketsLoading) return <Loading />;
   if (supportTicketsError)
@@ -73,8 +83,9 @@ export const SupportTicketTable: React.FC<SupportTicketTableProps> = ({
         data={supportTicketList}
         columns={supportTicketListColumn}
         actions={supportTicketListAction}
+        onPageChange={onPageChange}
+        paginationData={paginationData}
       />
     </div>
   );
 };
-

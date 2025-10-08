@@ -393,8 +393,6 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
           setSelectedTicket(null);
           setModalMode("create");
         }}
-        projectId={projectId}
-        projectName={projectData?.name || ""}
         mode={modalMode}
         ticket={selectedTicket}
       />

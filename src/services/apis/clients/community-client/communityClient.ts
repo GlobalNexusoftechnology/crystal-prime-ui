@@ -2359,6 +2359,7 @@ export class CommunityClient extends ApiClient {
       priority?: string;
       page?: number;
       limit?: number;
+      userId?: string; // Add userId to filters
     } = {}
   ) => {
     // Build query string from filters
@@ -2368,23 +2369,19 @@ export class CommunityClient extends ApiClient {
     if (filters.priority && filters.priority !== 'All Priority') params.append('priority', filters.priority);
     if (filters.page) params.append('page', filters.page.toString());
     if (filters.limit) params.append('limit', filters.limit.toString());
-
+    if (filters.userId) params.append('userId', filters.userId); // Add userId to params
+  
     const url = params.toString() 
       ? `${fetchAllTicketsAcrossProjectsUrl()}?${params.toString()}`
       : fetchAllTicketsAcrossProjectsUrl();
-
-    const response = await this.get<IAllTicketsResponse>(
-      url,
-      {
-        requiresAuth: false,
-      }
-    );
-
+  
+    const response = await this.get<IAllTicketsResponse>(url);
+  
     if (!response?.success) {
       throw response?.errorData;
     }
-
-    return response?.data.data.list;
+  
+    return response?.data;
   };
 
   public createTicket = async (payload: ICreateTicketPayload) => {

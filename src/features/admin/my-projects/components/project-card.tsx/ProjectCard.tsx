@@ -137,8 +137,6 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
       <GenerateTicketModal
         isOpen={isGenerateTicketModalOpen}
         onClose={() => setIsGenerateTicketModalOpen(false)}
-        projectId={project.data.id}
-        projectName={project.data.name}
       />
     </>
   );

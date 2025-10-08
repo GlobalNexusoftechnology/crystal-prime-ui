@@ -22,9 +22,11 @@ import { useAuthStore } from "@/services";
 export function SupportTickets() {
   const router = useRouter();
   const { activeSession } = useAuthStore();
-
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [priorityFilter, setPriorityFilter] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const currentUserId = activeSession?.user?.id;
 
   const {
     ticketsData: supportTickets,
@@ -35,6 +37,8 @@ export function SupportTickets() {
   } = useAllTicketsAcrossProjectsQuery({
     status: statusFilter,
     priority: priorityFilter,
+    userId: currentUserId,
+    page: currentPage,
   });
 
   const { updateTicketStatus } = useUpdateTicketStatusMutation({
@@ -82,7 +86,9 @@ export function SupportTickets() {
     { label: "Critical", value: "critical" },
   ];
 
-  const supportTicketList: SupportTicketRow[] = (supportTickets || [])
+  const supportTicketList: SupportTicketRow[] = (
+    supportTickets?.data.list || []
+  )
     .filter((ticket) => {
       // Show completed tickets only to admin users (not clients)
       const userRole = activeSession?.user?.role?.role?.toLowerCase?.();
@@ -214,6 +220,8 @@ export function SupportTickets() {
     },
   ];
 
+  const paginationData = supportTickets?.data?.pagination;
+
   return (
     <div className="p-6 md:p-8 2xl:p-[2vw] bg-[#fafbfc] border 2xl:border-[0.05vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw] min-h-screen">
       <h1 className="text-xl 2xl:text-[1.25vw] 2xl:leading-[2vw] font-medium text-gray-900 mb-4 2xl:mb-[1vw]">
@@ -232,6 +240,8 @@ export function SupportTickets() {
         priorityOptions={priorityOptions}
         priorityFilter={priorityFilter}
         handlePriorityChange={setPriorityFilter}
+        onPageChange={setCurrentPage}
+        paginationData={paginationData}
       />
     </div>
   );
