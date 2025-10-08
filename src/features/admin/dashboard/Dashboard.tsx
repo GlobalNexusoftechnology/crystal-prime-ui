@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import {
+  ClientDashboard,
   ExpensesOverviewChart,
   LeadAnalyticsChart,
   LeadTypeChart,
@@ -63,16 +64,18 @@ export default function Dashboard() {
   // State for task status filter
   const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("open");
   // Trigger and preset for TaskTable external filter control
-  const [taskTablePreset, setTaskTablePreset] = useState<"none" | "dueToday" | "followups">(
-    "none"
-  );
-  const [taskTablePresetTrigger, setTaskTablePresetTrigger] = useState<number>(0);
-
+  const [taskTablePreset, setTaskTablePreset] = useState<
+    "none" | "dueToday" | "followups"
+  >("none");
+  const [taskTablePresetTrigger, setTaskTablePresetTrigger] =
+    useState<number>(0);
 
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
   const userRole = activeSession?.user?.role?.role || "";
-  const currentUserName = `${activeSession?.user?.first_name ?? ""} ${activeSession?.user?.last_name ?? ""}`.trim();
+  const currentUserName = `${activeSession?.user?.first_name ?? ""} ${
+    activeSession?.user?.last_name ?? ""
+  }`.trim();
   const currentUserId = activeSession?.user?.id ?? "";
 
   const handleProjectChange = (projectId: string) => {
@@ -133,7 +136,6 @@ export default function Dashboard() {
       }
     }
   }, [selectedProjectId, projectsData, selectedMilestoneId]);
-
 
   // Prepare user options for assignment dropdown
   const userOptions = React.useMemo(() => {
@@ -321,7 +323,8 @@ export default function Dashboard() {
       },
       onErrorCallback: (error) => {
         console.error("Delete task error:", error);
-        const errorMessage = error?.message || "Failed to delete task. Please try again.";
+        const errorMessage =
+          error?.message || "Failed to delete task. Please try again.";
         toast.error(errorMessage);
         setShowDeleteModal(false);
         setTaskToDelete(null);
@@ -401,7 +404,10 @@ export default function Dashboard() {
       const created = (f?.created_at as string | undefined) || "";
       if (!created) continue;
       const d = new Date(created);
-      const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+        2,
+        "0"
+      )}-${String(d.getDate()).padStart(2, "0")}`;
       if (dStr === todayStr) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const taskId = (f as any)?.project_task?.id as string | undefined;
@@ -425,14 +431,17 @@ export default function Dashboard() {
       const created = (f?.created_at as string | undefined) || "";
       if (!created) continue;
       const d = new Date(created);
-      const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
+        2,
+        "0"
+      )}-${String(d.getDate()).padStart(2, "0")}`;
       if (dStr === todayStr) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const taskId = (f as any)?.project_task?.id as string | undefined;
         if (taskId) ids.add(taskId);
       }
     }
-    
+
     return ids;
   }, [allClientFollowups]);
 
@@ -467,7 +476,6 @@ export default function Dashboard() {
                   { label: "Completed", value: "completed" },
                   { label: "In Progress", value: "inprogress" },
                   { label: "Approval", value: "approval" },
-                  
                 ]}
                 value={selectedTaskStatus}
                 onChange={(newStatus) => handleTaskStatusChange(newStatus)}
@@ -725,172 +733,187 @@ export default function Dashboard() {
 
   return (
     <div className="p-6 md:p-8 2xl:p-[2vw] bg-[#fafbfc] border 2xl:border-[0.05vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw] min-h-screen">
-      <div className="mb-6 2xl:mb-[1.5vw]">
-        <h1 className="text-2xl 2xl:text-[1.5vw] 2xl:leading-[2vw] font-semibold text-gray-900 mb-1 2xl:mb-[0.25vw]">
-          Welcome
-        </h1>
-        <p className="text-gray-500 text-base 2xl:text-[1vw]">
-          Wishing you a productive and fulfilling day ahead!
-        </p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
-        {analyticalCards?.length > 0 &&
-          analyticalCards.map((card, idx) => {
-            const title = String(card.title || "");
-            const normalizedTitle = title.trim().toLowerCase();
-            const isTodayFollowUpCard =
-              normalizedTitle === "today follow up" ||
-              /follow\s*-?\s*ups?\s*due\s*today/i.test(title);
-            const isFollowUpCard =
-              normalizedTitle === "follow ups" ||
-              normalizedTitle === "follow up" ||
-              /\bfollow\s*-?\s*ups?\b/i.test(title);
+      {userRole === "client" ? (
+        <ClientDashboard />
+      ) : (
+        <div>
+          <div className="mb-6 2xl:mb-[1.5vw]">
+            <h1 className="text-2xl 2xl:text-[1.5vw] 2xl:leading-[2vw] font-semibold text-gray-900 mb-1 2xl:mb-[0.25vw]">
+              Welcome
+            </h1>
+            <p className="text-gray-500 text-base 2xl:text-[1vw]">
+              Wishing you a productive and fulfilling day ahead!
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
+            {analyticalCards?.length > 0 &&
+              analyticalCards.map((card, idx) => {
+                const title = String(card.title || "");
+                const normalizedTitle = title.trim().toLowerCase();
+                const isTodayFollowUpCard =
+                  normalizedTitle === "today follow up" ||
+                  /follow\s*-?\s*ups?\s*due\s*today/i.test(title);
+                const isFollowUpCard =
+                  normalizedTitle === "follow ups" ||
+                  normalizedTitle === "follow up" ||
+                  /\bfollow\s*-?\s*ups?\b/i.test(title);
 
-            return (
-              <AnalyticalCard
-                key={idx}
-                data={card}
-                onClick={
-                  isTodayFollowUpCard
-                    ? () => {
-                        setTaskTablePreset("dueToday");
-                        setTaskTablePresetTrigger((v) => v + 1);
-                      }
-                    : isFollowUpCard
-                    ? () => {
-                        setTaskTablePreset("followups");
-                        setTaskTablePresetTrigger((v) => v + 1);
-                      }
+                return (
+                  <AnalyticalCard
+                    key={idx}
+                    data={card}
+                    onClick={
+                      isTodayFollowUpCard
+                        ? () => {
+                            setTaskTablePreset("dueToday");
+                            setTaskTablePresetTrigger((v) => v + 1);
+                          }
+                        : isFollowUpCard
+                        ? () => {
+                            setTaskTablePreset("followups");
+                            setTaskTablePresetTrigger((v) => v + 1);
+                          }
+                        : undefined
+                    }
+                  />
+                );
+              })}
+          </div>
+          <div>
+            {/* Task Table Component */}
+            <div className="mt-6 2xl:mt-[1.5vw]">
+              <TaskTable
+                userRole={userRole}
+                tasksLoading={isLoadingTasks}
+                tasksError={false}
+                tasksErrorObj={null}
+                taskList={taskList}
+                taskListColumn={taskListColumn}
+                taskListAction={taskListAction}
+                onAddTask={() => setShowAddTaskModal(true)}
+                currentUserName={currentUserName}
+                currentUserId={currentUserId}
+                presetFilter={taskTablePreset}
+                presetTrigger={taskTablePresetTrigger}
+                includeTaskIds={
+                  taskTablePreset === "dueToday"
+                    ? followupDueTodayTaskIds
+                    : taskTablePreset === "followups"
+                    ? followupTaskIds
                     : undefined
                 }
               />
-            );
-          })}
-      </div>
-      <div>
-        {/* Task Table Component */}
-        <div className="mt-6 2xl:mt-[1.5vw]">
-          <TaskTable
-            userRole={userRole}
-            tasksLoading={isLoadingTasks}
-            tasksError={false}
-            tasksErrorObj={null}
-            taskList={taskList}
-            taskListColumn={taskListColumn}
-            taskListAction={taskListAction}
-            onAddTask={() => setShowAddTaskModal(true)} 
-            currentUserName={currentUserName} 
-            currentUserId={currentUserId} 
-            presetFilter={taskTablePreset} 
-            presetTrigger={taskTablePresetTrigger} 
-            includeTaskIds={taskTablePreset === "dueToday" ? followupDueTodayTaskIds : taskTablePreset === "followups" ? followupTaskIds : undefined}          />
-        </div>
-        {userRole.toLocaleLowerCase() === "admin" && (
-          <div>
-            <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
-              <div className="w-full lg:w-[30%]">
-                <ProjectSnapshotChart
-                  data={projectSnapshotArray}
-                  colors={["#3B82F6", "#10B981", "#F59E42"]}
-                />
-              </div>
-              <div className="w-full lg:w-[70%]">
-                <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
-              </div>
             </div>
-            <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
-              <div className="w-full lg:w-[50%]">
-                <LeadTypeChart
-                  chartDataMap={leadTypeDataMap}
-                  colors={["#6366F1", "#F59E42", "#10B981", "#EF4444"]}
-                />
+            {userRole.toLocaleLowerCase() === "admin" && (
+              <div>
+                <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
+                  <div className="w-full lg:w-[30%]">
+                    <ProjectSnapshotChart
+                      data={projectSnapshotArray}
+                      colors={["#3B82F6", "#10B981", "#F59E42"]}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[70%]">
+                    <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
+                  </div>
+                </div>
+                <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
+                  <div className="w-full lg:w-[50%]">
+                    <LeadTypeChart
+                      chartDataMap={leadTypeDataMap}
+                      colors={["#6366F1", "#F59E42", "#10B981", "#EF4444"]}
+                    />
+                  </div>
+                  <div className="w-full lg:w-[50%]">
+                    <ProjectRenewalList
+                      data={renewalDataForSelectedMonth}
+                      selectedMonth={selectedMonth}
+                      onMonthChange={handleMonthChange}
+                      monthOptions={allMonthOptions}
+                    />
+                  </div>
+                </div>
+                <ExpensesOverviewChart dataMap={expensesDataMap} />
               </div>
-              <div className="w-full lg:w-[50%]">
-                <ProjectRenewalList
-                  data={renewalDataForSelectedMonth}
-                  selectedMonth={selectedMonth}
-                  onMonthChange={handleMonthChange}
-                  monthOptions={allMonthOptions}
-                />
-              </div>
-            </div>
-            <ExpensesOverviewChart dataMap={expensesDataMap} />
-          </div>
-        )}
-        {/* Add Task Modal */}
-        {showAddTaskModal && (
-          <AddTaskModal
-            isOpen={showAddTaskModal}
-            onClose={() => {
-              setShowAddTaskModal(false);
-              setSelectedAssignedTo("");
-              setEditingTaskId(null);
-            }}
-            onSubmit={async (values: ICreateProjectTask) => {
-              if (editingTaskId) {
-                await onUpdateMilestoneTask({
-                  taskId: editingTaskId,
-                  payload: {
-                    title: values.title,
-                    description: values.description,
-                    due_date: values.due_date,
-                    status: values.status,
-                    priority: values.priority,
-                    assigned_to: values.assigned_to,
-                    milestone_id: values.milestone_id,
-                  },
-                });
-              } else {
-                await onCreateMilestoneTask({
-                  title: values.title,
-                  description: values.description,
-                  due_date: values.due_date,
-                  status: values.status,
-                  priority: values.priority,
-                  assigned_to: values.assigned_to,
-                  milestone_id: values.milestone_id,
-                });
-              }
-            }}
-            initialValues={
-              editingTaskId
-                ? editInitialValues
-                : {
-                    title: "",
-                    description: "",
-                    due_date: new Date().toISOString().slice(0, 10),
-                    status: "Open",
-                    priority: "Medium",
-                    assigned_to: selectedAssignedTo || "",
-                    milestone_id: selectedMilestoneId || "",
+            )}
+            {/* Add Task Modal */}
+            {showAddTaskModal && (
+              <AddTaskModal
+                isOpen={showAddTaskModal}
+                onClose={() => {
+                  setShowAddTaskModal(false);
+                  setSelectedAssignedTo("");
+                  setEditingTaskId(null);
+                }}
+                onSubmit={async (values: ICreateProjectTask) => {
+                  if (editingTaskId) {
+                    await onUpdateMilestoneTask({
+                      taskId: editingTaskId,
+                      payload: {
+                        title: values.title,
+                        description: values.description,
+                        due_date: values.due_date,
+                        status: values.status,
+                        priority: values.priority,
+                        assigned_to: values.assigned_to,
+                        milestone_id: values.milestone_id,
+                      },
+                    });
+                  } else {
+                    await onCreateMilestoneTask({
+                      title: values.title,
+                      description: values.description,
+                      due_date: values.due_date,
+                      status: values.status,
+                      priority: values.priority,
+                      assigned_to: values.assigned_to,
+                      milestone_id: values.milestone_id,
+                    });
                   }
-            }
-            isPending={editingTaskId ? isUpdatingMilestoneTask : isCreatingTask}
-            isEdit={Boolean(editingTaskId)}
-            projectOptions={projectOptions}
-            milestoneOptions={milestoneOptions}
-            userOptions={userOptions}
-            selectedProjectId={selectedProjectId}
-            onProjectChange={handleProjectChange}
-          />
-        )}
+                }}
+                initialValues={
+                  editingTaskId
+                    ? editInitialValues
+                    : {
+                        title: "",
+                        description: "",
+                        due_date: new Date().toISOString().slice(0, 10),
+                        status: "Open",
+                        priority: "Medium",
+                        assigned_to: selectedAssignedTo || "",
+                        milestone_id: selectedMilestoneId || "",
+                      }
+                }
+                isPending={
+                  editingTaskId ? isUpdatingMilestoneTask : isCreatingTask
+                }
+                isEdit={Boolean(editingTaskId)}
+                projectOptions={projectOptions}
+                milestoneOptions={milestoneOptions}
+                userOptions={userOptions}
+                selectedProjectId={selectedProjectId}
+                onProjectChange={handleProjectChange}
+              />
+            )}
 
-        {/* Delete Modal */}
-        {showDeleteModal && taskToDelete && (
-          <DeleteModal
-            isOpen={showDeleteModal}
-            onClose={() => {
-              setShowDeleteModal(false);
-              setTaskToDelete(null);
-            }}
-            onConfirm={handleDeleteTask}
-            title="Delete Task"
-            message="Are you sure you want to delete the task "
-            itemName={taskToDelete.title}
-            isLoading={isDeletingTask}
-          />
-        )}
-      </div>
+            {/* Delete Modal */}
+            {showDeleteModal && taskToDelete && (
+              <DeleteModal
+                isOpen={showDeleteModal}
+                onClose={() => {
+                  setShowDeleteModal(false);
+                  setTaskToDelete(null);
+                }}
+                onConfirm={handleDeleteTask}
+                title="Delete Task"
+                message="Are you sure you want to delete the task "
+                itemName={taskToDelete.title}
+                isLoading={isDeletingTask}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

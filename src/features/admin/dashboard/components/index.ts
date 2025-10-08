@@ -6,3 +6,4 @@ export { LeadAnalyticsChart } from "./lead-analytics-chart";
 export { ProjectSnapshotChart } from "./project-snapshot-chart";
 export { StatsCards } from "./stats-cards";
 export { default as TaskTable } from "./TaskTable";
+export { ClientDashboard } from "./client-dashboard";

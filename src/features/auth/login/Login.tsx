@@ -32,7 +32,7 @@ const togglePasswordVisibility = () => {
     toast.success(response?.message || "Login successful 🎉");
     const role = loginData?.user?.role?.role?.toLowerCase?.() || "";
     if (role === "client") {
-      router.push("/admin/my-projects");
+      router.push("/admin/dashboard");
     } else {
       router.push("/admin/dashboard");
     }

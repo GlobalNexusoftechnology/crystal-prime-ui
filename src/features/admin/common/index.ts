@@ -1,1 +1,3 @@
-export { SupportTicketTable } from "./SupportTicketTable";
+import { SupportTicketTable, SupportTicketRow } from "./SupportTicketTable";
+export { SupportTicketTable };
+export type { SupportTicketRow };
