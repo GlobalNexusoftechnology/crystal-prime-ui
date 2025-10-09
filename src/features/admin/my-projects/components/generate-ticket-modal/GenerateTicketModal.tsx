@@ -1,7 +1,6 @@
-// features/admin/my-projects/components/GenerateTicketModal.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ModalOverlay,
   Button,
@@ -59,7 +58,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
   const [imageUrl, setImageUrl] = useState<string>("");
   const [uploadedImageUrl, setUploadedImageUrl] = useState<string>("");
   const [selectedPriority, setSelectedPriority] = useState<string>(
-    mode === "edit" && ticket ? ticket.priority : ""
+    mode === "edit" && ticket ? ticket.priority : "low"
   );
   const [selectedProjectId, setSelectedProjectId] = useState<string>(
     mode === "edit" && ticket ? ticket.project_id || "" : ""
@@ -69,10 +68,11 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
   const { allProjectsData } = useAllProjectsQuery();
 
   // Transform projects data for dropdown options
-  const projectOptions = allProjectsData?.map((project: IProjectResponse) => ({
-    label: project.name,
-    value: project.id,
-  })) || [];
+  const projectOptions =
+    allProjectsData?.map((project: IProjectResponse) => ({
+      label: project.name,
+      value: project.id,
+    })) || [];
 
   // Get selected project details for tasks
   const selectedProject = allProjectsData?.find(
@@ -80,13 +80,14 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
   );
 
   // Extract all tasks from all milestones of selected project
-  const allTasks = selectedProject?.milestones?.flatMap(
-    (milestone) =>
-      milestone.tasks?.map((task) => ({
-        ...task,
-        milestoneName: milestone.name,
-      })) || []
-  ) || [];
+  const allTasks =
+    selectedProject?.milestones?.flatMap(
+      (milestone) =>
+        milestone.tasks?.map((task) => ({
+          ...task,
+          milestoneName: milestone.name,
+        })) || []
+    ) || [];
 
   const { createTicket, isPending: isCreating } = useCreateTicketMutation({
     onSuccessCallback: (response) => {
@@ -97,7 +98,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
       setImageFile(null);
       setImageUrl("");
       setUploadedImageUrl("");
-      setSelectedPriority("");
+      setSelectedPriority("low");
       setSelectedProjectId("");
     },
     onErrorCallback: (error: IApiError) => {
@@ -114,7 +115,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
       setImageFile(null);
       setImageUrl("");
       setUploadedImageUrl("");
-      setSelectedPriority("");
+      setSelectedPriority("low");
       setSelectedProjectId("");
     },
     onErrorCallback: (error: IApiError) => {
@@ -141,12 +142,13 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
       description: mode === "edit" && ticket ? ticket.description : "",
       status: mode === "edit" && ticket ? ticket.status : "open",
       priority: mode === "edit" && ticket ? ticket.priority : selectedPriority,
-      project: mode === "edit" && ticket ? ticket.project_id || "" : selectedProjectId,
+      project:
+        mode === "edit" && ticket ? ticket.project_id || "" : selectedProjectId,
       task_id: mode === "edit" && ticket ? ticket.task?.id || "" : taskId || "",
       remark: mode === "edit" && ticket ? ticket.remark : "",
     },
     validationSchema,
-    enableReinitialize: mode === "edit" || !!selectedCardTitle,
+    enableReinitialize: false, // CHANGED: Disable auto-reinitialize to prevent form reset
     onSubmit: (values) => {
       // Check if ticket title matches any task title
       const matchingTask = allTasks.find(
@@ -192,6 +194,27 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
     },
   });
 
+  // FIX: Initialize form when modal opens or mode/ticket changes
+  useEffect(() => {
+    if (isOpen) {
+      formik.setValues({
+        title: mode === "edit" && ticket ? ticket.title : selectedCardTitle,
+        description: mode === "edit" && ticket ? ticket.description : "",
+        status: mode === "edit" && ticket ? ticket.status : "open",
+        priority:
+          mode === "edit" && ticket ? ticket.priority : selectedPriority,
+        project:
+          mode === "edit" && ticket
+            ? ticket.project_id || ""
+            : selectedProjectId,
+        task_id:
+          mode === "edit" && ticket ? ticket.task?.id || "" : taskId || "",
+        remark: mode === "edit" && ticket ? ticket.remark : "",
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, mode, ticket, selectedCardTitle, taskId]);
+
   const handleImageUpload = (file: File | null) => {
     setImageFile(file);
     if (file) {
@@ -205,18 +228,18 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
 
   const handlePriorityChange = (priority: string) => {
     setSelectedPriority(priority);
-    formik.setFieldValue("priority", priority);
+    formik.setFieldValue("priority", priority); // Only update priority field
   };
 
   const handleProjectChange = (projectId: string) => {
     setSelectedProjectId(projectId);
-    formik.setFieldValue("project", projectId);
+    formik.setFieldValue("project", projectId); // Only update project field
   };
 
   const handleClose = () => {
     // Reset form when closing
     formik.resetForm();
-    setSelectedPriority("");
+    setSelectedPriority("low");
     setSelectedProjectId("");
     setImageFile(null);
     setImageUrl("");

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Image from "next/image";
 import {
   SupportTicketTable,
@@ -27,6 +27,10 @@ export function SupportTickets() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const currentUserId = activeSession?.user?.id;
+  const userRole = activeSession?.user?.role?.role?.toLowerCase?.();
+
+  // Check if user is client
+  const isClient = userRole === "client";
 
   const {
     ticketsData: supportTickets,
@@ -91,8 +95,7 @@ export function SupportTickets() {
   )
     .filter((ticket) => {
       // Show completed tickets only to admin users (not clients)
-      const userRole = activeSession?.user?.role?.role?.toLowerCase?.();
-      if (userRole === "client") {
+      if (isClient) {
         return ticket.status !== "completed";
       }
       // Admin users can see all tickets including completed ones
@@ -124,82 +127,94 @@ export function SupportTickets() {
       };
     });
 
-  const supportTicketListColumn: ITableColumn<SupportTicketRow>[] = [
-    {
-      header: "STATUS",
-      accessor: "status",
-      cell: ({ row, value }) => (
-        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
-          <SimpleDropdown
-            options={[
-              { label: "Open", value: "open" },
-              { label: "In Progress", value: "in_progress" },
-              { label: "Completed", value: "completed" },
-            ]}
-            value={String((value as string) ?? "")}
-            onChange={(val) =>
-              updateTicketStatus({ id: String(row.id), status: val })
-            }
-            dropdownWidth="w-[10rem] 2xl:w-[10vw]"
-          />
-        </div>
-      ),
-    },
-    {
-      header: "ASSIGNED TO",
-      accessor: "assignedTo",
-      cell: ({ row, value }) => (
-        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
-          {isLoadingUsers ? (
-            <span className="text-gray-400 text-sm">Loading...</span>
-          ) : isUpdatingTicket ? (
-            <span className="text-blue-500 text-sm">Updating...</span>
-          ) : (
-            <Dropdown
-              options={userOptions}
-              value={value ? String(value) : ""}
-              onChange={(val) => {
-                const apiPayload = { assigned_to: val === "" ? null : val };
-                const requestPayload = {
-                  id: String(row.id),
-                  payload: apiPayload,
-                };
-                updateTicket(requestPayload);
-              }}
-              dropdownWidth="w-[15rem] 2xl:w-[15vw]"
+  // Conditionally define columns based on user role
+  const supportTicketListColumn: ITableColumn<SupportTicketRow>[] = useMemo(() => {
+    const baseColumns: ITableColumn<SupportTicketRow>[] = [
+      {
+        header: "STATUS",
+        accessor: "status",
+        cell: ({ row, value }) => (
+          <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
+            <SimpleDropdown
+              options={[
+                { label: "Open", value: "open" },
+                { label: "In Progress", value: "in_progress" },
+                { label: "Completed", value: "completed" },
+              ]}
+              value={String((value as string) ?? "")}
+              onChange={(val) =>
+                updateTicketStatus({ id: String(row.id), status: val })
+              }
+              dropdownWidth="w-[10rem] 2xl:w-[10vw]"
             />
-          )}
-        </div>
-      ),
-    },
-    {
-      header: "IMAGE",
-      accessor: "image",
-      cell: ({ value }) => {
-        const img = (value as string) ?? null;
-        if (!img) {
-          return <span className="text-gray-400 text-xs">No image</span>;
-        }
-        return (
-          <div className="flex items-center justify-center">
-            <div className="relative w-12 h-12 2xl:w-[3vw] 2xl:h-[3vw]">
-              <Image
-                src={img}
-                alt="Ticket attachment"
-                fill
-                className="object-cover rounded-lg"
-                unoptimized
-              />
-            </div>
           </div>
-        );
+        ),
       },
-    },
-    { header: "PRIORITY", accessor: "priority" },
-    { header: "TITLE", accessor: "title" },
-    { header: "PROJECT", accessor: "projectName" },
-    { header: "CREATED AT", accessor: "createdAt" },
-  ];
+      {
+        header: "IMAGE",
+        accessor: "image",
+        cell: ({ value }) => {
+          const img = (value as string) ?? null;
+          if (!img) {
+            return <span className="text-gray-400 text-xs">No image</span>;
+          }
+          return (
+            <div className="flex items-center justify-center">
+              <div className="relative w-12 h-12 2xl:w-[3vw] 2xl:h-[3vw]">
+                <Image
+                  src={img}
+                  alt="Ticket attachment"
+                  fill
+                  className="object-cover rounded-lg"
+                  unoptimized
+                />
+              </div>
+            </div>
+          );
+        },
+      },
+      { header: "PRIORITY", accessor: "priority" },
+      { header: "TITLE", accessor: "title" },
+      { header: "PROJECT", accessor: "projectName" },
+      { header: "CREATED AT", accessor: "createdAt" },
+    ];
+
+    // Add "Assigned To" column only for non-client users
+    if (!isClient) {
+      const assignedToColumn: ITableColumn<SupportTicketRow> = {
+        header: "ASSIGNED TO",
+        accessor: "assignedTo",
+        cell: ({ row, value }) => (
+          <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
+            {isLoadingUsers ? (
+              <span className="text-gray-400 text-sm">Loading...</span>
+            ) : isUpdatingTicket ? (
+              <span className="text-blue-500 text-sm">Updating...</span>
+            ) : (
+              <Dropdown
+                options={userOptions}
+                value={value ? String(value) : ""}
+                onChange={(val) => {
+                  const apiPayload = { assigned_to: val === "" ? null : val };
+                  const requestPayload = {
+                    id: String(row.id),
+                    payload: apiPayload,
+                  };
+                  updateTicket(requestPayload);
+                }}
+                dropdownWidth="w-[15rem] 2xl:w-[15vw]"
+              />
+            )}
+          </div>
+        ),
+      };
+
+      // Insert "Assigned To" column after "STATUS" column
+      baseColumns.splice(1, 0, assignedToColumn);
+    }
+
+    return baseColumns;
+  }, [isClient, isLoadingUsers, isUpdatingTicket, userOptions, updateTicketStatus, updateTicket]);
 
   const supportTicketListAction: ITableAction<SupportTicketRow>[] = [
     {

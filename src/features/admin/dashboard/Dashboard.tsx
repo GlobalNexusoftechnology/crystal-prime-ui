@@ -734,7 +734,17 @@ export default function Dashboard() {
   return (
     <div className="p-6 md:p-8 2xl:p-[2vw] bg-[#fafbfc] border 2xl:border-[0.05vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw] min-h-screen">
       {userRole === "client" ? (
-        <ClientDashboard />
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-[1.2rem] font-medium">Create New Support Request</h1>
+            <p className="w-[40rem] text-gray-500">
+              If you can&apos;t find a Solutions to your problems in our
+              Knowledgebase, you can submit a ticket by selecting appropriate
+              department below.
+            </p>
+          </div>
+          <ClientDashboard />
+        </div>
       ) : (
         <div>
           <div className="mb-6 2xl:mb-[1.5vw]">
