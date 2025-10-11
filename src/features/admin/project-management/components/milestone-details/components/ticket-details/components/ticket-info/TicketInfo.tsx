@@ -10,7 +10,7 @@ export interface ITicketInfoProps {
     created_at: string;
     updated_at: string;
     priority: string;
-    remark: string;
+    // remark: string;
   };
 }
 
@@ -63,7 +63,8 @@ export function TicketInfo({ ticketInfoData }: ITicketInfoProps) {
           <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
             <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
               Assigned To
-            </p>
+            </p>{
+              ticketInfoData.assigned_to.length > 0 ?
             <div className="flex items-center gap-2 2xl:gap-[0.5vw] mt-2 2xl:mt-[0.5vw]">
               <p
                 className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full"
@@ -78,7 +79,8 @@ export function TicketInfo({ ticketInfoData }: ITicketInfoProps) {
               <p className="py-1 2xl:py-[0.25vw] text-[0.9rem]">
                 {getUserName(ticketInfoData.assigned_to)}
               </p>
-            </div>
+            </div>: "-"
+            }
           </div>
         </div>
         <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
@@ -102,14 +104,14 @@ export function TicketInfo({ ticketInfoData }: ITicketInfoProps) {
               {ticketInfoData.priority}
             </span>
           </div>
-          <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
+          {/* <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
             <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
               Remark
             </p>
             <p className="text-[1rem] 2xl:text-[1.1vw]">
               {ticketInfoData.remark || "No remark"}
             </p>
-          </div>
+          </div> */}
         </div>
         <div className="flex gap-12 2xl:gap-[3vw] items-center">
           <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">

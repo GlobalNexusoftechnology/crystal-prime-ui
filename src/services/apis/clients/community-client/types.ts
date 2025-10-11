@@ -2429,7 +2429,7 @@ export interface ITicketData {
   created_at: string;
   updated_at: string;
   image_url?: string | null;
-  remark: string;
+  // remark: string;
   assigned_to?: string | null;
   milestone?: {
     id: string;
@@ -2514,7 +2514,7 @@ export interface ICreateTicketPayload {
   task_id?: string;
   image_url?: string;
   image_file?: File;
-  remark: string;
+  // remark: string;
   assigned_to?: string | null;
 }
 

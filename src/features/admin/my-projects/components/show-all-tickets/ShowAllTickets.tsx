@@ -124,7 +124,7 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
     description: string;
     status: string;
     priority: string;
-    remark: string;
+    // remark: string;
     image: React.ReactNode;
     created_at: string;
     updated_at: string;
@@ -157,11 +157,11 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
       accessor: "description",
       headerClassName: "min-w-[15rem] 2xl:min-w-[15vw]",
     },
-    {
-      header: "REMARK",
-      accessor: "remark",
-      headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
-    },
+    // {
+    //   header: "REMARK",
+    //   accessor: "remark",
+    //   headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
+    // },
     {
       header: "CREATED",
       accessor: "created_at",
@@ -222,10 +222,10 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
           : ticket.description,
       status: ticket.status,
       priority: ticket.priority,
-      remark:
-        ticket.remark.length > 30
-          ? `${ticket.remark.substring(0, 30)}...`
-          : ticket.remark,
+      // remark:
+      //   ticket.remark.length > 30
+      //     ? `${ticket.remark.substring(0, 30)}...`
+      //     : ticket.remark,
       image: ticket.image_url ? (
         <div className="flex justify-center">
           <Image

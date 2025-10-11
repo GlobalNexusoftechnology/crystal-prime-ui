@@ -89,7 +89,7 @@ export function TicketDetails({ ticketData }: { ticketData: ITicketData }) {
                 "toReadable"
               ),
               priority: ticketData.priority || "medium",
-              remark: ticketData.remark || "",
+              // remark: ticketData.remark || "",
             }}
           />
         </div>

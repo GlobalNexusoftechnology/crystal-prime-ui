@@ -120,7 +120,7 @@ export function SupportTickets() {
         createdAt: ticket?.created_at ? formatDate(ticket.created_at) : "-",
         updatedAt: ticket?.updated_at ? formatDate(ticket.updated_at) : "-",
         taskName: ticket?.task?.title || "-",
-        remark: ticket?.remark || "-",
+        // remark: ticket?.remark || "-",
         image: ticket?.image_url || null,
         milestoneId: ticket?.milestone?.id || "",
         taskId: ticket?.task?.id || "",

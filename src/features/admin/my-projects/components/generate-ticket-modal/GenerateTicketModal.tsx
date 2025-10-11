@@ -43,7 +43,7 @@ const validationSchema = Yup.object({
   description: Yup.string().required("Description is required"),
   priority: Yup.string().required("Priority is required"),
   project: Yup.string().required("Project is required"),
-  remark: Yup.string().required("Remark is required"),
+  // remark: Yup.string().required("Remark is required"),
 });
 
 export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
@@ -145,7 +145,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
       project:
         mode === "edit" && ticket ? ticket.project_id || "" : selectedProjectId,
       task_id: mode === "edit" && ticket ? ticket.task?.id || "" : taskId || "",
-      remark: mode === "edit" && ticket ? ticket.remark : "",
+      // remark: mode === "edit" && ticket ? ticket.remark : "",
     },
     validationSchema,
     enableReinitialize: false, // CHANGED: Disable auto-reinitialize to prevent form reset
@@ -172,7 +172,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
           priority: selectedPriority,
           project_id: values.project,
           task_id: finalTaskId,
-          remark: values.remark,
+          // remark: values.remark,
           image_url:
             uploadedImageUrl || imageUrl || ticket.image_url || undefined,
         };
@@ -185,7 +185,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
           priority: selectedPriority,
           project_id: values.project,
           task_id: finalTaskId,
-          remark: values.remark,
+          // remark: values.remark,
           image_file: imageFile || undefined,
           image_url: uploadedImageUrl || imageUrl || undefined,
         };
@@ -209,7 +209,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
             : selectedProjectId,
         task_id:
           mode === "edit" && ticket ? ticket.task?.id || "" : taskId || "",
-        remark: mode === "edit" && ticket ? ticket.remark : "",
+        // remark: mode === "edit" && ticket ? ticket.remark : "",
       });
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -348,7 +348,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
         </div>
 
         {/* Remark Field */}
-        <InputField
+        {/* <InputField
           label="Remark"
           name="remark"
           type="textarea"
@@ -357,7 +357,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           error={formik.touched.remark ? formik.errors.remark : undefined}
-        />
+        /> */}
 
         {/* Action Buttons */}
         <div className="flex gap-4">

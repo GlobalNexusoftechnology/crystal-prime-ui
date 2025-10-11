@@ -196,12 +196,12 @@ export function Tickets({ projectId }: ITicketsProps) {
               </p>
 
               {/* Remark */}
-              {ticket.remark && (
+              {/* {ticket.remark && (
                 <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw] text-gray-600">
                   <span className="font-medium">Remark: </span>
                   {ticket.remark}
                 </p>
-              )}
+              )} */}
 
               {/* Image */}
               {ticket.image_url && (

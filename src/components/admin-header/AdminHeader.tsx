@@ -426,14 +426,14 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
                       </p>
 
                       {/* Remark */}
-                      {ticket.remark && (
+                      {/* {ticket.remark && (
                         <p className="2xl:text-[0.9vw] mb-1 2xl:mb-[0.25vw] text-gray-600 text-sm">
                           <span className="font-medium">Remark: </span>
                           {ticket.remark.length > 50
                             ? `${ticket.remark.substring(0, 50)}...`
                             : ticket.remark}
                         </p>
-                      )}
+                      )} */}
 
                       {/* Image */}
                       {ticket.image_url && (

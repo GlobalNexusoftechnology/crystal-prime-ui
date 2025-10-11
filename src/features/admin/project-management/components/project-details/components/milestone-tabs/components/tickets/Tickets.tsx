@@ -13,7 +13,7 @@ export interface Ticket {
   description: string;
   status: string;
   priority: string;
-  remark: string;
+  // remark: string;
   image_url?: string | null;
 }
 
@@ -234,9 +234,9 @@ export function Tickets({
           {ticket.priority}
         </span>
       </td>
-      <td className="px-4 2xl:px-[1vw] py-2 text-center 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
+      {/* <td className="px-4 2xl:px-[1vw] py-2 text-center 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
         {ticket.remark || '-'}
-      </td>
+      </td> */}
       <td className="px-4 2xl:px-[1vw] py-2 text-center 2xl:py-[0.9vw]">
         {ticket.image_url ? (
           <div className="flex justify-center">
