@@ -969,6 +969,7 @@ export class CommunityClient extends ApiClient {
     searchText?: string;
     statusId?: string;
     typeId?: string;
+    assignedTo?: string;
     dateRange?: "All" | "Daily" | "Weekly" | "Monthly";
     referenceDate?: string;
     followupFrom?: string;
@@ -980,6 +981,7 @@ export class CommunityClient extends ApiClient {
     if (filters.searchText) params.append('searchText', filters.searchText);
     if (filters.statusId && filters.statusId !== 'All Status') params.append('statusId', filters.statusId);
     if (filters.typeId && filters.typeId !== 'All Type') params.append('typeId', filters.typeId);
+    if (filters.assignedTo && filters.assignedTo !== 'All Assigned To') params.append('assignedToId', filters.assignedTo);
     if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
     if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
     if (filters.followupFrom) params.append('followupFrom', filters.followupFrom);

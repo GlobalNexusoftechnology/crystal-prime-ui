@@ -28,6 +28,7 @@ import {
   useLeadDetailQuery,
   useLeadDownloadTemplateExcelQuery,
   useAuthStore,
+  useAllUsersQuery,
 } from "@/services";
 import { downloadBlobFile, formatDate, IApiError } from "@/utils";
 import { FiPlus, FiX } from "react-icons/fi";
@@ -49,6 +50,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [searchInput, setSearchInput] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [selectedType, setSelectedType] = useState("All Type");
+  const [selectedAssignedTo, setSelectedAssignedTo] = useState("All Assigned To");
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
   const [followupFromDate, setFollowupFromDate] = useState("");
   const [followupToDate, setFollowupToDate] = useState("");
@@ -80,18 +82,10 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       followupFrom: followupFromDate || undefined,
       followupTo: followupToDate || undefined,
       assignedToId: selectedAssignedToId || undefined,
+      assignedTo: selectedAssignedTo && selectedAssignedTo !== "All Assigned To" ? selectedAssignedTo : undefined,
       page: currentPage,
     }),
-    [
-      searchQuery,
-      selectedStatus,
-      selectedType,
-      dateRangeFilter,
-      followupFromDate,
-      followupToDate,
-      selectedAssignedToId,
-      currentPage,
-    ]
+    [searchQuery, selectedStatus, selectedType, dateRangeFilter, followupFromDate, followupToDate, selectedAssignedToId, selectedAssignedTo, currentPage]
   );
 
   const { activeSession } = useAuthStore();
@@ -164,6 +158,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   } = useAllLeadsListQuery(filters);
   // moved above for dependency usage
   const { allTypesData } = useAllTypesQuery();
+  const { allUsersData } = useAllUsersQuery();
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
 
   const { onLeadDownloadTemplateExcel } = useLeadDownloadTemplateExcelQuery();
@@ -401,6 +396,14 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     })) || []),
   ];
 
+  const assignedToOptions = [
+    { label: "All Assigned To", value: "All Assigned To" },
+    ...(allUsersData?.data?.list?.map((type) => ({
+      label: `${type?.first_name} ${type.last_name}`,
+      value: type?.id.toString(),
+    })) || []),
+  ];
+
   const dateRangeOptions = [
     { label: "All", value: "All" },
     { label: "Daily", value: "Daily" },
@@ -414,6 +417,10 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const handleTypeChange = (val: string) => {
     setSelectedType(val);
+  };
+
+  const handleAssignedToChange = (val: string) => {
+    setSelectedAssignedTo(val);
   };
 
   const handleDateRangeChange = (val: string) => {
@@ -536,6 +543,12 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           options={typeOptions}
           value={selectedType}
           onChange={handleTypeChange}
+          dropdownWidth="w-full md:w-fit"
+        />
+        <Dropdown
+          options={assignedToOptions}
+          value={selectedAssignedTo}
+          onChange={handleAssignedToChange}
           dropdownWidth="w-full md:w-fit"
         />
         <SimpleDropdown
