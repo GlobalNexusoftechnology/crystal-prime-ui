@@ -2688,3 +2688,20 @@ export interface ICreateHolidayResponse {
   success: true;
   data: ICreateHolidayPayload;
 }
+
+// get all holiday
+  export interface IHoliday {
+    id: string;
+    created_at: string;
+    updated_at: string;
+    deleted: boolean;
+    deleted_at: string | null;
+    holidayName: string;
+    date: string;
+  }
+
+  export interface IHolidaysResponse {
+    status: boolean;
+    message: string;
+    data: IHoliday[];
+  }

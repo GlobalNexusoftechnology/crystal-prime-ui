@@ -183,6 +183,7 @@ import {
   IAllTasksResponse,
   ICreateHolidayPayload,
   ICreateHolidayResponse,
+  IHolidaysResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -342,6 +343,7 @@ import {
   deleteTicketUrl,
   updateDailyTaskStatusUrl,
   createHolidayUrl,
+  fetchAllHolidaysUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2476,6 +2478,20 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data
   }
+
+  // get all holiday 
+    public getAllHoliday = async () => {
+    const response = await this.get<IHolidaysResponse>(fetchAllHolidaysUrl(), {
+      requiresAuth: false,
+    })
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data.data
+  }
+
 }
 
 /**

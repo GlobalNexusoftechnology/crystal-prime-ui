@@ -177,3 +177,4 @@ export { useTicketDetailQuery } from "./useTicketDetailQuery";
 
 // Holiday 
 export {useCreateHolidayMutation} from "./useCreateHolidayMutation"
+export {useAllHolidayQuery} from "./useAllHolidaysQuery"

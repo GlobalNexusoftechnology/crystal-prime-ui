@@ -363,3 +363,4 @@ export const getAllTicketCommentsUrl = (ticketId: string) =>
 
 // Holiday 
 export const createHolidayUrl = () => "/holidays"; //post
+export const fetchAllHolidaysUrl = () => "/holidays"; //get

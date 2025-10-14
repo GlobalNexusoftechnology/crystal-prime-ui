@@ -1,13 +1,15 @@
 "use client";
 import { useState } from "react";
 import { Button, Table } from "@/components";
-import { holidaysAction, holidaysList, holidaysListColumn } from "@/constants";
+import { holidaysAction, holidaysListColumn } from "@/constants";
 import { AddHolidayModal, Breadcrumb } from "@/features";
 import { FiPlus } from "react-icons/fi";
+import { useAllHolidayQuery } from "@/services";
 
 export function HolidaysList() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { data } = useAllHolidayQuery();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
 
@@ -32,7 +34,7 @@ export function HolidaysList() {
       </div>
 
       <Table
-        data={holidaysList}
+        data={data || []}
         columns={holidaysListColumn}
         actions={holidaysAction}
       />
