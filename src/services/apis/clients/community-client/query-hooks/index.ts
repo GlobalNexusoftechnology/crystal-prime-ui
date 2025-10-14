@@ -186,5 +186,5 @@ export { useCreateLeaveMutation } from "./useCreateLeaveMutation";
 export { useCreateCheckInMutation } from "./useCheckInMutation";
 //check out
 export { useCreateCheckOutMutation } from "./useCheckOutMutation";
-
-export {useAllAttendanceQuery} from "./useAllAttendanceQuery"
+//Attendance
+export { useAllAttendanceQuery } from "./useAllAttendanceQuery";
