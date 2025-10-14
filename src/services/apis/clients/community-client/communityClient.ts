@@ -189,6 +189,11 @@ import {
   IUpdateHolidayResponse,
   ICreateLeavePayload,
   ICreateLeaveResponse,
+  ICheckInPayload,
+  ICheckInResponse,
+  ICheckOutPayload,
+  ICheckOutResponse,
+  IAttendancesResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -352,6 +357,9 @@ import {
   deleteHolidayUrl,
   updateHolidayUrl,
   createLeaveUrl,
+  createCheckInUrl,
+  createCheckOutUrl,
+  fetchAllAttendanceUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2535,7 +2543,45 @@ export class CommunityClient extends ApiClient {
     return response?.data
   }
 
+// check in
+  public createCheckIn = async (payload: ICheckInPayload) => {
+    const response = await this.post<ICheckInResponse>(
+      createCheckInUrl(),
+      payload,
+      { requiresAuth: false }
+    )
 
+    if (!response?.success) {
+      throw response?.response?.data
+    }
+    return response?.data
+  }
+
+  // check in
+  public createCheckOut = async (payload: ICheckOutPayload) => {
+    const response = await this.post<ICheckOutResponse>(
+      createCheckOutUrl(),
+      payload,
+      { requiresAuth: false }
+    )
+
+    if (!response?.success) {
+      throw response?.response?.data
+    }
+    return response?.data
+  }
+  // get all Attendance 
+    public getAllAttendance = async () => {
+    const response = await this.get<IAttendancesResponse>(fetchAllAttendanceUrl(), {
+      requiresAuth: false,
+    })
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data.data
+  }
 }
 
 /**

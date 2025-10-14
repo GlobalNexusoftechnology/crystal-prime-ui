@@ -2744,3 +2744,60 @@ export interface ICreateLeaveResponse {
   success: true;
   data: ICreateLeavePayload;
 }
+
+
+
+export interface ICheckInPayload {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  staffId: string;
+  inTime: string;
+  outTime: string;
+  date: string;
+  totalHours: string;
+}
+
+export interface ICheckInResponse {
+  status: boolean;
+  message: string;
+  data: ICheckInPayload;
+}
+
+export interface ICheckOutPayload {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  staffId: string;
+  inTime: string;
+  outTime: string;
+  date: string;
+  totalHours: string;
+}
+
+export interface ICheckOutResponse {
+  status: boolean;
+  message: string;
+  data: ICheckOutPayload;
+}
+
+// all attendance 
+export interface IAttendance {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  holidayName: string;
+  date: string;
+}
+
+export interface IAttendancesResponse {
+  status: boolean;
+  message: string;
+  data: IAttendance[];
+}

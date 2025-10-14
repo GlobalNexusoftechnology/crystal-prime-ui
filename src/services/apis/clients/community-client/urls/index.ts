@@ -371,3 +371,12 @@ export const updateHolidayUrl = (id: string) => `/holidays/${id}`;
 
 //leave
 export const createLeaveUrl = () => "/leaves"; //post
+ // check in
+ export const createCheckInUrl = () => "/attendances/check-in"; //post
+
+  export const createCheckOutUrl = () => "/attendances/check-out"; //post
+  
+
+  export const fetchAllAttendanceUrl = () => "/attendances/all"; //get
+
+
