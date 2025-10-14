@@ -369,3 +369,5 @@ export const fetchAllHolidaysUrl = () => "/holidays"; //get
 export const deleteHolidayUrl = (id: string) => `/holidays/${id}`;
 export const updateHolidayUrl = (id: string) => `/holidays/${id}`;
 
+//leave
+export const createLeaveUrl = () => "/leaves"; //post

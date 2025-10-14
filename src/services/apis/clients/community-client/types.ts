@@ -2726,3 +2726,21 @@ export interface IUpdateHolidayResponse {
 }
 
 
+
+// create leave
+
+export interface ICreateLeavePayload {
+   staffId: string;
+  appliedDate: string;
+  fromDate: string;
+  toDate: string;
+  leaveType: string;
+  description: string;
+}
+
+export interface ICreateLeaveResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateLeavePayload;
+}

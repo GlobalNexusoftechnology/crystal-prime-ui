@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
 import { Button, DatePicker, Dropdown, InputField } from "@/components";
-// import { Breadcrumb } from "@/features";
+import { useCreateLeaveMutation } from "@/services";
+import toast from "react-hot-toast";
 
 interface LeaveFormData {
-  employeeId: string;
-  leaveType: "fullDay" | "halfDay" | "";
+  staffId: string;
+  leaveType: "Full Day" | "Half Day" | "";
   leaveCategory: string;
   fromDate: string;
   toDate: string;
@@ -14,20 +15,38 @@ interface LeaveFormData {
 
 export function ApplyLeave() {
   const leaveTypeOptions = [
-    { label: "Sick Leave", value: "sick" },
-    { label: "Casual Leave", value: "casual" },
-    { label: "Earned Leave", value: "earned" },
-    { label: "Maternity Leave", value: "maternity" },
-    { label: "Paternity Leave", value: "paternity" },
+    { label: "Sick Leave", value: "Sick Leave" },
+    { label: "Casual Leave", value: "Casual Leave" },
+    { label: "Earned Leave", value: "Earned Leave" },
+    { label: "Maternity Leave", value: "Maternity Leave" },
+    { label: "Paternity Leave", value: "Paternity Leave" },
   ];
 
   const [formData, setFormData] = useState<LeaveFormData>({
-    employeeId: "",
+    staffId: "",
     leaveType: "",
     leaveCategory: "",
     fromDate: "",
     toDate: "",
     reason: "",
+  });
+
+  //  Connect the API Hook
+  const { onLeaveMutation, isPending } = useCreateLeaveMutation({
+    onSuccessCallback: (data) => {
+      toast.success(data.message);
+      setFormData({
+        staffId: "",
+        leaveType: "",
+        leaveCategory: "",
+        fromDate: "",
+        toDate: "",
+        reason: "",
+      });
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Something went wrong!");
+    },
   });
 
   const handleInputChange = (field: keyof LeaveFormData, value: string) => {
@@ -39,18 +58,36 @@ export function ApplyLeave() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
+
+    if (
+      !formData.staffId ||
+      !formData.leaveType ||
+      !formData.fromDate ||
+      !formData.toDate
+    ) {
+      toast.error("Please fill all required fields");
+      return;
+    }
+
+    //  Prepare payload for API
+    const payload = {
+      staffId: formData.staffId,
+      appliedDate: new Date().toISOString().split("T")[0], // current date
+      fromDate: formData.fromDate,
+      toDate: formData.toDate,
+      leaveType: formData.leaveType,
+      description: formData.reason,
+    };
+
+    onLeaveMutation(payload);
   };
 
   const calculateTotalDays = () => {
     if (!formData.fromDate || !formData.toDate) return "0";
-
     const from = new Date(formData.fromDate);
     const to = new Date(formData.toDate);
     const diffTime = Math.abs(to.getTime() - from.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-
-    return diffDays.toString();
+    return (Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1).toString();
   };
 
   return (
@@ -59,7 +96,6 @@ export function ApplyLeave() {
         <h1 className="text-2xl font-semibold text-gray-900 mb-1">
           Apply Leave
         </h1>
-        {/* <Breadcrumb /> */}
       </div>
 
       <form onSubmit={handleSubmit}>
@@ -67,21 +103,22 @@ export function ApplyLeave() {
           <InputField
             label="Employee ID"
             placeholder="Employee ID"
-            value={formData.employeeId}
+            value={formData.staffId}
+            onChange={(e) => handleInputChange("staffId", e.target.value)}
           />
 
           {/* Type Selection */}
           <div className="flex flex-col gap-3">
             <label className="block text-gray-700 font-medium">
-              Type <span className="text-red-500">*</span>
+              Leave Type <span className="text-red-500">*</span>
             </label>
             <div className="flex gap-6">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="radio"
                   name="leaveType"
-                  value="fullDay"
-                  checked={formData.leaveType === "fullDay"}
+                  value="Full Day"
+                  checked={formData.leaveType === "Full Day"}
                   onChange={(e) =>
                     handleInputChange("leaveType", e.target.value)
                   }
@@ -93,8 +130,8 @@ export function ApplyLeave() {
                 <input
                   type="radio"
                   name="leaveType"
-                  value="halfDay"
-                  checked={formData.leaveType === "halfDay"}
+                  value="Half Day"
+                  checked={formData.leaveType === "Half Day"}
                   onChange={(e) =>
                     handleInputChange("leaveType", e.target.value)
                   }
@@ -104,39 +141,30 @@ export function ApplyLeave() {
               </label>
             </div>
           </div>
-          <div className="flex flex-col gap-3">
-            <Dropdown
-              label="Leave Type"
-              isRequired
-              options={leaveTypeOptions}
-              value={formData.leaveCategory}
-              onChange={(val) => handleInputChange("leaveCategory", val)}
-            />
-            <div className="text-sm text-gray-600">
-              Available Leave - 1.0 Days
-            </div>
-          </div>
 
-          {/* Date Range */}
+          <Dropdown
+            label="Leave Category"
+            isRequired
+            options={leaveTypeOptions}
+            value={formData.leaveCategory}
+            onChange={(val) => handleInputChange("leaveCategory", val)}
+          />
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DatePicker
               label="From"
               value={formData.fromDate}
               onChange={(date) => handleInputChange("fromDate", date)}
-              isRequired={true}
-              placeholder="Select start date"
+              isRequired
             />
-
             <DatePicker
               label="To"
               value={formData.toDate}
               onChange={(date) => handleInputChange("toDate", date)}
-              isRequired={true}
-              placeholder="Select end date"
+              isRequired
             />
           </div>
 
-          {/* Total Days */}
           <div className="flex flex-col gap-2">
             <label className="block text-gray-700 font-medium">
               Total Day(s)
@@ -146,7 +174,6 @@ export function ApplyLeave() {
             </div>
           </div>
 
-          {/* Reason for Leave */}
           <div className="flex flex-col gap-3">
             <label className="block text-gray-700 font-medium">
               Reason for Leave
@@ -160,10 +187,19 @@ export function ApplyLeave() {
             />
           </div>
 
-          {/* Action Buttons */}
           <div className="flex gap-4 ">
-            <Button title="Cancel" width="w-fit" variant="primary-outline" />
-            <Button title="Submit" width="w-fit" />
+            <Button
+              title="Cancel"
+              width="w-fit"
+              variant="primary-outline"
+              type="button"
+            />
+            <Button
+              title={isPending ? "Submitting..." : "Submit"}
+              width="w-fit"
+              type="submit"
+              disabled={isPending}
+            />
           </div>
         </div>
       </form>

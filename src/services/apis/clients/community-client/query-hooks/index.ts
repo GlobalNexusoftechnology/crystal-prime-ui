@@ -179,3 +179,7 @@ export { useCreateHolidayMutation } from "./useCreateHolidayMutation";
 export { useAllHolidayQuery } from "./useAllHolidaysQuery";
 export { useDeleteHolidayMutation } from "./useDeleteHolidayMutation";
 export { useUpdateHolidayMutation } from "./useUpdateHolidayMutation";
+
+
+// Leave
+export {useCreateLeaveMutation} from "./useCreateLeaveMutation"

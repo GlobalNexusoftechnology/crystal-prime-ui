@@ -187,6 +187,8 @@ import {
   IDeleteHolidayResponse,
   IUpdateHolidayPayload,
   IUpdateHolidayResponse,
+  ICreateLeavePayload,
+  ICreateLeaveResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -349,6 +351,7 @@ import {
   fetchAllHolidaysUrl,
   deleteHolidayUrl,
   updateHolidayUrl,
+  createLeaveUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2469,7 +2472,6 @@ export class CommunityClient extends ApiClient {
   };
 
 
-  // Create holiday 
     // create Holiday
   public createHoliday = async (payload: ICreateHolidayPayload) => {
     const response = await this.post<ICreateHolidayResponse>(
@@ -2516,6 +2518,19 @@ export class CommunityClient extends ApiClient {
 
     if (!response?.success) {
       throw response?.errorData
+    }
+    return response?.data
+  }
+// create leave
+  public createLeave = async (payload: ICreateLeavePayload) => {
+    const response = await this.post<ICreateLeaveResponse>(
+      createLeaveUrl(),
+      payload,
+      { requiresAuth: false }
+    )
+
+    if (!response?.success) {
+      throw response?.response?.data
     }
     return response?.data
   }
