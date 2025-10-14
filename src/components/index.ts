@@ -20,3 +20,4 @@ export {RadioButton} from "./radio-button";
 export { DeleteModal } from "./modal/DeleteModal";
 export * from "./action-dropdown";
 export * from "./number-input";
+export * from "./time-picker"

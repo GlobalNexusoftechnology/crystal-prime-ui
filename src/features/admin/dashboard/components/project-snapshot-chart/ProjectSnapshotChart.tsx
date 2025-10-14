@@ -4,6 +4,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 interface DataItem {
   name: string;
   value: number;
+  [key: string]: string | number; // ✅ Fix: index signature for recharts compatibility
 }
 
 interface ProjectSnapshotChartProps {
@@ -33,10 +34,7 @@ export const ProjectSnapshotChart: React.FC<ProjectSnapshotChartProps> = ({
   data,
   colors,
 }) => {
-  // Show the largest value as the center label (or customize as needed)
-
-  // For the legend, show all statuses
-  const legendItems = data?.map((d, idx) => ({
+  const legendItems = data.map((d, idx) => ({
     name: d.name,
     color: colors[idx % colors.length],
   }));
@@ -69,7 +67,7 @@ export const ProjectSnapshotChart: React.FC<ProjectSnapshotChartProps> = ({
               label={false}
               isAnimationActive={false}
             >
-              {data?.length > 0 &&  data?.map((entry, idx) => (
+              {data.map((entry, idx) => (
                 <Cell key={`cell-${idx}`} fill={colors[idx % colors.length]} />
               ))}
             </Pie>
@@ -77,9 +75,8 @@ export const ProjectSnapshotChart: React.FC<ProjectSnapshotChartProps> = ({
           </PieChart>
         </ResponsiveContainer>
       </div>
-      {/* Legend */}
       <div className="flex flex-wrap gap-6 mt-4">
-        {legendItems?.length > 0 && legendItems?.map((item) => (
+        {legendItems.map((item) => (
           <div key={item.name} className="flex items-center gap-2 text-base">
             <span
               className="inline-block w-4 h-4 rounded-full"

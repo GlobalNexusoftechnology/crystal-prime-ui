@@ -10,6 +10,7 @@ import {
 interface DataItem {
   name: string;
   value: number;
+  [key: string]: string | number;
 }
 
 interface LeadTypeChartProps {
@@ -17,22 +18,19 @@ interface LeadTypeChartProps {
   colors: string[];
 }
 
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  percent,
-}: PieLabelRenderProps) => {
+const renderCustomizedLabel = (props: PieLabelRenderProps) => {
   const RADIAN = Math.PI / 180;
-  const nCx = Number(cx) || 0;
-  const nCy = Number(cy) || 0;
-  const nInner = Number(innerRadius) || 0;
-  const nOuter = Number(outerRadius) || 0;
-  const radius = nInner + (nOuter - nInner) * 1.15;
-  const x = nCx + radius * Math.cos(-midAngle * RADIAN);
-  const y = nCy + radius * Math.sin(-midAngle * RADIAN);
+
+  const cx = Number(props.cx ?? 0);
+  const cy = Number(props.cy ?? 0);
+  const midAngle = Number(props.midAngle ?? 0);
+  const innerRadius = Number(props.innerRadius ?? 0);
+  const outerRadius = Number(props.outerRadius ?? 0);
+  const percent = Number(props.percent ?? 0);
+
+  const radius = innerRadius + (outerRadius - innerRadius) * 1.15;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
   return (
     <g>
@@ -53,7 +51,7 @@ const renderCustomizedLabel = ({
         className="text-[0.7rem]"
         fontWeight={600}
       >
-        {`${Math.round((percent || 0) * 100)}%`}
+        {`${Math.round(percent * 100)}%`}
       </text>
     </g>
   );
@@ -65,14 +63,19 @@ const dropdownOptions = [
   { value: "yearly", label: "Yearly" },
 ];
 
-export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colors }) => {
+export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({
+  chartDataMap,
+  colors,
+}) => {
   const [selected, setSelected] = useState("monthly");
   const [open, setOpen] = useState(false);
-  const [chartData, setChartData] = useState<DataItem[]>(chartDataMap["monthly"] ?? []);
+  const [chartData, setChartData] = useState<DataItem[]>(
+    chartDataMap["monthly"] ?? []
+  );
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setChartData(chartDataMap[selected]);
+    setChartData(chartDataMap[selected] ?? []);
   }, [selected, chartDataMap]);
 
   useEffect(() => {
@@ -88,27 +91,30 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const legendItems = (chartData ?? [])?.map((d, idx) => ({
+  const legendItems = chartData.map((d, idx) => ({
     name: d.name,
     color: colors[idx % colors.length],
   }));
 
-  // If all items are 'Unknown', show a message instead of the chart
-  const allUnknown = (chartData ?? []).length > 0 && (chartData ?? []).every(d => d.name === "Unknown");
+  const allUnknown =
+    chartData.length > 0 && chartData.every((d) => d.name === "Unknown");
 
   return (
-    <div
-      className="bg-white rounded-xl p-4 border 2xl:border-[0.05vw] border-gray-300 flex flex-col items-center w-full"
-    >
+    <div className="bg-white rounded-xl p-4 border 2xl:border-[0.05vw] border-gray-300 flex flex-col items-center w-full">
       <div className="flex justify-between items-center w-full mb-2 2xl:mb-[0.5vw]">
-        <span className="font-medium text-lg 2xl:text-[1.2vw] text-gray-900">Lead Type</span>
-        <div className="flex items-center gap-2 2xl:gap-[0.5vw] relative" ref={dropdownRef}>
+        <span className="font-medium text-lg 2xl:text-[1.2vw] text-gray-900">
+          Lead Type
+        </span>
+        <div
+          className="flex items-center gap-2 2xl:gap-[0.5vw] relative"
+          ref={dropdownRef}
+        >
           <button
             type="button"
             className="text-base text-gray-700 font-medium bg-transparent outline-none flex items-center gap-1"
             onClick={() => setOpen((prev) => !prev)}
           >
-            {dropdownOptions.find(opt => opt.value === selected)?.label}
+            {dropdownOptions.find((opt) => opt.value === selected)?.label}
             <svg
               className={`w-4 h-4 ml-2 transition-transform ${
                 open ? "rotate-180" : "rotate-0"
@@ -127,7 +133,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
           </button>
           {open && (
             <div className="absolute right-0 mt-2 bg-white border border-gray-200 rounded shadow z-10 min-w-[8rem]">
-              {dropdownOptions?.length > 0 && dropdownOptions.map((option) => (
+              {dropdownOptions.map((option) => (
                 <button
                   key={option.value}
                   className={`block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 ${
@@ -145,12 +151,17 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
           )}
         </div>
       </div>
+
       <div className="w-full flex flex-col md:flex-row gap-4">
         <div className="w-full lg:w-[55%] flex flex-col justify-center">
           {allUnknown ? (
-            <div className="text-center text-gray-500 py-8">No lead type data available for this period.</div>
-          ) : (chartData ?? []).length === 0 ? (
-            <div className="text-center text-gray-500 py-8">No data available for this period.</div>
+            <div className="text-center text-gray-500 py-8">
+              No lead type data available for this period.
+            </div>
+          ) : chartData.length === 0 ? (
+            <div className="text-center text-gray-500 py-8">
+              No data available for this period.
+            </div>
           ) : (
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
@@ -169,7 +180,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
                   labelLine={false}
                   isAnimationActive={false}
                 >
-                  {(chartData ?? [])?.map((entry, idx) => (
+                  {chartData.map((entry, idx) => (
                     <Cell
                       key={`cell-${idx}`}
                       fill={colors[idx % colors.length]}
@@ -180,10 +191,10 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({ chartDataMap, colo
             </ResponsiveContainer>
           )}
         </div>
-        {/* Legend */}
+
         <div className="w-full md:auto lg:w-[45%] flex flex-wrap justify-center flex-col gap-4">
           <div className="flex gap-4 flex-wrap">
-            {legendItems?.length > 0 && legendItems.map((item) => (
+            {legendItems.map((item) => (
               <div
                 key={item.name}
                 className="flex items-center gap-2 text-base 2xl:text-[1vw] mb-2"

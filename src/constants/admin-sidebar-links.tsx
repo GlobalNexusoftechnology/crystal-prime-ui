@@ -12,7 +12,7 @@ import {
 } from "@/features";
 import { TbReportAnalytics } from "react-icons/tb";
 import { LuTicket } from "react-icons/lu";
-
+import { FaUsersGear } from "react-icons/fa6";
 
 type TSidebarPermission = {
   module: string;
@@ -34,7 +34,7 @@ export interface IAdminSidebarLink {
   /**
    * Permission mapping for the sidebar link.
    */
-  permission: TSidebarPermission;
+  permission?: TSidebarPermission;
   /**
    * Optional nested links for sub-navigation.
    */
@@ -91,6 +91,31 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     permission: { module: "STAFF_MANAGEMENT", actions: "VIEW" },
   },
   {
+    //That will show to Staff
+    path: "/admin/leave",
+    name: "Leave",
+    icon: <StaffManagementIcon />,
+    activeIcon: <StaffManagementIcon color="#034A9F" />,
+    links: [
+      {
+        path: "/admin/leave/apply-leave",
+        name: "Apply Leave",
+        icon: <TbReportAnalytics className="w-full h-full" />,
+        activeIcon: (
+          <TbReportAnalytics className="w-full h-full" color="#034A9F" />
+        ),
+      },
+      {
+        path: "/admin/leave/holidays",
+        name: "Holidays",
+        icon: <TbReportAnalytics className="w-full h-full" />,
+        activeIcon: (
+          <TbReportAnalytics className="w-full h-full" color="#034A9F" />
+        ),
+      },
+    ],
+  },
+  {
     path: "/admin/client-management",
     name: "Clients",
     icon: <UserListRoundedIcon />,
@@ -115,7 +140,9 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
         path: "/admin/reports/public-business-report",
         name: "Public Business",
         icon: <TbReportAnalytics className="w-full h-full" />,
-        activeIcon: <TbReportAnalytics className="w-full h-full" color="#034A9F" />,
+        activeIcon: (
+          <TbReportAnalytics className="w-full h-full" color="#034A9F" />
+        ),
         permission: { module: "PUBLIC_BUSINESS_DASHBOARD", actions: "VIEW" },
       },
     ],
@@ -123,9 +150,41 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   {
     path: "/admin/support-tickets",
     name: "Support Tickets",
-    icon: <LuTicket className="w-full h-full"/>,
+    icon: <LuTicket className="w-full h-full" />,
     activeIcon: <LuTicket className="w-full h-full" color="#034A9F" />,
     permission: { module: "SUPPORT_TICKETS", actions: "VIEW" },
+  },
+  {
+    path: "/admin/hr-management",
+    name: "HR Management",
+    icon: <FaUsersGear className="w-full h-full" />,
+    activeIcon: <FaUsersGear className="w-full h-full" color="#034A9F" />,
+    links: [
+      {
+        path: "/admin/hr-management/holidays-list",
+        name: "Holidays List",
+        icon: <TbReportAnalytics className="w-full h-full" />,
+        activeIcon: (
+          <TbReportAnalytics className="w-full h-full" color="#034A9F" />
+        ),
+      },
+      {
+        path: "/admin/hr-management/attendance",
+        name: "Attendance",
+        icon: <TbReportAnalytics className="w-full h-full" />,
+        activeIcon: (
+          <TbReportAnalytics className="w-full h-full" color="#034A9F" />
+        ),
+      },
+        {
+        path: "/admin/hr-management/leaves",
+        name: "Leaves",
+        icon: <TbReportAnalytics className="w-full h-full" />,
+        activeIcon: (
+          <TbReportAnalytics className="w-full h-full" color="#034A9F" />
+        ),
+      },
+    ],
   },
   {
     path: "/admin/settings",
