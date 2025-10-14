@@ -185,6 +185,8 @@ import {
   ICreateHolidayResponse,
   IHolidaysResponse,
   IDeleteHolidayResponse,
+  IUpdateHolidayPayload,
+  IUpdateHolidayResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -346,6 +348,7 @@ import {
   createHolidayUrl,
   fetchAllHolidaysUrl,
   deleteHolidayUrl,
+  updateHolidayUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2500,6 +2503,19 @@ export class CommunityClient extends ApiClient {
 
     if (!response?.success) {
       throw response?.response?.data
+    }
+    return response?.data
+  }
+// update holiday 
+
+  public updateHoliday = async ({ id, payload }: IUpdateHolidayPayload) => {
+    const response = await this.put<IUpdateHolidayResponse>(
+      updateHolidayUrl(id),
+      payload,
+    )
+
+    if (!response?.success) {
+      throw response?.errorData
     }
     return response?.data
   }

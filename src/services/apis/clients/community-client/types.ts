@@ -2712,3 +2712,17 @@ export interface IDeleteHolidayResponse {
   success: true;
   data: ICreateHolidayPayload;
 }
+
+// update holiday 
+export interface IUpdateHolidayPayload {
+  id: string;
+  payload: ICreateHolidayPayload;
+}
+export interface IUpdateHolidayResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IUpdateHolidayPayload;
+}
+
+

@@ -367,3 +367,5 @@ export const getAllTicketCommentsUrl = (ticketId: string) =>
 export const createHolidayUrl = () => "/holidays"; //post
 export const fetchAllHolidaysUrl = () => "/holidays"; //get
 export const deleteHolidayUrl = (id: string) => `/holidays/${id}`;
+export const updateHolidayUrl = (id: string) => `/holidays/${id}`;
+

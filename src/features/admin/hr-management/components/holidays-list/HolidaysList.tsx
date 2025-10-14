@@ -12,7 +12,19 @@ import {
 import toast from "react-hot-toast";
 
 export function HolidaysList() {
-  const { data, refetchHolidays } = useAllHolidayQuery();
+  const { data: holidays = [], refetchHolidays } = useAllHolidayQuery();
+  const [selectedHoliday, setSelectedHoliday] = useState<IHoliday | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setSelectedHoliday(null);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedHoliday(null);
+  };
 
   const { onDeleteHoliday } = useDeleteHolidayMutation({
     onSuccessCallback(data) {
@@ -28,23 +40,19 @@ export function HolidaysList() {
     {
       label: "Edit",
       onClick: (row) => {
-        console.log("Edit clicked", row);
+        setSelectedHoliday(row);
+        setIsModalOpen(true);
       },
       className: "text-blue-500",
     },
     {
       label: "Delete",
       onClick: (row) => {
-          onDeleteHoliday(row.id); 
-        
+        onDeleteHoliday(row.id);
       },
       className: "text-red-500",
     },
   ];
-
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOpenModal = () => setIsModalOpen(true);
-  const handleCloseModal = () => setIsModalOpen(false);
 
   return (
     <div className="p-6 md:p-8 bg-[#fafbfc] border border-gray-300 rounded-xl min-h-screen flex flex-col gap-4">
@@ -67,7 +75,7 @@ export function HolidaysList() {
 
       {/* Table */}
       <Table
-        data={data || []}
+        data={holidays}
         columns={holidaysListColumn}
         actions={holidaysAction}
       />
@@ -77,6 +85,7 @@ export function HolidaysList() {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         refetchHolidays={refetchHolidays}
+        selectedHoliday={selectedHoliday}
       />
     </div>
   );
