@@ -255,7 +255,7 @@ export const updateMilestoneUrl = (milestoneId: string) =>
   `/project-milestones/${milestoneId}`;
 export const deleteMilestoneUrl = (milestoneId: string) =>
   `/project-milestones/${milestoneId}`;
-export const getMilestoneDetailUrl = (milestoneId: string) => 
+export const getMilestoneDetailUrl = (milestoneId: string) =>
   `/project-milestones/${milestoneId}`;
 export const getAllMilestonesUrl = (projectId: string) =>
   `/project-milestones/${projectId}`;
@@ -294,7 +294,8 @@ export const deleteDailyTaskEntryUrl = (id: string) => `/daily-task/${id}`;
 export const getDailyTaskEntryDetailUrl = (id: string) => `/daily-task/${id}`;
 export const getAllDailyTaskEntriesUrl = (projectId?: string) =>
   projectId ? `/daily-task?projectId=${projectId}` : "/daily-task";
-export const updateDailyTaskStatusUrl = (id: string) => `/daily-task/${id}/status`;
+export const updateDailyTaskStatusUrl = (id: string) =>
+  `/daily-task/${id}/status`;
 
 export const dashboardSummaryUrl = () => "/dashboard/summary";
 
@@ -341,7 +342,8 @@ export const fetchBusinessAnalysisReportExcelUrl = () =>
   "/reports/business-analysis/export/excel";
 
 // Ticket Management URLs
-export const fetchAllTicketsUrl = (projectId: string) => `/tickets/project/${projectId}`;
+export const fetchAllTicketsUrl = (projectId: string) =>
+  `/tickets/project/${projectId}`;
 export const fetchAllTicketsAcrossProjectsUrl = () => "/tickets";
 export const createTicketUrl = () => "/tickets";
 export const getTicketDetailByIdUrl = (id: string) => `/tickets/${id}`;
@@ -361,6 +363,7 @@ export const getTicketCommentDetailUrl = (commentId: string) =>
 export const getAllTicketCommentsUrl = (ticketId: string) =>
   `/ticket-comments/ticket/${ticketId}`;
 
-// Holiday 
+// Holiday
 export const createHolidayUrl = () => "/holidays"; //post
 export const fetchAllHolidaysUrl = () => "/holidays"; //get
+export const deleteHolidayUrl = (id: string) => `/holidays/${id}`;

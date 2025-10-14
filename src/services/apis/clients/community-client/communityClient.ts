@@ -184,6 +184,7 @@ import {
   ICreateHolidayPayload,
   ICreateHolidayResponse,
   IHolidaysResponse,
+  IDeleteHolidayResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -344,6 +345,7 @@ import {
   updateDailyTaskStatusUrl,
   createHolidayUrl,
   fetchAllHolidaysUrl,
+  deleteHolidayUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2491,6 +2493,17 @@ export class CommunityClient extends ApiClient {
 
     return response?.data.data
   }
+  // delete holiday 
+  
+  public deleteHoliday = async (id: string) => {
+    const response = await this.del<IDeleteHolidayResponse>(deleteHolidayUrl(id))
+
+    if (!response?.success) {
+      throw response?.response?.data
+    }
+    return response?.data
+  }
+
 
 }
 

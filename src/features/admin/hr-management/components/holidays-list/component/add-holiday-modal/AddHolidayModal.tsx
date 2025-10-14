@@ -8,6 +8,7 @@ import * as Yup from "yup";
 interface AddHolidayModalProps {
   isOpen: boolean;
   onClose: () => void;
+  refetchHolidays: () => void;
 }
 
 // Yup validation schema
@@ -16,10 +17,11 @@ const HolidaySchema = Yup.object().shape({
   date: Yup.string().required("Date is required"),
 });
 
-export function AddHolidayModal({ isOpen, onClose }: AddHolidayModalProps) {
+export function AddHolidayModal({ isOpen, onClose, refetchHolidays }: AddHolidayModalProps) {
   const { onHolidayMutation } = useCreateHolidayMutation({
     onSuccessCallback: (data) => {
       toast.success(data.message);
+      refetchHolidays()
     },
     onErrorCallback: (err) => {
       toast.error(err.message);

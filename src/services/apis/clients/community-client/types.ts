@@ -2690,18 +2690,25 @@ export interface ICreateHolidayResponse {
 }
 
 // get all holiday
-  export interface IHoliday {
-    id: string;
-    created_at: string;
-    updated_at: string;
-    deleted: boolean;
-    deleted_at: string | null;
-    holidayName: string;
-    date: string;
-  }
+export interface IHoliday {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  holidayName: string;
+  date: string;
+}
 
-  export interface IHolidaysResponse {
-    status: boolean;
-    message: string;
-    data: IHoliday[];
-  }
+export interface IHolidaysResponse {
+  status: boolean;
+  message: string;
+  data: IHoliday[];
+}
+
+export interface IDeleteHolidayResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateHolidayPayload;
+}
