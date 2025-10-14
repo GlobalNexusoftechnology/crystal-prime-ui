@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Button, DatePicker, Dropdown, InputField } from "@/components";
-import { useCreateLeaveMutation } from "@/services";
+import { useAuthStore, useCreateLeaveMutation } from "@/services";
 import toast from "react-hot-toast";
 
 interface LeaveFormData {
@@ -14,6 +14,9 @@ interface LeaveFormData {
 }
 
 export function ApplyLeave() {
+  const { activeSession } = useAuthStore();
+  const userId = activeSession?.user?.id
+  
   const leaveTypeOptions = [
     { label: "Sick Leave", value: "Sick Leave" },
     { label: "Casual Leave", value: "Casual Leave" },
@@ -60,7 +63,7 @@ export function ApplyLeave() {
     e.preventDefault();
 
     if (
-      !formData.staffId ||
+      !userId ||
       !formData.leaveType ||
       !formData.fromDate ||
       !formData.toDate
@@ -71,7 +74,7 @@ export function ApplyLeave() {
 
     //  Prepare payload for API
     const payload = {
-      staffId: formData.staffId,
+      staffId: userId,
       appliedDate: new Date().toISOString().split("T")[0], // current date
       fromDate: formData.fromDate,
       toDate: formData.toDate,
@@ -103,7 +106,7 @@ export function ApplyLeave() {
           <InputField
             label="Employee ID"
             placeholder="Employee ID"
-            value={formData.staffId}
+            value={userId}
             onChange={(e) => handleInputChange("staffId", e.target.value)}
           />
 

@@ -182,6 +182,7 @@ export { useUpdateHolidayMutation } from "./useUpdateHolidayMutation";
 
 // Leave
 export { useCreateLeaveMutation } from "./useCreateLeaveMutation";
+export { useAllLeavesQuery } from "./useAllLeavesQuery";
 //check in
 export { useCreateCheckInMutation } from "./useCheckInMutation";
 //check out

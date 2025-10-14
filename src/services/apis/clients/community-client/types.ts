@@ -2801,3 +2801,43 @@ export interface IAttendancesResponse {
   message: string;
   data: IAttendance[];
 }
+
+
+// get all leaves
+export interface IStaff {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  email: string;
+  first_name: string;
+  last_name: string;
+  phone_number: string;
+  dob: string | null;
+  otp: string | null;
+  otpExpiresAt: string | null;
+  isOtpVerified: boolean;
+  password: string;
+}
+export interface ILeaves {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  deleted: boolean;
+  deleted_at: string | null;
+  staffId: string;
+  appliedDate: string;
+  fromDate: string;
+  toDate: string;
+  leaveType: string;
+  description: string;
+  status: string;
+  adminRemark: string | null;
+  staff: IStaff;
+}
+export interface ILeavesResponse {
+  status: boolean;
+  message: string;
+  data: ILeaves[];
+}

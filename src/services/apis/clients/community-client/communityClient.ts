@@ -194,6 +194,7 @@ import {
   ICheckOutPayload,
   ICheckOutResponse,
   IAttendancesResponse,
+  ILeavesResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -360,6 +361,7 @@ import {
   createCheckInUrl,
   createCheckOutUrl,
   fetchAllAttendanceUrl,
+  fetchAllLeavesUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2581,6 +2583,19 @@ export class CommunityClient extends ApiClient {
     }
 
     return response?.data.data
+  }
+  
+    // get all leaves 
+    public getAllLeaves = async () => {
+    const response = await this.get<ILeavesResponse>(fetchAllLeavesUrl(), {
+      requiresAuth: false,
+    })
+
+    if (!response?.success) {
+      throw response?.errorData
+    }
+
+    return response?.data
   }
 }
 
