@@ -19,6 +19,7 @@ import { SupportTicketsIcon } from "@/features";
 import { useAllTicketsAcrossProjectsQuery, ITicketData } from "@/services";
 import { formatDate } from "@/utils";
 import Image from "next/image";
+import { CheckInCheckOut } from "./check-in-check-out";
 
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
@@ -209,6 +210,7 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
         </button>
       </div>
       <div className="flex items-center gap-4 2xl:gap-[1vw]">
+        <CheckInCheckOut />
         {/* Support Tickets Icon */}
         {!isClient && (
           <div

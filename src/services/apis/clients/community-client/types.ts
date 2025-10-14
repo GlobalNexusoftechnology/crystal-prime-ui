@@ -2841,3 +2841,31 @@ export interface ILeavesResponse {
   message: string;
   data: ILeaves[];
 }
+
+// update leave status 
+export interface IUpdateLeaveStatusPayload {
+  id: string;
+  status: "Approved" | "Pending" | "Not Approved"; 
+}
+
+// Response from API
+export interface IUpdateLeaveStatusResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: {
+    id: string;
+    created_at: string;
+    updated_at: string;
+    deleted: boolean;
+    deleted_at: string | null;
+    staffId: string;
+    appliedDate: string;
+    fromDate: string;
+    toDate: string;
+    leaveType: string;
+    description: string;
+    status: string;
+    adminRemark: string | null;
+  };
+}

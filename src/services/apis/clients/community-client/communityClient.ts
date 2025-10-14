@@ -125,7 +125,6 @@ import {
   IProjectTaskResponse,
   IProjectMilestoneDetailResponse,
   IProjectTaskDetailResponse,
-
   ICreateTaskCommentPayload,
   ITaskCommentResponse,
   IAllTaskCommentsResponse,
@@ -195,6 +194,8 @@ import {
   ICheckOutResponse,
   IAttendancesResponse,
   ILeavesResponse,
+  IUpdateLeaveStatusPayload,
+  IUpdateLeaveStatusResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -362,20 +363,25 @@ import {
   createCheckOutUrl,
   fetchAllAttendanceUrl,
   fetchAllLeavesUrl,
+  updateLeaveStatusUrl,
 } from "./urls";
-import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
+import {
+  IClientDetails,
+  IClientDetailsResponse,
+  DashboardSummaryApiResponse,
+} from "./types";
 
 /**
  * CommunityClient class handles all API requests related to
  * authentication and lead management in the community platform.
  */
 export class CommunityClient extends ApiClient {
-  private static classInstance?: CommunityClient
+  private static classInstance?: CommunityClient;
 
   private constructor() {
     super({
       baseURL: process.env.NEXT_PUBLIC_SATKAR_API_BASE_URL,
-    })
+    });
   }
 
   /**
@@ -383,10 +389,10 @@ export class CommunityClient extends ApiClient {
    */
   public static readonly getClientInstance = () => {
     if (!this.classInstance) {
-      this.classInstance = new CommunityClient()
+      this.classInstance = new CommunityClient();
     }
-    return this.classInstance
-  }
+    return this.classInstance;
+  };
 
   /**
    * Authenticates the user with email and password.
@@ -400,14 +406,14 @@ export class CommunityClient extends ApiClient {
       IApiError
     >(loginUrl(), payload, {
       requiresAuth: false,
-    })
+    });
 
     if (!response?.success) {
-      throw response?.error
+      throw response?.error;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   /**
    * Registers a new user.
@@ -421,14 +427,14 @@ export class CommunityClient extends ApiClient {
       IApiError
     >(registerUrl(), payload, {
       requiresAuth: false,
-    })
+    });
 
     if (!response?.success) {
-      throw response
+      throw response;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   /**
    * Verifies user's email using the provided verification code.
@@ -440,14 +446,14 @@ export class CommunityClient extends ApiClient {
       verifyEmailUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   /**
    * Sends OTP to the user's email or mobile for verification.
@@ -457,13 +463,13 @@ export class CommunityClient extends ApiClient {
   public sentOtp = async (payload: ISentOtpPayload) => {
     const response = await this.post<ISentOtpResponse>(sentOtpUrl(), payload, {
       requiresAuth: false,
-    })
+    });
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // reset password
   public resetPassword = async (payload: IResetPasswordPayload) => {
@@ -471,13 +477,13 @@ export class CommunityClient extends ApiClient {
       resetPasswordUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   //change password
   public changePassword = async (payload: IChangePasswordPayload) => {
@@ -485,27 +491,29 @@ export class CommunityClient extends ApiClient {
       changePasswordUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.error
+      throw response?.error;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // change client password (admin-side reset for a client)
-  public changeClientPassword = async (payload: IChangeClientPasswordPayload) => {
+  public changeClientPassword = async (
+    payload: IChangeClientPasswordPayload
+  ) => {
     const response = await this.post<IChangeClientPasswordResponse>(
       changeClientPasswordUrl(),
       payload,
       { requiresAuth: true }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   //create lead
 
@@ -514,27 +522,27 @@ export class CommunityClient extends ApiClient {
       createLeadUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public createRole = async (payload: ICreateRolePayload) => {
     const response = await this.post<ICreateRoleResponse>(
       createRoleUrl(),
-      payload,
-    )
+      payload
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
 
     return response?.data;
-  }
+  };
 
   // create lead attachment
 
@@ -545,14 +553,14 @@ export class CommunityClient extends ApiClient {
       createLeadAttachmentUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public uploadAttachment = async (formData: FormData) => {
     const response = await this.post<IUploadAttachmentResponse>(
@@ -564,14 +572,14 @@ export class CommunityClient extends ApiClient {
         },
         requiresAuth: true, // if no auth required, else set true
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response.response?.data
+      throw response.response?.data;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public uploadLeadFromExcel = async (formData: FormData) => {
     const response = await this.post<IUploadLeadFromExcelResponse>(
@@ -583,14 +591,14 @@ export class CommunityClient extends ApiClient {
         },
         requiresAuth: true,
       }
-    )
+    );
 
     if (!response.success) {
-      throw response
+      throw response;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // create sources
   public createSources = async (payload: ICreateSourcesPayload) => {
@@ -598,26 +606,26 @@ export class CommunityClient extends ApiClient {
       createSourcesUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
   // create sources
   public createType = async (payload: ICreateTypesPayload) => {
     const response = await this.post<ICreateTypesResponse>(
       createTypeUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // all statuses
 
@@ -626,38 +634,38 @@ export class CommunityClient extends ApiClient {
       createStatusesUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public updateLead = async ({ id, payload }: IUpdateLeadPayload) => {
     const response = await this.put<IUpdateLeadResponse>(
       updateLeadUrl(id),
-      payload,
-    )
+      payload
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public updateRole = async ({ id, payload }: IUpdateRolePayload) => {
     const response = await this.put<IUpdateRoleResponse>(
       updateRoleUrl(id),
-      payload,
-    )
+      payload
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // update statuses
   public updateStatuses = async ({ id, payload }: IUpdateStatusesPayload) => {
@@ -667,13 +675,13 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: true,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   //update Sources
   public updateSources = async ({ id, payload }: IUpdateSourcesPayload) => {
@@ -683,13 +691,13 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: true,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response
+      throw response;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   //update Sources
   public updateType = async ({ id, payload }: IUpdateTypesPayload) => {
@@ -699,13 +707,13 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: true,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response
+      throw response;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public updateLeadFollowUp = async ({
     id,
@@ -717,13 +725,13 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: true,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // create lead follow up
 
@@ -732,47 +740,49 @@ export class CommunityClient extends ApiClient {
       createLeadFollowUpUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // create client follow up
 
-  public createProjectFollowUp = async (payload: ICreateProjectFollowUpPayload) => {
+  public createProjectFollowUp = async (
+    payload: ICreateProjectFollowUpPayload
+  ) => {
     const response = await this.post<ICreateProjectFollowUpResponse>(
       createProjectFollowUpUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   //delete lead
   public deleteLead = async (id: string) => {
-    const response = await this.del<IDeleteLeadResponse>(deleteLeadUrl(id))
+    const response = await this.del<IDeleteLeadResponse>(deleteLeadUrl(id));
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public deleteRole = async (id: string) => {
-    const response = await this.del<IDeleteRoleResponse>(deleteRoleUrl(id))
+    const response = await this.del<IDeleteRoleResponse>(deleteRoleUrl(id));
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // delete statuses
 
@@ -782,13 +792,13 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // delete sources
 
@@ -798,27 +808,24 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public deleteType = async (id: string) => {
-    const response = await this.del<IDeleteTypeResponse>(
-      deleteTypeUrl(id),
-      {
-        requiresAuth: false,
-      }
-    )
+    const response = await this.del<IDeleteTypeResponse>(deleteTypeUrl(id), {
+      requiresAuth: false,
+    });
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // delete lead follow up
   public deleteLeadFollowUp = async (id: string) => {
@@ -827,45 +834,47 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: true,
       }
-    )
+    );
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public register = async (payload: IRegisterPayload) => {
     const response = await this.post<IRegisterResponse>(
       registerUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   /**
    * Creates client credentials for a client.
    * @param payload - client credential information
    * @returns client credential creation status
    */
-  public createClientCredential = async (payload: ICreateClientCredentialPayload) => {
+  public createClientCredential = async (
+    payload: ICreateClientCredentialPayload
+  ) => {
     const response = await this.post<ICreateClientCredentialResponse>(
       createClientCredentialUrl(),
       payload,
       { requiresAuth: true }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   /**
    * Fetches lead details using lead ID.
@@ -878,15 +887,15 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
     // TODO: Remove this comment once the isMock is removed above.
-    return response.data.data
-  }
+    return response.data.data;
+  };
 
   // get by id Sources
   public getSourcesDetailById = async (id: string) => {
@@ -895,29 +904,29 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
     // TODO: Remove this comment once the isMock is removed above.
-    return response.data.data
-  }
+    return response.data.data;
+  };
 
   // get role details by id.
   public getRoleDetailById = async (id: string) => {
     const response = await this.get<IRoleDetailsResponse>(
-      getRoleDetailByIdUrl(id),
-    )
+      getRoleDetailByIdUrl(id)
+    );
 
     if (!response?.success) {
-      throw response
+      throw response;
     }
 
     // TODO: Remove this comment once the isMock is removed above.
     return response.data;
-  }
+  };
 
   // all statuses get by id
 
@@ -927,15 +936,15 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
     // TODO: Remove this comment once the isMock is removed above.
-    return response.data.data
-  }
+    return response.data.data;
+  };
 
   public getLeadFollowUpDetailById = async (id: string) => {
     const response = await this.get<ILeadFollowUpDetailResponse>(
@@ -943,17 +952,17 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
-    const isMock = true
+    const isMock = true;
 
     if (!response?.success && !isMock) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
     // TODO: Remove this comment once the isMock is removed above.
-    return response
-  }
+    return response;
+  };
 
   public getLeadDownloadExcelById = async (id: string) => {
     const response = await this.get<ILeadDownloadExcelResponse>(
@@ -961,56 +970,71 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
-    const isMock = true
+    const isMock = true;
 
     if (!response?.success && !isMock) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
     // TODO: Remove this comment once the isMock is removed above.
-    return response
-  }
+    return response;
+  };
 
-    // all client follow ups
-  public fetchAllProjectFollowUp = async (filters: { project_task_id?: string } = {}) => {
+  // all client follow ups
+  public fetchAllProjectFollowUp = async (
+    filters: { project_task_id?: string } = {}
+  ) => {
     const params = new URLSearchParams();
-    if (filters.project_task_id) params.append('project_task_id', filters.project_task_id);
+    if (filters.project_task_id)
+      params.append("project_task_id", filters.project_task_id);
     const url = params.toString()
       ? `/client-followups?${params.toString()}`
       : `/client-followups`;
-    const response = await this.get<IAllProjectFollowUpResponse>(url, { requiresAuth: false });
+    const response = await this.get<IAllProjectFollowUpResponse>(url, {
+      requiresAuth: false,
+    });
     if (!response?.success) throw response?.error;
     return response?.data.data;
-  }
+  };
   /**
    * Fetches a list of all leads.
    * @returns list of leads
    */
-  public fetchAllLeadsList = async (filters: {
-    searchText?: string;
-    statusId?: string;
-    typeId?: string;
-    assignedTo?: string;
-    dateRange?: "All" | "Daily" | "Weekly" | "Monthly";
-    referenceDate?: string;
-    followupFrom?: string;
-    followupTo?: string;
-    page?: number;
-  } = {}) => {
+  public fetchAllLeadsList = async (
+    filters: {
+      searchText?: string;
+      statusId?: string;
+      typeId?: string;
+      assignedTo?: string;
+      dateRange?: "All" | "Daily" | "Weekly" | "Monthly";
+      referenceDate?: string;
+      followupFrom?: string;
+      followupTo?: string;
+      page?: number;
+    } = {}
+  ) => {
     // Build query string from filters
     const params = new URLSearchParams();
-    if (filters.searchText) params.append('searchText', filters.searchText);
-    if (filters.statusId && filters.statusId !== 'All Status') params.append('statusId', filters.statusId);
-    if (filters.typeId && filters.typeId !== 'All Type') params.append('typeId', filters.typeId);
-    if (filters.assignedTo && filters.assignedTo !== 'All Assigned To') params.append('assignedToId', filters.assignedTo);
-    if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
-    if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
-    if (filters.followupFrom) params.append('followupFrom', filters.followupFrom);
-    if (filters.followupTo) params.append('followupTo', filters.followupTo);
-    if (filters.page) params.append('page', filters.page.toString());
-    const url = params.toString() ? `${fetchAllLeadsListUrl()}?${params.toString()}` : fetchAllLeadsListUrl();
+    if (filters.searchText) params.append("searchText", filters.searchText);
+    if (filters.statusId && filters.statusId !== "All Status")
+      params.append("statusId", filters.statusId);
+    if (filters.typeId && filters.typeId !== "All Type")
+      params.append("typeId", filters.typeId);
+    if (filters.assignedTo && filters.assignedTo !== "All Assigned To")
+      params.append("assignedToId", filters.assignedTo);
+    if (filters.dateRange && filters.dateRange !== "All")
+      params.append("dateRange", filters.dateRange);
+    if (filters.referenceDate)
+      params.append("referenceDate", filters.referenceDate);
+    if (filters.followupFrom)
+      params.append("followupFrom", filters.followupFrom);
+    if (filters.followupTo) params.append("followupTo", filters.followupTo);
+    if (filters.page) params.append("page", filters.page.toString());
+    const url = params.toString()
+      ? `${fetchAllLeadsListUrl()}?${params.toString()}`
+      : fetchAllLeadsListUrl();
 
     const response = await this.get<IAllLeadResponse>(url);
 
@@ -1019,35 +1043,39 @@ export class CommunityClient extends ApiClient {
     }
 
     return response?.data;
-  }
+  };
 
   public fetchAllSources = async (page?: number) => {
     const params = new URLSearchParams();
-    if (page) params.append('page', page.toString());
-    const url = params.toString() ? `${fetchAllSourcesUrl()}?${params.toString()}` : fetchAllSourcesUrl();
-    
-    const response = await this.get<IAllSourcesResponse>(url)
+    if (page) params.append("page", page.toString());
+    const url = params.toString()
+      ? `${fetchAllSourcesUrl()}?${params.toString()}`
+      : fetchAllSourcesUrl();
+
+    const response = await this.get<IAllSourcesResponse>(url);
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public fetchAllTypes = async (page?: number) => {
     const params = new URLSearchParams();
-    if (page) params.append('page', page.toString());
-    const url = params.toString() ? `${fetchAllTypesUrl()}?${params.toString()}` : fetchAllTypesUrl();
-    
-    const response = await this.get<IAllTypesResponse>(url)
+    if (page) params.append("page", page.toString());
+    const url = params.toString()
+      ? `${fetchAllTypesUrl()}?${params.toString()}`
+      : fetchAllTypesUrl();
+
+    const response = await this.get<IAllTypesResponse>(url);
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // All lead attachment
 
@@ -1057,14 +1085,14 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.error
+      throw response?.error;
     }
 
-    return response?.data.data
-  }
+    return response?.data.data;
+  };
 
   // all lead follow ups
   public fetchAllLeadFollowUp = async (leadId?: string) => {
@@ -1073,124 +1101,140 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.error
+      throw response?.error;
     }
 
-    return response?.data.data
-  }
+    return response?.data.data;
+  };
 
-  public fetchAllLeadDownloadExcel = async (filters: {
-    searchText?: string;
-    statusId?: string;
-    typeId?: string;
-    dateRange?: "All" | "Daily" | "Weekly" | "Monthly";
-    referenceDate?: string;
-    followupFrom?: string;
-    followupTo?: string;
-  } = {}) => {
+  public fetchAllLeadDownloadExcel = async (
+    filters: {
+      searchText?: string;
+      statusId?: string;
+      typeId?: string;
+      dateRange?: "All" | "Daily" | "Weekly" | "Monthly";
+      referenceDate?: string;
+      followupFrom?: string;
+      followupTo?: string;
+    } = {}
+  ) => {
     const params = new URLSearchParams();
-    if (filters.searchText) params.append('searchText', filters.searchText);
-    if (filters.statusId && filters.statusId !== 'All Status') params.append('statusId', filters.statusId);
-    if (filters.typeId && filters.typeId !== 'All Type') params.append('typeId', filters.typeId);
-    if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
-    if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
-    if (filters.followupFrom) params.append('followupFrom', filters.followupFrom);
-    if (filters.followupTo) params.append('followupTo', filters.followupTo);
-    const url = params.toString() ? `${fetchAllLeadDownloadExcelUrl()}?${params.toString()}` : fetchAllLeadDownloadExcelUrl();
+    if (filters.searchText) params.append("searchText", filters.searchText);
+    if (filters.statusId && filters.statusId !== "All Status")
+      params.append("statusId", filters.statusId);
+    if (filters.typeId && filters.typeId !== "All Type")
+      params.append("typeId", filters.typeId);
+    if (filters.dateRange && filters.dateRange !== "All")
+      params.append("dateRange", filters.dateRange);
+    if (filters.referenceDate)
+      params.append("referenceDate", filters.referenceDate);
+    if (filters.followupFrom)
+      params.append("followupFrom", filters.followupFrom);
+    if (filters.followupTo) params.append("followupTo", filters.followupTo);
+    const url = params.toString()
+      ? `${fetchAllLeadDownloadExcelUrl()}?${params.toString()}`
+      : fetchAllLeadDownloadExcelUrl();
 
-    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    const response = await this.get<Blob>(url, { responseType: "blob" });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
   public fetchLeadDownloadTemplateExcel = async () => {
-    const response = await this.get<Blob>(
-      fetchLeadDownloadTemplateExcelUrl(),
-      {
-        responseType: 'blob'
-      }
-    )
+    const response = await this.get<Blob>(fetchLeadDownloadTemplateExcelUrl(), {
+      responseType: "blob",
+    });
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
     return response?.data;
-  }
+  };
 
   public fetchAllUserDownloadExcel = async (searchText?: string) => {
     const url = searchText
-      ? `${fetchAllUserDownloadExcelUrl()}?searchText=${encodeURIComponent(searchText)}`
+      ? `${fetchAllUserDownloadExcelUrl()}?searchText=${encodeURIComponent(
+          searchText
+        )}`
       : fetchAllUserDownloadExcelUrl();
-    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    const response = await this.get<Blob>(url, { responseType: "blob" });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
   public fetchAllStatuses = async (page?: number) => {
     const params = new URLSearchParams();
-    if (page) params.append('page', page.toString());
-    const url = params.toString() ? `${fetchAllStatusesUrl()}?${params.toString()}` : fetchAllStatusesUrl();
-    
+    if (page) params.append("page", page.toString());
+    const url = params.toString()
+      ? `${fetchAllStatusesUrl()}?${params.toString()}`
+      : fetchAllStatusesUrl();
+
     const response = await this.get<IAllStatusesResponse>(url, {
       requiresAuth: false,
-    })
+    });
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public fetchAllRoleList = async (page?: number) => {
     const params = new URLSearchParams();
-    if (page) params.append('page', page.toString());
-    const url = params.toString() ? `${fetchAllRoleListUrl()}?${params.toString()}` : fetchAllRoleListUrl();
-    
+    if (page) params.append("page", page.toString());
+    const url = params.toString()
+      ? `${fetchAllRoleListUrl()}?${params.toString()}`
+      : fetchAllRoleListUrl();
+
     const response = await this.get<IAllRoleResponse>(url, {
       requiresAuth: false,
-    })
+    });
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
   // staff
 
   public fetchAllUsers = async (searchText?: string, page?: number) => {
     const params = new URLSearchParams();
-    if (searchText) params.append('searchText', searchText);
-    if (page) params.append('page', page.toString());
-    const url = params.toString() ? `${fetchAllUsersUrl()}?${params.toString()}` : fetchAllUsersUrl();
-    const response = await this.get<IAllUsersResponse>(url, { requiresAuth: false });
+    if (searchText) params.append("searchText", searchText);
+    if (page) params.append("page", page.toString());
+    const url = params.toString()
+      ? `${fetchAllUsersUrl()}?${params.toString()}`
+      : fetchAllUsersUrl();
+    const response = await this.get<IAllUsersResponse>(url, {
+      requiresAuth: false,
+    });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
   //post
   public createUser = async (payload: ICreateUserPayload) => {
     const response = await this.post<ICreateUserResponse>(
       createUserUrl(),
       payload
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // get by id
 
@@ -1200,15 +1244,15 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
     // TODO: Remove this comment once the isMock is removed above.
-    return response.data.data
-  }
+    return response.data.data;
+  };
 
   //update
   public updateUser = async ({ id, payload }: IUpdateUserPayload) => {
@@ -1218,24 +1262,24 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: true,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public deleteUser = async (id: string) => {
     const response = await this.del<IDeleteUserResponse>(deleteUserUrl(id), {
       requiresAuth: false,
-    })
+    });
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // All lead status history
   public fetchAllLeadStatusHistory = async (leadId?: string) => {
@@ -1244,14 +1288,14 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: false,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data.data
-  }
+    return response?.data.data;
+  };
 
   // create lead follow up
   public createLeadStatusHistory = async (
@@ -1261,25 +1305,28 @@ export class CommunityClient extends ApiClient {
       createLeadStatusHistoryUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   public getNotifications = async () => {
-    const response = await this.get<INotificationsResponse>(getNotificationsUrl(), {
-      requiresAuth: false,
-    })
+    const response = await this.get<INotificationsResponse>(
+      getNotificationsUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data.data
-  }
+    return response?.data.data;
+  };
 
   // mark as read notification
   public updateMarkAsReadNotification = async () => {
@@ -1288,26 +1335,28 @@ export class CommunityClient extends ApiClient {
       {
         requiresAuth: true,
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
   //delete notification hook
 
   //delete lead
   public deleteNotification = async (id: string) => {
-    const response = await this.del<IDeleteNotification>(deleteNotificationUrl(id))
+    const response = await this.del<IDeleteNotification>(
+      deleteNotificationUrl(id)
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // Project APIs
   // -----------------------------------------------------
@@ -1327,7 +1376,7 @@ export class CommunityClient extends ApiClient {
   };
 
   //client..................
-  //post 
+  //post
 
   public createClient = async (payload: ICreateClientPayload) => {
     const response = await this.post<ICreateClientResponse>(
@@ -1361,9 +1410,11 @@ export class CommunityClient extends ApiClient {
 
   public fetchAllClient = async (searchText?: string, page?: number) => {
     const params = new URLSearchParams();
-    if (searchText) params.append('searchText', searchText);
-    if (page) params.append('page', page.toString());
-    const url = params.toString() ? `${fetchAllClientUrl()}?${params.toString()}` : fetchAllClientUrl();
+    if (searchText) params.append("searchText", searchText);
+    if (page) params.append("page", page.toString());
+    const url = params.toString()
+      ? `${fetchAllClientUrl()}?${params.toString()}`
+      : fetchAllClientUrl();
 
     const response = await this.get<IAllClientResponse>(url, {
       requiresAuth: false,
@@ -1458,7 +1509,7 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  // delete client 
+  // delete client
   public deleteClient = async (id: string) => {
     const response = await this.del<IDeleteClientResponse>(deleteClientUrl(id));
 
@@ -1468,7 +1519,9 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public createProjectTemplate = async (payload: ICreateProjectTemplatePayload) => {
+  public createProjectTemplate = async (
+    payload: ICreateProjectTemplatePayload
+  ) => {
     const response = await this.post<ICreateProjectTemplateResponse>(
       createProjectTemplateUrl(),
       payload
@@ -1503,7 +1556,10 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
-  public updateProjectTemplate = async ({ id, payload }: IUpdateProjectTemplatePayload) => {
+  public updateProjectTemplate = async ({
+    id,
+    payload,
+  }: IUpdateProjectTemplatePayload) => {
     const response = await this.put<IUpdateProjectTemplateResponse>(
       updateProjectTemplateUrl(id),
       payload,
@@ -1526,7 +1582,9 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public createProjectTemplateMilestone = async (payload: ICreateProjectTemplateMilestonePayload) => {
+  public createProjectTemplateMilestone = async (
+    payload: ICreateProjectTemplateMilestonePayload
+  ) => {
     const response = await this.post<ICreateProjectTemplateMilestoneResponse>(
       createProjectTemplateMilestoneUrl(),
       payload
@@ -1561,7 +1619,10 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
-  public updateProjectTemplateMilestone = async ({ id, payload }: IUpdateProjectTemplateMilestonePayload) => {
+  public updateProjectTemplateMilestone = async ({
+    id,
+    payload,
+  }: IUpdateProjectTemplateMilestonePayload) => {
     const response = await this.put<IUpdateProjectTemplateMilestoneResponse>(
       updateProjectTemplateMilestoneUrl(id),
       payload,
@@ -1584,18 +1645,23 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public createProjectTemplateMilestoneTask = async (payload: ICreateProjectTemplateMilestoneTaskPayload) => {
-    const response = await this.post<ICreateProjectTemplateMilestoneTaskResponse>(
-      createProjectTemplateMilestoneTaskUrl(),
-      payload
-    );
+  public createProjectTemplateMilestoneTask = async (
+    payload: ICreateProjectTemplateMilestoneTaskPayload
+  ) => {
+    const response =
+      await this.post<ICreateProjectTemplateMilestoneTaskResponse>(
+        createProjectTemplateMilestoneTaskUrl(),
+        payload
+      );
     if (!response?.success) {
       throw response?.response?.data;
     }
     return response?.data;
   };
 
-  public fetchAllProjectTemplateMilestoneTasks = async (milestoneId: string) => {
+  public fetchAllProjectTemplateMilestoneTasks = async (
+    milestoneId: string
+  ) => {
     const response = await this.get<IAllProjectTemplateMilestoneTasksResponse>(
       fetchAllProjectTemplateMilestoneTasksUrl(milestoneId),
       { requiresAuth: false }
@@ -1607,19 +1673,87 @@ export class CommunityClient extends ApiClient {
   };
 
   public getProjectTemplateMilestoneTaskDetailById = async (id: string) => {
-    const response = await this.get<IProjectTemplateMilestoneTaskDetailResponse>(
-      getProjectTemplateMilestoneTaskDetailByIdUrl(id),
-      { requiresAuth: false }
-    );
+    const response =
+      await this.get<IProjectTemplateMilestoneTaskDetailResponse>(
+        getProjectTemplateMilestoneTaskDetailByIdUrl(id),
+        { requiresAuth: false }
+      );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data.data;
   };
 
-  public updateProjectTemplateMilestoneTask = async ({ id, payload }: IUpdateProjectTemplateMilestoneTaskPayload) => {
-    const response = await this.put<IUpdateProjectTemplateMilestoneTaskResponse>(
-      updateProjectTemplateMilestoneTaskUrl(id),
+  public updateProjectTemplateMilestoneTask = async ({
+    id,
+    payload,
+  }: IUpdateProjectTemplateMilestoneTaskPayload) => {
+    const response =
+      await this.put<IUpdateProjectTemplateMilestoneTaskResponse>(
+        updateProjectTemplateMilestoneTaskUrl(id),
+        payload,
+        { requiresAuth: true }
+      );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteProjectTemplateMilestoneTask = async (id: string) => {
+    const response =
+      await this.del<IDeleteProjectTemplateMilestoneTaskResponse>(
+        deleteProjectTemplateMilestoneTaskUrl(id),
+        { requiresAuth: false }
+      );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public createClientDetails = async (payload: IClientDetails) => {
+    const response = await this.post<IClientDetailsResponse>(
+      createClientDetailsUrl(),
+      payload
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public getAllClientDetails = async () => {
+    const response = await this.get<IClientDetailsResponse[]>(
+      getAllClientDetailsUrl(),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public getClientDetailsById = async (id: string) => {
+    const response = await this.get<IClientDetailsResponse>(
+      getClientDetailsByIdUrl(id),
+      { requiresAuth: false }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public updateClientDetails = async ({
+    id,
+    payload,
+  }: {
+    id: string;
+    payload: IClientDetails;
+  }) => {
+    const response = await this.put<IClientDetailsResponse>(
+      updateClientDetailsUrl(id),
       payload,
       { requiresAuth: true }
     );
@@ -1629,9 +1763,9 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public deleteProjectTemplateMilestoneTask = async (id: string) => {
-    const response = await this.del<IDeleteProjectTemplateMilestoneTaskResponse>(
-      deleteProjectTemplateMilestoneTaskUrl(id),
+  public deleteClientDetails = async (id: string) => {
+    const response = await this.del<IClientDetailsResponse>(
+      deleteClientDetailsUrl(id),
       { requiresAuth: false }
     );
     if (!response?.success) {
@@ -1640,65 +1774,27 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public createClientDetails = async (payload: IClientDetails) => {
-    const response = await this.post<IClientDetailsResponse>(createClientDetailsUrl(), payload);
-    if (!response?.success) {
-      throw response?.response?.data;
-    }
-    return response?.data;
-  };
-
-  public getAllClientDetails = async () => {
-    const response = await this.get<IClientDetailsResponse[]>(getAllClientDetailsUrl(), { requiresAuth: false });
-    if (!response?.success) {
-      throw response?.errorData;
-    }
-    return response?.data;
-  };
-
-  public getClientDetailsById = async (id: string) => {
-    const response = await this.get<IClientDetailsResponse>(getClientDetailsByIdUrl(id), { requiresAuth: false });
-    if (!response?.success) {
-      throw response?.errorData;
-    }
-    return response?.data;
-  };
-
-  public updateClientDetails = async ({ id, payload }: { id: string, payload: IClientDetails }) => {
-    const response = await this.put<IClientDetailsResponse>(updateClientDetailsUrl(id), payload, { requiresAuth: true });
-    if (!response?.success) {
-      throw response?.response?.data;
-    }
-    return response?.data;
-  };
-
-  public deleteClientDetails = async (id: string) => {
-    const response = await this.del<IClientDetailsResponse>(deleteClientDetailsUrl(id), { requiresAuth: false });
-    if (!response?.success) {
-      throw response?.errorData;
-    }
-    return response?.data;
-  };
-
   public fetchAllClientDownloadExcel = async (searchText?: string) => {
     const url = searchText
-      ? `${fetchAllClientDownloadExcelUrl()}?searchText=${encodeURIComponent(searchText)}`
+      ? `${fetchAllClientDownloadExcelUrl()}?searchText=${encodeURIComponent(
+          searchText
+        )}`
       : fetchAllClientDownloadExcelUrl();
 
-    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    const response = await this.get<Blob>(url, { responseType: "blob" });
 
     if (!response?.success) {
       throw response?.errorData;
     }
 
     return response?.data;
-  }
+  };
 
   public fetchClientDownloadTemplateExcel = async () => {
     const response = await this.get<Blob>(
       fetchClientDownloadTemplateExcelUrl(),
       {
-        responseType: 'blob'
+        responseType: "blob",
       }
     );
 
@@ -1707,7 +1803,7 @@ export class CommunityClient extends ApiClient {
     }
 
     return response?.data;
-  }
+  };
 
   public uploadClientFromExcel = async (formData: FormData) => {
     const response = await this.post<IUploadClientFromExcelResponse>(
@@ -1726,62 +1822,92 @@ export class CommunityClient extends ApiClient {
     }
 
     return response?.data;
-  }
+  };
 
-  public createMilestone = async (payload: ICreateProjectMilestone): Promise<IProjectMilestoneResponse> => {
-    const response = await this.post<IProjectMilestoneResponse>(createMilestoneUrl(), payload);
+  public createMilestone = async (
+    payload: ICreateProjectMilestone
+  ): Promise<IProjectMilestoneResponse> => {
+    const response = await this.post<IProjectMilestoneResponse>(
+      createMilestoneUrl(),
+      payload
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public updateMilestone = async (milestoneId: string, payload: ICreateProjectMilestone): Promise<IProjectMilestoneResponse> => {
-    const response = await this.put<IProjectMilestoneResponse>(updateMilestoneUrl(milestoneId), payload);
+  public updateMilestone = async (
+    milestoneId: string,
+    payload: ICreateProjectMilestone
+  ): Promise<IProjectMilestoneResponse> => {
+    const response = await this.put<IProjectMilestoneResponse>(
+      updateMilestoneUrl(milestoneId),
+      payload
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
   public deleteMilestone = async (milestoneId: string): Promise<void> => {
     const response = await this.del<void>(deleteMilestoneUrl(milestoneId));
     if (!response?.success) {
       throw response?.errorData;
     }
-  }
+  };
 
-  public getMilestoneDetail = async (milestoneId: string): Promise<IProjectMilestoneDetailResponse> => {
-    const response = await this.get<IProjectMilestoneDetailResponse>(getMilestoneDetailUrl(milestoneId));
+  public getMilestoneDetail = async (
+    milestoneId: string
+  ): Promise<IProjectMilestoneDetailResponse> => {
+    const response = await this.get<IProjectMilestoneDetailResponse>(
+      getMilestoneDetailUrl(milestoneId)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public getAllMilestones = async (projectId: string): Promise<IProjectMilestoneResponse> => {
-    const response = await this.get<IProjectMilestoneResponse>(getAllMilestonesUrl(projectId));
+  public getAllMilestones = async (
+    projectId: string
+  ): Promise<IProjectMilestoneResponse> => {
+    const response = await this.get<IProjectMilestoneResponse>(
+      getAllMilestonesUrl(projectId)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public createMilestoneTask = async (payload: ICreateProjectTask): Promise<IProjectTaskResponse> => {
-    const response = await this.post<IProjectTaskResponse>(createMilestoneTaskUrl(), payload);
+  public createMilestoneTask = async (
+    payload: ICreateProjectTask
+  ): Promise<IProjectTaskResponse> => {
+    const response = await this.post<IProjectTaskResponse>(
+      createMilestoneTaskUrl(),
+      payload
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public updateMilestoneTask = async (taskId: string, payload: ICreateProjectTask): Promise<IProjectTaskResponse> => {
-    const response = await this.put<IProjectTaskResponse>(updateMilestoneTaskUrl(taskId), payload);
+  public updateMilestoneTask = async (
+    taskId: string,
+    payload: ICreateProjectTask
+  ): Promise<IProjectTaskResponse> => {
+    const response = await this.put<IProjectTaskResponse>(
+      updateMilestoneTaskUrl(taskId),
+      payload
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
   public deleteMilestoneTask = async (taskId: string): Promise<void> => {
     const response = await this.del<void>(deleteMilestoneTaskUrl(taskId));
@@ -1789,23 +1915,31 @@ export class CommunityClient extends ApiClient {
       throw response?.response?.data;
     }
     return response?.data;
-  }
+  };
 
-  public getMilestoneTaskDetail = async (taskId: string): Promise<IProjectTaskDetailResponse> => {
-    const response = await this.get<IProjectTaskDetailResponse>(getMilestoneTaskDetailUrl(taskId));
+  public getMilestoneTaskDetail = async (
+    taskId: string
+  ): Promise<IProjectTaskDetailResponse> => {
+    const response = await this.get<IProjectTaskDetailResponse>(
+      getMilestoneTaskDetailUrl(taskId)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public getAllMilestoneTasks = async (milestoneId: string): Promise<IProjectTaskResponse> => {
-    const response = await this.get<IProjectTaskResponse>(getAllMilestoneTasksUrl(milestoneId));
+  public getAllMilestoneTasks = async (
+    milestoneId: string
+  ): Promise<IProjectTaskResponse> => {
+    const response = await this.get<IProjectTaskResponse>(
+      getAllMilestoneTasksUrl(milestoneId)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
   public fetchAllTasks = async () => {
     const response = await this.get<IAllTasksResponse>(fetchAllTasksUrl());
@@ -1813,89 +1947,131 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
     return response?.data;
-  }
-
-
+  };
 
   // Task Comments API methods
-  public createTaskComment = async (payload: ICreateTaskCommentPayload): Promise<ITaskCommentResponse> => {
-    const response = await this.post<ITaskCommentResponse>(createTaskCommentUrl(), payload);
+  public createTaskComment = async (
+    payload: ICreateTaskCommentPayload
+  ): Promise<ITaskCommentResponse> => {
+    const response = await this.post<ITaskCommentResponse>(
+      createTaskCommentUrl(),
+      payload
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public updateTaskComment = async (commentId: string, payload: Partial<ICreateTaskCommentPayload>): Promise<ITaskCommentResponse> => {
-    const response = await this.put<ITaskCommentResponse>(updateTaskCommentUrl(commentId), payload);
+  public updateTaskComment = async (
+    commentId: string,
+    payload: Partial<ICreateTaskCommentPayload>
+  ): Promise<ITaskCommentResponse> => {
+    const response = await this.put<ITaskCommentResponse>(
+      updateTaskCommentUrl(commentId),
+      payload
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
   public deleteTaskComment = async (commentId: string): Promise<void> => {
     const response = await this.del<void>(deleteTaskCommentUrl(commentId));
     if (!response?.success) {
       throw response?.errorData;
     }
-  }
+  };
 
-  public getTaskCommentDetail = async (commentId: string): Promise<ITaskCommentResponse> => {
-    const response = await this.get<ITaskCommentResponse>(getTaskCommentDetailUrl(commentId));
+  public getTaskCommentDetail = async (
+    commentId: string
+  ): Promise<ITaskCommentResponse> => {
+    const response = await this.get<ITaskCommentResponse>(
+      getTaskCommentDetailUrl(commentId)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public getAllTaskComments = async (taskId: string): Promise<ITaskCommentResponse[]> => {
-    const response = await this.get<IAllTaskCommentsResponse>(getAllTaskCommentsUrl(taskId));
+  public getAllTaskComments = async (
+    taskId: string
+  ): Promise<ITaskCommentResponse[]> => {
+    const response = await this.get<IAllTaskCommentsResponse>(
+      getAllTaskCommentsUrl(taskId)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data.data;
-  }
+  };
 
   // Ticket Comments API methods
-  public createTicketComment = async (payload: ICreateTicketCommentPayload): Promise<ITicketCommentResponse> => {
-    const response = await this.post<ITicketCommentResponse>(createTicketCommentUrl(), payload, { requiresAuth: true });
+  public createTicketComment = async (
+    payload: ICreateTicketCommentPayload
+  ): Promise<ITicketCommentResponse> => {
+    const response = await this.post<ITicketCommentResponse>(
+      createTicketCommentUrl(),
+      payload,
+      { requiresAuth: true }
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public updateTicketComment = async (commentId: string, payload: Partial<ICreateTicketCommentPayload>): Promise<ITicketCommentResponse> => {
-    const response = await this.put<ITicketCommentResponse>(updateTicketCommentUrl(commentId), payload, { requiresAuth: true });
+  public updateTicketComment = async (
+    commentId: string,
+    payload: Partial<ICreateTicketCommentPayload>
+  ): Promise<ITicketCommentResponse> => {
+    const response = await this.put<ITicketCommentResponse>(
+      updateTicketCommentUrl(commentId),
+      payload,
+      { requiresAuth: true }
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
   public deleteTicketComment = async (commentId: string): Promise<void> => {
-    const response = await this.del<void>(deleteTicketCommentUrl(commentId), { requiresAuth: true });
+    const response = await this.del<void>(deleteTicketCommentUrl(commentId), {
+      requiresAuth: true,
+    });
     if (!response?.success) {
       throw response?.errorData;
     }
-  }
+  };
 
-  public getTicketCommentDetail = async (commentId: string): Promise<ITicketCommentResponse> => {
-    const response = await this.get<ITicketCommentResponse>(getTicketCommentDetailUrl(commentId), { requiresAuth: true });
+  public getTicketCommentDetail = async (
+    commentId: string
+  ): Promise<ITicketCommentResponse> => {
+    const response = await this.get<ITicketCommentResponse>(
+      getTicketCommentDetailUrl(commentId),
+      { requiresAuth: true }
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public getAllTicketComments = async (ticketId: string): Promise<ITicketCommentResponse[]> => {
-    const response = await this.get<IAllTicketCommentsResponse>(getAllTicketCommentsUrl(ticketId), { requiresAuth: true });
+  public getAllTicketComments = async (
+    ticketId: string
+  ): Promise<ITicketCommentResponse[]> => {
+    const response = await this.get<IAllTicketCommentsResponse>(
+      getAllTicketCommentsUrl(ticketId),
+      { requiresAuth: true }
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data.data.list;
-  }
+  };
 
   public updateTaskStatus = async (taskId: string, status: string) => {
     const response = await this.put<{ status: string }>(
@@ -1909,44 +2085,64 @@ export class CommunityClient extends ApiClient {
   };
 
   // Daily Task Entries API methods
-  public createDailyTaskEntry = async (payload: ICreateDailyTaskEntryPayload): Promise<ICreateDailyTaskEntryResponse> => {
-    const response = await this.post<ICreateDailyTaskEntryResponse>(createDailyTaskEntryUrl(), payload);
+  public createDailyTaskEntry = async (
+    payload: ICreateDailyTaskEntryPayload
+  ): Promise<ICreateDailyTaskEntryResponse> => {
+    const response = await this.post<ICreateDailyTaskEntryResponse>(
+      createDailyTaskEntryUrl(),
+      payload
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
   };
 
-  public updateDailyTaskEntry = async ({ id, payload }: IUpdateDailyTaskEntryPayload): Promise<IDailyTaskEntryResponse> => {
-    const response = await this.put<ICreateDailyTaskEntryResponse>(updateDailyTaskEntryUrl(id), payload);
+  public updateDailyTaskEntry = async ({
+    id,
+    payload,
+  }: IUpdateDailyTaskEntryPayload): Promise<IDailyTaskEntryResponse> => {
+    const response = await this.put<ICreateDailyTaskEntryResponse>(
+      updateDailyTaskEntryUrl(id),
+      payload
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data.data;
   };
 
-  public deleteDailyTaskEntry = async (id: string): Promise<IDeleteDailyTaskEntryResponse> => {
-    const response = await this.del<IDeleteDailyTaskEntryResponse>(deleteDailyTaskEntryUrl(id));
+  public deleteDailyTaskEntry = async (
+    id: string
+  ): Promise<IDeleteDailyTaskEntryResponse> => {
+    const response = await this.del<IDeleteDailyTaskEntryResponse>(
+      deleteDailyTaskEntryUrl(id)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
   };
 
-  public getDailyTaskEntryDetail = async (id: string): Promise<IDailyTaskEntryResponse> => {
-    const response = await this.get<ICreateDailyTaskEntryResponse>(getDailyTaskEntryDetailUrl(id));
+  public getDailyTaskEntryDetail = async (
+    id: string
+  ): Promise<IDailyTaskEntryResponse> => {
+    const response = await this.get<ICreateDailyTaskEntryResponse>(
+      getDailyTaskEntryDetailUrl(id)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data.data;
   };
 
-  public getAllDailyTaskEntries = async (filters: {
- 
-    taskId?: string;
-  } = {}): Promise<IDailyTaskEntryResponse[]> => {
+  public getAllDailyTaskEntries = async (
+    filters: {
+      taskId?: string;
+    } = {}
+  ): Promise<IDailyTaskEntryResponse[]> => {
     const params = new URLSearchParams();
-    if (filters.taskId) params.append('task_id', filters.taskId);
+    if (filters.taskId) params.append("task_id", filters.taskId);
     const url = `/daily-task?${params.toString()}`;
     const response = await this.get<IAllDailyTaskEntriesResponse>(url);
     if (!response?.success) {
@@ -1955,8 +2151,14 @@ export class CommunityClient extends ApiClient {
     return response?.data?.data;
   };
 
-  public updateDailyTaskStatus = async (id: string, payload: IUpdateDailyTaskStatusPayload): Promise<IUpdateDailyTaskStatusResponse> => {
-    const response = await this.put<IUpdateDailyTaskStatusResponse>(updateDailyTaskStatusUrl(id), payload);
+  public updateDailyTaskStatus = async (
+    id: string,
+    payload: IUpdateDailyTaskStatusPayload
+  ): Promise<IUpdateDailyTaskStatusResponse> => {
+    const response = await this.put<IUpdateDailyTaskStatusResponse>(
+      updateDailyTaskStatusUrl(id),
+      payload
+    );
     if (!response?.success) {
       throw response?.response?.data;
     }
@@ -1967,7 +2169,7 @@ export class CommunityClient extends ApiClient {
     const response = await this.post<unknown>(
       uploadMultipleAttachmentUrl(),
       formData,
-      { headers: { 'Content-Type': 'multipart/form-data' }, requiresAuth: true }
+      { headers: { "Content-Type": "multipart/form-data" }, requiresAuth: true }
     );
     if (!response?.success) {
       throw response?.response?.data;
@@ -1975,20 +2177,25 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchDashboardSummary = async (): Promise<DashboardSummaryApiResponse> => {
-    const response = await this.get<DashboardSummaryApiResponse>(dashboardSummaryUrl());
-    if (!response?.success) {
-      throw response?.errorData;
-    }
-    return response?.data;
-  }
+  public fetchDashboardSummary =
+    async (): Promise<DashboardSummaryApiResponse> => {
+      const response = await this.get<DashboardSummaryApiResponse>(
+        dashboardSummaryUrl()
+      );
+      if (!response?.success) {
+        throw response?.errorData;
+      }
+      return response?.data;
+    };
 
   // EI Log Type Master Methods
   public fetchAllEILogTypes = async (page?: number) => {
     const params = new URLSearchParams();
-    if (page) params.append('page', page.toString());
-    const url = params.toString() ? `${fetchAllEILogTypesUrl()}?${params.toString()}` : fetchAllEILogTypesUrl();
-    
+    if (page) params.append("page", page.toString());
+    const url = params.toString()
+      ? `${fetchAllEILogTypesUrl()}?${params.toString()}`
+      : fetchAllEILogTypesUrl();
+
     const response = await this.get<IAllEILogTypesResponse>(url);
     if (!response?.success) {
       throw response?.errorData;
@@ -1997,7 +2204,10 @@ export class CommunityClient extends ApiClient {
   };
 
   public createEILogType = async (payload: ICreateEILogTypePayload) => {
-    const response = await this.post<ICreateEILogTypeResponse>(createEILogTypeUrl(), payload);
+    const response = await this.post<ICreateEILogTypeResponse>(
+      createEILogTypeUrl(),
+      payload
+    );
     if (!response?.success) {
       throw response?.response?.data;
     }
@@ -2005,7 +2215,10 @@ export class CommunityClient extends ApiClient {
   };
 
   public updateEILogType = async ({ id, payload }: IUpdateEILogTypePayload) => {
-    const response = await this.put<IUpdateEILogTypeResponse>(updateEILogTypeUrl(id), payload);
+    const response = await this.put<IUpdateEILogTypeResponse>(
+      updateEILogTypeUrl(id),
+      payload
+    );
     if (!response?.success) {
       throw response?.response?.data;
     }
@@ -2013,7 +2226,9 @@ export class CommunityClient extends ApiClient {
   };
 
   public deleteEILogType = async (id: string) => {
-    const response = await this.del<IDeleteEILogTypeResponse>(deleteEILogTypeUrl(id));
+    const response = await this.del<IDeleteEILogTypeResponse>(
+      deleteEILogTypeUrl(id)
+    );
     if (!response?.success) {
       throw response?.response?.data;
     }
@@ -2021,7 +2236,9 @@ export class CommunityClient extends ApiClient {
   };
 
   public getEILogTypeDetailById = async (id: string) => {
-    const response = await this.get<IAllEILogTypesResponse>(getEILogTypeDetailByIdUrl(id));
+    const response = await this.get<IAllEILogTypesResponse>(
+      getEILogTypeDetailByIdUrl(id)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -2031,9 +2248,11 @@ export class CommunityClient extends ApiClient {
   // EI Log Head Master Methods
   public fetchAllEILogHeads = async (page?: number) => {
     const params = new URLSearchParams();
-    if (page) params.append('page', page.toString());
-    const url = params.toString() ? `${fetchAllEILogHeadsUrl()}?${params.toString()}` : fetchAllEILogHeadsUrl();
-    
+    if (page) params.append("page", page.toString());
+    const url = params.toString()
+      ? `${fetchAllEILogHeadsUrl()}?${params.toString()}`
+      : fetchAllEILogHeadsUrl();
+
     const response = await this.get<IAllEILogHeadsResponse>(url);
     if (!response?.success) {
       throw response?.errorData;
@@ -2042,7 +2261,10 @@ export class CommunityClient extends ApiClient {
   };
 
   public createEILogHead = async (payload: ICreateEILogHeadPayload) => {
-    const response = await this.post<ICreateEILogHeadResponse>(createEILogHeadUrl(), payload);
+    const response = await this.post<ICreateEILogHeadResponse>(
+      createEILogHeadUrl(),
+      payload
+    );
     if (!response?.success) {
       throw response?.response?.data;
     }
@@ -2050,7 +2272,10 @@ export class CommunityClient extends ApiClient {
   };
 
   public updateEILogHead = async ({ id, payload }: IUpdateEILogHeadPayload) => {
-    const response = await this.put<IUpdateEILogHeadResponse>(updateEILogHeadUrl(id), payload);
+    const response = await this.put<IUpdateEILogHeadResponse>(
+      updateEILogHeadUrl(id),
+      payload
+    );
     if (!response?.success) {
       throw response?.response?.data;
     }
@@ -2058,7 +2283,9 @@ export class CommunityClient extends ApiClient {
   };
 
   public deleteEILogHead = async (id: string) => {
-    const response = await this.del<IDeleteEILogHeadResponse>(deleteEILogHeadUrl(id));
+    const response = await this.del<IDeleteEILogHeadResponse>(
+      deleteEILogHeadUrl(id)
+    );
     if (!response?.success) {
       throw response?.response?.data;
     }
@@ -2066,7 +2293,9 @@ export class CommunityClient extends ApiClient {
   };
 
   public getEILogHeadDetailById = async (id: string) => {
-    const response = await this.get<IAllEILogHeadsResponse>(getEILogHeadDetailByIdUrl(id));
+    const response = await this.get<IAllEILogHeadsResponse>(
+      getEILogHeadDetailByIdUrl(id)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -2077,16 +2306,23 @@ export class CommunityClient extends ApiClient {
   public fetchAllEILogs = async (filters: IEILogFilters = {}) => {
     // Build query string from filters
     const params = new URLSearchParams();
-    if (filters.searchText) params.append('searchText', filters.searchText);
-    if (filters.eilogTypeId && filters.eilogTypeId !== 'All Type') params.append('eilogTypeId', filters.eilogTypeId);
-    if (filters.eilogHeadId && filters.eilogHeadId !== 'All Head') params.append('eilogHeadId', filters.eilogHeadId);
-    if (filters.paymentMode && filters.paymentMode !== 'All Payment Mode') params.append('paymentMode', filters.paymentMode);
-    if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
-    if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
-    if (filters.fromDate) params.append('fromDate', filters.fromDate);
-    if (filters.toDate) params.append('toDate', filters.toDate);
-    if (filters.page) params.append('page', filters.page.toString());
-    const url = params.toString() ? `${fetchAllEILogsUrl()}?${params.toString()}` : fetchAllEILogsUrl();
+    if (filters.searchText) params.append("searchText", filters.searchText);
+    if (filters.eilogTypeId && filters.eilogTypeId !== "All Type")
+      params.append("eilogTypeId", filters.eilogTypeId);
+    if (filters.eilogHeadId && filters.eilogHeadId !== "All Head")
+      params.append("eilogHeadId", filters.eilogHeadId);
+    if (filters.paymentMode && filters.paymentMode !== "All Payment Mode")
+      params.append("paymentMode", filters.paymentMode);
+    if (filters.dateRange && filters.dateRange !== "All")
+      params.append("dateRange", filters.dateRange);
+    if (filters.referenceDate)
+      params.append("referenceDate", filters.referenceDate);
+    if (filters.fromDate) params.append("fromDate", filters.fromDate);
+    if (filters.toDate) params.append("toDate", filters.toDate);
+    if (filters.page) params.append("page", filters.page.toString());
+    const url = params.toString()
+      ? `${fetchAllEILogsUrl()}?${params.toString()}`
+      : fetchAllEILogsUrl();
 
     const response = await this.get<IAllEILogResponse>(url);
     if (!response?.success) {
@@ -2096,7 +2332,10 @@ export class CommunityClient extends ApiClient {
   };
 
   public createEILog = async (payload: ICreateEILogPayload) => {
-    const response = await this.post<ICreateEILogResponse>(createEILogUrl(), payload);
+    const response = await this.post<ICreateEILogResponse>(
+      createEILogUrl(),
+      payload
+    );
     if (!response?.success) {
       throw response?.response?.data;
     }
@@ -2104,7 +2343,10 @@ export class CommunityClient extends ApiClient {
   };
 
   public updateEILog = async ({ id, payload }: IUpdateEILogPayload) => {
-    const response = await this.put<IUpdateEILogResponse>(updateEILogUrl(id), payload);
+    const response = await this.put<IUpdateEILogResponse>(
+      updateEILogUrl(id),
+      payload
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -2120,7 +2362,9 @@ export class CommunityClient extends ApiClient {
   };
 
   public getEILogDetailById = async (id: string) => {
-    const response = await this.get<IEILogDetailResponse>(getEILogDetailByIdUrl(id));
+    const response = await this.get<IEILogDetailResponse>(
+      getEILogDetailByIdUrl(id)
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -2129,18 +2373,25 @@ export class CommunityClient extends ApiClient {
 
   public fetchAllEILogsDownloadExcel = async (filters: IEILogFilters = {}) => {
     const params = new URLSearchParams();
-    if (filters.searchText) params.append('searchText', filters.searchText);
-    if (filters.eilogTypeId && filters.eilogTypeId !== 'All Type') params.append('eilogTypeId', filters.eilogTypeId);
-    if (filters.eilogHeadId && filters.eilogHeadId !== 'All Head') params.append('eilogHeadId', filters.eilogHeadId);
-    if (filters.paymentMode && filters.paymentMode !== 'All Payment Mode') params.append('paymentMode', filters.paymentMode);
-    if (filters.dateRange && filters.dateRange !== 'All') params.append('dateRange', filters.dateRange);
-    if (filters.referenceDate) params.append('referenceDate', filters.referenceDate);
-    if (filters.fromDate) params.append('fromDate', filters.fromDate);
-    if (filters.toDate) params.append('toDate', filters.toDate);
-    if (filters.page) params.append('page', filters.page.toString());
-    const url = params.toString() ? `${fetchAllEILogsDownloadExcelUrl()}?${params.toString()}` : fetchAllEILogsDownloadExcelUrl();
+    if (filters.searchText) params.append("searchText", filters.searchText);
+    if (filters.eilogTypeId && filters.eilogTypeId !== "All Type")
+      params.append("eilogTypeId", filters.eilogTypeId);
+    if (filters.eilogHeadId && filters.eilogHeadId !== "All Head")
+      params.append("eilogHeadId", filters.eilogHeadId);
+    if (filters.paymentMode && filters.paymentMode !== "All Payment Mode")
+      params.append("paymentMode", filters.paymentMode);
+    if (filters.dateRange && filters.dateRange !== "All")
+      params.append("dateRange", filters.dateRange);
+    if (filters.referenceDate)
+      params.append("referenceDate", filters.referenceDate);
+    if (filters.fromDate) params.append("fromDate", filters.fromDate);
+    if (filters.toDate) params.append("toDate", filters.toDate);
+    if (filters.page) params.append("page", filters.page.toString());
+    const url = params.toString()
+      ? `${fetchAllEILogsDownloadExcelUrl()}?${params.toString()}`
+      : fetchAllEILogsDownloadExcelUrl();
 
-    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    const response = await this.get<Blob>(url, { responseType: "blob" });
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -2148,7 +2399,10 @@ export class CommunityClient extends ApiClient {
   };
 
   public fetchEILogDownloadTemplateExcel = async () => {
-    const response = await this.get<Blob>(fetchEILogDownloadTemplateExcelUrl(), { responseType: 'blob' });
+    const response = await this.get<Blob>(
+      fetchEILogDownloadTemplateExcelUrl(),
+      { responseType: "blob" }
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
@@ -2156,12 +2410,16 @@ export class CommunityClient extends ApiClient {
   };
 
   public uploadEILogFromExcel = async (formData: FormData) => {
-    const response = await this.post<IUploadEILogFromExcelResponse>(uploadEILogFromExcelUrl(), formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      requiresAuth: true,
-    });
+    const response = await this.post<IUploadEILogFromExcelResponse>(
+      uploadEILogFromExcelUrl(),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        requiresAuth: true,
+      }
+    );
     if (!response?.success) {
       throw response;
     }
@@ -2178,37 +2436,50 @@ export class CommunityClient extends ApiClient {
         },
         requiresAuth: true, // if no auth required, else set true
       }
-    )
+    );
 
     if (!response?.success) {
-      throw response.response?.data
+      throw response.response?.data;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
 
-  public fetchStaffPerformanceReport = async (params: { userId: string; startDate?: string; endDate?: string }) => {
+  public fetchStaffPerformanceReport = async (params: {
+    userId: string;
+    startDate?: string;
+    endDate?: string;
+  }) => {
     const url = staffPerformanceReportUrl();
-    const response = await this.get<StaffPerformanceReportResponse>(url, { params });
+    const response = await this.get<StaffPerformanceReportResponse>(url, {
+      params,
+    });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
   };
 
-  public fetchProjectPerformanceReport = async (params: { projectId?: string; clientId?: string; fromDate?: string; toDate?: string }) => {
+  public fetchProjectPerformanceReport = async (params: {
+    projectId?: string;
+    clientId?: string;
+    fromDate?: string;
+    toDate?: string;
+  }) => {
     const url = projectPerformanceReportUrl();
-    const response = await this.get<ProjectPerformanceReportResponse>(url, { params });
+    const response = await this.get<ProjectPerformanceReportResponse>(url, {
+      params,
+    });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
   };
 
-  public fetchLeadReport = async (params?: { 
-    fromDate?: string; 
-    toDate?: string; 
-    sourceId?: string; 
+  public fetchLeadReport = async (params?: {
+    fromDate?: string;
+    toDate?: string;
+    sourceId?: string;
     statusId?: string;
     userId?: string;
     typeId?: string;
@@ -2227,82 +2498,98 @@ export class CommunityClient extends ApiClient {
       const query = new URLSearchParams(params).toString();
       if (query) url += `?${query}`;
     }
-    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    const response = await this.get<Blob>(url, { responseType: "blob" });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public fetchBusinessAnalysisReport = async (params?: BusinessAnalysisParams) => {
+  public fetchBusinessAnalysisReport = async (
+    params?: BusinessAnalysisParams
+  ) => {
     const url = businessAnalysisReportUrl();
-    const response = await this.get<BusinessAnalysisReportResponse>(url, { params });
+    const response = await this.get<BusinessAnalysisReportResponse>(url, {
+      params,
+    });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data.data;
-  }
+  };
 
-  public fetchPublicDashboardReport = async (params?: PublicDashboardParams) => {
+  public fetchPublicDashboardReport = async (
+    params?: PublicDashboardParams
+  ) => {
     const url = publicDashboardReportUrl();
-    const response = await this.get<PublicDashboardReportResponse>(url, { params });
+    const response = await this.get<PublicDashboardReportResponse>(url, {
+      params,
+    });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data.data;
-  }
+  };
 
-  public fetchPublicDashboardReportExcel = async (params?: Record<string, string>) => {
+  public fetchPublicDashboardReportExcel = async (
+    params?: Record<string, string>
+  ) => {
     let url = fetchPublicDashboardReportExcelUrl();
     if (params) {
       const query = new URLSearchParams(params).toString();
       if (query) url += `?${query}`;
     }
-    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    const response = await this.get<Blob>(url, { responseType: "blob" });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public fetchProjectPerformanceReportExcel = async (params?: Record<string, string>) => {
+  public fetchProjectPerformanceReportExcel = async (
+    params?: Record<string, string>
+  ) => {
     let url = fetchProjectPerformanceReportExcelUrl();
     if (params) {
       const query = new URLSearchParams(params).toString();
       if (query) url += `?${query}`;
     }
-    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    const response = await this.get<Blob>(url, { responseType: "blob" });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public fetchStaffPerformanceReportExcel = async (params?: Record<string, string>) => {
+  public fetchStaffPerformanceReportExcel = async (
+    params?: Record<string, string>
+  ) => {
     let url = fetchStaffPerformanceReportExcelUrl();
     if (params) {
       const query = new URLSearchParams(params).toString();
       if (query) url += `?${query}`;
     }
-    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    const response = await this.get<Blob>(url, { responseType: "blob" });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
-  public fetchBusinessAnalysisReportExcel = async (params?: Record<string, string>) => {
+  public fetchBusinessAnalysisReportExcel = async (
+    params?: Record<string, string>
+  ) => {
     let url = fetchBusinessAnalysisReportExcelUrl();
     if (params) {
       const query = new URLSearchParams(params).toString();
       if (query) url += `?${query}`;
     }
-    const response = await this.get<Blob>(url, { responseType: 'blob' });
+    const response = await this.get<Blob>(url, { responseType: "blob" });
     if (!response?.success) {
       throw response?.errorData;
     }
     return response?.data;
-  }
+  };
 
   /**
    * Sends forgot password request to the user's email.
@@ -2353,22 +2640,21 @@ export class CommunityClient extends ApiClient {
   ) => {
     // Build query string from filters
     const params = new URLSearchParams();
-    if (filters.searchText) params.append('searchText', filters.searchText);
-    if (filters.status && filters.status !== 'All Status') params.append('status', filters.status);
-    if (filters.priority && filters.priority !== 'All Priority') params.append('priority', filters.priority);
-    if (filters.page) params.append('page', filters.page.toString());
-    if (filters.limit) params.append('limit', filters.limit.toString());
+    if (filters.searchText) params.append("searchText", filters.searchText);
+    if (filters.status && filters.status !== "All Status")
+      params.append("status", filters.status);
+    if (filters.priority && filters.priority !== "All Priority")
+      params.append("priority", filters.priority);
+    if (filters.page) params.append("page", filters.page.toString());
+    if (filters.limit) params.append("limit", filters.limit.toString());
 
-    const url = params.toString() 
+    const url = params.toString()
       ? `${fetchAllTicketsUrl(projectId)}?${params.toString()}`
       : fetchAllTicketsUrl(projectId);
 
-    const response = await this.get<IAllTicketsResponse>(
-      url,
-      {
-        requiresAuth: false,
-      }
-    );
+    const response = await this.get<IAllTicketsResponse>(url, {
+      requiresAuth: false,
+    });
 
     if (!response?.success) {
       throw response?.errorData;
@@ -2389,23 +2675,25 @@ export class CommunityClient extends ApiClient {
   ) => {
     // Build query string from filters
     const params = new URLSearchParams();
-    if (filters.searchText) params.append('searchText', filters.searchText);
-    if (filters.status && filters.status !== 'All Status') params.append('status', filters.status);
-    if (filters.priority && filters.priority !== 'All Priority') params.append('priority', filters.priority);
-    if (filters.page) params.append('page', filters.page.toString());
-    if (filters.limit) params.append('limit', filters.limit.toString());
-    if (filters.userId) params.append('userId', filters.userId); // Add userId to params
-  
-    const url = params.toString() 
+    if (filters.searchText) params.append("searchText", filters.searchText);
+    if (filters.status && filters.status !== "All Status")
+      params.append("status", filters.status);
+    if (filters.priority && filters.priority !== "All Priority")
+      params.append("priority", filters.priority);
+    if (filters.page) params.append("page", filters.page.toString());
+    if (filters.limit) params.append("limit", filters.limit.toString());
+    if (filters.userId) params.append("userId", filters.userId); // Add userId to params
+
+    const url = params.toString()
       ? `${fetchAllTicketsAcrossProjectsUrl()}?${params.toString()}`
       : fetchAllTicketsAcrossProjectsUrl();
-  
+
     const response = await this.get<IAllTicketsResponse>(url);
-  
+
     if (!response?.success) {
       throw response?.errorData;
     }
-  
+
     return response?.data;
   };
 
@@ -2423,7 +2711,10 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public updateTicket = async ({ id, payload }: IUpdateTicketRequestPayload) => {
+  public updateTicket = async ({
+    id,
+    payload,
+  }: IUpdateTicketRequestPayload) => {
     const response = await this.put<IUpdateTicketResponse>(
       updateTicketUrl(id),
       payload,
@@ -2481,83 +2772,84 @@ export class CommunityClient extends ApiClient {
     return response?.data.data;
   };
 
-
-    // create Holiday
+  // create Holiday
   public createHoliday = async (payload: ICreateHolidayPayload) => {
     const response = await this.post<ICreateHolidayResponse>(
       createHolidayUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
-  // get all holiday 
-    public getAllHoliday = async () => {
+  // get all holiday
+  public getAllHoliday = async () => {
     const response = await this.get<IHolidaysResponse>(fetchAllHolidaysUrl(), {
       requiresAuth: false,
-    })
+    });
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data.data
-  }
-  // delete holiday 
-  
+    return response?.data.data;
+  };
+  // delete holiday
+
   public deleteHoliday = async (id: string) => {
-    const response = await this.del<IDeleteHolidayResponse>(deleteHolidayUrl(id))
+    const response = await this.del<IDeleteHolidayResponse>(
+      deleteHolidayUrl(id)
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
-// update holiday 
+    return response?.data;
+  };
+  // update holiday
 
   public updateHoliday = async ({ id, payload }: IUpdateHolidayPayload) => {
     const response = await this.put<IUpdateHolidayResponse>(
       updateHolidayUrl(id),
-      payload,
-    )
+      payload
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
-    return response?.data
-  }
-// create leave
+    return response?.data;
+  };
+  // create leave
   public createLeave = async (payload: ICreateLeavePayload) => {
     const response = await this.post<ICreateLeaveResponse>(
       createLeaveUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
-// check in
+  // check in
   public createCheckIn = async (payload: ICheckInPayload) => {
     const response = await this.post<ICheckInResponse>(
       createCheckInUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
+    return response?.data;
+  };
 
   // check in
   public createCheckOut = async (payload: ICheckOutPayload) => {
@@ -2565,43 +2857,61 @@ export class CommunityClient extends ApiClient {
       createCheckOutUrl(),
       payload,
       { requiresAuth: false }
-    )
+    );
 
     if (!response?.success) {
-      throw response?.response?.data
+      throw response?.response?.data;
     }
-    return response?.data
-  }
-  // get all Attendance 
-    public getAllAttendance = async () => {
-    const response = await this.get<IAttendancesResponse>(fetchAllAttendanceUrl(), {
-      requiresAuth: false,
-    })
+    return response?.data;
+  };
+  // get all Attendance
+  public getAllAttendance = async () => {
+    const response = await this.get<IAttendancesResponse>(
+      fetchAllAttendanceUrl(),
+      {
+        requiresAuth: false,
+      }
+    );
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data.data
-  }
-  
-    // get all leaves 
-    public getAllLeaves = async () => {
+    return response?.data.data;
+  };
+
+  // get all leaves
+  public getAllLeaves = async () => {
     const response = await this.get<ILeavesResponse>(fetchAllLeavesUrl(), {
       requiresAuth: false,
-    })
+    });
 
     if (!response?.success) {
-      throw response?.errorData
+      throw response?.errorData;
     }
 
-    return response?.data
-  }
+    return response?.data;
+  };
+
+  // update leave status
+  public updateLeaveStatus = async ({
+    id,
+    status,
+  }: IUpdateLeaveStatusPayload) => {
+    const response = await this.put<IUpdateLeaveStatusResponse>(
+      updateLeaveStatusUrl(id),
+      status
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+
+    return response.data;
+  };
 }
 
 /**
  * Exported singleton instance of the CommunityClient to be used across the app.
  */
 export const COMMUNITY_CLIENT = CommunityClient.getClientInstance();
-
-

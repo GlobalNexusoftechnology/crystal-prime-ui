@@ -372,6 +372,8 @@ export const updateHolidayUrl = (id: string) => `/holidays/${id}`;
 //leave
 export const createLeaveUrl = () => "/leaves"; //post
 export const fetchAllLeavesUrl = () => "/leaves"; //get
+export const updateLeaveStatusUrl = (id: string) => `/leaves/${id}`;
+
  // check in
  export const createCheckInUrl = () => "/attendances/check-in"; //post
 

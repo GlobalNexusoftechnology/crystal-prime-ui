@@ -1,22 +1,14 @@
 "use client";
 import { Table } from "@/components";
-import { leavesListColumn, ITableAction } from "@/constants";
+import { leavesListColumn } from "@/constants";
 import { Breadcrumb } from "@/features";
-import { ILeaves, useAllLeavesQuery } from "@/services";
+import {  useAllLeavesQuery } from "@/services";
 
 export function Leaves() {
   const { data } = useAllLeavesQuery();
   console.log(data, "AAAAAAAAAAAAAAAA");
 
-  const leavesAction: ITableAction<ILeaves>[] = [
-    {
-      label: "Delete",
-      onClick: () => {
-        console.log("Delete clicked");
-      },
-      className: "text-red-500",
-    },
-  ];
+
 
   const formattedData = data?.data?.map((leave) => ({
   ...leave,
@@ -32,7 +24,6 @@ export function Leaves() {
       <Table
         data={formattedData || []}
         columns={leavesListColumn}
-        actions={leavesAction}
       />
     </div>
   );
