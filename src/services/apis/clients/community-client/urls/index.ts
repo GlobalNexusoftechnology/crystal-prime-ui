@@ -360,3 +360,6 @@ export const getTicketCommentDetailUrl = (commentId: string) =>
   `/ticket-comments/${commentId}`;
 export const getAllTicketCommentsUrl = (ticketId: string) =>
   `/ticket-comments/ticket/${ticketId}`;
+
+// Holiday 
+export const createHolidayUrl = () => "/holidays"; //post

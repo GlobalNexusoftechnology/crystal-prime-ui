@@ -58,7 +58,7 @@ export interface IAllStatusesResponse {
   };
 }
 
-// START LEAD TYPES 
+// START LEAD TYPES
 
 export interface ICreateTypesPayload {
   name: string;
@@ -298,7 +298,6 @@ export interface IStats {
   profileSent: number;
   convertedLeads: number;
   todayFollowups: 0;
-
 }
 
 export interface IAllLeadResponse {
@@ -505,7 +504,7 @@ export interface IUploadAttachmentResponse {
 export interface IUploadMultipleAttachmentResponse {
   status: string;
   message: string;
-  data: string[]
+  data: string[];
 }
 export interface IUploadLeadFromExcelResponse {
   status: string;
@@ -837,7 +836,7 @@ export interface IUserViewDetails {
   last_name: string;
   phone_number: string;
   role_id: string;
-  password?:string;
+  password?: string;
   dob: string;
 }
 
@@ -1094,14 +1093,11 @@ export interface IAllProjectFollowUpResponse {
 export interface IMarkAsReadNotificationResponse {
   status: string;
   message: string;
-  
 }
-
 
 export interface IDeleteNotification {
   status: string;
   message: string;
- 
 }
 
 interface INotificationMetadata {
@@ -1121,7 +1117,13 @@ export interface INotification {
   updated_at: string;
   deleted: boolean;
   deleted_at: string | null;
-  type: 'LEAD_ASSIGNED' | 'FOLLOWUP_REMINDER' | 'FOLLOWUP_CREATED' | 'QUOTATION_SENT' | 'BUSINESS_DONE' | 'LEAD_ESCALATED';
+  type:
+    | "LEAD_ASSIGNED"
+    | "FOLLOWUP_REMINDER"
+    | "FOLLOWUP_CREATED"
+    | "QUOTATION_SENT"
+    | "BUSINESS_DONE"
+    | "LEAD_ESCALATED";
   message: string;
   isRead: boolean;
   metadata: INotificationMetadata;
@@ -1141,18 +1143,18 @@ export interface INotificationsResponse {
 export interface ICreateProjectTask {
   title: string;
   description?: string;
-  due_date?: string; 
+  due_date?: string;
   status?: string;
   assigned_to?: string;
   priority?: "Critical" | "High" | "Medium" | "Low";
   milestone_id: string;
 }
 
-export interface IProjectTaskResponse  {
+export interface IProjectTaskResponse {
   id: string;
   title: string;
   description?: string;
-  due_date?: string; 
+  due_date?: string;
   status?: string;
   assigned_to?: string;
   priority?: "Critical" | "High" | "Medium" | "Low";
@@ -1160,25 +1162,22 @@ export interface IProjectTaskResponse  {
   created_at: string;
   updated_at: string;
   deleted: boolean;
-  milestone: IProjectMilestoneResponse
+  milestone: IProjectMilestoneResponse;
   deleted_at: string | null;
 }
 
-export interface IProjectTaskDetailResponse  {
+export interface IProjectTaskDetailResponse {
   status: boolean;
   message: string;
   success: true;
   data: IProjectTaskResponse;
 }
 
-
 export interface IAllTasksResponse {
   status: boolean;
   data: IProjectTaskResponse[];
   total?: number;
 }
-
-
 
 export interface ICreateProjectMilestone {
   name: string;
@@ -1195,7 +1194,7 @@ export interface ICreateProjectMilestone {
 
 export interface IProjectMilestoneResponse {
   id?: string;
-  project: IProjectResponse
+  project: IProjectResponse;
   name: string;
   description: string;
   start_date?: string;
@@ -1247,7 +1246,7 @@ export interface IProjectAttachmentResponse {
   file_name: string;
   uploaded_by?: IUser;
   created_at?: string;
-  project: IProjectAttachmentResponse
+  project: IProjectAttachmentResponse;
 }
 
 export enum ProjectRenewalType {
@@ -1338,7 +1337,6 @@ export interface IUpdateProjectPayload {
   payload: Partial<ICreateProjectPayload>;
 }
 
-
 export interface IUpdateProjectResponse {
   status: boolean;
   message: string;
@@ -1404,7 +1402,7 @@ export interface IClientList {
   website: string;
   company_name: string;
   contact_person: string;
-  lead_id: null; 
+  lead_id: null;
   client_details?: IClientDetails[];
   gst_number?: string;
   isCredential?: boolean;
@@ -2340,10 +2338,10 @@ export interface BusinessAnalysisReport {
   };
   monthlyTrends: {
     labels: string[];
-    started: (number|null)[];
-    completed: (number|null)[];
-    newLeads: (number|null)[];
-    revenue: (number|null)[];
+    started: (number | null)[];
+    completed: (number | null)[];
+    newLeads: (number | null)[];
+    revenue: (number | null)[];
   };
   summary: {
     totalRevenue: number;
@@ -2675,4 +2673,18 @@ export interface IDeleteTicketCommentResponse {
   message: string;
   success: true;
   data: ITicketCommentResponse;
+}
+
+// Create Holiday
+
+export interface ICreateHolidayPayload {
+  holidayName: string;
+  date: string;
+}
+
+export interface ICreateHolidayResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: ICreateHolidayPayload;
 }

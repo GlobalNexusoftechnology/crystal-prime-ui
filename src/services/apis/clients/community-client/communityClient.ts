@@ -181,6 +181,8 @@ import {
   IVerifyOtpPayload,
   IVerifyOtpResponse,
   IAllTasksResponse,
+  ICreateHolidayPayload,
+  ICreateHolidayResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -339,6 +341,7 @@ import {
   updateTicketStatusUrl,
   deleteTicketUrl,
   updateDailyTaskStatusUrl,
+  createHolidayUrl,
 } from "./urls";
 import { IClientDetails, IClientDetailsResponse, DashboardSummaryApiResponse } from "./types";
 
@@ -2457,6 +2460,22 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data.data;
   };
+
+
+  // Create holiday 
+    // create Holiday
+  public createHoliday = async (payload: ICreateHolidayPayload) => {
+    const response = await this.post<ICreateHolidayResponse>(
+      createHolidayUrl(),
+      payload,
+      { requiresAuth: false }
+    )
+
+    if (!response?.success) {
+      throw response?.response?.data
+    }
+    return response?.data
+  }
 }
 
 /**

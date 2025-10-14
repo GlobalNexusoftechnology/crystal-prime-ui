@@ -174,3 +174,6 @@ export { useUpdateTicketMutation } from "./useUpdateTicketMutation";
 export { useUpdateTicketStatusMutation } from "./useUpdateTicketStatusMutation";
 export { useDeleteTicketMutation } from "./useDeleteTicketMutation";
 export { useTicketDetailQuery } from "./useTicketDetailQuery";
+
+// Holiday 
+export {useCreateHolidayMutation} from "./useCreateHolidayMutation"
