@@ -17,6 +17,7 @@ interface DropdownProps {
   isRequired?: boolean;
   dropdownBorderRadius?: string;
   dropdownWidth?: string;
+    disabled?: boolean; // ✅ Add this
 }
 
 export function Dropdown({
@@ -27,7 +28,8 @@ export function Dropdown({
   label,
   isRequired = false,
   dropdownBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
-  dropdownWidth = "w-full"
+  dropdownWidth = "w-full",
+  disabled = false
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -74,7 +76,10 @@ export function Dropdown({
     };
   }, [isOpen]);
 
-  const toggleDropdown = () => setIsOpen(!isOpen);
+ const toggleDropdown = () => {
+    if (disabled) return; // prevent opening
+    setIsOpen(!isOpen);
+  };
 
   const handleSelect = (val: string) => {
     onChange(val);
@@ -97,32 +102,39 @@ export function Dropdown({
         </label>
       )}
 
-      <div
-        className={`border 2xl:border-[0.05vw] focus:outline-none focus:ring-1 ${
-          error ? "focus:ring-red-500" : "focus:ring-primary"
-        } ${error ? "border-red-500" : "border-gray-300"} ${dropdownBorderRadius} 2xl:text-[1vw] px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] flex items-center gap-6 2xl:gap-[1.5vw] justify-between cursor-pointer bg-white`}
-        onClick={toggleDropdown}
-        tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            toggleDropdown();
-          }
-        }}
-      >
-        <span className={`${!selectedOption ? "text-gray-400" : ""}`}>
-          {selectedOption ? selectedOption.label : "Select an option"}
-        </span>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className={`w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw] text-gray-500 transform transition-transform ${isOpen ? "rotate-180" : ""}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
+    <div
+  className={`border 2xl:border-[0.05vw] focus:outline-none focus:ring-1 ${
+    error ? "focus:ring-red-500" : "focus:ring-primary"
+  } ${error ? "border-red-500" : "border-gray-300"} ${dropdownBorderRadius} 2xl:text-[1vw] px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] flex items-center gap-6 2xl:gap-[1.5vw] justify-between cursor-pointer ${
+    disabled ? "bg-gray-100 text-gray-400 cursor-default" : "bg-white"
+  }`}
+  onClick={toggleDropdown}
+  tabIndex={0}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleDropdown();
+    }
+  }}
+>
+  <span className={`${!selectedOption ? "text-gray-400" : ""}`}>
+    {selectedOption ? selectedOption.label : "Select an option"}
+  </span>
+
+  {/* ✅ Only show arrow if not disabled */}
+  {!disabled && (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      className={`w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw] text-gray-500 transform transition-transform ${isOpen ? "rotate-180" : ""}`}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+    </svg>
+  )}
+</div>
+
 
       {/* Debug: Render portal menu as plain div, no animation */}
       {isOpen && menuStyles.top !== undefined && menuStyles.left !== undefined &&

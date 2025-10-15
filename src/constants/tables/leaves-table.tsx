@@ -3,11 +3,7 @@
 
 import { useState } from "react";
 import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
-import {
-  ILeaves,
-  IUpdateLeaveStatusResponse,
-  useUpdateLeaveStatusMutation,
-} from "@/services";
+import { ILeaves, useUpdateLeaveStatusMutation } from "@/services";
 import { ITableColumn } from "../table";
 import toast from "react-hot-toast";
 
@@ -25,9 +21,8 @@ const StatusCell = ({ row }: IStatusCellProps) => {
   );
   const [nextStatus, setNextStatus] = useState<LeaveStatus | null>(null);
 
-  // Proper mutation hook
   const { updateLeaveStatus, isPending } = useUpdateLeaveStatusMutation({
-    onSuccessCallback: (data: IUpdateLeaveStatusResponse) => {
+    onSuccessCallback: (data) => {
       toast.success(data.message || "Leave status updated successfully");
       setIsModalOpen(false);
       setAdminRemark("");
@@ -48,12 +43,16 @@ const StatusCell = ({ row }: IStatusCellProps) => {
   const handleStatusChange = (val: string) => {
     const newStatus = val as LeaveStatus;
 
+    // Approved cannot be changed again
+    if (currentStatus === "Approved") return;
+
     if (newStatus === "Pending") {
-      // Directly update pending
       setCurrentStatus(newStatus);
       callUpdateAPI(newStatus, "");
-    } else {
-      // Show modal for Approved / Not Approved
+    } else if (newStatus === "Not Approved") {
+      setNextStatus(newStatus);
+      setIsModalOpen(true);
+    } else if (newStatus === "Approved") {
       setNextStatus(newStatus);
       setIsModalOpen(true);
     }
@@ -71,8 +70,10 @@ const StatusCell = ({ row }: IStatusCellProps) => {
     setNextStatus(null);
   };
 
-  // Correct payload structure
   const callUpdateAPI = (status: LeaveStatus, remark: string) => {
+    //  Only call API if not already Approved
+    if (currentStatus === "Approved") return;
+
     updateLeaveStatus({
       id: row?.id,
       payload: {
@@ -89,6 +90,9 @@ const StatusCell = ({ row }: IStatusCellProps) => {
         value={currentStatus}
         onChange={handleStatusChange}
         dropdownWidth="w-40"
+        disabled={
+          currentStatus === "Approved" || currentStatus === "Not Approved"
+        }
       />
 
       <ModalOverlay
