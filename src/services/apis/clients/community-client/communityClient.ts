@@ -1325,7 +1325,7 @@ export class CommunityClient extends ApiClient {
     );
 
     if (!response?.success) {
-      throw response?.errorData;
+      throw response?.response?.data;
     }
 
     return response?.data.data;
@@ -2854,7 +2854,7 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  // check out
+  // check in
   public createCheckOut = async (payload: ICheckOutPayload) => {
     const response = await this.post<ICheckOutResponse>(
       createCheckOutUrl(),
@@ -2914,7 +2914,7 @@ export class CommunityClient extends ApiClient {
   };
 
   //
-    public createAnnouncement = async (payload: IAnnouncementPayload) => {
+  public createAnnouncement = async (payload: IAnnouncementPayload) => {
     const response = await this.post<IAnnouncementResponse>(
       createAnnouncementUrl(),
       payload,
