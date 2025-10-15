@@ -2845,6 +2845,7 @@ export interface ILeaves {
   fromDate: string;
   toDate: string;
   leaveType: string;
+  leaveDays: string;
   description: string;
   status: string;
   adminRemark: string | null;
