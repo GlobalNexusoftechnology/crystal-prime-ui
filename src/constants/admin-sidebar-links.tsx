@@ -76,13 +76,13 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     activeIcon: <ProjectManagementIcon color="#034A9F" />,
     permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" },
   },
-  {
-    path: "/admin/my-projects",
-    name: "My Projects",
-    icon: <ProjectManagementIcon />,
-    activeIcon: <ProjectManagementIcon color="#034A9F" />,
-    permission: { module: "MY_PROJECTS", actions: "VIEW" },
-  },
+  // {
+  //   path: "/admin/my-projects",
+  //   name: "My Projects",
+  //   icon: <ProjectManagementIcon />,
+  //   activeIcon: <ProjectManagementIcon color="#034A9F" />,
+  //   permission: { module: "MY_PROJECTS", actions: "VIEW" },
+  // },
   {
     path: "/admin/staff-management",
     name: "Staffs",
@@ -92,10 +92,11 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   },
   {
     //That will show to Staff
-    path: "/admin/leave",
+    path: "/admin/leave/apply-leave",
     name: "Leave",
     icon: <StaffManagementIcon />,
     activeIcon: <StaffManagementIcon color="#034A9F" />,
+    permission: { module: "LEAVE", actions: "VIEW" },
     links: [
       {
         path: "/admin/leave/apply-leave",
@@ -104,6 +105,7 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
         activeIcon: (
           <TbReportAnalytics className="w-full h-full" color="#034A9F" />
         ),
+        permission: { module: "APPLY_LEAVE", actions: "VIEW" },
       },
       {
         path: "/admin/leave/holidays",
@@ -112,6 +114,7 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
         activeIcon: (
           <TbReportAnalytics className="w-full h-full" color="#034A9F" />
         ),
+        permission: { module: "HOLIDAYS", actions: "VIEW" },
       },
     ],
   },
@@ -155,18 +158,20 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     permission: { module: "SUPPORT_TICKETS", actions: "VIEW" },
   },
   {
-    path: "/admin/hr-management",
+    path: "/admin/hr-management/holidays-list",
     name: "HR Management",
     icon: <FaUsersGear className="w-full h-full" />,
     activeIcon: <FaUsersGear className="w-full h-full" color="#034A9F" />,
+    permission: { module: "HR_MANAGEMENET", actions: "VIEW" },
     links: [
       {
         path: "/admin/hr-management/holidays-list",
-        name: "Holidays List",
+        name: "Holiday List",
         icon: <TbReportAnalytics className="w-full h-full" />,
         activeIcon: (
           <TbReportAnalytics className="w-full h-full" color="#034A9F" />
         ),
+        permission: { module: "HOLIDAY_LIST", actions: "VIEW" },
       },
       {
         path: "/admin/hr-management/attendance",
@@ -175,6 +180,7 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
         activeIcon: (
           <TbReportAnalytics className="w-full h-full" color="#034A9F" />
         ),
+        permission: { module: "ATTENDANCE", actions: "VIEW" },
       },
         {
         path: "/admin/hr-management/leaves",
@@ -183,6 +189,7 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
         activeIcon: (
           <TbReportAnalytics className="w-full h-full" color="#034A9F" />
         ),
+        permission: { module: "LEAVES", actions: "VIEW" },
       },
     ],
   },

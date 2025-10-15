@@ -87,6 +87,12 @@ export const leavesListColumn: ITableColumn<
   ILeaves & { staff_name: string }
 >[] = [
   {
+    header: "STATUS",
+    accessor: "status",
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    cell: (row) => <StatusCell row={row} />,
+  },
+  {
     header: "STAFF ID",
     accessor: "staffId",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
@@ -97,9 +103,18 @@ export const leavesListColumn: ITableColumn<
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "STATUS",
-    accessor: "status",
+    header: "Reason Leave",
+    accessor: "description",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
-    cell: (row) => <StatusCell row={row} />,
+  },
+  {
+    header: "Leave Type",
+    accessor: "leaveType",
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+  },
+  {
+    header: "Applied Date",
+    accessor: "appliedDate",
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
 ];

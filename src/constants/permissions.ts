@@ -22,7 +22,15 @@ export enum EModule {
   BUSINESS_ANALYSIS_REPORT = "BUSINESS_ANALYSIS_REPORT",
   PUBLIC_BUSINESS_DASHBOARD = "PUBLIC_BUSINESS_DASHBOARD",
   MY_PROJECTS = "MY_PROJECTS",
-  SUPPORT_TICKETS = "SUPPORT_TICKETS"
+  TICKET_MANAGEMENT= "TICKET_MANAGEMENT",
+  SUPPORT_TICKETS = "SUPPORT_TICKETS",
+  HR_MANAGEMENET = "HR_MANAGEMENET",
+  HOLIDAY_LIST = "HOLIDAY_LIST",
+  ATTENDANCE = "ATTENDANCE",
+  LEAVES = "LEAVES",
+  LEAVE = "LEAVE",
+  APPLY_LEAVE = "APPLY_LEAVE",
+  HOLIDAYS = "HOLIDAYS",
 }
 
 export enum EAction {
@@ -62,7 +70,15 @@ export const MODULES: TOptionItem[] = [
   { key: EModule.BUSINESS_ANALYSIS_REPORT, label: "Business Analysis Report", value: "30" },
   { key: EModule.PUBLIC_BUSINESS_DASHBOARD, label: "Public Business Dashboard", value: "31" },
   { key: EModule.MY_PROJECTS, label: "My Projects Module", value: "32" },
-  { key: EModule.SUPPORT_TICKETS, label: "Support Tickets Module", value: "33" },
+  { key: EModule.TICKET_MANAGEMENT, label: "Ticket Management Module", value: "33" },
+  { key: EModule.SUPPORT_TICKETS, label: "Support Tickets Module", value: "34" },
+  { key: EModule.HR_MANAGEMENET, label: "HR Management Module", value: "35" },
+  { key: EModule.HOLIDAY_LIST, label: "Holiday List Module", value: "36" },
+  { key: EModule.ATTENDANCE, label: "Attendance Module", value: "37" },
+  { key: EModule.LEAVES, label: "Leaves Module", value: "38" },
+  { key: EModule.LEAVE, label: "Leave Module", value: "39" },
+  { key: EModule.APPLY_LEAVE, label: "Apply Leave Module", value: "40" },
+  { key: EModule.HOLIDAYS, label: "Holidays Module", value: "41" },
 ];
 
 export const ACTIONS: TOptionItem[] = [

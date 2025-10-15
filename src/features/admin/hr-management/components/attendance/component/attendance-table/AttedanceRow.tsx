@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import { generateMonthDates } from "@/constants";
-import { TimePicker } from "@/components";
 import { IAttendance } from "@/services";
 
 interface AttendanceRowProps {
@@ -12,22 +11,27 @@ interface AttendanceRowProps {
   year: number;
   month: number;
   attendanceData: IAttendance[];
-  onRefresh?: () => void; // optional refetch callback from parent
 }
 
-const formatTime = (raw?: string | null) => {
-  if (!raw) return "";
-  // if it's an ISO timestamp, convert to HH:mm
-  if (raw.includes("T") || raw.includes("Z")) {
-    const d = new Date(raw);
-    if (!isNaN(d.getTime())) {
-      const hh = String(d.getHours()).padStart(2, "0");
-      const mm = String(d.getMinutes()).padStart(2, "0");
-      return `${hh}:${mm}`;
+// Format time to display in AM/PM format from HH:mm:ss
+const formatTimeForDisplay = (raw?: string | null) => {
+  if (!raw) return "-";
+  
+  // Your API returns time in "HH:mm:ss" format
+  if (raw.includes(":")) {
+    const timeParts = raw.split(":");
+    if (timeParts.length >= 2) {
+      const hours = parseInt(timeParts[0]);
+      const minutes = timeParts[1];
+      
+      // Convert to AM/PM format
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const displayHours = hours % 12 || 12; // Convert 0 to 12 for 12 AM
+      
+      return `${displayHours}:${minutes} ${ampm}`;
     }
   }
-  // if raw already in HH:mm or similar, return as-is
-  if (raw.includes(":")) return raw;
+  
   return raw;
 };
 
@@ -39,7 +43,7 @@ export const AttendanceRow: React.FC<AttendanceRowProps> = ({
   month,
   attendanceData,
 }) => {
-  const [localAttendanceData, setLocalAttendanceData] = useState<
+  const [displayData, setDisplayData] = useState<
     Record<string, { inTime: string; outTime: string }>
   >({});
 
@@ -49,45 +53,26 @@ export const AttendanceRow: React.FC<AttendanceRowProps> = ({
     [attendanceData, staffId]
   );
 
-  // Initialize localAttendanceData for every date in month
+  // Initialize display data for every date in month
   useEffect(() => {
     const dates = generateMonthDates(year, month);
     const initialData: Record<string, { inTime: string; outTime: string }> = {};
 
     dates.forEach((date) => {
-      // try to find matching attendance entry
+      // Find matching attendance entry
       const existing = staffAttendance.find((att) => {
-        try {
-          // Normalize to YYYY-MM-DD
-          const apiDate = att.date?.split("T")[0] ?? att.date;
-          return apiDate === date;
-        } catch {
-          return false;
-        }
+        const apiDate = att.date;
+        return apiDate === date;
       });
 
       initialData[date] = {
-        inTime: formatTime(existing?.inTime) || "",
-        outTime: formatTime(existing?.outTime) || "",
+        inTime: existing ? formatTimeForDisplay(existing.inTime) : "-",
+        outTime: existing ? formatTimeForDisplay(existing.outTime) : "-",
       };
     });
 
-    setLocalAttendanceData(initialData);
+    setDisplayData(initialData);
   }, [staffAttendance, year, month]);
-
-  const handleTimeChange = (
-    date: string,
-    type: "inTime" | "outTime",
-    value: string
-  ) => {
-    setLocalAttendanceData((prev) => ({
-      ...prev,
-      [date]: {
-        ...prev[date],
-        [type]: value,
-      },
-    }));
-  };
 
   return (
     <tr className="text-sm whitespace-nowrap">
@@ -104,16 +89,14 @@ export const AttendanceRow: React.FC<AttendanceRowProps> = ({
       {generateMonthDates(year, month).map((date, idx) => (
         <React.Fragment key={idx}>
           <td className="border p-2 text-center">
-            <TimePicker
-              value={localAttendanceData[date]?.inTime || ""}
-              onChange={(val) => handleTimeChange(date, "inTime", val)}
-            />
+            <div className="min-h-[40px] flex items-center justify-center">
+              {displayData[date]?.inTime || "-"}
+            </div>
           </td>
           <td className="border p-2 text-center">
-            <TimePicker
-              value={localAttendanceData[date]?.outTime || ""}
-              onChange={(val) => handleTimeChange(date, "outTime", val)}
-            />
+            <div className="min-h-[40px] flex items-center justify-center">
+              {displayData[date]?.outTime || "-"}
+            </div>
           </td>
         </React.Fragment>
       ))}
