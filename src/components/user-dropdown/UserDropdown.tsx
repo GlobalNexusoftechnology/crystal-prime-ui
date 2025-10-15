@@ -13,16 +13,22 @@ interface UserDropdownProps {
   onAnnouncementClick?: () => void; // pass handler from parent
 }
 
-export const UserDropdown: React.FC<UserDropdownProps> = ({ name, onAnnouncementClick }) => {
+export const UserDropdown: React.FC<UserDropdownProps> = ({
+  name,
+  onAnnouncementClick,
+}) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const { removeSession } = useAuthStore();
+  const { removeSession, activeSession } = useAuthStore();
   const dropdownRef = useRef<HTMLDivElement>(null);
-
+  const userRole = activeSession?.user?.role.role;
   // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
       }
     };
@@ -46,7 +52,9 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ name, onAnnouncement
           {getInitials(name)}
         </span>
         <span className="font-medium text-black capitalize">{name}</span>
-        <FiChevronDown className={`w-5 h-5 transition-transform ${open ? "rotate-180" : ""}`} />
+        <FiChevronDown
+          className={`w-5 h-5 transition-transform ${open ? "rotate-180" : ""}`}
+        />
       </button>
 
       {open && (
@@ -59,16 +67,17 @@ export const UserDropdown: React.FC<UserDropdownProps> = ({ name, onAnnouncement
             >
               Profile
             </Link>
-
-            <div
-              onClick={() => {
-                setOpen(false);
-                onAnnouncementClick?.(); // trigger parent handler
-              }}
-              className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-            >
-              Announcement
-            </div>
+            {userRole?.toLowerCase() === "admin" ? (
+              <div
+                onClick={() => {
+                  setOpen(false);
+                  onAnnouncementClick?.(); // trigger parent handler
+                }}
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              >
+                Announcement
+              </div>
+            ) : null}
 
             <Link
               onClick={() => setOpen(false)}

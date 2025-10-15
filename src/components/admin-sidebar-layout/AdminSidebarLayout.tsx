@@ -3,6 +3,7 @@ import React, { JSX, useState } from "react";
 import { AdminHeader, AdminSidebar } from "@/components";
 import { IAdminSidebarLayoutProps } from "@/constants";
 import { usePermission } from "@/utils/hooks";
+import { Announcement } from "../user-dropdown/announcement";
 
 /**
  * AdminSidebarLayout component renders a responsive admin layout with a taggable sidebar.
@@ -18,10 +19,13 @@ export function AdminSidebarLayout({
   adminSidebarLinks,
 }: IAdminSidebarLayoutProps): JSX.Element {
   const [isVisibleSidebar, SetIsVisibleSidebar] = useState(false);
+  const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false);
   const { hasPermission } = usePermission();
 
   const filteredLinks = adminSidebarLinks.filter((item) =>
-    item.permission ? hasPermission(item.permission.module, item.permission.actions) : true
+    item.permission
+      ? hasPermission(item.permission.module, item.permission.actions)
+      : true
   );
 
   /**
@@ -31,12 +35,15 @@ export function AdminSidebarLayout({
     SetIsVisibleSidebar((prev) => !prev);
   };
 
+
   return (
     <div className="w-full flex justify-end h-screen overflow-auto">
       {/* Sidebar */}
       <div
         className={`${
-          isVisibleSidebar ? "w-0 xl:w-[6%]" : "w-[70%] md:w-[35%] lg:w-[25%] xl:w-[20%]"
+          isVisibleSidebar
+            ? "w-0 xl:w-[6%]"
+            : "w-[70%] md:w-[35%] lg:w-[25%] xl:w-[20%]"
         } h-full z-40 transition-all duration-500 ease-in-out overflow-hidden bg-white shadow-md fixed left-0`}
       >
         <AdminSidebar
@@ -47,14 +54,25 @@ export function AdminSidebarLayout({
       {/* Main Content */}
       <div
         className={`${
-          isVisibleSidebar ? "w-full xl:w-[94%]" : "w-[30%] md:w-[65%] lg:w-[75%] xl:w-[80%]"
+          isVisibleSidebar
+            ? "w-full xl:w-[94%]"
+            : "w-[30%] md:w-[65%] lg:w-[75%] xl:w-[80%]"
         } transition-all duration-500 ease-in-out`}
       >
-        <AdminHeader SetIsVisibleSidebar={toggleSidebar} />
+        <AdminHeader
+          SetIsVisibleSidebar={toggleSidebar}
+          setIsAnnouncementOpen={setIsAnnouncementOpen}
+        />
         <div className="px-4 md:px-6 xl:px-[1.5vw] py-[1.5vw] overflow-auto min-h-[91.5vh]">
           {children}
         </div>
       </div>
+      {isAnnouncementOpen ? (
+        <Announcement
+          isOpen={isAnnouncementOpen}
+          onClose={() => setIsAnnouncementOpen(false)}
+        />
+      ) : null}
     </div>
   );
 }

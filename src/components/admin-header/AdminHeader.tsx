@@ -20,10 +20,10 @@ import { useAllTicketsAcrossProjectsQuery, ITicketData } from "@/services";
 import { formatDate } from "@/utils";
 import Image from "next/image";
 import { CheckInCheckOut } from "./check-in-check-out";
-import { Announcement } from "../user-dropdown/announcement";
 
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
+  setIsAnnouncementOpen: (value: boolean) => void;
 }
 
 /**
@@ -35,9 +35,7 @@ interface AdminHeaderProps {
  * @param {Function} props.SetIsVisibleSidebar - Function to toggle the sidebar visibility.
  * @returns {JSX.Element} The rendered AdminHeader component.
  */
-export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
-  const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false);
-
+export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: AdminHeaderProps) {
   const router = useRouter();
   const { activeSession } = useAuthStore();
   const [showNotifications, setShowNotifications] = useState(false);
@@ -254,11 +252,6 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
           ) : (
             <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
           )}
-
-          <Announcement
-            isOpen={isAnnouncementOpen}
-            onClose={() => setIsAnnouncementOpen(false)}
-          />
         </div>
       </div>
 
@@ -269,11 +262,11 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
         >
           {isLoading ? (
             <div className="text-center py-4">Loading notifications...</div>
-          ) : !notifications || notifications.length === 0 ? (
+          ) : !notifications || notifications?.length === 0 ? (
             <div className="text-center py-4">No notifications</div>
           ) : (
             notifications.length > 0 &&
-            notifications.map((notification: INotification) => (
+            notifications?.map((notification: INotification) => (
               <div
                 key={notification.id}
                 className={`border rounded-xl p-4 shadow-sm ${
@@ -281,14 +274,14 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
                 } relative group cursor-pointer`}
               >
                 <button
-                  onClick={(e) => handleDeleteNotification(e, notification.id)}
+                  onClick={(e) => handleDeleteNotification(e, notification?.id)}
                   className="absolute top-2 right-2 p-1 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>
                 <div className="flex items-start gap-3">
                   <span className="text-2xl">
-                    {getNotificationIcon(notification.type)}
+                    {getNotificationIcon(notification?.type)}
                   </span>
                   <div className="flex-1">
                     <p className="font-bold">
