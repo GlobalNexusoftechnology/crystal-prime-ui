@@ -196,6 +196,8 @@ import {
   ILeavesResponse,
   IUpdateLeaveStatusPayload,
   IUpdateLeaveStatusResponse,
+  IAnnouncementPayload,
+  IAnnouncementResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -364,6 +366,7 @@ import {
   fetchAllAttendanceUrl,
   fetchAllLeavesUrl,
   updateLeaveStatusUrl,
+  createAnnouncementUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -2851,7 +2854,7 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  // check in
+  // check out
   public createCheckOut = async (payload: ICheckOutPayload) => {
     const response = await this.post<ICheckOutResponse>(
       createCheckOutUrl(),
@@ -2908,6 +2911,20 @@ export class CommunityClient extends ApiClient {
     }
 
     return response.data;
+  };
+
+  //
+    public createAnnouncement = async (payload: IAnnouncementPayload) => {
+    const response = await this.post<IAnnouncementResponse>(
+      createAnnouncementUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
   };
 }
 

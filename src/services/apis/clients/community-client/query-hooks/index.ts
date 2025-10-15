@@ -191,3 +191,5 @@ export { useCreateCheckInMutation } from "./useCheckInMutation";
 export { useCreateCheckOutMutation } from "./useCheckOutMutation";
 //Attendance
 export { useAllAttendanceQuery } from "./useAllAttendanceQuery";
+
+export { useCreateAnnouncementMutation } from "./useCreateAnnouncementMutation";

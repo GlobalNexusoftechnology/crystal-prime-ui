@@ -2887,3 +2887,13 @@ export interface IUpdateLeaveStatusResponse {
     adminRemark: string | null;
   };
 }
+export interface IAnnouncementPayload {
+  message: string;
+  userType: string;
+}
+
+export interface IAnnouncementResponse {
+  status: boolean;
+  message: string;
+  data: IAnnouncementPayload;
+}

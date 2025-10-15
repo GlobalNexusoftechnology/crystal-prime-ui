@@ -382,4 +382,5 @@ export const updateLeaveStatusUrl = (id: string) => `/leaves/${id}`;
 
   export const fetchAllAttendanceUrl = () => "/attendances/all"; //get
 
+  export const createAnnouncementUrl = () => "/notifications/announce"; //post
 
