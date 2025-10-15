@@ -1,4 +1,4 @@
-import { IUpdateLeaveStatusResponse, useMutation } from "@/services";
+import { IUpdateLeaveStatusResponse, IUpdateLeaveStatusPayload, useMutation } from "@/services";
 import { ErrorEventsEnum, errorLogToRemoteUtil, IApiError } from "@/utils";
 import { COMMUNITY_CLIENT } from "../communityClient";
 
@@ -17,7 +17,11 @@ export const useUpdateLeaveStatusMutation = ({
     mutationKey: [UPDATE_LEAVE_MUTATION_KEY],
     networkMode: "always",
     retry: false,
-    mutationFn: COMMUNITY_CLIENT.updateLeaveStatus,
+
+    // actual API function
+    mutationFn: (payload: IUpdateLeaveStatusPayload) =>
+      COMMUNITY_CLIENT.updateLeaveStatus(payload),
+
     onSuccess: (response) => {
       onSuccessCallback(response);
     },
@@ -28,7 +32,6 @@ export const useUpdateLeaveStatusMutation = ({
         errorTitle: "Error in useUpdateLeaveStatusMutation",
         message: err?.message,
       });
-
       onErrorCallback?.(err);
     },
   });

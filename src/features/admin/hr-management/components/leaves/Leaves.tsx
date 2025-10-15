@@ -6,9 +6,6 @@ import {  useAllLeavesQuery } from "@/services";
 
 export function Leaves() {
   const { data } = useAllLeavesQuery();
-  console.log(data, "AAAAAAAAAAAAAAAA");
-
-
 
   const formattedData = data?.data?.map((leave) => ({
   ...leave,

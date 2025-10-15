@@ -2896,11 +2896,11 @@ export class CommunityClient extends ApiClient {
   // update leave status
   public updateLeaveStatus = async ({
     id,
-    status,
+    payload,
   }: IUpdateLeaveStatusPayload) => {
     const response = await this.put<IUpdateLeaveStatusResponse>(
       updateLeaveStatusUrl(id),
-      status
+      payload
     );
 
     if (!response?.success) {

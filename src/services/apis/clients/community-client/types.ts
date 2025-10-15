@@ -2713,7 +2713,7 @@ export interface IDeleteHolidayResponse {
   data: ICreateHolidayPayload;
 }
 
-// update holiday 
+// update holiday
 export interface IUpdateHolidayPayload {
   id: string;
   payload: ICreateHolidayPayload;
@@ -2725,12 +2725,10 @@ export interface IUpdateHolidayResponse {
   data: IUpdateHolidayPayload;
 }
 
-
-
 // create leave
 
 export interface ICreateLeavePayload {
-   staffId: string;
+  staffId: string;
   appliedDate: string;
   fromDate: string;
   toDate: string;
@@ -2744,8 +2742,6 @@ export interface ICreateLeaveResponse {
   success: true;
   data: ICreateLeavePayload;
 }
-
-
 
 export interface ICheckInPayload {
   id: string;
@@ -2785,7 +2781,7 @@ export interface ICheckOutResponse {
   data: ICheckOutPayload;
 }
 
-// all attendance 
+// all attendance
 export interface IAttendance {
   id: string;
   created_at: string;
@@ -2860,10 +2856,13 @@ export interface ILeavesResponse {
   data: ILeaves[];
 }
 
-// update leave status 
+// update leave status
 export interface IUpdateLeaveStatusPayload {
   id: string;
-  status: "Approved" | "Pending" | "Not Approved"; 
+  payload: {
+    status: "Approved" | "Pending" | "Not Approved";
+    adminRemark: string | null;
+  };
 }
 
 // Response from API

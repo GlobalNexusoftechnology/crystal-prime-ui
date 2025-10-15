@@ -20,25 +20,30 @@ export const AttendanceTable: React.FC = () => {
 
   // Normalize array from your response shape:
   // your IAttendancesResponse -> { status, message, data: IAttendance[] }
-const attendanceData = useMemo<IAttendance[]>(() => {
-  if (!attendanceResponse) return [];
-  if ("data" in attendanceResponse && Array.isArray(attendanceResponse.data)) {
-    return attendanceResponse.data;
-  }
-  if (Array.isArray(attendanceResponse)) {
-    return attendanceResponse;
-  }
-  return [];
-}, [attendanceResponse]);
-
+  const attendanceData = useMemo<IAttendance[]>(() => {
+    if (!attendanceResponse) return [];
+    if (
+      "data" in attendanceResponse &&
+      Array.isArray(attendanceResponse.data)
+    ) {
+      return attendanceResponse.data;
+    }
+    if (Array.isArray(attendanceResponse)) {
+      return attendanceResponse;
+    }
+    return [];
+  }, [attendanceResponse]);
 
   // Build staff list from attendanceData
   const staffList = React.useMemo(() => {
     if (!attendanceData || attendanceData.length === 0) return [];
 
-    const uniqueStaff = new Map<string, { id: string; name: string; email: string }>();
+    const uniqueStaff = new Map<
+      string,
+      { id: string; name: string; email: string }
+    >();
 
-    attendanceData.forEach(att => {
+    attendanceData.forEach((att) => {
       const staff = att.staff;
       if (staff && !uniqueStaff.has(staff.id)) {
         uniqueStaff.set(staff.id, {

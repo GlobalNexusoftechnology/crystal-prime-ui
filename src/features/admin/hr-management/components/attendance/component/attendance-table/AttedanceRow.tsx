@@ -79,7 +79,7 @@ export const AttendanceRow: React.FC<AttendanceRowProps> = ({
       <td className="border p-2 text-center sticky left-0 bg-white z-20">
         {index + 1}
       </td>
-      <td className="border p-2 text-center sticky left-12 bg-white z-20">
+      <td className="border  p-2 text-center sticky left-12 bg-white z-20">
         {staffId}
       </td>
       <td className="border p-2 text-start sticky left-30 bg-white z-10">

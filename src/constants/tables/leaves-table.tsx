@@ -1,53 +1,85 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { ILeaves } from "@/services";
-import { ITableColumn } from "../table";
 
 import { useState } from "react";
 import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
+import {
+  ILeaves,
+  IUpdateLeaveStatusResponse,
+  useUpdateLeaveStatusMutation,
+} from "@/services";
+import { ITableColumn } from "../table";
+import toast from "react-hot-toast";
 
-const StatusCell = ({ row }: { row: any }) => {
+interface IStatusCellProps {
+  row: any;
+}
+
+type LeaveStatus = "Approved" | "Pending" | "Not Approved";
+
+const StatusCell = ({ row }: IStatusCellProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [remark, setRemark] = useState("");
-  const [currentStatus, setCurrentStatus] = useState(row.status || "pending");
+  const [adminRemark, setAdminRemark] = useState("");
+  const [currentStatus, setCurrentStatus] = useState<LeaveStatus>(
+    (row.status as LeaveStatus) || "Pending"
+  );
+  const [nextStatus, setNextStatus] = useState<LeaveStatus | null>(null);
+
+  // Proper mutation hook
+  const { updateLeaveStatus, isPending } = useUpdateLeaveStatusMutation({
+    onSuccessCallback: (data: IUpdateLeaveStatusResponse) => {
+      toast.success(data.message || "Leave status updated successfully");
+      setIsModalOpen(false);
+      setAdminRemark("");
+      setNextStatus(null);
+      setCurrentStatus(nextStatus!);
+    },
+    onErrorCallback: (err) => {
+      toast.error(err.message || "Failed to update leave status");
+    },
+  });
 
   const statusOptions = [
-    { label: "Pending", value: "pending" },
-    { label: "Approve", value: "approve" },
-    { label: "Not Approve", value: "not_approve" },
+    { label: "Pending", value: "Pending" },
+    { label: "Approved", value: "Approved" },
+    { label: "Not Approved", value: "Not Approved" },
   ];
 
-  const handleStatusChange = (newStatus: string) => {
-    setCurrentStatus(newStatus);
+  const handleStatusChange = (val: string) => {
+    const newStatus = val as LeaveStatus;
 
-    if (newStatus === "approve" || newStatus === "not_approve") {
-      setIsModalOpen(true);
+    if (newStatus === "Pending") {
+      // Directly update pending
+      setCurrentStatus(newStatus);
+      callUpdateAPI(newStatus, "");
     } else {
-      // Update directly for pending
-      updateStatus(row, newStatus, "");
+      // Show modal for Approved / Not Approved
+      setNextStatus(newStatus);
+      setIsModalOpen(true);
     }
   };
 
   const handleSubmit = () => {
-    updateStatus(row, currentStatus, remark);
+    if (!nextStatus) return;
+    callUpdateAPI(nextStatus, adminRemark);
     setIsModalOpen(false);
-    setRemark("");
   };
 
   const handleCancel = () => {
-    setCurrentStatus("pending");
-    updateStatus(row, "pending", "");
+    setAdminRemark("");
     setIsModalOpen(false);
-    setRemark("");
+    setNextStatus(null);
   };
 
-  const updateStatus = (rowData: any, status: string, remark: string) => {
-    console.log("Status updated:", {
-      staffId: rowData.staffId,
-      status,
-      remark,
+  // Correct payload structure
+  const callUpdateAPI = (status: LeaveStatus, remark: string) => {
+    updateLeaveStatus({
+      id: row?.id,
+      payload: {
+        status,
+        adminRemark: remark || null,
+      },
     });
-    // API call here
   };
 
   return (
@@ -65,17 +97,26 @@ const StatusCell = ({ row }: { row: any }) => {
         modalTitle={`Status Change - ${row.staff_name}`}
         modalClassName="w-[24rem]"
       >
-        <div className=" flex flex-col gap-6 p-4">
-          <InputField label="Remark" placeholder="Fill Remark Here" />
+        <div className="flex flex-col gap-6 p-4">
+          <InputField
+            label="Remark"
+            placeholder="Fill Remark Here"
+            value={adminRemark}
+            onChange={(e) => setAdminRemark(e.target.value)}
+          />
 
           <div className="flex justify-between gap-5">
             <Button
               title="Cancel"
               variant="primary-outline"
               onClick={handleCancel}
+              disabled={isPending}
             />
-
-            <Button title="Submit" onClick={handleSubmit} />
+            <Button
+              title={isPending ? "Submitting..." : "Submit"}
+              onClick={handleSubmit}
+              disabled={isPending || !adminRemark.trim()}
+            />
           </div>
         </div>
       </ModalOverlay>
@@ -83,6 +124,7 @@ const StatusCell = ({ row }: { row: any }) => {
   );
 };
 
+// Table Columns
 export const leavesListColumn: ITableColumn<
   ILeaves & { staff_name: string }
 >[] = [
@@ -90,8 +132,9 @@ export const leavesListColumn: ITableColumn<
     header: "STATUS",
     accessor: "status",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
-    cell: (row) => <StatusCell row={row} />,
+    cell: ({ row }) => <StatusCell row={row} />,
   },
+
   {
     header: "STAFF ID",
     accessor: "staffId",
@@ -103,17 +146,17 @@ export const leavesListColumn: ITableColumn<
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "Reason Leave",
+    header: "REASON LEAVE",
     accessor: "description",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "Leave Type",
+    header: "LEAVE TYPE",
     accessor: "leaveType",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
-    header: "Applied Date",
+    header: "APPLIED DATE",
     accessor: "appliedDate",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
