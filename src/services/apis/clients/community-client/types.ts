@@ -2792,8 +2792,27 @@ export interface IAttendance {
   updated_at: string;
   deleted: boolean;
   deleted_at: string | null;
-  holidayName: string;
+  staffId: string;
+  inTime: string;
+  outTime: string;
   date: string;
+  totalHours: string;
+  staff: {
+    id: string;
+    created_at: string;
+    updated_at: string;
+    deleted: boolean;
+    deleted_at: string | null;
+    email: string;
+    first_name: string;
+    last_name: string;
+    phone_number: string;
+    dob: string | null;
+    otp: string | null;
+    otpExpiresAt: string | null;
+    isOtpVerified: boolean;
+    password: string;
+  };
 }
 
 export interface IAttendancesResponse {
@@ -2801,7 +2820,6 @@ export interface IAttendancesResponse {
   message: string;
   data: IAttendance[];
 }
-
 
 // get all leaves
 export interface IStaff {
