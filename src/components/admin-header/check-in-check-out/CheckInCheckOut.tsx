@@ -2,7 +2,7 @@
 "use client";
 import { Button } from "@/components";
 import { ICheckInResponse, ICheckOutResponse, useAuthStore } from "@/services";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useCreateCheckInMutation,
   useCreateCheckOutMutation,
@@ -17,16 +17,39 @@ interface Props {
 export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   const { activeSession } = useAuthStore();
   const [isCheckedIn, setIsCheckedIn] = useState(false);
+  const [timerSeconds, setTimerSeconds] = useState(0); // timer in seconds
 
   const userRole = activeSession?.user?.role?.role;
   const userPermission =
     userRole?.toLowerCase() === "admin" || userRole?.toLowerCase() === "client";
+
+  // Timer logic
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    if (isCheckedIn) {
+      interval = setInterval(() => {
+        setTimerSeconds((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isCheckedIn]);
+
+  // Format timer as HH:MM:SS
+  const formatTime = (seconds: number) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${hrs.toString().padStart(2, "0")}:${mins
+      .toString()
+      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
 
   // Check In Mutation
   const { onCheckInMutation, isPending: isCheckInPending } =
     useCreateCheckInMutation({
       onSuccessCallback: (data: ICheckInResponse) => {
         setIsCheckedIn(true);
+        setTimerSeconds(0); // reset timer
         toast.success(data.message || "Check In successful!");
         onSuccessRefresh?.();
       },
@@ -80,12 +103,17 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   return (
     <div>
       {!userPermission && (
-        <div>
+        <div className="flex flex-col gap-2">
           <Button
             title={buttonTitle}
             onClick={handleButtonClick}
             disabled={isLoading}
           />
+          {isCheckedIn && (
+            <span className="text-sm text-gray-700">
+              Timer: {formatTime(timerSeconds)}
+            </span>
+          )}
           {isLoading && <span>Loading...</span>}
         </div>
       )}
