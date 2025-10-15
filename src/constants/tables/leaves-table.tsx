@@ -160,6 +160,21 @@ export const leavesListColumn: ITableColumn<
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {
+    header: "FROM DATE",
+    accessor: "fromDate",
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+  },
+  {
+    header: "TO DATE",
+    accessor: "toDate",
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+  },
+  {
+    header: "LEAVE DAYS",
+    accessor: "leaveDays",
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+  },
+  {
     header: "APPLIED DATE",
     accessor: "appliedDate",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
