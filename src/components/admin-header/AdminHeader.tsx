@@ -20,6 +20,7 @@ import { useAllTicketsAcrossProjectsQuery, ITicketData } from "@/services";
 import { formatDate } from "@/utils";
 import Image from "next/image";
 import { CheckInCheckOut } from "./check-in-check-out";
+import { Announcement } from "../user-dropdown/announcement";
 
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
@@ -35,6 +36,8 @@ interface AdminHeaderProps {
  * @returns {JSX.Element} The rendered AdminHeader component.
  */
 export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
+  const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false);
+
   const router = useRouter();
   const { activeSession } = useAuthStore();
   const [showNotifications, setShowNotifications] = useState(false);
@@ -242,11 +245,21 @@ export function AdminHeader({ SetIsVisibleSidebar }: AdminHeaderProps) {
             </span>
           )}
         </div>
-        {userName ? (
-          <UserDropdown name={userName} />
-        ) : (
-          <div className="w-8 2xl:w-[2vw] h-8 2xl:h-[2vw] rounded-full bg-gray-200 animate-pulse" />
-        )}
+        <div className="flex items-center gap-4">
+          {userName ? (
+            <UserDropdown
+              name={userName}
+              onAnnouncementClick={() => setIsAnnouncementOpen(true)}
+            />
+          ) : (
+            <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
+          )}
+
+          <Announcement
+            isOpen={isAnnouncementOpen}
+            onClose={() => setIsAnnouncementOpen(false)}
+          />
+        </div>
       </div>
 
       {showNotifications && (
