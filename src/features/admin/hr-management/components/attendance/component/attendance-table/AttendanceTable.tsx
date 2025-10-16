@@ -2,24 +2,31 @@
 
 import React, { useMemo } from "react";
 import { AttendanceHeader } from "./AttendanceHeader";
+import { useAllAttendanceQuery, useAllUsersQuery } from "@/services";
+import { IAttendance, IUser } from "@/services";
 import { AttendanceRow } from "./AttedanceRow";
-import { useAllAttendanceQuery } from "@/services";
-import { IAttendance } from "@/services";
 
 export const AttendanceTable: React.FC = () => {
   const year = 2025;
   const month = 10;
 
-  // Assuming your hook returns { data, isLoading, isError, error, refetch }
+  // Fetch attendance data
   const {
     data: attendanceResponse,
-    isLoading,
-    isError,
-    error,
+    isLoading: isLoadingAttendance,
+    isError: isAttendanceError,
+    error: attendanceError,
   } = useAllAttendanceQuery();
 
-  // Normalize array from your response shape:
-  // your IAttendancesResponse -> { status, message, data: IAttendance[] }
+  // Fetch all users/staff data
+  const {
+    allUsersData: usersResponse,
+    isLoading: isLoadingUsers,
+    isError: isUsersError,
+    error: usersError,
+  } = useAllUsersQuery();
+
+  // Normalize attendance array from response
   const attendanceData = useMemo<IAttendance[]>(() => {
     if (!attendanceResponse) return [];
     if (
@@ -34,28 +41,44 @@ export const AttendanceTable: React.FC = () => {
     return [];
   }, [attendanceResponse]);
 
-  // Build staff list from attendanceData
-  const staffList = React.useMemo(() => {
-    if (!attendanceData || attendanceData.length === 0) return [];
-
-    const uniqueStaff = new Map<
-      string,
-      { id: string; name: string; email: string }
-    >();
-
-    attendanceData.forEach((att) => {
-      const staff = att.staff;
-      if (staff && !uniqueStaff.has(staff.id)) {
-        uniqueStaff.set(staff.id, {
-          id: staff.id,
-          name: `${staff.first_name ?? ""} ${staff.last_name ?? ""}`.trim(),
-          email: staff.email ?? "",
-        });
-      }
+  // Normalize users array from response - fixed to use data.list
+  const usersData = useMemo<IUser[]>(() => {
+    if (!usersResponse || !usersResponse.data) return [];
+    
+    // Extract the list from data.list
+    const userList = usersResponse.data.list || [];
+    
+    // Filter out users with role 'admin' or 'client'
+    const filteredUsers = userList.filter((user: IUser) => {
+      const userRole = user.role?.role?.toLowerCase();
+      return userRole.toLowerCase() !== 'admin' && userRole.toLowerCase() !== 'client';
     });
 
-    return Array.from(uniqueStaff.values());
-  }, [attendanceData]);
+    return filteredUsers;
+  }, [usersResponse]);
+
+  // Build staff list from usersData and match with attendance data
+  const staffList = React.useMemo(() => {
+    if (!usersData || usersData.length === 0) return [];
+
+    return usersData.map((user) => {
+      // Find attendance records for this user
+      const userAttendance = attendanceData.filter(
+        (att) => att.staffId === user.id
+      );
+
+      return {
+        id: user.id,
+        name: `${user.first_name ?? ""} ${user.last_name ?? ""}`.trim(),
+        email: user.email ?? "",
+        attendanceRecords: userAttendance,
+      };
+    });
+  }, [usersData, attendanceData]);
+
+  const isLoading = isLoadingAttendance || isLoadingUsers;
+  const isError = isAttendanceError || isUsersError;
+  const error = attendanceError || usersError;
 
   if (isLoading) {
     return (
@@ -69,7 +92,7 @@ export const AttendanceTable: React.FC = () => {
     return (
       <div className="flex justify-center items-center mt-6">
         <div className="text-lg text-red-500">
-          Error loading attendance data: {error?.message}
+          Error loading data: {error?.message}
         </div>
       </div>
     );
@@ -96,8 +119,7 @@ export const AttendanceTable: React.FC = () => {
               name={staff.name}
               year={year}
               month={month}
-              attendanceData={attendanceData}
-              // pass refetch so rows or other components can trigger refresh
+              attendanceData={staff.attendanceRecords}
             />
           ))}
         </tbody>

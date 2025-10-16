@@ -47,12 +47,6 @@ export const AttendanceRow: React.FC<AttendanceRowProps> = ({
     Record<string, { inTime: string; outTime: string }>
   >({});
 
-  // Filter only entries for this staff
-  const staffAttendance = React.useMemo(
-    () => attendanceData.filter((a) => a.staffId === staffId),
-    [attendanceData, staffId]
-  );
-
   // Initialize display data for every date in month
   useEffect(() => {
     const dates = generateMonthDates(year, month);
@@ -60,7 +54,7 @@ export const AttendanceRow: React.FC<AttendanceRowProps> = ({
 
     dates.forEach((date) => {
       // Find matching attendance entry
-      const existing = staffAttendance.find((att) => {
+      const existing = attendanceData.find((att) => {
         const apiDate = att.date;
         return apiDate === date;
       });
@@ -72,14 +66,14 @@ export const AttendanceRow: React.FC<AttendanceRowProps> = ({
     });
 
     setDisplayData(initialData);
-  }, [staffAttendance, year, month]);
+  }, [attendanceData, year, month]);
 
   return (
     <tr className="text-sm whitespace-nowrap">
       <td className="border p-2 text-center sticky left-0 bg-white z-20">
         {index + 1}
       </td>
-      <td className="border  p-2 text-center sticky left-12 bg-white z-20">
+      <td className="border p-2 text-center sticky left-12 bg-white z-20">
         {staffId}
       </td>
       <td className="border p-2 text-start sticky left-30 bg-white z-10">
