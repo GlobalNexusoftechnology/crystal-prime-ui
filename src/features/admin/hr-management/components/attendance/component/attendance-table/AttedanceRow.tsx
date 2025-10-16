@@ -35,6 +35,12 @@ const formatTimeForDisplay = (raw?: string | null) => {
   return raw;
 };
 
+// Function to check if a date is Sunday
+const isSunday = (dateString: string): boolean => {
+  const date = new Date(dateString);
+  return date.getDay() === 0; // 0 is Sunday
+};
+
 export const AttendanceRow: React.FC<AttendanceRowProps> = ({
   index,
   staffId,
@@ -80,20 +86,23 @@ export const AttendanceRow: React.FC<AttendanceRowProps> = ({
         {name}
       </td>
 
-      {generateMonthDates(year, month).map((date, idx) => (
-        <React.Fragment key={idx}>
-          <td className="border p-2 text-center">
-            <div className="min-h-[40px] flex items-center justify-center">
-              {displayData[date]?.inTime || "-"}
-            </div>
-          </td>
-          <td className="border p-2 text-center">
-            <div className="min-h-[40px] flex items-center justify-center">
-              {displayData[date]?.outTime || "-"}
-            </div>
-          </td>
-        </React.Fragment>
-      ))}
+      {generateMonthDates(year, month).map((date, idx) => {
+        const sundayClass = isSunday(date) ? 'bg-yellow-100' : 'bg-white';
+        return (
+          <React.Fragment key={idx}>
+            <td className={`border p-2 text-center ${sundayClass}`}>
+              <div className="min-h-[40px] flex items-center justify-center">
+                {displayData[date]?.inTime || "-"}
+              </div>
+            </td>
+            <td className={`border p-2 text-center ${sundayClass}`}>
+              <div className="min-h-[40px] flex items-center justify-center">
+                {displayData[date]?.outTime || "-"}
+              </div>
+            </td>
+          </React.Fragment>
+        );
+      })}
     </tr>
   );
 };
