@@ -9,24 +9,18 @@ import { AttendanceRow } from "./AttedanceRow";
 interface AttendanceTableProps {
   year: number;
   month: number;
+  searchText?: string; // optional search filter
+  page?: number;
+  limit?: number;
 }
 
 export const AttendanceTable: React.FC<AttendanceTableProps> = ({
   year,
   month,
+  searchText,
+  page = 1,
+  limit = 100,
 }) => {
-  // Remove hardcoded year and month - use props instead
-  // const year = 2025;
-  // const month = 10;
-
-  // Fetch attendance data
-  const {
-    data: attendanceResponse,
-    isLoading: isLoadingAttendance,
-    isError: isAttendanceError,
-    error: attendanceError,
-  } = useAllAttendanceQuery();
-
   // Fetch all users/staff data
   const {
     allUsersData: usersResponse,
@@ -35,48 +29,37 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
     error: usersError,
   } = useAllUsersQuery();
 
-  // Normalize attendance array from response
+  // Fetch attendance data with filters
+  const {
+    data: attendanceResponse,
+    isLoading: isLoadingAttendance,
+    isError: isAttendanceError,
+    error: attendanceError,
+  } = useAllAttendanceQuery({ year, month, searchText, page, limit });
+
+  // Normalize attendance array
   const attendanceData = useMemo<IAttendance[]>(() => {
-    if (!attendanceResponse) return [];
-    if (
-      "data" in attendanceResponse &&
-      Array.isArray(attendanceResponse.data)
-    ) {
-      return attendanceResponse.data;
-    }
-    if (Array.isArray(attendanceResponse)) {
-      return attendanceResponse;
-    }
-    return [];
+    if (!attendanceResponse || !attendanceResponse.list) return [];
+    return attendanceResponse.list;
   }, [attendanceResponse]);
 
-  // Normalize users array from response - fixed to use data.list
+  // Normalize users array - filter out admin/client
   const usersData = useMemo<IUser[]>(() => {
-    if (!usersResponse || !usersResponse.data) return [];
-    
-    // Extract the list from data.list
-    const userList = usersResponse.data.list || [];
-    
-    // Filter out users with role 'admin' or 'client'
-    const filteredUsers = userList.filter((user: IUser) => {
+    if (!usersResponse?.data?.list) return [];
+    return usersResponse.data.list.filter((user: IUser) => {
       const userRole = user.role?.role?.toLowerCase();
-      // Add null/undefined check before calling toLowerCase()
-      return userRole && userRole !== 'admin' && userRole !== 'client';
+      return userRole && userRole !== "admin" && userRole !== "client";
     });
-
-    return filteredUsers;
   }, [usersResponse]);
 
-  // Build staff list from usersData and match with attendance data
-  const staffList = React.useMemo(() => {
+  // Map staff with their attendance records
+  const staffList = useMemo(() => {
     if (!usersData || usersData.length === 0) return [];
 
     return usersData.map((user) => {
-      // Find attendance records for this user
       const userAttendance = attendanceData.filter(
         (att) => att.staffId === user.id
       );
-
       return {
         id: user.id,
         name: `${user.first_name ?? ""} ${user.last_name ?? ""}`.trim(),
@@ -90,15 +73,14 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
   const isError = isAttendanceError || isUsersError;
   const error = attendanceError || usersError;
 
-  if (isLoading) {
+  if (isLoading)
     return (
       <div className="flex justify-center items-center mt-6">
         <div className="text-lg">Loading attendance data...</div>
       </div>
     );
-  }
 
-  if (isError) {
+  if (isError)
     return (
       <div className="flex justify-center items-center mt-6">
         <div className="text-lg text-red-500">
@@ -106,15 +88,13 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
         </div>
       </div>
     );
-  }
 
-  if (staffList.length === 0) {
+  if (staffList.length === 0)
     return (
       <div className="flex justify-center items-center mt-6">
         <div className="text-lg">No staff data found</div>
       </div>
     );
-  }
 
   return (
     <div className="overflow-x-auto mt-6">

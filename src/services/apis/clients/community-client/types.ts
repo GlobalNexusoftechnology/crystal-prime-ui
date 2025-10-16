@@ -2810,11 +2810,32 @@ export interface IAttendance {
     password: string;
   };
 }
+export interface IAttendanceFilters {
+  year?: number;
+  month?: number;
+  searchText?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface IAttendanceExportFilters {
+  year?: number;
+  month?: number;
+  searchText?: string;
+}
 
 export interface IAttendancesResponse {
   status: boolean;
   message: string;
-  data: IAttendance[];
+  data: {
+    list: IAttendance[];
+    pagination: {
+      total: number;
+      page: number;
+      limit: number;
+      totalPages: number;
+    };
+  };
 }
 
 // get all leaves

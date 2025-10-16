@@ -200,6 +200,8 @@ import {
   IAnnouncementResponse,
   ISendProposalPayload,
   ISendProposalResponse,
+  IAttendanceFilters,
+  IAttendanceExportFilters,
 } from "./types";
 import {
   changePasswordUrl,
@@ -370,6 +372,7 @@ import {
   updateLeaveStatusUrl,
   createAnnouncementUrl,
   sendProposalUrl,
+  fetchAllAttendanceDownloadExcelUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -2871,9 +2874,9 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
   // get all Attendance
-  public getAllAttendance = async () => {
+  public getAllAttendance = async (filters: IAttendanceFilters = {}) => {
     const response = await this.get<IAttendancesResponse>(
-      fetchAllAttendanceUrl(),
+      fetchAllAttendanceUrl(filters),
       {
         requiresAuth: false,
       }
@@ -2883,7 +2886,8 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
 
-    return response?.data.data;
+    // Return full data object (list + pagination)
+    return response?.data;
   };
 
   // get all leaves
@@ -2936,17 +2940,42 @@ export class CommunityClient extends ApiClient {
       payload,
       {
         requiresAuth: false,
-        responseType: "blob", 
+        responseType: "blob",
       }
     );
     if (!response) {
       throw new Error("No response from server while generating proposal");
     }
     if (response?.success === false) {
-      throw response?.response?.data || new Error("Failed to generate proposal file");
+      throw (
+        response?.response?.data ||
+        new Error("Failed to generate proposal file")
+      );
+    }
+
+    return response?.data;
+  };
+
+  
+ public fetchAllAttendanceDownloadExcel = async (filters: IAttendanceExportFilters = {}) => {
+    const params = new URLSearchParams();
+  
+    if (filters.year) params.append("year", filters.year.toString());
+    if (filters.month) params.append("month", filters.month.toString());
+    if (filters.searchText) params.append("searchText", filters.searchText);
+  
+    const queryString = params.toString();
+    const url = queryString 
+      ? `${fetchAllAttendanceDownloadExcelUrl()}?${queryString}` 
+      : fetchAllAttendanceDownloadExcelUrl();
+  
+    const response = await this.get<Blob>(url, { responseType: "blob" });
+  
+    if (!response?.success) {
+      throw response?.errorData;
     }
   
-    return response?.data; 
+    return response?.data; // Blob containing Excel file
   };
   
 }

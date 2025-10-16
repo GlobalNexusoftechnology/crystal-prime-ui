@@ -1,3 +1,5 @@
+import { IAttendanceFilters } from "../types";
+
 interface ILoginWithEmailAndPasswordUrlOptions {
   tenantName: string;
   policyName: string;
@@ -379,9 +381,22 @@ export const updateLeaveStatusUrl = (id: string) => `/leaves/${id}`;
 
   export const createCheckOutUrl = () => "/attendances/check-out"; //post
   
+  export const fetchAllAttendanceDownloadExcelUrl = () => "/attendances/export/excel"; 
+  
+  export const fetchAllAttendanceUrl = (filters: IAttendanceFilters = {}) => {
+    const params = new URLSearchParams();
+  
+    if (filters.year) params.append("year", filters.year.toString());
+    if (filters.month) params.append("month", filters.month.toString());
+    if (filters.page) params.append("page", filters.page.toString());
+    if (filters.limit) params.append("limit", filters.limit.toString());
+    if (filters.searchText) params.append("searchText", filters.searchText);
+  
+    const queryString = params.toString();
+    return queryString ? `/attendances/all?${queryString}` : "/attendances/all";
+  };
 
-  export const fetchAllAttendanceUrl = () => "/attendances/all"; //get
-
+  
   export const createAnnouncementUrl = () => "/notifications/announce"; //post
 
   export const sendProposalUrl = (id: string) => `/leads/${id}/quotation`; //post
