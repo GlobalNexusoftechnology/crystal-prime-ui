@@ -3,11 +3,11 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, ModalOverlay, DatePicker, NumberInput } from "@/components";
-import { useRef, useEffect } from "react";
+import { useEffect } from "react";
 
 export interface IProposal {
   proposalDate: string;
-  proposalNumber: string; 
+  proposalNumber: string;
   proposalText: string;
 }
 
@@ -17,7 +17,6 @@ export interface SendProposalModalProps {
   onSubmit: (values: IProposal) => Promise<void> | void;
   initialValues: IProposal;
   isPending?: boolean;
-  isEdit?: boolean;
 }
 
 export function SendProposalModal({
@@ -26,15 +25,11 @@ export function SendProposalModal({
   onSubmit,
   initialValues,
   isPending = false,
-  isEdit = false,
 }: SendProposalModalProps) {
-  const userEditedNumber = useRef(false);
-  const userEditedText = useRef(false);
-
   const formik = useFormik({
     initialValues: {
-      proposalDate: initialValues.proposalDate || "",
-      proposalNumber: initialValues.proposalNumber || "0", // default as string
+      proposalDate: initialValues.proposalDate || new Date().toISOString().split("T")[0],
+      proposalNumber: initialValues.proposalNumber || "",
       proposalText: initialValues.proposalText || "",
     },
     validationSchema: Yup.object().shape({
@@ -47,37 +42,35 @@ export function SendProposalModal({
     enableReinitialize: true,
     onSubmit: async (values) => {
       await onSubmit(values);
+      formik.resetForm({
+        values: {
+          proposalDate: new Date().toISOString().split("T")[0],
+          proposalNumber: "",
+          proposalText: "",
+        },
+      });
     },
   });
 
-  // Sync initial values if user hasn't edited fields
+  // Optional: reset form when modal closes
   useEffect(() => {
-    if (!userEditedNumber.current && initialValues.proposalNumber !== undefined) {
-      formik.setFieldValue("proposalNumber", initialValues.proposalNumber.toString());
-    }
-    if (!userEditedText.current) {
-      formik.setFieldValue("proposalText", initialValues.proposalText || "");
+    if (!isOpen) {
+      formik.resetForm({
+        values: {
+          proposalDate: new Date().toISOString().split("T")[0],
+          proposalNumber: "",
+          proposalText: "",
+        },
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialValues.proposalNumber, initialValues.proposalText]);
-
-  // Set defaults when modal opens
-  useEffect(() => {
-    if (isOpen && !isEdit) {
-      if (!formik.values.proposalDate) {
-        formik.setFieldValue("proposalDate", new Date().toISOString().split("T")[0]);
-      }
-      if (!formik.values.proposalNumber && initialValues.proposalNumber === undefined) {
-        formik.setFieldValue("proposalNumber", "1"); // default as string
-      }
-    }
-  }, [isOpen, isEdit, formik, initialValues.proposalNumber]);
+  }, [isOpen]);
 
   return (
     <ModalOverlay
       isOpen={isOpen}
       onClose={onClose}
-      modalTitle={isEdit ? "Edit Proposal" : "Send Proposal"}
+      modalTitle="Send Proposal"
       modalClassName="w-full md:w-[45rem]"
     >
       <form
@@ -90,18 +83,13 @@ export function SendProposalModal({
               Proposal Number
             </label>
             <NumberInput
-              value={Number(formik.values.proposalNumber)}
-              onChange={(value) => {
-                userEditedNumber.current = true;
-                formik.setFieldValue("proposalNumber", value.toString());
-              }}
+              value={Number(formik.values.proposalNumber || 0)}
+              onChange={(value) => formik.setFieldValue("proposalNumber", value.toString())}
               onBlur={formik.handleBlur}
               min={1}
               placeholder="Enter proposal number"
               className={`w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                formik.touched.proposalNumber && formik.errors.proposalNumber
-                  ? "border-red-500"
-                  : ""
+                formik.touched.proposalNumber && formik.errors.proposalNumber ? "border-red-500" : ""
               }`}
             />
             {formik.touched.proposalNumber && formik.errors.proposalNumber && (
@@ -111,7 +99,7 @@ export function SendProposalModal({
 
           <DatePicker
             label="Proposal Date"
-            value={formik.values.proposalDate || ""}
+            value={formik.values.proposalDate}
             onChange={(value) => formik.setFieldValue("proposalDate", value)}
             placeholder="Select Proposal Date"
             datePickerWidth="w-full"
@@ -126,10 +114,7 @@ export function SendProposalModal({
             name="proposalText"
             placeholder="Enter proposal text..."
             value={formik.values.proposalText}
-            onChange={(e) => {
-              userEditedText.current = true;
-              formik.handleChange(e);
-            }}
+            onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             rows={6}
             className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
@@ -150,7 +135,7 @@ export function SendProposalModal({
             width="w-full"
           />
           <Button
-            title={isPending ? (isEdit ? "Saving..." : "Sending...") : isEdit ? "Save Changes" : "Send Proposal"}
+            title={isPending ? "Sending..." : "Send Proposal"}
             type="submit"
             width="w-full"
             disabled={isPending}
