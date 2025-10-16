@@ -41,15 +41,15 @@ export const AttendanceHeader: React.FC<AttendanceHeaderProps> = ({
         >
           S.No.
         </th>
-        <th
+        {/* <th
           rowSpan={2}
           className="border p-2 text-center sticky left-12 bg-gray-100 z-30"
         >
           Staff ID
-        </th>
+        </th> */}
         <th
           rowSpan={2}
-          className="border p-2 text-start sticky left-30 bg-gray-100 z-20"
+          className="border p-2 text-start sticky left-[3.5rem] bg-gray-100 z-20"
         >
           Name
         </th>
