@@ -6,9 +6,18 @@ import { useAllAttendanceQuery, useAllUsersQuery } from "@/services";
 import { IAttendance, IUser } from "@/services";
 import { AttendanceRow } from "./AttedanceRow";
 
-export const AttendanceTable: React.FC = () => {
-  const year = 2025;
-  const month = 10;
+interface AttendanceTableProps {
+  year: number;
+  month: number;
+}
+
+export const AttendanceTable: React.FC<AttendanceTableProps> = ({
+  year,
+  month,
+}) => {
+  // Remove hardcoded year and month - use props instead
+  // const year = 2025;
+  // const month = 10;
 
   // Fetch attendance data
   const {
@@ -51,7 +60,8 @@ export const AttendanceTable: React.FC = () => {
     // Filter out users with role 'admin' or 'client'
     const filteredUsers = userList.filter((user: IUser) => {
       const userRole = user.role?.role?.toLowerCase();
-      return userRole.toLowerCase() !== 'admin' && userRole.toLowerCase() !== 'client';
+      // Add null/undefined check before calling toLowerCase()
+      return userRole && userRole !== 'admin' && userRole !== 'client';
     });
 
     return filteredUsers;
