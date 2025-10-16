@@ -384,3 +384,6 @@ export const updateLeaveStatusUrl = (id: string) => `/leaves/${id}`;
 
   export const createAnnouncementUrl = () => "/notifications/announce"; //post
 
+  export const sendProposalUrl = (id: string) => `/leads/${id}/quotation`; //post
+
+

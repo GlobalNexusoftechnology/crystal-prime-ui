@@ -7,6 +7,7 @@ import {
   Table,
   DatePicker,
   SimpleDropdown,
+  SendProposalModal,
 } from "@/components";
 import {
   EAction,
@@ -29,6 +30,7 @@ import {
   useLeadDownloadTemplateExcelQuery,
   useAuthStore,
   useAllUsersQuery,
+  useSendProposalMutation,
 } from "@/services";
 import { downloadBlobFile, formatDate, IApiError } from "@/utils";
 import { FiPlus, FiX } from "react-icons/fi";
@@ -62,6 +64,32 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isSendProposalModalOpen, setIsSendProposalModalOpen] = useState(false);
+  const [selectedLeadForProposal, setSelectedLeadForProposal] = useState<ILeadsListProps | null>(null);
+  const { mutate: sendProposal, isPending: isSendingProposal } = useSendProposalMutation();
+
+
+  // Send Proposal Handler
+  const handleSendProposal = async (proposalData: { proposalDate: string; proposalNumber: string; proposalText: string }) => {
+    try {
+      if (!selectedLeadForProposal?.id) {
+        toast.error("No lead selected for proposal.");
+        return;
+      }
+
+      await sendProposal({
+        id: selectedLeadForProposal.id,
+        payload: proposalData,
+      });
+
+      toast.success("Proposal sent successfully!");
+      setIsSendProposalModalOpen(false);
+      setSelectedLeadForProposal(null);
+    } catch (error) {
+      console.error("Proposal send failed:", error);
+      toast.error("Failed to send proposal.");
+    }
+  };
 
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
@@ -160,7 +188,6 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const { allTypesData } = useAllTypesQuery();
   const { allUsersData } = useAllUsersQuery();
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
-
   const { onLeadDownloadTemplateExcel } = useLeadDownloadTemplateExcelQuery();
 
   // Reset to first page when filters change
@@ -278,6 +305,16 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       className: "text-red-500",
     });
   }
+
+  // Add Send Proposal action
+  leadLeadManagementAction.push({
+    label: "Send Proposal",
+    onClick: (row) => {
+      setSelectedLeadForProposal(row);
+      setIsSendProposalModalOpen(true);
+    },
+    className: "text-green-600",
+  });
 
   const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
     (lead) => {
@@ -601,6 +638,21 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         title="Delete Lead"
         message="Are you sure you want to delete this lead "
         itemName={leadNameToDelete}
+      />
+      
+      <SendProposalModal
+        isOpen={isSendProposalModalOpen}
+        onClose={() => {
+          setIsSendProposalModalOpen(false);
+          setSelectedLeadForProposal(null);
+        }}
+        onSubmit={handleSendProposal}
+        initialValues={{
+          proposalDate: new Date().toISOString().split("T")[0],
+          proposalNumber: "",
+          proposalText: ""
+        }}
+        isPending={isSendingProposal}
       />
     </div>
   );

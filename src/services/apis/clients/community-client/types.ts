@@ -2897,3 +2897,11 @@ export interface IAnnouncementResponse {
   message: string;
   data: IAnnouncementPayload;
 }
+
+export interface ISendProposalPayload {
+  proposalDate: string;
+  proposalNumber?: string;
+  proposalText: string;
+}
+
+export type ISendProposalResponse = Blob;

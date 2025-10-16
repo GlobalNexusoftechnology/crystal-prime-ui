@@ -194,3 +194,5 @@ export { useAllAttendanceQuery } from "./useAllAttendanceQuery";
 
 export { useCreateAnnouncementMutation } from "./useCreateAnnouncementMutation";
 
+export { useSendProposalMutation } from "./useSendProposalMutation";
+

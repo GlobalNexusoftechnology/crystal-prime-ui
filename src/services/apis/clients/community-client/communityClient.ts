@@ -198,6 +198,8 @@ import {
   IUpdateLeaveStatusResponse,
   IAnnouncementPayload,
   IAnnouncementResponse,
+  ISendProposalPayload,
+  ISendProposalResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -367,6 +369,7 @@ import {
   fetchAllLeavesUrl,
   updateLeaveStatusUrl,
   createAnnouncementUrl,
+  sendProposalUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -2926,6 +2929,26 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   };
+
+  public sendProposal = async (id: string, payload: ISendProposalPayload) => {
+    const response = await this.post<ISendProposalResponse>(
+      sendProposalUrl(id),
+      payload,
+      {
+        requiresAuth: false,
+        responseType: "blob", 
+      }
+    );
+    if (!response) {
+      throw new Error("No response from server while generating proposal");
+    }
+    if (response?.success === false) {
+      throw response?.response?.data || new Error("Failed to generate proposal file");
+    }
+  
+    return response?.data; 
+  };
+  
 }
 
 /**
