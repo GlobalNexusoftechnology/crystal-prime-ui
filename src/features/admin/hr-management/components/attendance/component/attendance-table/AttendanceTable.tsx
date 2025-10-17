@@ -62,6 +62,7 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
       );
       return {
         id: user.id,
+        employee_id: user.employee_id,
         name: `${user.first_name ?? ""} ${user.last_name ?? ""}`.trim(),
         email: user.email ?? "",
         attendanceRecords: userAttendance,
@@ -105,7 +106,7 @@ export const AttendanceTable: React.FC<AttendanceTableProps> = ({
             <AttendanceRow
               key={staff.id}
               index={index}
-              staffId={staff.id}
+              employeeId={staff.employee_id}
               name={staff.name}
               year={year}
               month={month}

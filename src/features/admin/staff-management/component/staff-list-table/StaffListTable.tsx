@@ -82,6 +82,7 @@ export function StaffListTable() {
   const userList: IAllUsersListResponse[] = (allUsersData?.data?.list ?? []).map(
     (user) => ({
       id: user.id || "",
+      employee_id: user?.employee_id || "",
       first_name: user?.first_name || "",
       last_name: user?.last_name || "",
       number: user?.phone_number || "",
@@ -106,6 +107,7 @@ export function StaffListTable() {
       onClick: (row) => {
         setSelectedStaff({
           id: row.id || "",
+          employee_id: row.employee_id || "",
           first_name: row.first_name || "",
           last_name: row.last_name || "",
           email: row.email || "",

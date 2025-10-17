@@ -27,6 +27,7 @@ interface AddNewStaffModelProps {
 }
 
 export interface IAddStaffFormValues {
+  employeeId: string;
   firstName: string;
   lastName: string;
   dob: string;
@@ -37,6 +38,7 @@ export interface IAddStaffFormValues {
 }
 
 const initialValues: IAddStaffFormValues = {
+  employeeId: "",
   firstName: "",
   lastName: "",
   dob: "",
@@ -100,6 +102,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
     const createUserPayload: ICreateUserPayload = {
       ...values,
       first_name: values.firstName,
+      employee_id: values.employeeId,
       last_name: values.lastName,
       phone_number: values.phoneNumber,
       role_id: values.role,
@@ -132,6 +135,15 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
               <h1 className="text-lg 2xl:text-[1.125vw] font-semibold">
                 Add New Staff
               </h1>
+                <InputField
+                  label="Employee Id"
+                  name="employeeId"
+                  placeholder="Enter Employee Id"
+                  value={values.employeeId}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.employeeId && errors.employeeId}
+                />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
                 <InputField
                   label="First Name"

@@ -2,7 +2,7 @@
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, ModalOverlay, DatePicker, NumberInput } from "@/components";
+import { Button, ModalOverlay, DatePicker, InputField } from "@/components";
 import { useEffect } from "react";
 
 export interface IProposal {
@@ -28,15 +28,16 @@ export function SendProposalModal({
 }: SendProposalModalProps) {
   const formik = useFormik({
     initialValues: {
-      proposalDate: initialValues.proposalDate || new Date().toISOString().split("T")[0],
+      proposalDate:
+        initialValues.proposalDate || new Date().toISOString().split("T")[0],
       proposalNumber: initialValues.proposalNumber || "",
       proposalText: initialValues.proposalText || "",
     },
     validationSchema: Yup.object().shape({
       proposalDate: Yup.string().required("Proposal date is required"),
       proposalNumber: Yup.string()
-        .required("Proposal number is required")
-        .matches(/^[1-9]\d*$/, "Proposal number must be a positive integer"),
+        .trim()
+        .required("Proposal number is required"),
       proposalText: Yup.string().required("Proposal text is required"),
     }),
     enableReinitialize: true,
@@ -52,7 +53,7 @@ export function SendProposalModal({
     },
   });
 
-  // Optional: reset form when modal closes
+  // Reset form when modal closes
   useEffect(() => {
     if (!isOpen) {
       formik.resetForm({
@@ -77,23 +78,22 @@ export function SendProposalModal({
         onSubmit={formik.handleSubmit}
         className="flex flex-col gap-6 2xl:gap-[1.5vw] overflow-auto bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw]"
       >
+        {/* Proposal Number + Date */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Proposal Number
-            </label>
-            <NumberInput
-              value={Number(formik.values.proposalNumber || 0)}
-              onChange={(value) => formik.setFieldValue("proposalNumber", value.toString())}
+            <InputField
+              label="Proposal Number"
+              value={formik.values.proposalNumber}
+              onChange={(e) => formik.setFieldValue("proposalNumber", e.target.value)}
+
               onBlur={formik.handleBlur}
-              min={1}
-              placeholder="Enter proposal number"
-              className={`w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                formik.touched.proposalNumber && formik.errors.proposalNumber ? "border-red-500" : ""
-              }`}
+              placeholder="Enter proposal number (e.g., P-001)"
+              // Removed numeric props since it's a string input
             />
             {formik.touched.proposalNumber && formik.errors.proposalNumber && (
-              <p className="mt-1 text-sm text-red-600">{formik.errors.proposalNumber}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {formik.errors.proposalNumber}
+              </p>
             )}
           </div>
 
@@ -103,13 +103,20 @@ export function SendProposalModal({
             onChange={(value) => formik.setFieldValue("proposalDate", value)}
             placeholder="Select Proposal Date"
             datePickerWidth="w-full"
-            error={formik.touched.proposalDate ? formik.errors.proposalDate : undefined}
+            error={
+              formik.touched.proposalDate
+                ? formik.errors.proposalDate
+                : undefined
+            }
             maxDate={new Date().toISOString().split("T")[0]}
           />
         </div>
 
+        {/* Proposal Text */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Proposal Text</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Proposal Text
+          </label>
           <textarea
             name="proposalText"
             placeholder="Enter proposal text..."
@@ -118,14 +125,19 @@ export function SendProposalModal({
             onBlur={formik.handleBlur}
             rows={6}
             className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              formik.touched.proposalText && formik.errors.proposalText ? "border-red-500" : ""
+              formik.touched.proposalText && formik.errors.proposalText
+                ? "border-red-500"
+                : ""
             }`}
           />
           {formik.touched.proposalText && formik.errors.proposalText && (
-            <p className="mt-1 text-sm text-red-600">{formik.errors.proposalText}</p>
+            <p className="mt-1 text-sm text-red-600">
+              {formik.errors.proposalText}
+            </p>
           )}
         </div>
 
+        {/* Actions */}
         <div className="flex flex-wrap md:flex-nowrap gap-4">
           <Button
             title="Cancel"
@@ -135,7 +147,7 @@ export function SendProposalModal({
             width="w-full"
           />
           <Button
-            title={isPending ? "Sending..." : "Send Proposal"}
+            title={isPending ? "Sending..." : "Download Proposal"}
             type="submit"
             width="w-full"
             disabled={isPending}

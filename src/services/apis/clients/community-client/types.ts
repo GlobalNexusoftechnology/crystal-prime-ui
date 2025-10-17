@@ -820,6 +820,7 @@ export interface IUsersDetails {
   updated_at: string;
   role: IRoleData;
   email: string;
+  employee_id: string;
   first_name: string;
   last_name: string;
   phone_number: string;
@@ -830,6 +831,7 @@ export interface IUserViewDetails {
   id: string;
   created_at: string;
   updated_at: string;
+  employee_id: string;
   role: string;
   email: string;
   first_name: string;
@@ -846,6 +848,7 @@ export interface IAllUsersListResponse {
   updated_at: string;
   role: string;
   email: string;
+  employee_id: string;
   first_name: string;
   last_name: string;
   number: string;
@@ -899,6 +902,7 @@ export interface IAllUsersResponse {
 
 //post  ...
 export interface ICreateUserPayload {
+  employee_id: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -908,6 +912,7 @@ export interface ICreateUserPayload {
   role_id: string;
 }
 export interface IUserUpdatePayload {
+  employee_id: string;
   first_name: string;
   last_name: string;
   email: string;
@@ -2801,6 +2806,7 @@ export interface IAttendance {
     deleted_at: string | null;
     email: string;
     first_name: string;
+    employee_id: string;
     last_name: string;
     phone_number: string;
     dob: string | null;

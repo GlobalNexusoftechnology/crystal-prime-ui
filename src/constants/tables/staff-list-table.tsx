@@ -16,6 +16,13 @@ export interface IStaffListProps {
 export const staffListColumn: ITableColumn<IAllUsersListResponse>[] = [
 
   {
+    header: "EMPLOYEE ID",
+    accessor: "employee_id",
+    sortable: true,
+    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    cell: ({value}) => <span>{value ? value : "N/A"}</span>
+  },
+  {
     header: "FIRST NAME",
     accessor: "first_name",
     sortable: true,
