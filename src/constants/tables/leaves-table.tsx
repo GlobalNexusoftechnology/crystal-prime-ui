@@ -140,8 +140,8 @@ export const leavesListColumn: ITableColumn<
   },
 
   {
-    header: "STAFF ID",
-    accessor: "staffId",
+    header: "EMPLOYEE ID",
+    accessor: "employee_id",
     headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
   },
   {

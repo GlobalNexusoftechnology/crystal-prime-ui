@@ -2853,6 +2853,7 @@ export interface IStaff {
   deleted_at: string | null;
   email: string;
   first_name: string;
+  employee_id: string;
   last_name: string;
   phone_number: string;
   dob: string | null;
