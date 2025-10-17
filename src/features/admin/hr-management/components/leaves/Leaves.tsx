@@ -9,7 +9,7 @@ export function Leaves() {
 
   const formattedData = data?.data?.map((leave) => ({
     ...leave,
-    employee_id: leave.staff?.employee_id || "",
+    employee_id: leave.staff?.employee_id || "N/A",
     staff_name: `${leave.staff?.first_name || ""} ${leave.staff?.last_name || ""}`.trim(),
   }));
   
