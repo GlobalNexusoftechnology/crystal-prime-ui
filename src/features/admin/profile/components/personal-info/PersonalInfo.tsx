@@ -37,6 +37,7 @@ export function PersonalInfo() {
   const user = activeSession?.user;
 
   const initialValues = {
+    employee_id: user?.employee_id || "",
     first_name: user?.first_name || "",
     last_name: user?.last_name || "",
     email: user?.email || "",

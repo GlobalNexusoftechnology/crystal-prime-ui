@@ -383,6 +383,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     deleted_at: leadDetailById?.deleted_at || "null",
     assignedTo: leadDetailById?.assigned_to || {
       id: leadDetailById?.assigned_to?.id || "",
+      employee_id: leadDetailById?.assigned_to?.employee_id || "",
       first_name: leadDetailById?.assigned_to?.first_name || "",
       last_name: leadDetailById?.assigned_to?.last_name || "",
       number: leadDetailById?.assigned_to?.number || "",

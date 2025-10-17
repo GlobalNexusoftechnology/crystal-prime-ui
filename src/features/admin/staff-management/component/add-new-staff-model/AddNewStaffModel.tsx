@@ -100,16 +100,19 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
 
   const handleAddNewStaffSubmit = (values: IAddStaffFormValues) => {
     const createUserPayload: ICreateUserPayload = {
-      ...values,
       first_name: values.firstName,
-      employee_id: values.employeeId,
       last_name: values.lastName,
+      dob: values.dob,
+      email: values.email,
+      password: values.password,
       phone_number: values.phoneNumber,
       role_id: values.role,
+      employee_id: values.employeeId, 
     };
-
+  
     onCreateUser(createUserPayload);
   };
+  
 
   return (
     <div>
