@@ -130,7 +130,7 @@ const StatusCell = ({ row }: IStatusCellProps) => {
 
 // Table Columns
 export const leavesListColumn: ITableColumn<
-  ILeaves & { staff_name: string }
+  ILeaves & { staff_name: string; employee_id: string }
 >[] = [
   {
     header: "STATUS",

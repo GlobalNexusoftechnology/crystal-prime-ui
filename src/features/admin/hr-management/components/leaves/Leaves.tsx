@@ -8,9 +8,11 @@ export function Leaves() {
   const { data } = useAllLeavesQuery();
 
   const formattedData = data?.data?.map((leave) => ({
-  ...leave,
-  staff_name: `${leave.staff.first_name} ${leave.staff.last_name}`,
-}));
+    ...leave,
+    employee_id: leave.staff?.employee_id || "",
+    staff_name: `${leave.staff?.first_name || ""} ${leave.staff?.last_name || ""}`.trim(),
+  }));
+  
 
   return (
     <div className="p-6 md:p-8 bg-[#fafbfc] border border-gray-300 rounded-xl min-h-screen flex flex-col gap-4">
