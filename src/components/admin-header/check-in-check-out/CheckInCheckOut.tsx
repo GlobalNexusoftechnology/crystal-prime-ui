@@ -39,10 +39,10 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
     if (isCheckedIn && todayStatus?.checkInTime) {
       const today = new Date();
   
-      // Parse HH:MM:SS from checkInTime
+      // Parse the check-in time
       const [hours, minutes, seconds] = todayStatus.checkInTime.split(":").map(Number);
   
-      // Create a Date object using local timezone (client)
+      // Create a Date object for the check-in time in the local time zone
       const checkInDate = new Date(
         today.getFullYear(),
         today.getMonth(),
@@ -52,23 +52,16 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
         seconds
       );
   
-      // If checkInDate is in the future (due to timezone), fallback to UTC parsing
-      let diffSeconds = Math.floor((Date.now() - checkInDate.getTime()) / 1000);
-      if (diffSeconds < 0) {
-        // Parse as UTC
-        const checkInDateUTC = new Date(Date.UTC(
-          today.getFullYear(),
-          today.getMonth(),
-          today.getDate(),
-          hours,
-          minutes,
-          seconds
-        ));
-        diffSeconds = Math.floor((Date.now() - checkInDateUTC.getTime()) / 1000);
-      }
+      // Calculate the time difference in milliseconds
+      const diffMilliseconds = Date.now() - checkInDate.getTime();
   
+      // Convert the difference to seconds
+      const diffSeconds = Math.floor(diffMilliseconds / 1000);
+  
+      // Set the timer
       setTimerSeconds(diffSeconds);
   
+      // Update the timer every second
       interval = setInterval(() => {
         setTimerSeconds((prev) => prev + 1);
       }, 1000);
@@ -76,7 +69,7 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   
     return () => clearInterval(interval);
   }, [isCheckedIn, todayStatus?.checkInTime]);
-  ;
+  
 
   // Format timer as HH:MM:SS
   const formatTime = (seconds: number) => {
