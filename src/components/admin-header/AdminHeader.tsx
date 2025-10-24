@@ -298,11 +298,11 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
                             </span>
                           </p>
                         )}
-                        {notification.metadata.assignedBy && (
+                        {notification.metadata.assignedBy || notification?.metadata?.assignedByName && (
                           <p>
                             Assigned by:{" "}
-                            <span className="font-semibold text-blue-600">
-                              {notification.metadata.assignedBy}
+                            <span className="font-semibold text-blue-600 capitalize">
+                              {notification?.metadata?.assignedBy || notification?.metadata?.assignedByName}
                             </span>
                           </p>
                         )}

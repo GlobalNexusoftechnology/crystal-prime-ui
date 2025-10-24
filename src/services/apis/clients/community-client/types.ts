@@ -1109,6 +1109,7 @@ interface INotificationMetadata {
   leadId: string;
   leadName: string;
   assignedBy?: string;
+  assignedByName?: string;
   dueDate?: string;
   remarks?: string;
   followupId?: string;
