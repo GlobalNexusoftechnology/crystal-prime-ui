@@ -13,32 +13,27 @@ interface AttendanceRowProps {
   attendanceData: IAttendance[];
 }
 
-// Format time to display in AM/PM format from HH:mm:ss
-const formatTimeForDisplay = (raw?: string | null) => {
-  if (!raw) return "-";
-  
-  // Your API returns time in "HH:mm:ss" format
-  if (raw.includes(":")) {
-    const timeParts = raw.split(":");
-    if (timeParts.length >= 2) {
-      const hours = parseInt(timeParts[0]);
-      const minutes = timeParts[1];
-      
-      // Convert to AM/PM format
-      const ampm = hours >= 12 ? 'PM' : 'AM';
-      const displayHours = hours % 12 || 12; // Convert 0 to 12 for 12 AM
-      
-      return `${displayHours}:${minutes} ${ampm}`;
-    }
-  }
-  
-  return raw;
+// Convert UTC date + time to local time string in AM/PM
+const formatTimeForDisplay = (dateStr?: string, timeStr?: string | null) => {
+  if (!timeStr) return "-";
+  if (!dateStr) return timeStr;
+
+  // Combine date + time in UTC and parse
+  const utcDateTime = new Date(`${dateStr}T${timeStr}Z`);
+  if (isNaN(utcDateTime.getTime())) return "-";
+
+  const hours = utcDateTime.getHours();
+  const minutes = utcDateTime.getMinutes().toString().padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  const displayHours = hours % 12 || 12;
+
+  return `${displayHours}:${minutes} ${ampm}`;
 };
 
 // Function to check if a date is Sunday
 const isSunday = (dateString: string): boolean => {
   const date = new Date(dateString);
-  return date.getDay() === 0; // 0 is Sunday
+  return date.getDay() === 0;
 };
 
 export const AttendanceRow: React.FC<AttendanceRowProps> = ({
@@ -60,14 +55,11 @@ export const AttendanceRow: React.FC<AttendanceRowProps> = ({
 
     dates.forEach((date) => {
       // Find matching attendance entry
-      const existing = attendanceData.find((att) => {
-        const apiDate = att.date;
-        return apiDate === date;
-      });
+      const existing = attendanceData.find((att) => att.date === date);
 
       initialData[date] = {
-        inTime: existing ? formatTimeForDisplay(existing.inTime) : "-",
-        outTime: existing ? formatTimeForDisplay(existing.outTime) : "-",
+        inTime: existing ? formatTimeForDisplay(existing.date, existing.inTime) : "-",
+        outTime: existing ? formatTimeForDisplay(existing.date, existing.outTime) : "-",
       };
     });
 
@@ -80,14 +72,14 @@ export const AttendanceRow: React.FC<AttendanceRowProps> = ({
         {index + 1}
       </td>
       <td className="border p-2 text-center sticky left-12 bg-white z-20">
-        {employeeId ? employeeId : "N/A"}
+        {employeeId || "N/A"}
       </td>
       <td className="border p-2 text-start sticky left-[12.5rem] bg-white z-10">
         {name}
       </td>
 
       {generateMonthDates(year, month).map((date, idx) => {
-        const sundayClass = isSunday(date) ? 'bg-yellow-100' : 'bg-white';
+        const sundayClass = isSunday(date) ? "bg-yellow-100" : "bg-white";
         return (
           <React.Fragment key={idx}>
             <td className={`border p-2 text-center ${sundayClass}`}>

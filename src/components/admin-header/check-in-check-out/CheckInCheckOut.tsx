@@ -21,8 +21,11 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   const { activeSession } = useAuthStore();
   const staffId = activeSession?.user?.id;
 
-  const { data: todayStatus, isLoading: isStatusLoading, refetchTodayStatus } =
-    useTodayAttendanceStatus(staffId);
+  const {
+    data: todayStatus,
+    isLoading: isStatusLoading,
+    refetchTodayStatus,
+  } = useTodayAttendanceStatus(staffId);
 
   const [timerSeconds, setTimerSeconds] = useState(0);
 
@@ -35,41 +38,43 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   // Timer logic (timezone safe)
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-  
+
     if (isCheckedIn && todayStatus?.checkInTime) {
-      const today = new Date();
-  
-      // Parse the check-in time
-      const [hours, minutes, seconds] = todayStatus.checkInTime.split(":").map(Number);
-  
-      // Create a Date object for the check-in time in the local time zone
+      // Parse the check-in time and create a UTC date
+      const [hours, minutes, seconds] = todayStatus.checkInTime
+        .split(":")
+        .map(Number);
+
+      // Create check-in time in UTC by using the same date but with check-in time
+      const now = new Date();
       const checkInDate = new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate(),
-        hours,
-        minutes,
-        seconds
+        Date.UTC(
+          now.getUTCFullYear(),
+          now.getUTCMonth(),
+          now.getUTCDate(),
+          hours,
+          minutes,
+          seconds
+        )
       );
-  
+
       // Calculate the time difference in milliseconds
       const diffMilliseconds = Date.now() - checkInDate.getTime();
-  
+
       // Convert the difference to seconds
       const diffSeconds = Math.floor(diffMilliseconds / 1000);
-  
+
       // Set the timer
       setTimerSeconds(diffSeconds);
-  
+
       // Update the timer every second
       interval = setInterval(() => {
         setTimerSeconds((prev) => prev + 1);
       }, 1000);
     }
-  
+
     return () => clearInterval(interval);
   }, [isCheckedIn, todayStatus?.checkInTime]);
-  
 
   // Format timer as HH:MM:SS
   const formatTime = (seconds: number) => {
