@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import {
   useCreateCheckInMutation,
   useCreateCheckOutMutation,
+  useTodayAttendanceStatus,
 } from "@/services";
 import { toast } from "react-hot-toast";
 import { IApiError } from "@/utils";
@@ -16,8 +17,14 @@ interface Props {
 
 export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   const { activeSession } = useAuthStore();
-  const [isCheckedIn, setIsCheckedIn] = useState(false);
+  const staffId = activeSession?.user?.id;
+
+  const { data: todayStatus, isLoading: isStatusLoading, refetchTodayStatus } =
+    useTodayAttendanceStatus(staffId);
+
   const [timerSeconds, setTimerSeconds] = useState(0); // timer in seconds
+
+  const isCheckedIn = todayStatus?.isCheckedIn ?? false;
 
   const userRole = activeSession?.user?.role?.role;
   const userPermission =
@@ -26,13 +33,25 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   // Timer logic
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-    if (isCheckedIn) {
+  
+    if (isCheckedIn && todayStatus?.checkInTime) {
+      // Combine today's date with checkInTime
+      const todayDate = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
+      const [hours, minutes, seconds] = todayStatus.checkInTime.split(":").map(Number);
+      const checkInDate = new Date(todayDate);
+      checkInDate.setHours(hours, minutes, seconds, 0);
+  
+      const diffSeconds = Math.floor((Date.now() - checkInDate.getTime()) / 1000);
+      setTimerSeconds(diffSeconds);
+  
       interval = setInterval(() => {
         setTimerSeconds((prev) => prev + 1);
       }, 1000);
     }
+  
     return () => clearInterval(interval);
-  }, [isCheckedIn]);
+  }, [isCheckedIn, todayStatus?.checkInTime]);
+  
 
   // Format timer as HH:MM:SS
   const formatTime = (seconds: number) => {
@@ -48,9 +67,8 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   const { onCheckInMutation, isPending: isCheckInPending } =
     useCreateCheckInMutation({
       onSuccessCallback: (data: ICheckInResponse) => {
-        setIsCheckedIn(true);
-        setTimerSeconds(0); // reset timer
         toast.success(data.message || "Check In successful!");
+        refetchTodayStatus();
         onSuccessRefresh?.();
       },
       onErrorCallback: (err: IApiError) => {
@@ -62,8 +80,8 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   const { onCheckOutMutation, isPending: isCheckOutPending } =
     useCreateCheckOutMutation({
       onSuccessCallback: (data: ICheckOutResponse) => {
-        setIsCheckedIn(false);
         toast.success(data.message || "Check Out successful!");
+        refetchTodayStatus();
         onSuccessRefresh?.();
       },
       onErrorCallback: (err: IApiError) => {
@@ -71,10 +89,9 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
       },
     });
 
-  const isLoading = isCheckInPending || isCheckOutPending;
+  const isLoading = isCheckInPending || isCheckOutPending || isStatusLoading;
 
   const handleButtonClick = async () => {
-    const staffId = activeSession?.user?.id;
     const currentDate = new Date().toISOString().split("T")[0];
     const currentTime = new Date().toISOString(); // send ISO to backend
 

@@ -202,6 +202,7 @@ import {
   ISendProposalResponse,
   IAttendanceFilters,
   IAttendanceExportFilters,
+  ITodayStatusAPIResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -373,6 +374,7 @@ import {
   createAnnouncementUrl,
   sendProposalUrl,
   fetchAllAttendanceDownloadExcelUrl,
+  fetchAttendanceStaffStatusUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -2888,6 +2890,19 @@ export class CommunityClient extends ApiClient {
 
     // Return full data object (list + pagination)
     return response?.data;
+  };
+
+  public getTodayStatus = async (staffId: string) => {
+    const response = await COMMUNITY_CLIENT.get<ITodayStatusAPIResponse>(
+      fetchAttendanceStaffStatusUrl(staffId),
+      { requiresAuth: true }
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response.data.data; 
   };
 
   // get all leaves

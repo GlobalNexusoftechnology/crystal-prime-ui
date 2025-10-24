@@ -2933,3 +2933,17 @@ export interface ISendProposalPayload {
 }
 
 export type ISendProposalResponse = Blob;
+
+// src/services/types/attendance.ts
+
+export interface ITodayStatusResponse {
+  isCheckedIn: boolean;
+  checkInTime?: string;
+  checkOutTime?: string;
+}
+
+export interface ITodayStatusAPIResponse {
+  status: boolean;
+  message: string;
+  data: ITodayStatusResponse;
+}

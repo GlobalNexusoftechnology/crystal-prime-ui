@@ -198,3 +198,5 @@ export { useAllAttendanceDownloadExcelQuery } from "./useAllAttendanceDownloadEx
 
 export { useSendProposalMutation } from "./useSendProposalMutation";
 
+export { useTodayAttendanceStatus } from "./useTodayAttendanceStatus";
+

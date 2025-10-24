@@ -83,7 +83,7 @@ export function Table<T extends { id: string | number }>({
                 <th className="text-center min-w-[5rem] 2xl:min-w-[5vw] bg-gray-200 p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase border-r border-gray-300">
                   Sr No
                 </th>
-                {actions && actions.length > 0 && (
+                {actions && actions?.length > 0 && (
                   <th className="text-center min-w-[6rem] bg-gray-200 p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase border-r border-gray-300">
                     Action
                   </th>

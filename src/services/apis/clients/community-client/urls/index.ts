@@ -382,6 +382,9 @@ export const updateLeaveStatusUrl = (id: string) => `/leaves/${id}`;
   export const createCheckOutUrl = () => "/attendances/check-out"; //post
   
   export const fetchAllAttendanceDownloadExcelUrl = () => "/attendances/export/excel"; 
+
+  export const fetchAttendanceStaffStatusUrl = (staffId: string) => `/attendances/status/${staffId}`; 
+  
   
   export const fetchAllAttendanceUrl = (filters: IAttendanceFilters = {}) => {
     const params = new URLSearchParams();
