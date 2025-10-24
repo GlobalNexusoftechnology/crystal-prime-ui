@@ -1,13 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components";
-import { ICheckInResponse, ICheckOutResponse, useAuthStore } from "@/services";
-import { useState, useEffect } from "react";
 import {
+  ICheckInResponse,
+  ICheckOutResponse,
+  useAuthStore,
   useCreateCheckInMutation,
   useCreateCheckOutMutation,
   useTodayAttendanceStatus,
 } from "@/services";
+import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { IApiError } from "@/utils";
 
@@ -22,7 +24,7 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   const { data: todayStatus, isLoading: isStatusLoading, refetchTodayStatus } =
     useTodayAttendanceStatus(staffId);
 
-  const [timerSeconds, setTimerSeconds] = useState(0); // timer in seconds
+  const [timerSeconds, setTimerSeconds] = useState(0);
 
   const isCheckedIn = todayStatus?.isCheckedIn ?? false;
 
@@ -30,28 +32,29 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   const userPermission =
     userRole?.toLowerCase() === "admin" || userRole?.toLowerCase() === "client";
 
-  // Timer logic
+  // Timer logic (timezone safe)
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-  
+
     if (isCheckedIn && todayStatus?.checkInTime) {
-      // Combine today's date with checkInTime
-      const todayDate = new Date().toISOString().split("T")[0]; // yyyy-mm-dd
-      const [hours, minutes, seconds] = todayStatus.checkInTime.split(":").map(Number);
-      const checkInDate = new Date(todayDate);
+      // Combine today’s local date with checkInTime
+      const today = new Date();
+      const [hours, minutes, seconds] = todayStatus.checkInTime
+        .split(":")
+        .map(Number);
+      const checkInDate = new Date(today);
       checkInDate.setHours(hours, minutes, seconds, 0);
-  
+
       const diffSeconds = Math.floor((Date.now() - checkInDate.getTime()) / 1000);
       setTimerSeconds(diffSeconds);
-  
+
       interval = setInterval(() => {
         setTimerSeconds((prev) => prev + 1);
       }, 1000);
     }
-  
+
     return () => clearInterval(interval);
   }, [isCheckedIn, todayStatus?.checkInTime]);
-  
 
   // Format timer as HH:MM:SS
   const formatTime = (seconds: number) => {
@@ -93,7 +96,7 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
 
   const handleButtonClick = async () => {
     const currentDate = new Date().toISOString().split("T")[0];
-    const currentTime = new Date().toISOString(); // send ISO to backend
+    const currentTime = new Date().toISOString();
 
     if (!staffId) {
       toast.error("User not found!");
