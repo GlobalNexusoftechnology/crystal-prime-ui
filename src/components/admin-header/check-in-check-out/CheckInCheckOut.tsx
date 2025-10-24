@@ -35,26 +35,48 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   // Timer logic (timezone safe)
   useEffect(() => {
     let interval: ReturnType<typeof setInterval>;
-
+  
     if (isCheckedIn && todayStatus?.checkInTime) {
-      // Combine today’s local date with checkInTime
       const today = new Date();
-      const [hours, minutes, seconds] = todayStatus.checkInTime
-        .split(":")
-        .map(Number);
-      const checkInDate = new Date(today);
-      checkInDate.setHours(hours, minutes, seconds, 0);
-
-      const diffSeconds = Math.floor((Date.now() - checkInDate.getTime()) / 1000);
+  
+      // Parse HH:MM:SS from checkInTime
+      const [hours, minutes, seconds] = todayStatus.checkInTime.split(":").map(Number);
+  
+      // Create a Date object using local timezone (client)
+      const checkInDate = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate(),
+        hours,
+        minutes,
+        seconds
+      );
+  
+      // If checkInDate is in the future (due to timezone), fallback to UTC parsing
+      let diffSeconds = Math.floor((Date.now() - checkInDate.getTime()) / 1000);
+      if (diffSeconds < 0) {
+        // Parse as UTC
+        const checkInDateUTC = new Date(Date.UTC(
+          today.getFullYear(),
+          today.getMonth(),
+          today.getDate(),
+          hours,
+          minutes,
+          seconds
+        ));
+        diffSeconds = Math.floor((Date.now() - checkInDateUTC.getTime()) / 1000);
+      }
+  
       setTimerSeconds(diffSeconds);
-
+  
       interval = setInterval(() => {
         setTimerSeconds((prev) => prev + 1);
       }, 1000);
     }
-
+  
     return () => clearInterval(interval);
   }, [isCheckedIn, todayStatus?.checkInTime]);
+  ;
 
   // Format timer as HH:MM:SS
   const formatTime = (seconds: number) => {
