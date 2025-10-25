@@ -62,7 +62,8 @@ export default function Dashboard() {
   );
 
   // State for task status filter
-  const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("open");
+  const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("allTask");
+
   // Trigger and preset for TaskTable external filter control
   const [taskTablePreset, setTaskTablePreset] = useState<
     "none" | "dueToday" | "followups"
@@ -218,26 +219,72 @@ export default function Dashboard() {
 
   const currentMonth = getCurrentMonth();
 
-  // Helper function to get task count by status
-  const getTaskCountByStatus = (status: string) => {
-    switch (status) {
-      case "completed":
-        return `${statsData?.taskStat?.completedTasks || 0} Task`;
-      case "inprogress":
-        return `${statsData?.taskStat?.inprogressTasks || 0} Task`;
-      case "approval":
-        return `${statsData?.taskStat?.approvalTasks || 0} Task`;
-      case "open":
-        return `${statsData?.taskStat?.openTasks || 0} Task`;
-      default:
-        return `${statsData?.taskStat?.totalTasks || 0} Task`;
+  // Helper function to check if a date is today or yesterday
+  const isTodayOrYesterday = (dateString: string): boolean => {
+    if (!dateString) return false;
+
+    try {
+      const taskDate = new Date(dateString);
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+
+      // Reset time to compare only dates
+      const taskDateOnly = new Date(
+        taskDate.getFullYear(),
+        taskDate.getMonth(),
+        taskDate.getDate()
+      );
+      const todayOnly = new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+      );
+      const yesterdayOnly = new Date(
+        yesterday.getFullYear(),
+        yesterday.getMonth(),
+        yesterday.getDate()
+      );
+
+      const isToday = taskDateOnly.getTime() === todayOnly.getTime();
+      const isYesterday = taskDateOnly.getTime() === yesterdayOnly.getTime();
+
+      return isToday || isYesterday;
+    } catch (error) {
+      console.error("Error parsing date:", dateString, error);
+      return false;
     }
   };
 
-  // Handler for task status change
-  const handleTaskStatusChange = (newStatus: string) => {
-    setSelectedTaskStatus(newStatus);
+  // Helper function to get task count by status
+  const getTaskCountByStatus = (status: string) => {
+    // Get the actual filtered task count from taskList
+    const filteredCount = taskList.length;
+
+    switch (status) {
+      case "completed":
+        return `${
+          taskList.filter((task) => task.status === "Completed").length
+        } Task`;
+      case "inprogress":
+        return `${
+          taskList.filter((task) => task.status === "In Progress").length
+        } Task`;
+      case "approval":
+        return `${
+          taskList.filter((task) => task.status === "Approval").length
+        } Task`;
+      case "open":
+        return `${
+          taskList.filter((task) => task.status === "Open").length
+        } Task`;
+      case "allTask":
+        return `${filteredCount} Task`;
+      default:
+        return `${filteredCount} Task`;
+    }
   };
+
 
   // Handler for deleting a task
   const handleDeleteTask = async () => {
@@ -331,7 +378,7 @@ export default function Dashboard() {
       },
     });
 
-  // Task Data Transformation - Extract tasks from projects data
+  // Task Data Transformation - Extract tasks from projects data with custom filtering
   const taskList: TaskRow[] = React.useMemo(() => {
     const list = (allTasksData as { data?: unknown[] } | undefined)?.data ?? [];
     if (!Array.isArray(list)) return [];
@@ -342,7 +389,7 @@ export default function Dashboard() {
       return user ? `${user.first_name} ${user.last_name}` : "-";
     };
 
-    return list.map((task) => {
+    const transformedTasks = list.map((task) => {
       const t = task as {
         id: string;
         title: string;
@@ -388,7 +435,45 @@ export default function Dashboard() {
         rawCreatedAt: t.created_at,
       } as TaskRow;
     });
-  }, [allTasksData, usersData]);
+
+    // TEMPORARY TEST: Force completed status to test filtering
+    const testStatus =
+      selectedTaskStatus === "completed" ? "completed" : selectedTaskStatus;
+
+    // Apply custom filtering logic based on selectedTaskStatus
+    const filteredTasks = transformedTasks.filter((task) => {
+      const taskStatus = task.status || "";
+
+      // If "completed" is selected, show ALL completed tasks (no date filter)
+      if (testStatus === "completed") {
+        return taskStatus === "Completed";
+      }
+
+      // If specific status is selected (open, inprogress, approval), show only that status
+      if (testStatus === "open") {
+        return taskStatus === "Open";
+      }
+      if (testStatus === "inprogress") {
+        return taskStatus === "In Progress";
+      }
+      if (testStatus === "approval") {
+        return taskStatus === "Approval";
+      }
+
+      // For "allTask" and default cases:
+      // Show today/yesterday completed tasks + all other statuses
+      if (taskStatus === "Completed") {
+        // Only show completed tasks from today or yesterday
+        const dateToCheck = task.rawCreatedAt || "";
+        return isTodayOrYesterday(dateToCheck);
+      }
+
+      // Show all other statuses (open, in progress, approval, etc.)
+      return true;
+    });
+
+    return filteredTasks;
+  }, [allTasksData, usersData, selectedTaskStatus]);
 
   // Build a set of task IDs that have client follow-ups created today
   const followupDueTodayTaskIds = React.useMemo(() => {
@@ -467,24 +552,6 @@ export default function Dashboard() {
           title: "Open",
           subtitle: "Open",
           icon: <AnalyticalCardIcon />,
-          customContent: (
-            <div className="flex flex-col items-start gap-2">
-              <SimpleDropdown
-                options={[
-                  { label: "Open", value: "open" },
-                  { label: "All Task", value: "allTask" },
-                  { label: "Completed", value: "completed" },
-                  { label: "In Progress", value: "inprogress" },
-                  { label: "Approval", value: "approval" },
-                ]}
-                value={selectedTaskStatus}
-                onChange={(newStatus) => handleTaskStatusChange(newStatus)}
-                dropdownWidth="w-40 "
-                dropdownBorderRadius="rounded-md"
-                buttonClassName="text-sm"
-              />
-            </div>
-          ),
         },
         {
           count: statsData?.todayFollowups,
@@ -541,9 +608,7 @@ export default function Dashboard() {
       cell: ({ value }) => {
         return (
           <div className="flex justify-center">
-            <span
-              className={`px-2  py-1  text-xs  font-medium `}
-            >
+            <span className={`px-2  py-1  text-xs  font-medium `}>
               {(value as string) || "Medium"}
             </span>
           </div>
@@ -736,7 +801,9 @@ export default function Dashboard() {
       {userRole === "client" ? (
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-2">
-            <h1 className="text-[1.2rem] font-medium">Create New Support Request</h1>
+            <h1 className="text-[1.2rem] font-medium">
+              Create New Support Request
+            </h1>
             <p className="w-[40rem] text-gray-500">
               If you can&apos;t find a Solutions to your problems in our
               Knowledgebase, you can submit a ticket by selecting appropriate
@@ -804,6 +871,8 @@ export default function Dashboard() {
                 currentUserName={currentUserName}
                 currentUserId={currentUserId}
                 presetFilter={taskTablePreset}
+                selectedTaskStatus={selectedTaskStatus}
+                setSelectedTaskStatus={setSelectedTaskStatus}
                 presetTrigger={taskTablePresetTrigger}
                 includeTaskIds={
                   taskTablePreset === "dueToday"

@@ -50,9 +50,13 @@ interface TaskTableProps {
   presetFilter?: "none" | "dueToday" | "followups";
   presetTrigger?: number; // change to re-apply preset
   includeTaskIds?: Set<string>; // include these even if other filters would exclude
+  selectedTaskStatus: string;
+  setSelectedTaskStatus: (status: string) => void;
 }
 
 const TaskTable: React.FC<TaskTableProps> = ({
+  selectedTaskStatus,
+  setSelectedTaskStatus,
   // currentUserName,
   currentUserId,
   tasksLoading,
@@ -76,7 +80,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const [toDate, setToDate] = useState("");
   const [dueFromDate, setDueFromDate] = useState("");
   const [dueToDate, setDueToDate] = useState("");
-  
+
   // Force reset mechanism for date pickers
   const [datePickerResetKey, setDatePickerResetKey] = useState(0);
   const { activeSession } = useAuthStore();
@@ -124,19 +128,19 @@ const TaskTable: React.FC<TaskTableProps> = ({
       setToDate("");
       setDueFromDate("");
       setDueToDate("");
-      
+
       // Force reset of date pickers
-      setDatePickerResetKey(prev => prev + 1);
+      setDatePickerResetKey((prev) => prev + 1);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [presetFilter, presetTrigger]);
 
   const statusOptions = [
-    { label: "All Status", value: "" },
-    { label: "Open", value: "Open" },
-    { label: "In Progress", value: "In Progress" },
-    { label: "Completed", value: "Completed" },
-    { label: "Approval", value: "Approval" },
+    { label: "All Status", value: "allTask" },
+    { label: "Open", value: "open" },
+    { label: "In Progress", value: "inprogress" },
+    { label: "Completed", value: "completed" },
+    { label: "Approval", value: "approval" },
   ];
 
   const priorityOptions = [
@@ -363,7 +367,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
         }
       }
 
-      const baseMatch = (
+      const baseMatch =
         searchMatch &&
         statusMatch &&
         priorityMatch &&
@@ -371,8 +375,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
         projectMatch &&
         timePeriodMatch &&
         dateMatch &&
-        dueDateMatch
-      );
+        dueDateMatch;
 
       return baseMatch;
     });
@@ -410,9 +413,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   return (
     <div className="p-4  border  border-grey-300 rounded-xl  bg-gray-50">
       <div className="flex justify-between items-center flex-wrap gap-4 ">
-        <h2 className="text-[1.2rem]  font-medium">
-          Task List
-        </h2>
+        <h2 className="text-[1.2rem]  font-medium">Task List</h2>
         <div className="flex items-center flex-wrap gap-4 ">
           <SearchBar
             onSearch={handleSearch}
@@ -425,9 +426,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
               variant="primary"
               onClick={onAddTask}
               width="w-full md:w-fit"
-              leftIcon={
-                <FiPlus className="w-4 h-4   mt-[1px] " />
-              }
+              leftIcon={<FiPlus className="w-4 h-4   mt-[1px] " />}
             />
           )}
         </div>
@@ -435,20 +434,24 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
       <div className="flex justify-start items-end flex-wrap gap-4  my-4 ">
         <DatePicker
-          key={`from-date-${presetFilter}-${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`}`}
+          key={`from-date-${presetFilter}-${presetTrigger}${
+            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+          }`}
           label="From Date"
           value={fromDate}
           onChange={setFromDate}
           placeholder="From Date"
-          datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
+          datePickerWidth="w-full min-w-[12rem]"
         />
         <DatePicker
-          key={`to-date-${presetFilter}-${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`}`}
+          key={`to-date-${presetFilter}-${presetTrigger}${
+            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+          }`}
           label="To Date"
           value={toDate}
           onChange={setToDate}
           placeholder="To Date"
-          datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
+          datePickerWidth="w-full min-w-[12rem]"
         />
         {(fromDate || toDate) && (
           <Button
@@ -460,41 +463,45 @@ const TaskTable: React.FC<TaskTableProps> = ({
           />
         )}
         <DatePicker
-          key={`due-from-${presetFilter}-${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`}`}
+          key={`due-from-${presetFilter}-${presetTrigger}${
+            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+          }`}
           label="Due From"
           value={dueFromDate}
           onChange={setDueFromDate}
           placeholder="Due From"
-          datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
+          datePickerWidth="w-full min-w-[12rem]"
         />
         <DatePicker
-          key={`due-to-${presetFilter}-${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`}`}
+          key={`due-to-${presetFilter}-${presetTrigger}${
+            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+          }`}
           label="Due To"
           value={dueToDate}
           onChange={setDueToDate}
           placeholder="Due To"
-          datePickerWidth="w-full min-w-[12rem] md:w-[15vw]"
+          datePickerWidth="w-full min-w-[12rem]"
         />
         {(dueFromDate || dueToDate) && (
           <Button
             variant="background-white"
             width="w-full md:w-fit"
             onClick={handleClearDueDates}
-            leftIcon={<FiX className="w-5 h-5  " />}
+            leftIcon={<FiX className="w-5 h-5" />}
             tooltip="Clear Due Dates"
           />
         )}
         <SimpleDropdown
           options={statusOptions}
-          value={statusFilter}
-          onChange={setStatusFilter}
-          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
+          value={selectedTaskStatus}
+          onChange={setSelectedTaskStatus}
+          dropdownWidth="w-full min-w-[12rem]"
         />
         <SimpleDropdown
           options={priorityOptions}
           value={priorityFilter}
           onChange={setPriorityFilter}
-          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
+          dropdownWidth="w-full min-w-[12rem]"
         />
 
         {/* Staff filter only for Admin */}
@@ -503,7 +510,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
             options={staffOptions}
             value={staffFilter}
             onChange={setStaffFilter}
-            dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
+            dropdownWidth="w-full min-w-[12rem]"
           />
         )}
 
@@ -511,13 +518,13 @@ const TaskTable: React.FC<TaskTableProps> = ({
           options={timePeriodOptions}
           value={timePeriodFilter}
           onChange={setTimePeriodFilter}
-          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
+          dropdownWidth="w-full min-w-[12rem]"
         />
         <Dropdown
           options={projectOptions}
           value={projectFilter}
           onChange={setProjectFilter}
-          dropdownWidth="w-full min-w-[12rem] md:w-[15vw]"
+          dropdownWidth="w-full min-w-[12rem]"
         />
 
         {(searchInput ||
