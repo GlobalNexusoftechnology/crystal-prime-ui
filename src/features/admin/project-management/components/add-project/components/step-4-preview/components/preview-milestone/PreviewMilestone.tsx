@@ -54,7 +54,7 @@ export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
   return (
     <React.Fragment>
       <tr className="bg-white rounded-lg shadow">
-        <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw] font-medium flex items-center gap-2 pt-4 2xl:pt-[1vw]">
+        <td className="px-2  py-2  font-medium flex items-center gap-2 pt-4 ">
           <button
             onClick={() => setExpanded(!expanded)}
             className="focus:outline-none"
@@ -62,28 +62,28 @@ export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
             type="button"
           >
             {expanded ? (
-              <HiChevronUp className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
+              <HiChevronUp className="w-4  h-4 " />
             ) : (
-              <HiChevronDown className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
+              <HiChevronDown className="w-4  h-4 " />
             )}
           </button>
-          <span className="text-[0.9rem] 2xl:text-[0.9vw]">{milestone.name}</span>
-          <span className="flex items-center gap-1 2xl:gap-[0.25vw]">
-            <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
-            <span className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
+          <span className="text-[0.9rem] ">{milestone.name}</span>
+          <span className="flex items-center gap-1 ">
+            <TreeStructureIcon className="w-4  h-4 " />
+            <span className="border-2 border-dotted border-primary rounded-full text-xs  px-1  text-primary">
               {milestone?.tasks?.length}
             </span>
           </span>
         </td>
-        <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
+        <td className="px-2  py-2  text-[0.9rem] ">
           <span className="text-gray-600">
             {milestone.description || "No description"}
           </span>
         </td>
-        <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
-          <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+        <td className="px-2  py-2  text-[0.9rem] ">
+          <div className="flex items-center gap-2 ">
             <p
-              className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] rounded-full"
+              className="flex items-center justify-center p-2  w-10  h-10  text-white text-[0.9rem] rounded-full"
               style={{
                 backgroundColor: getRandomColor(
                   getUserNameById(milestone.assigned_to, users)
@@ -92,65 +92,65 @@ export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
             >
               {getInitials(getUserNameById(milestone.assigned_to, users))}
             </p>
-            <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
+            <p className="px-3  py-1  text-[0.9rem] ">
               {getUserNameById(milestone.assigned_to, users)}
             </p>
           </div>
         </td>
-        <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw]">
-          <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-xs font-semibold 2xl:text-[0.9vw]">
+        <td className="px-2  py-2 ">
+          <span className="bg-blue-100 text-blue-600 px-3  py-1  rounded-full text-xs font-semibold ">
             {milestone.status}
           </span>
         </td>
-        <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw]">
-          <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
-            <span className="text-[0.9rem] 2xl:text-[0.9vw]">
+        <td className="px-2  py-2 ">
+          <span className="flex items-center gap-2 ">
+            <span className="text-[0.9rem] ">
               {formatDateToDDMMYYYY(milestone.start_date)}
             </span>
           </span>
         </td>
-        <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw]">
-          <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
+        <td className="px-2  py-2 ">
+          <span className="flex items-center gap-2 ">
             {formatDateToDDMMYYYY(milestone.end_date)}
           </span>
         </td>
-        <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw]"></td>
+        <td className="px-2  py-2 "></td>
       </tr>
       {expanded && milestone.tasks && milestone.tasks.length > 0 && (
-        <tr className="bg-gray-50 2xl:bg-gray-100">
-          <td colSpan={7} className="p-0 pl-20 2xl:pl-[5vw]">
+        <tr className="bg-gray-50 ">
+          <td colSpan={7} className="p-0 pl-20 ">
             <table>
               <thead>
-                <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
-                  <th className="px-8 2xl:px-[2vw] py-2 2xl:py-[0.5vw] text-left min-w-[10rem] 2xl:min-w-[10vw]">
+                <tr className="text-gray-500 text-[0.9rem] ">
+                  <th className="px-8  py-2  text-left min-w-[10rem] ">
                     Task Name
                   </th>
-                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                  <th className="px-2 py-2   text-left  min-w-[12rem] ">
                     Description
                   </th>
-                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">
+                  <th className="px-2 py-2   text-left  min-w-[14rem] ">
                     Assigned To
                   </th>
-                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                  <th className="px-2 py-2   text-left  min-w-[10rem] ">
                     Status
                   </th>
-                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                  <th className="px-2 py-2   text-left  min-w-[10rem] ">
                     Due Date
                   </th>
-                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
+                  <th className="px-2 py-2  "></th>
                 </tr>
               </thead>
               <tbody>
                 {milestone?.tasks?.map((task) => (
-                  <tr key={task.id} className="border-t 2xl:border-t-[0.05vw] border-gray-200">
-                    <td className="pl-8 2xl:pl-[2vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
+                  <tr key={task.id} className="border-t border-gray-200">
+                    <td className="pl-8  py-2  text-[0.9rem]  font-medium">
                       {task?.title}
                     </td>
-                    <td className="py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">{task?.description}</td>
-                    <td className="py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
-                      <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+                    <td className="py-2  text-[0.9rem] ">{task?.description}</td>
+                    <td className="py-2  text-[0.9rem] ">
+                      <div className="flex items-center gap-2 ">
                         <p
-                          className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
+                          className="flex items-center justify-center p-2  w-10  h-10  text-white text-[0.9rem]  rounded-full"
                           style={{
                             backgroundColor: getRandomColor(
                               getUserNameById(task?.assigned_to, users)
@@ -161,22 +161,22 @@ export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
                             getUserNameById(task?.assigned_to, users)
                           )}
                         </p>
-                        <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                        <p className="px-3  py-1  text-[0.9rem] ">
                           {getUserNameById(task?.assigned_to, users)}
                         </p>
                       </div>
                     </td>
-                    <td className="py-2 2xl:py-[0.5vw]">
-                      <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-xs font-semibold 2xl:text-[0.9vw]">
+                    <td className="py-2 ">
+                      <span className="bg-blue-100 text-blue-600 px-3  py-1  rounded-full text-xs font-semibold ">
                         {task?.status}
                       </span>
                     </td>
-                    <td className="py-2 2xl:py-[0.5vw]">
+                    <td className="py-2 ">
                       <span className="flex items-center gap-2">
                         <span className="text-[0.9rem]">{task?.due_date}</span>
                       </span>
                     </td>
-                    <td className="py-2 2xl:py-[0.5vw]"></td>
+                    <td className="py-2 "></td>
                   </tr>
                 ))}
               </tbody>
@@ -190,53 +190,53 @@ export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
         milestone.name === "Support" &&
         milestone.tickets &&
         milestone.tickets.length > 0 && (
-          <tr className="bg-gray-50 2xl:bg-gray-100">
-            <td colSpan={7} className="p-0 pl-20 2xl:pl-[5vw]">
+          <tr className="bg-gray-50 ">
+            <td colSpan={7} className="p-0 pl-20 ">
               <table>
                 <thead>
-                  <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
-                    <th className="px-8 2xl:px-[2vw] py-2 2xl:py-[0.5vw] text-left min-w-[10rem] 2xl:min-w-[10vw]">
+                  <tr className="text-gray-500 text-[0.9rem] ">
+                    <th className="px-8  py-2  text-left min-w-[10rem] ">
                       Ticket Title
                     </th>
-                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                    <th className="px-2 py-2   text-left  min-w-[12rem] ">
                       Description
                     </th>
-                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">
+                    <th className="px-2 py-2   text-left  min-w-[14rem] ">
                       Assigned To
                     </th>
-                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                    <th className="px-2 py-2   text-left  min-w-[10rem] ">
                       Status
                     </th>
-                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                    <th className="px-2 py-2   text-left  min-w-[10rem] ">
                       Priority
                     </th>
-                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                    <th className="px-2 py-2   text-left  min-w-[12rem] ">
                       Remark
                     </th>
-                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                    <th className="px-2 py-2   text-left  min-w-[8rem] ">
                       Image
                     </th>
-                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                    <th className="px-2 py-2   text-left  min-w-[10rem] ">
                       Created Date
                     </th>
-                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
+                    <th className="px-2 py-2  "></th>
                   </tr>
                 </thead>
                 <tbody>
                   {milestone.tickets.map((ticket) => (
                     <tr key={ticket.id} className="border-t border-gray-200">
-                      <td className="pl-8 2xl:pl-[2vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
+                      <td className="pl-8  py-2  text-[0.9rem]  font-medium">
                         {ticket.title}
                       </td>
-                      <td className="py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                      <td className="py-2  text-[0.9rem] ">
                         {ticket.description}
                       </td>
-                      <td className="py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw]">
-                        <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+                      <td className="py-2  text-[0.9rem] ">
+                        <div className="flex items-center gap-2 ">
                           {ticket.assigned_to ? (
                             <>
                               <p
-                                className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
+                                className="flex items-center justify-center p-2  w-10  h-10  text-white text-[0.9rem]  rounded-full"
                                 style={{
                                   backgroundColor: getRandomColor(
                                     getUserNameById(ticket.assigned_to, users)
@@ -247,27 +247,27 @@ export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
                                   getUserNameById(ticket.assigned_to, users)
                                 )}
                               </p>
-                              <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                              <p className="px-3  py-1  text-[0.9rem] ">
                                 {getUserNameById(ticket.assigned_to, users)}
                               </p>
                             </>
                           ) : (
-                            <span className="text-gray-500 2xl:text-[0.9vw]">None</span>
+                            <span className="text-gray-500 ">None</span>
                           )}
                         </div>
                       </td>
-                      <td className="py-2 2xl:py-[0.5vw]">
-                        <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-xs font-semibold 2xl:text-[0.9vw]">
+                      <td className="py-2 ">
+                        <span className="bg-blue-100 text-blue-600 px-3  py-1  rounded-full text-xs font-semibold ">
                           {ticket.status}
                         </span>
                       </td>
-                      <td className="py-2 2xl:py-[0.5vw]">
-                        <span className="bg-green-100 text-green-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-xs font-semibold 2xl:text-[0.9vw]">
+                      <td className="py-2 ">
+                        <span className="bg-green-100 text-green-600 px-3  py-1  rounded-full text-xs font-semibold ">
                           {ticket.priority}
                         </span>
                       </td>
-                      <td className="py-2 2xl:py-[0.5vw] text-[0.9rem]">{ticket.remark}</td>
-                      <td className="py-2 2xl:py-[0.5vw]">
+                      <td className="py-2  text-[0.9rem]">{ticket.remark}</td>
+                      <td className="py-2 ">
                         {ticket.image_url ? (
                           <div className="flex justify-center">
                             <Image
@@ -275,11 +275,11 @@ export function PreviewMilestone({ milestone, users }: PreviewMilestoneProps) {
                               alt="Ticket attachment"
                               width={60}
                               height={60}
-                              className="w-15 2xl:w-[3vw] h-15 2xl:h-[3vw] object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
+                              className="w-15  h-15  object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
                             />
                           </div>
                         ) : (
-                          <span className="text-gray-400 text-sm 2xl:text-[0.9vw]">
+                          <span className="text-gray-400 text-sm ">
                             No image
                           </span>
                         )}

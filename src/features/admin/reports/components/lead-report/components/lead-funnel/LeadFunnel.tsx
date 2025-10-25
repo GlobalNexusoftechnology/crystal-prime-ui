@@ -35,7 +35,7 @@ export const LeadFunnel: React.FC<LeadFunnelProps> = ({ data }) => {
   ];
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full shadow-sm">
-      <div className="text-[1.1rem] 2xl:text-[1.1vw] font-medium text-black mb-2">Lead Funnel</div>
+      <div className="text-[1.1rem]  font-medium text-black mb-2">Lead Funnel</div>
       <ResponsiveContainer width="100%" height={240}>
         <BarChart data={funnelData} barSize={36} margin={{ top: 20, right: 20, left: 0, bottom: 0 }}>
         <CartesianGrid strokeDasharray="3 3" vertical={false} />

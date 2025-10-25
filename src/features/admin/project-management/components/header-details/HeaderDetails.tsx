@@ -32,11 +32,11 @@ export function HeaderDetails({
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw]">
+    <div className="flex flex-wrap items-center gap-4 ">
       <div>
-        <h2 className="text-[1.5rem] 2xl:text-[1.5vw] font-medium">{title}</h2>
+        <h2 className="text-[1.5rem]  font-medium">{title}</h2>
       </div>
-      <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw]">
+      <div className="flex flex-wrap items-center gap-4 ">
         {isTaskView || isTicketView ? (
           <StatusDropdown
             options={
@@ -59,13 +59,13 @@ export function HeaderDetails({
           />
         ) : (
           <span
-            className={`px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] ${statusBgColor} rounded-xl 2xl:rounded-[1vw] 2xl:text-[1vw]`}
+            className={`px-4 py-2   ${statusBgColor} rounded-xl  `}
           >
             {status}
           </span>
         )}
         <span
-          className={`px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] ${progressBgColor} rounded-xl 2xl:rounded-[1vw] 2xl:text-[1vw]`}
+          className={`px-4 py-2   ${progressBgColor} rounded-xl  `}
         >
           {progress}
         </span>

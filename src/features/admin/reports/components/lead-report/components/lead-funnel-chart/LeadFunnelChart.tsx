@@ -59,12 +59,12 @@ export const LeadFunnelChart: React.FC<LeadFunnelChartProps> = ({ data }) => {
       ];
   return (
     <div className="">
-      <h3 className="text-[1.1rem] 2xl:text-[1.1vw] mb-6 2xl:mb-[1.5vw] font-semibold text-gray-900">
+      <h3 className="text-[1.1rem]  mb-6  font-semibold text-gray-900">
         Lead Funnel Chart
       </h3>
-      <div className="bg-white rounded-xl p-6 border border-gray-300 2xl:border-[0.05vw] w-full">
+      <div className="bg-white rounded-xl p-6 border border-gray-300  w-full">
         <div className="flex justify-between items-center mb-4">
-          <span className="font-semibold text-[1.1rem] 2xl:text-[1.1vw] text-gray-900">
+          <span className="font-semibold text-[1.1rem]  text-gray-900">
             Lead Metrics
           </span>
           <div className="flex items-center gap-2">

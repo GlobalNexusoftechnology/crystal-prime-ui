@@ -134,8 +134,8 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
             errors,
             touched,
           }) => (
-            <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-gray-200">
-              <h1 className="text-lg 2xl:text-[1.125vw] font-semibold">
+            <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg  p-4  border  border-gray-200">
+              <h1 className="text-lg  font-semibold">
                 Add New Staff
               </h1>
                 <InputField
@@ -147,7 +147,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   onBlur={handleBlur}
                   error={touched.employeeId && errors.employeeId}
                 />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                 <InputField
                   label="First Name"
                   name="firstName"
@@ -167,7 +167,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   error={touched.lastName && errors.lastName}
                 />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                 <DatePicker
                   label="DOB"
                   name="dob"
@@ -177,8 +177,8 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   error={touched.dob && errors.dob}
                   maxDate={new Date().toISOString().split("T")[0]}
                 />
-                <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
-                  <label className="2xl:text-[1vw] text-gray-700 block">
+                <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
+                  <label className=" text-gray-700 block">
                     Phone Number
                   </label>
                   <PhoneInput
@@ -188,14 +188,14 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                     inputProps={{ name: "phoneNumber" }}
                   />
                   {errors.phoneNumber && touched.phoneNumber && (
-                    <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw]">
+                    <p className="text-red-500 text-[0.9rem] ">
                       {errors.phoneNumber}
                     </p>
                   )}
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                 <InputField
                   label="Email"
                   name="email"
@@ -230,7 +230,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                 }
                 onIconClick={() => setShowPassword((prev) => !prev)}
               />
-              <div className="flex justify-between mt-6 2xl:mt-[1.5vw] space-x-4">
+              <div className="flex justify-between mt-6  space-x-4">
                 <Button
                   title="Cancel"
                   variant="primary-outline"

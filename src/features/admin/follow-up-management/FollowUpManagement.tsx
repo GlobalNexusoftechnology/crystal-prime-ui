@@ -30,17 +30,17 @@ export function FollowUpManagement() {
   ];
 
   return (
-    <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
+    <section className="flex flex-col gap-6 md:gap-8  border border-gray-300 rounded-lg  bg-white p-4 ">
       {/* Header */}
-      <div className="flex flex-col gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
-        <h1 className="text-[1rem] 2xl:text-[5vw] font-medium">
+      <div className="flex flex-col gap-2  px-4 ">
+        <h1 className="text-[1rem]  font-medium">
           Follow Up Management
         </h1>
       </div>
 
       {/* Main content */}
-      <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
+      <div className="grid grid-cols-1 gap-4 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4  flex-wrap px-4 ">
           {analyticalCards?.length > 0 && analyticalCards?.slice(0, 4)?.map((card, index) => (
             <AnalyticalCard key={index} data={card} />
           ))}
@@ -56,10 +56,10 @@ export function FollowUpManagement() {
         modalTitle="Back to Follow up"
         isOpen={isFollowUpModalOpen}
         onClose={() => setIsFollowUpModalOpen(false)}
-        modalClassName="w-[29rem] md:h-[32rem]  2xl:w-[50vw] 2xl:h-[32vw]"
+        modalClassName="w-[29rem] md:h-[32rem]   "
       >
-        <form className="bg-white p-6 rounded-lg overflow-y-auto max-h-[80vh] md:h-[25rem] h-[24rem] space-y-4 md:w-[27rem] 2xl:w-[49vw] 2xl:h-[26vw] border border-gray-300">
-          <h2 className="text-[1rem] 2xl:text-[1.5vw] font-semibold mb-2">Follow Up Information</h2>
+        <form className="bg-white p-6 rounded-lg overflow-y-auto max-h-[80vh] md:h-[25rem] h-[24rem] space-y-4 md:w-[27rem]   border border-gray-300">
+          <h2 className="text-[1rem]  font-semibold mb-2">Follow Up Information</h2>
 
           <Dropdown
             label="Select Lead"
@@ -94,7 +94,7 @@ export function FollowUpManagement() {
           </div>
 
           <div>
-            <label className="block text-[1rem] 2xl:text-[1vw] font-medium">Remark</label>
+            <label className="block text-[1rem]  font-medium">Remark</label>
             <InputField
               type="text"
               value={remark}

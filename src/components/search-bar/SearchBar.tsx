@@ -38,7 +38,7 @@ export function SearchBar({
   const inputValue = value !== undefined ? value : query;
 
   return (
-    <div className={`bg-${bgColor} focus-within:border-primary relative flex items-center border 2xl:border-[0.05vw] border-gray-300 px-4 py-2 2xl:px-[1vw] 2xl:py-[0.5vw] rounded-xl 2xl:rounded-[0.75vw] ${width}`}>
+    <div className={`bg-${bgColor} focus-within:border-primary relative flex items-center border  border-gray-300 px-4 py-2   rounded-xl  ${width}`}>
       {/* Search Icon */}
       <span
         className="cursor-pointer"
@@ -48,7 +48,7 @@ export function SearchBar({
         tabIndex={0}
         aria-label="Focus search input"
       >
-        <SearchIcon className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+        <SearchIcon className="w-6  h-6 " />
       </span>
 
       {/* Search Input Field */}
@@ -61,7 +61,7 @@ export function SearchBar({
           onSearch(e.target.value); 
         }}
         placeholder={placeholder}
-        className="ml-2 2xl:ml-[0.5vw] bg-transparent focus:outline-none w-full 2xl:text-[1vw]"
+        className="ml-2  bg-transparent focus:outline-none w-full "
       />
     </div>
   );

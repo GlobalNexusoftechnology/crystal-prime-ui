@@ -58,17 +58,17 @@ export const LeadMetrics: React.FC<LeadMetricsProps> = ({ data }) => {
   ];
 
   return (
-    <div className="border-b border-gray-400 2xl:border-b-[0.1vw] p-6 2xl:p-[1.5vw]">
-      <div className="flex flex-wrap gap-4 2xl:gap-[1.5vw] w-full">
+    <div className="border-b border-gray-400  p-6 ">
+      <div className="flex flex-wrap gap-4  w-full">
         {metrics?.length > 0 && metrics?.map((metric, idx) => (
-          <div key={idx} className="flex items-start gap-4 border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
+          <div key={idx} className="flex items-start gap-4 border border-gray-300  rounded-lg  p-4 ">
             <div>
-              <div className="2xl:text-[1vw] font-light text-gray-800">
+              <div className=" font-light text-gray-800">
                 {metric.label}
               </div>
               <div
                 className={
-                  `text-[1rem] 2xl:text-[1vw] font-medium text-[#1a2341] mt-1` +
+                  `text-[1rem]  font-medium text-[#1a2341] mt-1` +
                   (metric.underline ? " underline cursor-pointer" : "")
                 }
               >

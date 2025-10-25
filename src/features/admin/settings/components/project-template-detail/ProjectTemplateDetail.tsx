@@ -92,7 +92,7 @@ export function ProjectTemplateDetail({
 
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw] justify-between bg-white rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.05vw] border-borderGray p-4 2xl:p-[1vw]">
+    <div className="flex flex-col gap-4  justify-between bg-white rounded-lg  border  border-borderGray p-4 ">
       <div className="flex items-start justify-between">
         <div>
         <Breadcrumb idToName={idToName} />
@@ -112,52 +112,52 @@ export function ProjectTemplateDetail({
           ]}
         />
       </div>
-      <h2 className="text-[1.5rem] 2xl:font-[1.5vw] font-medium">
+      <h2 className="text-[1.5rem] font-medium">
         {projectTemplateData.name}
       </h2>
 
-      <p className="text-[1.1rem] 2xl:text-[1.1vw] font-medium">Project Info</p>
+      <p className="text-[1.1rem]  font-medium">Project Info</p>
 
-      <div className="flex flex-wrap lg:grid lg:grid-cols-5 gap-8 2xl:gap-[2vw]">
-        <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-          <p className=" text-[0.9rem] 2xl:text-[0.875vw] ">Template Name</p>
-          <p className="text-[1rem] 2xl:text-[1vw] font-medium underline underline-offset-2 2xl:underline-offset-4 leading-[1.6]">
+      <div className="flex flex-wrap lg:grid lg:grid-cols-5 gap-8 ">
+        <div className="flex flex-col gap-1 ">
+          <p className=" text-[0.9rem]  ">Template Name</p>
+          <p className="text-[1rem]  font-medium underline underline-offset-2  leading-[1.6]">
             {projectTemplateData.name}
           </p>
         </div>
-        <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-          <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Type Of Project</p>
-          <p className="text-[1rem] 2xl:text-[1vw] font-medium">
+        <div className="flex flex-col gap-1 ">
+          <p className=" text-[0.9rem] ">Type Of Project</p>
+          <p className="text-[1rem]  font-medium">
             {projectTypeName}
           </p>
         </div>
-        <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-          <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Estimated Days</p>
-          <p className="text-[1rem] 2xl:text-[1vw] font-medium">
+        <div className="flex flex-col gap-1 ">
+          <p className=" text-[0.9rem] ">Estimated Days</p>
+          <p className="text-[1rem]  font-medium">
             {projectTemplateData.estimated_days}
           </p>
         </div>
-        <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-          <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Created At</p>
-          <p className="text-[1rem] 2xl:text-[1vw] font-medium">
+        <div className="flex flex-col gap-1 ">
+          <p className=" text-[0.9rem] ">Created At</p>
+          <p className="text-[1rem]  font-medium">
             {formatIndiaTime(projectTemplateData.created_at, "toReadable")}
           </p>
         </div>
-        <div className="flex flex-col gap-1 2xl:gap-[0.5vw]">
-          <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Updated At</p>
-          <p className="text-[1rem] 2xl:text-[1vw] font-medium">
+        <div className="flex flex-col gap-1 ">
+          <p className=" text-[0.9rem] ">Updated At</p>
+          <p className="text-[1rem]  font-medium">
             {formatIndiaTime(projectTemplateData.updated_at, "toReadable")}
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
-        <p className=" text-[0.9rem] 2xl:text-[0.875vw]">Project Description</p>
-        <p className="text-[1rem] 2xl:text-[1vw] font-medium">
+      <div className="flex flex-col gap-2 ">
+        <p className=" text-[0.9rem] ">Project Description</p>
+        <p className="text-[1rem]  font-medium">
           {projectTemplateData.description}
         </p>
       </div>
-      <hr className="mt-4 2xl:mt-[1vw]"/>
+      <hr className="mt-4 "/>
       <FormikProvider value={formik}>
         <form onSubmit={formik.handleSubmit}>
           <ProjectTemplateMilestone formik={formik} readOnly={true} />

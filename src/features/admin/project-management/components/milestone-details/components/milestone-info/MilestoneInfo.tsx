@@ -29,25 +29,25 @@ export function MilestoneInfo({ milestoneInfoData }: ProjectInfoProps) {
   };
 
   return (
-    <div className="border-b p-4 2xl:p-[1vw]">
-      <h3 className="text-[1.2rem] 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">
+    <div className="border-b p-4 ">
+      <h3 className="text-[1.2rem]  mb-4 ">
         Milestone Info
       </h3>
-      <div className="flex flex-col gap-8 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
-        <div className="flex gap-12 2xl:gap-[3vw] items-start">
-          <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
-            <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
+      <div className="flex flex-col gap-8  text-[0.9rem] ">
+        <div className="flex gap-12  items-start">
+          <div className="border border-gray-300  rounded-lg  p-4 ">
+            <p className="font-light text-[0.9rem] ">
               Milestone Name
             </p>
-            <p className="underline text-[1rem] 2xl:text-[1.1vw]">
+            <p className="underline text-[1rem] ">
               {milestoneInfoData.name}
             </p>
           </div>
-          <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
-            <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
+          <div className="flex flex-col border border-gray-300  rounded-lg  p-4 ">
+            <p className="font-light text-[0.9rem] ">
               Assigned To
             </p>
-            <div className="flex items-center gap-2 2xl:gap-[0.5vw] mt-2 2xl:mt-[0.5vw]">
+            <div className="flex items-center gap-2  mt-2 ">
               <p
                 className="flex items-center justify-center p-2 w-10 h-10 text-white text-[0.9rem] rounded-full"
                 style={{
@@ -58,34 +58,34 @@ export function MilestoneInfo({ milestoneInfoData }: ProjectInfoProps) {
               >
                 {getUserInitials(milestoneInfoData.assigned_to)}
               </p>
-              <p className="py-1 2xl:py-[0.25vw] text-[0.9rem]">
+              <p className="py-1  text-[0.9rem]">
                 {getUserName(milestoneInfoData.assigned_to)}
               </p>
             </div>
           </div>
         </div>
-        <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
-          <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
+        <div className="flex flex-col border border-gray-300  rounded-lg  p-4 ">
+          <p className="font-light text-[0.9rem] ">
             Description
           </p>
-          <p className="text-[1rem] 2xl:text-[1.1vw]">
+          <p className="text-[1rem] ">
             {milestoneInfoData.description}
           </p>
         </div>
-        <div className="flex gap-12 2xl:gap-[3vw] items-center">
-          <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
-            <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
+        <div className="flex gap-12  items-center">
+          <div className="flex flex-col border border-gray-300  rounded-lg  p-4 ">
+            <p className="font-light text-[0.9rem] ">
               Created At
             </p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">
+            <p className="text-[1rem] ">
               {milestoneInfoData.created_at}
             </p>
           </div>
-          <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
-            <p className="font-light text-[0.9rem] 2xl:text-[0.875vw]">
+          <div className="flex flex-col border border-gray-300  rounded-lg  p-4 ">
+            <p className="font-light text-[0.9rem] ">
               Updated At
             </p>
-            <p className="text-[1rem] 2xl:text-[1.1vw]">
+            <p className="text-[1rem] ">
               {milestoneInfoData.updated_at}
             </p>
           </div>

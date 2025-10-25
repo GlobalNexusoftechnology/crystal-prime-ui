@@ -22,10 +22,10 @@ export function TicketEstimate({ ticketEstimateData }: ITicketEstimateProps) {
     };
 
     return (
-        <div className="border-b p-4 2xl:p-[1vw]">
-            <h3 className="text-[1.2rem] 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">Ticket Attachments</h3>
-            <div className="flex flex-col gap-8 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
-                <div className="flex flex-wrap gap-12 2xl:gap-[3vw] items-start">
+        <div className="border-b p-4 ">
+            <h3 className="text-[1.2rem]  mb-4 ">Ticket Attachments</h3>
+            <div className="flex flex-col gap-8  text-[0.9rem] ">
+                <div className="flex flex-wrap gap-12  items-start">
                     <div className="flex flex-col">
                         <p className="font-light">Attached Image</p>
                         {ticketEstimateData.image_url ? (
@@ -40,7 +40,7 @@ export function TicketEstimate({ ticketEstimateData }: ITicketEstimateProps) {
                                 />
                             </div>
                         ) : (
-                            <p className="text-[1rem] 2xl:text-[1.1vw] text-gray-500">No image attached</p>
+                            <p className="text-[1rem]  text-gray-500">No image attached</p>
                         )}
                     </div>
                 </div>

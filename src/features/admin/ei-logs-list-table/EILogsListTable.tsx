@@ -246,12 +246,12 @@ export function EILogsListTable({
     : "";
 
   return (
-    <div className="bg-customGray p-5 2xl:p-[1.25vw] border 2xl:border-[0.05vw] rounded-xl 2xl:rounded-[0.375vw]">
-      <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
-        <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
+    <div className="bg-customGray p-5  border  rounded-xl ">
+      <div className="flex justify-between items-center flex-wrap gap-4 ">
+        <h1 className="text-[1.2rem]  font-medium">
           EI Logs List
         </h1>
-        <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+        <div className="flex items-center flex-wrap gap-4 ">
           <SearchBar
             onSearch={handleSearch}
             bgColor="white"
@@ -263,7 +263,7 @@ export function EILogsListTable({
               variant="background-white"
               width="w-full md:w-fit"
               leftIcon={
-                <FiPlus className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                <FiPlus className="w-5 h-5  " />
               }
               onClick={() => setAddEILogModalOpen(true)}
             />
@@ -282,7 +282,7 @@ export function EILogsListTable({
             onClick={handleDownloadTemplate}
             leftIcon={
               <ImDownload2
-                className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
+                className="w-5 h-5  "
                 color="#034A9F"
               />
             }
@@ -290,7 +290,7 @@ export function EILogsListTable({
           />
         </div>
       </div>
-      <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] mt-4 2xl:mt-[1vw]">
+      <div className="flex justify-start items-end flex-wrap gap-4  mt-4 ">
         <div className="flex flex-col justify-start items-start w-full min-w-[12rem] md:w-[15vw]">
            <DatePicker
             label="From Date"
@@ -314,7 +314,7 @@ export function EILogsListTable({
               width="w-full md:w-fit"
               onClick={handleClearDates}
               leftIcon={
-                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                <FiX className="w-5 h-5  " />
               }
               tooltip="Clear Dates"
             />

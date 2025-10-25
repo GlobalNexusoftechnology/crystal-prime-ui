@@ -89,12 +89,12 @@ export const AddLeadTypesModal: React.FC<AddLeadTypesModalProps> = ({
         }}
       >
         {({ isSubmitting }) => (
-          <Form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw] border-gray-400">
-            <h1 className="text-md 2xl:text-[1vw] text-gray-900">
+          <Form className="flex flex-col gap-4  p-4  bg-white rounded-xl  border-gray-400">
+            <h1 className="text-md  text-gray-900">
               {typeId ? "Edit Lead Type" : "Add New Lead Type"}
             </h1>
 
-            <div className="flex flex-col gap-4 md:gap-8 2xl:gap-[2vw] md:flex-row justify-between items-center w-full">
+            <div className="flex flex-col gap-4 md:gap-8  md:flex-row justify-between items-center w-full">
               <div className="w-full">
                 <label className="block mb-1 text-[0.9rem] font-medium text-gray-700">
                   Name
@@ -110,7 +110,7 @@ export const AddLeadTypesModal: React.FC<AddLeadTypesModalProps> = ({
               </div>
             </div>
 
-            <div className="flex gap-4 2xl:gap-[1vw] w-full">
+            <div className="flex gap-4  w-full">
               <Button
                 title="Cancel"
                 variant="primary-outline"

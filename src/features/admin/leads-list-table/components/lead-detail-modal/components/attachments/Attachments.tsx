@@ -97,11 +97,11 @@ export function Attachments({
   });
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+    <div className="flex flex-col gap-4 ">
       {showForm ? (
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw]"
+          className="flex flex-col gap-6  bg-customGray border  p-3  rounded-md "
         >
           <UploadDocument
             label="Upload Document"
@@ -114,7 +114,7 @@ export function Attachments({
             error={formik?.touched?.document ? formik?.errors?.document : undefined}
           />
 
-          <div className="flex justify-end gap-4 2xl:gap-[1vw] ">
+          <div className="flex justify-end gap-4  ">
             <Button
               title="Cancel"
               onClick={() => setShowForm(false)}
@@ -133,22 +133,22 @@ export function Attachments({
          allLeadAttachmentData?.map((attachment, idx) => (
           <div
             key={idx}
-            className="flex gap-6 2xl:gap-[2vw] text-darkBlue bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] flex-col md:flex-row justify-between "
+            className="flex gap-6  text-darkBlue bg-customGray border  p-3  rounded-md  flex-col md:flex-row justify-between "
           >
-            <div className="w-[70%] flex flex-col gap-4 2xl:gap-[1vw] ">
+            <div className="w-[70%] flex flex-col gap-4  ">
               <div className="text-primary flex items-center underline scrollbar-hidden overflow-x-auto">
-                <Link className="text-[1rem] 2xl:text-[1vw]" href={attachment.file_path}>{attachment?.file_name}</Link>
+                <Link className="text-[1rem] " href={attachment.file_path}>{attachment?.file_name}</Link>
               </div>
-              <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
-                <p className="text-[1rem] 2xl:text-[1vw]">Created At:</p>
-                <p className="text-[1rem] 2xl:text-[1vw]">{formatIndiaTime(attachment?.created_at, "toReadable")}</p>
+              <div className="text-lightGreen flex flex-col md:flex-row gap-2  underline">
+                <p className="text-[1rem] ">Created At:</p>
+                <p className="text-[1rem] ">{formatIndiaTime(attachment?.created_at, "toReadable")}</p>
               </div>
             </div>
             <div>
-              <p className="text-[0.9rem] 2xl:text-[0.875vw]">Assigned To</p>
-              <div className="flex gap-2 2xl:gap-[0.5vw] items-center">
+              <p className="text-[0.9rem] ">Assigned To</p>
+              <div className="flex gap-2  items-center">
                 <p
-                  className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-8 h-8 2xl:w-[2vw] 2xl:h-[2vw] text-white text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] rounded-full"
+                  className="flex items-center justify-center p-2  w-8 h-8   text-white text-[0.9rem]   rounded-full"
                   style={{
                     backgroundColor: getRandomColor(
                       `${attachment?.uploaded_by?.first_name}`
@@ -158,7 +158,7 @@ export function Attachments({
                   {getInitials(attachment?.uploaded_by?.first_name)}
                   {getInitials(attachment?.uploaded_by?.last_name)}
                 </p>
-                <p className="underline font-medium text-textColor text-[1rem] 2xl:text-[1vw] capitalize">
+                <p className="underline font-medium text-textColor text-[1rem]  capitalize">
                   {attachment?.uploaded_by?.first_name} {attachment?.uploaded_by?.last_name}
                 </p>
               </div>

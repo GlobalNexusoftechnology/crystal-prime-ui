@@ -57,9 +57,9 @@ export function EmailValidation({ onNext }: TEmailValidationProps) {
       >
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-4 2xl:gap-[1vw]"
+          className="flex flex-col gap-4 "
         >
-          <span className="text-[1rem] 2xl:text-[1vw] text-center">
+          <span className="text-[1rem]  text-center">
             Please Enter you email to forget password
           </span>
 

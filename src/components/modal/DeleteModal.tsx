@@ -49,7 +49,7 @@ export const DeleteModal: React.FC<DeleteModalProps> = ({
 
   return (
     <div 
-      className="fixed top-[-2rem] 2xl:top-[-2vw] inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      className="fixed top-[-2rem]  inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
       onClick={handleBackdropClick}
     >
       <div className="bg-white p-6 rounded-lg max-w-md w-full mx-4 shadow-xl">

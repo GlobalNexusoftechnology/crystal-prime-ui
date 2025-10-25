@@ -10,30 +10,30 @@ export interface ClientInfoProps {
 
 export function ClientInfo({ clientInfoData }: ClientInfoProps) {
   return (
-    <div className="border-b border-gray-400 2xl:border-[0.05vw] p-4 2xl:p-[1vw]">
-      <h3 className="text-[1.2rem] font-medium 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">Client Info</h3>
-      <div className="flex flex-wrap gap-4 2xl:gap-[1vw] text-[0.9rem] 2xl:text-[0.875vw]">
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-          <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">Client Name</p>
-          <p className="underline break-words text-[1rem] 2xl:text-[1.1vw]">{clientInfoData.client_name}</p>
+    <div className="border-b border-gray-400  p-4 ">
+      <h3 className="text-[1.2rem] font-medium  mb-4 ">Client Info</h3>
+      <div className="flex flex-wrap gap-4  text-[0.9rem] ">
+        <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+          <p className="font-light text-[0.9rem]  mb-2 ">Client Name</p>
+          <p className="underline break-words text-[1rem] ">{clientInfoData.client_name}</p>
         </div>
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-          <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">Company Name</p>
-          <p className="break-words text-[1rem] 2xl:text-[1.1vw]">{clientInfoData.company_name}</p>
+        <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+          <p className="font-light text-[0.9rem]  mb-2 ">Company Name</p>
+          <p className="break-words text-[1rem] ">{clientInfoData.company_name}</p>
         </div>
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-          <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">Contact Person</p>
-          <p className="break-words text-[1rem] 2xl:text-[1.1vw]">{clientInfoData.contact_person}</p>
+        <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+          <p className="font-light text-[0.9rem]  mb-2 ">Contact Person</p>
+          <p className="break-words text-[1rem] ">{clientInfoData.contact_person}</p>
         </div>
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-          <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1.1vw] text-primary">
-            <FiPhone className="text-[1rem] 2xl:text-[1vw] flex-shrink-0" />
+        <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+          <div className="flex items-center gap-2 text-[1rem]  text-primary">
+            <FiPhone className="text-[1rem]  flex-shrink-0" />
             <a href={`tel:${clientInfoData.phone}`} className="underline text-textColor break-words">{clientInfoData.phone}</a>
           </div>
         </div>
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-          <div className="flex items-center gap-2 text-[1rem] 2xl:text-[1.1vw] text-primary">
-            <FiMail className="text-[1rem] 2xl:text-[1vw] flex-shrink-0" />
+        <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+          <div className="flex items-center gap-2 text-[1rem]  text-primary">
+            <FiMail className="text-[1rem]  flex-shrink-0" />
             <a href={`mailto:${clientInfoData.email}`} className="underline text-textColor break-words">{clientInfoData.email}</a>
           </div>
         </div>

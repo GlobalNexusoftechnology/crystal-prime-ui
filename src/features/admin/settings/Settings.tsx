@@ -69,26 +69,26 @@ export function Settings() {
   );
 
   return (
-    <div className="p-4 2xl:p-[1vw] bg-white border 2xl:border-[0.05vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw]">
+    <div className="p-4  bg-white border  border-gray-300 rounded-xl ">
       {/* Navigation Buttons to switch between settings views */}
-      <div className="flex flex-row gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
+      <div className="flex flex-row gap-4  mb-4 ">
         <button
-          className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw] font-semibold ${
+          className={`p-2  rounded  font-semibold ${
             activePage === "settings"
-              ? "border-b-4 border-[#65558F] text-lg 2xl:text-[1.125vw]"
-              : "text-lg 2xl:text-[1.125vw]"
+              ? "border-b-4 border-[#65558F] text-lg "
+              : "text-lg "
           }`}
         >
           Settings
         </button>
-        <div className="flex gap-4 2xl:gap-[1vw] overflow-x-auto">
+        <div className="flex gap-4  overflow-x-auto">
           {tabs?.length > 0 && tabs.map((tab) => (
             <button
               key={tab.key}
-              className={`p-2 2xl:p-[0.5vw] w-fit whitespace-nowrap rounded 2xl:rounded-[0.25vw] font-medium ${
+              className={`p-2  w-fit whitespace-nowrap rounded  font-medium ${
                 activePage === tab.key
-                  ? "border-b-4 border-[#65558F] text-[1rem] 2xl:text-[1vw]"
-                  : "text-[0.9rem] 2xl:text-[0.875vw]"
+                  ? "border-b-4 border-[#65558F] text-[1rem] "
+                  : "text-[0.9rem] "
               }`}
               onClick={() => setActivePage(tab.key)}
             >

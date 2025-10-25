@@ -14,7 +14,7 @@ export function PBDashboardFilter({
   setToDate,
 }: PBDashboardFilterProps) {
   return (
-    <form className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] mb-6 2xl:mb-[1vw] items-end">
+    <form className="grid grid-cols-1 md:grid-cols-2 gap-4  mb-6  items-end">
       <div>
         <DatePicker
           label="Start Date"

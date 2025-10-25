@@ -46,7 +46,7 @@ export function LeadReport() {
 
   if (isError) {
     return (
-      <div className="flex flex-col gap-6 2xl:gap-[1vw]">
+      <div className="flex flex-col gap-6 ">
         <div className="text-red-500 text-center p-4">
           Error loading lead report data. Please try again.
         </div>
@@ -55,9 +55,9 @@ export function LeadReport() {
   }
 
   return (
-    <div className="flex flex-col gap-6 2xl:gap-[1vw]">
+    <div className="flex flex-col gap-6 ">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
+        <h2 className="text-2xl  font-medium mb-4 ">
           Lead Report
         </h2>
         <Button
@@ -67,7 +67,7 @@ export function LeadReport() {
           onClick={handleExport}
           leftIcon={
             <ImDownload2
-              className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
+              className="w-5 h-5  "
               color="#034A9F"
             />
           }
@@ -81,14 +81,14 @@ export function LeadReport() {
         setToDate={setToDate}
       />
       <div className="grid grid-cols-1 xl:grid-cols-2">
-        <div className="flex flex-col border-r gap-8 2xl:gap-[2vw] border-gray-400 2xl:border-r-[0.1vw] p-6 2xl:p-[1.5vw]">
+        <div className="flex flex-col border-r gap-8  border-gray-400  p-6 ">
           <LeadFunnelChart data={leadReportData?.leadFunnelChart} />
           <LeadMetricsGrid data={leadReportData?.kpiMetrics} />
           <StaffConversionPerformance
             data={leadReportData?.staffConversionPerformance}
           />
         </div>
-        <div className="flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:p-[1vw]">
+        <div className="flex flex-col gap-8  p-4 ">
           <SourceWiseConversionRate
             data={leadReportData?.sourceWiseConversionRates}
           />

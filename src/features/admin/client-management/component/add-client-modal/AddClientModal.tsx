@@ -89,14 +89,14 @@ export function AddClientModal({
       modalTitle="Back to Clients"
       isOpen={true}
       onClose={onClose}
-      modalClassName="w-auto md:w-[40rem] 2xl:w-[45vw]"
+      modalClassName="w-auto md:w-[40rem] "
     >
       <FormikProvider value={formik}>
         <form
           onSubmit={formik.handleSubmit}
           className="max-h-[80vh] flex flex-col gap-4 p-4 border bg-white rounded-lg h-full overflow-y-auto"
         >
-          <p className="text-[1.2rem] 2xl:text-[1.2vw] font-semibold">
+          <p className="text-[1.2rem]  font-semibold">
             {isEditMode ? "Edit Client" : "Add New Client"}
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -178,11 +178,11 @@ export function AddClientModal({
           <FieldArray
             name="client_details"
             render={(arrayHelpers) => (
-              <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+              <div className="flex flex-col gap-4 ">
                 {formik?.values?.client_details?.length > 0 && formik?.values?.client_details?.map((contact, index) => (
                   <div
                     key={index}
-                    className="flex flex-col gap-4 2xl:gap-[1vw] relative border p-2 rounded"
+                    className="flex flex-col gap-4  relative border p-2 rounded"
                   >
                     {formik.values.client_details.length > 1 && (
                       <button
@@ -277,8 +277,8 @@ export function AddClientModal({
                         className="flex items-center gap-2 mt-2"
                         onClick={() => handleVisibleOtherContact(index)}
                       >
-                        <span className="text-primary flex items-center gap-2 2xl:gap-[0.5vw]">
-                          <AddSquareIcon className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+                        <span className="text-primary flex items-center gap-2 ">
+                          <AddSquareIcon className="w-6  h-6 " />
                           <span>Add Other Contact No</span>
                         </span>
                       </button>
@@ -300,8 +300,8 @@ export function AddClientModal({
                     })
                   }
                 >
-                  <span className="text-primary flex items-center gap-2 2xl:gap-[0.5vw]">
-                    <AddSquareIcon className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+                  <span className="text-primary flex items-center gap-2 ">
+                    <AddSquareIcon className="w-6  h-6 " />
                     <span>Add Client Contact</span>
                   </span>
                 </button>

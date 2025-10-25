@@ -25,9 +25,9 @@ export function InputField({
   className,
   disabled,
   type = "text",
-  inputBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
-  textAreaBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
-  textAreaHeight ="min-h-[8rem] 2xl:min-h-[8vw]",
+  inputBorderRadius = "rounded-md ",
+  textAreaBorderRadius = "rounded-md ",
+  textAreaHeight ="min-h-[8rem]",
   ...props
 }: InputProps) {
   const [isFocused, setIsFocused] = useState(false);
@@ -53,7 +53,7 @@ export function InputField({
     <div className="w-full">
       {/* Label */}
       {label && (
-        <label className="block 2xl:text-[1vw] text-gray-700 mb-2 2xl:mb-[0.5vw]">
+        <label className="block  text-gray-700 mb-2 ">
           {label} {isRequired && <span className="text-red-500">*</span>}
         </label>
       )}
@@ -62,7 +62,7 @@ export function InputField({
       <div
         className={`flex items-${
           isTextArea ? "start" : "center"
-        } border 2xl:border-[0.05vw] ${
+        } border  ${
           error
             ? "border-red-500"
             : isFocused
@@ -70,7 +70,7 @@ export function InputField({
             : "border-gray-300"
         } ${
           isTextArea ? textAreaBorderRadius : inputBorderRadius
-        } px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] bg-white transition ${className}`}
+        } px-4  py-2  bg-white transition ${className}`}
       >
         {/* Left Icon */}
         {icon && <span className="mr-3 text-gray-500">{icon}</span>}
@@ -78,7 +78,7 @@ export function InputField({
         {/* Input or Textarea */}
         {isTextArea ? (
           <textarea
-            className={`w-full bg-transparent outline-none resize-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${textAreaHeight}`}
+            className={`w-full bg-transparent outline-none resize-none  text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed ${textAreaHeight}`}
             disabled={disabled}
             required={isRequired}
             {...(props as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
@@ -88,7 +88,7 @@ export function InputField({
         ) : (
           <input
             type={type}
-            className="w-full bg-transparent outline-none 2xl:text-[1vw] text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-transparent outline-none  text-gray-700 placeholder-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={disabled}
             required={isRequired}
             {...(props as React.InputHTMLAttributes<HTMLInputElement>)}
@@ -111,7 +111,7 @@ export function InputField({
 
       {/* Error Message */}
       {error && (
-        <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] 2xl:mt-[0.5vw] mt-1">
+        <p className="text-red-500 text-[0.9rem]   mt-1">
           {error}
         </p>
       )}

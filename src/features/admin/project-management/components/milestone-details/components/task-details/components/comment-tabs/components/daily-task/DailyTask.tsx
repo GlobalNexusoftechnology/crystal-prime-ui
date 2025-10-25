@@ -107,18 +107,18 @@ export function DailyTask({
   // Show error state if task is not found
   if (isError && error?.message?.includes("Task not found")) {
     return (
-      <div className="flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:px-[1vw]">
-        <div className="flex flex-col items-center justify-center py-8 2xl:py-[2vw]">
+      <div className="flex flex-col gap-8  p-4 ">
+        <div className="flex flex-col items-center justify-center py-8 ">
           <div className="text-center">
-            <div className="text-lg 2xl:text-[1.1vw] font-semibold text-red-600 mb-2 2xl:mb-[0.5vw]">
+            <div className="text-lg  font-semibold text-red-600 mb-2 ">
               Task Not Found
             </div>
-            <div className="text-[0.9rem] 2xl:text-[0.9vw] text-gray-600 mb-4 2xl:mb-[1vw]">
+            <div className="text-[0.9rem]  text-gray-600 mb-4 ">
               The task with ID{" "}
               <code className="bg-gray-100 px-2 py-1 rounded">{projectId}</code>
               could not be found.
             </div>
-            <div className="text-[0.9rem] 2xl:text-[0.9vw] text-gray-500">
+            <div className="text-[0.9rem]  text-gray-500">
               This might happen if the task was deleted or the URL contains an
               invalid task ID.
             </div>
@@ -128,10 +128,10 @@ export function DailyTask({
     );
   }
   return (
-    <div className="flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:px-[1vw]">
+    <div className="flex flex-col gap-8  p-4 ">
       {/* Tab Contents */}
       <div>
-        <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+        <div className="flex flex-col gap-4 ">
           {showForm ? (
             <AddDailyTaskModal
               isOpen={showForm}
@@ -163,26 +163,26 @@ export function DailyTask({
               isPending={isPending}
             />
           ) : (
-            <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+            <div className="flex flex-col gap-4 ">
               {isLoading ? (
                 <div>Loading...</div>
               ) : dailyTasks && dailyTasks.length > 0 ? (
-                <div className="space-y-4 2xl:space-y-[1vw]">
+                <div className="space-y-4 ">
                   {dailyTasks?.length > 0 && dailyTasks?.map((task: IDailyTaskEntryResponse) => {
                     return (
                       <div
                         key={task.id}
-                        className="flex flex-col justify-center gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
+                        className="flex flex-col justify-center gap-4  bg-customGray border  border-grey-300 rounded-xl  p-4  text-[0.9rem]  text-[#1D2939] w-full"
                       >
-                        <div className="flex justify-between flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
+                        <div className="flex justify-between flex-wrap gap-4  mb-2  font-medium text-[#1D2939]">
                           <div className="flex items-center">
-                            <span className="underline text-[1.1rem] 2xl:text-[1.1vw] font-normal">
+                            <span className="underline text-[1.1rem]  font-normal">
                               {task.task_title || "-"}
                             </span>
                           </div>
-                          <div className="flex justify-end flex-wrap gap-6 2xl:gap-[1.5vw]">
+                          <div className="flex justify-end flex-wrap gap-6 ">
                             <div className="underline flex items-center">
-                              <span className="2xl:text-[1.1vw] font-normal">
+                              <span className=" font-normal">
                                 Assigned To:{" "}
                                 {task.user
                                   ? `${task.user.first_name} ${task.user.last_name}`
@@ -190,7 +190,7 @@ export function DailyTask({
                               </span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <span className="2xl:text-[1.1vw] font-normal text-primary">
+                              <span className=" font-normal text-primary">
                                 Status:
                                 </span>
                                 {isUpdatingStatus ? (
@@ -200,26 +200,26 @@ export function DailyTask({
                                     options={statusOptions}
                                     value={task.status || "Pending"}
                                     onChange={(newStatus) => handleStatusChange(task.id, newStatus)}
-                                    dropdownWidth="w-40 2xl:w-[12vw]"
-                                    dropdownBorderRadius="rounded-md 2xl:rounded-[0.375vw]"
+                                    dropdownWidth="w-40 "
+                                    dropdownBorderRadius="rounded-md "
                                   />
                                 )}
                             </div>
-                            <span className="underline flex items-center text-lightGreen 2xl:text-[1.1vw]">
+                            <span className="underline flex items-center text-lightGreen ">
                               Created At:{" "}
                               {formatIndiaTime(task.created_at, "toReadable")}
                             </span>
                             <span className="underline flex items-center text-yellow-600">
-                              <span className="2xl:text-[1.1vw] font-normal">
+                              <span className=" font-normal">
                                 Priority: {task.priority || "-"}
                               </span>
                             </span>
                           </div>
                         </div>
-                        <div className="mb-2 2xl:mb-[0.5vw]">
+                        <div className="mb-2 ">
                           {task.description}
                         </div>
-                        <div className="mb-2 2xl:mb-[0.5vw]">
+                        <div className="mb-2 ">
                           <strong>Remark:</strong>{" "}
                           <p>{renderWithLinks(task.remarks)}</p>
                         </div>
@@ -228,8 +228,8 @@ export function DailyTask({
                   })}
                 </div>
               ) : (
-                <div className="py-4 2xl:py-[1vw]">
-                  <p className="text-gray-500 2xl:text-[1.1vw]">
+                <div className="py-4 ">
+                  <p className="text-gray-500 ">
                     No daily task entries found for this project
                   </p>
                 </div>

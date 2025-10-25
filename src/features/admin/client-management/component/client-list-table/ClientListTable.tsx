@@ -240,12 +240,12 @@ export function ClientListTable(): JSX.Element {
   const clientNameToDelete = deleteId ? filteredClients.find((c) => c.id === deleteId)?.name : "";
 
   return (
-    <div className="flex flex-col gap-8 2xl:gap-[2vw] px-4 2xl:p-[1vw] py-2 2xl:py-[0.5vw]">
-      <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+    <div className="flex flex-col gap-8  px-4  py-2 ">
+      <div className="flex flex-col gap-4 ">
         <Breadcrumb />
         <div className="flex flex-col flex-wrap lg:items-center gap-4 lg:flex-row lg:gap-0 justify-between">
-          <h1 className="font-medium text-2xl 2xl:text-[1.5vw]">Client List</h1>
-          <div className="flex flex-col flex-wrap md:flex-row gap-4 2xl:gap-[1vw]">
+          <h1 className="font-medium text-2xl ">Client List</h1>
+          <div className="flex flex-col flex-wrap md:flex-row gap-4 ">
             <SearchBar
               value={searchQuery}
               onSearch={setSearchQuery}
@@ -285,7 +285,7 @@ export function ClientListTable(): JSX.Element {
               onClick={handleDownloadTemplate}
               leftIcon={
                 <ImDownload2
-                  className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
+                  className="w-5 h-5  "
                   color="#034A9F"
                 />
               }

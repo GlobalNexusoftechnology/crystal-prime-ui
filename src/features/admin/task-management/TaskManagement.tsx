@@ -15,18 +15,18 @@ import { TaskManagementCard } from "./components";
 
 export function TaskManagement() {
   return (
-    <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
+    <section className="flex flex-col gap-6 md:gap-8  border border-gray-300 rounded-lg  bg-white p-4 ">
       
       {/* Section Header */}
-      <div className="flex flex-col gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
-        <h1 className="text-xl 2xl:text-[1.25vw] font-medium">
+      <div className="flex flex-col gap-2  px-4 ">
+        <h1 className="text-xl  font-medium">
           Task Management
         </h1>
       </div>
 
       {/* Summary Cards and Add Task Button */}
-      <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4 2xl:gap-[1vw] flex-wrap px-4 2xl:px-[1vw]">
+      <div className="grid grid-cols-1 gap-4 ">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-5 gap-4  flex-wrap px-4 ">
           {/* Render up to 4 analytical cards */}
           {analyticalCards?.slice(0, 4)?.map((card, index) => (
             <AnalyticalCard key={index} data={card} />
@@ -40,7 +40,7 @@ export function TaskManagement() {
       </div>
 
       {/* Task Management Section */}
-      <div className="gap-2 2xl:gap-[0.5vw] px-4 2xl:px-[1vw]">
+      <div className="gap-2  px-4 ">
         <TaskManagementCard/>
       </div>
 

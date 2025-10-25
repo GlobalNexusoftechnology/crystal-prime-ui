@@ -35,7 +35,7 @@ export const StaffConversionPerformance: React.FC<StaffConversionPerformanceProp
   return (
     <div className="bg-white rounded-2xl border border-gray-200 p-6 w-full shadow-sm">
       <div className="flex justify-between items-center mb-6">
-        <span className="text-[1.1rem] 2xl:text-[1.1vw] font-medium text-black">Staff Conversion Performance</span>
+        <span className="text-[1.1rem]  font-medium text-black">Staff Conversion Performance</span>
       </div>
       <div
         ref={listRef}

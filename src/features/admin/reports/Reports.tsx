@@ -32,22 +32,22 @@ export function Reports() {
 
   // If no permission for any tab, show nothing
   if (tabs.length === 0) {
-    return <div className="p-6 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw]">No report permissions available.</div>;
+    return <div className="p-6  bg-white rounded-xl ">No report permissions available.</div>;
   }
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw] p-6 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw]">
+    <div className="flex flex-col gap-4  p-6  bg-white rounded-xl ">
       <Breadcrumb />
-      <div className="flex items-center gap-8 2xl:gap-[2vw]">
-        <h1 className="text-3xl 2xl:text-[2vw] font-medium mb-6 2xl:mb-[1vw]">Reports</h1>
-        <div className="flex gap-4 2xl:gap-[1vw] mb-6 2xl:mb-[1vw] overflow-x-auto">
+      <div className="flex items-center gap-8 ">
+        <h1 className="text-3xl  font-medium mb-6 ">Reports</h1>
+        <div className="flex gap-4  mb-6  overflow-x-auto">
           {tabs?.length > 0 && tabs?.map((tab) => (
             <button
               key={tab.key}
-              className={`p-2 2xl:p-[0.5vw] rounded 2xl:rounded-[0.25vw] font-medium whitespace-nowrap ${
+              className={`p-2  rounded  font-medium whitespace-nowrap ${
                 activeTab === tab.key
-                  ? "border-b-4 border-[#65558F] text-[1rem] 2xl:text-[1vw]"
-                  : "text-[0.9rem] 2xl:text-[0.875vw]"
+                  ? "border-b-4 border-[#65558F] text-[1rem] "
+                  : "text-[0.9rem] "
               }`}
               onClick={() => setActiveTab(tab.key)}
             >

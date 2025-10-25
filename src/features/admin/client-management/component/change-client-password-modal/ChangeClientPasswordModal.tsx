@@ -55,9 +55,9 @@ export function ChangeClientPasswordModal({ isOpen, onClose, clientEmail, userId
   });
 
   return (
-    <ModalOverlay isOpen={isOpen} onClose={onClose} modalTitle="Back to Clients" modalClassName="w-auto md:w-[28rem] 2xl:w-[28vw]">
+    <ModalOverlay isOpen={isOpen} onClose={onClose} modalTitle="Back to Clients" modalClassName="w-auto md:w-[28rem] ">
       <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 p-4 bg-white rounded-lg max-h-[80vh] overflow-y-auto">
-        <p className="text-[1.2rem] 2xl:text-[1.2vw] font-semibold">Change Client Password</p>
+        <p className="text-[1.2rem]  font-semibold">Change Client Password</p>
         
         {clientEmail && (
           <div className="p-3 bg-gray-50 rounded">
@@ -75,9 +75,9 @@ export function ChangeClientPasswordModal({ isOpen, onClose, clientEmail, userId
           type={showPassword ? "text" : "password"}
           suffixIcon={
             showPassword ? (
-              <FiEye className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+              <FiEye className="w-5 h-5  " />
             ) : (
-              <FiEyeOff className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+              <FiEyeOff className="w-5 h-5  " />
             )
           }
           onIconClick={() => setShowPassword((s) => !s)}
@@ -93,9 +93,9 @@ export function ChangeClientPasswordModal({ isOpen, onClose, clientEmail, userId
           type={showConfirmPassword ? "text" : "password"}
           suffixIcon={
             showConfirmPassword ? (
-              <FiEye className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+              <FiEye className="w-5 h-5  " />
             ) : (
-              <FiEyeOff className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+              <FiEyeOff className="w-5 h-5  " />
             )
           }
           onIconClick={() => setShowConfirmPassword((s) => !s)}

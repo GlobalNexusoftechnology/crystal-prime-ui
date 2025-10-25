@@ -500,25 +500,25 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray mx-4 2xl:mx-[1vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] rounded-xl 2xl:rounded-[0.75vw]">
-      <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
-        <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
+    <div className="flex flex-col gap-6  bg-customGray mx-4  p-4  border  rounded-xl ">
+      <div className="flex justify-between items-center flex-wrap gap-4 ">
+        <h1 className="text-[1.2rem]  font-medium">
           Leads List
         </h1>
-        <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+        <div className="flex items-center flex-wrap gap-4 ">
           <SearchBar
             onSearch={handleSearch}
             bgColor="white"
             width="w-full min-w-[12rem] md:w-[20vw]"
           />
           {cavAddLeadManagement && (
-            <div className="w-full md:w-fit flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+            <div className="w-full md:w-fit flex items-center flex-wrap gap-4 ">
               <Button
                 title="Add Lead"
                 variant="background-white"
                 width="w-full md:w-fit"
                 leftIcon={
-                  <FiPlus className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                  <FiPlus className="w-5 h-5  " />
                 }
                 onClick={() => setAddLeadModalOpen(true)}
               />
@@ -536,13 +536,13 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             width="w-full md:w-fit"
             onClick={handleLeadDownloadTemplateExcel}
             leftIcon={
-              <ImDownload2 className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+              <ImDownload2 className="w-5 h-5  " />
             }
             tooltip="Download Template"
           />
         </div>
       </div>
-      <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw]">
+      <div className="flex justify-start items-end flex-wrap gap-4 ">
         <div className="w-full md:w-fit flex flex-col justify-start items-start">
           <DatePicker
             label="Follow Up From"
@@ -565,7 +565,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
               width="w-full md:w-fit"
               onClick={handleClearFollowupDates}
               leftIcon={
-                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                <FiX className="w-5 h-5  " />
               }
               tooltip="Clear Dates"
             />

@@ -21,7 +21,7 @@ export function ActionDropdown({
   options,
   icon,
   direction = "right",
-  className = "w-fit min-w-[8rem] 2xl:min-w-[8vw]",
+  className = "w-fit min-w-[8rem] ",
 }: ActionDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -122,10 +122,10 @@ export function ActionDropdown({
         type="button"
         ref={buttonRef}
         onClick={toggleDropdown}
-        className="p-1 2xl:p-[0.25vw] rounded hover:bg-gray-200"
+        className="p-1  rounded hover:bg-gray-200"
       >
         {icon || (
-          <FiMoreVertical className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.25vw]" />
+          <FiMoreVertical className="w-5  h-5 " />
         )}
       </button>
 
@@ -149,7 +149,7 @@ export function ActionDropdown({
                 <button
                   type="button"
                   key={actionIndex}
-                  className={`block w-full px-4 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left hover:bg-gray-100 ${
+                  className={`block w-full px-4 text-[0.9rem]    py-2  text-left hover:bg-gray-100 ${
                     action.className || ""
                   }`}
                   onClick={(e) => {
@@ -179,14 +179,14 @@ export function ActionDropdown({
                 : direction === "bottom"
                 ? "right-full top-[50%]"
                 : "right-full bottom-0"
-            } mt-2 bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.05vw] ${className}`}
+            } mt-2 bg-white shadow-lg z-50 rounded  border  ${className}`}
           >
             {options.length > 0 &&
               options.map((action, actionIndex) => (
                 <button
                   type="button"
                   key={actionIndex}
-                  className={`block w-full px-4 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left hover:bg-gray-100 ${
+                  className={`block w-full px-4 text-[0.9rem]    py-2  text-left hover:bg-gray-100 ${
                     action.className || ""
                   }`}
                   onClick={(e) => {

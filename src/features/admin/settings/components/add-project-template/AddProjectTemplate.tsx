@@ -139,14 +139,14 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
     <FormikProvider value={formik}>
       <form
         onSubmit={formik.handleSubmit}
-        className="flex flex-col gap-4 2xl:gap-[1vw]"
+        className="flex flex-col gap-4 "
       >
-        <div className="rounded-lg 2xl:rounded-[0.5vw] border 2xl:border-[0.05vw] border-borderGray p-4 2xl:p-[1vw] bg-white">
-          <h1 className="text-[1.1rem] 2xl:text-[1.1vw] font-medium mb-4">
+        <div className="rounded-lg  border  border-borderGray p-4  bg-white">
+          <h1 className="text-[1.1rem]  font-medium mb-4">
             Project Info
           </h1>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 2xl:gap-[1vw]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ">
             <InputField
               label="Template Name"
               name="name"
@@ -198,8 +198,8 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
             />
           </div>
 
-          <div className="flex flex-col gap-2 2xl:gap-[0.5vw] mt-4">
-            <span className="text-[1rem] 2xl:text-[1vw]">
+          <div className="flex flex-col gap-2  mt-4">
+            <span className="text-[1rem] ">
               Template Description
             </span>
             <textarea
@@ -212,18 +212,18 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               }}
               onBlur={formik.handleBlur}
               placeholder="Write something..."
-              className="w-full p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-borderGray rounded-md 2xl:rounded-[0.375vw]"
+              className="w-full p-4  border  border-borderGray rounded-md "
             />
             {formik.touched.description && formik.errors.description && (
-              <span className="text-red-500 text-[0.9rem] 2xl:text-[0.875vw]">
+              <span className="text-red-500 text-[0.9rem] ">
                 {formik.errors.description}
               </span>
             )}
           </div>
-          <hr className="mt-8 2xl:mt-[2vw]" />
+          <hr className="mt-8 " />
 
           <ProjectTemplateMilestone formik={formik} />
-          <div className="flex justify-start items-center gap-4 2xl:gap-[1vw] mt-4">
+          <div className="flex justify-start items-center gap-4  mt-4">
             <Button
               type="button"
               variant="primary-outline"

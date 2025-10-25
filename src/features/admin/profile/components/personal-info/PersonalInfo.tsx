@@ -75,12 +75,12 @@ export function PersonalInfo() {
   if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="flex flex-col gap-2 2xl:gap-[0.5vw] p-4 2xl:p-[1vw] rounded-lg 2xl:rounded-[0.5vw]">
-      <div className="flex flex-col px-4 2xl:px-[1vw] mb-3 2xl:mb-[0.75vw]">
-        <h1 className="text-lg 2xl:text-[1.125vw] text-[#414651] font-medium 2xl:mb-[0.5vw]">
+    <div className="flex flex-col gap-2  p-4  rounded-lg ">
+      <div className="flex flex-col px-4  mb-3 ">
+        <h1 className="text-lg  text-[#414651] font-medium ">
           Personal Info
         </h1>
-        <span className="text-[0.9rem] 2xl:text-[0.875vw]">
+        <span className="text-[0.9rem] ">
           Update your photo and personal details.
         </span>
       </div>
@@ -98,9 +98,9 @@ export function PersonalInfo() {
       >
         {({ values, errors, touched, handleChange, setFieldValue }) => (
           <Form>
-            <div className="bg-white flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] rounded-lg 2xl:rounded-[0.5vw]">
-              <div className="flex-flex-col gap-2 2xl:gap-[0.5vw]">
-                <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
+            <div className="bg-white flex flex-col gap-4  p-4  rounded-lg ">
+              <div className="flex-flex-col gap-2 ">
+                <div className="flex flex-col md:flex-row gap-4  mb-4 ">
                   <InputField
                     label="First Name"
                     placeholder="Enter name"
@@ -118,7 +118,7 @@ export function PersonalInfo() {
                     error={touched.last_name && errors.last_name}
                   />
                 </div>
-                <div className="mb-4 2xl:mb-[1vw]">
+                <div className="mb-4 ">
                   <InputField
                     label="Email"
                     placeholder="Enter email"
@@ -128,7 +128,7 @@ export function PersonalInfo() {
                     error={touched.email && errors.email}
                   />
                 </div>
-                <div className="mb-4 2xl:mb-[1vw]">
+                <div className="mb-4 ">
                   <DatePicker
                     label="Date of Birth"
                     value={values.dob ? (values.dob.length > 10 ? values.dob.slice(0, 10) : values.dob) : ""}
@@ -137,7 +137,7 @@ export function PersonalInfo() {
                     error={touched.dob && errors.dob}
                   />
                 </div>
-                <div className="mb-4 2xl:mb-[1vw]">
+                <div className="mb-4 ">
                   <InputField
                     label="Phone Number"
                     placeholder="Enter phone number"
@@ -154,7 +154,7 @@ export function PersonalInfo() {
                   />
                 </div>
               </div>
-              <div className="flex justify-end gap-2 2xl:gap-[0.5vw]">
+              <div className="flex justify-end gap-2 ">
                 <Button type="button" title="Cancel" variant="primary-outline" onClick={() => router.back()} />
                 <Button title={isPending ? "Saving..." : "Save changes"} type="submit" disabled={isPending} />
               </div>

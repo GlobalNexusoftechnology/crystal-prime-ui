@@ -71,12 +71,12 @@ export function ChangePassword() {
   };
 
   return (
-    <section className="bg-white rounded-lg pb-2 2xl:pb-3 h-screen">
-      <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium ml-5 py-5">
+    <section className="bg-white rounded-lg pb-2 h-screen">
+      <h1 className="text-[1.2rem]  font-medium ml-5 py-5">
         Change Password
       </h1>
 
-      <div className="bg-[#F8F8F8] rounded-xl m-5 border border-[#D7D7D7] p-6 space-y-4 sm:w-[36rem] 2xl:w-[36vw]">
+      <div className="bg-[#F8F8F8] rounded-xl m-5 border border-[#D7D7D7] p-6 space-y-4 sm:w-[36rem] ">
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -94,9 +94,9 @@ export function ChangePassword() {
                 error={touched.oldPassword && errors.oldPassword}
                 suffixIcon={
                   showOldPassword ? (
-                    <FiEye className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+                    <FiEye className="w-5 h-5  " />
                   ) : (
-                    <FiEyeOff className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+                    <FiEyeOff className="w-5 h-5  " />
                   )
                 }
                 onIconClick={toggleOldPasswordVisibility}
@@ -112,9 +112,9 @@ export function ChangePassword() {
                 error={touched.newPassword && errors.newPassword}
                 suffixIcon={
                   showNewPassword ? (
-                    <FiEye className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+                    <FiEye className="w-5 h-5  " />
                   ) : (
-                    <FiEyeOff className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+                    <FiEyeOff className="w-5 h-5  " />
                   )
                 }
                 onIconClick={toggleNewPasswordVisibility}
@@ -130,9 +130,9 @@ export function ChangePassword() {
                 error={touched.confirmPassword && errors.confirmPassword}
                 suffixIcon={
                   showConfirmPassword ? (
-                    <FiEye className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+                    <FiEye className="w-5 h-5  " />
                   ) : (
-                    <FiEyeOff className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+                    <FiEyeOff className="w-5 h-5  " />
                   )
                 }
                 onIconClick={toggleConfirmPasswordVisibility}

@@ -76,7 +76,7 @@ export function SendProposalModal({
     >
       <form
         onSubmit={formik.handleSubmit}
-        className="flex flex-col gap-6 2xl:gap-[1.5vw] overflow-auto bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw]"
+        className="flex flex-col gap-6  overflow-auto bg-customGray border  p-3  rounded-md "
       >
         {/* Proposal Number + Date */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

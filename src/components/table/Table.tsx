@@ -75,16 +75,16 @@ export function Table<T extends { id: string | number }>({
 
   return (
     <div>
-      <div className="border bg-white 2xl:border-[0.05vw] rounded-xl 2xl:rounded-[0.75vw] overflow-hidden">
+      <div className="border bg-white  rounded-xl  overflow-hidden">
         <div className="scrollbar-style overflow-x-auto max-h-[70vh] overflow-y-auto">
-          <table className="w-full text-[0.9rem] 2xl:text-[0.875vw] text-left border-gray-200">
+          <table className="w-full text-[0.9rem]  text-left border-gray-200">
             <thead className="text-gray-700 sticky top-0 z-10 bg-white">
               <tr>
-                <th className="text-center min-w-[5rem] 2xl:min-w-[5vw] bg-gray-200 p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase border-r border-gray-300">
+                <th className="text-center min-w-[5rem]  bg-gray-200 p-3  text-[0.9rem]   uppercase border-r border-gray-300">
                   Sr No
                 </th>
                 {actions && actions?.length > 0 && (
-                  <th className="text-center min-w-[6rem] bg-gray-200 p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] uppercase border-r border-gray-300">
+                  <th className="text-center min-w-[6rem] bg-gray-200 p-3  text-[0.9rem]   uppercase border-r border-gray-300">
                     Action
                   </th>
                 )}

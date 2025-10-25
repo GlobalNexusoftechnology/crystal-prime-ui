@@ -14,7 +14,7 @@ export function DatePicker({
   error,
   label,
   isRequired = false,
-  datePickerBorderRadius = "rounded-md 2xl:rounded-[0.5vw]",
+  datePickerBorderRadius = "rounded-md ",
   name="date",
   datePickerWidth="w-full",
   minDate,
@@ -104,7 +104,7 @@ export function DatePicker({
   return (
     <div className={`${datePickerWidth}`}>
       {label && (
-        <label className="block 2xl:text-[1vw] text-gray-700 mb-2 2xl:mb-[0.5vw]">
+        <label className="block  text-gray-700 mb-2 ">
           {label} {isRequired && <span className="text-red-500">*</span>}
         </label>
       )}
@@ -114,9 +114,9 @@ export function DatePicker({
           placeholder={placeholder}
           ref={inputRef}
           type="date"
-          className={`w-full 2xl:text-[1vw] border 2xl:border-[0.05vw] ${
+          className={`w-full  border  ${
             error ? "border-red-500" : "border-gray-300"
-          } ${datePickerBorderRadius} px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] pr-10 2xl:pr-[2.5vw] focus:outline-none focus:ring-1 ${
+          } ${datePickerBorderRadius} px-4  py-2  pr-10 focus:outline-none focus:ring-1 ${
             error ? "focus:ring-red-500" : "focus:ring-primary"
           }`}
           value={internalValue}
@@ -130,14 +130,14 @@ export function DatePicker({
         />
         {/* Custom Calendar Icon */}
         <div
-          className="absolute inset-y-0 right-3 2xl:right-[0.75vw] flex items-center cursor-pointer"
+          className="absolute inset-y-0 right-3  flex items-center cursor-pointer"
           onClick={() =>
             inputRef.current?.showPicker?.() || inputRef.current?.focus()
           }
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw] text-gray-500"
+            className="w-6  h-6  text-gray-500"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -152,7 +152,7 @@ export function DatePicker({
 
       {/* Error Message */}
       {error && (
-        <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] mt-1 2xl:mt-[0.5vw]">
+        <p className="text-red-500 text-[0.9rem]  mt-1 ">
           {error}
         </p>
       )}

@@ -27,7 +27,7 @@ export function Dropdown({
   error,
   label,
   isRequired = false,
-  dropdownBorderRadius = "rounded-md 2xl:rounded-[0.375vw]",
+  dropdownBorderRadius = "rounded-md ",
   dropdownWidth = "w-full",
   disabled = false
 }: DropdownProps) {
@@ -97,15 +97,15 @@ export function Dropdown({
   return (
     <div className={`${dropdownWidth} relative`} ref={dropdownRef}>
       {label && (
-        <label className="block 2xl:text-[1vw] text-gray-700 mb-2 2xl:mb-[0.5vw]">
+        <label className="block  text-gray-700 mb-2 ">
           {label} {isRequired && <span className="text-red-500">*</span>}
         </label>
       )}
 
     <div
-  className={`border 2xl:border-[0.05vw] focus:outline-none focus:ring-1 ${
+  className={`border  focus:outline-none focus:ring-1 ${
     error ? "focus:ring-red-500" : "focus:ring-primary"
-  } ${error ? "border-red-500" : "border-gray-300"} ${dropdownBorderRadius} 2xl:text-[1vw] px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] flex items-center gap-6 2xl:gap-[1.5vw] justify-between cursor-pointer ${
+  } ${error ? "border-red-500" : "border-gray-300"} ${dropdownBorderRadius}  px-4  py-2  flex items-center gap-6  justify-between cursor-pointer ${
     disabled ? "bg-gray-100 text-gray-400 cursor-default" : "bg-white"
   }`}
   onClick={toggleDropdown}
@@ -125,7 +125,7 @@ export function Dropdown({
   {!disabled && (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className={`w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw] text-gray-500 transform transition-transform ${isOpen ? "rotate-180" : ""}`}
+      className={`w-5 h-5   text-gray-500 transform transition-transform ${isOpen ? "rotate-180" : ""}`}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -187,7 +187,7 @@ export function Dropdown({
       {/* Fallback: render inline if menuStyles not set */}
       {isOpen && (menuStyles.top === undefined || menuStyles.left === undefined) && (
         <div
-          className={`absolute z-10 mt-1 2xl:mt-[0.25vw] w-full bg-yellow-100 border border-yellow-500 ${dropdownBorderRadius} shadow-lg max-h-60 overflow-auto`}
+          className={`absolute z-10 mt-1  w-full bg-yellow-100 border border-yellow-500 ${dropdownBorderRadius} shadow-lg max-h-60 overflow-auto`}
         >
           <div className="p-2 border-b">
             <input
@@ -205,7 +205,7 @@ export function Dropdown({
             filteredOptions.length > 0 && filteredOptions.map((option) => (
               <div
                 key={option.value}
-                className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] 2xl:text-[0.9vw] cursor-pointer hover:bg-gray-100 ${
+                className={`px-4  py-2   cursor-pointer hover:bg-gray-100 ${
                   value === option.value ? "bg-gray-100 font-semibold" : ""
                 }`}
                 onMouseDown={() => handleSelect(option.value)}
@@ -218,7 +218,7 @@ export function Dropdown({
       )}
 
       {error && (
-        <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] mt-1 2xl:mt-[0.5vw]">
+        <p className="text-red-500 text-[0.9rem]  mt-1 ">
           {error}
         </p>
       )}

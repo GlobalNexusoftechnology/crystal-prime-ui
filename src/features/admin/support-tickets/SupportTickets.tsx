@@ -134,7 +134,7 @@ export function SupportTickets() {
         header: "STATUS",
         accessor: "status",
         cell: ({ row, value }) => (
-          <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
+          <div className="min-w-[9rem]  flex justify-center">
             <SimpleDropdown
               options={[
                 { label: "Open", value: "open" },
@@ -145,7 +145,7 @@ export function SupportTickets() {
               onChange={(val) =>
                 updateTicketStatus({ id: String(row.id), status: val })
               }
-              dropdownWidth="w-[10rem] 2xl:w-[10vw]"
+              dropdownWidth="w-[10rem] "
             />
           </div>
         ),
@@ -160,7 +160,7 @@ export function SupportTickets() {
           }
           return (
             <div className="flex items-center justify-center">
-              <div className="relative w-12 h-12 2xl:w-[3vw] 2xl:h-[3vw]">
+              <div className="relative w-12 h-12  ">
                 <Image
                   src={img}
                   alt="Ticket attachment"
@@ -185,7 +185,7 @@ export function SupportTickets() {
         header: "ASSIGNED TO",
         accessor: "assignedTo",
         cell: ({ row, value }) => (
-          <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
+          <div className="min-w-[9rem]  flex justify-center">
             {isLoadingUsers ? (
               <span className="text-gray-400 text-sm">Loading...</span>
             ) : isUpdatingTicket ? (
@@ -202,7 +202,7 @@ export function SupportTickets() {
                   };
                   updateTicket(requestPayload);
                 }}
-                dropdownWidth="w-[15rem] 2xl:w-[15vw]"
+                dropdownWidth="w-[15rem] "
               />
             )}
           </div>
@@ -238,8 +238,8 @@ export function SupportTickets() {
   const paginationData = supportTickets?.data?.pagination;
 
   return (
-    <div className="p-6 md:p-8 2xl:p-[2vw] bg-[#fafbfc] border 2xl:border-[0.05vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw] min-h-screen">
-      <h1 className="text-xl 2xl:text-[1.25vw] 2xl:leading-[2vw] font-medium text-gray-900 mb-4 2xl:mb-[1vw]">
+    <div className="p-6 md:p-8  bg-[#fafbfc] border  border-gray-300 rounded-xl  min-h-screen">
+      <h1 className="text-xl   font-medium text-gray-900 mb-4 ">
         Support Tickets
       </h1>
       <SupportTicketTable

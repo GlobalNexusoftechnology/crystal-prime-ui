@@ -33,7 +33,7 @@ export function ProgressHeader({ step }: { step: number }) {
             }}
           >
             <span className={`circle${isActive ? " active" : ""}${isBefore ? " before" : ""}`}>
-              {isBefore ? <FaCheck className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]"/> : String(item.id).padStart(2, "0")}
+              {isBefore ? <FaCheck className="w-4  h-4 "/> : String(item.id).padStart(2, "0")}
             </span>
             <span className="label">{item.title}</span>
             {idx !== steps.length - 1 && (

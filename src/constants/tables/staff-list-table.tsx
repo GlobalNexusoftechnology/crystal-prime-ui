@@ -19,49 +19,49 @@ export const staffListColumn: ITableColumn<IAllUsersListResponse>[] = [
     header: "EMPLOYEE ID",
     accessor: "employee_id",
     sortable: true,
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
     cell: ({value}) => <span>{value ? value : "N/A"}</span>
   },
   {
     header: "FIRST NAME",
     accessor: "first_name",
     sortable: true,
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "LAST NAME",
     accessor: "last_name",
     sortable: true,
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "CONTACT",
     accessor: "number",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "DOB",
     accessor: "dob",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "EMAIL",
     accessor: "email",
-    headerClassName: "min-w-[16rem] 2xl:min-w-[16vw]",
+    headerClassName: "min-w-[16rem] ",
   },
   {
     header: "ROLE NAME",
     accessor: "role",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "CREATED AT",
     accessor: "created_at",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "UPDATED AT",
     accessor: "updated_at",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
 ];

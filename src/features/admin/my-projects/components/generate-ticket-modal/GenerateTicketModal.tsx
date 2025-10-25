@@ -252,11 +252,11 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
       isOpen={isOpen}
       onClose={handleClose}
       modalTitle={mode === "edit" ? "Edit Ticket" : "Generate Ticket"}
-      modalClassName="w-full md:w-[31rem] 2xl:w-[31vw] bg-white"
+      modalClassName="w-full md:w-[31rem]  bg-white"
     >
       <form
         onSubmit={formik.handleSubmit}
-        className="h-[85vh] md:h-auto lg:h-[45vw] 2xl:h-[50vw] overflow-y-auto flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+        className="h-[85vh] md:h-auto lg:h-[45vw]  overflow-y-auto flex flex-col gap-6  bg-customGray border  p-3  rounded-md  space-y-1 mb-3 "
       >
         {/* Title Field - Auto-populated with selected card title */}
         <InputField
@@ -294,7 +294,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
 
         {/* Priority Radio Buttons */}
         <div className="space-y-2">
-          <label className="block text-sm 2xl:text-[0.875vw] font-medium text-gray-700 mb-2">
+          <label className="block text-sm  font-medium text-gray-700 mb-2">
             Priority *
           </label>
           <div className="flex flex-wrap gap-4">
@@ -311,14 +311,14 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
                   onChange={() => handlePriorityChange(option.value)}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
-                <span className="text-sm 2xl:text-[0.875vw] text-gray-700">
+                <span className="text-sm  text-gray-700">
                   {option.label}
                 </span>
               </label>
             ))}
           </div>
           {formik.touched.priority && formik.errors.priority && (
-            <p className="text-red-500 text-xs 2xl:text-[0.75vw] mt-1">
+            <p className="text-red-500 text-xs  mt-1">
               {formik.errors.priority}
             </p>
           )}
@@ -327,7 +327,7 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
         {/* Upload Image Section */}
         <div className="space-y-4">
           <div>
-            <label className="block text-sm 2xl:text-[0.875vw] font-medium text-gray-700 mb-2">
+            <label className="block text-sm  font-medium text-gray-700 mb-2">
               Upload Image
             </label>
             <UploadFileInput
@@ -335,12 +335,12 @@ export const GenerateTicketModal: React.FC<GenerateTicketModalProps> = ({
               placeholder="Choose image file"
             />
             {isUploading && (
-              <p className="text-sm 2xl:text-[0.875vw] text-blue-600 mt-1 2xl:mt-[0.25vw]">
+              <p className="text-sm  text-blue-600 mt-1 ">
                 Uploading image...
               </p>
             )}
             {uploadedImageUrl && (
-              <p className="text-sm 2xl:text-[0.875vw] text-green-600 mt-1 2xl:mt-[0.25vw]">
+              <p className="text-sm  text-green-600 mt-1 ">
                 ✓ Image uploaded successfully
               </p>
             )}

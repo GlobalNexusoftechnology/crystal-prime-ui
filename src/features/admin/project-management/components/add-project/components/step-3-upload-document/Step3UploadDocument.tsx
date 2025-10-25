@@ -104,9 +104,9 @@ export function Step3UploadDocument({
   };
 
   return (
-    <div className="flex flex-col gap-8 2xl:gap-[2vw]">
+    <div className="flex flex-col gap-8 ">
       {files.length > 0 && (
-        <div className="flex mt-2 gap-4 2xl:gap-[1vw]">
+        <div className="flex mt-2 gap-4 ">
           {files?.length > 0 && files?.map((f, idx) => (
             <div key={idx} className="flex items-center gap-2">
               <span className="text-primary">{f.name}</span>
@@ -128,7 +128,7 @@ export function Step3UploadDocument({
       )}
       {/* Upload Area */}
       <div
-        className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg bg-gray-50 p-12 2xl:p-[4vw] mx-auto w-full min-h-[300px] cursor-pointer"
+        className="flex flex-col items-center justify-center border-2 border-dashed rounded-lg bg-gray-50 p-12  mx-auto w-full min-h-[300px] cursor-pointer"
         onClick={() => inputRef.current?.click()}
         onDrop={handleDrop}
         onDragOver={(e) => e.preventDefault()}
@@ -142,8 +142,8 @@ export function Step3UploadDocument({
           multiple
         />
         <div className="flex flex-col items-center gap-2">
-          <FileAttachmentIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
-          <span className="font-semibold text-lg 2xl:text-[1.2vw] text-gray-700">
+          <FileAttachmentIcon className="w-6 h-6  " />
+          <span className="font-semibold text-lg  text-gray-700">
             Upload Document(s)
           </span>
           <span className="text-[0.9rem] text-red-400">
@@ -159,19 +159,19 @@ export function Step3UploadDocument({
         </div>
       </div>
        {/* Action Buttons */}
-       <div className="flex justify-center items-center mt-6 2xl:mt-[1.5vw] gap-4 2xl:gap-[1vw]">
+       <div className="flex justify-center items-center mt-6  gap-4 ">
         <Button
           title="Back"
           variant="primary-outline"
           onClick={onBack}
-          width="w-full md:w-[10rem] 2xl:w-[10vw]"
+          width="w-full md:w-[10rem] "
         />
         <Button
           title="Next"
           
           onClick={() => onNext(files, removedAttachmentIds)}
           disabled={isPending}
-          width="w-full md:w-[10rem] 2xl:w-[10vw]"
+          width="w-full md:w-[10rem] "
         />
       </div>
       {/* Render DeleteModal for file removal confirmation */}

@@ -479,7 +479,7 @@ export default function Dashboard() {
                 ]}
                 value={selectedTaskStatus}
                 onChange={(newStatus) => handleTaskStatusChange(newStatus)}
-                dropdownWidth="w-40 2xl:w-[11.5vw]"
+                dropdownWidth="w-40 "
                 dropdownBorderRadius="rounded-md"
                 buttonClassName="text-sm"
               />
@@ -511,7 +511,7 @@ export default function Dashboard() {
       header: "STATUS",
       accessor: "status",
       cell: ({ row, value }) => (
-        <div className="min-w-[9rem] 2xl:min-w-[9vw] flex justify-center">
+        <div className="min-w-[9rem]  flex justify-center">
           {isUpdatingTaskStatus ? (
             <span className="text-blue-500 text-sm">Updating...</span>
           ) : (
@@ -529,7 +529,7 @@ export default function Dashboard() {
                   status: val,
                 })
               }
-              dropdownWidth="w-[10rem] 2xl:w-[10vw]"
+              dropdownWidth="w-[10rem] "
             />
           )}
         </div>
@@ -542,7 +542,7 @@ export default function Dashboard() {
         return (
           <div className="flex justify-center">
             <span
-              className={`px-2 2xl:px-[0.5vw] py-1 2xl:py-[0.5vw] text-xs 2xl:text-[0.9vw] font-medium `}
+              className={`px-2  py-1  text-xs  font-medium `}
             >
               {(value as string) || "Medium"}
             </span>
@@ -575,13 +575,13 @@ export default function Dashboard() {
         };
 
         return (
-          <div className="w-[20rem] 2xl:w-[20vw] text-left text-sm 2xl:text-[0.9vw]">
+          <div className="w-[20rem]  text-left text-sm ">
             <div className="text-wrap break-words">
               {displayText}
               {shouldTruncate && (
                 <button
                   onClick={toggleExpanded}
-                  className="text-blue-500 hover:text-blue-700 text-xs 2xl:text-[0.75vw] font-medium underline relative left-1 bottom-[1px] 2xl:bottom-[0.1vw]"
+                  className="text-blue-500 hover:text-blue-700 text-xs  font-medium underline relative left-1 bottom-[1px] "
                 >
                   {isExpanded ? "Read less" : "Read more"}
                 </button>
@@ -732,7 +732,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="p-6 md:p-8 2xl:p-[2vw] bg-[#fafbfc] border 2xl:border-[0.05vw] border-gray-300 rounded-xl 2xl:rounded-[0.75vw] min-h-screen">
+    <div className="p-6 md:p-8  bg-[#fafbfc] border  border-gray-300 rounded-xl  min-h-screen">
       {userRole === "client" ? (
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-2">
@@ -747,15 +747,15 @@ export default function Dashboard() {
         </div>
       ) : (
         <div>
-          <div className="mb-6 2xl:mb-[1.5vw]">
-            <h1 className="text-2xl 2xl:text-[1.5vw] 2xl:leading-[2vw] font-semibold text-gray-900 mb-1 2xl:mb-[0.25vw]">
+          <div className="mb-6 ">
+            <h1 className="text-2xl   font-semibold text-gray-900 mb-1 ">
               Welcome
             </h1>
-            <p className="text-gray-500 text-base 2xl:text-[1vw]">
+            <p className="text-gray-500 text-base ">
               Wishing you a productive and fulfilling day ahead!
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 2xl:gap-[1vw] mb-4 2xl:mb-[1vw]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4  mb-4 ">
             {analyticalCards?.length > 0 &&
               analyticalCards.map((card, idx) => {
                 const title = String(card.title || "");
@@ -791,7 +791,7 @@ export default function Dashboard() {
           </div>
           <div>
             {/* Task Table Component */}
-            <div className="mt-6 2xl:mt-[1.5vw]">
+            <div className="mt-6 ">
               <TaskTable
                 userRole={userRole}
                 tasksLoading={isLoadingTasks}
@@ -816,7 +816,7 @@ export default function Dashboard() {
             </div>
             {userRole.toLocaleLowerCase() === "admin" && (
               <div>
-                <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
+                <div className="flex flex-wrap lg:flex-nowrap gap-6  my-6 ">
                   <div className="w-full lg:w-[30%]">
                     <ProjectSnapshotChart
                       data={projectSnapshotArray}
@@ -827,7 +827,7 @@ export default function Dashboard() {
                     <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
                   </div>
                 </div>
-                <div className="flex flex-wrap lg:flex-nowrap gap-6 2xl:gap-[1.5vw] my-6 2xl:my-[1.5vw]">
+                <div className="flex flex-wrap lg:flex-nowrap gap-6  my-6 ">
                   <div className="w-full lg:w-[50%]">
                     <LeadTypeChart
                       chartDataMap={leadTypeDataMap}

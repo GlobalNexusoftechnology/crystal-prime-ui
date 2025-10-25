@@ -30,50 +30,50 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
   return (
     <>
       <div
-        className={`relative rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] shadow-md ${bgColor}`}
+        className={`relative rounded-lg  p-4  shadow-md ${bgColor}`}
       >
-        <div className="flex justify-between items-start border-b border-gray-400 pb-2 2xl:pb-[0.5vw]">
+        <div className="flex justify-between items-start border-b border-gray-400 pb-2 ">
           <div>
-            <p className="text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] underline text-gray-600">
+            <p className="text-[0.9rem]   underline text-gray-600">
               Project Name
             </p>
-            <h3 className="font-medium break-all text-base 2xl:text-[1.1vw] 2xl:leading-[1.5vw]">
+            <h3 className="font-medium break-all text-base  ">
               {project.data.name}
             </h3>
           </div>
         </div>
-        <div className="flex border-b border-gray-400 flex-nowwrap h-[5rem] 2xl:h-[5vw] overflow-hidden gap-2 2xl:gap-[0.5vw] justify-between items-center text-[0.9rem] 2xl:text-[0.875vw] 2xl:leading-[1.2vw]">
-          <div className="py-2 2xl:py-[0.5vw] w-[45%]">
-            <p className="text-gray-600 2xl:text-[1vw] 2xl:leading-[1.4vw]">
+        <div className="flex border-b border-gray-400 flex-nowwrap h-[5rem]  overflow-hidden gap-2  justify-between items-center text-[0.9rem]  ">
+          <div className="py-2  w-[45%]">
+            <p className="text-gray-600  ">
               Client Name
             </p>
             <Link
               href="#"
-              className="font-medium underline 2xl:text-[1vw] 2xl:leading-[1.4vw]"
+              className="font-medium underline  "
             >
               {project?.data?.client?.name || "Unknown Client"}
             </Link>
           </div>
-          <div className="w-[1px] 2xl:w-[0.1vw] h-[10rem] 2xl:h-[10vw] bg-gray-400" />
-          <div className="text-left py-2 2xl:py-[0.5vw]">
-            <p className="text-gray-600 2xl:text-[1vw] underline 2xl:leading-[1.4vw]">
+          <div className="w-[1px]  h-[10rem]  bg-gray-400" />
+          <div className="text-left py-2 ">
+            <p className="text-gray-600  underline ">
               {project.data.status === "completed" ||
               project.data.status === "Completed"
                 ? "Actual End Date"
                 : "Expected End Date"}
             </p>
-            <p className="font-semibold 2xl:text-[1vw] 2xl:leading-[1.4vw]">
+            <p className="font-semibold  ">
               {formatDate(project.data.end_date?.toString() ?? "")}
             </p>
           </div>
         </div>
 
-        <div className="mt-2 2xl:mt-[0.5vw] text-[0.9rem] 2xl:text-[0.875vw]">
+        <div className="mt-2  text-[0.9rem] ">
           <div className="flex justify-between">
-            <p className="text-gray-600 2xl:text-[1vw] underline 2xl:leading-[1.4vw]">
+            <p className="text-gray-600  underline ">
               Project status
             </p>
-            <p className="text-right 2xl:text-[1vw] 2xl:leading-[1.4vw]">
+            <p className="text-right  ">
               {(() => {
                 const allMilestones = project.data.milestones || [];
                 const milestones = allMilestones.filter((m) => {
@@ -91,7 +91,7 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
               })()}
             </p>
           </div>
-          <div className="w-full h-1.5 2xl:h-[0.375vw] bg-white rounded-md overflow-hidden my-1 2xl:my-[0.25vw]">
+          <div className="w-full h-1.5  bg-white rounded-md overflow-hidden my-1">
             <div
               className="h-full bg-blue-900"
               style={{
@@ -117,7 +117,7 @@ export const ProjectCard: React.FC<Props> = ({ project, bgColor }) => {
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap gap-2 2xl:gap-[0.5vw] mt-4 2xl:mt-[1vw]">
+        <div className="flex flex-wrap gap-2  mt-4 ">
           <Button
             title="Generate Ticket"
             variant="primary"

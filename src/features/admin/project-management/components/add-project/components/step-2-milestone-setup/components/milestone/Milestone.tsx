@@ -82,7 +82,7 @@ export function Milestone({
       {editingId === milestone.id && editMilestone ? (
         <>
           <td></td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 ">
             <InputField
               value={editMilestone.name}
               onChange={(e) =>
@@ -91,7 +91,7 @@ export function Milestone({
               error={errors?.name}
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 ">
             <InputField
               value={editMilestone.description}
               onChange={(e) =>
@@ -101,7 +101,7 @@ export function Milestone({
               error={errors?.description}
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 ">
             <Dropdown
               options={userOptions}
               value={editMilestone.assigned_to || ""}
@@ -111,12 +111,12 @@ export function Milestone({
               error={errors?.assigned_to}
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
-            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs 2xl:text-[0.9vw] font-semibold w-fit">
+          <td className="p-2 ">
+            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs  font-semibold w-fit">
               {milestone.status}
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 ">
             <DatePicker
               value={sanitizeDateForPicker(editMilestone.start_date)}
               onChange={(val) =>
@@ -127,7 +127,7 @@ export function Milestone({
               maxDate={projectEndDate}
             />
           </td>
-          <td className="p-2 2xl:p-[0.5vw]">
+          <td className="p-2 ">
             <DatePicker
               value={sanitizeDateForPicker(editMilestone.end_date)}
               onChange={(val) => onChange({ ...editMilestone, end_date: val })}
@@ -136,18 +136,18 @@ export function Milestone({
               maxDate={projectEndDate}
             />
           </td>
-          <td className="px-2 2xl:px-[0.5vw] py-4 2xl:py-[1vw] text-left flex gap-2 2xl:gap-[0.5vw]">
+          <td className="px-2  py-4  text-left flex gap-2 ">
             <button onClick={onSave} className="text-green-600" title="Save">
-              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+              <HiCheck className="w-6  h-6 " />
             </button>
             <button onClick={onCancel} className="text-red-600" title="Cancel">
-              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+              <HiXMark className="w-6  h-6 " />
             </button>
           </td>
         </>
       ) : (
         <>
-          <td className="p-2 2xl:p-[0.5vw] text-left relative bg-gray-200">
+          <td className="p-2  text-left relative bg-gray-200">
             <button
               className="text-gray-400 hover:text-blue-600"
               title="Menu"
@@ -156,21 +156,21 @@ export function Milestone({
                 setMenuOpen(menuOpen === milestone.id ? null : milestone.id)
               }
             >
-              <HiOutlineDotsVertical className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+              <HiOutlineDotsVertical className="w-6  h-6 " />
             </button>
             {menuOpen === milestone.id && (
               <div
                 ref={menuRef}
-                className="absolute left-[80%] bottom-[10%] mt-2 2xl:mt-[0.5vw] bg-white border rounded 2xl:rounded-[0.25vw] shadow z-10 min-w-[100px]"
+                className="absolute left-[80%] bottom-[10%] mt-2  bg-white border rounded  shadow z-10 min-w-[100px]"
               >
                 <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100"
+                  className="block w-full text-left px-4  py-2  hover:bg-gray-100"
                   onClick={() => onEdit(milestone)}
                 >
                   Edit
                 </button>
                 <button
-                  className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] hover:bg-gray-100 text-red-600"
+                  className="block w-full text-left px-4  py-2  hover:bg-gray-100 text-red-600"
                   onClick={() => onDelete(milestone.id)}
                 >
                   Delete
@@ -178,8 +178,8 @@ export function Milestone({
               </div>
             )}
           </td>
-          <td className="p-2 2xl:p-[0.5vw] bg-gray-200">
-            <div className="flex items-center gap-4 2xl:gap-[1vw]">
+          <td className="p-2  bg-gray-200">
+            <div className="flex items-center gap-4 ">
               <button
                 onClick={() => onToggle(milestone.id)}
                 className="focus:outline-none"
@@ -187,31 +187,31 @@ export function Milestone({
                 type="button"
               >
                 {expanded ? (
-                  <HiChevronUp className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
+                  <HiChevronUp className="w-4  h-4 " />
                 ) : (
-                  <HiChevronDown className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
+                  <HiChevronDown className="w-4  h-4 " />
                 )}
               </button>
-              <div className="flex items-center gap-4 2xl-gap-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
-                <span className="text-[0.9rem] 2xl:text-[0.9vw]">
+              <div className="flex items-center gap-4 2xl-gap-[1vw] min-w-[10rem] ">
+                <span className="text-[0.9rem] ">
                   {milestone.name}
                 </span>
-                <div className="flex items-center gap-1 2xl:gap-[0.25vw]">
-                  <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
-                  <p className="border-2 2xl:border-[0.05vw] border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-2 2xl:px-[0.5vw] py-0 2xl:py-[0.4vw] text-primary">
+                <div className="flex items-center gap-1 ">
+                  <TreeStructureIcon className="w-4  h-4 " />
+                  <p className="border-2  border-dotted border-primary rounded-full text-xs  px-2  py-0  text-primary">
                     {milestone.tasks.length}
                   </p>
                 </div>
               </div>
             </div>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] min-w-[10rem] 2xl:min-w-[10vw] bg-gray-200">
+          <td className="p-2  text-[0.9rem]  min-w-[10rem]  bg-gray-200">
             <span className="text-gray-600">
               {milestone.description || "No description"}
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] min-w-[14rem] 2xl:min-w-[14vw] bg-gray-200">
-            <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+          <td className="p-2  text-[0.9rem]  min-w-[14rem]  bg-gray-200">
+            <div className="flex items-center gap-2 ">
               {milestone.assigned_to ? (
                 (() => {
                   const user = userOptions.find(
@@ -221,39 +221,39 @@ export function Milestone({
                   return (
                     <>
                       <p
-                        className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
+                        className="flex items-center justify-center p-2  w-10  h-10  text-white text-[0.9rem]  rounded-full"
                         style={{ backgroundColor: getRandomColor(fullName) }}
                       >
                         {getInitials(fullName)}
                       </p>
-                      <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
+                      <p className="px-3  py-1  text-[0.9rem] ">
                         {fullName || milestone.assigned_to || "---"}
                       </p>
                     </>
                   );
                 })()
               ) : (
-                <p className="text-[0.9rem] 2xl:text-[0.9vw]">---</p>
+                <p className="text-[0.9rem] ">---</p>
               )}
             </div>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw] bg-gray-200">
-            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold">
+          <td className="p-2  min-w-[10rem]  bg-gray-200">
+            <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-[0.9rem]  font-semibold">
               {milestone.status}
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw] bg-gray-200">
-            <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
-              <span className="text-[0.9rem] 2xl:text-[0.9vw]">
+          <td className="p-2  min-w-[12rem]  bg-gray-200">
+            <span className="flex items-center gap-2 ">
+              <span className="text-[0.9rem] ">
                 {milestone.start_date
                   ? formatDateToDDMMYYYY(milestone.start_date)
                   : "---"}
               </span>
             </span>
           </td>
-          <td className="p-2 2xl:p-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw] bg-gray-200">
-            <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
-              <span className="text-[0.9rem] 2xl:text-[0.9vw]">
+          <td className="p-2  min-w-[10rem]  bg-gray-200">
+            <span className="flex items-center gap-2 ">
+              <span className="text-[0.9rem] ">
                 {milestone.end_date
                   ? formatDateToDDMMYYYY(milestone.end_date)
                   : "---"}

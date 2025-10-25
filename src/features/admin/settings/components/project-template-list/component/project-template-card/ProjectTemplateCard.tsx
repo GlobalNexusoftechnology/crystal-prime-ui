@@ -87,11 +87,11 @@ export function ProjectTemplateCard({
   return (
     <div
       onClick={handleClickOnView}
-      className=" flex flex-col bg-[#BAD8FD] p-[1.5rem] 2xl:p-[1.5vw] rounded-2xl 2xl:rounded-[1vw] w-full md:w-[52vw] lg:w-[38vw] xl:w-[26vw] shadow-md relative"
+      className=" flex flex-col bg-[#BAD8FD] p-[1.5rem]  rounded-2xl  w-full md:w-[52vw] lg:w-[38vw] xl:w-[26vw] shadow-md relative"
     >
       {/* More options */}
       <div
-        className="absolute top-4 2xl:top-[1vw] right-4 2xl:right-[1vw] z-10"
+        className="absolute top-4  right-4  z-10"
         onClick={(e) => e.stopPropagation()}
       >
         <ActionDropdown
@@ -112,32 +112,32 @@ export function ProjectTemplateCard({
         />
       </div>
 
-      <div className="flex flex-col gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw]">
+      <div className="flex flex-col gap-2  pb-2 ">
         {/* Template Name */}
-        <p className="text-[0.9rem] 2xl:text-[0.9vw] text-black ">
+        <p className="text-[0.9rem]  text-black ">
           Template Name
         </p>
-        <h2 className="text-[1rem] 2xl:text-[1vw] text-black ">
+        <h2 className="text-[1rem]  text-black ">
           {templateName}
         </h2>
       </div>
 
       {/* Milestone & Tasks */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-[1.5vw] border-y border-gray-400">
-        <div className="flex items-center gap-2 2xl:gap-[0.5vw] py-2 2xl:py-[0.5vw]">
-          <div className="h-5 w-5 2xl:h-[1.5vw] 2xl:w-[1.5vw]">
+        <div className="flex items-center gap-2  py-2 ">
+          <div className="h-5 w-5  ">
             <TbTargetArrow className="h-full w-full text-gray-600" />
           </div>
-          <p className="text-[1rem] 2xl:text-[1vw] text-black">
+          <p className="text-[1rem]  text-black">
             {milestoneCount} Milestone
           </p>
         </div>
         <div className="w-[1px] h-full bg-gray-400"></div>
-        <div className="flex items-center gap-2 2xl:gap-[0.5vw] py-2 2xl:py-[0.5vw]">
-          <div className="h-5 w-5 2xl:h-[1.5vw] 2xl:w-[1.5vw]">
+        <div className="flex items-center gap-2  py-2 ">
+          <div className="h-5 w-5  ">
             <ToDoListIcon className="h-full w-full" />
           </div>
-          <p className="text-[1rem] 2xl:text-[1vw] text-black">
+          <p className="text-[1rem]  text-black">
             {taskCount} Tasks
           </p>
         </div>
@@ -145,22 +145,22 @@ export function ProjectTemplateCard({
 
       {/* Bottom Info */}
       <div className="flex sm:justify-between flex-col gap-3 sm:flex-row sm:items-center border-b border-gray-400">
-        <div className="flex flex-col gap-2 2xl:gap-[0.5vw] py-2 2xl:py-[0.5vw]">
-          <p className="text-[0.9rem] 2xl:text-[0.9vw] text-black">
+        <div className="flex flex-col gap-2  py-2 ">
+          <p className="text-[0.9rem]  text-black">
             Estimated Days
           </p>
-          <p className="text-[1rem] 2xl:text-[1vw] underline text-black">
+          <p className="text-[1rem]  underline text-black">
             {estimatedDays} Days
           </p>
         </div>
         <div className="w-[1px] h-full bg-gray-400"></div>
-        <div className="flex flex-col gap-2 2xl:gap-[0.5vw] py-2 2xl:py-[0.5vw]">
-          <p className="text-[0.9rem] 2xl:text-[0.9vw] text-black">
+        <div className="flex flex-col gap-2  py-2 ">
+          <p className="text-[0.9rem]  text-black">
             Project Type
           </p>
           <Link
             href="#"
-            className="text-[1rem] 2xl:text-[1vw] underline text-black"
+            className="text-[1rem]  underline text-black"
           >
             {projectTypeName}
           </Link>

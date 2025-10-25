@@ -23,14 +23,14 @@ export function CommentTabs({
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <div className="flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:px-[1vw]">
+    <div className="flex flex-col gap-8  p-4 ">
       {/* Tabs */}
-      <div className="flex flex-wrap gap-8 2xl:gap-[2vw] items-center">
-        <div className="flex gap-8 2xl:gap-[2vw]">
+      <div className="flex flex-wrap gap-8  items-center">
+        <div className="flex gap-8 ">
           {tabs?.length > 0 && tabs?.map((tab) => (
             <button
               key={tab}
-              className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${
+              className={`  font-medium text-[1.2rem]  ${
                 activeTab === tab ? "" : "text-gray-500"
               }`}
               onClick={() => {
@@ -44,7 +44,7 @@ export function CommentTabs({
         </div>
         <div
           onClick={() => setShowForm((prev) => !prev)}
-          className="flex items-center gap-2 2xl:gap-[0.5vw] text-primary text-[1rem] 2xl:text-[1vw] cursor-pointer"
+          className="flex items-center gap-2  text-primary text-[1rem]  cursor-pointer"
         >
           <span>
             {showForm ? (

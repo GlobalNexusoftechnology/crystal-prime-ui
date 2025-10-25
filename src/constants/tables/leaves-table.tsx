@@ -135,48 +135,48 @@ export const leavesListColumn: ITableColumn<
   {
     header: "STATUS",
     accessor: "status",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
     cell: ({ row }) => <StatusCell row={row} />,
   },
 
   {
     header: "EMPLOYEE ID",
     accessor: "employee_id",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "STAFF NAME",
     accessor: "staff_name",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "REASON LEAVE",
     accessor: "description",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "LEAVE TYPE",
     accessor: "leaveType",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "FROM DATE",
     accessor: "fromDate",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "TO DATE",
     accessor: "toDate",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "LEAVE DAYS",
     accessor: "leaveDays",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "APPLIED DATE",
     accessor: "appliedDate",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
 ];

@@ -18,54 +18,54 @@ export const clientListColumn = [
   {
     header: "CUSTOMER NAME",
     accessor: "name",
-    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClass: "min-w-[10rem] ",
   },
   {
     header: "COMPANY NAME",
     accessor: "company_name",
-    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClass: "min-w-[10rem] ",
   },
   {
     header: "CONTACT PERSON",
     accessor: "contact_person",
-    headerClass: "min-w-[12rem] 2xl:min-w-[12vw]",
+    headerClass: "min-w-[12rem] ",
   },
   {
     header: "PHONE NUMBER",
     accessor: "contact_number",
-    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClass: "min-w-[10rem] ",
   },
   {
     header: "CONTACT EMAIL",
     accessor: "email",
-    headerClass: "min-w-[15rem] 2xl:min-w-[15vw]",
+    headerClass: "min-w-[15rem] ",
   },
   {
     header: "GST NUMBER",
     accessor: "gst_number",
-    headerClass: "min-w-[12rem] 2xl:min-w-[12vw]",
+    headerClass: "min-w-[12rem] ",
   },
   {
     header: "WEBSITE URL",
     accessor: "website",
-    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClass: "min-w-[10rem] ",
   },
   {
     header: "ADDRESS",
     accessor: "address",
-    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClass: "min-w-[10rem] ",
   },
   {
     header: "CREATED AT",
     accessor: "created_at",
-    headerClass: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClass: "min-w-[10rem] ",
   },
 ];
 
 export const clientContactDetailsColumns = [
-  { header: "CONTACT NAME", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
-  { header: "DESIGNATION", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
-  { header: "CONTACT NUMBER", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
-  { header: "OTHER CONTACT", headerClass: "min-w-[10rem] 2xl:min-w-[10vw]" },
-  { header: "EMAIL", headerClass: "min-w-[15rem] 2xl:min-w-[15vw]" },
+  { header: "CONTACT NAME", headerClass: "min-w-[10rem] " },
+  { header: "DESIGNATION", headerClass: "min-w-[10rem] " },
+  { header: "CONTACT NUMBER", headerClass: "min-w-[10rem] " },
+  { header: "OTHER CONTACT", headerClass: "min-w-[10rem] " },
+  { header: "EMAIL", headerClass: "min-w-[15rem] " },
 ];

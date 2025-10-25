@@ -54,17 +54,17 @@ export function AllOpenTickets({ isOpen, onClose }: AllOpenTicketsProps) {
       isOpen={isOpen}
       onClose={onClose}
       modalTitle="All Open Tickets"
-      modalClassName="w-full md:w-[500px] 2xl:w-[30vw] max-w-[500px]"
+      modalClassName="w-full md:w-[500px] max-w-[500px]"
       position="right"
     >
-      <div className="flex flex-col gap-4 2xl:gap-[1vw] h-full">
+      <div className="flex flex-col gap-4  h-full">
         {/* Header */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 2xl:gap-[1vw]">
-            <h3 className="text-lg 2xl:text-[1.2vw] font-semibold text-[#1D2939]">
+          <div className="flex items-center gap-4 ">
+            <h3 className="text-lg  font-semibold text-[#1D2939]">
               Open Tickets
             </h3>
-            <span className="text-sm 2xl:text-[0.9vw] text-gray-500">
+            <span className="text-sm  text-gray-500">
               ({openTickets.length} tickets)
             </span>
           </div>
@@ -80,40 +80,40 @@ export function AllOpenTickets({ isOpen, onClose }: AllOpenTicketsProps) {
             </div>
           ) : error ? (
             <div className="text-center py-8">
-              <p className="text-red-600 mb-4 2xl:text-[1.1vw]">
+              <p className="text-red-600 mb-4 ">
                 Failed to load tickets. Please try again.
               </p>
             </div>
           ) : openTickets.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-500 mb-4 2xl:text-[1.1vw]">
+              <p className="text-gray-500 mb-4 ">
                 No open tickets found across all projects.
               </p>
             </div>
           ) : (
-            <div className="space-y-4 2xl:space-y-[1vw] max-h-[60vh] overflow-y-auto">
+            <div className="space-y-4  max-h-[60vh] overflow-y-auto">
               {openTickets.map((ticket: ITicketData) => (
                 <div
                   key={ticket.id}
-                  className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
+                  className="flex flex-col gap-4  bg-customGray border  border-grey-300 rounded-xl  p-4  text-[0.9rem]  text-[#1D2939] w-full"
                 >
                   {/* Header with title and project info */}
-                  <div className="flex flex-wrap justify-between items-start gap-4 2xl:gap-[1vw]">
+                  <div className="flex flex-wrap justify-between items-start gap-4 ">
                     <div className="flex-1">
-                      <h4 className="font-semibold text-[1rem] 2xl:text-[1.1vw] text-[#1D2939] mb-2 2xl:mb-[0.5vw]">
+                      <h4 className="font-semibold text-[1rem]  text-[#1D2939] mb-2 ">
                         {ticket.title}
                       </h4>
-                      <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
+                      <div className="flex flex-wrap gap-4  mb-2  font-medium text-[#1D2939]">
                         <span>
-                          <span className="2xl:text-[1.1vw] font-normal">Priority: </span>
-                          <span className={`underline 2xl:text-[1.1vw] ${getPriorityColor(ticket.priority)}`}>
+                          <span className=" font-normal">Priority: </span>
+                          <span className={`underline  ${getPriorityColor(ticket.priority)}`}>
                             {ticket.priority}
                           </span>
                         </span>
                         {ticket.project && (
                           <span>
-                            <span className="2xl:text-[1.1vw] font-normal">Project: </span>
-                            <span className="underline 2xl:text-[1.1vw] text-blue-600">
+                            <span className=" font-normal">Project: </span>
+                            <span className="underline  text-blue-600">
                               {ticket.project.name}
                             </span>
                           </span>
@@ -123,13 +123,13 @@ export function AllOpenTickets({ isOpen, onClose }: AllOpenTicketsProps) {
                   </div>
 
                   {/* Description */}
-                  <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw]">
+                  <p className=" mb-2 ">
                     {ticket.description || 'No description provided'}
                   </p>
 
                   {/* Remark */}
                   {/* {ticket.remark && (
-                    <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw] text-gray-600">
+                    <p className=" mb-2  text-gray-600">
                       <span className="font-medium">Remark: </span>
                       {ticket.remark}
                     </p>
@@ -137,7 +137,7 @@ export function AllOpenTickets({ isOpen, onClose }: AllOpenTicketsProps) {
 
                   {/* Image */}
                   {ticket.image_url && (
-                    <div className="mb-2 2xl:mb-[0.5vw]">
+                    <div className="mb-2 ">
                       <Image
                         src={ticket.image_url}
                         alt="Ticket attachment"
@@ -150,11 +150,11 @@ export function AllOpenTickets({ isOpen, onClose }: AllOpenTicketsProps) {
                   )}
 
                   {/* Footer with dates */}
-                  <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw] font-medium">
-                    <p className="2xl:text-[1.1vw] underline">
+                  <div className="flex flex-wrap items-center gap-4  font-medium">
+                    <p className=" underline">
                       Created: {formatDate(ticket.created_at)}
                     </p>
-                    <p className="text-lightGreen 2xl:text-[1.1vw]">
+                    <p className="text-lightGreen ">
                       Updated: {formatDate(ticket.updated_at)}
                     </p>
                   </div>

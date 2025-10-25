@@ -18,52 +18,52 @@ export function ProjectInfo({ projectInfoData }: ProjectInfoProps) {
   };
 
   return (
-    <div className="border-b border-gray-400 2xl:border-[0.05vw] p-4 2xl:p-[1vw]">
-      <h3 className="text-[1.2rem] font-medium 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">
+    <div className="border-b border-gray-400  p-4 ">
+      <h3 className="text-[1.2rem] font-medium  mb-4 ">
         Project Info
       </h3>
-      <div className="flex flex-wrap gap-4 2xl:gap-[1vw] text-[0.9rem] 2xl:text-[0.875vw]">
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-          <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">
+      <div className="flex flex-wrap gap-4  text-[0.9rem] ">
+        <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+          <p className="font-light text-[0.9rem]  mb-2 ">
             Project Name
           </p>
-          <p className="underline break-words text-[1rem] 2xl:text-[1.1vw]">
+          <p className="underline break-words text-[1rem] ">
             {projectInfoData.name}
           </p>
         </div>
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-          <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">
+        <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+          <p className="font-light text-[0.9rem]  mb-2 ">
             Type Of Project
           </p>
-          <p className="break-words text-[1rem] 2xl:text-[1.1vw]">
+          <p className="break-words text-[1rem] ">
             {typesLoading
               ? "Loading..."
               : getProjectTypeName(projectInfoData.project_type)}
           </p>
         </div>
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-          <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">
+        <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+          <p className="font-light text-[0.9rem]  mb-2 ">
             Contact Person
           </p>
-          <p className="underline break-words text-[1rem] 2xl:text-[1.1vw]">
+          <p className="underline break-words text-[1rem] ">
             {projectInfoData.contact_person}
           </p>
         </div>
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] w-full">
-          <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">Description</p>
-          <p className="break-words text-[1rem] 2xl:text-[1.1vw]">
+        <div className="border border-gray-300  rounded-lg  p-4  w-full">
+          <p className="font-light text-[0.9rem]  mb-2 ">Description</p>
+          <p className="break-words text-[1rem] ">
             {projectInfoData.description}
           </p>
         </div>
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-          <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">Created At</p>
-          <p className="break-words text-[1rem] 2xl:text-[1.1vw]">
+        <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+          <p className="font-light text-[0.9rem]  mb-2 ">Created At</p>
+          <p className="break-words text-[1rem] ">
             {projectInfoData.created_at}
           </p>
         </div>
-        <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-          <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">Updated At</p>
-          <p className="break-words text-[1rem] 2xl:text-[1.1vw]">
+        <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+          <p className="font-light text-[0.9rem]  mb-2 ">Updated At</p>
+          <p className="break-words text-[1rem] ">
             {projectInfoData.updated_at}
           </p>
         </div>

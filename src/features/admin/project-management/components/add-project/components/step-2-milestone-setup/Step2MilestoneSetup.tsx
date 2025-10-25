@@ -884,10 +884,10 @@ export function Step2MilestoneSetup({
   };
 
   return (
-    <div className="flex flex-col gap-6 2xl:gap-[2vw]">
+    <div className="flex flex-col gap-6 ">
       {/* Project Template Dropdown */}
       {isTemplateSelected && (
-        <div className="mb-4 2xl:mb-[1vw]">
+        <div className="mb-4 ">
           <Dropdown
             label="Project Template"
             options={
@@ -907,14 +907,14 @@ export function Step2MilestoneSetup({
         </div>
       )}
       {/* Milestone Table */}
-      <div className="mb-4 2xl:mb-[1vw]">
-        <h1 className="text-[1.2rem] 2xl:text-[1.2vw]">Milestone</h1>
-        <div className="overflow-x-auto border mt-4 2xl:mt-[0.5vw] border-gray-300 rounded-lg 2xl:rounded-[0.75vw]">
-          <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
+      <div className="mb-4 ">
+        <h1 className="text-[1.2rem] ">Milestone</h1>
+        <div className="overflow-x-auto border mt-4  border-gray-300 rounded-lg ">
+          <table className="border-separate border-spacing-y-2">
             <thead>
-              <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
-                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+              <tr className="text-gray-500 text-[0.9rem] ">
+                <th className="px-2 py-2  "></th>
+                <th className="text-left p-2  flex items-center gap-4  min-w-[20rem] ">
                   <span>Milestone Name</span>
                   <button
                     className="text-purple-500 hover:text-purple-700 text-lg"
@@ -922,22 +922,22 @@ export function Step2MilestoneSetup({
                     type="button"
                     onClick={handleAddMilestone}
                   >
-                    <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                    <AddSquareIcon className="w-6 h-6  " />
                   </button>
                 </th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                <th className="text-left  px-2 py-2   min-w-[15rem] ">
                   Description
                 </th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">
+                <th className="text-left  px-2 py-2   min-w-[14rem] ">
                   Assigned To
                 </th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                <th className="text-left  px-2 py-2   min-w-[10rem] ">
                   Status
                 </th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[10vw]">
+                <th className="text-left  px-2 py-2   min-w-[12rem] ">
                   Estimated Start Date
                 </th>
-                <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                <th className="text-left  px-2 py-2   min-w-[10rem] ">
                   Estimated End Date
                 </th>
                 <th></th>
@@ -969,13 +969,13 @@ export function Step2MilestoneSetup({
                     {(expandedMilestones.includes(milestone.id) ||
                       editingId === milestone.id) &&
                       milestone.name !== "Support" && (
-                      <tr className="bg-gray-50 2xl:bg-gray-100">
+                      <tr className="bg-gray-50 ">
                         <td colSpan={7} className="p-0">
                           <table className="w-fit">
                             <thead>
-                              <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
-                                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                                <th className="px-8 2xl:px-[2vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                              <tr className="text-gray-500 text-[0.9rem] ">
+                                <th className="px-2 py-2  "></th>
+                                <th className="px-8  pl-32  py-2  text-left flex items-center gap-4  min-w-[20rem] ">
                                   <span>Task Name</span>
                                   <button
                                     className="text-purple-500 hover:text-purple-700 text-lg"
@@ -983,19 +983,19 @@ export function Step2MilestoneSetup({
                                     type="button"
                                     onClick={() => handleAddTask(milestone.id)}
                                   >
-                                    <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                                    <AddSquareIcon className="w-6 h-6  " />
                                   </button>
                                 </th>
-                                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                <th className="px-2 py-2   text-left  min-w-[15rem] ">
                                   Description
                                 </th>
-                                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[14rem] 2xl:min-w-[14vw]">
+                                <th className="px-2 py-2   text-left  min-w-[14rem] ">
                                   Assigned To
                                 </th>
-                                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                <th className="px-2 py-2   text-left  min-w-[10rem] ">
                                   Status
                                 </th>
-                                <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                <th className="px-2 py-2   text-left  min-w-[10rem] ">
                                   Due Date
                                 </th>
                                 <th></th>
@@ -1039,7 +1039,7 @@ export function Step2MilestoneSetup({
                                 <tr>
                                   <td
                                     colSpan={7}
-                                    className="px-2 py-4 2xl:px-[0.5vw] 2xl:py-[1vw] text-center text-gray-500"
+                                    className="px-2 py-4   text-center text-gray-500"
                                   >
                                     No tasks added yet. Click the + button to
                                     add a task.
@@ -1058,34 +1058,34 @@ export function Step2MilestoneSetup({
                       milestone.name === "Support" &&
                       milestone.tickets &&
                       milestone.tickets.length > 0 && (
-                        <tr className="bg-gray-50 2xl:bg-gray-100">
+                        <tr className="bg-gray-50 ">
                           <td colSpan={7} className="p-0">
                             <table className="w-fit">
                               <thead>
-                                <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                                  <th className="px-8 2xl:px-[2vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-center flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                <tr className="text-gray-500 text-[0.9rem] ">
+                                  <th className="px-2 py-2  "></th>
+                                  <th className="px-8  pl-32  py-2  text-center flex items-center gap-4  min-w-[20rem] ">
                                     <span>Ticket Title</span>
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                  <th className="px-2 py-2   text-center  min-w-[20rem] ">
                                     Description
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                  <th className="px-2 py-2   text-center  min-w-[15rem] ">
                                     Assigned To
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                  <th className="px-2 py-2   text-center  min-w-[10rem] ">
                                     Status
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                  <th className="px-2 py-2   text-center  min-w-[10rem] ">
                                     Priority
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                  <th className="px-2 py-2   text-center  min-w-[15rem] ">
                                     Remark
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                  <th className="px-2 py-2   text-center  min-w-[8rem] ">
                                     Image
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                  <th className="px-2 py-2   text-center  min-w-[10rem] ">
                                     Created Date
                                   </th>
                                 </tr>
@@ -1096,26 +1096,26 @@ export function Step2MilestoneSetup({
                                     key={ticket.id}
                                     className="hover:bg-blue-50 transition-colors duration-150"
                                   >
-                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></td>
-                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                    <td className="px-2 py-2  "></td>
+                                    <td className="px-2 py-2   text-center">
                                       {ticket.title}
                                     </td>
-                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                    <td className="px-2 py-2   text-center">
                                       {ticket.description}
                                     </td>
-                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                    <td className="px-2 py-2   text-center">
                                       {ticket.assigned_to || "None"}
                                     </td>
-                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                    <td className="px-2 py-2   text-center">
                                       {ticket.status}
                                     </td>
-                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                    <td className="px-2 py-2   text-center">
                                       {ticket.priority}
                                     </td>
-                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                    <td className="px-2 py-2   text-center">
                                       {ticket.remark}
                                     </td>
-                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                    <td className="px-2 py-2   text-center">
                                       {ticket.image_url ? (
                                         <div className="flex justify-center">
                                           <Image
@@ -1123,16 +1123,16 @@ export function Step2MilestoneSetup({
                                             alt="Ticket attachment"
                                             width={60}
                                             height={60}
-                                            className="w-15 2xl:w-[3vw] h-15 2xl:h-[3vw] object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
+                                            className="w-15  h-15  object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
                                           />
                                         </div>
                                       ) : (
-                                        <span className="text-gray-400 text-sm 2xl:text-[0.9vw]">
+                                        <span className="text-gray-400 text-sm ">
                                           No image
                                         </span>
                                       )}
                                     </td>
-                                    <td className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center">
+                                    <td className="px-2 py-2   text-center">
                                       {ticket.created_at
                                         ? new Date(
                                             ticket.created_at
@@ -1153,17 +1153,17 @@ export function Step2MilestoneSetup({
         </div>
       </div>
       {/* Action Buttons */}
-      <div className="flex justify-start items-center mt-6 2xl:mt-[1.5vw] gap-4 2xl:gap-[1vw]">
+      <div className="flex justify-start items-center mt-6  gap-4 ">
         <Button
           title="Back"
           variant="primary-outline"
           onClick={onBack}
-          width="w-full md:w-[10rem] 2xl:w-[10vw]"
+          width="w-full md:w-[10rem] "
         />
         <Button
           title="Next"
           onClick={handleNext}
-          width="w-full md:w-[10rem] 2xl:w-[10vw]"
+          width="w-full md:w-[10rem] "
         />
       </div>
     </div>

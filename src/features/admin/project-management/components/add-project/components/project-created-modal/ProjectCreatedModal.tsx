@@ -39,7 +39,7 @@ export function ProjectCreatedModal({
       isOpen={isOpen}
       modalTitle="Back To Projects"
     >
-      <div className="w-full max-w-lg 2xl:max-w-[32vw] text-center flex flex-col items-center gap-6">
+      <div className="w-full max-w-lg  text-center flex flex-col items-center gap-6">
         <div className="flex flex-col gap-6 bg-white rounded-lg border border-gray-300 p-8 ">
           <div>
             <Image
@@ -50,7 +50,7 @@ export function ProjectCreatedModal({
               className="w-full h-full"
             />
           </div>
-          <p className="text-lg 2xl:[1.2vw] text-gray-600">
+          <p className="text-lg text-gray-600">
             Project {mode === "edit" ? "updated" : "created"} successfully. View it in project management.
           </p>
         </div>
@@ -59,12 +59,12 @@ export function ProjectCreatedModal({
             title="Cancel"
             variant="primary-outline"
             onClick={onClose}
-            width="w-full md:w-[10rem] 2xl:w-[10vw]"
+            width="w-full md:w-[10rem] "
           />
           <Button
             title="View Project"
             onClick={handleViewProject}
-            width="w-full md:w-[10rem] 2xl:w-[10vw]"
+            width="w-full md:w-[10rem] "
           />
         </div>
       </div>

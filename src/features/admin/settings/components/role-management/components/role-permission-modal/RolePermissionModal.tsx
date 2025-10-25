@@ -153,15 +153,15 @@ export function RolePermissionModal({
   }
 
   return (
-    <ModalOverlay modalTitle="Back to Roles" isOpen={true} onClose={onClose} modalClassName="2xl:w-[40vw]">
+    <ModalOverlay modalTitle="Back to Roles" isOpen={true} onClose={onClose} modalClassName="">
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         <div className="bg-white rounded-lg p-4 border border-gray-200">
-          <h2 className="text-[1rem] 2xl:text-[1vw] font-semibold mb-4 text-gray-800">
+          <h2 className="text-[1rem]  font-semibold mb-4 text-gray-800">
             {isEditMode ? "Edit Role" : "Add Role"}
           </h2>
 
           <div className="mb-6">
-            <label className="block text-[1rem] 2xl:text-[1vw] font-medium mb-1 text-gray-700">
+            <label className="block text-[1rem]  font-medium mb-1 text-gray-700">
               Role Name
             </label>
             <InputField
@@ -174,14 +174,14 @@ export function RolePermissionModal({
           </div>
 
           {permissionError && (
-            <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] 2xl:mt-[0.25vw] mt-1">
+            <p className="text-red-500 text-[0.9rem]   mt-1">
               {permissionError}
             </p>
           )}
 
           {MODULES?.map((mod: TOptionItem, idx) => (
             <div key={mod.value} className="mb-4">
-              <div className="flex items-start mb-2 text-[1rem] 2xl:text-[1vw]">
+              <div className="flex items-start mb-2 text-[1rem] ">
                 <span className="font-medium text-gray-800">
                   {idx + 1}. {mod.label}
                 </span>

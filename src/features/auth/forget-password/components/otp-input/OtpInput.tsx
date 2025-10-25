@@ -50,7 +50,7 @@ export function OtpInput({ value, onChange }: OtpInputProps) {
 
   return (
     <div className="flex flex-col gap-2">
-      <h1 className="text-[1rem] 2xl:text-[1vw]">
+      <h1 className="text-[1rem] ">
         Enter OTP
       </h1>
       <div className="flex gap-2 justify-start">
@@ -63,7 +63,7 @@ export function OtpInput({ value, onChange }: OtpInputProps) {
             value={value[index] || ""}
             onChange={(e) => handleChange(index, e)}
             onKeyDown={(e) => handleKeyDown(index, e)}
-            className="h-8 w-8 md:w-10 md:h-10 2xl:h-[3vw] 2xl:w-[3vw] border rounded-md text-center text-xl focus:outline-none focus:ring-2 focus:ring-primary"
+            className="h-8 w-8 md:w-10 md:h-10   border rounded-md text-center text-xl focus:outline-none focus:ring-2 focus:ring-primary"
           />
         ))}
       </div>

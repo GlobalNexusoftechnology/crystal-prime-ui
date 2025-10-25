@@ -35,7 +35,7 @@ export const UploadFileInput: React.FC<IUploadFileProps> = ({
     <div className="w-full">
       <label
         htmlFor="file-upload"
-        className="block w-full 2xl:text-[1vw] px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] border 2xl:border-[0.05vw] border-gray-300 text-gray-400 rounded-md 2xl:rounded-[0.375vw] bg-transparent cursor-pointer bg-white"
+        className="block w-full  px-4  py-2  border  border-gray-300 text-gray-400 rounded-md  bg-transparent cursor-pointer bg-white"
       >
         {fileName || placeholder || "Upload Business License"}
       </label>

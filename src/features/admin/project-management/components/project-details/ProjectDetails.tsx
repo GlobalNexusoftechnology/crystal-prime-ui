@@ -41,7 +41,7 @@ export function ProjectDetails({
   const isAdmin = userRole === "admin";
 
   return (
-    <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+    <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
       <Breadcrumb idToName={idToName} />
       <HeaderDetails
         title={projectDetailData.name}

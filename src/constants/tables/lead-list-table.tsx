@@ -50,7 +50,7 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
     {
     header: "STATUS",
     accessor: "status_id",
-    headerClassName: "min-w-[13rem] 2xl:min-w-[13vw]",
+    headerClassName: "min-w-[13rem] ",
     cell: ({ row }) => (
       <span
         className="inline-block px-4 py-1 rounded-full text-white"
@@ -63,47 +63,47 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
   {
     header: "FIRST NAME",
     accessor: "first_name",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "LAST NAME",
     accessor: "last_name",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "COMPANY",
     accessor: "company",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "PHONE",
     accessor: "phone",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "OTHER CONTACT",
     accessor: "other_contact",
-    headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
+    headerClassName: "min-w-[12rem] ",
   },
   {
     header: "EMAIL",
     accessor: "email",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "LOCATION",
     accessor: "location",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "BUDGET",
     accessor: "budget",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "POSSIBILITY OF CONVERSION",
     accessor: "possibility_of_conversion",
-    headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
+    headerClassName: "min-w-[12rem] ",
     cell: ({ row }) => (
       <span>
         {row.possibility_of_conversion ? `${row.possibility_of_conversion}%` : '-'}
@@ -113,22 +113,22 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
   {
     header: "REQUIREMENT",
     accessor: "requirement",
-    headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
+    headerClassName: "min-w-[12rem] ",
   },
   {
     header: "SOURCE",
     accessor: "source_id",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "TYPE",
     accessor: "type_id",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "ASSIGNED TO",
     accessor: "assigned_to",
-    headerClassName: "min-w-[13rem] 2xl:min-w-[13vw]",
+    headerClassName: "min-w-[13rem] ",
   },
 ];
 

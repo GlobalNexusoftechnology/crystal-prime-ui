@@ -166,7 +166,7 @@ export function Tickets({
   return (
     <>
       <tr className="border-t border-gray-200">
-      <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.9vw] text-left relative">
+      <td className="px-2  py-2  text-left relative">
         <button
           className="text-gray-400 hover:text-blue-600"
           title="Menu"
@@ -188,7 +188,7 @@ export function Tickets({
           >
             {canViewTicket && (
               <button
-                className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
+                className="block w-full text-left px-4  py-2  hover:bg-gray-100"
                 onClick={() => handleRedirectView(ticket.id)}
               >
                 View
@@ -197,15 +197,15 @@ export function Tickets({
           </div>
         )}
       </td>
-      <td className="ml-32 2xl:ml-[8vw] text-center py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
+      <td className="ml-32  text-center py-2  text-[0.9rem]  font-medium">
         {ticket.title}
       </td>
-      <td className="px-4 2xl:px-[1vw] text-center py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
+      <td className="px-4  text-center py-2  text-[0.9rem] ">
         {ticket.description.length > 50 
           ? `${ticket.description.substring(0, 50)}...` 
           : ticket.description}
       </td>
-      <td className="px-4 2xl:px-[1vw] py-2 text-center 2xl:py-[0.9vw]">
+      <td className="px-4  py-2 text-center ">
         <div className="flex justify-center">
           {isLoadingUsers ? (
             <span className="text-gray-400 text-sm">Loading...</span>
@@ -217,27 +217,27 @@ export function Tickets({
                 options={userOptions}
                 value={assignedTo}
                 onChange={handleAssignmentChange}
-                dropdownWidth="w-[15rem] 2xl:w-[15vw]"
-                dropdownBorderRadius="rounded-md 2xl:rounded-[0.25vw]"
+                dropdownWidth="w-[15rem] "
+                dropdownBorderRadius="rounded-md "
               />
             </div>
           )}
         </div>
       </td>
-      <td className="px-4 2xl:px-[1vw] py-2 text-center 2xl:py-[0.9vw]">
-        <span className={`px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold ${getStatusColor(ticket.status)}`}>
+      <td className="px-4  py-2 text-center ">
+        <span className={`px-3  py-1  rounded-full text-[0.9rem]  font-semibold ${getStatusColor(ticket.status)}`}>
           {ticket.status}
         </span>
       </td>
-      <td className="px-4 2xl:px-[1vw] py-2 text-center 2xl:py-[0.9vw]">
-        <span className={`px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold ${getPriorityColor(ticket.priority)}`}>
+      <td className="px-4  py-2 text-center ">
+        <span className={`px-3  py-1  rounded-full text-[0.9rem]  font-semibold ${getPriorityColor(ticket.priority)}`}>
           {ticket.priority}
         </span>
       </td>
-      {/* <td className="px-4 2xl:px-[1vw] py-2 text-center 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
+      {/* <td className="px-4  py-2 text-center  text-[0.9rem] ">
         {ticket.remark || '-'}
       </td> */}
-      <td className="px-4 2xl:px-[1vw] py-2 text-center 2xl:py-[0.9vw]">
+      <td className="px-4  py-2 text-center ">
         {ticket.image_url ? (
           <div className="flex justify-center">
             <Image
@@ -245,17 +245,17 @@ export function Tickets({
               alt="Ticket attachment"
               width={60}
               height={60}
-              className="w-15 2xl:w-[3vw] h-15 2xl:h-[3vw] object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
+              className="w-15  h-15  object-cover rounded border cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => handleImageClick(ticket.image_url!)}
             />
           </div>
         ) : (
-          <span className="text-gray-400 text-sm 2xl:text-[0.9vw]">No image</span>
+          <span className="text-gray-400 text-sm ">No image</span>
         )}
       </td>
-      <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] 2xl:text-[0.9vw]">
-        <span className="flex items-center justify-center gap-2 2xl:gap-[0.5vw]">
-          <span className="text-[0.9rem] 2xl:text-[0.9vw]">
+      <td className="px-4  py-2  ">
+        <span className="flex items-center justify-center gap-2 ">
+          <span className="text-[0.9rem] ">
             {ticket.created_at ? formatDateToDDMMYYYY(ticket.created_at) : "---"}
           </span>
         </span>

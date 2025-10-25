@@ -96,7 +96,7 @@ export function EditLeadModal({
         isOpen={true}
         onClose={() => setIsEditLeadModalOpen(false)}
       >
-        <div className="p-4 2xl:p-[1vw]">Loading lead data...</div>
+        <div className="p-4 ">Loading lead data...</div>
       </ModalOverlay>
     );
   }
@@ -161,8 +161,8 @@ export function EditLeadModal({
       onClose={handleCancel}
     >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
-        <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-gray-200">
-          <h2 className="text-[1rem] 2xl:text-[1.3vw] font-semibold">
+        <div className="bg-white rounded-lg  p-4  border  border-gray-200">
+          <h2 className="text-[1rem]  font-semibold">
             Edit Lead Information
           </h2>
           <Formik<ICreateLeadPayload>
@@ -220,7 +220,7 @@ export function EditLeadModal({
             {({ values, handleChange, setFieldValue, errors, touched }) => {
               return (
                 <Form>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                     <InputField
                       label="First Name"
                       placeholder="Enter First Name"
@@ -239,7 +239,7 @@ export function EditLeadModal({
                       // error={touched.last_name && errors.last_name}
                     />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                     <InputField
                       label="Company"
                       placeholder="Enter Company Name"
@@ -248,8 +248,8 @@ export function EditLeadModal({
                       onChange={handleChange}
 
                     />
-                    <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
-                      <label className="2xl:text-[1vw] text-gray-700 block">
+                    <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
+                      <label className=" text-gray-700 block">
                         Phone <span className="text-red-500">*</span>
                       </label>
                       <PhoneInput
@@ -259,13 +259,13 @@ export function EditLeadModal({
                         inputProps={{ name: "phone" }}
                       />
                       {errors.phone && touched.phone && (
-                        <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw]">
+                        <p className="text-red-500 text-[0.9rem] ">
                           {errors.phone}
                         </p>
                       )}
                     </div>
                   </div>
-                  <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
+                  <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4  pb-2  relative">
                     <InputField
                       label="Other Contact"
                       placeholder="Enter Other Contact"
@@ -279,7 +279,7 @@ export function EditLeadModal({
                       }}
 
                     />
-                    <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
+                    <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
                       <label className="text-[0.9rem] font-medium text-gray-700">
                         Possibility of Conversion (%)
                       </label>
@@ -292,7 +292,7 @@ export function EditLeadModal({
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                     <InputField
                       label="Email"
                       placeholder="Enter Email"
@@ -312,8 +312,8 @@ export function EditLeadModal({
                     />
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
-                    <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
+                    <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
                       <label className="text-[0.9rem] font-medium text-gray-700">
                         Budget
                       </label>
@@ -332,7 +332,7 @@ export function EditLeadModal({
 
                     />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                     <Dropdown
                       label="Source"
                       options={sourceOptions}
@@ -348,7 +348,7 @@ export function EditLeadModal({
 
                     />
                   </div>
-                  <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                  <div className="grid grid-cols-1 gap-4  py-2 ">
                     <Dropdown
                       label="Type"
                       options={typeOptions}
@@ -357,7 +357,7 @@ export function EditLeadModal({
 
                     />
                   </div>
-                  <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                  <div className="grid grid-cols-1 gap-4  py-2 ">
                     <InputField
                       label="Requirement"
                       placeholder="Enter Requirement"
@@ -367,7 +367,7 @@ export function EditLeadModal({
                       onChange={handleChange}
 
                     />
-                    <div className="py-2 2xl:py-[0.5vw]">
+                    <div className="py-2 ">
                       <Checkbox
                         label="Escalate To"
                         name="escalate_to"
@@ -377,7 +377,7 @@ export function EditLeadModal({
                         }
                       />
                     </div>
-                    <div className="flex justify-between mt-2 2xl:mt-[0.5vw] space-x-3">
+                    <div className="flex justify-between mt-2  space-x-3">
                       <Button
                         title="Cancel"
                         onClick={handleCancel}

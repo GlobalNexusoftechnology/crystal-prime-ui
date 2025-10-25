@@ -134,7 +134,7 @@ export function EditProject({ projectId }: EditProjectProps) {
 
   if (isLoading) {
     return (
-      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
+      <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
         <div className="flex justify-center items-center h-64">
           <div className="text-lg">Loading project details...</div>
         </div>
@@ -144,7 +144,7 @@ export function EditProject({ projectId }: EditProjectProps) {
 
   if (error) {
     return (
-      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
+      <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
         <div className="flex justify-center items-center h-64">
           <div className="text-lg text-red-600">Error loading project details. Please try again.</div>
           <div className="text-[0.9rem] text-gray-600 mt-2">Error: {error.message}</div>
@@ -155,7 +155,7 @@ export function EditProject({ projectId }: EditProjectProps) {
 
   if (!projectDetailData || !initialFormValues) {
     return (
-      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
+      <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
         <div className="flex justify-center items-center h-64">
           <div className="text-lg">Project not found</div>
           <div className="text-[0.9rem] text-gray-600 mt-2">Project ID: {projectId}</div>

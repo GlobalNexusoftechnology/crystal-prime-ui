@@ -20,50 +20,50 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
   };
 
   return (
-    <div className="border-b border-gray-400 2xl:border-[0.05vw] p-4 2xl:p-[1vw]">
-      <h3 className="text-[1.2rem] font-medium 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">
+    <div className="border-b border-gray-400  p-4 ">
+      <h3 className="text-[1.2rem] font-medium  mb-4 ">
         Documents
       </h3>
-      <div className="flex flex-col gap-4 2xl:gap-[1vw] text-[0.9rem] 2xl:text-[0.875vw]">
+      <div className="flex flex-col gap-4  text-[0.9rem] ">
         {documentSectionData?.length > 0 && documentSectionData?.map((doc, idx) => {         
           return (
             <div
               key={idx}
-              className="flex flex-wrap gap-4 2xl:gap-[1vw]"
+              className="flex flex-wrap gap-4 "
             >
-              <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-                <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">
+              <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+                <p className="font-light text-[0.9rem]  mb-2 ">
                   Document Name
                 </p>
                 <Link
                   href={`${doc?.file_path}`}
                   target="_blank"
                   // rel="noopener noreferrer"
-                  className="text-[1rem] 2xl:text-[1.1vw] underline hover:text-blue-600 transition-colors duration-200 break-words"
+                  className="text-[1rem]  underline hover:text-blue-600 transition-colors duration-200 break-words"
                 >
                   {doc?.name || "---"}
                 </Link>
               </div>
-              <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-                <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">
+              <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+                <p className="font-light text-[0.9rem]  mb-2 ">
                   Uploaded By
                 </p>
                 <p
                   className={`${
                     doc.uploaded_by && "underline"
-                  } text-[1rem] 2xl:text-[1.1vw] break-words`}
+                  } text-[1rem]  break-words`}
                 >
                   {getUserNameById(doc.uploaded_by)}
                 </p>
               </div>
-              <div className="border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] min-w-[200px] 2xl:min-w-[12vw] flex-1">
-                <p className="font-light text-[0.9rem] 2xl:text-[0.875vw] mb-2 2xl:mb-[0.5vw]">
+              <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
+                <p className="font-light text-[0.9rem]  mb-2 ">
                   Uploaded At
                 </p>
                 <p
                   className={`${
                     doc.created_at && "underline"
-                  } text-[1rem] 2xl:text-[1.1vw] break-words`}
+                  } text-[1rem]  break-words`}
                 >
                   {formatIndiaTime(doc?.created_at, "toReadable") || "---"}
                 </p>

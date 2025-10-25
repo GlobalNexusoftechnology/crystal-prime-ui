@@ -162,7 +162,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
       modalTitle="Back to EI Logs"
       isOpen={isOpen}
       onClose={onClose}
-      modalClassName="w-full sm:w-[40rem] 2xl:w-[40vw]"
+      modalClassName="w-full sm:w-[40rem] "
     >
       <Formik<EILogFormValues>
         enableReinitialize
@@ -202,11 +202,11 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
           // Set the ref directly
           setFieldValueRef.current = setFieldValue;
           return (
-            <Form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw] border-gray-400 overflow-y-auto max-h-[80vh]">
-              <h1 className="text-md 2xl:text-[1vw] text-gray-900">
+            <Form className="flex flex-col gap-4  p-4  bg-white rounded-xl  border-gray-400 overflow-y-auto max-h-[80vh]">
+              <h1 className="text-md  text-gray-900">
                 {eiLogId ? "Edit EI Log" : "Add New EI Log"}
               </h1>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw]">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
                 <div>
                   <Dropdown
                     label="EI Log Type *"
@@ -315,7 +315,7 @@ export const AddEILogModal: React.FC<AddEILogModalProps> = ({
                   }
                 />
               </div>
-              <div className="flex justify-end gap-4 2xl:gap-[1vw] mt-4">
+              <div className="flex justify-end gap-4  mt-4">
                 <Button
                   title="Cancel"
                   variant="primary-outline"

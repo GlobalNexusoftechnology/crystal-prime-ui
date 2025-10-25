@@ -57,7 +57,7 @@ export function ResetPassword({ email }: { email: string }) {
           }}
         >
           {({ errors, touched }) => (
-            <Form className="flex flex-col gap-4 2xl:gap-[1vw]">
+            <Form className="flex flex-col gap-4 ">
               <div>
                 <Field
                   name="password"

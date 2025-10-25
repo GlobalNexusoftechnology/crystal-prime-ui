@@ -107,8 +107,8 @@ export function AddLeadModal({
       onClose={handleCancel}
     >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
-        <div className="bg-white rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-gray-200">
-          <h2 className="text-lg 2xl:text-[1.125vw] font-semibold">
+        <div className="bg-white rounded-lg  p-4  border  border-gray-200">
+          <h2 className="text-lg  font-semibold">
             Lead Information
           </h2>
           <Formik<ICreateLeadPayload>
@@ -156,7 +156,7 @@ export function AddLeadModal({
           >
             {({ values, handleChange, setFieldValue, errors, touched }) => (
               <Form>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                   <InputField
                     label="First Name"
                     placeholder="Enter First Name"
@@ -174,7 +174,7 @@ export function AddLeadModal({
                     // error={touched.last_name && errors.last_name}
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                   <InputField
                     label="Company Name"
                     placeholder="Enter Company Name"
@@ -182,8 +182,8 @@ export function AddLeadModal({
                     value={values?.company}
                     onChange={handleChange}
                   />
-                  <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
-                    <label className="2xl:text-[1vw] text-gray-700 block">
+                  <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
+                    <label className=" text-gray-700 block">
                       Phone <span className="text-red-500">*</span>
                     </label>
                     <PhoneInput
@@ -193,13 +193,13 @@ export function AddLeadModal({
                       inputProps={{ name: "phone" }}
                     />
                     {errors.phone && touched.phone && (
-                      <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw]">
+                      <p className="text-red-500 text-[0.9rem] ">
                         {errors.phone}
                       </p>
                     )}
                   </div>
                 </div>
-                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] pb-2 2xl:pb-[0.5vw] relative">
+                <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4  pb-2  relative">
                   <InputField
                     label="Other Contact"
                     placeholder="Enter Other Contact"
@@ -213,7 +213,7 @@ export function AddLeadModal({
                     }}
 
                   />
-                  <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
+                  <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
                     <label className="text-[0.9rem] font-medium text-gray-700">
                       Possibility of Conversion (%)
                     </label>
@@ -226,7 +226,7 @@ export function AddLeadModal({
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                   <InputField
                     label="Email"
                     placeholder="Enter Email"
@@ -244,8 +244,8 @@ export function AddLeadModal({
                     onChange={handleChange}
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
-                  <div className="w-full grid grid-cols-1 gap-2 2xl:gap-[0.5vw] pb-2 2xl:pb-[0.5vw] relative">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
+                  <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
                     <label className="text-[0.9rem] font-medium text-gray-700">
                       Budget
                     </label>
@@ -263,7 +263,7 @@ export function AddLeadModal({
                     onChange={(val) => setFieldValue("assigned_to", val)}
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                   <Dropdown
                     label="Source"
                     options={sourceOptions}
@@ -277,7 +277,7 @@ export function AddLeadModal({
                     onChange={(val) => setFieldValue("status_id", val)}
                   />
                 </div>
-                <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                <div className="grid grid-cols-1 gap-4  py-2 ">
                   <Dropdown
                     label="Type"
                     options={typeOptions}
@@ -285,7 +285,7 @@ export function AddLeadModal({
                     onChange={(val) => setFieldValue("type_id", val)}
                   />
                 </div>
-                <div className="grid grid-cols-1 gap-4 2xl:gap-[1vw] py-2 2xl:py-[0.5vw]">
+                <div className="grid grid-cols-1 gap-4  py-2 ">
                   <InputField
                     label="Requirement"
                     placeholder="Enter Requirement"
@@ -295,7 +295,7 @@ export function AddLeadModal({
                     onChange={handleChange}
                   />
                 </div>
-                <div className="flex justify-between mt-6 2xl:mt-[1.5vw] space-x-4">
+                <div className="flex justify-between mt-6  space-x-4">
                   <Button
                     title="Cancel"
                     onClick={handleCancel}

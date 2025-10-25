@@ -90,12 +90,12 @@ export const AddEILogTypesModal: React.FC<AddEILogTypesModalProps> = ({
         }}
       >
         {({ isSubmitting }) => (
-          <Form className="flex flex-col gap-4 2xl:gap-[1vw] p-4 2xl:p-[1vw] bg-white rounded-xl 2xl:rounded-[0.75vw] border-gray-400">
-            <h1 className="text-md 2xl:text-[1vw] text-gray-900">
+          <Form className="flex flex-col gap-4  p-4  bg-white rounded-xl  border-gray-400">
+            <h1 className="text-md  text-gray-900">
               {typeId ? "Edit EI Log Type" : "Add New EI Log Type"}
             </h1>
 
-            <div className="flex flex-col gap-4 md:gap-8 2xl:gap-[2vw] md:flex-row justify-between items-center w-full">
+            <div className="flex flex-col gap-4 md:gap-8  md:flex-row justify-between items-center w-full">
               <div className="w-full">
                 <label className="block mb-1 text-[0.9rem] font-medium text-gray-700">
                   Name
@@ -111,7 +111,7 @@ export const AddEILogTypesModal: React.FC<AddEILogTypesModalProps> = ({
               </div>
             </div>
 
-            <div className="flex justify-end gap-2 2xl:gap-[0.5vw]">
+            <div className="flex justify-end gap-2 ">
               <Button
                 type="button"
                 title="Cancel"

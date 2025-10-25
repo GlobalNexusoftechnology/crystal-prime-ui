@@ -16,15 +16,15 @@ export function TicketCommentTab({
   const [showForm, setShowForm] = useState(false);
 
   return (
-    <div className="flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:px-[1vw]">
+    <div className="flex flex-col gap-8  p-4 ">
       {/* Header */}
-      <div className="flex flex-wrap gap-8 2xl:gap-[2vw] items-center">
-        <div className="flex gap-8 2xl:gap-[2vw]">
-          <h3 className="font-medium text-[1.2rem] 2xl:text-[1.2vw]">Ticket Comments</h3>
+      <div className="flex flex-wrap gap-8  items-center">
+        <div className="flex gap-8 ">
+          <h3 className="font-medium text-[1.2rem] ">Ticket Comments</h3>
         </div>
         <div
           onClick={() => setShowForm((prev) => !prev)}
-          className="flex items-center gap-2 2xl:gap-[0.5vw] text-primary text-[1rem] 2xl:text-[1vw] cursor-pointer"
+          className="flex items-center gap-2  text-primary text-[1rem]  cursor-pointer"
         >
           <span>
             {showForm ? (

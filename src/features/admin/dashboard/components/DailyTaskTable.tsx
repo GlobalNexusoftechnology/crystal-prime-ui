@@ -138,12 +138,12 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
       </div>
     );
   return (
-    <div className="p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw]">
-      <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
-        <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
+    <div className="p-4  border  border-grey-300 rounded-xl ">
+      <div className="flex justify-between items-center flex-wrap gap-4 ">
+        <h1 className="text-[1.2rem]  font-medium">
           Daily Task List
         </h1>
-        <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+        <div className="flex items-center flex-wrap gap-4 ">
           <SearchBar
             onSearch={handleSearch}
             bgColor="white"
@@ -155,12 +155,12 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
               variant="primary"
               onClick={onAddDailyTask}
               width="w-auto"
-              leftIcon={<FiPlus className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw] mt-[1px] 2xl:mt-[0.1vw]" />}
+              leftIcon={<FiPlus className="w-4 h-4   mt-[1px] " />}
             />
           )}
         </div>
       </div>
-      <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] my-4 2xl:my-[1vw]">
+      <div className="flex justify-start items-end flex-wrap gap-4  my-4 ">
         <div className="flex flex-col justify-start items-start w-full min-w-[12rem] md:w-[15vw]">
           <DatePicker
             label="From Date"
@@ -184,7 +184,7 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
               width="w-full md:w-fit"
               onClick={handleClearDates}
               leftIcon={
-                <FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                <FiX className="w-5 h-5  " />
               }
               tooltip="Clear Dates"
             />

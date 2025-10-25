@@ -128,7 +128,7 @@ export function Step1BasicInfo({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
         <InputField
           label="Project Name"
           name="name"
@@ -141,7 +141,7 @@ export function Step1BasicInfo({
               ? errors.name
               : undefined
           }
-          className="2xl:text-[1vw]"
+          className=""
         />
         <Dropdown
           label="Type Of Project"
@@ -187,9 +187,9 @@ export function Step1BasicInfo({
             : undefined
         }
         type="textarea"
-        className="2xl:text-[1vw]"
+        className=""
       />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
         <DatePicker
           label="Estimated Start Date"
           value={toDateString(values.start_date)}
@@ -235,12 +235,12 @@ export function Step1BasicInfo({
                 : undefined
             }
             type="number"
-            className="2xl:text-[1vw]"
+            className=""
           />
         )}
       </div>
       {isAdmin && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 2xl:gap-[1vw]">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 ">
           <InputField
             label="Cost Of Labour"
             name="cost_of_labour"
@@ -254,7 +254,7 @@ export function Step1BasicInfo({
                 : undefined
             }
             type="number"
-            className="2xl:text-[1vw]"
+            className=""
           />
           <InputField
             label="Over Head Cost"
@@ -270,7 +270,7 @@ export function Step1BasicInfo({
                 : undefined)
             }
             type="number"
-            className="2xl:text-[1vw]"
+            className=""
           />
           <InputField
             label="Additional Cost"
@@ -280,7 +280,7 @@ export function Step1BasicInfo({
             onChange={handleChange}
             onBlur={handleBlur}
             type="number"
-            className="2xl:text-[1vw]"
+            className=""
           />
           <div className="flex flex-col h-full">
             <CostDisplay
@@ -298,7 +298,7 @@ export function Step1BasicInfo({
               ) {
                 const diff = est - bud;
                 return (
-                  <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] 2xl:mt-[0.5vw] mt-1">
+                  <p className="text-red-500 text-[0.9rem]   mt-1">
                     Estimated Cost Exceeds by ₹{diff.toLocaleString("en-IN")}
                   </p>
                 );
@@ -357,46 +357,46 @@ export function Step1BasicInfo({
         </div>
       )}
       {!hideMilestoneTemplateOption && (
-        <div className="flex gap-6 2xl:gap-[1.5vw] mt-6 2xl:mt-[1vw]">
+        <div className="flex gap-6  mt-6 ">
           <div
-            className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${
+            className={`w-[18rem]  h-[16rem]  flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4  p-6  cursor-pointer transition ${
               isMilestoneSelected
                 ? "border-primary bg-blue-50"
                 : "border-gray-300 bg-white"
             }`}
             onClick={() => setFieldValue("milestoneOption", "milestone")}
           >
-            <div className="w-[8rem] 2xl:w-[8vw] h-[10rem] 2xl:h-[10vw]">
+            <div className="w-[8rem]  h-[10rem] ">
               <Image
                 src={ImageRegistry.addMilestone}
                 width={500}
                 height={500}
                 alt="Milestone"
-                className="w-full h-full mb-2 2xl:mb-[0.5vw]"
+                className="w-full h-full mb-2 "
               />
             </div>
-            <span className="font-semibold text-center mb-2 2xl:mb-[0.5vw] 2xl:text-[1vw] 2xl:leading-[1.4vw]">
+            <span className="font-semibold text-center mb-2   ">
               Do you want to add Milestones?
             </span>
           </div>
           <div
-            className={`w-[18rem] 2xl:w-[18vw] h-[16rem] 2xl:h-[16vw] flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4 2xl:gap-[1vw] p-6 2xl:p-[2vw] cursor-pointer transition ${
+            className={`w-[18rem]  h-[16rem]  flex flex-col items-center justify-center border-2 border-dashed rounded-lg gap-4  p-6  cursor-pointer transition ${
               isTemplateSelected
                 ? "border-primary bg-blue-50"
                 : "border-gray-300 bg-white"
             }`}
             onClick={() => setFieldValue("milestoneOption", "template")}
           >
-            <div className="w-[18rem] 2xl:w-[18vw] h-[10rem] 2xl:h-[10vw]">
+            <div className="w-[18rem]  h-[10rem] ">
               <Image
                 src={ImageRegistry.projectTemplate}
                 width={500}
                 height={500}
                 alt="Template"
-                className="w-full h-full mb-2 2xl:mb-[0.5vw]"
+                className="w-full h-full mb-2 "
               />
             </div>
-            <span className="font-semibold text-center mb-2 2xl:mb-[0.5vw] 2xl:text-[1vw] 2xl:leading-[1.4vw]">
+            <span className="font-semibold text-center mb-2   ">
               Use Project Template
             </span>
           </div>

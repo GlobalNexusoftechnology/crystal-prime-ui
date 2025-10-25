@@ -188,17 +188,17 @@ export function CustomClientTable({
 
   return (
     <div>
-      <div className="overflow-x-auto border border-gray-300 rounded-lg 2xl:rounded-[0.75vw]">
+      <div className="overflow-x-auto border border-gray-300 rounded-lg ">
         <table className="min-w-full bg-white rounded-lg shadow-md border-collapse">
           <thead className="bg-gray-50">
             <tr className="bg-gray-200">
-              <th className="px-4 2xl:px-[1vw] py-4 2xl:py-[1vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase border border-gray-300">
+              <th className="px-4  py-4  text-left text-[0.9rem]  font-semibold uppercase border border-gray-300">
                 Actions
               </th>
               {clientListColumn.length > 0 && clientListColumn.map((col) => (
                 <th
                   key={col.header}
-                  className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase border border-gray-300 ${col.headerClass}`}
+                  className={`px-4  py-2  text-left text-[0.9rem]  font-semibold uppercase border border-gray-300 ${col.headerClass}`}
                 >
                   {col.header}
                 </th>
@@ -213,24 +213,24 @@ export function CustomClientTable({
                     idx % 2 === 0 ? "bg-white" : "bg-gray-50"
                   }`}
                 >
-                  <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
-                    <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+                  <td className="px-6  py-4  text-[0.9rem]  border border-gray-300">
+                    <div className="flex items-center gap-2 ">
                       <button onClick={() => handleRowClick(row.id)}>
                         {expandedRowId === row.id ? (
-                          <FiChevronUp className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
+                          <FiChevronUp className="w-4 h-4  " />
                         ) : (
-                          <FiChevronDown className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
+                          <FiChevronDown className="w-4 h-4  " />
                         )}
                       </button>
                       <ActionDropdown
-                        className=" w-[15rem] 2xl:w-[15vw]"
+                        className=" w-[15rem] "
                         options={actions(row)?.map((action) => ({
                           label: action?.label,
                           onClick: () => action?.onClick(row),
                           className: action?.className,
                         }))}
                         icon={
-                          <FiMoreVertical className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
+                          <FiMoreVertical className="w-4 h-4  " />
                         }
                       />
                     </div>
@@ -253,7 +253,7 @@ export function CustomClientTable({
                             <a 
                               key={idx}
                               href={`tel:${phone}`}
-                              className="text-[0.9rem] 2xl:text-[0.9vw] text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
+                              className="text-[0.9rem]  text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
                               style={{ textDecoration: 'underline' }}
                             >
                               {phone}
@@ -286,7 +286,7 @@ export function CustomClientTable({
                     return (
                       <td
                         key={col.accessor}
-                        className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300"
+                        className="px-6  py-4  text-[0.9rem]  border border-gray-300"
                       >
                         {renderCellValue()}
                       </td>
@@ -297,21 +297,21 @@ export function CustomClientTable({
                   <tr key={`${row.id}-details`}>
                     <td
                       colSpan={clientListColumn.length + 1}
-                      className="pl-24 2xl:pl-[6vw] p-4 2xl:p-[1vw] bg-gray-50 rounded-b-lg 2xl:rounded-b-[0.75vw]"
+                      className="pl-24  p-4  bg-gray-50 rounded-b-lg"
                     >
-                      <h3 className="mb-4 2xl:mb-[1vw] 2xl:text-[1vw] font-semibold">
+                      <h3 className="mb-4   font-semibold">
                         Client Contact Details
                       </h3>
                       <table className="bg-white border border-gray-300 rounded shadow-sm border-collapse">
                         <thead className="bg-gray-200">
                           <tr>
-                            <th className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase border border-gray-300">
+                            <th className="px-4  py-2  text-left text-[0.9rem]  font-semibold uppercase border border-gray-300">
                               Action
                             </th>
                             {clientContactDetailsColumns.length > 0 && clientContactDetailsColumns.map((col) => (
                               <th
                                 key={col.header}
-                                className={`px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left text-[0.9rem] 2xl:text-[0.9vw] font-semibold uppercase border border-gray-300 ${col.headerClass}`}
+                                className={`px-4  py-2  text-left text-[0.9rem]  font-semibold uppercase border border-gray-300 ${col.headerClass}`}
                               >
                                 {col.header}
                               </th>
@@ -373,7 +373,7 @@ export function CustomClientTable({
                                           },
                                         ]}
                                         icon={
-                                          <FiMoreVertical className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
+                                          <FiMoreVertical className="w-4 h-4  " />
                                         }
                                       />
                                     </div>
@@ -448,13 +448,13 @@ export function CustomClientTable({
                                   </>
                                 ) : (
                                   <>
-                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
+                                    <td className="px-6  py-4  text-[0.9rem]  border border-gray-300">
                                       {contact.contact_person}
                                     </td>
-                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
+                                    <td className="px-6  py-4  text-[0.9rem]  border border-gray-300">
                                       {contact.designation}
                                     </td>
-                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
+                                    <td className="px-6  py-4  text-[0.9rem]  border border-gray-300">
                                       {contact.client_contact ? (
                                         <div className="flex flex-col gap-1">
                                           {String(contact.client_contact)
@@ -465,7 +465,7 @@ export function CustomClientTable({
                                               <a 
                                                 key={idx}
                                                 href={`tel:${phone}`}
-                                                className="text-[0.9rem] 2xl:text-[0.9vw] text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
+                                                className="text-[0.9rem]  text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
                                                 style={{ textDecoration: 'underline' }}
                                               >
                                                 {phone}
@@ -476,7 +476,7 @@ export function CustomClientTable({
                                         contact.client_contact
                                       )}
                                     </td>
-                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
+                                    <td className="px-6  py-4  text-[0.9rem]  border border-gray-300">
                                       {contact.other_contact ? (
                                         <div className="flex flex-col gap-1">
                                           {String(contact.other_contact)
@@ -487,7 +487,7 @@ export function CustomClientTable({
                                               <a 
                                                 key={idx}
                                                 href={`tel:${phone}`}
-                                                className="text-[0.9rem] 2xl:text-[0.9vw] text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
+                                                className="text-[0.9rem]  text-blue-600 hover:text-blue-800 hover:underline underline cursor-pointer transition-colors duration-200"
                                                 style={{ textDecoration: 'underline' }}
                                               >
                                                 {phone}
@@ -498,7 +498,7 @@ export function CustomClientTable({
                                         contact.other_contact
                                       )}
                                     </td>
-                                    <td className="px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw] text-[0.9rem] 2xl:text-[0.9vw] border border-gray-300">
+                                    <td className="px-6  py-4  text-[0.9rem]  border border-gray-300">
                                       {contact.email}
                                     </td>
                                   </>

@@ -6,13 +6,13 @@ export interface ITaskEstimateProps {
 
 export function TaskEstimate({ taskEstimateData }: ITaskEstimateProps) {
     return (
-        <div className="border-b p-4 2xl:p-[1vw]">
-            <h3 className="text-[1.2rem] 2xl:text-[1.2vw] mb-4 2xl:mb-[1vw]">Task Estimates</h3>
-            <div className="flex flex-col gap-8 2xl:gap-[2vw] text-[0.9rem] 2xl:text-[0.875vw]">
-                <div className="flex flex-wrap gap-12 2xl:gap-[3vw] items-start">
-                    <div className="flex flex-col border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]">
+        <div className="border-b p-4 ">
+            <h3 className="text-[1.2rem]  mb-4 ">Task Estimates</h3>
+            <div className="flex flex-col gap-8  text-[0.9rem] ">
+                <div className="flex flex-wrap gap-12  items-start">
+                    <div className="flex flex-col border border-gray-300  rounded-lg  p-4 ">
                         <p className="font-light">Estimated Start Date</p>
-                        <p className="text-[1rem] 2xl:text-[1.1vw]">{taskEstimateData.due_date}</p>
+                        <p className="text-[1rem] ">{taskEstimateData.due_date}</p>
                     </div>
                 </div>
             </div>

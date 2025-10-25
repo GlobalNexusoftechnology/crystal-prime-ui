@@ -61,9 +61,9 @@ export function CreateClientCredentialModal({ isOpen, onClose, prefillEmail, cli
   });
 
   return (
-    <ModalOverlay isOpen={isOpen} onClose={onClose} modalTitle="Back to Clients" modalClassName="w-auto md:w-[28rem] 2xl:w-[28vw]">
+    <ModalOverlay isOpen={isOpen} onClose={onClose} modalTitle="Back to Clients" modalClassName="w-auto md:w-[28rem] ">
       <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 p-4 bg-white rounded-lg max-h-[80vh] overflow-y-auto">
-        <p className="text-[1.2rem] 2xl:text-[1.2vw] font-semibold">Create Client Credentials</p>
+        <p className="text-[1.2rem]  font-semibold">Create Client Credentials</p>
         
         <InputField
           label="Email"
@@ -84,9 +84,9 @@ export function CreateClientCredentialModal({ isOpen, onClose, prefillEmail, cli
           type={showPassword ? "text" : "password"}
           suffixIcon={
             showPassword ? (
-              <FiEye className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+              <FiEye className="w-5 h-5  " />
             ) : (
-              <FiEyeOff className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+              <FiEyeOff className="w-5 h-5  " />
             )
           }
           onIconClick={togglePasswordVisibility}

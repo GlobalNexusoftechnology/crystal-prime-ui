@@ -632,15 +632,15 @@ export function AddProject({
   };
 
   return (
-    <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[1vw]">
+    <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
       <div
         onClick={handleBackNavigation}
-        className="flex gap-2 2xl:gap-[0.5vw] items-center 2xl:text-[1vw] font-medium cursor-pointer"
+        className="flex gap-2  items-center  font-medium cursor-pointer"
       >
-        <FaArrowLeftLong className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]" />
+        <FaArrowLeftLong className="w-4 h-4  " />
         <span>Back</span>
       </div>
-      <h1 className="text-2xl 2xl:text-[1.8vw] font-medium">
+      <h1 className="text-2xl  font-medium">
         {mode === "edit" ? "Edit Project" : "Create Project"}
       </h1>
       <ProgressHeader step={currentStep} />
@@ -663,12 +663,12 @@ export function AddProject({
                 clientError={clientError}
                 hideMilestoneTemplateOption={mode === "edit"}
               />
-              <div className="flex mt-6 2xl:mt-[1.5vw]">
+              <div className="flex mt-6 ">
                 <Button
                   type="submit"
                   disabled={formik.isSubmitting}
                   title="Next"
-                  width="w-full md:w-[10rem] 2xl:w-[10vw]"
+                  width="w-full md:w-[10rem] "
                 />
               </div>
             </Form>

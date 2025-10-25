@@ -91,40 +91,40 @@ export function RoleRowTable({
         className="bg-white border-b hover:bg-gray-50 transition-colors"
         onClick={onToggle}
       >
-        <td className="p-3 2xl:p-[0.75vw] flex items-center gap-2 2xl:gap-[0.5vw] border border-gray-300">
+        <td className="p-3  flex items-center gap-2  border border-gray-300">
           {isExpanded ? (
-            <ChevronDown className="w-[1.2rem] h-[1.2rem] 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+            <ChevronDown className="w-[1.2rem] h-[1.2rem]  " />
           ) : (
-            <ChevronRight className="w-[1.2rem] h-[1.2rem] 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+            <ChevronRight className="w-[1.2rem] h-[1.2rem]  " />
           )}
-          <td className="p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] font-medium text-gray-700">
+          <td className="p-3  text-[0.9rem]   font-medium text-gray-700">
             {index + 1}
           </td>
         </td>
-        <td className="p-3 2xl:p-[0.75vw] border border-gray-300">{role.role}</td>
-        <td className="p-3 2xl:p-[0.75vw] border border-gray-300">
+        <td className="p-3  border border-gray-300">{role.role}</td>
+        <td className="p-3  border border-gray-300">
           {new Date(role.created_at).toLocaleDateString()}
         </td>
-        <td className="p-3 2xl:p-[0.75vw] border border-gray-300">
+        <td className="p-3  border border-gray-300">
           {new Date(role.updated_at).toLocaleDateString()}
         </td>
-        <td className="p-3 2xl:p-[0.75vw] relative border border-gray-300" ref={actionRef}>
+        <td className="p-3  relative border border-gray-300" ref={actionRef}>
           <button
             onClick={(e) => {
               e.stopPropagation();
               setOpenActionId(isOpen ? null : role.id);
             }}
-            className="p-1 2xl:p-[0.25vw] rounded hover:bg-gray-200"
+            className="p-1  rounded hover:bg-gray-200"
           >
-            <FiMoreVertical className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.25vw]" />
+            <FiMoreVertical className="w-5  h-5 " />
           </button>
 
           {isOpen && (
-            <div className="absolute right-[95%] top-[-40%] bg-white shadow-lg z-50 rounded 2xl:rounded-[0.25vw] border 2xl:border-[0.05vw] w-32 2xl:w-[10vw]">
+            <div className="absolute right-[95%] top-[-40%] bg-white shadow-lg z-50 rounded  border  w-32 ">
               {actions?.length > 0 && actions?.map((action, index) => (
                 <button
                   key={index}
-                  className={`block w-full px-4 text-[0.9rem] 2xl:text-[0.9vw] 2xl:leading-[1.3vw] 2xl:px-[1vw] py-2 2xl:py-[0.5vw] text-left hover:bg-gray-100 ${action.className}`}
+                  className={`block w-full px-4 text-[0.9rem]    py-2  text-left hover:bg-gray-100 ${action.className}`}
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenActionId(null);

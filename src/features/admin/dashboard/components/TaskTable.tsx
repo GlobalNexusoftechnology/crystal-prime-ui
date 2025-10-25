@@ -408,12 +408,12 @@ const TaskTable: React.FC<TaskTableProps> = ({
     );
 
   return (
-    <div className="p-4 2xl:p-[1vw] border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] bg-gray-50">
-      <div className="flex justify-between items-center flex-wrap gap-4 2xl:gap-[1vw]">
-        <h2 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium">
+    <div className="p-4  border  border-grey-300 rounded-xl  bg-gray-50">
+      <div className="flex justify-between items-center flex-wrap gap-4 ">
+        <h2 className="text-[1.2rem]  font-medium">
           Task List
         </h2>
-        <div className="flex items-center flex-wrap gap-4 2xl:gap-[1vw]">
+        <div className="flex items-center flex-wrap gap-4 ">
           <SearchBar
             onSearch={handleSearch}
             bgColor="white"
@@ -426,14 +426,14 @@ const TaskTable: React.FC<TaskTableProps> = ({
               onClick={onAddTask}
               width="w-full md:w-fit"
               leftIcon={
-                <FiPlus className="w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw] mt-[1px] 2xl:mt-[0.1vw]" />
+                <FiPlus className="w-4 h-4   mt-[1px] " />
               }
             />
           )}
         </div>
       </div>
 
-      <div className="flex justify-start items-end flex-wrap gap-4 2xl:gap-[1vw] my-4 2xl:my-[1vw]">
+      <div className="flex justify-start items-end flex-wrap gap-4  my-4 ">
         <DatePicker
           key={`from-date-${presetFilter}-${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`}`}
           label="From Date"
@@ -455,7 +455,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
             variant="background-white"
             width="w-full md:w-fit"
             onClick={handleClearDates}
-            leftIcon={<FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />}
+            leftIcon={<FiX className="w-5 h-5  " />}
             tooltip="Clear Dates"
           />
         )}
@@ -480,7 +480,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
             variant="background-white"
             width="w-full md:w-fit"
             onClick={handleClearDueDates}
-            leftIcon={<FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />}
+            leftIcon={<FiX className="w-5 h-5  " />}
             tooltip="Clear Due Dates"
           />
         )}
@@ -534,7 +534,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
             variant="background-white"
             width="w-full md:w-fit"
             onClick={handleClearAllFilters}
-            leftIcon={<FiX className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />}
+            leftIcon={<FiX className="w-5 h-5  " />}
             tooltip="Clear All Filters"
           />
         )}

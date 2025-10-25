@@ -89,30 +89,30 @@ export function Tickets({ projectId }: ITicketsProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+    <div className="flex flex-col gap-4 ">
       {/* Header with filters */}
-      <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw] justify-between items-start md:items-center">
-        <div className="flex items-center gap-4 2xl:gap-[1vw]">
-          <h3 className="text-lg 2xl:text-[1.2vw] font-semibold text-[#1D2939]">
+      <div className="flex flex-col md:flex-row gap-4  justify-between items-start md:items-center">
+        <div className="flex items-center gap-4 ">
+          <h3 className="text-lg  font-semibold text-[#1D2939]">
             Project Tickets
           </h3>
-          <span className="text-sm 2xl:text-[0.9vw] text-gray-500">
+          <span className="text-sm  text-gray-500">
             ({filteredTickets.length} tickets)
           </span>
         </div>
       </div>
 
       {/* Filters Section */}
-      <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw] justify-between items-start md:items-center">
-        <div className="flex flex-col sm:flex-row gap-3 2xl:gap-[0.75vw] w-full md:w-auto">
-          <div className="w-full sm:w-48 2xl:w-[12vw]">
+      <div className="flex flex-col md:flex-row gap-4  justify-between items-start md:items-center">
+        <div className="flex flex-col sm:flex-row gap-3  w-full md:w-auto">
+          <div className="w-full sm:w-48 ">
             <Dropdown
               options={statusOptions}
               value={statusFilter}
               onChange={(value) => setStatusFilter(value)}
             />
           </div>
-          <div className="w-full sm:w-48 2xl:w-[12vw]">
+          <div className="w-full sm:w-48 ">
             <Dropdown
               options={priorityOptions}
               value={priorityFilter}
@@ -125,7 +125,7 @@ export function Tickets({ projectId }: ITicketsProps) {
       {/* Tickets List */}
       {error ? (
         <div className="text-center py-8">
-          <p className="text-red-600 mb-4 2xl:text-[1.1vw]">
+          <p className="text-red-600 mb-4 ">
             Failed to load tickets. Please try again.
           </p>
           <button
@@ -137,37 +137,37 @@ export function Tickets({ projectId }: ITicketsProps) {
         </div>
       ) : filteredTickets.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-500 mb-4 2xl:text-[1.1vw]">
+          <p className="text-gray-500 mb-4 ">
             {statusFilter || priorityFilter
               ? "No tickets found matching your filters."
               : "No tickets found for this project."}
           </p>
           {!statusFilter && !priorityFilter && (
-            <p className="text-gray-400 2xl:text-[1.1vw]">
+            <p className="text-gray-400 ">
               No tickets available for this project.
             </p>
           )}
         </div>
       ) : (
-        <div className="space-y-4 2xl:space-y-[1vw]">
+        <div className="space-y-4 ">
           {filteredTickets.map((ticket: ITicketData) => (
             <div
               key={ticket.id}
-              className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
+              className="flex flex-col gap-4  bg-customGray border  border-grey-300 rounded-xl  p-4  text-[0.9rem]  text-[#1D2939] w-full"
             >
               {/* Header with title */}
-              <div className="flex flex-wrap justify-between items-start gap-4 2xl:gap-[1vw]">
+              <div className="flex flex-wrap justify-between items-start gap-4 ">
                 <div className="flex-1">
-                  <h4 className="font-semibold text-[1rem] 2xl:text-[1.1vw] text-[#1D2939] mb-2 2xl:mb-[0.5vw]">
+                  <h4 className="font-semibold text-[1rem]  text-[#1D2939] mb-2 ">
                     {ticket.title}
                   </h4>
-                  <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
+                  <div className="flex flex-wrap gap-4  mb-2  font-medium text-[#1D2939]">
                     <span>
-                      <span className="2xl:text-[1.1vw] font-normal">
+                      <span className=" font-normal">
                         Status:{" "}
                       </span>
                       <span
-                        className={`underline 2xl:text-[1.1vw] ${getStatusColor(
+                        className={`underline  ${getStatusColor(
                           ticket.status
                         )}`}
                       >
@@ -175,11 +175,11 @@ export function Tickets({ projectId }: ITicketsProps) {
                       </span>
                     </span>
                     <span>
-                      <span className="2xl:text-[1.1vw] font-normal">
+                      <span className=" font-normal">
                         Priority:{" "}
                       </span>
                       <span
-                        className={`underline 2xl:text-[1.1vw] ${getPriorityColor(
+                        className={`underline  ${getPriorityColor(
                           ticket.priority
                         )}`}
                       >
@@ -191,13 +191,13 @@ export function Tickets({ projectId }: ITicketsProps) {
               </div>
 
               {/* Description */}
-              <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw]">
+              <p className=" mb-2 ">
                 {ticket.description || "No description provided"}
               </p>
 
               {/* Remark */}
               {/* {ticket.remark && (
-                <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw] text-gray-600">
+                <p className=" mb-2  text-gray-600">
                   <span className="font-medium">Remark: </span>
                   {ticket.remark}
                 </p>
@@ -205,7 +205,7 @@ export function Tickets({ projectId }: ITicketsProps) {
 
               {/* Image */}
               {ticket.image_url && (
-                <div className="mb-2 2xl:mb-[0.5vw]">
+                <div className="mb-2 ">
                   <Image
                     src={ticket.image_url}
                     alt="Ticket attachment"
@@ -218,11 +218,11 @@ export function Tickets({ projectId }: ITicketsProps) {
               )}
 
               {/* Footer with dates */}
-              <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw] font-medium">
-                <p className="2xl:text-[1.1vw] underline">
+              <div className="flex flex-wrap items-center gap-4  font-medium">
+                <p className=" underline">
                   Created: {formatDate(ticket.created_at)}
                 </p>
-                <p className="text-lightGreen 2xl:text-[1.1vw]">
+                <p className="text-lightGreen ">
                   Updated: {formatDate(ticket.updated_at)}
                 </p>
               </div>
@@ -239,7 +239,7 @@ export function Tickets({ projectId }: ITicketsProps) {
           setSelectedImage(null);
         }}
         modalTitle="Ticket Image"
-        modalClassName="w-full md:w-[80vw] 2xl:w-[80vw] max-w-4xl"
+        modalClassName="w-full md:w-[80vw] max-w-4xl"
       >
         <div className="flex justify-center items-center p-4">
           {selectedImage && (

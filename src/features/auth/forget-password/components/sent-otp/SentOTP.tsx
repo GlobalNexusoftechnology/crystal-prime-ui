@@ -52,7 +52,7 @@ export function SentOTP({ onNext, email }: TSentOTPProps) {
           }}
         >
           {({ setFieldValue, values }) => (
-            <Form className="flex flex-col gap-4 2xl:gap-[1vw]">
+            <Form className="flex flex-col gap-4 ">
               {/* OtpInput connected to Formik */}
               <OtpInput
                 value={values.otp}

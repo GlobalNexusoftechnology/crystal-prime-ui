@@ -26,23 +26,23 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
   };
 
   return (
-    <div className="  overflow-y-auto h-[30rem] 2xl:h-[30vw]">
-      <div className="space-y-6 p-4 2xl:p-[3vw] ">
+    <div className="  overflow-y-auto h-[30rem] ">
+      <div className="space-y-6 p-4  ">
         {/* Step 1 */}
         {step === 1 && (
           <>
             {/* Warning Section */}
             <div className="rounded-lg bg-white ">
-              <p className="text-[1rem] 2xl:text-[1vw] text-red-600 font-medium mb-2">
+              <p className="text-[1rem]  text-red-600 font-medium mb-2">
                 The following columns were found in the file but do not match
                 any fields in the system:
               </p>
-              <div className="space-y-2 ml-2 text-[1rem] 2xl:text-[1vw] text-gray-700">
+              <div className="space-y-2 ml-2 text-[1rem]  text-gray-700">
                 {["Company Size", "Website", "Lead Budget"].map(
                   (item, index) => (
                     <div
                       key={index}
-                      className="flex items-center space-x-2 text-[1rem] 2xl:text-[1vw]"
+                      className="flex items-center space-x-2 text-[1rem] "
                     >
                       <input
                         type="checkbox"
@@ -60,7 +60,7 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
 
             {/* Action Choice Section */}
             <div className="space-y-3">
-              <p className="text-[1rem] 2xl:text-[1vw] font-semibold text-gray-700">
+              <p className="text-[1rem]  font-semibold text-gray-700">
                 WHAT WOULD YOU LIKE TO DO WITH THESE COLUMNS?
               </p>
 
@@ -70,17 +70,17 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
                   id="addCustomFields"
                   checked={customFieldsChecked}
                   onChange={(e) => setCustomFieldsChecked(e.target.checked)}
-                  className="accent-black mt-1 text-[1rem] 2xl:text-[1vw]"
+                  className="accent-black mt-1 text-[1rem] "
                 />
                 <label
                   htmlFor="addCustomFields"
                   className="text-[0.9rem] text-gray-700"
                 >
-                  <span className="font-medium text-[1rem] 2xl:text-[1vw]">
+                  <span className="font-medium text-[1rem] ">
                     Add these as Custom Fields in the Lead Table
                   </span>
                   <br />
-                  <span className="text-gray-500 text-[1rem] 2xl:text-[1vw]">
+                  <span className="text-gray-500 text-[1rem] ">
                     This will create new fields visible in lead details/edit
                     form.
                   </span>
@@ -96,7 +96,7 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
                   className="accent-black mt-1"
                 />
                 <label htmlFor="ignoreFields" className="text-[0.9rem] text-gray-700">
-                  <span className="font-medium text-[1rem] 2xl:text-[1vw]">
+                  <span className="font-medium text-[1rem] ">
                     Ignore these columns
                   </span>
                   <br />
@@ -109,13 +109,13 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
             <div className="space-y-2">
               <label
                 htmlFor="leadType"
-                className="text-[1rem] 2xl:text-[1vw] font-medium text-gray-700"
+                className="text-[1rem]  font-medium text-gray-700"
               >
                 Lead Type
               </label>
               <select
                 id="leadType"
-                className="w-full border border-gray-300 rounded-md p-2 text-[1rem] 2xl:text-[1vw]"
+                className="w-full border border-gray-300 rounded-md p-2 text-[1rem] "
               >
                 <option value="">Select Lead Type</option>
               </select>
@@ -125,13 +125,13 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
             <div className="space-y-2">
               <label
                 htmlFor="assignedTo"
-                className="text-[1rem] 2xl:text-[1vw] font-medium text-gray-700"
+                className="text-[1rem]  font-medium text-gray-700"
               >
                 Assigned To
               </label>
               <select
                 id="assignedTo"
-                className="w-full border border-gray-300 rounded-md p-2 text-[1rem] 2xl:text-[1vw]"
+                className="w-full border border-gray-300 rounded-md p-2 text-[1rem] "
               >
                 <option value="">Select Staff</option>
               </select>
@@ -146,7 +146,7 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
                 />
                 <label
                   htmlFor="multiAssign"
-                  className="text-[1rem] 2xl:text-[1vw] text-gray-700"
+                  className="text-[1rem]  text-gray-700"
                 >
                   Assign to Multiple Staff Members
                 </label>
@@ -169,7 +169,7 @@ export function ImportExcel({ setAddLeadModalOpen }: ImportExcelProps) {
         {/* Step 2 */}
         {step === 2 && (
           <div className="text-center">
-            <p className="text-gray-600 text-[1rem] 2xl:text-[1vw]">
+            <p className="text-gray-600 text-[1rem] ">
               Next step goes here...
             </p>
             <Button title="Finish" onClick={handleCancel} className="mt-4" />

@@ -116,22 +116,22 @@ export const DocumentListColumn: ITableColumn<IDocumentListProps>[] = [
     header: "DOCUMENT NAME",
     accessor: "name",
     sortable: true,
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "DATE UPLOADED",
     accessor: "number",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "UPLOADED BY",
     accessor: "email",
-    headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
+    headerClassName: "min-w-[8rem] ",
   },
   {
     header: "TYPE",
     accessor: "businessName",
     sortable: true,
-    headerClassName: "min-w-[13rem] 2xl:min-w-[15vw]",
+    headerClassName: "min-w-[13rem] ",
   },
 ];

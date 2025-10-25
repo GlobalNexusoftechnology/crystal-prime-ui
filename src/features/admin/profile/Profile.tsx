@@ -8,11 +8,11 @@ import { PersonalInfo } from "./components";
  */
 export function Profile() {
   return (
-    <section className="flex flex-col  border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
-      <h1 className="text-xl 2xl:text-[1.25vw] font-semibold mb-8 2xl:mb-[2vw]">
+    <section className="flex flex-col  border border-gray-300 rounded-lg  bg-white p-4 ">
+      <h1 className="text-xl  font-semibold mb-8">
         My Profile
       </h1>
-      <div className="flex flex-col  border border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-[#F8F8F8]">
+      <div className="flex flex-col  border border-gray-300 rounded-lg  bg-[#F8F8F8]">
         <PersonalInfo />
       </div>
     </section>

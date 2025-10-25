@@ -84,11 +84,11 @@ export function AddDailyTaskModal({
       isOpen={isOpen}
       onClose={onClose}
       modalTitle={isEdit ? "Edit Daily Task Comment" : "Add Daily Task Comment"}
-      modalClassName="w-full md:w-[31rem] 2xl:w-[31vw]"
+      modalClassName="w-full md:w-[31rem] "
     >
       <form
         onSubmit={formik.handleSubmit}
-        className="flex flex-col gap-6 2xl:gap-[1.5vw] overflow-auto h-[30rem] 2xl:h-[30vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+        className="flex flex-col gap-6  overflow-auto h-[30rem]  bg-customGray border  p-3  rounded-md  space-y-1 mb-3 "
       >
         {showProjectAndUserSelection && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

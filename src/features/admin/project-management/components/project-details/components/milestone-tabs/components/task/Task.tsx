@@ -124,7 +124,7 @@ export function Task({
       editTask ? (
         <>
           <td></td>
-          <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] font-medium">
+          <td className="pl-32  py-2  font-medium">
             <div className="flex flex-col">
               <InputField
                 value={editTask.title}
@@ -135,7 +135,7 @@ export function Task({
               />
             </div>
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
+          <td className="px-4  py-2 ">
             <div className="flex flex-col">
               <InputField
                 value={editTask.description}
@@ -146,7 +146,7 @@ export function Task({
               />
             </div>
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
+          <td className="px-4  py-2 ">
             <div className="flex flex-col">
               <Dropdown
                 options={userOptions}
@@ -156,7 +156,7 @@ export function Task({
               />
             </div>
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
+          <td className="px-4  py-2 ">
             <div className="flex flex-col">
               <Dropdown
                 options={statusOptions}
@@ -166,7 +166,7 @@ export function Task({
               />
             </div>
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
+          <td className="px-4  py-2 ">
             <div className="flex flex-col">
               <Dropdown
                 options={priorityOptions}
@@ -176,7 +176,7 @@ export function Task({
               />
             </div>
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.5vw]">
+          <td className="px-4  py-2 ">
             <div className="flex flex-col">
               <DatePicker
                 value={editTask.due_date}
@@ -185,26 +185,26 @@ export function Task({
               />
             </div>
           </td>
-          <td className="h-full px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.5vw] text-right flex mt-2 2xl:mt-[0.5vw] gap-2 2xl:gap-[0.5vw]">
+          <td className="h-full px-2  py-2  text-right flex mt-2  gap-2 ">
             <button
               onClick={onSave}
-              className="text-green-600 2xl:text-[1vw]"
+              className="text-green-600 "
               title="Save"
             >
-              <HiCheck className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+              <HiCheck className="w-6  h-6 " />
             </button>
             <button
               onClick={onCancel}
-              className="text-red-600 2xl:text-[1vw]"
+              className="text-red-600 "
               title="Cancel"
             >
-              <HiXMark className="w-6 2xl:w-[1.5vw] h-6 2xl:h-[1.5vw]" />
+              <HiXMark className="w-6  h-6 " />
             </button>
           </td>
         </>
       ) : (
         <>
-          <td className="px-2 2xl:px-[0.5vw] py-2 2xl:py-[0.9vw] text-left relative">
+          <td className="px-2  py-2  text-left relative">
             <button
               className="text-gray-400 hover:text-blue-600"
               title="Menu"
@@ -226,7 +226,7 @@ export function Task({
               >
                 {canViewTask && (
                   <button
-                    className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
+                    className="block w-full text-left px-4  py-2  hover:bg-gray-100"
                     onClick={() => handleRedirectView(task.id)}
                   >
                     View
@@ -234,7 +234,7 @@ export function Task({
                 )}
                 {canEditTask && (
                   <button
-                    className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100"
+                    className="block w-full text-left px-4  py-2  hover:bg-gray-100"
                     onClick={() =>
                       onEdit(milestoneId, {
                         id: task.id,
@@ -252,7 +252,7 @@ export function Task({
                 )}
                 {canDeleteTask && (
                   <button
-                    className="block w-full text-left px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] hover:bg-gray-100 text-red-600"
+                    className="block w-full text-left px-4  py-2  hover:bg-gray-100 text-red-600"
                     onClick={() => onDelete(milestoneId, task.id)}
                   >
                     Delete
@@ -261,40 +261,40 @@ export function Task({
               </div>
             )}
           </td>
-          <td className="pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-[0.9rem] 2xl:text-[0.9vw] font-medium">
+          <td className="pl-32  py-2  text-[0.9rem]  font-medium">
             {task.title}
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
+          <td className="px-4  py-2  text-[0.9rem] ">
             {task.description}
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] text-[0.9rem] 2xl:text-[0.9vw]">
+          <td className="px-4  py-2  text-[0.9rem] ">
             <div className="flex items-center gap-2">
               <p
-                className="flex items-center justify-center p-2 2xl:p-[0.5vw] w-10 2xl:w-[2.5vw] h-10 2xl:h-[2.5vw] text-white text-[0.9rem] 2xl:text-[0.9vw] rounded-full"
+                className="flex items-center justify-center p-2  w-10  h-10  text-white text-[0.9rem]  rounded-full"
                 style={{
                   backgroundColor: getRandomColor(task.assigned_to || ""),
                 }}
               >
                 {getUserInitials(task.assigned_to || "")}
               </p>
-              <p className="px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] text-[0.9rem] 2xl:text-[0.9vw]">
+              <p className="px-3  py-1  text-[0.9rem] ">
                 {getUserName(task.assigned_to || "")}
               </p>
             </div>
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw]">
-            <span className="bg-blue-100 text-blue-600 px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold">
+          <td className="px-4  py-2 ">
+            <span className="bg-blue-100 text-blue-600 px-3  py-1  rounded-full text-[0.9rem]  font-semibold">
               {task.status}
             </span>
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw]">
-            <span className={`px-3 2xl:px-[0.75vw] py-1 2xl:py-[0.25vw] rounded-full text-[0.9rem] 2xl:text-[0.9vw] font-semibold ${getPriorityColor(task.priority)}`}>
+          <td className="px-4  py-2 ">
+            <span className={`px-3  py-1  rounded-full text-[0.9rem]  font-semibold ${getPriorityColor(task.priority)}`}>
               {task.priority || "Medium"}
             </span>
           </td>
-          <td className="px-4 2xl:px-[1vw] py-2 2xl:py-[0.9vw] 2xl:text-[0.9vw]">
-            <span className="flex items-center gap-2 2xl:gap-[0.5vw]">
-              <span className="text-[0.9rem] 2xl:text-[0.9vw]">
+          <td className="px-4  py-2  ">
+            <span className="flex items-center gap-2 ">
+              <span className="text-[0.9rem] ">
                 {task.due_date ? formatDateToDDMMYYYY(task.due_date) : "---"}
               </span>
             </span>

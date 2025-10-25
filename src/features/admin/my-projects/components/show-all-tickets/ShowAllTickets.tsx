@@ -135,42 +135,42 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
     {
       header: "IMAGE",
       accessor: "image",
-      headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
+      headerClassName: "min-w-[8rem] ",
     },
     {
       header: "STATUS",
       accessor: "status",
-      headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
+      headerClassName: "min-w-[8rem] ",
     },
     {
       header: "PRIORITY",
       accessor: "priority",
-      headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
+      headerClassName: "min-w-[8rem] ",
     },
     {
       header: "TITLE",
       accessor: "title",
-      headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
+      headerClassName: "min-w-[12rem] ",
     },
     {
       header: "DESCRIPTION",
       accessor: "description",
-      headerClassName: "min-w-[15rem] 2xl:min-w-[15vw]",
+      headerClassName: "min-w-[15rem] ",
     },
     // {
     //   header: "REMARK",
     //   accessor: "remark",
-    //   headerClassName: "min-w-[12rem] 2xl:min-w-[12vw]",
+    //   headerClassName: "min-w-[12rem] ",
     // },
     {
       header: "CREATED",
       accessor: "created_at",
-      headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+      headerClassName: "min-w-[10rem] ",
     },
     {
       header: "UPDATED",
       accessor: "updated_at",
-      headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+      headerClassName: "min-w-[10rem] ",
     },
   ];
 
@@ -268,7 +268,7 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
 
   if (projectLoading) {
     return (
-      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+      <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
         <Breadcrumb idToName={idToName} />
         <div className="flex justify-center items-center h-64">
           <div className="text-lg">Loading project details...</div>
@@ -279,7 +279,7 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
 
   if (!projectData) {
     return (
-      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+      <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
         <Breadcrumb />
         <div className="flex justify-center items-center h-64">
           <div className="text-lg text-red-600">Project not found.</div>
@@ -289,20 +289,20 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
   }
 
   return (
-    <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+    <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
       <Breadcrumb idToName={idToName} />
 
       {/* Header */}
-      <div className="flex flex-wrap md:flex-row flex-col gap-4 2xl:gap-[1.5vw] justify-between items-start md:items-center">
+      <div className="flex flex-wrap md:flex-row flex-col gap-4  justify-between items-start md:items-center">
         <div>
-          <h1 className="text-2xl 2xl:text-[1.8vw] font-semibold">
+          <h1 className="text-2xl  font-semibold">
             Tickets for: {projectData?.name}
           </h1>
           <p className="text-gray-600 mt-2">
             Total Tickets: {(ticketsData || []).length}
           </p>
         </div>
-        <div className="flex gap-4 2xl:gap-[1vw]">
+        <div className="flex gap-4 ">
           <Button
             title="Back to Projects"
             variant="primary-outline"
@@ -323,16 +323,16 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
       </div>
 
       {/* Filters Section */}
-      <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw] justify-between items-start md:items-center">
-        <div className="flex flex-col sm:flex-row gap-3 2xl:gap-[0.75vw] w-full md:w-auto">
-          <div className="w-full sm:w-48 2xl:w-[12vw]">
+      <div className="flex flex-col md:flex-row gap-4  justify-between items-start md:items-center">
+        <div className="flex flex-col sm:flex-row gap-3  w-full md:w-auto">
+          <div className="w-full sm:w-48 ">
             <SimpleDropdown
               options={statusOptions}
               value={statusFilter}
               onChange={(value) => setStatusFilter(value)}
             />
           </div>
-          <div className="w-full sm:w-48 2xl:w-[12vw]">
+          <div className="w-full sm:w-48 ">
             <SimpleDropdown
               options={priorityOptions}
               value={priorityFilter}
@@ -405,7 +405,7 @@ export const ShowAllTickets: React.FC<ShowAllTicketsProps> = ({
           setSelectedImage(null);
         }}
         modalTitle="Ticket Image"
-        modalClassName="w-full md:w-[80vw] 2xl:w-[80vw] max-w-4xl"
+        modalClassName="w-full max-w-4xl"
       >
         <div className="flex justify-center items-center p-4">
           {selectedImage && (

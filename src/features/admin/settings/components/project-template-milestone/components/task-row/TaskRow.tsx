@@ -30,7 +30,7 @@ export function TaskRow({
   formik,
 }: TaskRowProps) {
   return (
-    <div className="grid grid-cols-4 gap-4 2xl:gap-[1vw] items-center py-2 2xl:py-[0.5vw] px-4 2xl:px-[1vw] hover:bg-gray-50 border-b 2xl:border-b-[0.1vw]">
+    <div className="grid grid-cols-4 gap-4  items-center py-2  px-4  hover:bg-gray-50 border-b ">
       {isEditing ? (
         <InputField
           name={`milestones[${milestoneIndex}].tasks[${taskIndex}].title`}
@@ -83,7 +83,7 @@ export function TaskRow({
           }}
           onBlur={formik.handleBlur}
           placeholder="Enter Days"
-          icon={<TimeIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />}
+          icon={<TimeIcon className="w-6 h-6  " />}
           disabled={readOnly}
           error={
             formik.touched.milestones?.[milestoneIndex]?.tasks?.[taskIndex]
@@ -103,9 +103,9 @@ export function TaskRow({
           }
         />
       ) : (
-        <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
-          <TimeIcon className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.25vw]" />
-          <p className="text-[1.1rem] 2xl:text-[1.1vw] font-medium underline">
+        <div className="flex items-center gap-2 ">
+          <TimeIcon className="w-5  h-5 " />
+          <p className="text-[1.1rem]  font-medium underline">
             {task.estimated_days}
           </p>
         </div>

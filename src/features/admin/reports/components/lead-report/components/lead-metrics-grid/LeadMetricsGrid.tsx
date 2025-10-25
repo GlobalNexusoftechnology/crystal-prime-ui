@@ -36,7 +36,7 @@ export const LeadMetricsGrid: React.FC<LeadMetricsGridProps> = ({ data }) => {
   ];
 
   return (
-    <div className="flex flex-wrap gap-6 2xl:gap-[1.5vw] w-full max-w-6xl mx-auto">
+    <div className="flex flex-wrap gap-6  w-full max-w-6xl mx-auto">
       {metrics.map((metric, idx) => (
         <div
           key={idx}
@@ -46,9 +46,9 @@ export const LeadMetricsGrid: React.FC<LeadMetricsGridProps> = ({ data }) => {
             <FiInfo size={22} />
           </span>
           <div>
-            <div className="text-sm text-gray-600 2xl:text-[0.9vw]">{metric.label}</div>
+            <div className="text-sm text-gray-600 ">{metric.label}</div>
             <div
-              className={`text-[1rem] 2xl:text-[1vw] font-semibold text-[#1a2341] mt-1 ${
+              className={`text-[1rem]  font-semibold text-[#1a2341] mt-1 ${
                 metric.underline ? "underline cursor-pointer" : ""
               }`}
             >

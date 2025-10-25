@@ -52,15 +52,15 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
   }
 
   return (
-    <div className="p-4 2xl:p-[1vw]">
-      <h1 className="text-[1.1rem] 2xl:text-[1.1vw] font-medium">Milestone</h1>
+    <div className="p-4 ">
+      <h1 className="text-[1.1rem]  font-medium">Milestone</h1>
       <FieldArray
         name="milestones"
         render={(arrayHelpers) => (
           <div className="mt-4">
-            <div className="grid grid-cols-4 gap-4 2xl:gap-[1vw] items-center p-4 2xl:p-[1vw] border-b 2xl:border-b-[0.1vw]">
-              <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
-                <span className="text-[0.9rem] 2xl:text-[0.875vw] font-medium text-gray-500">
+            <div className="grid grid-cols-4 gap-4  items-center p-4  border-b ">
+              <div className="flex items-center gap-2 ">
+                <span className="text-[0.9rem]  font-medium text-gray-500">
                   Milestone Name
                 </span>
                 {!readOnly && (
@@ -87,14 +87,14 @@ export function ProjectTemplateMilestone({ formik, readOnly = false }: { formik:
                       }
                     }}
                   >
-                    <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                    <AddSquareIcon className="w-6 h-6  " />
                   </button>
                 )}
               </div>
-              <span className="text-[0.9rem] 2xl:text-[0.875vw] font-medium text-gray-500">
+              <span className="text-[0.9rem]  font-medium text-gray-500">
                 Estimated Days
               </span>
-              <span className="text-[0.9rem] 2xl:text-[0.875vw] font-medium text-gray-500">
+              <span className="text-[0.9rem]  font-medium text-gray-500">
                 Description
               </span>
             </div>

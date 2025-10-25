@@ -106,7 +106,7 @@ export function ProjectManagement() {
 
   if (isLoading) {
     return (
-      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+      <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
         <Breadcrumb />
         <div className="flex justify-center items-center h-64">
           <div className="text-lg">Loading projects...</div>
@@ -117,7 +117,7 @@ export function ProjectManagement() {
 
   if (error) {
     return (
-      <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+      <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
         <Breadcrumb />
         <div className="flex justify-center items-center h-64">
           <div className="text-lg text-red-600">Error loading projects. Please try again.</div>
@@ -127,13 +127,13 @@ export function ProjectManagement() {
   }
 
   return (
-    <section className="flex flex-col gap-6 2xl:gap-[2vw] border border-gray-300 rounded-lg 2xl:rounded-[1vw] bg-white p-4 2xl:p-[2vw]">
+    <section className="flex flex-col gap-6  border border-gray-300 rounded-lg  bg-white p-4 ">
       <Breadcrumb />
-      <div className="flex flex-wrap md:flex-row flex-col gap-4 2xl:gap-[1.5vw] justify-between items-start md:items-center">
-        <h1 className="text-2xl 2xl:text-[1.8vw] font-semibold">
+      <div className="flex flex-wrap md:flex-row flex-col gap-4  justify-between items-start md:items-center">
+        <h1 className="text-2xl  font-semibold">
           Project List
         </h1>
-        <div className="w-full md:w-auto flex gap-4 2xl:gap-[1vw] flex-col md:flex-row items-center">
+        <div className="w-full md:w-auto flex gap-4  flex-col md:flex-row items-center">
           {canAddProject && (
             <Button
               title="Add New Project"
@@ -148,12 +148,12 @@ export function ProjectManagement() {
             }}
             value={searchQuery}
             bgColor="white"
-            width="w-full min-w-[12rem] md:w-[25vw] 2xl:w-[20vw]"
+            width="w-full min-w-[12rem] md:w-[25vw] "
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 2xl:gap-[2vw]">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
         {(["open", "inProgress", "completed"] as const)?.map((stage) => (
           <ProjectStageSection
             key={stage}

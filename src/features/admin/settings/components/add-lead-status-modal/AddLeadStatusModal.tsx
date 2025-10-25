@@ -107,7 +107,7 @@ export function AddLeadStatusModal({
                   <label className="text-[0.9rem] font-medium text-gray-700 block mb-2">
                     Status Color
                   </label>
-                  <div className="flex items-center border border-gray-300 rounded-md 2xl:rounded-[0.375vw] relative px-4 ">
+                  <div className="flex items-center border border-gray-300 rounded-md  relative px-4 ">
                     <div
                       className="w-14 h-6 rounded-full"
                       style={{ backgroundColor: values.color }}

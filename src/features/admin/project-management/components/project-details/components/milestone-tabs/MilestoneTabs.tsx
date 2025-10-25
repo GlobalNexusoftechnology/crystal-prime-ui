@@ -752,15 +752,15 @@ export function MilestoneTabs({
   return (
     <div
       ref={containerRef}
-      className="flex flex-col gap-8 2xl:gap-[2vw] p-4 2xl:px-[1vw]"
+      className="flex flex-col gap-8  p-4 "
     >
       {/* Tabs */}
-      <div className="flex gap-8 2xl:gap-[2vw] items-center">
-        <div className="flex gap-8 2xl:gap-[2vw]">
+      <div className="flex gap-8  items-center">
+        <div className="flex gap-8 ">
           {tabs?.length > 0 && tabs?.map((tab) => (
             <button
               key={tab}
-              className={` 2xl:gap-[2vw] font-medium text-[1.2rem] 2xl:text-[1.2vw] ${
+              className={`  font-medium text-[1.2rem]  ${
                 activeTab === tab ? "" : "text-gray-500"
               }`}
               onClick={() => {
@@ -777,13 +777,13 @@ export function MilestoneTabs({
       {/* Tab Contents */}
       <div>
         {activeTab === "Milestones" && (
-          <div className="mb-4 2xl:mb-[1vw] border 2xl:border-[0.05vw] border-gray-300 rounded-lg 2xl:rounded-[0.75vw]">
+          <div className="mb-4  border  border-gray-300 rounded-lg ">
             <div className="overflow-x-auto">
-              <table className="border-separate border-spacing-y-2 2xl:border-spacing-y-[0.5vw]">
+              <table className="border-separate border-spacing-y-2 ">
                 <thead>
-                  <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
-                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                    <th className="text-left p-2 2xl:p-[0.5vw] flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                  <tr className="text-gray-500 text-[0.9rem] ">
+                    <th className="px-2 py-2  "></th>
+                    <th className="text-left p-2  flex items-center gap-4  min-w-[20rem] ">
                       <span>Milestone Name</span>
                       {canAddMilestone && (
                         <button
@@ -792,23 +792,23 @@ export function MilestoneTabs({
                           type="button"
                           onClick={handleAddMilestone}
                         >
-                          <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                          <AddSquareIcon className="w-6 h-6  " />
                         </button>
                       )}
                     </th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                    <th className="text-left  px-2 py-2   min-w-[15rem] ">
                       Description
                     </th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[14rem] 2xl:min-w-[14vw]">
+                    <th className="text-left  px-2 py-2   min-w-[14rem] ">
                       Assigned To
                     </th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                    <th className="text-left  px-2 py-2   min-w-[8rem] ">
                       Status
                     </th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                    <th className="text-left  px-2 py-2   min-w-[12rem] ">
                       Estimated Start Date
                     </th>
-                    <th className="text-left 2xl:text-[1vw] px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] min-w-[12rem] 2xl:min-w-[12vw]">
+                    <th className="text-left  px-2 py-2   min-w-[12rem] ">
                       Estimated End Date
                     </th>
                     <th></th>
@@ -840,13 +840,13 @@ export function MilestoneTabs({
                       />
                       {(expandedMilestones.includes(milestone.id) ||
                         editingId === milestone.id) && milestone.name !== "Support" && (
-                        <tr className="bg-gray-50 2xl:bg-gray-100]">
+                        <tr className="bg-gray-50 ]">
                           <td colSpan={7} className="p-0">
                             <table>
                               <thead>
-                                <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                                  <th className=" px-2 2xl:px-[0.5vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-left flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                <tr className="text-gray-500 text-[0.9rem] ">
+                                  <th className="px-2 py-2  "></th>
+                                  <th className=" px-2  pl-32  py-2  text-left flex items-center gap-4  min-w-[20rem] ">
                                     <span>Task Name</span>
                                     {canAddTask && (
                                       <button
@@ -857,26 +857,26 @@ export function MilestoneTabs({
                                           handleAddTask(milestone.id)
                                         }
                                       >
-                                        <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                                        <AddSquareIcon className="w-6 h-6  " />
                                       </button>
                                     )}
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                  <th className="px-2 py-2   text-left  min-w-[15rem] ">
                                     Description
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                  <th className="px-2 py-2   text-left  min-w-[15rem] ">
                                     Assigned To
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                  <th className="px-2 py-2   text-left  min-w-[8rem] ">
                                     Status
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                  <th className="px-2 py-2   text-left  min-w-[8rem] ">
                                     Priority
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-left 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                  <th className="px-2 py-2   text-left  min-w-[10rem] ">
                                     Due Date
                                   </th>
-                                  <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
+                                  <th className="px-2 py-2  "></th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -913,34 +913,34 @@ export function MilestoneTabs({
                       )}
                         {/* Tickets Section - Conditional Rendering */}
                         {milestone.tickets && milestone.tickets.length > 0 && (
-                          <tr className="bg-gray-50 2xl:bg-gray-100]">
+                          <tr className="bg-gray-50 ]">
                             <td colSpan={7} className="p-0">
                               <table>
                                 <thead>
-                                  <tr className="text-gray-500 text-[0.9rem] 2xl:text-[0.9vw]">
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw]"></th>
-                                    <th className=" px-2 2xl:px-[0.5vw] pl-32 2xl:pl-[8vw] py-2 2xl:py-[0.5vw] text-center flex items-center gap-4 2xl:gap-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                  <tr className="text-gray-500 text-[0.9rem] ">
+                                    <th className="px-2 py-2  "></th>
+                                    <th className=" px-2  pl-32  py-2  text-center flex items-center gap-4  min-w-[20rem] ">
                                       <span>Ticket Title</span>
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[20rem] 2xl:min-w-[20vw]">
+                                    <th className="px-2 py-2   text-center  min-w-[20rem] ">
                                       Description
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                    <th className="px-2 py-2   text-center  min-w-[15rem] ">
                                       Assigned To
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    <th className="px-2 py-2   text-center  min-w-[10rem] ">
                                       Status
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    <th className="px-2 py-2   text-center  min-w-[10rem] ">
                                       Priority
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[15rem] 2xl:min-w-[15vw]">
+                                    <th className="px-2 py-2   text-center  min-w-[15rem] ">
                                       Remark
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[8rem] 2xl:min-w-[8vw]">
+                                    <th className="px-2 py-2   text-center  min-w-[8rem] ">
                                       Image
                                     </th>
-                                    <th className="px-2 py-2 2xl:px-[0.5vw] 2xl:py-[0.5vw] text-center 2xl:text-[1vw] min-w-[10rem] 2xl:min-w-[10vw]">
+                                    <th className="px-2 py-2   text-center  min-w-[10rem] ">
                                       Created Date
                                     </th>
                                   </tr>

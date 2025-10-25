@@ -51,7 +51,7 @@ export function ImportExcel({ setAddEILogModalOpen }: ImportExcelProps) {
 
   return (
     <div className="w-full space-y-4">
-      <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl 2xl:rounded-[0.75vw] p-8 2xl:p-[2vw] text-center bg-gray-50">
+      <div className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl  p-8  text-center bg-gray-50">
         <UploadDocument
           label="Upload Excel File"
           onChange={(files: FileList | null) => {

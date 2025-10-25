@@ -100,13 +100,13 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({
     chartData.length > 0 && chartData.every((d) => d.name === "Unknown");
 
   return (
-    <div className="bg-white rounded-xl p-4 border 2xl:border-[0.05vw] border-gray-300 flex flex-col items-center w-full">
-      <div className="flex justify-between items-center w-full mb-2 2xl:mb-[0.5vw]">
-        <span className="font-medium text-lg 2xl:text-[1.2vw] text-gray-900">
+    <div className="bg-white rounded-xl p-4 border  border-gray-300 flex flex-col items-center w-full">
+      <div className="flex justify-between items-center w-full mb-2 ">
+        <span className="font-medium text-lg  text-gray-900">
           Lead Type
         </span>
         <div
-          className="flex items-center gap-2 2xl:gap-[0.5vw] relative"
+          className="flex items-center gap-2  relative"
           ref={dropdownRef}
         >
           <button
@@ -197,7 +197,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({
             {legendItems.map((item) => (
               <div
                 key={item.name}
-                className="flex items-center gap-2 text-base 2xl:text-[1vw] mb-2"
+                className="flex items-center gap-2 text-base  mb-2"
               >
                 <span
                   className="inline-block w-4 h-4 rounded-full"

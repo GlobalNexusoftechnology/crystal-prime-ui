@@ -83,8 +83,8 @@ export function MilestoneRow({
 
   return (
     <div>
-      <div className="grid grid-cols-4 gap-4 2xl:gap-[1vw] items-center py-2 2xl:py-[0.5vw] px-4 2xl:px-[1vw]  hover:bg-gray-50 border-b ">
-        <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
+      <div className="grid grid-cols-4 gap-4  items-center py-2  px-4   hover:bg-gray-50 border-b ">
+        <div className="flex items-center gap-2 ">
           <button
             type="button"
             onClick={() => onToggle(milestone.id || String(index))}
@@ -114,11 +114,11 @@ export function MilestoneRow({
               }
             />
           ) : (
-            <div className="flex items-center gap-4 2xl:gap-[1vw]">
+            <div className="flex items-center gap-4 ">
               <span>{milestone.name}</span>
               <div className="flex items-center gap-1">
-                <TreeStructureIcon className="w-4 2xl:w-[1vw] h-4 2xl:h-[1vw]" />
-                <p className="border-2 border-dotted border-primary rounded-full text-xs 2xl:text-[0.9vw] px-1 2xl:px-[0.25vw] text-primary">
+                <TreeStructureIcon className="w-4  h-4 " />
+                <p className="border-2 border-dotted border-primary rounded-full text-xs  px-1  text-primary">
                   {milestone.tasks.length}
                 </p>
               </div>
@@ -139,7 +139,7 @@ export function MilestoneRow({
             }}
             onBlur={formik.handleBlur}
             placeholder="Enter Days"
-            icon={<TimeIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />}
+            icon={<TimeIcon className="w-6 h-6  " />}
             error={
               formik.touched.milestones?.[index]?.estimated_days &&
               typeof formik.errors.milestones?.[index] === "object" &&
@@ -150,9 +150,9 @@ export function MilestoneRow({
             }
           />
         ) : (
-          <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
-            <TimeIcon className="w-5 2xl:w-[1.25vw] h-5 2xl:h-[1.25vw]" />
-            <p className="text-[1.1rem] 2xl:text-[1.1vw] font-medium underline">
+          <div className="flex items-center gap-2 ">
+            <TimeIcon className="w-5  h-5 " />
+            <p className="text-[1.1rem]  font-medium underline">
               {milestone.estimated_days}
             </p>
           </div>
@@ -261,14 +261,14 @@ export function MilestoneRow({
         </div>
       </div>
       {expanded && !isEditing && (
-        <div className="pl-12 2xl:pl-[3vw] pr-4 2xl:pr-[1vw] pb-4 2xl:pb-[1vw] mt-2">
+        <div className="pl-12  pr-4  pb-4  mt-2">
           <FieldArray
             name={`milestones[${index}].tasks`}
             render={(taskArrayHelpers) => (
               <div>
-                <div className="grid grid-cols-4 gap-4 2xl:gap-[1vw] items-center p-4 2xl:p-[1vw] border-b 2xl:border-b-[0.1vw]">
-                  <div className="flex items-center gap-2 2xl:gap-[0.5vw]">
-                    <span className="text-[0.9rem] 2xl:text-[0.875vw] font-medium text-gray-500">
+                <div className="grid grid-cols-4 gap-4  items-center p-4  border-b ">
+                  <div className="flex items-center gap-2 ">
+                    <span className="text-[0.9rem]  font-medium text-gray-500">
                       Task Name
                     </span>
                     {!readOnly && (
@@ -300,14 +300,14 @@ export function MilestoneRow({
                           }
                         }}
                       >
-                        <AddSquareIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+                        <AddSquareIcon className="w-6 h-6  " />
                       </button>
                     )}
                   </div>
-                  <span className="text-[0.9rem] 2xl:text-[0.875vw] font-medium text-gray-500">
+                  <span className="text-[0.9rem]  font-medium text-gray-500">
                     Estimated Days
                   </span>
-                  <span className="text-[0.9rem] 2xl:text-[0.875vw] font-medium text-gray-500">
+                  <span className="text-[0.9rem]  font-medium text-gray-500">
                     Description
                   </span>
                 </div>

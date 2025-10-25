@@ -44,10 +44,10 @@ export function PBDashboardReport() {
     return <div>Error loading dashboard</div>;
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw] border 2xl:border-[0.05vw] rounded-xl 2xl:rounded-[0.75vw] bg-white p-6 2xl:p-[1.5vw]">
+    <div className="flex flex-col gap-4  border  rounded-xl  bg-white p-6 ">
       <Breadcrumb />
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
+        <h2 className="text-2xl  font-medium mb-4 ">
           Public Business Dashboard
         </h2>
         <Button
@@ -57,7 +57,7 @@ export function PBDashboardReport() {
           onClick={handleExport}
           leftIcon={
             <ImDownload2
-              className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
+              className="w-5 h-5  "
               color="#034A9F"
             />
           }
@@ -71,10 +71,10 @@ export function PBDashboardReport() {
         setToDate={setToDate}
       />
       <div className="grid grid-cols-1 xl:grid-cols-2">
-        <div className="flex flex-col border-gray-400 border-r 2xl:border-r-[0.1vw]">
+        <div className="flex flex-col border-gray-400 border-r ">
           <BusinessOverview data={publicDashboardData.businessOverview} />
-          <div className="flex flex-col gap-4 2xl:gap-[1vw] p-6 2xl:p-[1.5vw]">
-            <h2 className="text-[1.1rem] 2xl:text-[1.1vw] font-semibold mb-2">
+          <div className="flex flex-col gap-4  p-6 ">
+            <h2 className="text-[1.1rem]  font-semibold mb-2">
               Trend Charts
             </h2>
             <ExpensesOverviewChart data={publicDashboardData.trendChart} />

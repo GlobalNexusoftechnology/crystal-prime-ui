@@ -84,13 +84,13 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
     })) || [];
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+    <div className="flex flex-col gap-4 ">
       {showForm ? (
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+          className="flex flex-col gap-6  bg-customGray border  p-3  rounded-md  space-y-1 mb-3 "
         >
-          <div className="flex flex-col md:flex-row gap-4 2xl:gap-[1vw]">
+          <div className="flex flex-col md:flex-row gap-4 ">
             <Dropdown
               label="Status"
               options={statusOptions}
@@ -123,7 +123,7 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
             minDate={new Date().toISOString().slice(0, 10)}
             error={formik.touched.due_date ? formik.errors.due_date : undefined}
           />
-          <div className="flex items-center gap-4 2xl:gap-[1vw]">
+          <div className="flex items-center gap-4 ">
             <Button
               title="Cancel"
               variant="primary-outline"
@@ -138,42 +138,42 @@ export function Followups({ leadId, showForm, setShowForm }: IFollowupsProps) {
         followupData?.map((followup, idx) => (
           <div
             key={idx}
-            className="flex flex-col gap-2 md:gap-6 2xl:gap-[2vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+            className="flex flex-col gap-2 md:gap-6  bg-customGray border  p-3  rounded-md  space-y-1 mb-3 "
           >
-            <div className="flex flex-col gap-2 2xl:gap-[0.5vw]">
-              <div className="text-darkBlue flex justify-between items-center gap-4 2xl:gap-[1vw]">
-                <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
-                  <p className="text-[1rem] 2xl:text-[1vw]">Assigned To:</p>
-                  <p className="text-[1rem] 2xl:text-[1vw]">{`${followup?.user?.first_name} ${followup?.user?.last_name}`}</p>
+            <div className="flex flex-col gap-2 ">
+              <div className="text-darkBlue flex justify-between items-center gap-4 ">
+                <div className="flex flex-col md:flex-row gap-2  underline">
+                  <p className="text-[1rem] ">Assigned To:</p>
+                  <p className="text-[1rem] ">{`${followup?.user?.first_name} ${followup?.user?.last_name}`}</p>
                 </div>
-                <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
-                  <p className="text-[1rem] 2xl:text-[1vw]">Status:</p>
-                  <p className="text-[1rem] 2xl:text-[1vw]">
+                <div className="flex flex-col md:flex-row gap-2  underline">
+                  <p className="text-[1rem] ">Status:</p>
+                  <p className="text-[1rem] ">
                     {followup?.status}
                   </p>
                 </div>
               </div>
-              <h1 className="text-[1rem] 2xl:text-[1vw]">
+              <h1 className="text-[1rem] ">
                 {followup?.remarks}
               </h1>
             </div>
             <div className="flex justify-between flex-col md:flex-row flex-wrap gap-4">
-              <div className="flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
-                <p className="text-[1rem] 2xl:text-[1vw]">Due:</p>
-                <p className="text-[1rem] 2xl:text-[1vw]">
+              <div className="flex flex-col md:flex-row gap-2  underline">
+                <p className="text-[1rem] ">Due:</p>
+                <p className="text-[1rem] ">
                   {formatDate(`${followup?.due_date}`)}
                 </p>
               </div>
-              <div className="flex flex-col text-lightGreen md:flex-row gap-2 2xl:gap-[0.5vw] underline">
-                <p className="text-[1rem] 2xl:text-[1vw]">Created At</p>
-                <p className="text-[1rem] 2xl:text-[1vw]">
+              <div className="flex flex-col text-lightGreen md:flex-row gap-2  underline">
+                <p className="text-[1rem] ">Created At</p>
+                <p className="text-[1rem] ">
                   {formatIndiaTime(`${followup?.created_at}`, "toReadable")}
                 </p>
               </div>
               {followup?.completed_date ? (
-                <div className="text-lightGreen flex flex-col md:flex-row gap-2 2xl:gap-[0.5vw] underline">
-                  <p className="text-[1rem] 2xl:text-[1vw]">Completed:</p>
-                  <p className="text-[1rem] 2xl:text-[1vw]">
+                <div className="text-lightGreen flex flex-col md:flex-row gap-2  underline">
+                  <p className="text-[1rem] ">Completed:</p>
+                  <p className="text-[1rem] ">
                     {formatIndiaTime(
                       `${followup?.completed_date}`,
                       "toReadable"

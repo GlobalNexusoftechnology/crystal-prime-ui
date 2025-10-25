@@ -57,14 +57,14 @@ export function SettingsTab() {
   };
 
   return (
-    <div className="bg-white rounded-lg pb-2 2xl:pb-[0.5vw]">
-      <h1 className="text-[1.2rem] 2xl:text-[1.2vw] font-medium ml-5 2xl:ml-[1.25vw] py-5 2xl:py-[1.25vw]">
+    <div className="bg-white rounded-lg pb-2 ">
+      <h1 className="text-[1.2rem]  font-medium ml-5  py-5 ">
         Setting
       </h1>
-      <div className="p-6 2xl:p-[1.5vw] sm:w-[42rem] 2xl:w-[42vw] bg-[#F8F8F8] rounded-xl 2xl:rounded-[0.75vw] shadow-md space-y-4 border-[#D7D7D7] m-5 2xl:m-[1.25vw]">
+      <div className="p-6 sm:w-[42rem] bg-[#F8F8F8] rounded-xl  shadow-md space-y-4 border-[#D7D7D7] m-5 ">
         {notifications?.length > 0 && notifications?.map((name, idx) => (
-          <div key={idx} className="flex justify-between items-center pb-4 2xl:pb-[2vw]">
-            <div className="text-[0.7rem] sm:text-[1rem] 2xl:text-[1vw] font-medium text-gray-800 w-1/2">
+          <div key={idx} className="flex justify-between items-center pb-4 ">
+            <div className="text-[0.7rem] sm:text-[1rem]  font-medium text-gray-800 w-1/2">
               {name}
             </div>
 
@@ -87,7 +87,7 @@ export function SettingsTab() {
                       }`}
                     />
                   </button>
-                  <div className="flex items-start gap-2 text-[0.7rem] sm:text-[1rem] 2xl:text-[1vw]">
+                  <div className="flex items-start gap-2 text-[0.7rem] sm:text-[1rem] ">
                     Email
                   </div>
                 </div>
@@ -109,7 +109,7 @@ export function SettingsTab() {
                       }`}
                     />
                   </button>
-                  <div className="flex items-start gap-2 text-[0.7rem] sm:text-[1rem] 2xl:text-[1vw]">
+                  <div className="flex items-start gap-2 text-[0.7rem] sm:text-[1rem] ">
                     In App
                   </div>
                 </div>

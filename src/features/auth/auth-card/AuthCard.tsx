@@ -38,7 +38,7 @@ export const AuthCard: React.FC<IAuthCardProps> = ({
         />
       </div>
       <div className="absolute top-[-2vw] left-0 flex justify-between items-center w-full px-4 md:px-10 xl:px-[6vw]">
-        <div className="h-36 w-36 2xl:h-[14vw] 2xl:w-[14vw]">
+        <div className="h-36 w-36">
           <Image
             src={ImageRegistry.websiteLogo}
             alt="website-logo"
@@ -47,16 +47,16 @@ export const AuthCard: React.FC<IAuthCardProps> = ({
         </div>
       </div>
 
-      <div className="xl:absolute xl:top-[50%] xl:left-[50%] xl:translate-x-[-50%] xl:translate-y-[-50%] flex flex-col gap-4 2xl:gap-[1vw] justify-center items-center w-full h-full">
-        <div className="bg-whiteOverlay box-shadow flex flex-col p-6 2xl:p-[1.5vw] border-b-4 2xl:border-b-[0.4vw] border-b-primary rounded-xl 2xl:rounded-[0.75vw] w-full sm:w-[60%] md:w-[50vw] lg:w-[40vw] xl:w-[30vw]">
-          <h1 className="text-2xl md:text-3xl 2xl:text-[1.875vw] font-semibold mb-4 2xl:mb-[1vw] text-center">
+      <div className="xl:absolute xl:top-[50%] xl:left-[50%] xl:translate-x-[-50%] xl:translate-y-[-50%] flex flex-col gap-4  justify-center items-center w-full h-full">
+        <div className="bg-whiteOverlay box-shadow flex flex-col p-6  border-b-4  border-b-primary rounded-xl  w-full sm:w-[60%] md:w-[50vw] lg:w-[40vw] xl:w-[30vw]">
+          <h1 className="text-2xl md:text-3xl font-semibold mb-4  text-center">
             {title}
           </h1>
           <div className="px-2 overflow-y-auto scrollbar-hidden">
             {children}
           </div>
         </div>
-        <div className="text-[0.9rem] 2xl:text-[0.875vw] text-white">{copyright}</div>
+        <div className="text-[0.9rem]  text-white">{copyright}</div>
       </div>
     </section>
   );

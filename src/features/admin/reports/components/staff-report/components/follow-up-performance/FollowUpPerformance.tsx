@@ -17,22 +17,22 @@ export function FollowUpPerformance({ followUpPerformance }: FollowUpPerformance
   if (!followUpPerformance) return null;
 
   return (
-    <div className="p-6 2xl:p-[1.5vw] border-b border-gray-400 2xl:border-b-[0.1vw]">
-      <h3 className="text-[1.1rem] 2xl:text-[1.1vw] font-semibold text-gray-900 mb-6 2xl:mb-[1.5vw]">
+    <div className="p-6  border-b border-gray-400 ">
+      <h3 className="text-[1.1rem]  font-semibold text-gray-900 mb-6 ">
         Follow-Up Performance
       </h3>
 
-      <div className="flex flex-wrap gap-4 2xl:gap-[1vw]">
+      <div className="flex flex-wrap gap-4 ">
         {metrics.map((metric) => (
           <div
             key={metric.key}
-            className="flex flex-col gap-1 border border-gray-300 2xl:border-[0.05vw] rounded-lg 2xl:rounded-[0.5vw] p-4 2xl:p-[1vw]"
+            className="flex flex-col gap-1 border border-gray-300  rounded-lg  p-4 "
           >
             <span className="flex items-center gap-2 text-gray-600 text-sm font-medium">
-              <IoInformationCircleOutline className="w-5 h-5 2xl:w-[1vw] 2xl:h-[1vw]" />
+              <IoInformationCircleOutline className="w-5 h-5  " />
               {metric.label}
             </span>
-            <span className="text-[1rem] 2xl:text-[1vw] font-semibold  underline">
+            <span className="text-[1rem]  font-semibold  underline">
               {followUpPerformance[metric.key]}
             </span>
           </div>

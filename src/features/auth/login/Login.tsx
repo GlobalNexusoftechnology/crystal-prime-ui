@@ -73,9 +73,9 @@ const togglePasswordVisibility = () => {
       <AuthCard title="Login" copyright="Copyrights and developed © Islahdata.com">
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-4 2xl:gap-[1vw]"
+          className="flex flex-col gap-4 "
         >
-          <span className="text-[1rem] 2xl:text-[1vw] text-center">
+          <span className="text-[1rem]  text-center">
             Please provide your credentials to access your account.
           </span>
           <InputField
@@ -105,7 +105,7 @@ const togglePasswordVisibility = () => {
                 : undefined
             }
             suffixIcon={
-              showPassword ? <FiEye className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" /> : <FiEyeOff className="w-5 h-5 2xl:w-[1.2vw] 2xl:h-[1.2vw]" />
+              showPassword ? <FiEye className="w-5 h-5  " /> : <FiEyeOff className="w-5 h-5  " />
             }
             onIconClick={togglePasswordVisibility}
           />
@@ -113,7 +113,7 @@ const togglePasswordVisibility = () => {
           <Button type="submit" title={isPending ? "Logging in..." : "Login"} />
           <Link
             href="/forget-password"
-            className="text-[0.9rem] 2xl:text-[0.875vw] text-black underline underline-offset-4"
+            className="text-[0.9rem]  text-black underline underline-offset-4"
           >
             Forget Password?
           </Link>

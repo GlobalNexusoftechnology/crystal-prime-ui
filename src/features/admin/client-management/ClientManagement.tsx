@@ -11,7 +11,7 @@ import { ClientListTable } from "./component";
  */
 export function ClientManagement(): JSX.Element {
   return (
-    <section className="flex flex-col gap-6 md:gap-8 2xl:gap-[2.5vw] border 2xl:border-[0.05vw] border-gray-300 rounded-lg 2xl:rounded-[0.5vw] bg-white p-4 2xl:p-[1vw]">
+    <section className="flex flex-col gap-6 md:gap-8  border  border-gray-300 rounded-lg  bg-white p-4 ">
       <ClientListTable />
     </section>
   );

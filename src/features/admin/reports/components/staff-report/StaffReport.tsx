@@ -75,9 +75,9 @@ export function StaffReport() {
   const data = staffPerformanceData?.data;
 
   return (
-    <div className="flex flex-col gap-6 2xl:gap-[1vw]">
+    <div className="flex flex-col gap-6 ">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl 2xl:text-[1.5vw] font-medium mb-4 2xl:mb-[0.75vw]">
+        <h2 className="text-2xl  font-medium mb-4 ">
           Staff Performance Report
         </h2>
         <Button
@@ -87,7 +87,7 @@ export function StaffReport() {
           onClick={handleExport}
           leftIcon={
             <ImDownload2
-              className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]"
+              className="w-5 h-5  "
               color="#034A9F"
             />
           }
@@ -103,7 +103,7 @@ export function StaffReport() {
         setToDate={setToDate}
       />
       <div className="grid grid-cols-1 xl:grid-cols-2">
-        <div className="flex flex-col border-gray-400 border-0 lg:border-r 2xl:border-r-[0.1vw]">
+        <div className="flex flex-col border-gray-400 border-0 lg:border-r ">
           <StaffInfoCard staffInfo={data?.staffInfo} />
           <TaskSummary taskSummary={data?.taskSummary} />
         </div>

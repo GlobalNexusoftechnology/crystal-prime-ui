@@ -28,11 +28,11 @@ export function RadioButton({
   labelClassName = "",
 }: RadioButtonProps) {
   return (
-    <div className={`flex flex-col gap-4 2xl:gap-[0.8vw] ${className}`}>
+    <div className={`flex flex-col gap-4  ${className}`}>
       {options.length > 0 && options.map((option) => (
         <label
           key={option.value}
-          className={`flex items-center gap-3 2xl:gap-[0.6vw] cursor-pointer text-base 2xl:text-[0.9vw] ${labelClassName}`}
+          className={`flex items-center gap-3  cursor-pointer text-base  ${labelClassName}`}
         >
           <input
             type="radio"
@@ -40,7 +40,7 @@ export function RadioButton({
             value={option.value}
             checked={selectedValue === option.value}
             onChange={() => onChange(option.value)}
-            className="accent-blue-600 w-4 h-4 2xl:w-[1vw] 2xl:h-[1vw]"
+            className="accent-blue-600 w-4 h-4  "
           />
           <span>{option.label}</span>
         </label>

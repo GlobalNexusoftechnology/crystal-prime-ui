@@ -15,7 +15,7 @@ export const LeadReportFilter: React.FC<LeadReportFilterProps> = ({
   setToDate,
 }) => {
   return (
-    <form className="grid grid-cols-1 md:grid-cols-2 gap-4 2xl:gap-[1vw] mb-6 2xl:mb-[1vw]">
+    <form className="grid grid-cols-1 md:grid-cols-2 gap-4  mb-6 ">
       <div>
         <DatePicker
           label="Start Date"

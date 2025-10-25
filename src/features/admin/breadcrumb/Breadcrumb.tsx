@@ -33,15 +33,15 @@ export function Breadcrumb({ idToName = {} }: { idToName?: Record<string, string
   });
 
   return (
-    <nav className="text-[1rem] 2xl:text-[1vw] text-gray-500" aria-label="Breadcrumb">
-      <ol className="flex flex-wrap gap-2 2xl:gap-[0.1vw] items-center">
+    <nav className="text-[1rem]  text-gray-500" aria-label="Breadcrumb">
+      <ol className="flex flex-wrap gap-2 items-center">
         {breadcrumbItems.length > 0 && breadcrumbItems.map((item, index) => {
           const isLast = index === breadcrumbItems.length - 1;
 
           return (
             <li key={index} className="flex items-center">
               <div className="flex items-center gap-1 text-gray-500">
-                <TbFolder className="w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                <TbFolder className="w-5 h-5  " />
                 {item.href ? (
                   <Link
                     href={item.href}
@@ -56,7 +56,7 @@ export function Breadcrumb({ idToName = {} }: { idToName?: Record<string, string
                 )}
               </div>
               {!isLast && (
-                <HiChevronRight className="ml-2 2xl:mx-[0.5vw] w-5 h-5 2xl:w-[1.25vw] 2xl:h-[1.25vw]" />
+                <HiChevronRight className="ml-2 w-5 h-5  " />
               )}
             </li>
           );

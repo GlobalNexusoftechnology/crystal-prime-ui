@@ -203,23 +203,23 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
     };
   }, [showNotifications, showSupportTickets]);
   return (
-    <header className="flex justify-between items-center sticky z-20 top-0 bg-white shadow-sm px-4 md:px-6 2xl:px-[1.5vw] py-4 2xl:py-[1vw]">
+    <header className="flex justify-between items-center sticky z-20 top-0 bg-white shadow-sm px-4 md:px-6  py-4 ">
       {/* Left: Menu + SearchBar */}
       <div className="flex items-center gap-4">
         <button className="text-gray-700 flex" onClick={SetIsVisibleSidebar}>
-          <MenuIcon className="w-8 2xl:w-[2vw] h-8 2xl:h-[2vw]" />
+          <MenuIcon className="w-8  h-8 " />
         </button>
       </div>
-      <div className="flex items-center gap-4 2xl:gap-[1vw]">
+      <div className="flex items-center gap-4 ">
         <CheckInCheckOut />
         {/* Support Tickets Icon */}
         {!isClient && (
           <div
-            className="relative cursor-pointer border 2xl:border-[0.05vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw] hover:bg-gray-100 transition-colors"
+            className="relative cursor-pointer border  bg-customGray border-gray-300 p-4  rounded-xl  hover:bg-gray-100 transition-colors"
             onClick={() => setShowSupportTickets(!showSupportTickets)}
             title="View All Open Tickets"
           >
-            <SupportTicketsIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+            <SupportTicketsIcon className="w-6 h-6  " />
             {openTickets.length > 0 && (
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {openTickets.length}
@@ -230,13 +230,13 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
 
         {/* Notifications Icon */}
         <div
-          className="relative cursor-pointer border 2xl:border-[0.05vw] bg-customGray border-gray-300 p-4 2xl:p-[0.75vw] rounded-xl 2xl:rounded-[0.75vw]"
+          className="relative cursor-pointer border  bg-customGray border-gray-300 p-4  rounded-xl "
           onClick={() => {
             setShowNotifications(!showNotifications);
             markNotificationAsRead(); // 🔁 Call API to mark all as read
           }}
         >
-          <NotificationIcon className="w-6 h-6 2xl:w-[1.5vw] 2xl:h-[1.5vw]" />
+          <NotificationIcon className="w-6 h-6  " />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
               {unreadCount}
@@ -258,7 +258,7 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
       {showNotifications && (
         <div
           ref={notificationRef}
-          className="absolute top-[100%] right-4 md:right-6 2xl:right-[1.5vw] mt-2 w-[300px] 2xl:w-[22vw] bg-white shadow-lg rounded-xl p-4 z-30 space-y-4 max-h-[400px] overflow-y-auto"
+          className="absolute top-[100%] right-4 md:right-6  mt-2 w-[300px]  bg-white shadow-lg rounded-xl p-4 z-30 space-y-4 max-h-[400px] overflow-y-auto"
         >
           {isLoading ? (
             <div className="text-center py-4">Loading notifications...</div>
@@ -354,58 +354,58 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
       {showSupportTickets && (
         <div
           ref={supportTicketsRef}
-          className="fixed inset-y-0 right-0 w-[22rem] md:w-[25rem] mt-[6.5rem] md:mt-[6rem] 2xl:mt-[6vw] mb-2 2xl:mb-[0.5vw] 2xl:w-[25vw] rounded-l-xl bg-white shadow-lg z-30"
+          className="fixed inset-y-0 right-0 w-[22rem] md:w-[25rem] mt-[6.5rem] md:mt-[6rem]  mb-2   rounded-l-xl bg-white shadow-lg z-30"
         >
           <div className="h-full flex flex-col">
-            <div className="p-4 2xl:p-[1vw] border-b border-gray-200">
+            <div className="p-4  border-b border-gray-200">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg 2xl:text-[1.2vw] font-semibold text-[#1D2939]">
+                <h3 className="text-lg  font-semibold text-[#1D2939]">
                   Open Tickets
                 </h3>
-                <span className="text-sm 2xl:text-[0.9vw] text-gray-500">
+                <span className="text-sm  text-gray-500">
                   ({openTickets.length} tickets)
                 </span>
               </div>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 2xl:p-[1vw]">
+            <div className="flex-1 overflow-y-auto p-4 ">
               {ticketsLoading ? (
                 <div className="flex justify-center items-center py-8">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 </div>
               ) : ticketsError ? (
                 <div className="text-center py-8">
-                  <p className="text-red-600 mb-4 2xl:text-[1.1vw]">
+                  <p className="text-red-600 mb-4 ">
                     Failed to load tickets. Please try again.
                   </p>
                 </div>
               ) : openTickets.length === 0 ? (
                 <div className="text-center py-8">
-                  <p className="text-gray-500 mb-4 2xl:text-[1.1vw]">
+                  <p className="text-gray-500 mb-4 ">
                     No open tickets found across all projects.
                   </p>
                 </div>
               ) : (
-                <div className="space-y-4 2xl:space-y-[1vw]">
+                <div className="space-y-4 ">
                   {openTickets.map((ticket: ITicketData) => (
                     <button
                       key={ticket.id}
-                      className="flex flex-col gap-3 2xl:gap-[0.75vw] bg-customGray border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-3 2xl:p-[0.75vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full cursor-pointer hover:bg-gray-100 transition-colors text-left"
+                      className="flex flex-col gap-3  bg-customGray border  border-grey-300 rounded-xl  p-3  text-[0.9rem]  text-[#1D2939] w-full cursor-pointer hover:bg-gray-100 transition-colors text-left"
                       onClick={() => handleTicketClick(ticket)}
                       style={{ cursor: "pointer" }}
                     >
                       {/* Header with title and project info */}
-                      <div className="flex flex-wrap justify-between items-start gap-2 2xl:gap-[0.5vw]">
+                      <div className="flex flex-wrap justify-between items-start gap-2 ">
                         <div className="flex-1">
-                          <h4 className="font-semibold text-[0.9rem] 2xl:text-[1vw] text-[#1D2939] mb-1 2xl:mb-[0.25vw]">
+                          <h4 className="font-semibold text-[0.9rem]  text-[#1D2939] mb-1 ">
                             {ticket.title}
                           </h4>
-                          <div className="flex flex-wrap gap-3 2xl:gap-[0.75vw] mb-1 2xl:mb-[0.25vw] font-medium text-[#1D2939]">
+                          <div className="flex flex-wrap gap-3  mb-1  font-medium text-[#1D2939]">
                             <span>
-                              <span className="2xl:text-[0.9vw] font-normal">
+                              <span className=" font-normal">
                                 Priority:{" "}
                               </span>
                               <span
-                                className={`underline 2xl:text-[0.9vw] ${getPriorityColor(
+                                className={`underline  ${getPriorityColor(
                                   ticket.priority
                                 )}`}
                               >
@@ -414,10 +414,10 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
                             </span>
                             {ticket.project && (
                               <span>
-                                <span className="2xl:text-[0.9vw] font-normal">
+                                <span className=" font-normal">
                                   Project:{" "}
                                 </span>
-                                <span className="underline 2xl:text-[0.9vw] text-blue-600">
+                                <span className="underline  text-blue-600">
                                   {ticket.project.name}
                                 </span>
                               </span>
@@ -427,7 +427,7 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
                       </div>
 
                       {/* Description */}
-                      <p className="2xl:text-[0.9vw] mb-1 2xl:mb-[0.25vw] text-sm">
+                      <p className=" mb-1  text-sm">
                         {ticket.description?.length > 100
                           ? `${ticket.description.substring(0, 100)}...`
                           : ticket.description || "No description provided"}
@@ -435,7 +435,7 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
 
                       {/* Remark */}
                       {/* {ticket.remark && (
-                        <p className="2xl:text-[0.9vw] mb-1 2xl:mb-[0.25vw] text-gray-600 text-sm">
+                        <p className=" mb-1  text-gray-600 text-sm">
                           <span className="font-medium">Remark: </span>
                           {ticket.remark.length > 50
                             ? `${ticket.remark.substring(0, 50)}...`
@@ -445,7 +445,7 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
 
                       {/* Image */}
                       {ticket.image_url && (
-                        <div className="mb-1 2xl:mb-[0.25vw]">
+                        <div className="mb-1 ">
                           <Image
                             src={ticket.image_url}
                             alt="Ticket attachment"
@@ -461,11 +461,11 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
                       )}
 
                       {/* Footer with dates */}
-                      <div className="flex flex-wrap items-center gap-3 2xl:gap-[0.75vw] font-medium text-xs">
-                        <p className="2xl:text-[0.8vw] underline">
+                      <div className="flex flex-wrap items-center gap-3  font-medium text-xs">
+                        <p className=" underline">
                           Created: {formatDate(ticket.created_at)}
                         </p>
-                        <p className="text-lightGreen 2xl:text-[0.8vw]">
+                        <p className="text-lightGreen ">
                           Updated: {formatDate(ticket.updated_at)}
                         </p>
                       </div>

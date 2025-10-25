@@ -42,13 +42,13 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
   }
 
   return (
-    <div className={`flex flex-col gap-2 2xl:gap-[0.25vw]`}>
+    <div className={`flex flex-col gap-2 `}>
       {label && (
-        <label className="text-[0.9rem] 2xl:text-[0.9vw] font-medium text-gray-800">{label}</label>
+        <label className="text-[0.9rem]  font-medium text-gray-800">{label}</label>
       )}
       <div
         onClick={handleFileClick}
-        className={`w-full cursor-pointer px-3 2xl:px-[0.75vw] py-[0.6rem] 2xl:py-[0.6vw] border 2xl:text-[0.9vw] 2xl:border-[0.05vw] rounded-md 2xl:rounded-[0.375vw] bg-white text-gray-600 border-gray-300 hover:border-gray-400 transition ${className}`}
+        className={`w-full cursor-pointer px-3  py-[0.6rem]  border   rounded-md  bg-white text-gray-600 border-gray-300 hover:border-gray-400 transition ${className}`}
       >
         {truncateName(selectedFileName || placeholder || "Upload Attachment")}
         <input
@@ -60,7 +60,7 @@ export const UploadDocument: React.FC<UploadDocumentProps> = ({
         />
       </div>
       {error && (
-        <p className="text-red-500 text-[0.9rem] 2xl:text-[0.9vw] 2xl:mt-[0.25vw] mt-1">
+        <p className="text-red-500 text-[0.9rem]   mt-1">
           {error}
         </p>
       )}

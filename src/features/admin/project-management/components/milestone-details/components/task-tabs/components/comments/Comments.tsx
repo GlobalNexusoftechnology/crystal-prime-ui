@@ -75,17 +75,17 @@ export function Comments({ projectId, showForm, setShowForm }: IFollowupsProps) 
   }
 
   return (
-    <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+    <div className="flex flex-col gap-4 ">
       {showForm ? (
         <ModalOverlay
           isOpen={showForm}
           onClose={() => setShowForm(false)}
           modalTitle="Add Follow Up"
-          modalClassName="w-full md:w-[31rem] 2xl:w-[31vw]"
+          modalClassName="w-full md:w-[31rem] "
         >
           <form
             onSubmit={formik.handleSubmit}
-            className="flex flex-col gap-6 2xl:gap-[1.5vw] bg-customGray border 2xl:border-[0.05vw] p-3 2xl:p-[0.75vw] rounded-md 2xl:rounded-[0.375vw] space-y-1 mb-3 2xl:mb-[0.75vw]"
+            className="flex flex-col gap-6  bg-customGray border  p-3  rounded-md  space-y-1 mb-3 "
           >
             <InputField
               label="Remarks"
@@ -96,7 +96,7 @@ export function Comments({ projectId, showForm, setShowForm }: IFollowupsProps) 
               onBlur={formik.handleBlur}
               error={formik.touched.remarks ? formik.errors.remarks : undefined}
             />
-            <div className="flex items-center gap-4 2xl:gap-[1vw]">
+            <div className="flex items-center gap-4 ">
               <Button
                 title="Cancel"
                 variant="primary-outline"
@@ -114,36 +114,36 @@ export function Comments({ projectId, showForm, setShowForm }: IFollowupsProps) 
           </form>
         </ModalOverlay>
       ) : (
-        <div className="flex flex-col gap-4 2xl:gap-[1vw]">
+        <div className="flex flex-col gap-4 ">
           {followupData && followupData.length > 0 ? (
-            <div className="space-y-4 2xl:space-y-[1vw]">
+            <div className="space-y-4 ">
               {followupData?.length > 0 && followupData?.map((followup) => (
                 <div
                   key={followup.id}
-                  className="flex flex-col gap-4 2xl:gap-[1vw] bg-customGray border 2xl:border-[0.05vw] border-grey-300 rounded-xl 2xl:rounded-[0.75vw] p-4 2xl:p-[1vw] text-[0.9rem] 2xl:text-[0.9vw] text-[#1D2939] w-full"
+                  className="flex flex-col gap-4  bg-customGray border  border-grey-300 rounded-xl  p-4  text-[0.9rem]  text-[#1D2939] w-full"
                 >
-                  <div className="flex flex-wrap gap-4 2xl:gap-[1vw] mb-2 2xl:mb-[0.5vw] font-medium text-[#1D2939]">
+                  <div className="flex flex-wrap gap-4  mb-2  font-medium text-[#1D2939]">
                     <span>
-                      <span className="2xl:text-[1.1vw] font-normal">
+                      <span className=" font-normal">
                         Assigned To:{" "}
                       </span>
-                      <span className="underline 2xl:text-[1.1vw]">
+                      <span className="underline ">
                         {followup.user ? `${followup.user.first_name} ${followup.user.last_name}` : 'Unassigned'}
                       </span>
                     </span>
                   </div>
 
-                  <p className="2xl:text-[1.1vw] mb-2 2xl:mb-[0.5vw]">
+                  <p className=" mb-2 ">
                     {followup.remarks || 'No remarks provided'}
                   </p>
 
-                  <div className="flex flex-wrap items-center gap-4 2xl:gap-[1vw] font-medium">
+                  <div className="flex flex-wrap items-center gap-4  font-medium">
                     {followup.completed_date && (
-                      <p className="text-green-600 2xl:text-[1.1vw]">
+                      <p className="text-green-600 ">
                         Completed: {formatDate(followup.completed_date)},
                       </p>
                     )}
-                    <p className="text-lightGreen 2xl:text-[1.1vw]">
+                    <p className="text-lightGreen ">
                       Created: {formatDate(followup.created_at)}
                     </p>
                   </div>
@@ -151,8 +151,8 @@ export function Comments({ projectId, showForm, setShowForm }: IFollowupsProps) 
               ))}
             </div>
           ) : (
-            <div className="py-4 2xl:py-[1vw]">
-              <p className="text-gray-500 2xl:text-[1.1vw]">
+            <div className="py-4 ">
+              <p className="text-gray-500 ">
                 No follow-ups found for this client
               </p>
             </div>

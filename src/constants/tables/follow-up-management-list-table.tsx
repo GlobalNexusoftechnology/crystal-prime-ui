@@ -123,22 +123,22 @@ export const FollowUpManagementListColumn: ITableColumn<IFollowUpManagementListP
     header: "LEAD NAME",
     accessor: "name",
     sortable: true,
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "FOllOW UP DATE",
     accessor: "number",
-    headerClassName: "min-w-[10rem] 2xl:min-w-[10vw]",
+    headerClassName: "min-w-[10rem] ",
   },
   {
     header: "ASSIGNED TO",
     accessor: "email",
-    headerClassName: "min-w-[8rem] 2xl:min-w-[8vw]",
+    headerClassName: "min-w-[8rem] ",
   },
   {
     header: "STATUS",
     accessor: "businessName",
     sortable: true,
-    headerClassName: "min-w-[13rem] 2xl:min-w-[15vw]",
+    headerClassName: "min-w-[13rem] ",
   },
 ];
