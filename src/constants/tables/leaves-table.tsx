@@ -89,7 +89,6 @@ const StatusCell = ({ row }: IStatusCellProps) => {
         options={statusOptions}
         value={currentStatus}
         onChange={handleStatusChange}
-        dropdownWidth="w-40"
         disabled={
           currentStatus === "Approved" || currentStatus === "Not Approved"
         }

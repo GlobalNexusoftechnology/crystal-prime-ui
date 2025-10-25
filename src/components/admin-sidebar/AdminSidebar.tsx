@@ -27,7 +27,7 @@ export function AdminSidebar({
     >
       <div className="flex justify-center pb-4 ">
         {!isVisibleSidebar ? (
-          <div className={`w-[13rem] xl:w-[15vw]`}>
+          <div className={`w-[13rem]`}>
             <Image
               src={ImageRegistry.websiteLogo}
               alt="website-logo"
@@ -35,7 +35,7 @@ export function AdminSidebar({
             />
           </div>
         ) : (
-          <div className={`w-[5rem] xl:w-[5vw]`}>
+          <div className={`w-[5rem]`}>
             <Image
               src={ImageRegistry.websiteLogoIcon}
               alt="website-logo"

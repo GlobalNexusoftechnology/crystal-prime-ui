@@ -35,15 +35,12 @@ export function AdminSidebarLayout({
     SetIsVisibleSidebar((prev) => !prev);
   };
 
-
   return (
     <div className="w-full flex justify-end h-screen overflow-auto">
       {/* Sidebar */}
       <div
         className={`${
-          isVisibleSidebar
-            ? "w-0 xl:w-[6%]"
-            : "w-[70%] md:w-[35%] lg:w-[25%] xl:w-[20%]"
+          isVisibleSidebar ? "w-0 xl:w-[6rem]" : "w-[70%] md:w-[17rem]"
         } h-full z-40 transition-all duration-500 ease-in-out overflow-hidden bg-white shadow-md fixed left-0`}
       >
         <AdminSidebar
@@ -55,8 +52,8 @@ export function AdminSidebarLayout({
       <div
         className={`${
           isVisibleSidebar
-            ? "w-full xl:w-[94%]"
-            : "w-[30%] md:w-[65%] lg:w-[75%] xl:w-[80%]"
+            ? "w-full xl:w-[calc(100%-6rem)]"
+            : "w-[30%] md:w-[calc(100%-17rem)]"
         } transition-all duration-500 ease-in-out`}
       >
         <AdminHeader
