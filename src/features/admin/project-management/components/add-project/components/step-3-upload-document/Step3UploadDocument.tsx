@@ -41,6 +41,9 @@ export function Step3UploadDocument({
       // Word
       "application/msword",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      // PowerPoint
+      "application/vnd.ms-powerpoint",
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation",
       // PDF
       "application/pdf",
       // Images
@@ -55,7 +58,7 @@ export function Step3UploadDocument({
     for (let i = 0; i < fileList.length; i++) {
       const f = fileList[i];
       if (!validTypes.includes(f.type)) {
-        errorMsg = "Only PDF, Word, Excel, or image files are allowed.";
+        errorMsg = "Only PDF, Word, Excel, PowerPoint, or image files are allowed.";
         continue;
       }
       if (f.size > 2 * 1024 * 1024) {
@@ -136,7 +139,7 @@ export function Step3UploadDocument({
         <input
           ref={inputRef}
           type="file"
-          accept=".xls,.xlsx,.doc,.docx,.pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/pdf,image/jpeg,image/png,image/gif,image/bmp,image/webp"
+          accept=".xls,.xlsx,.doc,.docx,.ppt,.pptx,.pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf,image/jpeg,image/png,image/gif,image/bmp,image/webp"
           className="hidden"
           onChange={handleFileChange}
           multiple
@@ -147,7 +150,7 @@ export function Step3UploadDocument({
             Upload Document(s)
           </span>
           <span className="text-[0.9rem] text-red-400">
-            Supported: PDF, Word, Excel, Images – Max 2MB each
+            Supported: PDF, Word, Excel, PowerPoint, Images – Max 2MB each
           </span>
           {mode === "edit" && (
             <span className="text-[0.9rem] text-blue-600">

@@ -1,8 +1,7 @@
 import React from "react";
 import { useAllUsersQuery } from "@/services";
 import { IDocumentInfo } from "@/constants";
-import Link from "next/link";
-import { formatIndiaTime } from "@/utils";
+import { formatIndiaTime, downloadBinaryFile } from "@/utils";
 
 export interface DocumentSectionProps {
   documentSectionData: IDocumentInfo[];
@@ -17,6 +16,15 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
     if (!allUsersData || !userId) return "---";
     const user = allUsersData?.data?.list?.find((user) => user.id === userId);
     return user ? `${user.first_name} ${user.last_name}`.trim() : "---";
+  };
+
+  // Function to handle file download
+  const handleFileDownload = async (fileUrl: string, fileName: string) => {
+    try {
+      await downloadBinaryFile(fileUrl, fileName);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
   };
 
   return (
@@ -35,14 +43,12 @@ export function DocumentSection({ documentSectionData }: DocumentSectionProps) {
                 <p className="font-light text-[0.9rem]  mb-2 ">
                   Document Name
                 </p>
-                <Link
-                  href={`${doc?.file_path}`}
-                  target="_blank"
-                  // rel="noopener noreferrer"
-                  className="text-[1rem]  underline hover:text-blue-600 transition-colors duration-200 break-words"
+                <button
+                  onClick={() => handleFileDownload(doc?.file_path, doc?.name)}
+                  className="text-[1rem] underline hover:text-blue-600 transition-colors duration-200 break-words text-left bg-transparent border-none cursor-pointer"
                 >
                   {doc?.name || "---"}
-                </Link>
+                </button>
               </div>
               <div className="border border-gray-300  rounded-lg  p-4  min-w-[200px]  flex-1">
                 <p className="font-light text-[0.9rem]  mb-2 ">
