@@ -2,10 +2,7 @@ import { Button, Dropdown, InputField, ModalOverlay, NumberInput } from "@/compo
 import {
   ICreateLeadPayload,
   ICreateLeadResponse,
-  useAllSourcesQuery,
-  useAllStatusesQuery,
-  useAllTypesQuery,
-  useAllUsersQuery,
+  useAllDropdownDataQuery,
   useCreateLeadMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
@@ -53,10 +50,7 @@ export function AddLeadModal({
   leadsRefetch,
 }: IAddLeadModalProps) {
   const queryClient = useQueryClient();
-  const { allSourcesData } = useAllSourcesQuery();
-  const { allStatusesData } = useAllStatusesQuery();
-  const { allUsersData } = useAllUsersQuery();
-  const { allTypesData } = useAllTypesQuery();
+  const { allSourcesData, allStatusesData, allUsersData, allTypesData } = useAllDropdownDataQuery();
 
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (response: ICreateLeadResponse) => {

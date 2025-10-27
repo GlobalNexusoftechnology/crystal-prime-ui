@@ -12,12 +12,13 @@ const ALL_SOURCES_QUERY_KEY = "all-type-query-key";
  */
 export interface TypesFilters {
   page?: number;
+  limit?: number;
 }
 
 export const useAllTypesQuery = (filters: TypesFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
     queryKey: [ALL_SOURCES_QUERY_KEY, filters],
-    queryFn: () => COMMUNITY_CLIENT.fetchAllTypes(filters.page),
+    queryFn: () => COMMUNITY_CLIENT.fetchAllTypes(filters.page, filters.limit),
     networkMode: "always",
   });
 

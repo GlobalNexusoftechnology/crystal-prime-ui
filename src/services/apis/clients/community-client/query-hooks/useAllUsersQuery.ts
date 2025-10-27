@@ -12,12 +12,13 @@ const ALL_USERS_QUERY_KEY = "all-users-query-key";
 export interface UsersFilters {
   searchText?: string;
   page?: number;
+  limit?: number;
 }
 
 export const useAllUsersQuery = (filters: UsersFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
     queryKey: [ALL_USERS_QUERY_KEY, filters],
-    queryFn: () => COMMUNITY_CLIENT.fetchAllUsers(filters.searchText, filters.page),
+    queryFn: () => COMMUNITY_CLIENT.fetchAllUsers(filters.searchText, filters.page, filters.limit),
     networkMode: "always",
   });
 

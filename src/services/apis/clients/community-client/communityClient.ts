@@ -1056,9 +1056,10 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchAllSources = async (page?: number) => {
+  public fetchAllSources = async (page?: number, limit?: number) => {
     const params = new URLSearchParams();
     if (page) params.append("page", page.toString());
+    if (limit) params.append("limit", limit.toString());
     const url = params.toString()
       ? `${fetchAllSourcesUrl()}?${params.toString()}`
       : fetchAllSourcesUrl();
@@ -1072,9 +1073,10 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchAllTypes = async (page?: number) => {
+  public fetchAllTypes = async (page?: number, limit?: number) => {
     const params = new URLSearchParams();
     if (page) params.append("page", page.toString());
+    if (limit) params.append("limit", limit.toString());
     const url = params.toString()
       ? `${fetchAllTypesUrl()}?${params.toString()}`
       : fetchAllTypesUrl();
@@ -1181,9 +1183,10 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchAllStatuses = async (page?: number) => {
+  public fetchAllStatuses = async (page?: number, limit?: number) => {
     const params = new URLSearchParams();
     if (page) params.append("page", page.toString());
+    if (limit) params.append("limit", limit.toString());
     const url = params.toString()
       ? `${fetchAllStatusesUrl()}?${params.toString()}`
       : fetchAllStatusesUrl();
@@ -1218,10 +1221,11 @@ export class CommunityClient extends ApiClient {
   };
   // staff
 
-  public fetchAllUsers = async (searchText?: string, page?: number) => {
+  public fetchAllUsers = async (searchText?: string, page?: number, limit?: number) => {
     const params = new URLSearchParams();
     if (searchText) params.append("searchText", searchText);
     if (page) params.append("page", page.toString());
+    if (limit) params.append("limit", limit.toString());
     const url = params.toString()
       ? `${fetchAllUsersUrl()}?${params.toString()}`
       : fetchAllUsersUrl();

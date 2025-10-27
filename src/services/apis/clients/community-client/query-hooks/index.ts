@@ -200,3 +200,6 @@ export { useSendProposalMutation } from "./useSendProposalMutation";
 
 export { useTodayAttendanceStatus } from "./useTodayAttendanceStatus";
 
+// Dropdown data hook
+export { useAllDropdownDataQuery } from "./useAllDropdownDataQuery";
+

@@ -12,12 +12,13 @@ const ALL_STATUSES_QUERY_KEY = 'all-statuses-query-key';
  */
 export interface StatusesFilters {
   page?: number;
+  limit?: number;
 }
 
 export const useAllStatusesQuery = (filters: StatusesFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
     queryKey: [ALL_STATUSES_QUERY_KEY, filters],
-    queryFn: () => COMMUNITY_CLIENT.fetchAllStatuses(filters.page),
+    queryFn: () => COMMUNITY_CLIENT.fetchAllStatuses(filters.page, filters.limit),
     networkMode: 'always',
   });
 
