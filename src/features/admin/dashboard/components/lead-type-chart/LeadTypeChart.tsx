@@ -21,12 +21,13 @@ interface LeadTypeChartProps {
 const renderCustomizedLabel = (props: PieLabelRenderProps) => {
   const RADIAN = Math.PI / 180;
 
-  const cx = Number(props.cx ?? 0);
-  const cy = Number(props.cy ?? 0);
-  const midAngle = Number(props.midAngle ?? 0);
-  const innerRadius = Number(props.innerRadius ?? 0);
-  const outerRadius = Number(props.outerRadius ?? 0);
-  const percent = Number(props.percent ?? 0);
+  // Safely convert to numbers with fallbacks to prevent NaN
+  const cx = Number(props.cx) || 0;
+  const cy = Number(props.cy) || 0;
+  const midAngle = Number(props.midAngle) || 0;
+  const innerRadius = Number(props.innerRadius) || 0;
+  const outerRadius = Number(props.outerRadius) || 0;
+  const percent = Number(props.percent) || 0;
 
   const radius = innerRadius + (outerRadius - innerRadius) * 1.15;
   const x = cx + radius * Math.cos(-midAngle * RADIAN);
