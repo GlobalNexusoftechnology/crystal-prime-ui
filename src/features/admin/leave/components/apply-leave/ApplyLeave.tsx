@@ -87,10 +87,49 @@ export function ApplyLeave() {
 
   const calculateTotalDays = () => {
     if (!formData.fromDate || !formData.toDate) return "0";
+    
     const from = new Date(formData.fromDate);
     const to = new Date(formData.toDate);
-    const diffTime = Math.abs(to.getTime() - from.getTime());
-    return (Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1).toString();
+    
+    // Handle half-day leaves
+    if (formData.leaveType === "Half Day") {
+      // For half day, check if it's a weekend
+      const dayOfWeek = from.getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        return "0"; // Weekend, no leave days
+      }
+      return "0.5"; // Half day
+    }
+    
+    // Handle single day leaves (when fromDate and toDate are the same)
+    if (from.getTime() === to.getTime()) {
+      // Check if it's a weekend
+      const dayOfWeek = from.getDay();
+      if (dayOfWeek === 0 || dayOfWeek === 6) {
+        return "0"; // Weekend, no leave days
+      }
+      return "1"; // Single working day
+    }
+    
+    // Handle multi-day leaves
+    let leaveDays = 0;
+    const currentDate = new Date(from);
+    
+    // Ensure we process all days from start to end (inclusive)
+    while (currentDate <= to) {
+      const dayOfWeek = currentDate.getDay();
+      
+      // Count only weekdays (Monday = 1, Tuesday = 2, ..., Friday = 5)
+      // Skip weekends (Saturday = 6, Sunday = 0)
+      if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+        leaveDays++;
+      }
+      
+      // Move to next day
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    return leaveDays.toString();
   };
 
   return (
@@ -173,7 +212,7 @@ export function ApplyLeave() {
               Total Day(s)
             </label>
             <div className="text-lg font-semibold text-gray-900 bg-gray-50 px-4 py-2 rounded border border-gray-200">
-              {calculateTotalDays()}
+              {calculateTotalDays()} {calculateTotalDays() === "0.5" ? "day" : calculateTotalDays() === "1" ? "day" : "days"}
             </div>
           </div>
 
