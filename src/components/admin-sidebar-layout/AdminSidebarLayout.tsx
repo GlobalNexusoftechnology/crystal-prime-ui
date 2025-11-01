@@ -6,7 +6,7 @@ import { usePermission } from "@/utils/hooks";
 import { Announcement } from "../user-dropdown/announcement";
 
 /**
- * AdminSidebarLayout component renders a responsive admin layout with a taggable sidebar.
+ * AdminSidebarLayout component renders a responsive admin layout with a toggleable sidebar.
  *
  * @component
  * @param {IAdminSidebarLayoutProps} props - The component props.
@@ -18,7 +18,7 @@ export function AdminSidebarLayout({
   children,
   adminSidebarLinks,
 }: IAdminSidebarLayoutProps): JSX.Element {
-  const [isVisibleSidebar, SetIsVisibleSidebar] = useState(false);
+  const [isVisibleSidebar, setIsVisibleSidebar] = useState(false);
   const [isAnnouncementOpen, setIsAnnouncementOpen] = useState(false);
   const { hasPermission } = usePermission();
 
@@ -32,7 +32,7 @@ export function AdminSidebarLayout({
    * Toggles the visibility of the sidebar.
    */
   const toggleSidebar = () => {
-    SetIsVisibleSidebar((prev) => !prev);
+    setIsVisibleSidebar((prev) => !prev);
   };
 
   return (
@@ -40,20 +40,21 @@ export function AdminSidebarLayout({
       {/* Sidebar */}
       <div
         className={`${
-          isVisibleSidebar ? "w-0 xl:w-[6rem]" : "w-[70%] md:w-[17rem]"
+          isVisibleSidebar ? "w-0 lg:w-[6rem]" : "w-[70%] md:w-[17rem]"
         } h-full z-40 transition-all duration-500 ease-in-out overflow-hidden bg-white shadow-md fixed left-0`}
       >
         <AdminSidebar
           adminSidebarLinks={filteredLinks}
           isVisibleSidebar={isVisibleSidebar}
+          setIsVisibleSidebar={setIsVisibleSidebar}
         />
       </div>
       {/* Main Content */}
       <div
         className={`${
           isVisibleSidebar
-            ? "w-full xl:w-[calc(100%-6rem)]"
-            : "w-[30%] md:w-[calc(100%-17rem)]"
+            ? "w-full lg:w-[calc(100%-6rem)]"
+            : "w-full lg:w-[calc(100%-17rem)]"
         } transition-all duration-500 ease-in-out`}
       >
         <AdminHeader

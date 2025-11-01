@@ -159,7 +159,7 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   },
   {
     path: "/admin/hr-management/holidays-list",
-    name: "HR Management",
+    name: "HR",
     icon: <FaUsersGear className="w-full h-full" />,
     activeIcon: <FaUsersGear className="w-full h-full" color="#034A9F" />,
     permission: { module: "HR_MANAGEMENET", actions: "VIEW" },
