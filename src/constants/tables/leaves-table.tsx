@@ -149,6 +149,11 @@ export const leavesListColumn: ITableColumn<
     headerClassName: "min-w-[10rem] ",
   },
   {
+    header: "LEAVE CATEGORY",
+    accessor: "leaveCategory",
+    headerClassName: "min-w-[10rem] ",
+  },
+  {
     header: "REASON LEAVE",
     accessor: "description",
     headerClassName: "min-w-[10rem] ",

@@ -15,14 +15,15 @@ interface LeaveFormData {
 
 export function ApplyLeave() {
   const { activeSession } = useAuthStore();
-  const userId = activeSession?.user?.id
-  
-  const leaveTypeOptions = [
+  const user = activeSession?.user;
+
+  const leaveCategoryOptions = [
     { label: "Sick Leave", value: "Sick Leave" },
     { label: "Casual Leave", value: "Casual Leave" },
     { label: "Earned Leave", value: "Earned Leave" },
     { label: "Maternity Leave", value: "Maternity Leave" },
     { label: "Paternity Leave", value: "Paternity Leave" },
+    { label: "Other", value: "Other" },
   ];
 
   const [formData, setFormData] = useState<LeaveFormData>({
@@ -63,8 +64,9 @@ export function ApplyLeave() {
     e.preventDefault();
 
     if (
-      !userId ||
+      !user?.id ||
       !formData.leaveType ||
+      !formData.leaveCategory ||
       !formData.fromDate ||
       !formData.toDate
     ) {
@@ -74,9 +76,10 @@ export function ApplyLeave() {
 
     //  Prepare payload for API
     const payload = {
-      staffId: userId,
-      appliedDate: new Date().toISOString().split("T")[0], // current date
+      staffId: user?.id,
+      appliedDate: new Date().toISOString().split("T")[0], 
       fromDate: formData.fromDate,
+      leaveCategory: formData.leaveCategory,
       toDate: formData.toDate,
       leaveType: formData.leaveType,
       description: formData.reason,
@@ -87,10 +90,10 @@ export function ApplyLeave() {
 
   const calculateTotalDays = () => {
     if (!formData.fromDate || !formData.toDate) return "0";
-    
+
     const from = new Date(formData.fromDate);
     const to = new Date(formData.toDate);
-    
+
     // Handle half-day leaves
     if (formData.leaveType === "Half Day") {
       // For half day, check if it's a weekend
@@ -100,7 +103,7 @@ export function ApplyLeave() {
       }
       return "0.5"; // Half day
     }
-    
+
     // Handle single day leaves (when fromDate and toDate are the same)
     if (from.getTime() === to.getTime()) {
       // Check if it's a weekend
@@ -110,25 +113,25 @@ export function ApplyLeave() {
       }
       return "1"; // Single working day
     }
-    
+
     // Handle multi-day leaves
     let leaveDays = 0;
     const currentDate = new Date(from);
-    
+
     // Ensure we process all days from start to end (inclusive)
     while (currentDate <= to) {
       const dayOfWeek = currentDate.getDay();
-      
+
       // Count only weekdays (Monday = 1, Tuesday = 2, ..., Friday = 5)
       // Skip weekends (Saturday = 6, Sunday = 0)
       if (dayOfWeek >= 1 && dayOfWeek <= 5) {
         leaveDays++;
       }
-      
+
       // Move to next day
       currentDate.setDate(currentDate.getDate() + 1);
     }
-    
+
     return leaveDays.toString();
   };
 
@@ -145,8 +148,8 @@ export function ApplyLeave() {
           <InputField
             label="Employee ID"
             placeholder="Employee ID"
-            value={userId}
-            onChange={(e) => handleInputChange("staffId", e.target.value)}
+            value={user?.employee_id}
+            disabled
           />
 
           {/* Type Selection */}
@@ -187,7 +190,7 @@ export function ApplyLeave() {
           <Dropdown
             label="Leave Category"
             isRequired
-            options={leaveTypeOptions}
+            options={leaveCategoryOptions}
             value={formData.leaveCategory}
             onChange={(val) => handleInputChange("leaveCategory", val)}
           />
@@ -196,14 +199,25 @@ export function ApplyLeave() {
             <DatePicker
               label="From"
               value={formData.fromDate}
-              onChange={(date) => handleInputChange("fromDate", date)}
+              onChange={(date) => {
+                handleInputChange("fromDate", date);
+                if (formData.toDate && date > formData.toDate) {
+                  handleInputChange("toDate", "");
+                }
+              }}
               isRequired
+              minDate={new Date().toISOString().split("T")[0]}
+              maxDate={formData.toDate || undefined}
             />
+
             <DatePicker
               label="To"
               value={formData.toDate}
               onChange={(date) => handleInputChange("toDate", date)}
               isRequired
+              minDate={
+                formData.fromDate || new Date().toISOString().split("T")[0]
+              } // Prevent past date + before fromDate
             />
           </div>
 
@@ -212,7 +226,12 @@ export function ApplyLeave() {
               Total Day(s)
             </label>
             <div className="text-lg font-semibold text-gray-900 bg-gray-50 px-4 py-2 rounded border border-gray-200">
-              {calculateTotalDays()} {calculateTotalDays() === "0.5" ? "day" : calculateTotalDays() === "1" ? "day" : "days"}
+              {calculateTotalDays()}{" "}
+              {calculateTotalDays() === "0.5"
+                ? "day"
+                : calculateTotalDays() === "1"
+                ? "day"
+                : "days"}
             </div>
           </div>
 
