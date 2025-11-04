@@ -23,14 +23,12 @@ import {
   IDeleteLeadResponse,
   useAllLeadDownloadExcelQuery,
   useAllLeadsListQuery,
-  useAllStatusesQuery,
-  useAllTypesQuery,
   useDeleteLeadMutation,
   useLeadDetailQuery,
   useLeadDownloadTemplateExcelQuery,
   useAuthStore,
-  useAllUsersQuery,
   useSendProposalMutation,
+  useAllDropdownDataQuery,
 } from "@/services";
 import { downloadBlobFile, formatDate, IApiError } from "@/utils";
 import { FiPlus, FiX } from "react-icons/fi";
@@ -166,7 +164,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   }, [activeSession?.user?.id]);
 
   // Resolve pending business done once statuses are loaded
-  const { allStatusesData } = useAllStatusesQuery();
+  const { allTypesData, allUsersData, allStatusesData } = useAllDropdownDataQuery()
   useEffect(() => {
     if (!pendingStatusName) return;
     const list = allStatusesData?.data?.list || [];
@@ -185,8 +183,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     error,
   } = useAllLeadsListQuery(filters);
   // moved above for dependency usage
-  const { allTypesData } = useAllTypesQuery();
-  const { allUsersData } = useAllUsersQuery();
+
   const { onAllLeadDownloadExcel } = useAllLeadDownloadExcelQuery();
   const { onLeadDownloadTemplateExcel } = useLeadDownloadTemplateExcelQuery();
 

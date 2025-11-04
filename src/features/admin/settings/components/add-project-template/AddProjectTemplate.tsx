@@ -4,10 +4,10 @@ import { useFormik, FormikProvider } from "formik";
 import { Dropdown, InputField, Button } from "@/components";
 import { ProjectTemplateMilestone } from "../project-template-milestone";
 import { ProjectTemplateFormValues } from "./types";
-import { useCreateProjectTemplateMutation, useUpdateProjectTemplateMutation } from "@/services";
+import { useAllDropdownDataQuery, useCreateProjectTemplateMutation, useUpdateProjectTemplateMutation } from "@/services";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useProjectTemplateDetailQuery, useAllTypesQuery } from "@/services";
+import { useProjectTemplateDetailQuery } from "@/services";
 import { useQueryClient } from '@tanstack/react-query';
 
 
@@ -39,7 +39,7 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
   });
   const { projectTemplateDetailData, isLoading } = useProjectTemplateDetailQuery(id ?? "");
 
-  const { allTypesData } = useAllTypesQuery();
+  const { allTypesData } = useAllDropdownDataQuery()
 
   const projectTypeOptions =
     allTypesData?.data?.list?.map((type) => ({

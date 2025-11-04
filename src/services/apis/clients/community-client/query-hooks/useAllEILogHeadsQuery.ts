@@ -12,12 +12,13 @@ const ALL_EI_LOG_HEADS_QUERY_KEY = "all-ei-log-heads-query-key";
  */
 export interface EILogHeadsFilters {
   page?: number;
+  limit?: number
 }
 
 export const useAllEILogHeadsQuery = (filters: EILogHeadsFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
     queryKey: [ALL_EI_LOG_HEADS_QUERY_KEY, filters],
-    queryFn: () => COMMUNITY_CLIENT.fetchAllEILogHeads(filters.page),
+    queryFn: () => COMMUNITY_CLIENT.fetchAllEILogHeads(filters.page, filters.limit),
     networkMode: "always",
   });
 

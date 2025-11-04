@@ -302,7 +302,7 @@ export function AddProject({
     allClientData,
     isLoading: clientLoading,
     isError: clientError,
-  } = useAllClientQuery();
+  } = useAllClientQuery({limit: 1000000});
 
   // Get current user from auth store
   const { activeSession } = useAuthStore();

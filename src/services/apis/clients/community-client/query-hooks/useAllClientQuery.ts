@@ -13,12 +13,13 @@ const ALL_CLIENT_QUERY_KEY = 'all-client-query-key';
 export interface ClientFilters {
   searchText?: string;
   page?: number;
+  limit?: number;
 }
 
 export const useAllClientQuery = (filters: ClientFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
     queryKey: [ALL_CLIENT_QUERY_KEY, filters],
-    queryFn: () => COMMUNITY_CLIENT.fetchAllClient(filters.searchText, filters.page),
+    queryFn: () => COMMUNITY_CLIENT.fetchAllClient(filters.searchText, filters.page, filters.limit),
     networkMode: 'always',
   });
 

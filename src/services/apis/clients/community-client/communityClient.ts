@@ -1202,9 +1202,10 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchAllRoleList = async (page?: number) => {
+  public fetchAllRoleList = async (page?: number, limit?:number) => {
     const params = new URLSearchParams();
     if (page) params.append("page", page.toString());
+    if (limit) params.append("limit", limit.toString());
     const url = params.toString()
       ? `${fetchAllRoleListUrl()}?${params.toString()}`
       : fetchAllRoleListUrl();
@@ -1423,10 +1424,11 @@ export class CommunityClient extends ApiClient {
 
   //get
 
-  public fetchAllClient = async (searchText?: string, page?: number) => {
+  public fetchAllClient = async (searchText?: string, page?: number, limit?: number) => {
     const params = new URLSearchParams();
     if (searchText) params.append("searchText", searchText);
     if (page) params.append("page", page.toString());
+    if (limit) params.append("limit", limit.toString());
     const url = params.toString()
       ? `${fetchAllClientUrl()}?${params.toString()}`
       : fetchAllClientUrl();
@@ -2204,9 +2206,10 @@ export class CommunityClient extends ApiClient {
     };
 
   // EI Log Type Master Methods
-  public fetchAllEILogTypes = async (page?: number) => {
+  public fetchAllEILogTypes = async (page?: number, limit?: number) => {
     const params = new URLSearchParams();
     if (page) params.append("page", page.toString());
+    if (limit) params.append("limit", limit.toString());
     const url = params.toString()
       ? `${fetchAllEILogTypesUrl()}?${params.toString()}`
       : fetchAllEILogTypesUrl();
@@ -2261,9 +2264,10 @@ export class CommunityClient extends ApiClient {
   };
 
   // EI Log Head Master Methods
-  public fetchAllEILogHeads = async (page?: number) => {
+  public fetchAllEILogHeads = async (page?: number, limit?: number) => {
     const params = new URLSearchParams();
     if (page) params.append("page", page.toString());
+    if (limit) params.append("limit", limit.toString());
     const url = params.toString()
       ? `${fetchAllEILogHeadsUrl()}?${params.toString()}`
       : fetchAllEILogHeadsUrl();

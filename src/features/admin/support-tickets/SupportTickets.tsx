@@ -12,7 +12,7 @@ import {
   useAllTicketsAcrossProjectsQuery,
   useUpdateTicketStatusMutation,
   useUpdateTicketMutation,
-  useAllUsersQuery,
+  useAllDropdownDataQuery,
 } from "@/services";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
@@ -65,8 +65,9 @@ export function SupportTickets() {
       },
     }
   );
+
   const { allUsersData: usersData, isLoading: isLoadingUsers } =
-    useAllUsersQuery();
+    useAllDropdownDataQuery();
   const userOptions = React.useMemo(() => {
     if (!usersData?.data?.list) return [];
     return usersData.data.list.map((user) => ({
@@ -128,93 +129,101 @@ export function SupportTickets() {
     });
 
   // Conditionally define columns based on user role
-  const supportTicketListColumn: ITableColumn<SupportTicketRow>[] = useMemo(() => {
-    const baseColumns: ITableColumn<SupportTicketRow>[] = [
-      {
-        header: "STATUS",
-        accessor: "status",
-        cell: ({ row, value }) => (
-          <div className="min-w-[9rem]  flex justify-center">
-            <SimpleDropdown
-              options={[
-                { label: "Open", value: "open" },
-                { label: "In Progress", value: "in_progress" },
-                { label: "Completed", value: "completed" },
-              ]}
-              value={String((value as string) ?? "")}
-              onChange={(val) =>
-                updateTicketStatus({ id: String(row.id), status: val })
-              }
-              dropdownWidth="w-[10rem] "
-            />
-          </div>
-        ),
-      },
-      {
-        header: "IMAGE",
-        accessor: "image",
-        cell: ({ value }) => {
-          const img = (value as string) ?? null;
-          if (!img) {
-            return <span className="text-gray-400 text-xs">No image</span>;
-          }
-          return (
-            <div className="flex items-center justify-center">
-              <div className="relative w-12 h-12  ">
-                <Image
-                  src={img}
-                  alt="Ticket attachment"
-                  fill
-                  className="object-cover rounded-lg"
-                  unoptimized
-                />
-              </div>
-            </div>
-          );
-        },
-      },
-      { header: "PRIORITY", accessor: "priority" },
-      { header: "TITLE", accessor: "title" },
-      { header: "PROJECT", accessor: "projectName" },
-      { header: "CREATED AT", accessor: "createdAt" },
-    ];
-
-    // Add "Assigned To" column only for non-client users
-    if (!isClient) {
-      const assignedToColumn: ITableColumn<SupportTicketRow> = {
-        header: "ASSIGNED TO",
-        accessor: "assignedTo",
-        cell: ({ row, value }) => (
-          <div className="min-w-[9rem]  flex justify-center">
-            {isLoadingUsers ? (
-              <span className="text-gray-400 text-sm">Loading...</span>
-            ) : isUpdatingTicket ? (
-              <span className="text-blue-500 text-sm">Updating...</span>
-            ) : (
-              <Dropdown
-                options={userOptions}
-                value={value ? String(value) : ""}
-                onChange={(val) => {
-                  const apiPayload = { assigned_to: val === "" ? null : val };
-                  const requestPayload = {
-                    id: String(row.id),
-                    payload: apiPayload,
-                  };
-                  updateTicket(requestPayload);
-                }}
-                dropdownWidth="w-[15rem] "
+  const supportTicketListColumn: ITableColumn<SupportTicketRow>[] =
+    useMemo(() => {
+      const baseColumns: ITableColumn<SupportTicketRow>[] = [
+        {
+          header: "STATUS",
+          accessor: "status",
+          cell: ({ row, value }) => (
+            <div className="min-w-[9rem]  flex justify-center">
+              <SimpleDropdown
+                options={[
+                  { label: "Open", value: "open" },
+                  { label: "In Progress", value: "in_progress" },
+                  { label: "Completed", value: "completed" },
+                ]}
+                value={String((value as string) ?? "")}
+                onChange={(val) =>
+                  updateTicketStatus({ id: String(row.id), status: val })
+                }
+                dropdownWidth="w-[10rem] "
               />
-            )}
-          </div>
-        ),
-      };
+            </div>
+          ),
+        },
+        {
+          header: "IMAGE",
+          accessor: "image",
+          cell: ({ value }) => {
+            const img = (value as string) ?? null;
+            if (!img) {
+              return <span className="text-gray-400 text-xs">No image</span>;
+            }
+            return (
+              <div className="flex items-center justify-center">
+                <div className="relative w-12 h-12  ">
+                  <Image
+                    src={img}
+                    alt="Ticket attachment"
+                    fill
+                    className="object-cover rounded-lg"
+                    unoptimized
+                  />
+                </div>
+              </div>
+            );
+          },
+        },
+        { header: "PRIORITY", accessor: "priority" },
+        { header: "TITLE", accessor: "title" },
+        { header: "PROJECT", accessor: "projectName" },
+        { header: "CREATED AT", accessor: "createdAt" },
+      ];
 
-      // Insert "Assigned To" column after "STATUS" column
-      baseColumns.splice(1, 0, assignedToColumn);
-    }
+      // Add "Assigned To" column only for non-client users
+      if (!isClient) {
+        const assignedToColumn: ITableColumn<SupportTicketRow> = {
+          header: "ASSIGNED TO",
+          accessor: "assignedTo",
+          cell: ({ row, value }) => (
+            <div className="min-w-[9rem]  flex justify-center">
+              {isLoadingUsers ? (
+                <span className="text-gray-400 text-sm">Loading...</span>
+              ) : isUpdatingTicket ? (
+                <span className="text-blue-500 text-sm">Updating...</span>
+              ) : (
+                <Dropdown
+                  options={userOptions}
+                  value={value ? String(value) : ""}
+                  onChange={(val) => {
+                    const apiPayload = { assigned_to: val === "" ? null : val };
+                    const requestPayload = {
+                      id: String(row.id),
+                      payload: apiPayload,
+                    };
+                    updateTicket(requestPayload);
+                  }}
+                  dropdownWidth="w-[15rem] "
+                />
+              )}
+            </div>
+          ),
+        };
 
-    return baseColumns;
-  }, [isClient, isLoadingUsers, isUpdatingTicket, userOptions, updateTicketStatus, updateTicket]);
+        // Insert "Assigned To" column after "STATUS" column
+        baseColumns.splice(1, 0, assignedToColumn);
+      }
+
+      return baseColumns;
+    }, [
+      isClient,
+      isLoadingUsers,
+      isUpdatingTicket,
+      userOptions,
+      updateTicketStatus,
+      updateTicket,
+    ]);
 
   const supportTicketListAction: ITableAction<SupportTicketRow>[] = [
     {

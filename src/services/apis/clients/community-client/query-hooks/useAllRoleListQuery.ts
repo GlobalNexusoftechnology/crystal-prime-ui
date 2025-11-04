@@ -11,12 +11,13 @@ const Role_LIST_QUERY_KEY = "role-list-query-key";
  */
 export interface RoleListFilters {
   page?: number;
+  limit?: number
 }
 
 export const useAllRoleListQuery = (filters: RoleListFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
     queryKey: [Role_LIST_QUERY_KEY, filters],
-    queryFn: () => COMMUNITY_CLIENT.fetchAllRoleList(filters.page),
+    queryFn: () => COMMUNITY_CLIENT.fetchAllRoleList(filters.page, filters.limit),
     networkMode: "always",
   });
 

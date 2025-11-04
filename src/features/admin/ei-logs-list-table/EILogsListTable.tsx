@@ -12,10 +12,9 @@ import {
   IAllEILogList,
   useAllEILogsQuery,
   useDeleteEILogMutation,
-  useAllEILogTypesQuery,
-  useAllEILogHeadsQuery,
   useAllEILogsDownloadExcelQuery,
   useEILogDownloadTemplateExcelQuery,
+  useAllDropdownDataQuery,
 } from "@/services";
 import { IApiError } from "@/utils";
 import { useDebounce } from "@/utils/hooks";
@@ -71,9 +70,8 @@ export function EILogsListTable({
     [selectedType, selectedHead, selectedPaymentMode, dateRangeFilter, fromDate, toDate, searchQuery, currentPage]
   );
 
-  const { data: allEILogList, eiLogsRefetch } = useAllEILogsQuery(filters);
-  const { allEILogTypesData } = useAllEILogTypesQuery();
-  const { allEILogHeadsData } = useAllEILogHeadsQuery();
+  const { data: allEILogList, eiLogsRefetch } = useAllEILogsQuery(filters)
+  const { allEILogTypesData, allEILogHeadsData } = useAllDropdownDataQuery()
   const { onAllEILogsDownloadExcel } = useAllEILogsDownloadExcelQuery();
   const { onEILogDownloadTemplateExcel } = useEILogDownloadTemplateExcelQuery();
 

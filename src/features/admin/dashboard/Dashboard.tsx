@@ -13,7 +13,6 @@ import { AnalyticalCard } from "../analytical-card";
 import {
   useDashboardSummaryQuery,
   useAllProjectsQuery,
-  useAllUsersQuery,
   useAllTasksQuery,
   useUpdateTaskStatusMutation,
   useCreateMilestoneTaskMutation,
@@ -21,6 +20,7 @@ import {
   useDeleteMilestoneTaskMutation,
   useAuthStore,
   useAllClientFollowUpQuery,
+  useAllDropdownDataQuery,
 } from "@/services";
 import type { ICreateProjectTask } from "@/services";
 
@@ -101,7 +101,9 @@ export default function Dashboard() {
     });
 
   // Fetch all users for assignment dropdown
-  const { allUsersData: usersData } = useAllUsersQuery();
+  // const { allUsersData: usersData } = useAllUsersQuery();
+  const { allUsersData: usersData } = useAllDropdownDataQuery();
+
 
   // Fetch all tasks directly
   const { allTasksData, isLoading: isLoadingTasks } = useAllTasksQuery();

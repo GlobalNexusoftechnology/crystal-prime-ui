@@ -11,7 +11,7 @@ import * as Yup from "yup";
 import {
   ICreateUserPayload,
   ICreateUserResponse,
-  useAllRoleListQuery,
+  useAllDropdownDataQuery,
   useCreateUserMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
@@ -74,14 +74,21 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
   onClose,
   onNewStaffSuccessCallback,
 }) => {
-  const { data: rolesList } = useAllRoleListQuery();
+  // const { data: rolesList } = useAllRoleListQuery();
+  const { allRoleData } = useAllDropdownDataQuery()
   const [showPassword, setShowPassword] = React.useState(false);
 
   const roleOptions =
-    rolesList?.data?.list?.map((roleData) => ({
+  allRoleData?.data?.list
+    ?.filter(
+      (role, index, self) =>
+        index === self.findIndex((r) => r.role === role.role) 
+    )
+    ?.map((roleData) => ({
       label: roleData?.role,
       value: roleData?.id.toString(),
     })) || [];
+
 
   const handleCreateUserSuccessCallback = (response: ICreateUserResponse) => {
     toast.success(response.message);

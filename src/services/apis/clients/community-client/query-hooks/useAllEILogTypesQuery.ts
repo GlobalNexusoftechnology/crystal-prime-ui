@@ -12,12 +12,13 @@ const ALL_EI_LOG_TYPES_QUERY_KEY = "all-ei-log-types-query-key";
  */
 export interface EILogTypesFilters {
   page?: number;
+  limit?: number
 }
 
 export const useAllEILogTypesQuery = (filters: EILogTypesFilters = {}) => {
   const { data, isError, error, isLoading, isPending, refetch } = useQuery({
     queryKey: [ALL_EI_LOG_TYPES_QUERY_KEY, filters],
-    queryFn: () => COMMUNITY_CLIENT.fetchAllEILogTypes(filters.page),
+    queryFn: () => COMMUNITY_CLIENT.fetchAllEILogTypes(filters.page, filters.limit),
     networkMode: "always",
   });
 

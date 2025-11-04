@@ -11,7 +11,7 @@ import {
 import { FiX, FiPlus } from "react-icons/fi";
 import { ITableAction, ITableColumn } from "@/constants/table";
 import { useDebounce } from "@/utils/hooks";
-import { useAuthStore } from "@/services";
+import { IProjectResponse, useAllDropdownDataQuery, useAllProjectsQuery, useAuthStore } from "@/services";
 
 export interface TaskRow {
   id: string | number;
@@ -80,6 +80,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const [toDate, setToDate] = useState("");
   const [dueFromDate, setDueFromDate] = useState("");
   const [dueToDate, setDueToDate] = useState("");
+  const { allUsersData } = useAllDropdownDataQuery();
+  const { allProjectsData } = useAllProjectsQuery()
 
   // Force reset mechanism for date pickers
   const [datePickerResetKey, setDatePickerResetKey] = useState(0);
@@ -162,33 +164,27 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
   // Staff dropdown options (only admin gets "All Staff")
   const staffOptions = useMemo(() => {
-    const uniqueNames = Array.from(
-      new Set(
-        (taskList || [])
-          .map((t) => t.staffName?.trim())
-          .filter((name): name is string => Boolean(name && name.length > 0))
-      )
-    );
-    const options = uniqueNames.map((name) => ({ label: name, value: name }));
-
+    if (!allUsersData?.data) return [];
+  
+    const options = allUsersData.data.list.map((user) => ({
+      label: `${user?.first_name}${user?.last_name}`,
+      value: user?.id, // or user.name if needed
+    }));
+  
     return (userRole ?? "").toLowerCase() === "admin"
       ? [{ label: "All Staff", value: "" }, ...options]
       : options;
-  }, [taskList, userRole]);
+  }, [allUsersData, userRole]);
 
-  const projectOptions = useMemo(() => {
-    const uniqueProjects = Array.from(
-      new Set(
-        (taskList || [])
-          .map((t) => t.projectName?.trim())
-          .filter((name): name is string => Boolean(name && name.length > 0))
-      )
-    );
-    return [
-      { label: "All Projects", value: "" },
-      ...uniqueProjects.map((name) => ({ label: name, value: name })),
-    ];
-  }, [taskList]);
+
+  const projectOptions = [
+    { label: "All Projects", value: "" },
+    ...(allProjectsData?.map((project: IProjectResponse) => ({
+      label: project.name,
+      value: project.id,
+    })) || []),
+  ];
+  
 
   const handleSearch = (query: string) => {
     setSearchInput(query.toLowerCase());

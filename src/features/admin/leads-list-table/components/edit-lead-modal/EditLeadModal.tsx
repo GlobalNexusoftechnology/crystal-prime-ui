@@ -9,10 +9,7 @@ import {
 import {
   ICreateLeadPayload,
   IUpdateLeadResponse,
-  useAllSourcesQuery,
-  useAllStatusesQuery,
-  useAllTypesQuery,
-  useAllUsersQuery,
+  useAllDropdownDataQuery,
   useCreateLeadFollowUpMutation,
   useUpdateLeadMutation,
 } from "@/services";
@@ -63,10 +60,8 @@ export function EditLeadModal({
   lead,
 }: IEditLeadModalProps) {
   const queryClient = useQueryClient();
-  const { allSourcesData } = useAllSourcesQuery();
-  const { allStatusesData } = useAllStatusesQuery();
-  const { allUsersData } = useAllUsersQuery();
-  const { allTypesData } = useAllTypesQuery();
+
+  const { allSourcesData, allStatusesData, allUsersData, allTypesData} = useAllDropdownDataQuery()
 
   const { onEditLead, isPending } = useUpdateLeadMutation({
     onSuccessCallback: (response: IUpdateLeadResponse) => {

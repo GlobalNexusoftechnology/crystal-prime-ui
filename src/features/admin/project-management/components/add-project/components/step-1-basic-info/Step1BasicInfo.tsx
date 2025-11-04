@@ -6,7 +6,7 @@ import { IAddProjectFormValues } from "../../AddProject";
 import { ImageRegistry } from "@/constants";
 import Image from "next/image";
 import { Checkbox } from "@/components";
-import { useAllTypesQuery, useAuthStore } from "@/services";
+import { useAllDropdownDataQuery, useAuthStore } from "@/services";
 import { differenceInCalendarDays, parseISO } from "date-fns";
 import { CostDisplay } from "./CostDisplay";
 
@@ -42,7 +42,9 @@ export function Step1BasicInfo({
   const isTemplateSelected = values.milestoneOption === "template";
 
   // Fetch lead/project types
-  const { allTypesData } = useAllTypesQuery();
+  // const { allTypesData } = useAllTypesQuery();
+  const { allTypesData } = useAllDropdownDataQuery()
+
   const projectTypeOptions =
     allTypesData?.data?.list?.map((type) => ({
       label: type?.name,

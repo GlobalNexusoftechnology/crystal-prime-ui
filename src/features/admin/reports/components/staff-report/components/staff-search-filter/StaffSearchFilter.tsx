@@ -1,4 +1,4 @@
-import { useAllUsersQuery } from "@/services";
+import { useAllDropdownDataQuery } from "@/services";
 import { Dropdown } from "@/components/dropdown";
 import { DatePicker } from "@/components/date-picker";
 import { IUsersDetails } from "@/services";
@@ -20,7 +20,8 @@ export function StaffSearchFilter({
   toDate,
   setToDate,
 }: StaffSearchFilterProps) {
-  const { allUsersData } = useAllUsersQuery();
+  // const { allUsersData } = useAllUsersQuery();
+  const { allUsersData } = useAllDropdownDataQuery()
   let staffList: IUsersDetails[] = allUsersData?.data?.list || [];
   // Exclude users with role 'admin' (case-insensitive, role may be object)
   staffList = staffList.filter(user => user.role?.role?.toLowerCase() !== "admin");
