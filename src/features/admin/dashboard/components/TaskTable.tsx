@@ -11,7 +11,12 @@ import {
 import { FiX, FiPlus } from "react-icons/fi";
 import { ITableAction, ITableColumn } from "@/constants/table";
 import { useDebounce } from "@/utils/hooks";
-import { IProjectResponse, useAllDropdownDataQuery, useAllProjectsQuery, useAuthStore } from "@/services";
+import {
+  IProjectResponse,
+  useAllDropdownDataQuery,
+  useAllProjectsQuery,
+  useAuthStore,
+} from "@/services";
 
 export interface TaskRow {
   id: string | number;
@@ -81,7 +86,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const [dueFromDate, setDueFromDate] = useState("");
   const [dueToDate, setDueToDate] = useState("");
   const { allUsersData } = useAllDropdownDataQuery();
-  const { allProjectsData } = useAllProjectsQuery()
+  const { allProjectsData } = useAllProjectsQuery();
 
   // Force reset mechanism for date pickers
   const [datePickerResetKey, setDatePickerResetKey] = useState(0);
@@ -165,17 +170,16 @@ const TaskTable: React.FC<TaskTableProps> = ({
   // Staff dropdown options (only admin gets "All Staff")
   const staffOptions = useMemo(() => {
     if (!allUsersData?.data) return [];
-  
+
     const options = allUsersData.data.list.map((user) => ({
       label: `${user?.first_name}${user?.last_name}`,
       value: user?.id, // or user.name if needed
     }));
-  
+
     return (userRole ?? "").toLowerCase() === "admin"
       ? [{ label: "All Staff", value: "" }, ...options]
       : options;
   }, [allUsersData, userRole]);
-
 
   const projectOptions = [
     { label: "All Projects", value: "" },
@@ -184,7 +188,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
       value: project.id,
     })) || []),
   ];
-  
 
   const handleSearch = (query: string) => {
     setSearchInput(query.toLowerCase());
@@ -216,18 +219,18 @@ const TaskTable: React.FC<TaskTableProps> = ({
   // Filter tasks
   const filteredTaskList = useMemo(() => {
     return taskList.filter((task) => {
-      // Restrict non-admins strictly to their own tasks
-      if (userRole !== "admin" && task.assigned_to !== currentUserId) {
+      // Restrict non-admins to their own tasks
+      if (
+        userRole !== "admin" &&
+        String(task.assigned_to) !== String(currentUserId)
+      ) {
         return false;
       }
 
-      // When preset is 'followups' or 'dueToday', strictly show only tasks included in includeTaskIds
       if (presetFilter === "followups" || presetFilter === "dueToday") {
-        // If we have an include set, use it as the sole criterion (after role guard)
         if (includeTaskIds && includeTaskIds.size > 0) {
           return includeTaskIds.has(String(task.id));
         }
-        // If no followup ids available, show nothing (after role guard)
         return false;
       }
 
@@ -243,10 +246,13 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
       const statusMatch = !statusFilter || task.status === statusFilter;
       const priorityMatch = !priorityFilter || task.priority === priorityFilter;
-      const staffMatch = !staffFilter || task.staffName === staffFilter;
-      const projectMatch = !projectFilter || task.projectName === projectFilter;
 
-      // Time period filter
+      const staffMatch =
+        !staffFilter || String(task.assigned_to) === String(staffFilter);
+
+      const projectMatch =
+        !projectFilter || String(task.projectId) === String(projectFilter);
+
       let timePeriodMatch = true;
       if (timePeriodFilter && task.created_at) {
         const taskDateObj = new Date(task.created_at);
@@ -266,14 +272,13 @@ const TaskTable: React.FC<TaskTableProps> = ({
           case "daily":
             timePeriodMatch = taskDateStart.getTime() === nowStart.getTime();
             break;
-          case "yesterday": {
+          case "yesterday":
             const yesterdayStart = new Date(
               nowStart.getTime() - 24 * 60 * 60 * 1000
             );
             timePeriodMatch =
               taskDateStart.getTime() === yesterdayStart.getTime();
             break;
-          }
           case "weekly":
             timePeriodMatch =
               taskDateStart >=
@@ -294,7 +299,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
         }
       }
 
-      // Created date filter
       let dateMatch = true;
       if ((fromDate || toDate) && task.created_at) {
         const taskDateObj = new Date(task.created_at);
@@ -328,7 +332,6 @@ const TaskTable: React.FC<TaskTableProps> = ({
         }
       }
 
-      // Due date filter
       let dueDateMatch = true;
       if ((dueFromDate || dueToDate) && (task.rawDueDate || task.due_date)) {
         const sourceDate = task.rawDueDate || task.due_date!;
@@ -363,7 +366,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
         }
       }
 
-      const baseMatch =
+      return (
         searchMatch &&
         statusMatch &&
         priorityMatch &&
@@ -371,9 +374,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
         projectMatch &&
         timePeriodMatch &&
         dateMatch &&
-        dueDateMatch;
-
-      return baseMatch;
+        dueDateMatch
+      );
     });
   }, [
     taskList,
