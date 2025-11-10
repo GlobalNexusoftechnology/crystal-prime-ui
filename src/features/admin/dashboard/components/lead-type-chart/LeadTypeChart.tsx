@@ -193,7 +193,7 @@ export const LeadTypeChart: React.FC<LeadTypeChartProps> = ({
           )}
         </div>
 
-        <div className="w-full md:auto lg:w-[45%] flex flex-wrap justify-center flex-col gap-4">
+        <div className="w-full md:auto lg:w-[45%] flex flex-wrap justify-center flex-col gap-4 overflow-scroll max-h-[20rem]">
           <div className="flex gap-4 flex-wrap">
             {legendItems.map((item) => (
               <div
