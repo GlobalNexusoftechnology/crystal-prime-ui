@@ -52,7 +52,7 @@ export function LeadManagement() {
     },
     {
       count: `${allLeadList?.data?.stats?.todayFollowups || 0}`,
-      title: "Today Followups",
+      title: "Lead Followups",
       subtitle: "Follow-up scheduled for today",
       icon: <AnalyticalCardIcon />,
     },

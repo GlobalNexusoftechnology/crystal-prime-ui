@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { Button } from "../button";
 
 interface DropdownOption {
   label: string;
@@ -11,13 +12,16 @@ interface DropdownOption {
 interface DropdownProps {
   options: DropdownOption[];
   value: string;
-  onChange: (val: string) => void;
+  onChange?: (val: string) => void;
   error?: string;
   label?: string;
   isRequired?: boolean;
   dropdownBorderRadius?: string;
   dropdownWidth?: string;
-    disabled?: boolean; // ✅ Add this
+  isShowButton?: boolean;
+  buttonTitle?: string;
+  handleCickButton?: () => void;
+  disabled?: boolean;
 }
 
 export function Dropdown({
@@ -27,21 +31,31 @@ export function Dropdown({
   error,
   label,
   isRequired = false,
-  dropdownBorderRadius = "rounded-md ",
+  dropdownBorderRadius = "rounded-md",
   dropdownWidth = "w-full",
-  disabled = false
+  isShowButton = false,
+  buttonTitle,
+  handleCickButton,
+  disabled = false,
 }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [menuStyles, setMenuStyles] = useState<React.CSSProperties>({});
   const [search, setSearch] = useState("");
 
+  const [highlightIndex, setHighlightIndex] = useState<number>(-1);
+
   const selectedOption = options.find((opt) => opt.value === value);
 
+  /** Close dropdown when clicked outside */
   const handleClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-      setIsOpen(false);
-    }
+    const target = event.target as Node;
+
+    if (dropdownRef.current?.contains(target)) return;
+    if (menuRef.current?.contains(target)) return;
+
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -49,7 +63,7 @@ export function Dropdown({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Calculate and set menu position when opening
+  /** Position dropdown menu */
   useEffect(() => {
     function updateMenuPosition() {
       if (isOpen && dropdownRef.current) {
@@ -61,7 +75,8 @@ export function Dropdown({
           width: rect.width,
           zIndex: 9999,
           background: "white",
-          border: "1px solid #ccc",
+          borderRadius: 8,
+          boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
         });
       }
     }
@@ -76,105 +91,163 @@ export function Dropdown({
     };
   }, [isOpen]);
 
- const toggleDropdown = () => {
-    if (disabled) return; // prevent opening
+  const toggleDropdown = () => {
+    if (disabled) return;
     setIsOpen(!isOpen);
+    setHighlightIndex(0);
   };
 
   const handleSelect = (val: string) => {
-    onChange(val);
+    onChange?.(val);
     setIsOpen(false);
     setSearch("");
   };
 
-  // Filter options by search
+  /** ⭐ Filter options using search */
   const filteredOptions = search
     ? options.filter((option) =>
         option.label.toLowerCase().includes(search.toLowerCase())
       )
     : options;
 
+  /** ⭐ Keyboard Navigation */
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isOpen) {
+      if (e.key === "ArrowDown") {
+        setIsOpen(true);
+        setHighlightIndex(0);
+      }
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightIndex((prev) =>
+        prev < filteredOptions.length - 1 ? prev + 1 : prev
+      );
+    }
+
+    if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightIndex((prev) => (prev > 0 ? prev - 1 : prev));
+    }
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (highlightIndex >= 0 && filteredOptions[highlightIndex]) {
+        handleSelect(filteredOptions[highlightIndex].value);
+      }
+    }
+
+    if (e.key === "Escape") {
+      setIsOpen(false);
+    }
+  };
+
   return (
-    <div className={`${dropdownWidth} relative`} ref={dropdownRef}>
+    <div
+      className={`${dropdownWidth} relative`}
+      ref={dropdownRef}
+      tabIndex={0}
+      onKeyDown={handleKeyDown}
+    >
       {label && (
-        <label className="block  text-gray-700 mb-2 ">
+        <label className="block text-[0.9rem] text-gray-700 mb-1">
           {label} {isRequired && <span className="text-red-500">*</span>}
         </label>
       )}
 
-    <div
-  className={`border  focus:outline-none focus:ring-1 ${
-    error ? "focus:ring-red-500" : "focus:ring-primary"
-  } ${error ? "border-red-500" : "border-gray-300"} ${dropdownBorderRadius}  px-4  py-2  flex items-center gap-6  justify-between cursor-pointer ${
-    disabled ? "bg-gray-100 text-gray-400 cursor-default" : "bg-white"
-  }`}
-  onClick={toggleDropdown}
-  tabIndex={0}
-  onKeyDown={(e) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      toggleDropdown();
-    }
-  }}
->
-  <span className={`${!selectedOption ? "text-gray-400" : ""}`}>
-    {selectedOption ? selectedOption.label : "Select an option"}
-  </span>
+      {/* Selected Field */}
+      <div
+        className={`border px-4 py-2 flex items-center justify-between gap-4 cursor-pointer ${dropdownBorderRadius}
+          ${error ? "border-red-500" : "border-gray-300"}
+          ${disabled ? "bg-gray-100 text-gray-400 cursor-default" : "bg-white"}`}
+        onClick={toggleDropdown}
+      >
+        <span className={!selectedOption ? "text-gray-400" : ""}>
+          {selectedOption ? selectedOption.label : "Select an option"}
+        </span>
 
-  {/* ✅ Only show arrow if not disabled */}
-  {!disabled && (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={`w-5 h-5   text-gray-500 transform transition-transform ${isOpen ? "rotate-180" : ""}`}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-    </svg>
-  )}
-</div>
+        {!disabled && (
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={`w-5 h-5 text-gray-500 transform transition-transform ${
+              isOpen ? "rotate-180" : ""
+            }`}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        )}
+      </div>
 
-
-      {/* Debug: Render portal menu as plain div, no animation */}
-      {isOpen && menuStyles.top !== undefined && menuStyles.left !== undefined &&
-        typeof window !== "undefined" && typeof document !== "undefined" &&
+      {/* Dropdown Menu (Portal) */}
+      {isOpen &&
+        menuStyles.top !== undefined &&
+        typeof document !== "undefined" &&
         createPortal(
           <div
+            ref={menuRef}
             style={{
               ...menuStyles,
+              maxHeight: 200,
+              overflowY: "auto",
               background: "#fff",
-              border: "1px solid #F8F8F8",
-              color: "#000",
-              boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-              borderRadius: "8px",
-              padding: 0,
-              maxHeight: 240,
-              overflow: "auto",
             }}
           >
+            {isShowButton && (
+              <div className="px-2 pt-2">
+                <Button
+                  title={buttonTitle}
+                  variant="primary"
+                  onClick={() => {
+                    handleCickButton?.();
+                    setIsOpen(false);
+                  }}
+                />
+              </div>
+            )}
+
+            {/* Search Box */}
             <div className="p-2 border-b">
               <input
+                autoFocus
                 type="text"
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setHighlightIndex(0);
+                }}
                 placeholder="Search..."
                 className="w-full px-2 py-1 border rounded"
-                autoFocus
               />
             </div>
+
+            {/* Options */}
             {filteredOptions.length === 0 ? (
               <div className="px-4 py-2 text-gray-400">No options</div>
             ) : (
-              filteredOptions.length > 0 && filteredOptions.map((option) => (
+              filteredOptions.map((option, index) => (
                 <div
                   key={option.value}
-                  style={{
-                    padding: "8px 16px",
-                    cursor: "pointer",
-                    background: value === option.value ? "#F8F8F8" : undefined,
-                    fontWeight: value === option.value ? "bold" : undefined,
+                  ref={(el) => {
+                    if (index === highlightIndex && el) {
+                      el.scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest",
+                      });
+                    }
                   }}
+                  className={`px-4 py-2 cursor-pointer ${
+                    index === highlightIndex
+                      ? "bg-indigo-100"
+                      : value === option.value
+                      ? "bg-gray-100 font-bold"
+                      : ""
+                  }`}
+                  onMouseEnter={() => setHighlightIndex(index)}
                   onMouseDown={() => handleSelect(option.value)}
                 >
                   {option.label}
@@ -184,44 +257,9 @@ export function Dropdown({
           </div>,
           document.body
         )}
-      {/* Fallback: render inline if menuStyles not set */}
-      {isOpen && (menuStyles.top === undefined || menuStyles.left === undefined) && (
-        <div
-          className={`absolute z-10 mt-1  w-full bg-yellow-100 border border-yellow-500 ${dropdownBorderRadius} shadow-lg max-h-60 overflow-auto`}
-        >
-          <div className="p-2 border-b">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search..."
-              className="w-full px-2 py-1 border rounded"
-              autoFocus
-            />
-          </div>
-          {filteredOptions.length === 0 ? (
-            <div className="px-4 py-2 text-gray-400">No options</div>
-          ) : (
-            filteredOptions.length > 0 && filteredOptions.map((option) => (
-              <div
-                key={option.value}
-                className={`px-4  py-2   cursor-pointer hover:bg-gray-100 ${
-                  value === option.value ? "bg-gray-100 font-semibold" : ""
-                }`}
-                onMouseDown={() => handleSelect(option.value)}
-              >
-                {option.label}
-              </div>
-            ))
-          )}
-        </div>
-      )}
 
-      {error && (
-        <p className="text-red-500 text-[0.9rem]  mt-1 ">
-          {error}
-        </p>
-      )}
+      {/* Error */}
+      {error && <p className="text-red-500 text-[0.9rem] mt-1">{error}</p>}
     </div>
   );
 }

@@ -129,7 +129,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         setFollowupFromDate("");
         setFollowupToDate("");
         setSelectedAssignedToId(undefined);
-      } else if (card.includes("today")) {
+      } else if (card.includes("lead")) {
         // Filter by today's followups (due_date) not created_at
         const today = new Date();
         const yyyy = today.getFullYear();

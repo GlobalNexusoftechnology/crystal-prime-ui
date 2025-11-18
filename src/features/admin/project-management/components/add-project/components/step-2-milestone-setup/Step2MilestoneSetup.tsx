@@ -111,7 +111,6 @@ export function Step2MilestoneSetup({
   setProjectTemplate,
   projectStartDate,
   projectEndDate,
-  projectType,
   mode = "create",
 }: Step2MilestoneSetupProps) {
     // Use project store for create mode, local state for edit mode
@@ -822,7 +821,6 @@ export function Step2MilestoneSetup({
   // Filter templates by selected project type using string match
   const filteredProjectTemplateOptions =
     allProjectTemplatesData?.templates
-      ?.filter((tpl) => !projectType || tpl.project_type === projectType)
       ?.map((tpl) => ({
         label: tpl.name,
         value: tpl.id,
