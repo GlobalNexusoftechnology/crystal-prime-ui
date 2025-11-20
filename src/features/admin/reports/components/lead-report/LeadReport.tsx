@@ -84,9 +84,9 @@ export function LeadReport() {
         <div className="flex flex-col border-r gap-8  border-gray-400  p-6 ">
           <LeadFunnelChart data={leadReportData?.leadFunnelChart} />
           <LeadMetricsGrid data={leadReportData?.kpiMetrics} />
-          <StaffConversionPerformance
+          {/* <StaffConversionPerformance
             data={leadReportData?.staffConversionPerformance}
-          />
+          /> */}
         </div>
         <div className="flex flex-col gap-8  p-4 ">
           <SourceWiseConversionRate

@@ -14,7 +14,7 @@ export function StaffInfoCard({ staffInfo }: StaffInfoCardProps) {
         Staff Basic Info
       </h3>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 ">
+      <div className="flex flex-wrap gap-4 ">
         {/* First Name */}
         <div className="border border-gray-300  rounded-lg  p-4 ">
           <p className="text-sm  text-gray-500 mb-1">

@@ -14,7 +14,7 @@ export function TaskSummary({ taskSummary }: TaskSummaryProps) {
         Task Summary
       </h3>
 
-      <div className="flex flex-wrap gap-6  text-[0.95rem] ">
+      <div className="flex flex-wrap gap-6 text-[0.95rem] ">
         <InfoItem label="Total Task Assigned" value={taskSummary.totalTasksAssigned} />
         <InfoItem label="Completed Task" value={taskSummary.completedTasks} />
         <InfoItem label="Completion Rate" value={`${taskSummary.completionRate}`} />

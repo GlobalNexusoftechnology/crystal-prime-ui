@@ -23,9 +23,6 @@ export function StaffSearchFilter({
   // const { allUsersData } = useAllUsersQuery();
   const { allUsersData } = useAllDropdownDataQuery()
   let staffList: IUsersDetails[] = allUsersData?.data?.list || [];
-  // Exclude users with role 'admin' (case-insensitive, role may be object)
-  staffList = staffList.filter(user => user.role?.role?.toLowerCase() !== "admin");
-
   const staffOptions = [
     ...staffList?.map((user: IUsersDetails) => ({
       label: `${user.first_name} ${user.last_name}`,
