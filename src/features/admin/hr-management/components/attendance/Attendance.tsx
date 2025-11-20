@@ -1,6 +1,8 @@
 "use client";
 import { Breadcrumb, ExportIcon } from "@/features";
 import { AttendanceTable } from "./component";
+import { WorkRequestModal } from "./component/work-request-modal";
+import { WorkRequestsTable } from "./component/work-requests-table";
 import { Button, SearchBar, SimpleDropdown } from "@/components";
 import { useState } from "react";
 import { useAllAttendanceDownloadExcelQuery } from "@/services"; // import your hook
@@ -30,6 +32,9 @@ export function Attendance() {
   const handleMonthChange = (value: string) => setSelectedMonth(Number(value));
   const handleYearChange = (value: string) => setSelectedYear(Number(value));
   const handleSearch = (value: string) => setSearchText(value);
+
+  const [activeTab, setActiveTab] = useState<"attendance" | "requests">("attendance");
+  const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
 
   // Export handler
   const handleExport = async () => {
@@ -63,50 +68,89 @@ export function Attendance() {
         </h1>
         <Breadcrumb />
       </div>
-      
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end justify-between">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <SimpleDropdown
-            label="Month"
-            options={monthOptions}
-            value={selectedMonth.toString()}
-            onChange={handleMonthChange}
-            dropdownWidth="min-w-[140px]"
-            buttonClassName="bg-white hover:bg-gray-50"
-          />
-          <SimpleDropdown
-            label="Year"
-            options={yearOptions}
-            value={selectedYear.toString()}
-            onChange={handleYearChange}
-            dropdownWidth="min-w-[100px]"
-            buttonClassName="bg-white hover:bg-gray-50"
-          />
-        </div>
 
-        <div className="flex gap-3 w-full sm:w-auto">
-          <SearchBar
-            onSearch={handleSearch}
-            bgColor="white"
-            width="w-full min-w-[12rem] md:w-[20vw]"
-          />
-          <Button
-            title={isExporting ? "Exporting..." : "Export"}
-            variant="background-white"
-            rightIcon={<ExportIcon />}
-            width="w-full md:w-fit"
-            onClick={handleExport}
-            disabled={isExporting}
-          />
-        </div>
+      {/* Tabs */}
+      <div className="flex gap-4 border-b border-gray-200">
+        <button
+          className={`pb-2 px-1 ${
+            activeTab === "attendance"
+              ? "border-b-2 border-blue-600 text-blue-600 font-medium"
+              : "text-gray-500 hover:text-gray-700"
+          }`}
+          onClick={() => setActiveTab("attendance")}
+        >
+          Attendance Records
+        </button>
+        <button
+          className={`pb-2 px-1 ${
+            activeTab === "requests"
+              ? "border-b-2 border-blue-600 text-blue-600 font-medium"
+              : "text-gray-500 hover:text-gray-700"
+          }`}
+          onClick={() => setActiveTab("requests")}
+        >
+          Work Requests
+        </button>
       </div>
+      
+      {activeTab === "attendance" ? (
+        <>
+          {/* Filters */}
+          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end justify-between">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <SimpleDropdown
+                label="Month"
+                options={monthOptions}
+                value={selectedMonth.toString()}
+                onChange={handleMonthChange}
+                dropdownWidth="min-w-[140px]"
+                buttonClassName="bg-white hover:bg-gray-50"
+              />
+              <SimpleDropdown
+                label="Year"
+                options={yearOptions}
+                value={selectedYear.toString()}
+                onChange={handleYearChange}
+                dropdownWidth="min-w-[100px]"
+                buttonClassName="bg-white hover:bg-gray-50"
+              />
+            </div>
 
-      {/* Attendance Table with filters */}
-      <AttendanceTable
-        year={selectedYear}
-        month={selectedMonth}
-        searchText={searchText}
+            <div className="flex gap-3 w-full sm:w-auto">
+              <SearchBar
+                onSearch={handleSearch}
+                bgColor="white"
+                width="w-full min-w-[12rem] md:w-[20vw]"
+              />
+              <Button
+                title={isExporting ? "Exporting..." : "Export"}
+                variant="background-white"
+                rightIcon={<ExportIcon />}
+                width="w-full md:w-fit"
+                onClick={handleExport}
+                disabled={isExporting}
+              />
+            </div>
+          </div>
+
+          {/* Attendance Table with filters */}
+          <AttendanceTable
+            year={selectedYear}
+            month={selectedMonth}
+            searchText={searchText}
+          />
+        </>
+      ) : (
+        <div className="flex flex-col gap-4">
+           <div className="flex justify-end">
+           </div>
+           <WorkRequestsTable />
+        </div>
+      )}
+
+      <WorkRequestModal 
+        isOpen={isRequestModalOpen} 
+        onClose={() => setIsRequestModalOpen(false)} 
       />
     </div>
   );

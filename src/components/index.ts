@@ -10,7 +10,8 @@ export * from "./loading"
 export * from "./admin-header"
 export * from "./search-bar"
 export * from "./dropdown"
-export * from "./date-picker"
+export * from "./date-picker";
+export * from "./custom-date-picker";
 export * from "./table"
 export * from "./user-dropdown"
 export * from "./upload-document"

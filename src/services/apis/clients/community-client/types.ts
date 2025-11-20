@@ -798,6 +798,52 @@ export interface Permission {
   delete: boolean;
 }
 
+// Work Request Types
+export interface ICreateWorkRequestPayload {
+  date: string;
+  reason: string;
+  type: "Weekend" | "Holiday";
+}
+
+export interface IWorkRequest {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  staffId: string;
+  staff: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    employee_id: string;
+    email: string;
+    phone_number: string;
+  };
+  requestDate: string;
+  type?: "Weekend" | "Holiday"; // Not returned by backend yet
+  reason: string;
+  status: "Pending" | "Approved" | "Rejected";
+  adminRemark?: string | null;
+}
+
+export interface IAllWorkRequestsResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IWorkRequest[];
+}
+
+export interface IUpdateWorkRequestStatusPayload {
+  status: "Approved" | "Rejected";
+  adminRemark?: string;
+}
+
+export interface IUpdateWorkRequestStatusResponse {
+  status: boolean;
+  message: string;
+  success: true;
+  data: IWorkRequest;
+}
+
 export interface ICreateAddRoleResponse {
   status: boolean;
   message: string;

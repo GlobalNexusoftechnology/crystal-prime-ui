@@ -404,4 +404,9 @@ export const updateLeaveStatusUrl = (id: string) => `/leaves/${id}`;
 
   export const sendProposalUrl = (id: string) => `/leads/${id}/quotation`; //post
 
+  // Work Request
+  export const createWorkRequestUrl = () => "/work-requests"; //post
+  export const fetchAllWorkRequestsUrl = () => "/work-requests"; //get
+  export const updateWorkRequestStatusUrl = (id: string) => `/work-requests/${id}/status`; //put
+
 

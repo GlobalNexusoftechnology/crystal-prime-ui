@@ -203,3 +203,8 @@ export { useTodayAttendanceStatus } from "./useTodayAttendanceStatus";
 // Dropdown data hook
 export { useAllDropdownDataQuery } from "./useAllDropdownDataQuery";
 
+// Work Request
+export { useCreateWorkRequestMutation } from "./useCreateWorkRequestMutation";
+export { useAllWorkRequestsQuery } from "./useAllWorkRequestsQuery";
+export { useUpdateWorkRequestStatusMutation } from "./useUpdateWorkRequestStatusMutation";
+

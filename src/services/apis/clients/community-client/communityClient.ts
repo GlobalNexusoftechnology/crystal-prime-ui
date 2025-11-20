@@ -375,11 +375,18 @@ import {
   sendProposalUrl,
   fetchAllAttendanceDownloadExcelUrl,
   fetchAttendanceStaffStatusUrl,
+  createWorkRequestUrl,
+  fetchAllWorkRequestsUrl,
+  updateWorkRequestStatusUrl,
 } from "./urls";
 import {
   IClientDetails,
   IClientDetailsResponse,
   DashboardSummaryApiResponse,
+  ICreateWorkRequestPayload,
+  IAllWorkRequestsResponse,
+  IUpdateWorkRequestStatusPayload,
+  IUpdateWorkRequestStatusResponse,
 } from "./types";
 
 /**
@@ -2979,8 +2986,41 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  
- public fetchAllAttendanceDownloadExcel = async (filters: IAttendanceExportFilters = {}) => {
+
+  // Work Request
+  public createWorkRequest = async (payload: ICreateWorkRequestPayload) => {
+    const response = await this.post<any>(
+      createWorkRequestUrl(),
+      payload
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public getAllWorkRequests = async () => {
+    const response = await this.get<IAllWorkRequestsResponse>(
+      fetchAllWorkRequestsUrl()
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public updateWorkRequestStatus = async ({ id, payload }: { id: string; payload: IUpdateWorkRequestStatusPayload }) => {
+    const response = await this.put<IUpdateWorkRequestStatusResponse>(
+      updateWorkRequestStatusUrl(id),
+      payload
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public fetchAllAttendanceDownloadExcel = async (filters: IAttendanceExportFilters = {}) => {
     const params = new URLSearchParams();
   
     if (filters.year) params.append("year", filters.year.toString());
