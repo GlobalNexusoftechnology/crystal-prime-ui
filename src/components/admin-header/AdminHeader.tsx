@@ -153,6 +153,12 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
         return "✅";
       case "LEAD_ESCALATED":
         return "🔄";
+      case "WORK_REQUEST_CREATED":
+        return "📋";
+      case "WORK_REQUEST_APPROVED":
+        return "✅";
+      case "WORK_REQUEST_REJECTED":
+        return "❌";
       default:
         return "📢";
     }
@@ -172,6 +178,12 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
         return "Business Completed";
       case "LEAD_ESCALATED":
         return "Lead Escalated";
+      case "WORK_REQUEST_CREATED":
+        return "New Work Request";
+      case "WORK_REQUEST_APPROVED":
+        return "Work Request Approved";
+      case "WORK_REQUEST_REJECTED":
+        return "Work Request Rejected";
       default:
         return type.replace("_", " ");
     }
@@ -269,9 +281,8 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
             notifications?.map((notification: INotification) => (
               <div
                 key={notification.id}
-                className={`border rounded-xl p-4 shadow-sm ${
-                  !notification.isRead ? "bg-blue-50" : ""
-                } relative group cursor-pointer`}
+                className={`border rounded-xl p-4 shadow-sm ${!notification.isRead ? "bg-blue-50" : ""
+                  } relative group cursor-pointer`}
               >
                 <button
                   onClick={(e) => handleDeleteNotification(e, notification?.id)}
