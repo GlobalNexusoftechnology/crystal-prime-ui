@@ -8,6 +8,8 @@ import {
   useCreateCheckInMutation,
   useCreateCheckOutMutation,
   useTodayAttendanceStatus,
+  useAllWorkRequestsQuery,
+  useAllHolidayQuery,
 } from "@/services";
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
@@ -27,6 +29,9 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
     refetchTodayStatus,
   } = useTodayAttendanceStatus(staffId);
 
+  const { data: workRequests } = useAllWorkRequestsQuery();
+  const { data: holidays } = useAllHolidayQuery();
+
   const [timerSeconds, setTimerSeconds] = useState(0);
 
   const isCheckedIn = todayStatus?.isCheckedIn ?? false;
@@ -34,6 +39,31 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
   const userRole = activeSession?.user?.role?.role;
   const userPermission =
     userRole?.toLowerCase() === "admin" || userRole?.toLowerCase() === "client";
+
+  // Check if today is a weekend or holiday and if user has approved work request
+  const shouldShowCheckInOut = () => {
+    const today = new Date();
+    const todayString = today.toISOString().split("T")[0];
+    const isSunday = today.getDay() === 0;
+
+    // Check if today is a holiday
+    const isHoliday = holidays?.some((h: any) => h.date === todayString) ?? false;
+
+    // If it's not a weekend or holiday, show the button
+    if (!isSunday && !isHoliday) {
+      return true;
+    }
+
+    // If it's a weekend or holiday, check if user has approved work request for today
+    const hasApprovedRequest = workRequests?.data?.some(
+      (req: any) =>
+        req.requestDate === todayString &&
+        req.status === "Approved" &&
+        req.staffId === staffId
+    ) ?? false;
+
+    return hasApprovedRequest;
+  };
 
   // Timer logic (timezone safe)
   useEffect(() => {
@@ -140,23 +170,26 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
 
   const buttonTitle = isCheckedIn ? "Check Out" : "Check In";
 
+  // Don't render if user is admin/client OR if it's weekend/holiday without approval
+  if (userPermission || !shouldShowCheckInOut()) {
+    return null;
+  }
+
   return (
     <div>
-      {!userPermission && (
-        <div className="flex flex-col gap-2">
-          <Button
-            title={buttonTitle}
-            onClick={handleButtonClick}
-            disabled={isLoading}
-          />
-          {isCheckedIn && (
-            <span className="text-sm text-gray-700">
-              Timer: {formatTime(timerSeconds)}
-            </span>
-          )}
-          {isLoading && <span>Loading...</span>}
-        </div>
-      )}
+      <div className="flex flex-col gap-2">
+        <Button
+          title={buttonTitle}
+          onClick={handleButtonClick}
+          disabled={isLoading}
+        />
+        {isCheckedIn && (
+          <span className="text-sm text-gray-700">
+            Timer: {formatTime(timerSeconds)}
+          </span>
+        )}
+        {isLoading && <span>Loading...</span>}
+      </div>
     </div>
   );
 }

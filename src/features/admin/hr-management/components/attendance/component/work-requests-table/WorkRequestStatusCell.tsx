@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
 import { useUpdateWorkRequestStatusMutation, IWorkRequest } from "@/services";
+import { useAuthStore } from "@/services/stores/auth-store";
 import toast from "react-hot-toast";
 
 interface WorkRequestStatusCellProps {
@@ -12,6 +13,10 @@ export function WorkRequestStatusCell({ row }: WorkRequestStatusCellProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [adminRemark, setAdminRemark] = useState("");
   const [nextStatus, setNextStatus] = useState<"Approved" | "Rejected" | null>(null);
+
+  const { activeSession } = useAuthStore();
+  const userRole = activeSession?.user?.role?.role;
+  const isAdmin = userRole === "admin";
 
   const { updateWorkRequestStatus, isPending } = useUpdateWorkRequestStatusMutation({
     onSuccessCallback: (data) => {
@@ -60,6 +65,22 @@ export function WorkRequestStatusCell({ row }: WorkRequestStatusCellProps) {
     setIsModalOpen(false);
     setNextStatus(null);
   };
+
+  // If not admin, show read-only status badge
+  if (!isAdmin) {
+    return (
+      <span
+        className={`px-3 py-1 rounded-full text-xs font-medium ${row.status === "Pending"
+          ? "bg-yellow-100 text-yellow-700"
+          : row.status === "Approved"
+            ? "bg-green-100 text-green-700"
+            : "bg-red-100 text-red-700"
+          }`}
+      >
+        {row.status}
+      </span>
+    );
+  }
 
   return (
     <>

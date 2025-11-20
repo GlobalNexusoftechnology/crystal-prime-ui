@@ -6,10 +6,12 @@ import { useAllHolidayQuery } from "@/services";
 import { useState } from "react";
 import { useAuthStore } from "@/services/stores/auth-store";
 import { WorkRequestModal } from "../../../hr-management/components/attendance/component/work-request-modal";
+import { WorkRequestsTable } from "../../../hr-management/components/attendance/component/work-requests-table";
 
 export function Holidays() {
   const { data } = useAllHolidayQuery();
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"holidays" | "requests">("holidays");
 
   const { activeSession } = useAuthStore();
   const userRole = activeSession?.user?.role?.role;
@@ -32,7 +34,34 @@ export function Holidays() {
           />
         )}
       </div>
-      <Table data={data || []} columns={holidaysListColumn} />
+
+      {/* Tabs */}
+      <div className="flex gap-4 border-b border-gray-200">
+        <button
+          className={`pb-2 px-1 ${activeTab === "holidays"
+              ? "border-b-2 border-blue-600 text-blue-600 font-medium"
+              : "text-gray-500 hover:text-gray-700"
+            }`}
+          onClick={() => setActiveTab("holidays")}
+        >
+          Holidays List
+        </button>
+        <button
+          className={`pb-2 px-1 ${activeTab === "requests"
+              ? "border-b-2 border-blue-600 text-blue-600 font-medium"
+              : "text-gray-500 hover:text-gray-700"
+            }`}
+          onClick={() => setActiveTab("requests")}
+        >
+          My Work Requests
+        </button>
+      </div>
+
+      {activeTab === "holidays" ? (
+        <Table data={data || []} columns={holidaysListColumn} />
+      ) : (
+        <WorkRequestsTable />
+      )}
 
       <WorkRequestModal
         isOpen={isRequestModalOpen}
