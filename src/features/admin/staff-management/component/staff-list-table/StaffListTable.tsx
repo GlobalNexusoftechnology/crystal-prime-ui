@@ -72,7 +72,7 @@ export function StaffListTable() {
   });
 
   const handleUserDownloadExcel = async () => {
-    const blob = await downloadAllUserExcel(searchQuery); 
+    const blob = await downloadAllUserExcel(searchQuery);
     if (blob instanceof Blob) {
       await downloadBlobFile(blob, `staff_data.xlsx`);
     }
@@ -92,6 +92,10 @@ export function StaffListTable() {
       created_at: formatDate(user?.created_at) || "",
       updated_at: formatDate(user?.updated_at) || "",
       role_id: user?.role?.id || "",
+      team_lead: (user as any)?.team_lead
+        ? `${(user as any).team_lead.first_name} ${(user as any).team_lead.last_name}`
+        : "",
+      team_lead_id: (user as any)?.team_lead?.id || "",
     })
   );
   const filteredUserList = userList;
@@ -100,7 +104,7 @@ export function StaffListTable() {
   const paginationData = allUsersData?.data?.pagination;
 
   const leadStaffManagementAction: ITableAction<IAllUsersListResponse>[] = [];
-  
+
   if (cavEditStaffManagement) {
     leadStaffManagementAction.push({
       label: "Edit",
@@ -117,6 +121,7 @@ export function StaffListTable() {
           role_id: row.role_id || "",
           created_at: formatDate(row.created_at) || "",
           updated_at: formatDate(row.updated_at) || "",
+          team_lead_id: row.team_lead_id || "",
         });
         setIsEditStaffModalOpen(true);
       },
@@ -142,9 +147,9 @@ export function StaffListTable() {
 
   const staffNameToDelete = deleteId
     ? (() => {
-        const staff = filteredUserList.find((u) => u.id === deleteId);
-        return staff ? `${staff.first_name} ${staff.last_name}` : "";
-      })()
+      const staff = filteredUserList.find((u) => u.id === deleteId);
+      return staff ? `${staff.first_name} ${staff.last_name}` : "";
+    })()
     : "";
 
   return (
@@ -178,13 +183,13 @@ export function StaffListTable() {
         </div>
       </div>
 
-              <Table
-          data={filteredUserList}
-          columns={staffListColumn}
-          actions={leadStaffManagementAction}
-          paginationData={paginationData}
-          onPageChange={setCurrentPage}
-        />
+      <Table
+        data={filteredUserList}
+        columns={staffListColumn}
+        actions={leadStaffManagementAction}
+        paginationData={paginationData}
+        onPageChange={setCurrentPage}
+      />
 
       {/* Modals */}
       <AddNewStaffModel

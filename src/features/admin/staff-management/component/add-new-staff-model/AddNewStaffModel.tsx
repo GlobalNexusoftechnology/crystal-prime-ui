@@ -13,6 +13,7 @@ import {
   ICreateUserResponse,
   useAllDropdownDataQuery,
   useCreateUserMutation,
+  useAllUsersQuery,
 } from "@/services";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
@@ -35,6 +36,7 @@ export interface IAddStaffFormValues {
   email: string;
   role: string;
   password: string;
+  teamLead: string;
 }
 
 const initialValues: IAddStaffFormValues = {
@@ -46,6 +48,7 @@ const initialValues: IAddStaffFormValues = {
   email: "",
   role: "",
   password: "",
+  teamLead: "",
 };
 
 const validationSchema = Yup.object({
@@ -76,18 +79,29 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
 }) => {
   // const { data: rolesList } = useAllRoleListQuery();
   const { allRoleData } = useAllDropdownDataQuery()
+  const { allUsersData } = useAllUsersQuery({});
   const [showPassword, setShowPassword] = React.useState(false);
 
   const roleOptions =
-  allRoleData?.data?.list
-    ?.filter(
-      (role, index, self) =>
-        index === self.findIndex((r) => r.role === role.role) 
-    )
-    ?.map((roleData) => ({
-      label: roleData?.role,
-      value: roleData?.id.toString(),
-    })) || [];
+    allRoleData?.data?.list
+      ?.filter(
+        (role, index, self) =>
+          index === self.findIndex((r) => r.role === role.role)
+      )
+      ?.map((roleData) => ({
+        label: roleData?.role,
+        value: roleData?.id.toString(),
+      })) || [];
+
+  const userOptions = [
+    { label: "None", value: "" },
+    ...(allUsersData?.data?.list
+      ?.filter((user: any) => user.first_name && user.last_name)
+      ?.map((user: any) => ({
+        label: `${user.first_name} ${user.last_name}`,
+        value: user.id.toString(),
+      })) || [])
+  ];
 
 
   const handleCreateUserSuccessCallback = (response: ICreateUserResponse) => {
@@ -114,12 +128,13 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
       password: values.password,
       phone_number: values.phoneNumber,
       role_id: values.role,
-      employee_id: values.employeeId, 
+      employee_id: values.employeeId,
+      team_lead_id: values.teamLead || undefined,
     };
-  
+
     onCreateUser(createUserPayload);
   };
-  
+
 
   return (
     <div>
@@ -145,15 +160,15 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
               <h1 className="text-lg  font-semibold">
                 Add New Staff
               </h1>
-                <InputField
-                  label="Employee Id"
-                  name="employeeId"
-                  placeholder="Enter Employee Id"
-                  value={values.employeeId}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.employeeId && errors.employeeId}
-                />
+              <InputField
+                label="Employee Id"
+                name="employeeId"
+                placeholder="Enter Employee Id"
+                value={values.employeeId}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                error={touched.employeeId && errors.employeeId}
+              />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                 <InputField
                   label="First Name"
@@ -220,6 +235,13 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   error={touched.role ? errors.role : undefined}
                 />
               </div>
+
+              <Dropdown
+                label="Team Lead (Optional)"
+                options={userOptions}
+                value={values.teamLead}
+                onChange={(val: string) => setFieldValue("teamLead", val)}
+              />
 
               <InputField
                 label="Enter Password"

@@ -15,6 +15,7 @@ import {
   IUserViewDetails,
   useAllRoleListQuery,
   useUpdateUserMutation,
+  useAllUsersQuery,
 } from "@/services";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
@@ -70,6 +71,7 @@ const initialEditValues: IAddStaffFormValues = {
   email: "",
   role: "",
   password: "",
+  teamLead: "",
 };
 
 export const EditStaffModel: React.FC<EditStaffModelProps> = ({
@@ -82,6 +84,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
     useState<IAddStaffFormValues>(initialEditValues);
 
   const { data: rolesList } = useAllRoleListQuery();
+  const { allUsersData } = useAllUsersQuery();
 
   // Format date for form field (YYYY-MM-DD)
   const formatDateForSave = (inputDate: string) => {
@@ -101,6 +104,16 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
       label: roleData?.role,
       value: roleData?.id.toString(),
     })) || [];
+
+  const userOptions = [
+    { label: "None", value: "" },
+    ...(allUsersData?.data?.list
+      ?.filter((user: any) => user.first_name && user.last_name)
+      ?.map((user: any) => ({
+        label: `${user.first_name} ${user.last_name}`,
+        value: user.id.toString(),
+      })) || [])
+  ];
 
   const { onEditUser } = useUpdateUserMutation({
     onSuccessCallback: (response) => {
@@ -125,6 +138,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
         email: selectStaff.email || "",
         role: selectStaff.role_id?.toString() || "",
         password: "",
+        teamLead: (selectStaff as any).team_lead_id?.toString() || "",
       });
     }
   }, [selectStaff]);
@@ -153,6 +167,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
             email: values.email,
             role_id: values.role,
             phone_number: values.phoneNumber,
+            team_lead_id: values.teamLead || undefined,
             ...(values.password &&
               values.password.trim() !== "" && { password: values.password }),
           };
@@ -174,14 +189,14 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
           <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg  p-4  border  border-gray-200">
             <h1 className="text-lg  font-semibold">Edit Staff</h1>
             <InputField
-                label="Employee Id"
-                name="employeeId"
-                placeholder="Enter Employee Id"
-                value={values.employeeId}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.employeeId && errors.employeeId}
-              />
+              label="Employee Id"
+              name="employeeId"
+              placeholder="Enter Employee Id"
+              value={values.employeeId}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={touched.employeeId && errors.employeeId}
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
               <InputField
                 label="First Name"
@@ -248,6 +263,13 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
                 error={touched.role ? errors.role : undefined}
               />
             </div>
+
+            <Dropdown
+              label="Team Lead (Optional)"
+              options={userOptions}
+              value={values.teamLead}
+              onChange={(val: string) => setFieldValue("teamLead", val)}
+            />
 
             <InputField
               label="Enter Password"

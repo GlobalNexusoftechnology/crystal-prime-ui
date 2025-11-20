@@ -886,6 +886,7 @@ export interface IUserViewDetails {
   role_id: string;
   password?: string;
   dob: string;
+  team_lead_id?: string;
 }
 
 export interface IAllUsersListResponse {
@@ -900,6 +901,8 @@ export interface IAllUsersListResponse {
   number: string;
   dob: string;
   role_id: string;
+  team_lead?: string;
+  team_lead_id?: string;
 }
 
 export interface IAllUsersResponse {
@@ -956,6 +959,7 @@ export interface ICreateUserPayload {
   phone_number: string;
   password: string;
   role_id: string;
+  team_lead_id?: string;
 }
 export interface IUserUpdatePayload {
   employee_id: string;
@@ -966,6 +970,7 @@ export interface IUserUpdatePayload {
   phone_number: string;
   password?: string;
   role_id: string;
+  team_lead_id?: string;
 }
 
 export interface ICreateUserResponse {

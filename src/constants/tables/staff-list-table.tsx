@@ -20,7 +20,7 @@ export const staffListColumn: ITableColumn<IAllUsersListResponse>[] = [
     accessor: "employee_id",
     sortable: true,
     headerClassName: "min-w-[10rem] ",
-    cell: ({value}) => <span>{value ? value : "N/A"}</span>
+    cell: ({ value }) => <span>{value ? value : "N/A"}</span>
   },
   {
     header: "FIRST NAME",
@@ -53,6 +53,12 @@ export const staffListColumn: ITableColumn<IAllUsersListResponse>[] = [
     header: "ROLE NAME",
     accessor: "role",
     headerClassName: "min-w-[10rem] ",
+  },
+  {
+    header: "TEAM LEAD",
+    accessor: "team_lead",
+    headerClassName: "min-w-[12rem] ",
+    cell: ({ value }) => <span>{value ? value : "N/A"}</span>
   },
   {
     header: "CREATED AT",
