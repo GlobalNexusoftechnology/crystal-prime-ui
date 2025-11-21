@@ -13,21 +13,19 @@ interface AttendanceRowProps {
   attendanceData: IAttendance[];
 }
 
-// Convert UTC date + time to local time string in AM/PM
+// Convert 24h time string to 12h AM/PM format
 const formatTimeForDisplay = (dateStr?: string, timeStr?: string | null) => {
   if (!timeStr) return "-";
-  if (!dateStr) return timeStr;
 
-  // Combine date + time in UTC and parse
-  const utcDateTime = new Date(`${dateStr}T${timeStr}Z`);
-  if (isNaN(utcDateTime.getTime())) return "-";
+  const [hoursStr, minutesStr] = timeStr.split(":");
+  const hours = parseInt(hoursStr, 10);
 
-  const hours = utcDateTime.getHours();
-  const minutes = utcDateTime.getMinutes().toString().padStart(2, "0");
+  if (isNaN(hours)) return "-";
+
   const ampm = hours >= 12 ? "PM" : "AM";
   const displayHours = hours % 12 || 12;
 
-  return `${displayHours}:${minutes} ${ampm}`;
+  return `${displayHours}:${minutesStr} ${ampm}`;
 };
 
 // Function to check if a date is Sunday

@@ -75,24 +75,22 @@ export function CheckInCheckOut({ onSuccessRefresh }: Props) {
         .split(":")
         .map(Number);
 
-      // Create check-in time in UTC by using the same date but with check-in time
+      // Create check-in time in Local Time
       const now = new Date();
       const checkInDate = new Date(
-        Date.UTC(
-          now.getUTCFullYear(),
-          now.getUTCMonth(),
-          now.getUTCDate(),
-          hours,
-          minutes,
-          seconds
-        )
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        hours,
+        minutes,
+        seconds
       );
 
       // Calculate the time difference in milliseconds
       const diffMilliseconds = Date.now() - checkInDate.getTime();
 
       // Convert the difference to seconds
-      const diffSeconds = Math.floor(diffMilliseconds / 1000);
+      const diffSeconds = Math.max(0, Math.floor(diffMilliseconds / 1000));
 
       // Set the timer
       setTimerSeconds(diffSeconds);
