@@ -92,7 +92,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
     delay: 500,
-    onChangeCb: () => {}, // not needed for this use case
+    onChangeCb: () => { }, // not needed for this use case
   });
 
   const filters = useMemo(
@@ -129,7 +129,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         setFollowupFromDate("");
         setFollowupToDate("");
         setSelectedAssignedToId(undefined);
-      } else if (card.includes("lead")) {
+      } else if (card.includes("followup")) {
         // Filter by today's followups (due_date) not created_at
         const today = new Date();
         const yyyy = today.getFullYear();
@@ -151,6 +151,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         setFollowupToDate("");
       } else if (card.includes("total")) {
         setSelectedStatus("All Status");
+        setSelectedType("All Type");
+        setSelectedAssignedTo("All Assigned To");
         setDateRangeFilter("All");
         setFollowupFromDate("");
         setFollowupToDate("");
@@ -483,9 +485,9 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const leadNameToDelete = deleteId
     ? (() => {
-        const lead = leadsList.find((l) => l.id === deleteId);
-        return lead ? `${lead.first_name} ${lead.last_name}` : "";
-      })()
+      const lead = leadsList.find((l) => l.id === deleteId);
+      return lead ? `${lead.first_name} ${lead.last_name}` : "";
+    })()
     : "";
 
   if (isError) {
@@ -637,7 +639,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
         message="Are you sure you want to delete this lead "
         itemName={leadNameToDelete}
       />
-      
+
       <SendProposalModal
         isOpen={isSendProposalModalOpen}
         onClose={() => {

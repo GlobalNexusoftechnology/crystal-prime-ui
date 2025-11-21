@@ -82,6 +82,14 @@ export default function Dashboard() {
     setSelectedProjectId(projectId);
     setSelectedMilestoneId(""); // Reset milestone when project changes
   };
+
+  const handleTaskStatusChange = (newStatus: string) => {
+    setSelectedTaskStatus(newStatus);
+    // Reset task table preset when status filter changes
+    setTaskTablePreset("none");
+    setTaskTablePresetTrigger((v) => v + 1);
+  };
+
   // Task status update hook
   const { onUpdateTaskStatus, isPending: isUpdatingTaskStatus } =
     useUpdateTaskStatusMutation({
@@ -561,6 +569,25 @@ export default function Dashboard() {
         title: "Open",
         subtitle: "Open",
         icon: <AnalyticalCardIcon />,
+        customContent: (
+          <div className="flex flex-col items-start gap-2">
+            <SimpleDropdown
+              options={[
+                { label: "Open", value: "open" },
+                { label: "All Task", value: "allTask" },
+                { label: "Completed", value: "completed" },
+                { label: "In Progress", value: "inprogress" },
+                { label: "Approval", value: "approval" },
+              ]}
+              value={selectedTaskStatus}
+              onChange={(newStatus) => handleTaskStatusChange(newStatus)}
+              dropdownWidth="w-40 "
+              dropdownBorderRadius="rounded-md"
+              buttonClassName="text-sm"
+            />
+          </div>
+        ),
+
       },
       {
         count: statsData?.todayFollowups,
