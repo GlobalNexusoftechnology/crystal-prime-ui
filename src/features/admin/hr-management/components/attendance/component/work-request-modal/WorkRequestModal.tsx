@@ -38,13 +38,17 @@ export function WorkRequestModal({ isOpen, onClose }: WorkRequestModalProps) {
   };
 
   const isDateSelectable = (d: Date) => {
-    const dateString = d.toISOString().split("T")[0];
-    
+    // Fix: Use local time components to avoid timezone shifts
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const dateString = `${year}-${month}-${day}`;
+
     if (type === "Weekend") {
       // Allow only Sundays (0)
       return d.getDay() === 0;
-    } 
-    
+    }
+
     if (type === "Holiday") {
       // Allow only dates present in holidays list
       return holidays?.some((h: any) => h.date === dateString) ?? false;

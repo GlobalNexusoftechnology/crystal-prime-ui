@@ -28,7 +28,7 @@ export function Holidays() {
         </div>
         {canRequestWork && (
           <Button
-            title="Request Work"
+            title="Request To Work"
             width="w-fit"
             onClick={() => setIsRequestModalOpen(true)}
           />
@@ -39,8 +39,8 @@ export function Holidays() {
       <div className="flex gap-4 border-b border-gray-200">
         <button
           className={`pb-2 px-1 ${activeTab === "holidays"
-              ? "border-b-2 border-blue-600 text-blue-600 font-medium"
-              : "text-gray-500 hover:text-gray-700"
+            ? "border-b-2 border-blue-600 text-blue-600 font-medium"
+            : "text-gray-500 hover:text-gray-700"
             }`}
           onClick={() => setActiveTab("holidays")}
         >
@@ -48,8 +48,8 @@ export function Holidays() {
         </button>
         <button
           className={`pb-2 px-1 ${activeTab === "requests"
-              ? "border-b-2 border-blue-600 text-blue-600 font-medium"
-              : "text-gray-500 hover:text-gray-700"
+            ? "border-b-2 border-blue-600 text-blue-600 font-medium"
+            : "text-gray-500 hover:text-gray-700"
             }`}
           onClick={() => setActiveTab("requests")}
         >
