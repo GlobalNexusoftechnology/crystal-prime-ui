@@ -375,6 +375,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
         dueDateMatch
       );
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     taskList,
     searchQuery,

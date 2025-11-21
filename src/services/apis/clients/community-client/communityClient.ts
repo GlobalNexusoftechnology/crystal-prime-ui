@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { IApiError } from "@/utils";
 import { ApiClient } from "../../api-client";
 

@@ -1,3 +1,5 @@
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Button, CustomDatePicker, Dropdown, ModalOverlay } from "@/components";
 import { useCreateWorkRequestMutation, useAllHolidayQuery } from "@/services";

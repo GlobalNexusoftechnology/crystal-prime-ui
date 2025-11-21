@@ -22,7 +22,7 @@ export function StaffSearchFilter({
 }: StaffSearchFilterProps) {
   // const { allUsersData } = useAllUsersQuery();
   const { allUsersData } = useAllDropdownDataQuery()
-  let staffList: IUsersDetails[] = allUsersData?.data?.list || [];
+  const staffList: IUsersDetails[] = allUsersData?.data?.list || [];
   const staffOptions = [
     ...staffList?.map((user: IUsersDetails) => ({
       label: `${user.first_name} ${user.last_name}`,

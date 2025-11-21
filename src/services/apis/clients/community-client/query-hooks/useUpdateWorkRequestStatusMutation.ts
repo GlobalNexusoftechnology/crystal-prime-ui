@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { COMMUNITY_CLIENT } from "../communityClient";
 import { IUpdateWorkRequestStatusPayload } from "../types";
