@@ -2,17 +2,14 @@ import { ReactNode } from "react";
 
 import {
   DashboardIcon,
-  EILogIcon,
   LeadManagementIcon,
   ProjectManagementIcon,
   ReportIcon,
   SettingsIcon,
-  StaffManagementIcon,
-  UserListRoundedIcon,
+  StaffManagementIcon
 } from "@/features";
-import { TbReportAnalytics } from "react-icons/tb";
 import { LuTicket } from "react-icons/lu";
-import { FaUsersGear } from "react-icons/fa6";
+import { TbReportAnalytics } from "react-icons/tb";
 
 type TSidebarPermission = {
   module: string;
