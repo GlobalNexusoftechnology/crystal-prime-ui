@@ -19,9 +19,9 @@ export function WorkRequestsTable() {
       cell: ({ row }: { row: IWorkRequest }) => (
         <div className="flex flex-col">
           <span className="font-medium text-gray-900">
-            {row.staff.first_name} {row.staff.last_name}
+            {row?.staff?.first_name} {row?.staff?.last_name}
           </span>
-          <span className="text-xs text-gray-500">{row.staff.employee_id}</span>
+          <span className="text-xs text-gray-500">{row?.staff?.employee_id}</span>
         </div>
       ),
     },

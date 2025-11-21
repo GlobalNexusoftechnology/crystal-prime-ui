@@ -37,6 +37,8 @@ export interface TaskRow {
   created_at?: string;
   updated_at?: string;
   rawCreatedAt?: string;
+  team_lead?: { id: string } | null;
+  teamLeadName?: string;
   [key: string]: unknown;
 }
 
@@ -95,7 +97,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
     delay: 500,
-    onChangeCb: () => {},
+    onChangeCb: () => { },
   });
 
   // Apply preset filters pushed from parent
@@ -219,13 +221,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
   // Filter tasks
   const filteredTaskList = useMemo(() => {
     return taskList.filter((task) => {
-      // Restrict non-admins to their own tasks
-      if (
-        userRole !== "admin" &&
-        String(task.assigned_to) !== String(currentUserId)
-      ) {
-        return false;
-      }
+      // For non-admins, backend already filters tasks (own tasks + team members' tasks if team lead)
+      // So we don't need additional filtering here, just pass through
+      // Admin users see all tasks
 
       if (presetFilter === "followups" || presetFilter === "dueToday") {
         if (includeTaskIds && includeTaskIds.size > 0) {
@@ -313,22 +311,22 @@ const TaskTable: React.FC<TaskTableProps> = ({
           dateMatch =
             dateMatch &&
             taskDateStart >=
-              new Date(
-                fromDateObj.getFullYear(),
-                fromDateObj.getMonth(),
-                fromDateObj.getDate()
-              );
+            new Date(
+              fromDateObj.getFullYear(),
+              fromDateObj.getMonth(),
+              fromDateObj.getDate()
+            );
         }
         if (toDate) {
           const toDateObj = new Date(toDate);
           dateMatch =
             dateMatch &&
             taskDateStart <=
-              new Date(
-                toDateObj.getFullYear(),
-                toDateObj.getMonth(),
-                toDateObj.getDate()
-              );
+            new Date(
+              toDateObj.getFullYear(),
+              toDateObj.getMonth(),
+              toDateObj.getDate()
+            );
         }
       }
 
@@ -347,22 +345,22 @@ const TaskTable: React.FC<TaskTableProps> = ({
           dueDateMatch =
             dueDateMatch &&
             dueDateStart >=
-              new Date(
-                fromDateObj.getFullYear(),
-                fromDateObj.getMonth(),
-                fromDateObj.getDate()
-              );
+            new Date(
+              fromDateObj.getFullYear(),
+              fromDateObj.getMonth(),
+              fromDateObj.getDate()
+            );
         }
         if (dueToDate) {
           const toDateObj = new Date(dueToDate);
           dueDateMatch =
             dueDateMatch &&
             dueDateStart <=
-              new Date(
-                toDateObj.getFullYear(),
-                toDateObj.getMonth(),
-                toDateObj.getDate()
-              );
+            new Date(
+              toDateObj.getFullYear(),
+              toDateObj.getMonth(),
+              toDateObj.getDate()
+            );
         }
       }
 
@@ -401,8 +399,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
       <div className="text-red-500">
         Error loading tasks:{" "}
         {typeof tasksErrorObj === "object" &&
-        tasksErrorObj &&
-        "message" in tasksErrorObj
+          tasksErrorObj &&
+          "message" in tasksErrorObj
           ? (tasksErrorObj as { message: string }).message
           : "Unknown error"}
       </div>
@@ -432,9 +430,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
       <div className="flex justify-start items-end flex-wrap gap-4 my-4 ">
         <DatePicker
-          key={`from-date-${presetFilter}-${presetTrigger}${
-            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
-          }`}
+          key={`from - date - ${presetFilter} -${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+            } `}
           label="From Date"
           value={fromDate}
           onChange={setFromDate}
@@ -442,9 +439,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
           datePickerWidth="w-full md:w-[12rem]"
         />
         <DatePicker
-          key={`to-date-${presetFilter}-${presetTrigger}${
-            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
-          }`}
+          key={`to - date - ${presetFilter} -${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+            } `}
           label="To Date"
           value={toDate}
           onChange={setToDate}
@@ -461,9 +457,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
           />
         )}
         <DatePicker
-          key={`due-from-${presetFilter}-${presetTrigger}${
-            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
-          }`}
+          key={`due - from - ${presetFilter} -${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+            } `}
           label="Due From"
           value={dueFromDate}
           onChange={setDueFromDate}
@@ -471,9 +466,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
           datePickerWidth="w-full md:w-[12rem]"
         />
         <DatePicker
-          key={`due-to-${presetFilter}-${presetTrigger}${
-            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
-          }`}
+          key={`due - to - ${presetFilter} -${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+            } `}
           label="Due To"
           value={dueToDate}
           onChange={setDueToDate}
@@ -535,14 +529,14 @@ const TaskTable: React.FC<TaskTableProps> = ({
           toDate ||
           dueFromDate ||
           dueToDate) && (
-          <Button
-            variant="background-white"
-            width="w-full md:w-fit"
-            onClick={handleClearAllFilters}
-            leftIcon={<FiX className="w-5 h-5  " />}
-            tooltip="Clear All Filters"
-          />
-        )}
+            <Button
+              variant="background-white"
+              width="w-full md:w-fit"
+              onClick={handleClearAllFilters}
+              leftIcon={<FiX className="w-5 h-5  " />}
+              tooltip="Clear All Filters"
+            />
+          )}
       </div>
 
       <Table
