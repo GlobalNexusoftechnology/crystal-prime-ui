@@ -281,7 +281,7 @@ export function EILogsListTable({
             leftIcon={
               <ImDownload2
                 className="w-5 h-5  "
-                color="#034A9F"
+                color="#221F21"
               />
             }
             tooltip="Download Template"

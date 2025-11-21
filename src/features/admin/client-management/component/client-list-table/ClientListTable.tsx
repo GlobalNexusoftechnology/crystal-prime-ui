@@ -260,14 +260,14 @@ export function ClientListTable(): JSX.Element {
             <Button
               title="Export"
               variant="primary-outline-blue"
-              rightIcon={<ExportIcon color="#034A9F" />}
+              rightIcon={<ExportIcon color="#221F21" />}
               width="w-full md:w-fit"
               onClick={handleExportClients}
             />
             <Button
               title="Import"
               variant="primary-outline-blue"
-              rightIcon={<ExportIcon color="#034A9F" className="rotate-180" />}
+              rightIcon={<ExportIcon color="#221F21" className="rotate-180" />}
               width="w-full md:w-fit"
               onClick={handleImportClick}
               disabled={isUploading}
@@ -286,7 +286,7 @@ export function ClientListTable(): JSX.Element {
               leftIcon={
                 <ImDownload2
                   className="w-5 h-5  "
-                  color="#034A9F"
+                  color="#221F21"
                 />
               }
               tooltip="Download Template"
