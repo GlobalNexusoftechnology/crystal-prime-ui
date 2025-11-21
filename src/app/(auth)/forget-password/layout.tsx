@@ -9,8 +9,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Satkar",
-  description: "This is Satkar web app",
+  title: "Crystal Prime",
+  description: "This is Crystal Prime web app",
 };
 
 export default function RootLayout({

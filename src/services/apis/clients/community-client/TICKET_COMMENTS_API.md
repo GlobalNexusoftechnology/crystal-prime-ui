@@ -1,6 +1,6 @@
 # Ticket Comments API
 
-This document describes the Ticket Comments API implementation for the Satkar frontend application.
+This document describes the Ticket Comments API implementation for the Crystal Prime frontend application.
 
 ## Overview
 

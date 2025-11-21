@@ -42,7 +42,7 @@ export function SentOTP({ onNext, email }: TSentOTPProps) {
     <div className="flex justify-center items-center">
       <AuthCard
         title="Forget Password"
-        copyright="Copyrights and developed © Islahdata.com"
+        copyright=""
       >
         <Formik
           initialValues={{ otp: "" }}
