@@ -187,7 +187,7 @@ export function AddMaterialModal({
         }}
         validationSchema={validationSchema}
         onSubmit={async (values: any, actions: any) => {
-          const payload = {
+          const payload: any = {
             name: values.materialName,
             code: values.code,
             materialBrandId: values.brand,
