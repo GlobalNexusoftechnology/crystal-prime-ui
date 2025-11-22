@@ -438,4 +438,3 @@ export const getMaterialTypeDetailByIdUrl = (id: string) =>
   `/material-type/${id}`; //get by id
 export const updateMaterialTypeUrl = (id: string) => `/material-type/${id}`; //put
 export const deleteMaterialTypeUrl = (id: string) => `/material-type/${id}`; //delete
-export const fetchAllMaterialsUrl = () => "/materials"; //Get
