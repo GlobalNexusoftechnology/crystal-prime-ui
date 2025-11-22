@@ -79,12 +79,15 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     name: "Inventory",
     icon: <MaterialIcon />,
     activeIcon: <MaterialIcon color="#221F21" />,
-    permission: { module: "MATERIAL_MANAGEMENT", actions: "VIEW" },
+    // permission: { module: "MATERIAL_MANAGEMENT", actions: "VIEW" },
+    permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" },
+
     links: [
       {
         path: "/admin/material-management/proposal",
         name: "Proposal",
-        permission: { module: "PROPOSAL", actions: "VIEW" },
+        // permission: { module: "PROPOSAL", actions: "VIEW" },
+        permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" },
         icon: <ProjectManagementIcon />,
         activeIcon: <ProjectManagementIcon color="#221F21" />,
       },
