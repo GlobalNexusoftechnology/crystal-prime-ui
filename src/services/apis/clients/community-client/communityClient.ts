@@ -386,6 +386,7 @@ import {
   importMaterialFromExcelUrl,
   fetchMaterialExcelUrl,
   downloadMaterialTemplateFromExcelUrl,
+  changeStatusMaterialUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -403,6 +404,7 @@ import {
   IUpdateMaterialResponse,
   IDeleteMaterialResponse,
   IImportMaterialFromExcelResponse,
+  IChangeMaterialStatusResponse,
 } from "../../types";
 
 /**
@@ -3144,6 +3146,17 @@ export class CommunityClient extends ApiClient {
     const response = await this.get<Blob>(
       downloadMaterialTemplateFromExcelUrl(),
       { responseType: "blob" }
+    );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+  public changeMaterialStatus = async (id: string, active: boolean) => {
+    const response = await this.put<IChangeMaterialStatusResponse>(
+      changeStatusMaterialUrl(id),
+      { active },
+      { requiresAuth: true }
     );
     if (!response?.success) {
       throw response?.errorData;

@@ -1,19 +1,16 @@
 "use client";
 
 import { Table, Checkbox, DeleteModal } from "@/components";
-import {
-  materialColumns,
-  IMaterialManagementProps,
-  ITableAction,
-  ITableColumn,
-} from "@/constants";
-import {
-  useDeleteMaterialMutation,
-  useChangeMaterialStatusMutation,
-} from "@/services";
+import { ITableAction, ITableColumn } from "@/constants";
 import toast from "react-hot-toast";
 import { IApiError } from "@/utils";
 import { useState } from "react";
+import {
+  IMaterialManagementProps,
+  materialColumns,
+} from "@/constants/tables/material-management-list";
+import { useDeleteMaterialMutation } from "@/services/apis/clients/community-client/query-hooks/useDeleteMaterialMutation";
+import { useChangeMaterialStatusMutation } from "@/services/apis/clients/community-client/query-hooks/useChangeMaterialStatusMutation";
 
 export function MaterialListTable({
   onEdit,
@@ -34,7 +31,8 @@ export function MaterialListTable({
   onPageChange?: (page: number) => void;
 }) {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-  const [materialToDelete, setMaterialToDelete] = useState<IMaterialManagementProps | null>(null);
+  const [materialToDelete, setMaterialToDelete] =
+    useState<IMaterialManagementProps | null>(null);
 
   const { onDeleteMaterial, isPending } = useDeleteMaterialMutation({
     onSuccessCallback: (res) => {
@@ -50,18 +48,16 @@ export function MaterialListTable({
     },
   });
 
-  const {
-    onChangeMaterialStatus,
-    isPending: isStatusPending,
-  } = useChangeMaterialStatusMutation({
-    onSuccessCallback: () => {
-      toast.success("Material status updated");
-      onRefetch();
-    },
-    onErrorCallback: (err: IApiError) => {
-      toast.error(err?.message || "Error updating status");
-    },
-  });
+  const { onChangeMaterialStatus, isPending: isStatusPending } =
+    useChangeMaterialStatusMutation({
+      onSuccessCallback: () => {
+        toast.success("Material status updated");
+        onRefetch();
+      },
+      onErrorCallback: (err: IApiError) => {
+        toast.error(err?.message || "Error updating status");
+      },
+    });
 
   // Use the data passed as props
   const normalizedData: IMaterialManagementProps[] = data || [];
@@ -72,7 +68,13 @@ export function MaterialListTable({
       return {
         ...col,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        cell: ({ row, value }: { row: IMaterialManagementProps; value: any }) => (
+        cell: ({
+          row,
+          value,
+        }: {
+          row: IMaterialManagementProps;
+          value: any;
+        }) => (
           <Checkbox
             checked={!!value}
             disabled={isStatusPending}
@@ -104,14 +106,15 @@ export function MaterialListTable({
     },
   ];
 
-  if (normalizedData.length === 0) return <div className="text-center py-10  ">No materials found.</div>;
+  if (normalizedData.length === 0)
+    return <div className="text-center py-10  ">No materials found.</div>;
 
   return (
     <>
-      <Table 
-        data={normalizedData} 
-        columns={columns} 
-        actions={actions} 
+      <Table
+        data={normalizedData}
+        columns={columns}
+        actions={actions}
         paginationData={paginationData}
         onPageChange={onPageChange}
       />
