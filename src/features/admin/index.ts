@@ -20,5 +20,6 @@ export * from "./reports";
 export * from "./pb-dashboard-report";
 export * from "./support-tickets";
 export * from "./common";
-export * from "./hr-management"
-export * from "./leave"
+export * from "./hr-management";
+export * from "./leave";
+export * from "./material-management";
