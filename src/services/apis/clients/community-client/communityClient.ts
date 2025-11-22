@@ -387,6 +387,7 @@ import {
   fetchMaterialExcelUrl,
   downloadMaterialTemplateFromExcelUrl,
   changeStatusMaterialUrl,
+  fetchAllMaterialBrandUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -405,6 +406,7 @@ import {
   IDeleteMaterialResponse,
   IImportMaterialFromExcelResponse,
   IChangeMaterialStatusResponse,
+  IAllMaterialBrandResponse,
 } from "../../types";
 
 /**
@@ -3158,6 +3160,21 @@ export class CommunityClient extends ApiClient {
       { active },
       { requiresAuth: true }
     );
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  // Material Brand Master Methods
+  public fetchAllMaterialBrand = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append("page", page.toString());
+    const url = params.toString()
+      ? `${fetchAllMaterialBrandUrl()}?${params.toString()}`
+      : fetchAllMaterialBrandUrl();
+
+    const response = await this.get<IAllMaterialBrandResponse>(url);
     if (!response?.success) {
       throw response?.errorData;
     }

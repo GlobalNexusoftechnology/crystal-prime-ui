@@ -429,3 +429,5 @@ export const downloadMaterialTemplateFromExcelUrl = () =>
 
 export const changeStatusMaterialUrl = (id: string) =>
   `/materials/${id}/change-status`;
+
+export const fetchAllMaterialBrandUrl = () => "/material-brand"; //Get
