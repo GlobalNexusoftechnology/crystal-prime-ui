@@ -59,12 +59,12 @@ const validationSchema = Yup.object({
   Upload: Yup.array()
     .of(
       Yup.mixed()
-        .test("fileType", "Unsupported File Format", (value) => {
+        .test("fileType", "Unsupported File Format", (value: any) => {
           if (!value || typeof value === "string") return true;
           const allowed = ["image/jpeg", "image/png", "application/pdf"];
           return value instanceof File ? allowed.includes(value.type) : true;
         })
-        .test("fileSize", "File too large", (value) => {
+        .test("fileSize", "File too large", (value: any) => {
           if (!value || typeof value === "string") return true;
           return value instanceof File ? value.size <= 5 * 1024 * 1024 : true;
         })
@@ -89,13 +89,15 @@ export function AddMaterialModal({
   const isEditMode = Boolean(initialData);
 
   const typeOptions =
-    allMaterialTypeData?.data?.list?.map((type) => ({
-      label: type?.name,
-      value: type?.id.toString(),
-    })) || [];
+    allMaterialTypeData?.data?.list?.map(
+      (type: { name: any; id: { toString: () => any } }) => ({
+        label: type?.name,
+        value: type?.id.toString(),
+      })
+    ) || [];
 
   const brandOptions =
-    allMaterialBrandData?.data?.list?.map((brand) => ({
+    allMaterialBrandData?.data?.list?.map((brand: any) => ({
       label: brand?.name,
       value: brand?.id.toString(),
     })) || [];
@@ -183,7 +185,7 @@ export function AddMaterialModal({
           Upload: initialUpload,
         }}
         validationSchema={validationSchema}
-        onSubmit={async (values, actions) => {
+        onSubmit={async (values: any, actions: any) => {
           const payload = {
             name: values.materialName,
             code: values.code,
