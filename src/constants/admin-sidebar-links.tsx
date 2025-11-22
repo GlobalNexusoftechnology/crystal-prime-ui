@@ -76,7 +76,7 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   },
   {
     path: "/admin/material-management",
-    name: "Material",
+    name: "Inventory",
     icon: <MaterialIcon />,
     activeIcon: <MaterialIcon color="#221F21" />,
     permission: { module: "MATERIAL_MANAGEMENT", actions: "VIEW" },
