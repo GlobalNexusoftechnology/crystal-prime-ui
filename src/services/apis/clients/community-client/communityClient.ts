@@ -389,6 +389,7 @@ import {
   changeStatusMaterialUrl,
   fetchAllMaterialBrandUrl,
   fetchAllMaterialTypeUrl,
+  fetchAllMaterialsUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -409,6 +410,7 @@ import {
   IChangeMaterialStatusResponse,
   IAllMaterialBrandResponse,
   IAllMaterialTypesResponse,
+  IAllMaterialsResponse,
 } from "../../types";
 
 /**
@@ -3194,6 +3196,25 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
     return response?.data;
+  };
+  //get all materials
+  public fetchAllMaterials = async (
+    filters: { searchText?: string; page?: number; limit?: number } = {}
+  ) => {
+    const params = new URLSearchParams();
+    if (filters.searchText) params.append("searchText", filters.searchText);
+    if (filters.page) params.append("page", filters.page.toString());
+    if (filters.limit) params.append("limit", filters.limit.toString());
+
+    const url = params.toString()
+      ? `${fetchAllMaterialsUrl()}?${params.toString()}`
+      : fetchAllMaterialsUrl();
+
+    const response = await this.get<IAllMaterialsResponse>(url);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data?.data;
   };
 }
 
