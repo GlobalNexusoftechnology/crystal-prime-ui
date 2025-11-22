@@ -1,0 +1,136 @@
+"use client";
+
+import { Table, Checkbox, DeleteModal } from "@/components";
+import {
+  materialColumns,
+  IMaterialManagementProps,
+  ITableAction,
+  ITableColumn,
+} from "@/constants";
+import {
+  useDeleteMaterialMutation,
+  useChangeMaterialStatusMutation,
+} from "@/services";
+import toast from "react-hot-toast";
+import { IApiError } from "@/utils";
+import { useState } from "react";
+
+export function MaterialListTable({
+  onEdit,
+  data,
+  onRefetch,
+  paginationData,
+  onPageChange,
+}: {
+  onEdit: (material: IMaterialManagementProps) => void;
+  data: IMaterialManagementProps[];
+  onRefetch: () => void;
+  paginationData?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+  onPageChange?: (page: number) => void;
+}) {
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [materialToDelete, setMaterialToDelete] = useState<IMaterialManagementProps | null>(null);
+
+  const { onDeleteMaterial, isPending } = useDeleteMaterialMutation({
+    onSuccessCallback: (res) => {
+      toast.success(res?.message || "Material deleted successfully");
+      onRefetch();
+      setShowDeleteConfirmation(false);
+      setMaterialToDelete(null);
+    },
+    onErrorCallback: (err) => {
+      toast.error(err?.message || "Error deleting material");
+      setShowDeleteConfirmation(false);
+      setMaterialToDelete(null);
+    },
+  });
+
+  const {
+    onChangeMaterialStatus,
+    isPending: isStatusPending,
+  } = useChangeMaterialStatusMutation({
+    onSuccessCallback: () => {
+      toast.success("Material status updated");
+      onRefetch();
+    },
+    onErrorCallback: (err: IApiError) => {
+      toast.error(err?.message || "Error updating status");
+    },
+  });
+
+  // Use the data passed as props
+  const normalizedData: IMaterialManagementProps[] = data || [];
+
+  // Create columns with interactive checkbox for 'active'
+  const columns = materialColumns.map((col) => {
+    if (col.accessor === "active") {
+      return {
+        ...col,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        cell: ({ row, value }: { row: IMaterialManagementProps; value: any }) => (
+          <Checkbox
+            checked={!!value}
+            disabled={isStatusPending}
+            onChange={() =>
+              onChangeMaterialStatus({ id: row.id, active: !value })
+            }
+            className="w-16 h-16 rounded-xl border-4 border-[#6C4BAF] checked:bg-[#6C4BAF] checked:border-[#6C4BAF] focus:ring-0 focus:outline-none"
+          />
+        ),
+      } as ITableColumn<IMaterialManagementProps>;
+    }
+    return col;
+  });
+
+  const actions: ITableAction<IMaterialManagementProps>[] = [
+    {
+      label: "Edit",
+      onClick: (row) => {
+        onEdit(row);
+      },
+    },
+    {
+      label: isPending ? "Deleting..." : "Delete",
+      onClick: (row) => {
+        setMaterialToDelete(row);
+        setShowDeleteConfirmation(true);
+      },
+      className: "text-red-500",
+    },
+  ];
+
+  if (normalizedData.length === 0) return <div className="text-center py-10  ">No materials found.</div>;
+
+  return (
+    <>
+      <Table 
+        data={normalizedData} 
+        columns={columns} 
+        actions={actions} 
+        paginationData={paginationData}
+        onPageChange={onPageChange}
+      />
+      <DeleteModal
+        isOpen={showDeleteConfirmation}
+        onClose={() => {
+          setShowDeleteConfirmation(false);
+          setMaterialToDelete(null);
+        }}
+        onConfirm={() => {
+          if (materialToDelete?.id) {
+            onDeleteMaterial(materialToDelete.id);
+          }
+        }}
+        title="Delete Material"
+        message="Are you sure you want to delete this material"
+        itemName={materialToDelete?.name || ""}
+        isLoading={isPending}
+      />
+    </>
+  );
+}

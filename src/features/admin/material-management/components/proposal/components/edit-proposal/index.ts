@@ -1,0 +1,1 @@
+export { EditProposal } from "./EditProposal"

@@ -6,8 +6,9 @@ import {
   ProjectManagementIcon,
   ReportIcon,
   SettingsIcon,
-  StaffManagementIcon
+  StaffManagementIcon,
 } from "@/features";
+import { MaterialIcon } from "@/features/icons/MaterialIcon";
 import { LuTicket } from "react-icons/lu";
 import { TbReportAnalytics } from "react-icons/tb";
 
@@ -72,6 +73,22 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     icon: <ProjectManagementIcon />,
     activeIcon: <ProjectManagementIcon color="#221F21" />,
     permission: { module: "PROJECT_MANAGEMENT", actions: "VIEW" },
+  },
+  {
+    path: "/admin/material-management",
+    name: "Material",
+    icon: <MaterialIcon />,
+    activeIcon: <MaterialIcon color="#221F21" />,
+    permission: { module: "MATERIAL_MANAGEMENT", actions: "VIEW" },
+    links: [
+      {
+        path: "/admin/material-management/proposal",
+        name: "Proposal",
+        permission: { module: "PROPOSAL", actions: "VIEW" },
+        icon: <ProjectManagementIcon />,
+        activeIcon: <ProjectManagementIcon color="#221F21" />,
+      },
+    ],
   },
   // {
   //   path: "/admin/my-projects",
