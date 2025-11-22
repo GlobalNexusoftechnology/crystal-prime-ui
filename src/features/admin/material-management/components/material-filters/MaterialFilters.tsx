@@ -4,13 +4,12 @@ import { ImDownload2 } from "react-icons/im";
 
 import { Button, SearchBar } from "@/components";
 import { ExportIcon } from "@/features";
-import {
-  useMaterialDownloadTemplateExcelQuery,
-  useMaterialExportFromExcelQuery,
-} from "@/services";
+
 import { downloadBlobFile, IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import { useImportMaterialFromExcelMutation } from "@/services/apis/clients/community-client/query-hooks/useImportMaterialFromExcelMutation";
+import { useMaterialExportFromExcelQuery } from "@/services/apis/clients/community-client/query-hooks/useMaterialExportFromExcelQuery";
+import { useMaterialDownloadTemplateExcelQuery } from "@/services/apis/clients/community-client/query-hooks/useMaterialDownloadTemplateExcelQuery";
 
 interface MaterialFiltersProps {
   searchQuery: string;
