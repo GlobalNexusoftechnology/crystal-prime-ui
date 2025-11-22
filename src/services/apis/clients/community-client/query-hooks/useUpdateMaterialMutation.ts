@@ -14,7 +14,7 @@ interface IUpdateMaterialOptions {
 }
 
 /**
- * Hook to update Material
+ * Hook to update Inventory
  */
 export const useUpdateMaterialMutation = ({
   onSuccessCallback,

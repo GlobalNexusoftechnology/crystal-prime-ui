@@ -2585,7 +2585,7 @@ export interface IAllMaterialsList {
   code: string;
   materialBrand?: { id: string; name: string };
   size?: string;
-  uom?: string; // Unit of Material
+  uom?: string; // Unit of Inventory
   pressure?: string;
   hsn?: string;
   materialType?: { id: string; name: string };
@@ -2623,7 +2623,7 @@ export interface ICreateMaterialPayload {
   code: string;
   brand?: string;
   size?: string;
-  uom?: string; // Unit of Material
+  uom?: string; // Unit of Inventory
   pressure?: string;
   hsn?: string;
   type?: string;

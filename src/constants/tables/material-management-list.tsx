@@ -12,7 +12,7 @@ export interface IMaterialManagementProps {
   code: string;
   materialBrand?: string | { id: string; name: string };
   size?: string;
-  uom?: string; // Unit of Material
+  uom?: string; // Unit of Inventory
   pressure?: string;
   hsn?: string;
   materialType?: string | { id: string; name: string };
@@ -128,7 +128,7 @@ export const materialColumns: ITableColumn<IMaterialManagementProps>[] = [
                 <Image
                   key={idx}
                   src={url}
-                  alt="InventoryPhoto"
+                  alt="Inventory  Photo"
                   width={500}
                   height={500}
                   className="w-12 h-12 object-cover rounded border cursor-pointer"
