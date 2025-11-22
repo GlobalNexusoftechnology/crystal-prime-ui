@@ -407,6 +407,7 @@ import {
   IImportMaterialFromExcelResponse,
   IChangeMaterialStatusResponse,
   IAllMaterialBrandResponse,
+  IAllMaterialTypesResponse,
 } from "../../types";
 
 /**
@@ -3175,6 +3176,19 @@ export class CommunityClient extends ApiClient {
       : fetchAllMaterialBrandUrl();
 
     const response = await this.get<IAllMaterialBrandResponse>(url);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+  public fetchAllMaterialType = async (page?: number) => {
+    const params = new URLSearchParams();
+    if (page) params.append("page", page.toString());
+    const url = params.toString()
+      ? `${fetchAllMaterialTypeUrl()}?${params.toString()}`
+      : fetchAllMaterialTypeUrl();
+
+    const response = await this.get<IAllMaterialTypesResponse>(url);
     if (!response?.success) {
       throw response?.errorData;
     }

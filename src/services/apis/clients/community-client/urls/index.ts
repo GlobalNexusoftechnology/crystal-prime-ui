@@ -431,3 +431,10 @@ export const changeStatusMaterialUrl = (id: string) =>
   `/materials/${id}/change-status`;
 
 export const fetchAllMaterialBrandUrl = () => "/material-brand"; //Get
+
+export const fetchAllMaterialTypeUrl = () => "/material-type"; //Get
+export const createMaterialTypeUrl = () => "/material-type"; //post
+export const getMaterialTypeDetailByIdUrl = (id: string) =>
+  `/material-type/${id}`; //get by id
+export const updateMaterialTypeUrl = (id: string) => `/material-type/${id}`; //put
+export const deleteMaterialTypeUrl = (id: string) => `/material-type/${id}`; //delete
