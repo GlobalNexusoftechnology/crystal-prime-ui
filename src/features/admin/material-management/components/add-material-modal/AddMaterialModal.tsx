@@ -42,7 +42,7 @@ export interface IAddStaffFormValues {
 
 const validationSchema = Yup.object({
   code: Yup.string().required("Code is required"),
-  materialName: Yup.string().required("Material Name is required"),
+  materialName: Yup.string().required("InventoryName is required"),
   brand: Yup.string().required("Brand is required"),
   size: Yup.string().required("Size is required"),
   uom: Yup.string().required("UOM is required"),
@@ -238,15 +238,15 @@ export function AddMaterialModal({
                 {isEditMode ? "Edit Material" : "Add Material"}
               </h1>
 
-              {/* Material Name & Code */}
+              {/* InventoryName & Code */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
-                  label="Material Name"
+                  label="InventoryName"
                   name="materialName"
                   value={values.materialName}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="Enter Material Name"
+                  placeholder="Enter InventoryName"
                   error={touched.materialName && errors.materialName}
                 />
                 <InputField

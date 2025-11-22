@@ -128,7 +128,7 @@ export const materialColumns: ITableColumn<IMaterialManagementProps>[] = [
                 <Image
                   key={idx}
                   src={url}
-                  alt="Material Photo"
+                  alt="InventoryPhoto"
                   width={500}
                   height={500}
                   className="w-12 h-12 object-cover rounded border cursor-pointer"

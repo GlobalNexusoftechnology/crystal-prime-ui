@@ -38,7 +38,7 @@ export function MaterialListTable({
 
   const { onDeleteMaterial, isPending } = useDeleteMaterialMutation({
     onSuccessCallback: (res) => {
-      toast.success(res?.message || "Material deleted successfully");
+      toast.success(res?.message || "Inventorydeleted successfully");
       onRefetch();
       setShowDeleteConfirmation(false);
       setMaterialToDelete(null);
@@ -53,7 +53,7 @@ export function MaterialListTable({
   const { onChangeMaterialStatus, isPending: isStatusPending } =
     useChangeMaterialStatusMutation({
       onSuccessCallback: () => {
-        toast.success("Material status updated");
+        toast.success("Inventorystatus updated");
         onRefetch();
       },
       onErrorCallback: (err: IApiError) => {

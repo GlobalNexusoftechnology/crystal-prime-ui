@@ -665,7 +665,7 @@
 //       </div>
 //       {/* Search Bar */}
 
-//       {/* Proposal Material List Table */}
+//       {/* Proposal InventoryList Table */}
 //       <ProposalMaterialTable
 //         selectedMaterials={selectedMaterials}
 //         onQuantityChange={handleQuantityChange}

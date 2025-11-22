@@ -88,7 +88,7 @@ export function MaterialFilters({
 
   return (
     <div className="flex justify-between items-center flex-wrap gap-4 ">
-      <h1 className="text-[1.2rem]  font-medium">Material List</h1>
+      <h1 className="text-[1.2rem]  font-medium">InventoryList</h1>
       <div className="flex items-center flex-wrap gap-4 ">
         <SearchBar
           onSearch={onSearchChange}

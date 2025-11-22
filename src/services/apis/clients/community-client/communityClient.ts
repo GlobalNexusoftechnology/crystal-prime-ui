@@ -3170,7 +3170,7 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  // Material Brand Master Methods
+  // InventoryBrand Master Methods
   public fetchAllMaterialBrand = async (page?: number) => {
     const params = new URLSearchParams();
     if (page) params.append("page", page.toString());
