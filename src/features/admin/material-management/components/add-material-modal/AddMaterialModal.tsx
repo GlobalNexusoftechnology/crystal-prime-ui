@@ -10,10 +10,7 @@ import {
 } from "@/components";
 import { Formik, Form, FormikHelpers } from "formik";
 import * as Yup from "yup";
-import {
-  ,
-  useUploadMultipleAttachmentsMutation,
-} from "@/services";
+import { useUploadMultipleAttachmentsMutation } from "@/services";
 import toast from "react-hot-toast";
 
 import { useCreateMaterialMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateMaterialMutation";
