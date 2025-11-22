@@ -1,7 +1,15 @@
 "use client";
 
-import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
-import { gstOptions, IMaterialManagementProps } from "@/constants";
+import React from "react";
+import {
+  Button,
+  Dropdown,
+  InputField,
+  ModalOverlay,
+  UploadPhotos,
+} from "@/components";
+import { Formik, Form, FormikHelpers } from "formik";
+import * as Yup from "yup";
 import {
   useAllMaterialBrandQuery,
   useAllMaterialTypeQuery,
@@ -9,10 +17,8 @@ import {
   useUpdateMaterialMutation,
   useUploadMultipleAttachmentsMutation,
 } from "@/services";
-import { Form, Formik, FormikHelpers } from "formik";
-import React from "react";
 import toast from "react-hot-toast";
-import * as Yup from "yup";
+import { gstOptions, IMaterialManagementProps } from "@/constants";
 
 export interface IAddStaffFormValues {
   code: string;
@@ -47,9 +53,7 @@ const validationSchema = Yup.object({
   purchasePrice: Yup.string().required("Purchase Price is required"),
   salesPrice: Yup.string().required("Sales Price is required"),
   salesDescription: Yup.string().required("Sales Description is required"),
-  purchaseDescription: Yup.string().required(
-    "Purchase Description is required"
-  ),
+  purchaseDescription: Yup.string().required("Purchase Description is required"),
   alias: Yup.string().required("Alias is required"),
   Upload: Yup.array()
     .of(
@@ -95,9 +99,7 @@ export function AddMaterialModal({
       value: brand?.id.toString(),
     })) || [];
 
-  const setFieldValueRef = React.useRef<
-    FormikHelpers<IAddStaffFormValues>["setFieldValue"] | null
-  >(null);
+  const setFieldValueRef = React.useRef<FormikHelpers<IAddStaffFormValues>["setFieldValue"] | null>(null);
   const latestUploadRef = React.useRef<(File | string)[]>([]);
 
   const { onUploadMultipleAttachments, isPending: isUploading } =
@@ -139,7 +141,9 @@ export function AddMaterialModal({
   });
 
   const initialUpload: (File | string)[] =
-    isEditMode && Array.isArray(initialData?.photos) ? initialData.photos : [];
+    isEditMode && Array.isArray(initialData?.photos)
+      ? initialData.photos
+      : [];
 
   return (
     <ModalOverlay
@@ -166,10 +170,7 @@ export function AddMaterialModal({
               ? initialData.materialType
               : initialData?.materialType?.id || "",
           gst: initialData?.gst || "",
-          qty:
-            initialData?.qty?.toString() ||
-            initialData?.quantity?.toString() ||
-            "",
+          qty: initialData?.qty?.toString() || initialData?.quantity?.toString() || "",
           purchasePrice: initialData?.purchase_price?.toString() || "",
           salesPrice: initialData?.sales_price?.toString() || "",
           salesDescription: initialData?.sales_description || "",
