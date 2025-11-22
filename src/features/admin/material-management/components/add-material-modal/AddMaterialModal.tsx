@@ -15,10 +15,12 @@ import {
   useUploadMultipleAttachmentsMutation,
 } from "@/services";
 import toast from "react-hot-toast";
-import { gstOptions, IMaterialManagementProps } from "@/constants";
+
 import { useCreateMaterialMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateMaterialMutation";
 import { useAllMaterialBrandQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialBrandQuery";
 import { useAllMaterialTypeQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialTypeQuery";
+import { useUpdateMaterialMutation } from "@/services/apis/clients/community-client/query-hooks/useUpdateMaterialMutation";
+import { IMaterialManagementProps } from "@/constants/tables/material-management-list";
 
 export interface IAddStaffFormValues {
   code: string;
