@@ -1,1 +1,0 @@
-export { CustomSalesOrderTable } from "./CustomSalesOrderTable";
