@@ -1,13 +1,13 @@
 "use client";
 import { useState, useMemo, useEffect } from "react";
 
-import { IMaterialManagementProps } from "@/constants";
 import { AddMaterialModal, MaterialListTable } from "@/features";
 import { MaterialFilters } from "@/features/admin/material-management/components";
-import { useAllMaterialsQuery } from "@/services";
 import { useDebounce } from "@/utils/hooks";
 
 import { Breadcrumb } from "../breadcrumb";
+import { IMaterialManagementProps } from "@/constants/tables/material-management-list";
+import { useAllMaterialsQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialsQuery";
 
 export function MaterialManagement() {
   const [searchInput, setSearchInput] = useState("");
@@ -76,8 +76,8 @@ export function MaterialManagement() {
           currentFilters={filters}
         />
 
-        <MaterialListTable 
-          onEdit={handleEditMaterial} 
+        <MaterialListTable
+          onEdit={handleEditMaterial}
           data={allMaterialsData?.data || []}
           onRefetch={fetchAllMaterials}
           paginationData={allMaterialsData?.pagination}
