@@ -388,6 +388,7 @@ import {
   downloadMaterialTemplateFromExcelUrl,
   changeStatusMaterialUrl,
   fetchAllMaterialBrandUrl,
+  fetchAllMaterialTypeUrl,
 } from "./urls";
 import {
   IClientDetails,
