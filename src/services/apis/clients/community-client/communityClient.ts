@@ -380,6 +380,9 @@ import {
   createWorkRequestUrl,
   fetchAllWorkRequestsUrl,
   updateWorkRequestStatusUrl,
+  createMaterialUrl,
+  deleteMaterialUrl,
+  updateMaterialUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -390,6 +393,13 @@ import {
   IUpdateWorkRequestStatusPayload,
   IUpdateWorkRequestStatusResponse,
 } from "./types";
+import {
+  ICreateMaterialPayload,
+  ICreateMaterialResponse,
+  IUpdateMaterialPayload,
+  IUpdateMaterialResponse,
+  IDeleteMaterialResponse,
+} from "../../types";
 
 /**
  * CommunityClient class handles all API requests related to
@@ -1211,7 +1221,7 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchAllRoleList = async (page?: number, limit?:number) => {
+  public fetchAllRoleList = async (page?: number, limit?: number) => {
     const params = new URLSearchParams();
     if (page) params.append("page", page.toString());
     if (limit) params.append("limit", limit.toString());
@@ -1231,7 +1241,11 @@ export class CommunityClient extends ApiClient {
   };
   // staff
 
-  public fetchAllUsers = async (searchText?: string, page?: number, limit?: number) => {
+  public fetchAllUsers = async (
+    searchText?: string,
+    page?: number,
+    limit?: number
+  ) => {
     const params = new URLSearchParams();
     if (searchText) params.append("searchText", searchText);
     if (page) params.append("page", page.toString());
@@ -1433,7 +1447,11 @@ export class CommunityClient extends ApiClient {
 
   //get
 
-  public fetchAllClient = async (searchText?: string, page?: number, limit?: number) => {
+  public fetchAllClient = async (
+    searchText?: string,
+    page?: number,
+    limit?: number
+  ) => {
     const params = new URLSearchParams();
     if (searchText) params.append("searchText", searchText);
     if (page) params.append("page", page.toString());
@@ -2919,7 +2937,7 @@ export class CommunityClient extends ApiClient {
       throw response?.response?.data;
     }
 
-    return response.data.data; 
+    return response.data.data;
   };
 
   // get all leaves
@@ -2988,13 +3006,9 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-
   // Work Request
   public createWorkRequest = async (payload: ICreateWorkRequestPayload) => {
-    const response = await this.post<any>(
-      createWorkRequestUrl(),
-      payload
-    );
+    const response = await this.post<any>(createWorkRequestUrl(), payload);
     if (!response?.success) {
       throw response?.response?.data;
     }
@@ -3011,7 +3025,13 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public updateWorkRequestStatus = async ({ id, payload }: { id: string; payload: IUpdateWorkRequestStatusPayload }) => {
+  public updateWorkRequestStatus = async ({
+    id,
+    payload,
+  }: {
+    id: string;
+    payload: IUpdateWorkRequestStatusPayload;
+  }) => {
     const response = await this.put<IUpdateWorkRequestStatusResponse>(
       updateWorkRequestStatusUrl(id),
       payload
@@ -3022,27 +3042,68 @@ export class CommunityClient extends ApiClient {
     return response?.data;
   };
 
-  public fetchAllAttendanceDownloadExcel = async (filters: IAttendanceExportFilters = {}) => {
+  public fetchAllAttendanceDownloadExcel = async (
+    filters: IAttendanceExportFilters = {}
+  ) => {
     const params = new URLSearchParams();
-  
+
     if (filters.year) params.append("year", filters.year.toString());
     if (filters.month) params.append("month", filters.month.toString());
     if (filters.searchText) params.append("searchText", filters.searchText);
-  
+
     const queryString = params.toString();
-    const url = queryString 
-      ? `${fetchAllAttendanceDownloadExcelUrl()}?${queryString}` 
+    const url = queryString
+      ? `${fetchAllAttendanceDownloadExcelUrl()}?${queryString}`
       : fetchAllAttendanceDownloadExcelUrl();
-  
+
     const response = await this.get<Blob>(url, { responseType: "blob" });
-  
+
     if (!response?.success) {
       throw response?.errorData;
     }
-  
+
     return response?.data; // Blob containing Excel file
   };
-  
+
+  public createMaterial = async (payload: ICreateMaterialPayload) => {
+    const response = await this.post<ICreateMaterialResponse>(
+      createMaterialUrl(),
+      payload,
+      { requiresAuth: false }
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+  // update material
+  public updateMaterial = async ({ id, payload }: IUpdateMaterialPayload) => {
+    const response = await this.put<IUpdateMaterialResponse>(
+      updateMaterialUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      }
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  // delete material
+  public deleteMaterial = async (id: string) => {
+    const response = await this.del<IDeleteMaterialResponse>(
+      deleteMaterialUrl(id)
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
 }
 
 /**

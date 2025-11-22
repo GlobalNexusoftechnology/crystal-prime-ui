@@ -376,37 +376,46 @@ export const createLeaveUrl = () => "/leaves"; //post
 export const fetchAllLeavesUrl = () => "/leaves"; //get
 export const updateLeaveStatusUrl = (id: string) => `/leaves/${id}`;
 
- // check in
- export const createCheckInUrl = () => "/attendances/check-in"; //post
+// check in
+export const createCheckInUrl = () => "/attendances/check-in"; //post
 
-  export const createCheckOutUrl = () => "/attendances/check-out"; //post
-  
-  export const fetchAllAttendanceDownloadExcelUrl = () => "/attendances/export/excel"; 
+export const createCheckOutUrl = () => "/attendances/check-out"; //post
 
-  export const fetchAttendanceStaffStatusUrl = (staffId: string) => `/attendances/status/${staffId}`; 
-  
-  
-  export const fetchAllAttendanceUrl = (filters: IAttendanceFilters = {}) => {
-    const params = new URLSearchParams();
-  
-    if (filters.year) params.append("year", filters.year.toString());
-    if (filters.month) params.append("month", filters.month.toString());
-    if (filters.page) params.append("page", filters.page.toString());
-    if (filters.limit) params.append("limit", filters.limit.toString());
-    if (filters.searchText) params.append("searchText", filters.searchText);
-  
-    const queryString = params.toString();
-    return queryString ? `/attendances/all?${queryString}` : "/attendances/all";
-  };
+export const fetchAllAttendanceDownloadExcelUrl = () =>
+  "/attendances/export/excel";
 
-  
-  export const createAnnouncementUrl = () => "/notifications/announce"; //post
+export const fetchAttendanceStaffStatusUrl = (staffId: string) =>
+  `/attendances/status/${staffId}`;
 
-  export const sendProposalUrl = (id: string) => `/leads/${id}/quotation`; //post
+export const fetchAllAttendanceUrl = (filters: IAttendanceFilters = {}) => {
+  const params = new URLSearchParams();
 
-  // Work Request
-  export const createWorkRequestUrl = () => "/work-requests"; //post
-  export const fetchAllWorkRequestsUrl = () => "/work-requests"; //get
-  export const updateWorkRequestStatusUrl = (id: string) => `/work-requests/${id}/status`; //put
+  if (filters.year) params.append("year", filters.year.toString());
+  if (filters.month) params.append("month", filters.month.toString());
+  if (filters.page) params.append("page", filters.page.toString());
+  if (filters.limit) params.append("limit", filters.limit.toString());
+  if (filters.searchText) params.append("searchText", filters.searchText);
 
+  const queryString = params.toString();
+  return queryString ? `/attendances/all?${queryString}` : "/attendances/all";
+};
 
+export const createAnnouncementUrl = () => "/notifications/announce"; //post
+
+export const sendProposalUrl = (id: string) => `/leads/${id}/quotation`; //post
+
+// Work Request
+export const createWorkRequestUrl = () => "/work-requests"; //post
+export const fetchAllWorkRequestsUrl = () => "/work-requests"; //get
+export const updateWorkRequestStatusUrl = (id: string) =>
+  `/work-requests/${id}/status`; //put
+
+export const fetchAllMaterialsUrl = () => "/materials"; //Get
+
+export const createMaterialUrl = () => "/materials"; //post
+
+export const getMaterialDetailByIdUrl = (id: string) => `/materials/${id}`; //get by id
+
+export const updateMaterialUrl = (id: string) => `/materials/${id}`; //put
+
+export const deleteMaterialUrl = (id: string) => `/materials/${id}`; //delete
