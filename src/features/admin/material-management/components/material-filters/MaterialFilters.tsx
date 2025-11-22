@@ -5,12 +5,12 @@ import { ImDownload2 } from "react-icons/im";
 import { Button, SearchBar } from "@/components";
 import { ExportIcon } from "@/features";
 import {
-  useImportMaterialFromExcelMutation,
   useMaterialDownloadTemplateExcelQuery,
   useMaterialExportFromExcelQuery,
 } from "@/services";
 import { downloadBlobFile, IApiError } from "@/utils";
 import toast from "react-hot-toast";
+import { useImportMaterialFromExcelMutation } from "@/services/apis/clients/community-client/query-hooks/useImportMaterialFromExcelMutation";
 
 interface MaterialFiltersProps {
   searchQuery: string;
@@ -32,7 +32,8 @@ export function MaterialFilters({
   currentFilters,
 }: MaterialFiltersProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { onMaterialDownloadTemplateExcel } = useMaterialDownloadTemplateExcelQuery();
+  const { onMaterialDownloadTemplateExcel } =
+    useMaterialDownloadTemplateExcelQuery();
 
   const { onImportMaterialFromExcel } = useImportMaterialFromExcelMutation({
     onSuccessCallback: (data) => {
@@ -88,9 +89,7 @@ export function MaterialFilters({
 
   return (
     <div className="flex justify-between items-center flex-wrap gap-4 ">
-      <h1 className="text-[1.2rem]  font-medium">
-        Material List
-      </h1>
+      <h1 className="text-[1.2rem]  font-medium">Material List</h1>
       <div className="flex items-center flex-wrap gap-4 ">
         <SearchBar
           onSearch={onSearchChange}
@@ -131,12 +130,7 @@ export function MaterialFilters({
           variant="primary-outline-blue"
           width="w-full md:w-fit"
           onClick={handleDownloadTemplate}
-          leftIcon={
-            <ImDownload2
-              className="w-5 h-5  "
-              color="#034A9F"
-            />
-          }
+          leftIcon={<ImDownload2 className="w-5 h-5  " color="#034A9F" />}
           tooltip="Download Template"
         />
       </div>

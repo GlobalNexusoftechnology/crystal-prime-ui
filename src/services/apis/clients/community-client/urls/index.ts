@@ -419,3 +419,10 @@ export const getMaterialDetailByIdUrl = (id: string) => `/materials/${id}`; //ge
 export const updateMaterialUrl = (id: string) => `/materials/${id}`; //put
 
 export const deleteMaterialUrl = (id: string) => `/materials/${id}`; //delete
+
+export const importMaterialFromExcelUrl = () => "/materials/import/excel";
+
+export const fetchMaterialExcelUrl = () => "/materials/export/excel";
+
+export const downloadMaterialTemplateFromExcelUrl = () =>
+  "/materials/template/download";

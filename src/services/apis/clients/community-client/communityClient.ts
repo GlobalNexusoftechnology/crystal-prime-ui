@@ -383,6 +383,9 @@ import {
   createMaterialUrl,
   deleteMaterialUrl,
   updateMaterialUrl,
+  importMaterialFromExcelUrl,
+  fetchMaterialExcelUrl,
+  downloadMaterialTemplateFromExcelUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -399,6 +402,7 @@ import {
   IUpdateMaterialPayload,
   IUpdateMaterialResponse,
   IDeleteMaterialResponse,
+  IImportMaterialFromExcelResponse,
 } from "../../types";
 
 /**
@@ -3099,6 +3103,48 @@ export class CommunityClient extends ApiClient {
       deleteMaterialUrl(id)
     );
 
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+  public importMaterialFromExcel = async (formData: FormData) => {
+    const response = await this.post<IImportMaterialFromExcelResponse>(
+      importMaterialFromExcelUrl(),
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        requiresAuth: true,
+      }
+    );
+
+    if (!response?.success) {
+      throw response.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  public fetchMaterialExcel = async (params?: Record<string, string>) => {
+    let url = fetchMaterialExcelUrl();
+    if (params) {
+      const query = new URLSearchParams(params).toString();
+      if (query) url += `?${query}`;
+    }
+    const response = await this.get<Blob>(url, { responseType: "blob" });
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+
+  public fetchMaterialDownloadTemplateExcel = async () => {
+    const response = await this.get<Blob>(
+      downloadMaterialTemplateFromExcelUrl(),
+      { responseType: "blob" }
+    );
     if (!response?.success) {
       throw response?.errorData;
     }
