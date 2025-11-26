@@ -390,6 +390,12 @@ import {
   fetchAllMaterialBrandUrl,
   fetchAllMaterialTypeUrl,
   fetchAllMaterialsUrl,
+  createMaterialTypeUrl,
+  deleteMaterialTypeUrl,
+  updateMaterialTypeUrl,
+  createMaterialBrandUrl,
+  deleteMaterialBrandUrl,
+  updateMaterialBrandUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -411,6 +417,16 @@ import {
   IAllMaterialBrandResponse,
   IAllMaterialTypesResponse,
   IAllMaterialsResponse,
+  ICreateMaterialBrandPayload,
+  ICreateMaterialBrandResponse,
+  ICreateMaterialTypePayload,
+  ICreateMaterialTypeResponse,
+  IDeleteMaterialBrandResponse,
+  IDeleteMaterialTypeResponse,
+  IUpdateMaterialBrandPayload,
+  IUpdateMaterialBrandResponse,
+  IUpdateMaterialTypePayload,
+  IUpdateMaterialTypeResponse,
 } from "../../types";
 
 /**
@@ -3215,6 +3231,74 @@ export class CommunityClient extends ApiClient {
       throw response?.errorData;
     }
     return response?.data?.data;
+  };
+
+    // Inventory Type Master Methods
+
+  public createMaterialType = async (payload: ICreateMaterialTypePayload) => {
+    const response = await this.post<ICreateMaterialTypeResponse>(
+      createMaterialTypeUrl(),
+      payload
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public updateMaterialType = async ({ id, payload }: IUpdateMaterialTypePayload) => {
+    const response = await this.put<IUpdateMaterialTypeResponse>(
+      updateMaterialTypeUrl(id),
+      payload
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteMaterialType = async (id: string) => {
+    const response = await this.del<IDeleteMaterialTypeResponse>(
+      deleteMaterialTypeUrl(id)
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+   // Inventory Brand Master Methods
+
+  public createMaterialBrand = async (payload: ICreateMaterialBrandPayload) => {
+    const response = await this.post<ICreateMaterialBrandResponse>(
+      createMaterialBrandUrl(),
+      payload
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public updateMaterialBrand = async ({ id, payload }: IUpdateMaterialBrandPayload) => {
+    const response = await this.put<IUpdateMaterialBrandResponse>(
+      updateMaterialBrandUrl(id),
+      payload
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+
+  public deleteMaterialBrand = async (id: string) => {
+    const response = await this.del<IDeleteMaterialBrandResponse>(
+      deleteMaterialBrandUrl(id)
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
   };
 }
 

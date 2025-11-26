@@ -23,3 +23,6 @@ export * from "./action-dropdown";
 export * from "./number-input";
 export * from "./time-picker";
 export * from "./upload-photos";
+export * from "./material-brand";
+export * from "./material-type";
+

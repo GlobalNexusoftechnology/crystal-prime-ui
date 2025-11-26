@@ -1,18 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { EAction, EModule } from "@/constants";
+import { usePermission } from "@/utils/hooks";
+import { useSearchParams } from "next/navigation";
+import { useMemo, useState } from "react";
 import {
+  EILogHeads,
+  EILogTypes,
   LeadSources,
+  LeadStatus,
   LeadTypes,
   ProjectTemplateList,
-  EILogTypes,
-  EILogHeads,
+  RoleManagement,
 } from "./components";
-import { LeadStatus } from "./components";
-import { RoleManagement } from "./components";
-import { usePermission } from "@/utils/hooks";
-import { EAction, EModule } from "@/constants";
-import { useSearchParams } from "next/navigation";
+import { MaterialBrand, MaterialType } from "@/components";
 
 /**
  * `Settings` is the main component for managing the settings page.
@@ -34,32 +35,24 @@ export function Settings() {
     EModule.PROJECT_TEMPLATE,
     EAction.VIEW
   );
-  const cavViewEILogTypes = hasPermission(EModule.EI_LOG_TYPES, EAction.VIEW);
-  const cavViewEILogHeads = hasPermission(EModule.EI_LOG_HEADS, EAction.VIEW);
+    const cavViewMaterialType = hasPermission(EModule.MATERIAL_TYPE, EAction.VIEW);
+  const cavViewMaterialBrand = hasPermission(EModule.MATERIAL_BRAND, EAction.VIEW);
 
   // Dynamically build the tabs array based on permissions
   const tabs = useMemo(() => {
     const arr = [];
     if (cavViewTypes) arr.push({ key: "leadTypes", label: "Lead Types" });
-    if (cavViewEILogTypes)
-      arr.push({ key: "eiLogTypes", label: "EI Log Types" });
-    if (cavViewEILogHeads)
-      arr.push({ key: "eiLogHeads", label: "EI Log Heads" });
+
     if (cavViewSources) arr.push({ key: "leadSources", label: "Lead Sources" });
     if (cavViewStatuses) arr.push({ key: "leadStatus", label: "Lead Status" });
     if (cavViewRoles) arr.push({ key: "role", label: "Role" });
+  
+    if (cavViewMaterialType) arr.push({ key: "materialType", label: "Inventory Type" });
+    if (cavViewMaterialBrand) arr.push({ key: "materialBrand", label: "Inventory Brand" });
     if (cavViewProjectTemplate)
       arr.push({ key: "projectTemplate", label: "Project Template" });
     return arr;
-  }, [
-    cavViewTypes,
-    cavViewSources,
-    cavViewStatuses,
-    cavViewRoles,
-    cavViewProjectTemplate,
-    cavViewEILogTypes,
-    cavViewEILogHeads,
-  ]);
+  }, [cavViewTypes, cavViewSources, cavViewStatuses, cavViewRoles, cavViewMaterialType, cavViewMaterialBrand, cavViewProjectTemplate]);
 
   // Read tab from query param
   const tabParam = searchParams.get("tab");
@@ -106,6 +99,8 @@ export function Settings() {
       {activePage === "projectTemplate" && <ProjectTemplateList />}
       {activePage === "eiLogTypes" && <EILogTypes />}
       {activePage === "eiLogHeads" && <EILogHeads />}
+           {activePage === "materialBrand" && <MaterialBrand />}
+      {activePage === "materialType" && <MaterialType />}
     </div>
   );
 }

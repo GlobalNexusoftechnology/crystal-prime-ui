@@ -40,7 +40,7 @@ export function MaterialFilters({
       onRefetch?.();
     },
     onErrorCallback: (err: IApiError) => {
-      toast.error(err.message || "Failed to import materials");
+      toast.error(err.message || "Failed to import inventory");
     },
   });
 

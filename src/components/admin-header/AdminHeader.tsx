@@ -1,25 +1,23 @@
 "use client";
 
 import { MenuIcon, NotificationIcon } from "@/features";
-import { useRouter } from "next/navigation";
 import {
   INotification,
+  ITicketData,
+  useAllTicketsAcrossProjectsQuery,
   useAuthStore,
   useDeleteNotificationMutation,
   useMarkAsReadNotificationMutation,
   useNotificationsQuery,
 } from "@/services";
-import { UserDropdown } from "../user-dropdown";
-import { useEffect, useRef, useState } from "react";
-import { IApiError } from "@/utils";
+import { formatDate, IApiError } from "@/utils";
 import { format } from "date-fns";
 import { Trash2 } from "lucide-react";
-import toast from "react-hot-toast";
-import { SupportTicketsIcon } from "@/features";
-import { useAllTicketsAcrossProjectsQuery, ITicketData } from "@/services";
-import { formatDate } from "@/utils";
 import Image from "next/image";
-import { CheckInCheckOut } from "./check-in-check-out";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
+import { UserDropdown } from "../user-dropdown";
 
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
@@ -50,7 +48,6 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
     [firstName, lastName]
       .filter((part) => typeof part === "string" && part.trim().length > 0)
       .join(" ") || null;
-  const isClient = activeSession?.user?.role?.role?.toLowerCase() === "client";
 
   const unreadCount =
     notifications?.filter((n: INotification) => !n.isRead).length || 0;
@@ -223,22 +220,7 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
         </button>
       </div>
       <div className="flex items-center gap-4 ">
-        <CheckInCheckOut />
-        {/* Support Tickets Icon */}
-        {!isClient && (
-          <div
-            className="relative cursor-pointer border  bg-customGray border-gray-300 p-4  rounded-xl  hover:bg-gray-100 transition-colors"
-            onClick={() => setShowSupportTickets(!showSupportTickets)}
-            title="View All Open Tickets"
-          >
-            <SupportTicketsIcon className="w-6 h-6  " />
-            {openTickets.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {openTickets.length}
-              </span>
-            )}
-          </div>
-        )}
+   
 
         {/* Notifications Icon */}
         <div

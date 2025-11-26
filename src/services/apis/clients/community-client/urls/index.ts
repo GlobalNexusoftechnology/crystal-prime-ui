@@ -438,3 +438,11 @@ export const getMaterialTypeDetailByIdUrl = (id: string) =>
   `/material-type/${id}`; //get by id
 export const updateMaterialTypeUrl = (id: string) => `/material-type/${id}`; //put
 export const deleteMaterialTypeUrl = (id: string) => `/material-type/${id}`; //delete
+
+
+// Inventory Brand Master API
+export const createMaterialBrandUrl = () => "/material-brand"; //post
+export const getMaterialBrandDetailByIdUrl = (id: string) => `/material-brand/${id}`; //get by id
+export const updateMaterialBrandUrl = (id: string) => `/material-brand/${id}`; //put
+export const deleteMaterialBrandUrl = (id: string) => `/material-brand/${id}`; //delete
+

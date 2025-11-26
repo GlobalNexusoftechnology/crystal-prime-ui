@@ -109,7 +109,7 @@ export function MaterialListTable({
   ];
 
   if (normalizedData.length === 0)
-    return <div className="text-center py-10  ">No materials found.</div>;
+    return <div className="text-center py-10  ">No inventory found.</div>;
 
   return (
     <>
