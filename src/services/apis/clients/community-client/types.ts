@@ -2979,11 +2979,20 @@ export interface IAnnouncementResponse {
   data: IAnnouncementPayload;
 }
 
-export interface ISendProposalPayload {
-  proposalDate: string;
-  proposalNumber?: string;
-  proposalText: string;
+export interface ISendProposalProduct {
+  materialId: string;       // required
+  name: string;             // required
+  salePrice: number;        // required
 }
+
+
+  export interface ISendProposalPayload {
+    proposalDate: string;
+    proposalNumber?: string;
+    proposalText: string;
+      products: ISendProposalProduct[];   // <-- added
+
+  }
 
 export type ISendProposalResponse = Blob;
 

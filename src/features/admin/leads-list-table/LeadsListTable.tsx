@@ -43,6 +43,14 @@ interface LeadsListTableProps {
   setAddLeadModalOpen: (arg0: boolean) => void;
 }
 
+  type ProductRow = {
+  id: string;
+  materialId: string;
+  name: string;
+  salePrice: string; // keep string in UI, convert below
+};
+
+
 export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const queryClient = useQueryClient();
   const [leadId, setLeadId] = useState("");
@@ -68,26 +76,80 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
 
   // Send Proposal Handler
-  const handleSendProposal = async (proposalData: { proposalDate: string; proposalNumber: string; proposalText: string }) => {
-    try {
-      if (!selectedLeadForProposal?.id) {
-        toast.error("No lead selected for proposal.");
-        return;
-      }
+  // const handleSendProposal = async (proposalData: { proposalDate: string; proposalNumber: string; proposalText: string }) => {
+  //   try {
+  //     if (!selectedLeadForProposal?.id) {
+  //       toast.error("No lead selected for proposal.");
+  //       return;
+  //     }
 
-      await sendProposal({
-        id: selectedLeadForProposal.id,
-        payload: proposalData,
-      });
+  //     await sendProposal({
+  //       id: selectedLeadForProposal.id,
+  //       payload: proposalData,
+  //     });
 
-      toast.success("Proposal sent successfully!");
-      setIsSendProposalModalOpen(false);
-      setSelectedLeadForProposal(null);
-    } catch (error) {
-      console.error("Proposal send failed:", error);
-      toast.error("Failed to send proposal.");
+  //     toast.success("Proposal sent successfully!");
+  //     setIsSendProposalModalOpen(false);
+  //     setSelectedLeadForProposal(null);
+  //   } catch (error) {
+  //     console.error("Proposal send failed:", error);
+  //     toast.error("Failed to send proposal.");
+  //   }
+  // };
+
+
+
+const handleSendProposal = async (
+  proposalData: { proposalDate: string; proposalNumber: string; proposalText: string },
+  productRows: ProductRow[]
+) => {
+  try {
+    if (!selectedLeadForProposal?.id) {
+      toast.error("No lead selected for proposal.");
+      return;
     }
-  };
+
+    // Filter only rows where a material was selected
+    const selectedProducts = (productRows ?? []).filter((r) => !!r.materialId);
+
+    if (selectedProducts.length === 0) {
+      toast.error("Please add at least one product and select an item.");
+      return;
+    }
+
+    // Build products payload — convert salePrice to number where possible
+    const productsPayload = selectedProducts.map((p) => {
+      // try to convert salePrice to a number, fallback to 0
+      const parsedPrice = Number(String(p.salePrice).replace(/[^0-9.-]+/g, ""));
+      return {
+        materialId: p.materialId,
+        name: p.name,
+        salePrice: Number.isFinite(parsedPrice) ? parsedPrice : 0,
+        // add other fields if your API expects them, e.g. quantity
+        // quantity: p.quantity ?? 1,
+      };
+    });
+
+    // Final payload structure (adjust if your API expects different keys)
+    const payload = {
+      ...proposalData,
+      products: productsPayload,
+    };
+
+    await sendProposal({
+      id: selectedLeadForProposal.id,
+      payload,
+    });
+
+    toast.success("Proposal sent successfully!");
+    setIsSendProposalModalOpen(false);
+    setSelectedLeadForProposal(null);
+  } catch (error) {
+    console.error("Proposal send failed:", error);
+    toast.error("Failed to send proposal.");
+  }
+};
+
 
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
