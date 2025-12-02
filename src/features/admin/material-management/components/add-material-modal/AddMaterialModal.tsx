@@ -38,6 +38,7 @@ export interface IAddStaffFormValues {
   purchaseDescription: string;
   alias: string;
   Upload: (File | string)[];
+  keywords?: string[] 
 }
 
 const validationSchema = Yup.object({

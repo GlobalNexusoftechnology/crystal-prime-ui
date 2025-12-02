@@ -1,12 +1,17 @@
 export interface ITableColumn<T> {
   header: string;
-  accessor: keyof T;
+  // accept either a key of T or a function that returns value for this column
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  accessor: keyof T | ((row: T) => any);
   sortable?: boolean;
   width?: string;
   headerClassName?: string;
+
+  // cell receives resolved value (any)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  cell?: (props: { row: T; value: T[keyof T] }) => React.ReactNode;
+  cell?: (props: { row: T; value: any }) => React.ReactNode;
 }
+
 export interface ITableAction<T> {
   label: string;
   onClick: (row: T) => void;

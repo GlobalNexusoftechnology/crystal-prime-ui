@@ -1,3 +1,325 @@
+// /* eslint-disable @typescript-eslint/no-explicit-any */
+
+// import {
+//   Button,
+//   DatePicker,
+//   Dropdown,
+//   InputField,
+//   ModalOverlay,
+// } from "@/components";
+// import React, { useState } from "react";
+// import TagsInput from "react-tagsinput";
+// import { Formik, Form } from "formik";
+// import * as Yup from "yup";
+// import {
+//   ICreateUserPayload,
+//   ICreateUserResponse,
+//   useAllDropdownDataQuery,
+//   useCreateUserMutation,
+//   useAllUsersQuery,
+// } from "@/services";
+// import { IApiError } from "@/utils";
+// import toast from "react-hot-toast";
+// import PhoneInput from "react-phone-input-2";
+// import "react-phone-input-2/lib/style.css";
+// import { FiEye, FiEyeOff } from "react-icons/fi";
+
+// interface AddNewStaffModelProps {
+//   isOpen: boolean;
+//   onClose: () => void;
+//   onNewStaffSuccessCallback: () => void;
+// }
+
+// export interface IAddStaffFormValues {
+//   employeeId: string;
+//   firstName: string;
+//   lastName: string;
+//   dob: string;
+//   phoneNumber: string;
+//   email: string;
+//   role: string;
+//   password: string;
+//   teamLead: string;
+//   keywords?: string[]
+// }
+
+// const initialValues: IAddStaffFormValues = {
+//   employeeId: "",
+//   firstName: "",
+//   lastName: "",
+//   dob: "",
+//   phoneNumber: "",
+//   email: "",
+//   role: "",
+//   password: "",
+//   teamLead: "",
+//   keywords: []
+// };
+// const MAX_KEYWORDS = 8;
+
+// const validationSchema = Yup.object({
+//   firstName: Yup.string().required("First name is required"),
+//   lastName: Yup.string().required("Last name is required"),
+//   dob: Yup.date()
+//     .max(new Date(), "DOB cannot be in the future")
+//     .required("Date of Birth is required")
+//     .typeError("Invalid date format (YYYY-MM-DD)"),
+//   phoneNumber: Yup.string()
+//     .required("Phone number is required")
+//     .matches(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits"),
+//   email: Yup.string()
+//     .email("Invalid email")
+//     .matches(/@.+\..+/, "Email must contain a dot (.) after the @ symbol")
+//     .required("Email is required"),
+//   role: Yup.string().required("Role is required"),
+//   password: Yup.string()
+//     .min(6, "Password must be at least 6 characters")
+//     .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/, "Password must contain at least one letter and one number")
+//     .required("Password is required"),
+//   keywords: Yup.array()
+//     .of(
+//       Yup.string()
+//         .trim()
+//         .min(1, "Keyword is too short")
+//         .max(40, "Keyword is too long")
+//     )
+//     .max(MAX_KEYWORDS, `Maximum ${MAX_KEYWORDS} keywords allowed`)
+//     .nullable(), 
+// });
+
+// export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
+//   isOpen,
+//   onClose,
+//   onNewStaffSuccessCallback,
+// }) => {
+//   // const { data: rolesList } = useAllRoleListQuery();
+//   const { allRoleData } = useAllDropdownDataQuery()
+//   const { allUsersData } = useAllUsersQuery({});
+//   const [showPassword, setShowPassword] = React.useState(false);
+//   const [tags, setTags] = useState([""]);
+
+//   const handleTagChange = (newTags?: string[]) => {
+//     if (newTags) setTags(newTags);
+//   };
+
+
+//   const roleOptions =
+//     allRoleData?.data?.list
+//       ?.filter(
+//         (role, index, self) =>
+//           index === self.findIndex((r) => r.role === role.role)
+//       )
+//       ?.map((roleData) => ({
+//         label: roleData?.role,
+//         value: roleData?.id.toString(),
+//       })) || [];
+
+//   const userOptions = [
+//     { label: "None", value: "" },
+//     ...(allUsersData?.data?.list
+//       ?.filter((user: any) => user.first_name && user.last_name)
+//       ?.map((user: any) => ({
+//         label: `${user.first_name} ${user.last_name}`,
+//         value: user.id.toString(),
+//       })) || [])
+//   ];
+
+
+//   const handleCreateUserSuccessCallback = (response: ICreateUserResponse) => {
+//     toast.success(response.message);
+//     onNewStaffSuccessCallback();
+//     onClose();
+//   };
+
+//   const handleCreateUserErrorCallback = (error: IApiError) => {
+//     toast.error(error.message);
+//   };
+
+//   const { isPending, onCreateUser } = useCreateUserMutation({
+//     onSuccessCallback: handleCreateUserSuccessCallback,
+//     onErrorCallback: handleCreateUserErrorCallback,
+//   });
+
+//   const handleAddNewStaffSubmit = (values: IAddStaffFormValues) => {
+//     const createUserPayload: ICreateUserPayload = {
+//       first_name: values.firstName,
+//       last_name: values.lastName,
+//       dob: values.dob,
+//       email: values.email,
+//       password: values.password,
+//       phone_number: values.phoneNumber,
+//       role_id: values.role,
+//       employee_id: values.employeeId,
+//       team_lead_id: values.teamLead || undefined,
+//       keywords: values.keywords || []
+//     };
+
+//     onCreateUser(createUserPayload);
+//   };
+
+
+//   return (
+//     <div>
+//       <ModalOverlay
+//         modalTitle="Back to Staffs"
+//         isOpen={isOpen}
+//         onClose={onClose}
+//       >
+//         <Formik
+//           initialValues={initialValues}
+//           validationSchema={validationSchema}
+//           onSubmit={handleAddNewStaffSubmit}
+//         >
+//           {({
+//             values,
+//             handleChange,
+//             handleBlur,
+//             setFieldValue,
+//             errors,
+//             touched,
+//           }) => (
+//             <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg  p-4  border  border-gray-200">
+//               <h1 className="text-lg  font-semibold">
+//                 Add New Staff
+//               </h1>
+//               <InputField
+//                 label="Employee Id"
+//                 name="employeeId"
+//                 placeholder="Enter Employee Id"
+//                 value={values.employeeId}
+//                 onChange={handleChange}
+//                 onBlur={handleBlur}
+//                 error={touched.employeeId && errors.employeeId}
+//               />
+//               <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
+//                 <InputField
+//                   label="First Name"
+//                   name="firstName"
+//                   placeholder="Enter First name"
+//                   value={values.firstName}
+//                   onChange={handleChange}
+//                   onBlur={handleBlur}
+//                   error={touched.firstName && errors.firstName}
+//                 />
+//                 <InputField
+//                   label="Last Name"
+//                   name="lastName"
+//                   placeholder="Enter Last name"
+//                   value={values.lastName}
+//                   onChange={handleChange}
+//                   onBlur={handleBlur}
+//                   error={touched.lastName && errors.lastName}
+//                 />
+//               </div>
+//               <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
+//                 <DatePicker
+//                   label="DOB"
+//                   name="dob"
+//                   value={values.dob}
+//                   onChange={(value) => setFieldValue("dob", value)}
+//                   placeholder="Select DOB"
+//                   error={touched.dob && errors.dob}
+//                   maxDate={new Date().toISOString().split("T")[0]}
+//                 />
+//                 <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
+//                   <label className=" text-gray-700 block">
+//                     Phone Number
+//                   </label>
+//                   <PhoneInput
+//                     country="in"
+//                     value={values.phoneNumber}
+//                     onChange={(value) => setFieldValue("phoneNumber", value)}
+//                     inputProps={{ name: "phoneNumber" }}
+//                   />
+//                   {errors.phoneNumber && touched.phoneNumber && (
+//                     <p className="text-red-500 text-[0.9rem] ">
+//                       {errors.phoneNumber}
+//                     </p>
+//                   )}
+//                 </div>
+//               </div>
+
+//               <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
+//                 <InputField
+//                   label="Email"
+//                   name="email"
+//                   placeholder="Enter Email"
+//                   value={values.email}
+//                   onChange={handleChange}
+//                   onBlur={handleBlur}
+//                   error={touched.email && errors.email}
+//                 />
+//                 <Dropdown
+//                   label="Role Name"
+//                   options={roleOptions}
+//                   value={values.role}
+//                   onChange={(val: string) => setFieldValue("role", val)}
+//                   error={touched.role ? errors.role : undefined}
+//                 />
+//               </div>
+
+//               <Dropdown
+//                 label="Team Lead (Optional)"
+//                 options={userOptions}
+//                 value={values.teamLead}
+//                 onChange={(val: string) => setFieldValue("teamLead", val)}
+//               />
+//               <div className=" mt-3">
+
+//                 <InputField
+//                   label="Enter Password"
+//                   name="password"
+//                   placeholder="Enter Password"
+//                   value={values.password}
+//                   onChange={handleChange}
+//                   onBlur={handleBlur}
+//                   error={touched.password && errors.password}
+//                   type={showPassword ? "text" : "password"}
+//                   suffixIcon={
+//                     <span style={{ userSelect: "none" }}>
+//                       {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
+//                     </span>
+//                   }
+//                   onIconClick={() => setShowPassword((prev) => !prev)}
+//                 />
+//               </div>
+
+//               <div className=" mt-6">
+//                 <TagsInput
+//                   value={tags}
+//                   onChange={handleChange}
+//                   inputProps={{
+//                     placeholder: "Add a Keyword"
+//                   }}
+
+//                 />
+
+//                 <p>Current Keywords: {tags.join(", ")}</p>
+//               </div>
+//               <div className="flex justify-between mt-6  space-x-4">
+//                 <Button
+//                   title="Cancel"
+//                   variant="primary-outline"
+//                   width="w-full"
+//                   onClick={onClose}
+//                   type="button"
+//                 />
+//                 <Button
+//                   disabled={isPending}
+//                   title="Add Staff"
+//                   width="w-full"
+//                   type="submit"
+//                 />
+//               </div>
+//             </Form>
+//           )}
+//         </Formik>
+//       </ModalOverlay>
+//     </div>
+//   );
+// };
+
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
@@ -8,6 +330,8 @@ import {
   ModalOverlay,
 } from "@/components";
 import React from "react";
+import TagsInput from "react-tagsinput";
+import "react-tagsinput/react-tagsinput.css";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import {
@@ -39,7 +363,10 @@ export interface IAddStaffFormValues {
   role: string;
   password: string;
   teamLead: string;
+  keywords?: string[];
 }
+
+const MAX_KEYWORDS = 8;
 
 const initialValues: IAddStaffFormValues = {
   employeeId: "",
@@ -51,6 +378,7 @@ const initialValues: IAddStaffFormValues = {
   role: "",
   password: "",
   teamLead: "",
+  keywords: [],
 };
 
 const validationSchema = Yup.object({
@@ -72,6 +400,15 @@ const validationSchema = Yup.object({
     .min(6, "Password must be at least 6 characters")
     .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/, "Password must contain at least one letter and one number")
     .required("Password is required"),
+  keywords: Yup.array()
+    .of(
+      Yup.string()
+        .trim()
+        .min(1, "Keyword is too short")
+        .max(40, "Keyword is too long")
+    )
+    .max(MAX_KEYWORDS, `Maximum ${MAX_KEYWORDS} keywords allowed`)
+    .nullable(),
 });
 
 export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
@@ -79,8 +416,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
   onClose,
   onNewStaffSuccessCallback,
 }) => {
-  // const { data: rolesList } = useAllRoleListQuery();
-  const { allRoleData } = useAllDropdownDataQuery()
+  const { allRoleData } = useAllDropdownDataQuery();
   const { allUsersData } = useAllUsersQuery({});
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -102,9 +438,8 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
       ?.map((user: any) => ({
         label: `${user.first_name} ${user.last_name}`,
         value: user.id.toString(),
-      })) || [])
+      })) || []),
   ];
-
 
   const handleCreateUserSuccessCallback = (response: ICreateUserResponse) => {
     toast.success(response.message);
@@ -132,152 +467,165 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
       role_id: values.role,
       employee_id: values.employeeId,
       team_lead_id: values.teamLead || undefined,
+      keywords: values.keywords || [],
     };
 
     onCreateUser(createUserPayload);
   };
 
-
   return (
     <div>
-      <ModalOverlay
-        modalTitle="Back to Staffs"
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleAddNewStaffSubmit}
-        >
-          {({
-            values,
-            handleChange,
-            handleBlur,
-            setFieldValue,
-            errors,
-            touched,
-          }) => (
-            <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg  p-4  border  border-gray-200">
-              <h1 className="text-lg  font-semibold">
-                Add New Staff
-              </h1>
-              <InputField
-                label="Employee Id"
-                name="employeeId"
-                placeholder="Enter Employee Id"
-                value={values.employeeId}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.employeeId && errors.employeeId}
-              />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
+      <ModalOverlay modalTitle="Back to Staffs" isOpen={isOpen} onClose={onClose}>
+        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleAddNewStaffSubmit}>
+          {({ values, handleChange, handleBlur, setFieldValue, errors, touched }) => {
+            // keywords handler that writes directly to Formik state
+            const handleKeywordsChange = (newKeywords: string[]) => {
+              const normalized = (newKeywords || [])
+                .map((k) => k.trim())
+                .filter((k) => k.length > 0);
+
+              const unique: string[] = [];
+              for (const k of normalized) {
+                if (!unique.includes(k)) unique.push(k);
+              }
+
+              if (unique.length > MAX_KEYWORDS) {
+                unique.splice(MAX_KEYWORDS);
+                toast.error(`Maximum ${MAX_KEYWORDS} keywords allowed`);
+              }
+
+              setFieldValue("keywords", unique);
+            };
+
+            return (
+              <Form className="overflow-y-auto max-h-[80vh] flex flex-col bg-white rounded-lg p-4 border border-gray-200">
+                <h1 className="text-lg font-semibold">Add New Staff</h1>
+
                 <InputField
-                  label="First Name"
-                  name="firstName"
-                  placeholder="Enter First name"
-                  value={values.firstName}
+                  label="Employee Id"
+                  name="employeeId"
+                  placeholder="Enter Employee Id"
+                  value={values.employeeId}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  error={touched.firstName && errors.firstName}
+                  error={touched.employeeId && (errors.employeeId as string)}
                 />
-                <InputField
-                  label="Last Name"
-                  name="lastName"
-                  placeholder="Enter Last name"
-                  value={values.lastName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.lastName && errors.lastName}
-                />
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
-                <DatePicker
-                  label="DOB"
-                  name="dob"
-                  value={values.dob}
-                  onChange={(value) => setFieldValue("dob", value)}
-                  placeholder="Select DOB"
-                  error={touched.dob && errors.dob}
-                  maxDate={new Date().toISOString().split("T")[0]}
-                />
-                <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
-                  <label className=" text-gray-700 block">
-                    Phone Number
-                  </label>
-                  <PhoneInput
-                    country="in"
-                    value={values.phoneNumber}
-                    onChange={(value) => setFieldValue("phoneNumber", value)}
-                    inputProps={{ name: "phoneNumber" }}
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+                  <InputField
+                    label="First Name"
+                    name="firstName"
+                    placeholder="Enter First name"
+                    value={values.firstName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.firstName && (errors.firstName as string)}
                   />
-                  {errors.phoneNumber && touched.phoneNumber && (
-                    <p className="text-red-500 text-[0.9rem] ">
-                      {errors.phoneNumber}
-                    </p>
-                  )}
+                  <InputField
+                    label="Last Name"
+                    name="lastName"
+                    placeholder="Enter Last name"
+                    value={values.lastName}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.lastName && (errors.lastName as string)}
+                  />
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
-                <InputField
-                  label="Email"
-                  name="email"
-                  placeholder="Enter Email"
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={touched.email && errors.email}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+                  <DatePicker
+                    label="DOB"
+                    name="dob"
+                    value={values.dob}
+                    onChange={(value) => setFieldValue("dob", value)}
+                    placeholder="Select DOB"
+                    error={touched.dob && (errors.dob as string)}
+                    maxDate={new Date().toISOString().split("T")[0]}
+                  />
+                  <div className="w-full grid grid-cols-1 gap-2 pb-2 relative">
+                    <label className="text-gray-700 block">Phone Number</label>
+                    <PhoneInput
+                      country="in"
+                      value={values.phoneNumber}
+                      onChange={(value) => setFieldValue("phoneNumber", value)}
+                      inputProps={{ name: "phoneNumber" }}
+                    />
+                    {errors.phoneNumber && touched.phoneNumber && (
+                      <p className="text-red-500 text-[0.9rem]">{errors.phoneNumber as string}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+                  <InputField
+                    label="Email"
+                    name="email"
+                    placeholder="Enter Email"
+                    value={values.email}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.email && (errors.email as string)}
+                  />
+                  <Dropdown
+                    label="Role Name"
+                    options={roleOptions}
+                    value={values.role}
+                    onChange={(val: string) => setFieldValue("role", val)}
+                    error={touched.role ? (errors.role as string) : undefined}
+                  />
+                </div>
+
                 <Dropdown
-                  label="Role Name"
-                  options={roleOptions}
-                  value={values.role}
-                  onChange={(val: string) => setFieldValue("role", val)}
-                  error={touched.role ? errors.role : undefined}
+                  label="Team Lead (Optional)"
+                  options={userOptions}
+                  value={values.teamLead}
+                  onChange={(val: string) => setFieldValue("teamLead", val)}
                 />
-              </div>
 
-              <Dropdown
-                label="Team Lead (Optional)"
-                options={userOptions}
-                value={values.teamLead}
-                onChange={(val: string) => setFieldValue("teamLead", val)}
-              />
+                <div className="mt-3">
+                  <InputField
+                    label="Enter Password"
+                    name="password"
+                    placeholder="Enter Password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.password && (errors.password as string)}
+                    type={showPassword ? "text" : "password"}
+                    suffixIcon={<span style={{ userSelect: "none" }}>{showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}</span>}
+                    onIconClick={() => setShowPassword((prev) => !prev)}
+                  />
+                </div>
 
-              <InputField
-                label="Enter Password"
-                name="password"
-                placeholder="Enter Password"
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={touched.password && errors.password}
-                type={showPassword ? "text" : "password"}
-                suffixIcon={
-                  <span style={{ userSelect: "none" }}>
-                    {showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}
-                  </span>
-                }
-                onIconClick={() => setShowPassword((prev) => !prev)}
-              />
-              <div className="flex justify-between mt-6  space-x-4">
-                <Button
-                  title="Cancel"
-                  variant="primary-outline"
-                  width="w-full"
-                  onClick={onClose}
-                  type="button"
-                />
-                <Button
-                  disabled={isPending}
-                  title="Add Staff"
-                  width="w-full"
-                  type="submit"
-                />
-              </div>
-            </Form>
-          )}
+                <div className="mt-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Keywords (skills, responsibilities)</label>
+
+                  <TagsInput
+                    value={Array.isArray(values.keywords) ? values.keywords : []}
+                    onChange={handleKeywordsChange}
+                    inputProps={{
+                      placeholder: "Add a keyword and press Enter",
+                      name: "keywords",
+                    }}
+                    onlyUnique
+                  />
+
+                  {touched.keywords && errors.keywords && (
+                    <p className="text-red-500 text-[0.9rem] mt-1">{(errors.keywords as any) || ""}</p>
+                  )}
+
+                  <p className="mt-2 text-xs text-gray-500">{(values.keywords?.length ?? 0)}/{MAX_KEYWORDS} keywords</p>
+
+                  <p className="mt-2 text-sm text-gray-600">Current Keywords: {(values.keywords && values.keywords.length > 0) ? values.keywords.join(", ") : "No keywords added"}</p>
+                </div>
+
+                <div className="flex justify-between mt-6 space-x-4">
+                  <Button title="Cancel" variant="primary-outline" width="w-full" onClick={onClose} type="button" />
+                  <Button disabled={isPending} title="Add Staff" width="w-full" type="submit" />
+                </div>
+              </Form>
+            );
+          }}
         </Formik>
       </ModalOverlay>
     </div>

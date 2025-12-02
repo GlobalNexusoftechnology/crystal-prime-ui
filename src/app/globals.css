@@ -88,3 +88,10 @@ input[type="number"] {
     border-width: clamp(0.1px, 0.1vw, 0.1vw) !important;
     width: clamp(2.5rem, 2.5vw, 2.5vw) !important;
   }
+  
+  .react-tagsinput-tag{
+    display: none;
+  }
+.react-tagsinput-input{
+  width: 100px !important;
+}

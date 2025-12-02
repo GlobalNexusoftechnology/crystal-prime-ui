@@ -98,6 +98,7 @@ export function StaffListTable() {
         ? `${(user as any).team_lead.first_name} ${(user as any).team_lead.last_name}`
         : "",
       team_lead_id: (user as any)?.team_lead?.id || "",
+      keywords: user?.keywords,
     })
   );
   const filteredUserList = userList;

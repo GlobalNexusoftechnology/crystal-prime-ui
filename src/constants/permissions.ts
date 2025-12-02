@@ -77,25 +77,14 @@ export const MODULES: TOptionItem[] = [
   { key: EModule.ROLES, label: "Roles Module", value: "16" },
   { key: EModule.SETTINGS, label: "Settings Module", value: "17" },
   { key: EModule.LEAD_TYPES, label: "Lead Types Module", value: "18" },
-  {
-    key: EModule.CLIENT_MANAGEMENT,
-    label: "Client Management Module",
-    value: "19",
-  },
+
   {
     key: EModule.PROJECT_TEMPLATE,
     label: "Project Template Module",
     value: "20",
   },
   { key: EModule.MILESTONE, label: "Milestone Module", value: "21" },
-  { key: EModule.TASK, label: "Task Module", value: "22" },
-  { key: EModule.EI_LOG_TYPES, label: "EI Log Types Module", value: "23" },
-  { key: EModule.EI_LOG_HEADS, label: "EI Log Heads Module", value: "24" },
-  {
-    key: EModule.EI_LOG_MANAGEMENT,
-    label: "EI Log Management Module",
-    value: "25",
-  },
+
   { key: EModule.REPORTS, label: "Reports", value: "26" },
   {
     key: EModule.STAFF_PERFORMANCE_REPORT,
@@ -123,27 +112,11 @@ export const MODULES: TOptionItem[] = [
     value: "31",
   },
   { key: EModule.MY_PROJECTS, label: "My Projects Module", value: "32" },
-  {
-    key: EModule.TICKET_MANAGEMENT,
-    label: "Ticket Management Module",
-    value: "33",
-  },
-  {
-    key: EModule.SUPPORT_TICKETS,
-    label: "Support Tickets Module",
-    value: "34",
-  },
-  { key: EModule.HR_MANAGEMENET, label: "HR Management Module", value: "35" },
-  { key: EModule.HOLIDAY_LIST, label: "Holiday List Module", value: "36" },
-  { key: EModule.ATTENDANCE, label: "Attendance Module", value: "37" },
-  { key: EModule.LEAVES, label: "Leaves Module", value: "38" },
-  { key: EModule.LEAVE, label: "Leave Module", value: "39" },
-  { key: EModule.APPLY_LEAVE, label: "Apply Leave Module", value: "40" },
-  { key: EModule.HOLIDAYS, label: "Holidays Module", value: "41" },
+
    { key: EModule.MATERIAL_MANAGEMENT, label: "Inventory Management", value: "32"},
    { key: EModule.MATERIAL_TYPE, label: "Inventory Type", value: "37" },
    { key: EModule.MATERIAL_BRAND, label: "Inventory Brand", value: "38" },
-   { key: EModule.PROPOSAL, label: "Proposal", value: "35" },
+   { key: EModule.PROPOSAL, label: "Proposal Management", value: "35" },
 ];
 
 export const ACTIONS: TOptionItem[] = [

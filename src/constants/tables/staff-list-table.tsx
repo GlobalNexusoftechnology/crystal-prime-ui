@@ -60,6 +60,34 @@ export const staffListColumn: ITableColumn<IAllUsersListResponse>[] = [
     headerClassName: "min-w-[12rem] ",
     cell: ({ value }) => <span>{value ? value : "N/A"}</span>
   },
+
+  {
+  header: "KEYWORDS",
+  // accessor is a function that accepts the full row type and returns the keywords array (fallback to [])
+  accessor: (row: IAllUsersListResponse) => {
+    console.log("row", row);
+    return row?.keywords ?? [];
+  },
+  headerClassName: "min-w-[10rem]",
+  // cell expects the resolved value (and row if your types require it)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cell: ({ row, value }: { row: IAllUsersListResponse; value: any }) => {
+    console.log("value", value);
+
+    const keywords = Array.isArray(value) ? value : [];
+    return keywords.length > 0 ? (
+      <div className="flex flex-wrap gap-1">
+        {keywords.map((kw: string, i: number) => (
+          <span key={i} className="px-2 py-1 bg-indigo-100 text-indigo-700 text-xs rounded-full">
+            {kw}
+          </span>
+        ))}
+      </div>
+    ) : (
+      <span>N/A</span>
+    );
+  },
+},
   {
     header: "CREATED AT",
     accessor: "created_at",
