@@ -70,9 +70,8 @@ export const staffListColumn: ITableColumn<IAllUsersListResponse>[] = [
   },
   headerClassName: "min-w-[10rem]",
   // cell expects the resolved value (and row if your types require it)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
   cell: ({ row, value }: { row: IAllUsersListResponse; value: any }) => {
-    console.log("value", value);
 
     const keywords = Array.isArray(value) ? value : [];
     return keywords.length > 0 ? (
