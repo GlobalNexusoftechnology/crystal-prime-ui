@@ -29,7 +29,7 @@ export function TableRow({ row, columns, actions = [], index }: any) {
         </td>
       )}
       {columns.length > 0 &&
-        columns.map((col, index) => (
+        columns.map((col: ITableColumn<any>, index: number) => (
           <TableCell key={index} row={row} col={col} index={index} />
         ))}
     </tr>
