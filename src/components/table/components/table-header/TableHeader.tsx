@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
-export function TableHeader<T>({ column, sortBy, sortOrder, onSort }: any) {
+export function TableHeader({ column, sortBy, sortOrder, onSort }: any) {
   const isSorted = sortBy === column.accessor;
-
   return (
     <th
       className={`text-center p-3  bg-gray-200 whitespace-nowrap border-r border-gray-300 ${
