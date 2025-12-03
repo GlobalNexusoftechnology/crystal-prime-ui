@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export interface ITableColumn<T> {
   header: string;
   // accept either a key of T or a function that returns value for this column
@@ -32,7 +34,7 @@ export interface ITableProps<T> {
   onPageChange?: (page: number) => void;
 }
 
-export interface ITableHeaderProps<T> {
+export interface ITableHeaderProps {
   column: any;
   sortBy: any;
   sortOrder: any;
