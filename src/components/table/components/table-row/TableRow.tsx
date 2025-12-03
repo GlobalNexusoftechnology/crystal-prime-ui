@@ -37,17 +37,18 @@ export function TableRow<
   );
 }
 
-type TableCellProps<T extends { id: string | number }> = {
-  row: T;
-  col: ITableColumn<T>;
-  index: number;
+type TableCellProps = {
+  row: any;
+  col: any;
+  index: any;
 };
+// type TableCellProps<T extends { id: string | number }> = {
+//   row: T;
+//   col: ITableColumn<T>;
+//   index: number;
+// };
 
-export function TableCell<T extends { id: string | number }>({
-  row,
-  col,
-  index,
-}: TableCellProps<T>) {
+export function TableCell({ row, col, index }: any) {
   const value = row[col.accessor];
   const isAssignedTo = col.accessor === "assigned_to";
   const isStatusColumn =
