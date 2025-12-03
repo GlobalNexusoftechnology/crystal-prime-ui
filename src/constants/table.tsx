@@ -34,7 +34,7 @@ export interface ITableProps<T> {
   onPageChange?: (page: number) => void;
 }
 
-export interface ITableHeaderProps {
+export interface ITableHeaderProps<T> {
   column: any;
   sortBy: any;
   sortOrder: any;
