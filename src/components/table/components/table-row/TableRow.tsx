@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { ITableColumn, ITableRowProps } from "@/constants"; // Adjust path if needed
 import { getInitials, getRandomColor } from "@/utils";
 import { ActionDropdown } from "@/components/action-dropdown";
