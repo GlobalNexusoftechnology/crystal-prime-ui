@@ -13,11 +13,17 @@ export function TableRow({ row, columns, actions = [], index }: any) {
       {actions.length > 0 && (
         <td className="p-3  relative text-center border-r border-gray-200 capitalize">
           <ActionDropdown
-            options={actions.map((action) => ({
-              label: action.label,
-              onClick: () => action.onClick(row),
-              className: action.className,
-            }))}
+            options={actions.map(
+              (action: {
+                label: any;
+                onClick: (arg0: any) => any;
+                className: any;
+              }) => ({
+                label: action.label,
+                onClick: () => action.onClick(row),
+                className: action.className,
+              })
+            )}
             direction="bottom"
           />
         </td>
