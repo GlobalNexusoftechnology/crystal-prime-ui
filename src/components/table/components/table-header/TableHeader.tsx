@@ -1,13 +1,6 @@
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
-import { ITableHeaderProps } from "@/constants";
-
-export function TableHeader<T>({
-  column,
-  sortBy,
-  sortOrder,
-  onSort,
-}: ITableHeaderProps<T>) {
+export function TableHeader<T>({ column, sortBy, sortOrder, onSort }: any) {
   const isSorted = sortBy === column.accessor;
 
   return (
