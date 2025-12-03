@@ -22,7 +22,7 @@ export interface ITableProps<T> {
   data: T[];
   columns: ITableColumn<T>[];
   pageSize?: number;
-  actions?: ITableAction<T>[]; 
+  actions?: ITableAction<T>[];
   paginationData?: {
     total: number;
     page: number;
@@ -33,11 +33,18 @@ export interface ITableProps<T> {
 }
 
 export interface ITableHeaderProps<T> {
-  column: ITableColumn<T>;
-  sortBy: keyof T | null;
-  sortOrder: "asc" | "desc";
-  onSort: (accessor: keyof T) => void;
+  column: any;
+  sortBy: any;
+  sortOrder: any;
+  onSort: any;
 }
+
+// export interface ITableHeaderProps<T> {
+//   column: ITableColumn<T>;
+//   sortBy: keyof T | null;
+//   sortOrder: "asc" | "desc";
+//   onSort: (accessor: keyof T) => void;
+// }
 // interface ITableRowProps<T extends { id: string }> {
 
 export interface ITableRowProps<T extends { id: string | number }> {

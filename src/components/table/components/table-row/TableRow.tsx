@@ -1,10 +1,17 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-import { ActionDropdown } from "@/components/action-dropdown";
-import { ITableColumn } from "@/constants"; // Adjust path if needed
+import { ITableColumn, ITableRowProps } from "@/constants"; // Adjust path if needed
 import { getInitials, getRandomColor } from "@/utils";
+import { ActionDropdown } from "@/components/action-dropdown";
 
-export function TableRow({ row, columns, actions = [], index }: any) {
+export function TableRow<
+  T extends { id: string | number; assigned_to?: string }
+>({
+  row,
+  columns,
+  actions = [],
+  index,
+}: ITableRowProps<T> & {
+  index: number;
+}) {
   return (
     <tr className="border-t  border-gray-200 hover:bg-gray-50 relative whitespace-nowrap">
       <td className="p-3  text-[0.9rem]   font-medium text-gray-700 text-center border-r border-gray-200 capitalize">
@@ -13,23 +20,17 @@ export function TableRow({ row, columns, actions = [], index }: any) {
       {actions.length > 0 && (
         <td className="p-3  relative text-center border-r border-gray-200 capitalize">
           <ActionDropdown
-            options={actions.map(
-              (action: {
-                label: any;
-                onClick: (arg0: any) => any;
-                className: any;
-              }) => ({
-                label: action.label,
-                onClick: () => action.onClick(row),
-                className: action.className,
-              })
-            )}
+            options={actions.map((action) => ({
+              label: action.label,
+              onClick: () => action.onClick(row),
+              className: action.className,
+            }))}
             direction="bottom"
           />
         </td>
       )}
       {columns.length > 0 &&
-        columns.map((col: ITableColumn<any>, index: number) => (
+        columns.map((col, index) => (
           <TableCell key={index} row={row} col={col} index={index} />
         ))}
     </tr>
