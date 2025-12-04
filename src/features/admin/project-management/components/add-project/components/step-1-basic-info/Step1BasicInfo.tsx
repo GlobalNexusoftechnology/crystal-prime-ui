@@ -1,13 +1,13 @@
-import { InputField, Dropdown, DatePicker } from "@/components";
+import { DatePicker, Dropdown, InputField } from "@/components";
 // import Image from "next/image";
-import React, { useEffect } from "react";
-import { FormikProps } from "formik";
-import { IAddProjectFormValues } from "../../AddProject";
-import { ImageRegistry } from "@/constants";
-import Image from "next/image";
 import { Checkbox } from "@/components";
+import { ImageRegistry } from "@/constants";
 import { useAllDropdownDataQuery, useAuthStore } from "@/services";
 import { differenceInCalendarDays, parseISO } from "date-fns";
+import { FormikProps } from "formik";
+import Image from "next/image";
+import React, { useEffect } from "react";
+import { IAddProjectFormValues } from "../../AddProject";
 import { CostDisplay } from "./CostDisplay";
 
 const renewalTypeOptions = [
