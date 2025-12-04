@@ -30,7 +30,7 @@
 // }: SendProposalModalProps) {
 
 //   // fetch material
-  
+
 //     // const filters = useMemo(
 //     //   () => ({
 //     //     searchText: searchQuery,
@@ -39,11 +39,11 @@
 //     //   }),
 //     //   [searchQuery, currentPage]
 //     // );
-  
+
 //     const { allMaterialsData, fetchAllMaterials } = useAllMaterialsQuery();
-  
+
 //     console.log(allMaterialsData, "allMaterialsData");
-    
+
 //   const formik = useFormik({
 //     initialValues: {
 //       proposalDate:
@@ -190,6 +190,10 @@ export interface IProposal {
   proposalDate: string;
   proposalNumber: string;
   proposalText: string;
+  subtotal?: number,
+  taxPercent?: number,
+  finalAmount?: number,
+  products?: string
 }
 
 // export ProductRow so parent can reuse the type
@@ -204,7 +208,11 @@ export interface SendProposalModalProps {
   isOpen: boolean;
   onClose: () => void;
   // now accepts products array as the second argument
-  onSubmit: (values: IProposal, products: ProductRow[]) => Promise<void> | void;
+  onSubmit: (values: IProposal, products: ProductRow[],
+    subtotal: any,
+    taxPercent: any,
+    finalAmount: any,
+  ) => Promise<void> | void;
   initialValues: IProposal;
   isPending?: boolean;
 };
@@ -237,6 +245,9 @@ export function SendProposalModal({
       salePrice: "",
     },
   ]);
+
+  const [taxPercent, setTaxPercent] = useState(0);
+
 
   // Add a new empty row
   const addRow = () => {
@@ -284,40 +295,56 @@ export function SendProposalModal({
     console.log("Products to submit:", productRows);
   };
 
- const formik = useFormik({
-  initialValues: {
-    proposalDate:
-      initialValues.proposalDate || new Date().toISOString().split("T")[0],
-    proposalNumber: initialValues.proposalNumber || "",
-    proposalText: initialValues.proposalText || "",
-  },
-  validationSchema: Yup.object().shape({
-    proposalDate: Yup.string().required("Proposal date is required"),
-    proposalNumber: Yup.string()
-      .trim()
-      .required("Proposal number is required"),
-    proposalText: Yup.string().required("Proposal text is required"),
-  }),
-  enableReinitialize: true,
-  onSubmit: async (values) => {
-    // pass productRows to parent onSubmit which now expects (values, products)
-    await onSubmit(values, productRows);
+  const subtotal = productRows.reduce((acc, row) => {
+  const price = Number(row.salePrice) || 0; // safer than parseFloat + ||
+  return acc + price;
+}, 0);
 
-    // optional: log product rows
-    handleLogProducts();
+const taxRate = Number(taxPercent) || 0;
+const taxAmount = (subtotal * taxRate) / 100;
+const finalAmount = subtotal + taxAmount;
 
-    formik.resetForm({
-      values: {
-        proposalDate: new Date().toISOString().split("T")[0],
-        proposalNumber: "",
-        proposalText: "",
-      },
-    });
+  const formik = useFormik({
+    initialValues: {
+      proposalDate:
+        initialValues.proposalDate || new Date().toISOString().split("T")[0],
+      proposalNumber: initialValues.proposalNumber || "",
+      proposalText: initialValues.proposalText || "",
+      products: initialValues.products || "",
+    },
+    validationSchema: Yup.object().shape({
+      proposalDate: Yup.string().required("Proposal date is required"),
+      proposalNumber: Yup.string()
+        .trim()
+        .required("Proposal number is required"),
+      proposalText: Yup.string().required("Proposal text is required"),
+      products: Yup.string().optional(),
+    }),
+    enableReinitialize: true,
+    onSubmit: async (values) => {
+      // pass productRows to parent onSubmit which now expects (values, products)
+      await onSubmit(values, productRows,
+        subtotal,
+        taxPercent,
+        finalAmount,
+      );
 
-    // clear product rows to one empty
-    setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "" }]);
-  },
-});
+      // optional: log product rows
+      handleLogProducts();
+
+      formik.resetForm({
+        values: {
+          proposalDate: new Date().toISOString().split("T")[0],
+          proposalNumber: "",
+          proposalText: "",
+          products: ""
+        },
+      });
+
+      // clear product rows to one empty
+      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "" }]);
+    },
+  });
 
 
   // Reset form when modal closes
@@ -328,6 +355,7 @@ export function SendProposalModal({
           proposalDate: new Date().toISOString().split("T")[0],
           proposalNumber: "",
           proposalText: "",
+          products: ""
         },
       });
       setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "" }]);
@@ -335,12 +363,25 @@ export function SendProposalModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
+  // useEffect(() => {
+  //   const sum = productRows.reduce((acc, row) => {
+  //     const price = parseFloat(row.salePrice) || 0;
+  //     return acc + price;
+  //   }, 0);
+
+  //   setSubtotal(sum);
+
+  //   const final = sum + (sum * taxPercent) / 100;
+  //   setFinalAmount(final);
+  // }, [productRows, taxPercent]);
+
+
   return (
     <ModalOverlay
       isOpen={isOpen}
       onClose={onClose}
       modalTitle="Send Proposal"
-      modalClassName="w-full md:w-[45rem]"
+      modalClassName="w-full md:w-[45rem] h-[95vh] max-h-[95vh] overflow-y-auto flex flex-col justify-center"
     >
       <form
         onSubmit={formik.handleSubmit}
@@ -388,9 +429,8 @@ export function SendProposalModal({
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             rows={6}
-            className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-              formik.touched.proposalText && formik.errors.proposalText ? "border-red-500" : ""
-            }`}
+            className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${formik.touched.proposalText && formik.errors.proposalText ? "border-red-500" : ""
+              }`}
           />
           {formik.touched.proposalText && formik.errors.proposalText && (
             <p className="mt-1 text-sm text-red-600">
@@ -467,6 +507,53 @@ export function SendProposalModal({
             ))}
           </div>
         </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Products
+          </label>
+          <textarea
+            name="products"
+            placeholder="Enter products"
+            value={formik.values.products}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            rows={6}
+            className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${formik.touched.products && formik.errors.products ? "border-red-500" : ""
+              }`}
+          />
+          {formik.touched.products && formik.errors.products && (
+            <p className="mt-1 text-sm text-red-600">
+              {formik.errors.products}
+            </p>
+          )}
+        </div>
+
+        {/* Totals Section */}
+      {/* Totals Section */}
+<div className="border p-4 rounded-md bg-white flex flex-col gap-4">
+  <div className="flex justify-between">
+    <span className="font-medium">Subtotal:</span>
+    <span>₹ {subtotal.toFixed(2)}</span>
+  </div>
+
+  <div className="flex justify-between items-center">
+    <label className="font-medium">Tax (%)</label>
+    <input
+      type="number"
+      value={taxPercent}
+      onChange={(e) => setTaxPercent(Number(e.target.value) || 0)}
+      className="w-32 px-3 py-2 border rounded-md"
+      placeholder="0"
+    />
+  </div>
+
+  <div className="flex justify-between">
+    <span className="font-medium">Final Amount:</span>
+    <span className="text-lg font-semibold">₹ {finalAmount.toFixed(2)}</span>
+  </div>
+</div>
+
 
         {/* Actions */}
         <div className="flex flex-wrap md:flex-nowrap gap-4">

@@ -43,7 +43,7 @@ interface LeadsListTableProps {
   setAddLeadModalOpen: (arg0: boolean) => void;
 }
 
-  type ProductRow = {
+type ProductRow = {
   id: string;
   materialId: string;
   name: string;
@@ -99,56 +99,68 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
 
 
-const handleSendProposal = async (
-  proposalData: { proposalDate: string; proposalNumber: string; proposalText: string },
-  productRows: ProductRow[]
-) => {
-  try {
-    if (!selectedLeadForProposal?.id) {
-      toast.error("No lead selected for proposal.");
-      return;
-    }
+  const handleSendProposal = async (
+    proposalData: {
+      proposalDate: string; proposalNumber: string; proposalText: string
+    },
 
-    // Filter only rows where a material was selected
-    const selectedProducts = (productRows ?? []).filter((r) => !!r.materialId);
+    productRows: ProductRow[],
+    products?: string,
+    subtotal?: number,
+    taxPercent?: number,
+    finalAmount?: number
+  ) => {
+    try {
+      if (!selectedLeadForProposal?.id) {
+        toast.error("No lead selected for proposal.");
+        return;
+      }
 
-    if (selectedProducts.length === 0) {
-      toast.error("Please add at least one product and select an item.");
-      return;
-    }
+      // Filter only rows where a material was selected
+      const selectedProducts = (productRows ?? []).filter((r) => !!r.materialId);
 
-    // Build products payload — convert salePrice to number where possible
-    const productsPayload = selectedProducts.map((p) => {
-      // try to convert salePrice to a number, fallback to 0
-      const parsedPrice = Number(String(p.salePrice).replace(/[^0-9.-]+/g, ""));
-      return {
-        materialId: p.materialId,
-        name: p.name,
-        salePrice: Number.isFinite(parsedPrice) ? parsedPrice : 0,
-        // add other fields if your API expects them, e.g. quantity
-        // quantity: p.quantity ?? 1,
+      if (selectedProducts.length === 0) {
+        toast.error("Please add at least one product and select an item.");
+        return;
+      }
+
+      // Build products payload — convert salePrice to number where possible
+      const productsPayload = selectedProducts.map((p) => {
+        // try to convert salePrice to a number, fallback to 0
+        const parsedPrice = Number(String(p.salePrice).replace(/[^0-9.-]+/g, ""));
+        return {
+          materialId: p.materialId,
+          name: p.name,
+          salePrice: Number.isFinite(parsedPrice) ? parsedPrice : 0,
+          // add other fields if your API expects them, e.g. quantity
+          // quantity: p.quantity ?? 1,
+        };
+      });
+
+      // Final payload structure (adjust if your API expects different keys)
+      const payload = {
+        ...proposalData,
+        productsText: products,
+        subtotal: subtotal,
+        taxPercent: taxPercent,
+        finalAmount: finalAmount,
+        products: productsPayload,
       };
-    });
+      console.log("payload", payload);
 
-    // Final payload structure (adjust if your API expects different keys)
-    const payload = {
-      ...proposalData,
-      products: productsPayload,
-    };
+      await sendProposal({
+        id: selectedLeadForProposal.id,
+        payload,
+      });
 
-    await sendProposal({
-      id: selectedLeadForProposal.id,
-      payload,
-    });
-
-    toast.success("Proposal sent successfully!");
-    setIsSendProposalModalOpen(false);
-    setSelectedLeadForProposal(null);
-  } catch (error) {
-    console.error("Proposal send failed:", error);
-    toast.error("Failed to send proposal.");
-  }
-};
+      toast.success("Proposal sent successfully!");
+      setIsSendProposalModalOpen(false);
+      setSelectedLeadForProposal(null);
+    } catch (error) {
+      console.error("Proposal send failed:", error);
+      toast.error("Failed to send proposal.");
+    }
+  };
 
 
   const { debouncedValue: searchQuery } = useDebounce({
@@ -712,7 +724,8 @@ const handleSendProposal = async (
         initialValues={{
           proposalDate: new Date().toISOString().split("T")[0],
           proposalNumber: "",
-          proposalText: ""
+          proposalText: "",
+          products: "",
         }}
         isPending={isSendingProposal}
       />
