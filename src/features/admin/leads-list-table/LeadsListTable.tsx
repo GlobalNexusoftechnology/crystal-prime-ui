@@ -1,13 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
-import { useEffect, useState, useMemo } from "react";
 import {
   Button,
+  DatePicker,
+  DeleteModal,
   Dropdown,
   SearchBar,
-  Table,
-  DatePicker,
-  SimpleDropdown,
   SendProposalModal,
+  SimpleDropdown,
+  Table,
 } from "@/components";
 import {
   EAction,
@@ -18,26 +20,25 @@ import {
   leadsListColumn,
 } from "@/constants";
 import { ExportIcon } from "@/features";
-import { EditLeadModal, LeadDetailModal } from "./components";
 import {
   IDeleteLeadResponse,
+  useAllDropdownDataQuery,
   useAllLeadDownloadExcelQuery,
   useAllLeadsListQuery,
+  useAuthStore,
   useDeleteLeadMutation,
   useLeadDetailQuery,
   useLeadDownloadTemplateExcelQuery,
-  useAuthStore,
   useSendProposalMutation,
-  useAllDropdownDataQuery,
 } from "@/services";
 import { downloadBlobFile, formatDate, IApiError } from "@/utils";
+import { useDebounce, usePermission } from "@/utils/hooks";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import { FiPlus, FiX } from "react-icons/fi";
 import { ImDownload2 } from "react-icons/im";
-import { usePermission } from "@/utils/hooks";
-import { useDebounce } from "@/utils/hooks";
-import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
-import { DeleteModal } from "@/components";
+import { EditLeadModal, LeadDetailModal } from "./components";
 
 interface LeadsListTableProps {
   setAddLeadModalOpen: (arg0: boolean) => void;
