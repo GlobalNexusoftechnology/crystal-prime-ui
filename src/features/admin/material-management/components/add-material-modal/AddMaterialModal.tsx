@@ -42,23 +42,21 @@ export interface IAddStaffFormValues {
 }
 
 const validationSchema = Yup.object({
-  code: Yup.string().required("Code is required"),
-  materialName: Yup.string().required("Inventory  Name is required"),
-  brand: Yup.string().required("Brand is required"),
-  size: Yup.string().required("Size is required"),
-  uom: Yup.string().required("UOM is required"),
-  pressure: Yup.string().required("Pressure is required"),
-  hsn: Yup.string().required("HSN is required"),
-  qty: Yup.string().required("Quantity is required"),
-  type: Yup.string().required("Type is required"),
-  gst: Yup.string().required("GST is required"),
-  purchasePrice: Yup.string().required("Purchase Price is required"),
-  salesPrice: Yup.string().required("Sales Price is required"),
-  salesDescription: Yup.string().required("Sales Description is required"),
-  purchaseDescription: Yup.string().required(
-    "Purchase Description is required"
-  ),
-  alias: Yup.string().required("Alias is required"),
+  code: Yup.string().optional(),
+  materialName: Yup.string().optional(),
+  brand: Yup.string().optional(),
+  size: Yup.string().optional(),
+  uom: Yup.string().optional(),
+  pressure: Yup.string().optional(),
+  hsn: Yup.string().optional(),
+  qty: Yup.string().optional(),
+  type: Yup.string().optional(),
+  gst: Yup.string().optional(),
+  purchasePrice: Yup.string().optional(),
+  salesPrice: Yup.string().optional(),
+  salesDescription: Yup.string().optional(),
+  purchaseDescription: Yup.string().optional(),
+  alias: Yup.string().optional(),
   Upload: Yup.array()
     .of(
       Yup.mixed()
@@ -72,7 +70,7 @@ const validationSchema = Yup.object({
           return value instanceof File ? value.size <= 5 * 1024 * 1024 : true;
         })
     )
-    .max(10, "You can upload up to 10 files"),
+    .max(10, "You can upload up to 10 files").optional(),
 });
 
 export function AddMaterialModal({
