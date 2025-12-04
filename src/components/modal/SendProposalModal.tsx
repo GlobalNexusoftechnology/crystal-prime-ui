@@ -190,10 +190,10 @@ export interface IProposal {
   proposalDate: string;
   proposalNumber: string;
   proposalText: string;
+  productsText?: string
   subtotal?: number,
   taxPercent?: number,
   finalAmount?: number,
-  products?: string
 }
 
 // export ProductRow so parent can reuse the type
@@ -209,9 +209,10 @@ export interface SendProposalModalProps {
   onClose: () => void;
   // now accepts products array as the second argument
   onSubmit: (values: IProposal, products: ProductRow[],
-    subtotal: any,
-    taxPercent: any,
-    finalAmount: any,
+    subtotal?: any,
+    taxPercent?: any,
+    finalAmount?: any,
+
   ) => Promise<void> | void;
   initialValues: IProposal;
   isPending?: boolean;
@@ -296,13 +297,13 @@ export function SendProposalModal({
   };
 
   const subtotal = productRows.reduce((acc, row) => {
-  const price = Number(row.salePrice) || 0; // safer than parseFloat + ||
-  return acc + price;
-}, 0);
+    const price = Number(row.salePrice) || 0; // safer than parseFloat + ||
+    return acc + price;
+  }, 0);
 
-const taxRate = Number(taxPercent) || 0;
-const taxAmount = (subtotal * taxRate) / 100;
-const finalAmount = subtotal + taxAmount;
+  const taxRate = Number(taxPercent) || 0;
+  const taxAmount = (subtotal * taxRate) / 100;
+  const finalAmount = subtotal + taxAmount;
 
   const formik = useFormik({
     initialValues: {
@@ -310,7 +311,7 @@ const finalAmount = subtotal + taxAmount;
         initialValues.proposalDate || new Date().toISOString().split("T")[0],
       proposalNumber: initialValues.proposalNumber || "",
       proposalText: initialValues.proposalText || "",
-      products: initialValues.products || "",
+      productsText: initialValues.productsText || "",
     },
     validationSchema: Yup.object().shape({
       proposalDate: Yup.string().required("Proposal date is required"),
@@ -318,7 +319,7 @@ const finalAmount = subtotal + taxAmount;
         .trim()
         .required("Proposal number is required"),
       proposalText: Yup.string().required("Proposal text is required"),
-      products: Yup.string().optional(),
+      productsText: Yup.string().optional(),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -327,6 +328,7 @@ const finalAmount = subtotal + taxAmount;
         subtotal,
         taxPercent,
         finalAmount,
+
       );
 
       // optional: log product rows
@@ -337,7 +339,7 @@ const finalAmount = subtotal + taxAmount;
           proposalDate: new Date().toISOString().split("T")[0],
           proposalNumber: "",
           proposalText: "",
-          products: ""
+          productsText: ""
         },
       });
 
@@ -355,7 +357,7 @@ const finalAmount = subtotal + taxAmount;
           proposalDate: new Date().toISOString().split("T")[0],
           proposalNumber: "",
           proposalText: "",
-          products: ""
+          productsText: ""
         },
       });
       setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "" }]);
@@ -513,46 +515,46 @@ const finalAmount = subtotal + taxAmount;
             Products
           </label>
           <textarea
-            name="products"
+            name="productsText"
             placeholder="Enter products"
-            value={formik.values.products}
+            value={formik.values.productsText}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             rows={6}
-            className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${formik.touched.products && formik.errors.products ? "border-red-500" : ""
+            className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${formik.touched.productsText && formik.errors.productsText ? "border-red-500" : ""
               }`}
           />
-          {formik.touched.products && formik.errors.products && (
+          {formik.touched.productsText && formik.errors.productsText && (
             <p className="mt-1 text-sm text-red-600">
-              {formik.errors.products}
+              {formik.errors.productsText}
             </p>
           )}
         </div>
 
         {/* Totals Section */}
-      {/* Totals Section */}
-<div className="border p-4 rounded-md bg-white flex flex-col gap-4">
-  <div className="flex justify-between">
-    <span className="font-medium">Subtotal:</span>
-    <span>₹ {subtotal.toFixed(2)}</span>
-  </div>
+        {/* Totals Section */}
+        <div className="border p-4 rounded-md bg-white flex flex-col gap-4">
+          <div className="flex justify-between">
+            <span className="font-medium">Subtotal:</span>
+            <span>₹ {subtotal.toFixed(2)}</span>
+          </div>
 
-  <div className="flex justify-between items-center">
-    <label className="font-medium">Tax (%)</label>
-    <input
-      type="number"
-      value={taxPercent}
-      onChange={(e) => setTaxPercent(Number(e.target.value) || 0)}
-      className="w-32 px-3 py-2 border rounded-md"
-      placeholder="0"
-    />
-  </div>
+          <div className="flex justify-between items-center">
+            <label className="font-medium">Tax (%)</label>
+            <input
+              type="number"
+              value={taxPercent}
+              onChange={(e) => setTaxPercent(Number(e.target.value) || 0)}
+              className="w-32 px-3 py-2 border rounded-md"
+              placeholder="0"
+            />
+          </div>
 
-  <div className="flex justify-between">
-    <span className="font-medium">Final Amount:</span>
-    <span className="text-lg font-semibold">₹ {finalAmount.toFixed(2)}</span>
-  </div>
-</div>
+          <div className="flex justify-between">
+            <span className="font-medium">Final Amount:</span>
+            <span className="text-lg font-semibold">₹ {finalAmount.toFixed(2)}</span>
+          </div>
+        </div>
 
 
         {/* Actions */}

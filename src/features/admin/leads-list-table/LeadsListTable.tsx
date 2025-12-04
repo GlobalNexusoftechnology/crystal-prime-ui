@@ -101,14 +101,13 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const handleSendProposal = async (
     proposalData: {
-      proposalDate: string; proposalNumber: string; proposalText: string
+      proposalDate: string; proposalNumber: string; proposalText: string, productsText?: string,
     },
-
     productRows: ProductRow[],
-    products?: string,
-    subtotal?: number,
-    taxPercent?: number,
-    finalAmount?: number
+    
+    subtotal?: any,
+    taxPercent?: any,
+    finalAmount?: any
   ) => {
     try {
       if (!selectedLeadForProposal?.id) {
@@ -140,7 +139,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       // Final payload structure (adjust if your API expects different keys)
       const payload = {
         ...proposalData,
-        productsText: products,
+        // productsText: proposalData.products,
         subtotal: subtotal,
         taxPercent: taxPercent,
         finalAmount: finalAmount,
@@ -725,7 +724,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           proposalDate: new Date().toISOString().split("T")[0],
           proposalNumber: "",
           proposalText: "",
-          products: "",
+          productsText: "",
         }}
         isPending={isSendingProposal}
       />
