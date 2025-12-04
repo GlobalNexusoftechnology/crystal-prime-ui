@@ -40,6 +40,7 @@ export function Step1BasicInfo({
   const isAdmin = (activeSession?.user?.role.role ?? "").toLowerCase() === "admin";
   const isMilestoneSelected = values.milestoneOption === "milestone";
   const isTemplateSelected = values.milestoneOption === "template";
+console.log(clientOptions);
 
   // Fetch lead/project types
   // const { allTypesData } = useAllTypesQuery();
