@@ -13,6 +13,7 @@ import {
 } from "@/constants/tables/material-management-list";
 import { useDeleteMaterialMutation } from "@/services/apis/clients/community-client/query-hooks/useDeleteMaterialMutation";
 import { useChangeMaterialStatusMutation } from "@/services/apis/clients/community-client/query-hooks/useChangeMaterialStatusMutation";
+import { MaterialHistoryTab } from "@/features/admin/inventory-management/inventory-management";
 
 export function MaterialListTable({
   onEdit,
@@ -35,7 +36,8 @@ export function MaterialListTable({
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [materialToDelete, setMaterialToDelete] =
     useState<IMaterialManagementProps | null>(null);
-
+const [openTab, setOpenTab] = useState(false);
+const [id, setId] = useState("")
   const { onDeleteMaterial, isPending } = useDeleteMaterialMutation({
     onSuccessCallback: (res) => {
       toast.success(res?.message || "Inventory  deleted successfully");
@@ -60,6 +62,8 @@ export function MaterialListTable({
         toast.error(err?.message || "Error updating status");
       },
     });
+
+    const closeTab = () => setOpenTab(false)
 
   // Use the data passed as props
   const normalizedData: IMaterialManagementProps[] = data || [];
@@ -93,6 +97,12 @@ export function MaterialListTable({
 
   const actions: ITableAction<IMaterialManagementProps>[] = [
     {
+      label:"Manage Inventory",
+       onClick: (row) => {setOpenTab(true);
+        setId(row.id)
+       }
+    },
+    {
       label: "Edit",
       onClick: (row) => {
         onEdit(row);
@@ -111,6 +121,7 @@ export function MaterialListTable({
   if (normalizedData.length === 0)
     return <div className="text-center py-10  ">No inventory found.</div>;
 
+  const datahistory = normalizedData.find((data) => data.id === id)
   return (
     <>
       <Table
@@ -136,6 +147,9 @@ export function MaterialListTable({
         itemName={materialToDelete?.name || ""}
         isLoading={isPending}
       />
+      {
+        openTab && <MaterialHistoryTab data={datahistory} onClose={closeTab} />
+      }
     </>
   );
 }
