@@ -1,5 +1,6 @@
 import { IUser } from "@/services/stores/auth-store/types";
 import { IApiError } from "@/utils";
+import { IInventoryHistoryItem } from "@/services"; // or adjust path
 
 export interface ILoginPayload {
   email: string;
@@ -3013,4 +3014,43 @@ export interface ITodayStatusAPIResponse {
   status: boolean;
   message: string;
   data: ITodayStatusResponse;
+}
+// src/services/apis/types/inventoryHistory.types.ts
+
+
+export interface ICreateInventoryHistoryPayload {
+  material_id: string;
+  date: string;
+  used: number;
+  notes?: string | null;
+}
+
+export interface ICreateInventoryHistoryResponse {
+  message: string;
+  data: IInventoryHistoryItem;
+}
+
+export interface IDeleteInventoryHistoryResponse {
+  message: string;
+}
+
+export interface IGetInventoryHistoryByMaterialResponse {
+  message: string;
+  data: IInventoryHistoryItem[];
+}
+
+// From your services layer (example names, adjust as needed)
+export interface ICreateInventoryHistoryPayload {
+  material_id: string;
+  date: string;
+  used: number;
+  notes?: string | null;
+}
+
+export interface IInventoryHistoryItem {
+  id: string;
+  date: string;
+  used: number;
+  notes?: string | null;
+  created_at?: string;
 }

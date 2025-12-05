@@ -446,3 +446,12 @@ export const getMaterialBrandDetailByIdUrl = (id: string) => `/material-brand/${
 export const updateMaterialBrandUrl = (id: string) => `/material-brand/${id}`; //put
 export const deleteMaterialBrandUrl = (id: string) => `/material-brand/${id}`; //delete
 
+// src/services/apis/urls/inventoryHistoryUrls.ts
+
+export const createInventoryHistoryUrl = () => `/inventory-history`;
+
+export const inventoryHistoryByMaterialUrl = (materialId: string) =>
+  `/inventory-history?materialId=${materialId}`;
+
+export const deleteInventoryHistoryUrl = (id: string) =>
+  `/inventory-history/${id}`;

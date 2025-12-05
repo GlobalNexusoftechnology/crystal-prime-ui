@@ -1,19 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { ModalOverlay } from "@/components";
-import { MaterialHistory } from "@/components/material-history";
+import { InventoryHistory } from "@/components/material-history";
 import { useEffect, useRef, useState } from "react";
-import { FiPlusSquare } from "react-icons/fi";
-import { IoMdCloseCircleOutline } from "react-icons/io";
 
 interface LeadDetailsModalProps {
-    data: any;
+  data: any;
   onClose: () => void;
 }
 
 const tabs = ["History"];
 
 export function MaterialHistoryTab({ data, onClose }: LeadDetailsModalProps) {
-  const [activeTab, setActiveTab] = useState("Followups");
+  const [activeTab, setActiveTab] = useState("History");
   const [showForm, setShowForm] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,7 +35,7 @@ export function MaterialHistoryTab({ data, onClose }: LeadDetailsModalProps) {
         className="overflow-y-auto max-h-[80vh] space-y-4"
         ref={containerRef}
       >
-   
+
         <div className="flex flex-col gap-4  p-4  bg-white border  rounded-xl ">
           {/* Tabs */}
           <div className="flex justify-between items-center">
@@ -44,11 +43,10 @@ export function MaterialHistoryTab({ data, onClose }: LeadDetailsModalProps) {
               {tabs?.length > 0 && tabs.map((tab) => (
                 <button
                   key={tab}
-                  className={`pb-2   font-medium text-[1rem]  ${
-                    activeTab === tab
+                  className={`pb-2   font-medium text-[1rem]  ${activeTab === tab
                       ? "border-b-2 border-primary text-primary"
                       : "text-gray-500"
-                  }`}
+                    }`}
                   onClick={() => {
                     setActiveTab(tab);
                     setShowForm(false);
@@ -58,19 +56,18 @@ export function MaterialHistoryTab({ data, onClose }: LeadDetailsModalProps) {
                 </button>
               ))}
             </div>
-        
+
           </div>
 
           {/* Tab Contents */}
           <div>
             {activeTab === "History" && (
-              <MaterialHistory
-                leadId={data.id}
-                showForm={showForm}
-                setShowForm={setShowForm}
+              <InventoryHistory
+                materialId={data.id}
+
               />
             )}
-          
+
           </div>
 
           <div ref={bottomRef} />

@@ -205,6 +205,10 @@ import {
   IAttendanceFilters,
   IAttendanceExportFilters,
   ITodayStatusAPIResponse,
+  ICreateInventoryHistoryPayload,
+  ICreateInventoryHistoryResponse,
+  IDeleteInventoryHistoryResponse,
+  IGetInventoryHistoryByMaterialResponse,
 } from "./types";
 import {
   changePasswordUrl,
@@ -396,6 +400,9 @@ import {
   createMaterialBrandUrl,
   deleteMaterialBrandUrl,
   updateMaterialBrandUrl,
+  createInventoryHistoryUrl,
+  deleteInventoryHistoryUrl,
+  inventoryHistoryByMaterialUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -3300,6 +3307,51 @@ export class CommunityClient extends ApiClient {
     }
     return response?.data;
   };
+
+ // ➕ Create inventory history
+  public createInventoryHistory = async (
+    payload: ICreateInventoryHistoryPayload
+  ) => {
+    const response = await this.post<ICreateInventoryHistoryResponse>(
+      createInventoryHistoryUrl(),
+      payload
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  // 📄 Get all history by material
+  public getInventoryHistoryByMaterial = async (materialId: string) => {
+    const response =
+      await this.get<IGetInventoryHistoryByMaterialResponse>(
+        inventoryHistoryByMaterialUrl(materialId)
+      );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+  // ❌ Delete an entry
+  public deleteInventoryHistory = async (id: string) => {
+    const response = await this.del<IDeleteInventoryHistoryResponse>(
+      deleteInventoryHistoryUrl(id)
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
+
+
 }
 
 /**

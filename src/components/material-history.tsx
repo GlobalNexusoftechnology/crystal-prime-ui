@@ -1,190 +1,172 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { Button, DatePicker, Dropdown, InputField } from "@/components";
-import {
-  ICreateLeadFollowUpPayload,
-  ICreateLeadFollowUpResponse,
-  LeadFollowupStatus,
-  useAlLeadFollowUpQuery,
-  useAllUsersQuery,
-  useAuthStore,
-  useCreateLeadFollowUpMutation,
-} from "@/services";
-import { formatDate, formatIndiaTime, IApiError } from "@/utils";
 import { useQueryClient } from "@tanstack/react-query";
+import { useFormik } from "formik";
 import toast from "react-hot-toast";
+import * as Yup from "yup";
+import { Button, DatePicker, InputField, Table } from "@/components";
+import { IApiError } from "@/utils";
+import { IInventoryHistoryTableColumns } from "./inventory-history.columns";
+import { ICreateInventoryHistoryPayload, IInventoryHistoryItem } from "@/services";
+import { useCreateInventoryHistoryMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateInventoryHistoryMutation";
+import { useDeleteInventoryHistoryMutation } from "@/services/apis/clients/community-client/query-hooks/useDeleteInventoryHistoryMutation";
+import { useInventoryHistoryByMaterialQuery } from "@/services/apis/clients/community-client/query-hooks/useInventoryHistoryByMaterialQuery";
+import { useAllMaterialsQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialsQuery";
 
-// Fixing validationSchema field names to match Formik fields
 const validationSchema = Yup.object().shape({
-  lead_id: Yup.string().required("Lead ID is required"),
-  due_date: Yup.string().required("Next follow-up date is required"),
-  status: Yup.string().oneOf(
-    Object.values(LeadFollowupStatus),
-    "Invalid status"
-  ),
-  user_id: Yup.string().required("Assignee is required"),
-  remarks: Yup.string().required("Remark is required"),
+  date: Yup.string().required("Date is required"),
+  used: Yup.number()
+    .typeError("Used quantity must be a number")
+    .min(0, "Used quantity cannot be negative")
+    .required("Used quantity is required"),
+  notes: Yup.string().optional(),
 });
 
-interface IFollowupsProps {
-  showForm: boolean;
-  setShowForm: (val: boolean) => void;
-  leadId: string;
+interface IInventoryHistoryProps {
+  materialId: string;
 }
 
-export function MaterialHistory({ leadId, showForm, setShowForm }: IFollowupsProps) {
+export function InventoryHistory({ materialId }: IInventoryHistoryProps) {
   const queryClient = useQueryClient();
-  const { data: followupData, LeadFollowUp } = useAlLeadFollowUpQuery(leadId);
-  const { allUsersData } = useAllUsersQuery();
-  const { activeSession } = useAuthStore();
-  const userId = activeSession?.user?.id;
 
-  const { createLeadFollowUp } = useCreateLeadFollowUpMutation({
-    onSuccessCallback: (response: ICreateLeadFollowUpResponse) => {
-      console.log("Lead follow-up created successfully", response);
-      toast.success(response.message);
+    const { fetchAllMaterials } = useAllMaterialsQuery();
+  
+
+  // 🔁 Fetch list for this material
+  const { data: historyData, refetch } =
+    useInventoryHistoryByMaterialQuery(materialId);
+
+  // ➕ Create mutation
+  const { createInventoryHistory } = useCreateInventoryHistoryMutation({
+    onSuccessCallback: () => {
+      toast.success("Inventory history created");
       formik.resetForm();
-      setShowForm(false);
-      LeadFollowUp();
-      queryClient.invalidateQueries({ queryKey: ["leads-list-query-key"] });
+      refetch();
+      queryClient.invalidateQueries({
+        queryKey: ["materials-list-query-key"],
+      });
     },
     onErrorCallback: (err: IApiError) => {
       toast.error(err.message);
     },
   });
 
-  const formik = useFormik<ICreateLeadFollowUpPayload>({
-    initialValues: {
-      lead_id: leadId,
-      due_date: "",
-      status: "",
-      user_id: userId,
-      remarks: "",
+  // ❌ Delete mutation (optional)
+  const { deleteInventoryHistory } = useDeleteInventoryHistoryMutation({
+    onSuccessCallback: () => {
+      toast.success("Entry deleted");
+      refetch();
     },
-    validationSchema,
-    onSubmit: async (values) => {
-      if (!leadId) {
-        toast.error("Lead ID is missing");
-        return;
-      }
-      await createLeadFollowUp({ ...values, lead_id: leadId });
+    onErrorCallback: (err: IApiError) => {
+      toast.error(err.message);
     },
   });
+const formik = useFormik<ICreateInventoryHistoryPayload>({
+  initialValues: {
+    material_id: materialId,
+    date: "",
+    used: 0,
+    notes: "",
+  },
+  enableReinitialize: true,
+  validationSchema,
+  onSubmit: async (values) => {
+    if (!materialId) {
+      toast.error("Material ID is missing");
+      return;
+    }
 
-  const statusOptions = Object?.entries(LeadFollowupStatus)?.map(([, value]) => ({
-    label: value,
-    value,
-  }));
+    try {
+      await createInventoryHistory({
+        ...values,
+        material_id: materialId,
+      });
 
-  const userOptions =
-    allUsersData?.data?.list?.map((user) => ({
-      label: `${user?.first_name} ${user?.last_name}`,
-      value: user?.id.toString(),
-    })) || [];
+      fetchAllMaterials(); // ✅ runs ONLY after API success
+      toast.success("Inventory history created");
+      formik.resetForm();
+    } catch (err: any) {
+      // mutateAsync throws on error
+      toast.error(err?.message || "Failed to create inventory history");
+    }
+  },
+});
+
+
+  const inventoryHistoryActions = [
+    {
+      label: "Delete",
+      variant: "danger",
+      onClick: (row: IInventoryHistoryItem) => {
+        if (!row.id) return;
+        deleteInventoryHistory(row.id);
+      },
+    },
+  ];
+
+  const list: IInventoryHistoryItem[] = historyData?.data || [];
 
   return (
-    <div className="flex flex-col gap-4 ">
-      {showForm ? (
-        <form
-          onSubmit={formik.handleSubmit}
-          className="flex flex-col gap-6  bg-customGray border  p-3  rounded-md  space-y-1 mb-3 "
-        >
-          <div className="flex flex-col md:flex-row gap-4 ">
-            <Dropdown
-              label="Status"
-              options={statusOptions}
-              value={formik.values.status}
-              onChange={(val) => formik.setFieldValue("status", val)}
-              error={formik.touched.status ? formik.errors.status : undefined}
-            />
-            <Dropdown
-              label="Assigned To"
-              options={userOptions}
-              value={formik.values.user_id?.toString() || ""}
-              onChange={(val) => formik.setFieldValue("user_id", val)}
-              error={formik.touched.user_id ? formik.errors.user_id : undefined}
-            />
-          </div>
+    <div className="flex flex-col gap-4 mt-4">
+      {/* 👉 Form */}
+      <form
+        onSubmit={formik.handleSubmit}
+        className="flex flex-col gap-4 bg-customGray border p-3 rounded-md mb-3"
+      >
+        <div className="flex flex-col md:flex-row gap-4">
+          <DatePicker
+            label="Date"
+            value={formik.values.date}
+            onChange={(date) => formik.setFieldValue("date", date)}
+            placeholder="Select date"
+            error={formik.touched.date ? formik.errors.date : undefined}
+            minDate={new Date().toISOString().slice(0, 10)}
+          />
+
           <InputField
-            label="Remarks"
-            name="remarks"
-            placeholder="Enter remarks"
-            value={formik.values.remarks}
+            label="Used Quantity"
+            name="used"
+            type="number"
+            placeholder="Enter used quantity"
+            value={formik.values.used}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.remarks ? formik.errors.remarks : undefined}
+            error={formik.touched.used ? (formik.errors.used as string) : undefined}
           />
-          <DatePicker
-            label="Next Followup Date"
-            value={`${formik.values.due_date}`}
-            onChange={(date) => formik.setFieldValue("due_date", date)}
-            placeholder="Next Followup Date"
-            minDate={new Date().toISOString().slice(0, 10)}
-            error={formik.touched.due_date ? formik.errors.due_date : undefined}
+        </div>
+
+        <InputField
+          label="Notes"
+          name="notes"
+          placeholder="Enter notes"
+          value={formik.values.notes || ""}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.touched.notes ? formik.errors.notes : undefined}
+        />
+
+        <div className="flex justify-end gap-3">
+          <Button
+            type="button"
+            title="Reset"
+            variant="primary-outline"
+            onClick={() => formik.resetForm()}
           />
-          <div className="flex items-center gap-4 ">
-            <Button
-              title="Cancel"
-              variant="primary-outline"
-              type="button"
-              onClick={() => setShowForm(false)}
-              width="w-full"
-            />
-            <Button title="Submit followup" type="submit" width="w-full" />
-          </div>
-        </form>
-      ) : (
-        followupData?.map((followup, idx) => (
-          <div
-            key={idx}
-            className="flex flex-col gap-2 md:gap-6  bg-customGray border  p-3  rounded-md  space-y-1 mb-3 "
-          >
-            <div className="flex flex-col gap-2 ">
-              <div className="text-darkBlue flex justify-between items-center gap-4 ">
-                <div className="flex flex-col md:flex-row gap-2  underline">
-                  <p className="text-[1rem] ">Assigned To:</p>
-                  <p className="text-[1rem] ">{`${followup?.user?.first_name} ${followup?.user?.last_name}`}</p>
-                </div>
-                <div className="flex flex-col md:flex-row gap-2  underline">
-                  <p className="text-[1rem] ">Status:</p>
-                  <p className="text-[1rem] ">
-                    {followup?.status}
-                  </p>
-                </div>
-              </div>
-              <h1 className="text-[1rem] ">
-                {followup?.remarks}
-              </h1>
-            </div>
-            <div className="flex justify-between flex-col md:flex-row flex-wrap gap-4">
-              <div className="flex flex-col md:flex-row gap-2  underline">
-                <p className="text-[1rem] ">Due:</p>
-                <p className="text-[1rem] ">
-                  {formatDate(`${followup?.due_date}`)}
-                </p>
-              </div>
-              <div className="flex flex-col text-lightGreen md:flex-row gap-2  underline">
-                <p className="text-[1rem] ">Created At</p>
-                <p className="text-[1rem] ">
-                  {formatIndiaTime(`${followup?.created_at}`, "toReadable")}
-                </p>
-              </div>
-              {followup?.completed_date ? (
-                <div className="text-lightGreen flex flex-col md:flex-row gap-2  underline">
-                  <p className="text-[1rem] ">Completed:</p>
-                  <p className="text-[1rem] ">
-                    {formatIndiaTime(
-                      `${followup?.completed_date}`,
-                      "toReadable"
-                    )}
-                  </p>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        ))
-      )}
+          <Button type="submit" title="Add History" />
+        </div>
+      </form>
+
+      {/* 👉 Table */}
+      <div className="w-full mt-2">
+        <Table
+          data={list}
+          columns={IInventoryHistoryTableColumns}
+          actions={inventoryHistoryActions}
+          // Add pagination props if your hook returns them
+          // paginationData={paginationData}
+          // onPageChange={setCurrentPage}
+        />
+      </div>
     </div>
   );
 }
