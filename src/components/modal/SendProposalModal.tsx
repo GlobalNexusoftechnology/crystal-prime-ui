@@ -178,11 +178,13 @@
 //     </ModalOverlay>
 //   );
 // }
+
 "use client";
 
 import { Button, DatePicker, InputField, ModalOverlay } from "@/components";
 import { useAllMaterialsQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialsQuery";
 import { useFormik } from "formik";
+import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
 
@@ -268,23 +270,28 @@ export function SendProposalModal({
     setProductRows((prev) =>
       prev.map((r) => {
         if (r.id !== rowId) return r;
+
         if (!materialId) {
-          // clearing selection
           return { ...r, materialId: "", name: "", salePrice: "" };
         }
+
+        // 🔥 If custom product selected
+        if (materialId === "custom") {
+          return { ...r, materialId: "custom", name: "", salePrice: "" };
+        }
+
         const selected = materials.find((m: any) => m.id === materialId);
-        const salePrice =
-          selected && (selected.sales_price ?? selected.sales_price ?? "");
-        const name = selected && (selected.name ?? "");
+
         return {
           ...r,
           materialId,
-          name: name || "",
-          salePrice: salePrice != null ? String(salePrice) : "",
+          name: selected?.name ?? "",
+          salePrice: selected?.sales_price ? String(selected.sales_price) : "",
         };
       })
     );
   };
+
 
   // Handle manual sale price edit
   const handleSalePriceChange = (rowId: string, value: string) => {
@@ -451,40 +458,65 @@ export function SendProposalModal({
           </div>
 
           <div className="flex flex-col gap-3">
-            {productRows.map((row, idx) => (
+            {productRows.map((row) => (
               <div key={row.id} className="grid grid-cols-12 gap-3 items-end">
+
                 {/* Dropdown (select) */}
                 <div className="col-span-5">
                   <label className="block text-xs font-medium text-gray-700 mb-1">Item</label>
                   <select
                     value={row.materialId ?? ""}
-                    onChange={(e) => handleSelectMaterial(row.id, e.target.value || undefined)}
+                    onChange={(e) => handleSelectMaterial(row.id, e.target.value)}
                     className="w-full px-3 py-2 border rounded-md focus:outline-none"
                   >
                     <option value="">Select item</option>
+
                     {materials.map((m: any) => (
                       <option key={m.id} value={m.id}>
                         {m.name}
                       </option>
                     ))}
+
+                    {/* 🔥 Custom option */}
+                    <option value="custom">➕ Custom Product</option>
                   </select>
                 </div>
 
-                {/* Name (readOnly, populated from selected material) */}
-                {/* <div className="col-span-4">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
-                  <input
-                    type="text"
-                    value={row.name}
-                    readOnly
-                    placeholder="Selected name"
-                    className="w-full px-3 py-2 border rounded-md bg-gray-100"
-                  />
-                </div> */}
+                {/* If custom product → editable input */}
+                {row.materialId === "custom" ? (
+                  <div className="col-span-4">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Custom Name</label>
+                    <input
+                      type="text"
+                      value={row.name}
+                      onChange={(e) =>
+                        setProductRows((prev) =>
+                          prev.map((r) =>
+                            r.id === row.id ? { ...r, name: e.target.value } : r
+                          )
+                        )
+                      }
+                      placeholder="Enter custom product name"
+                      className="w-full px-3 py-2 border rounded-md"
+                    />
+                  </div>
+                ) : (
+                  /* Normal Name (read-only) */
+                  <div className="col-span-4">
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
+                    <input
+                      type="text"
+                      value={row.name}
+                      readOnly
+                      placeholder="Selected item name"
+                      className="w-full px-3 py-2 border rounded-md bg-gray-100"
+                    />
+                  </div>
+                )}
 
-                {/* Sale Price (editable) */}
+                {/* Price */}
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Sale Price</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Price</label>
                   <input
                     type="text"
                     value={row.salePrice}
@@ -494,19 +526,19 @@ export function SendProposalModal({
                   />
                 </div>
 
-                {/* Remove button */}
+                {/* Remove */}
                 <div className="col-span-1 flex items-center">
                   <button
                     type="button"
                     onClick={() => removeRow(row.id)}
                     className="m-auto text-sm text-red-600 hover:underline"
-                    aria-label={`Remove product row ${idx + 1}`}
                   >
-                    Remove
+                      <X className="w-5 h-5" />
                   </button>
                 </div>
               </div>
             ))}
+
           </div>
         </div>
 
