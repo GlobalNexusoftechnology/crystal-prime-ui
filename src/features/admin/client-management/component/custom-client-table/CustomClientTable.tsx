@@ -1,21 +1,18 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import toast from "react-hot-toast";
 import {
-  FiChevronDown,
-  FiChevronUp,
   FiMoreVertical,
   FiSave,
-  FiX,
+  FiX
 } from "react-icons/fi";
-import toast from "react-hot-toast";
-import React from "react";
 
-import { clientContactDetailsColumns, clientListColumn } from "@/constants";
 import { ActionDropdown } from "@/components";
-import { useUpdateClientDetailMutation, useDeleteClientDetailMutation, IClientList } from "@/services";
-import { formatDateToDDMMYYYY } from "@/utils";
 import { Pagination } from "@/components/table/components";
+import { clientContactDetailsColumns, clientListColumn } from "@/constants";
+import { IClientList, useDeleteClientDetailMutation, useUpdateClientDetailMutation } from "@/services";
+import { formatDateToDDMMYYYY } from "@/utils";
 
 interface EditContactData {
   contact_person: string;
@@ -129,10 +126,10 @@ export function CustomClientTable({
     setEditContact(null); // Close edit mode when changing pages
   };
 
-  const handleRowClick = (id: string) => {
-    setExpandedRowId(expandedRowId === id ? null : id);
-    setEditContact(null);
-  };
+  // const handleRowClick = (id: string) => {
+  //   setExpandedRowId(expandedRowId === id ? null : id);
+  //   setEditContact(null);
+  // };
 
   const handleEditContact = (
     clientId: string,
@@ -215,13 +212,13 @@ export function CustomClientTable({
                 >
                   <td className="px-6  py-4  text-[0.9rem]  border border-gray-300">
                     <div className="flex items-center gap-2 ">
-                      <button onClick={() => handleRowClick(row.id)}>
+                      {/* <button onClick={() => handleRowClick(row.id)}>
                         {expandedRowId === row.id ? (
                           <FiChevronUp className="w-4 h-4  " />
                         ) : (
                           <FiChevronDown className="w-4 h-4  " />
                         )}
-                      </button>
+                      </button> */}
                       <ActionDropdown
                         className=" w-[15rem] "
                         options={actions(row)?.map((action) => ({

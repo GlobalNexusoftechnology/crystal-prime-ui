@@ -7,6 +7,7 @@ import {
   ReportIcon,
   SettingsIcon,
   StaffManagementIcon,
+  UserListRoundedIcon
 } from "@/features";
 import { MaterialIcon } from "@/features/icons/MaterialIcon";
 import { LuTicket } from "react-icons/lu";
@@ -135,13 +136,13 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
       },
     ],
   },
-  // {
-  //   path: "/admin/client-management",
-  //   name: "Clients",
-  //   icon: <UserListRoundedIcon />,
-  //   activeIcon: <UserListRoundedIcon color="#221F21" />,
-  //   permission: { module: "CLIENT_MANAGEMENT", actions: "VIEW" },
-  // },
+  {
+    path: "/admin/client-management",
+    name: "Clients",
+    icon: <UserListRoundedIcon />,
+    activeIcon: <UserListRoundedIcon color="#221F21" />,
+    permission: { module: "CLIENT_MANAGEMENT", actions: "VIEW" },
+  },
   // {
   //   path: "/admin/ei-log-management",
   //   name: "EI Logs",

@@ -77,7 +77,7 @@ export const MODULES: TOptionItem[] = [
   { key: EModule.ROLES, label: "Roles Module", value: "16" },
   { key: EModule.SETTINGS, label: "Settings Module", value: "17" },
   { key: EModule.LEAD_TYPES, label: "Lead Types Module", value: "18" },
-
+  { key: EModule.CLIENT_MANAGEMENT, label: "Client Management Module", value: "19" },
   {
     key: EModule.PROJECT_TEMPLATE,
     label: "Project Template Module",

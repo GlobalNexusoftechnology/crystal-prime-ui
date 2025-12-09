@@ -1,11 +1,9 @@
 "use client";
 
-import { useFormik, FieldArray, FormikProvider, getIn } from "formik";
-import * as Yup from "yup";
 import { Button, InputField, ModalOverlay } from "@/components";
-import { IUpdateClientPayload, useCreateClientMutation } from "@/services";
-import { IClientList } from "@/services";
-import { AddSquareIcon } from "@/features";
+import { IClientList, IUpdateClientPayload, useCreateClientMutation } from "@/services";
+import { FormikProvider, useFormik } from "formik";
+import * as Yup from "yup";
 
 interface AddClientModalProps {
   onClose: () => void;
@@ -29,14 +27,14 @@ export function AddClientModal({
         onClose();
         clientRefech();
       },
-      onErrorCallback: () => {},
+      onErrorCallback: () => { },
     });
 
-  const handleVisibleOtherContact = (index: number) => {
-    const updated = [...formik.values.client_details];
-    updated[index]._showOtherContact = true;
-    formik.setFieldValue("client_details", updated);
-  };
+  // const handleVisibleOtherContact = (index: number) => {
+  //   const updated = [...formik.values.client_details];
+  //   updated[index]._showOtherContact = true;
+  //   formik.setFieldValue("client_details", updated);
+  // };
 
   const formik = useFormik({
     initialValues: {
@@ -50,31 +48,43 @@ export function AddClientModal({
       gst_number: selectedClient?.gst_number || "",
       client_details: Array.isArray(selectedClient?.client_details) && selectedClient.client_details.length > 0
         ? selectedClient.client_details.map((c) => ({
-            ...c,
-            _showOtherContact: false,
-          }))
+          ...c,
+          _showOtherContact: false,
+        }))
         : [],
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Customer name is required"),
-      company_name: Yup.string().required("Company name is required"),
-      address: Yup.string().required("Address is required"),
+
+      company_name: Yup.string().optional(),
+
+      address: Yup.string().optional(),
+
       website: Yup.string()
         .matches(
           /^$|^[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
           "Invalid website URL"
         )
+        .optional()
         .nullable(),
-      contact_person: Yup.string().required("Contact person is required"),
-      contact_number: Yup.string().required("Phone number is required"),
-      email: Yup.string().email("Invalid email").required("Email is required"),
+
+      contact_person: Yup.string().optional(),
+
+      contact_number: Yup.string().optional(),
+
+      email: Yup.string()
+        .email("Invalid email")
+        .optional(),
+
       gst_number: Yup.string()
         .matches(
           /^$|^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
           "Invalid GST number"
         )
+        .optional()
         .nullable(),
     }),
+
     onSubmit: (values) => {
       if (isEditMode && selectedClient && onUpdateClient) {
         onUpdateClient({ id: selectedClient.id, payload: values });
@@ -175,7 +185,7 @@ export function AddClientModal({
               placeholder="Enter email address"
             />
           </div>
-          <FieldArray
+          {/* <FieldArray
             name="client_details"
             render={(arrayHelpers) => (
               <div className="flex flex-col gap-4 ">
@@ -263,7 +273,7 @@ export function AddClientModal({
                       />
                     </div>
                     {/* Other Contact No - show only if toggled */}
-                    {contact._showOtherContact ? (
+                    {/* {contact._showOtherContact ? (
                       <InputField
                         label="Other Contact No"
                         name={`client_details.${index}.other_contact`}
@@ -282,10 +292,10 @@ export function AddClientModal({
                           <span>Add Other Contact No</span>
                         </span>
                       </button>
-                    )}
-                  </div>
-                ))}
-                <button
+                    )} */}
+                  {/* </div>
+                ))} */}
+                {/* <button
                   type="button"
                   className="flex items-center gap-2 mt-2"
                   onClick={() =>
@@ -304,10 +314,10 @@ export function AddClientModal({
                     <AddSquareIcon className="w-6  h-6 " />
                     <span>Add Client Contact</span>
                   </span>
-                </button>
-              </div>
-            )}
-          />
+                </button> */}
+              {/* </div> */}
+            {/* )} */}
+          {/* /> */} 
           <div className="flex justify-end gap-4 mt-auto pt-4">
             <Button
               title="Cancel"

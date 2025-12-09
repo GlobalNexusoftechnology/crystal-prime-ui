@@ -81,6 +81,7 @@ const initialValues: IAddProjectFormValues = {
   milestoneOption: "milestone",
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getValidationSchema = (isAdmin: boolean) =>
   Yup.object({
     name: Yup.string()
@@ -89,21 +90,22 @@ const getValidationSchema = (isAdmin: boolean) =>
         /^[a-zA-Z0-9 .,'-]*$/,
         "No special characters allowed in Project Name."
       ),
-    project_type: Yup.string().required("Project Type is required"),
-    client_id: Yup.string().required("Client is required"),
-    description: Yup.string().required("Description is required"),
+    project_type: Yup.string().optional(),
+    client_id: Yup.string().optional(),
+    description: Yup.string().optional(),
     start_date: Yup.date()
       .typeError("Estimated Start Date is required")
-      .required("Estimated Start Date is required"),
+      .optional(),
     end_date: Yup.date()
       .typeError("Estimated End Date is required")
-      .required("Estimated End Date is required"),
+      .optional(),
     budget: (isAdmin
       ? Yup.number().typeError("Budget must be a number").required("Budget is required")
       : Yup.number().transform((value, originalValue) => (originalValue === "" ? undefined : value)).optional()) as Yup.NumberSchema<number | undefined>,
     estimated_cost: (isAdmin
       ? Yup.number().typeError("Estimated Cost must be a number").required("Estimated Cost is required")
       : Yup.number().transform((value, originalValue) => (originalValue === "" ? undefined : value)).optional()) as Yup.NumberSchema<number | undefined>,
+
     cost_of_labour: Yup.number()
       .typeError("Cost Of Labour must be a number")
       .optional()
@@ -122,86 +124,86 @@ const getValidationSchema = (isAdmin: boolean) =>
 function createValidate(isAdmin: boolean) {
   const schema = getValidationSchema(isAdmin);
   return function validate(values: IAddProjectFormValues) {
-  const errors: Partial<Record<keyof IAddProjectFormValues, string>> = {};
+    const errors: Partial<Record<keyof IAddProjectFormValues, string>> = {};
 
-  try {
-    const valuesForValidation = { ...values };
-    if (!values.is_renewal) {
-      valuesForValidation.renewal_date = undefined;
-      valuesForValidation.renewal_type = undefined;
-    }
-    schema.validateSync(valuesForValidation, { abortEarly: false });
-  } catch (yupError) {
-    if (
-      typeof yupError === "object" &&
-      yupError !== null &&
-      "inner" in yupError &&
-      Array.isArray((yupError as { inner: unknown }).inner)
-    ) {
-      (
-        yupError as { inner: Array<{ path?: string; message: string }> }
-      ).inner.forEach((err) => {
-        if (err.path && !errors[err.path as keyof IAddProjectFormValues]) {
-          if (
-            (err.path === "renewal_date" || err.path === "renewal_type") &&
-            !values.is_renewal
-          ) {
-            // skip
-          } else {
-            // Skip admin-only cost fields for non-admins
-            if (!isAdmin && (err.path === "budget" || err.path === "estimated_cost")) {
-              // ignore
+    try {
+      const valuesForValidation = { ...values };
+      if (!values.is_renewal) {
+        valuesForValidation.renewal_date = undefined;
+        valuesForValidation.renewal_type = undefined;
+      }
+      schema.validateSync(valuesForValidation, { abortEarly: false });
+    } catch (yupError) {
+      if (
+        typeof yupError === "object" &&
+        yupError !== null &&
+        "inner" in yupError &&
+        Array.isArray((yupError as { inner: unknown }).inner)
+      ) {
+        (
+          yupError as { inner: Array<{ path?: string; message: string }> }
+        ).inner.forEach((err) => {
+          if (err.path && !errors[err.path as keyof IAddProjectFormValues]) {
+            if (
+              (err.path === "renewal_date" || err.path === "renewal_type") &&
+              !values.is_renewal
+            ) {
+              // skip
             } else {
-              errors[err.path as keyof IAddProjectFormValues] = err.message;
+              // Skip admin-only cost fields for non-admins
+              if (!isAdmin && (err.path === "budget" || err.path === "estimated_cost")) {
+                // ignore
+              } else {
+                errors[err.path as keyof IAddProjectFormValues] = err.message;
+              }
             }
           }
-        }
-      });
-    }
-  }
-  // Custom: Prevent special characters in name only
-  const allowedPattern = /^[a-zA-Z0-9 .,'-]*$/;
-  if (values.name && !allowedPattern.test(values.name)) {
-    errors.name = "No special characters allowed in Project Name.";
-  }
-  // Custom: Estimated Cost vs Budget
-  if (isAdmin &&
-    values.estimated_cost !== undefined &&
-    values.estimated_cost !== "" &&
-    values.budget !== undefined &&
-    values.budget !== "" &&
-    Number(values.estimated_cost) > Number(values.budget)
-  ) {
-    // Do not set errors.estimated_cost here, as the user might want to proceed even if estimated cost is greater than budget.
-  }
-  // Custom: Cost of Labour + Overhead Cost vs Estimated Cost
-  const sum =
-    (Number(values.cost_of_labour) || 0) + (Number(values.overhead_cost) || 0);
-  if (isAdmin &&
-    values.estimated_cost !== undefined &&
-    values.estimated_cost !== "" &&
-    sum > Number(values.estimated_cost)
-  ) {
-    errors.cost_of_labour =
-      "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
-    errors.overhead_cost =
-      "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
-  }
-  if (values.is_renewal) {
-    if (!values.renewal_type || values.renewal_type === "NONE") {
-      errors.renewal_type = "Renewal Type is required";
-    }
-    if (!values.renewal_date) {
-      errors.renewal_date = "Renewal Date is required";
-    }
-    if (values.renewal_date) {
-      const renewalDate = new Date(values.renewal_date);
-      if (isNaN(renewalDate.getTime())) {
-        errors.renewal_date = "Invalid date";
+        });
       }
     }
-  }
-  return errors;
+    // Custom: Prevent special characters in name only
+    const allowedPattern = /^[a-zA-Z0-9 .,'-]*$/;
+    if (values.name && !allowedPattern.test(values.name)) {
+      errors.name = "No special characters allowed in Project Name.";
+    }
+    // Custom: Estimated Cost vs Budget
+    if (isAdmin &&
+      values.estimated_cost !== undefined &&
+      values.estimated_cost !== "" &&
+      values.budget !== undefined &&
+      values.budget !== "" &&
+      Number(values.estimated_cost) > Number(values.budget)
+    ) {
+      // Do not set errors.estimated_cost here, as the user might want to proceed even if estimated cost is greater than budget.
+    }
+    // Custom: Cost of Labour + Overhead Cost vs Estimated Cost
+    const sum =
+      (Number(values.cost_of_labour) || 0) + (Number(values.overhead_cost) || 0);
+    if (isAdmin &&
+      values.estimated_cost !== undefined &&
+      values.estimated_cost !== "" &&
+      sum > Number(values.estimated_cost)
+    ) {
+      errors.cost_of_labour =
+        "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
+      errors.overhead_cost =
+        "Sum of Cost of Labour and Overhead Cost cannot be greater than Estimated Cost";
+    }
+    if (values.is_renewal) {
+      if (!values.renewal_type || values.renewal_type === "NONE") {
+        errors.renewal_type = "Renewal Type is required";
+      }
+      if (!values.renewal_date) {
+        errors.renewal_date = "Renewal Date is required";
+      }
+      if (values.renewal_date) {
+        const renewalDate = new Date(values.renewal_date);
+        if (isNaN(renewalDate.getTime())) {
+          errors.renewal_date = "Invalid date";
+        }
+      }
+    }
+    return errors;
   };
 }
 
@@ -302,7 +304,7 @@ export function AddProject({
     allClientData,
     isLoading: clientLoading,
     isError: clientError,
-  } = useAllClientQuery({limit: 1000000});
+  } = useAllClientQuery({ limit: 1000000 });
 
   // Get current user from auth store
   const { activeSession } = useAuthStore();
@@ -346,7 +348,7 @@ export function AddProject({
         );
       }
     },
-    onErrorCallback: () => {},
+    onErrorCallback: () => { },
   });
 
   const { onUpdateProject } = useUpdateProjectMutation({
@@ -369,7 +371,7 @@ export function AddProject({
         clearProjectCreation();
       }
     },
-    onErrorCallback: () => {},
+    onErrorCallback: () => { },
   });
 
   const { onUploadMultipleAttachments, isPending } =
@@ -461,8 +463,8 @@ export function AddProject({
       budget: basicInfo.budget !== "" ? Number(basicInfo.budget) : undefined,
       is_renewal: basicInfo.is_renewal,
       ...(basicInfo.is_renewal &&
-      basicInfo.renewal_date &&
-      !isNaN(new Date(basicInfo.renewal_date).getTime())
+        basicInfo.renewal_date &&
+        !isNaN(new Date(basicInfo.renewal_date).getTime())
         ? { renewal_date: basicInfo.renewal_date }
         : {}),
       ...(basicInfo.is_renewal && basicInfo.renewal_type
@@ -504,6 +506,8 @@ export function AddProject({
     values: IAddProjectFormValues,
     actions: FormikHelpers<IAddProjectFormValues>
   ) => {
+    console.log("Hnadle Submit");
+
     setBasicInfo(values);
     setMilestoneOption(values.milestoneOption);
     setCurrentStep(2);
@@ -594,9 +598,8 @@ export function AddProject({
       return {
         name: file.name,
         uploaded_by: originalAttachment.uploaded_by?.first_name
-          ? `${originalAttachment.uploaded_by.first_name} ${
-              originalAttachment.uploaded_by.last_name || ""
-            }`
+          ? `${originalAttachment.uploaded_by.first_name} ${originalAttachment.uploaded_by.last_name || ""
+          }`
           : userId,
         created_at:
           originalAttachment.created_at || new Date().toLocaleString(),
@@ -615,7 +618,7 @@ export function AddProject({
     }
   });
 
-  useEffect(() => {}, [isModalOpen, createdProjectId]);
+  useEffect(() => { }, [isModalOpen, createdProjectId]);
 
 
 

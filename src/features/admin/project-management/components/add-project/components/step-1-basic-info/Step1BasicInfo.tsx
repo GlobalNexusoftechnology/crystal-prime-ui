@@ -158,24 +158,25 @@ console.log(clientOptions);
           }
           dropdownWidth="w-full"
         />
-     <InputField
-  label="Client"
-  placeholder={
-    clientLoading
-      ? "Loading..."
-      : clientError
-      ? "Error loading clients"
-      : "Enter client name"
-  }
-  value={values.client_id || ""}
-  onChange={(e) => setFieldValue("client_id", e.target.value)}
-  error={
-    touched.client_id && typeof errors.client_id === "string"
-      ? errors.client_id
-      : undefined
-  }
-  className="w-full"
-/>
+        
+     <Dropdown
+          label="Client"
+          options={
+            clientLoading
+              ? [{ label: "Loading...", value: "" }]
+              : clientError
+              ? [{ label: "Error loading clients", value: "" }]
+              : clientOptions
+          }
+          value={values.client_id || ""}
+          onChange={(val) => setFieldValue("client_id", val)}
+          error={
+            touched.client_id && typeof errors.client_id === "string"
+              ? errors.client_id
+              : undefined
+          }
+          dropdownWidth="w-full"
+        />
 
       </div>
       <InputField
