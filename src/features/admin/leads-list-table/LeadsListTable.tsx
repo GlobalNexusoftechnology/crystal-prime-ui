@@ -381,7 +381,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   // Add Send Proposal action
   leadLeadManagementAction.push({
-    label: "Send Proposal",
+    label: "Create Proposal",
     onClick: (row) => {
       setSelectedLeadForProposal(row);
       setIsSendProposalModalOpen(true);
