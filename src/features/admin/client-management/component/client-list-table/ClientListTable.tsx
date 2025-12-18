@@ -115,18 +115,7 @@ export function ClientListTable(): JSX.Element {
           setIsChangePasswordOpen(true);
         },
       });
-    } else {
-      base.push({
-        label: "Create Client Credentials",
-        onClick: () => {
-          setCredentialPrefillEmail(row.email || "");
-          setCredentialClientId(row.id || "");
-          setCredentialUserId(row.user?.id || "");
-          setIsCreateCredentialOpen(true);
-        },
-      });
-    }
-
+    } 
     return base;
   };
 

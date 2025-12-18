@@ -389,7 +389,7 @@ export function SendProposalModal({
     <ModalOverlay
       isOpen={isOpen}
       onClose={onClose}
-      modalTitle="Send Proposal"
+      modalTitle="Create Proposal"
       modalClassName="w-full md:w-[45rem] h-[95vh] max-h-[95vh] overflow-y-auto flex flex-col justify-center"
     >
       <form
