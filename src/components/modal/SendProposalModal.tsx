@@ -1,183 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// "use client";
-
-// import { useFormik } from "formik";
-// import * as Yup from "yup";
-// import { Button, ModalOverlay, DatePicker, InputField } from "@/components";
-// import { useEffect, useMemo } from "react";
-// import { useAllMaterialsQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialsQuery";
-
-// export interface IProposal {
-//   proposalDate: string;
-//   proposalNumber: string;
-//   proposalText: string;
-// }
-
-// export interface SendProposalModalProps {
-//   isOpen: boolean;
-//   onClose: () => void;
-//   onSubmit: (values: IProposal) => Promise<void> | void;
-//   initialValues: IProposal;
-//   isPending?: boolean;
-// }
-
-// export function SendProposalModal({
-//   isOpen,
-//   onClose,
-//   onSubmit,
-//   initialValues,
-//   isPending = false,
-// }: SendProposalModalProps) {
-
-//   // fetch material
-
-//     // const filters = useMemo(
-//     //   () => ({
-//     //     searchText: searchQuery,
-//     //     page: currentPage,
-//     //     limit: 10,
-//     //   }),
-//     //   [searchQuery, currentPage]
-//     // );
-
-//     const { allMaterialsData, fetchAllMaterials } = useAllMaterialsQuery();
-
-//     console.log(allMaterialsData, "allMaterialsData");
-
-//   const formik = useFormik({
-//     initialValues: {
-//       proposalDate:
-//         initialValues.proposalDate || new Date().toISOString().split("T")[0],
-//       proposalNumber: initialValues.proposalNumber || "",
-//       proposalText: initialValues.proposalText || "",
-//     },
-//     validationSchema: Yup.object().shape({
-//       proposalDate: Yup.string().required("Proposal date is required"),
-//       proposalNumber: Yup.string()
-//         .trim()
-//         .required("Proposal number is required"),
-//       proposalText: Yup.string().required("Proposal text is required"),
-//     }),
-//     enableReinitialize: true,
-//     onSubmit: async (values) => {
-//       await onSubmit(values);
-//       formik.resetForm({
-//         values: {
-//           proposalDate: new Date().toISOString().split("T")[0],
-//           proposalNumber: "",
-//           proposalText: "",
-//         },
-//       });
-//     },
-//   });
-
-//   // Reset form when modal closes
-//   useEffect(() => {
-//     if (!isOpen) {
-//       formik.resetForm({
-//         values: {
-//           proposalDate: new Date().toISOString().split("T")[0],
-//           proposalNumber: "",
-//           proposalText: "",
-//         },
-//       });
-//     }
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, [isOpen]);
-
-//   return (
-//     <ModalOverlay
-//       isOpen={isOpen}
-//       onClose={onClose}
-//       modalTitle="Send Proposal"
-//       modalClassName="w-full md:w-[45rem]"
-//     >
-//       <form
-//         onSubmit={formik.handleSubmit}
-//         className="flex flex-col gap-6  overflow-auto bg-customGray border  p-3  rounded-md "
-//       >
-//         {/* Proposal Number + Date */}
-//         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//           <div>
-//             <InputField
-//               label="Proposal Number"
-//               value={formik.values.proposalNumber}
-//               onChange={(e) => formik.setFieldValue("proposalNumber", e.target.value)}
-
-//               onBlur={formik.handleBlur}
-//               placeholder="Enter proposal number (e.g., P-001)"
-//               // Removed numeric props since it's a string input
-//             />
-//             {formik.touched.proposalNumber && formik.errors.proposalNumber && (
-//               <p className="mt-1 text-sm text-red-600">
-//                 {formik.errors.proposalNumber}
-//               </p>
-//             )}
-//           </div>
-
-//           <DatePicker
-//             label="Proposal Date"
-//             value={formik.values.proposalDate}
-//             onChange={(value) => formik.setFieldValue("proposalDate", value)}
-//             placeholder="Select Proposal Date"
-//             datePickerWidth="w-full"
-//             error={
-//               formik.touched.proposalDate
-//                 ? formik.errors.proposalDate
-//                 : undefined
-//             }
-//             maxDate={new Date().toISOString().split("T")[0]}
-//           />
-//         </div>
-
-//         {/* Proposal Text */}
-//         <div>
-//           <label className="block text-sm font-medium text-gray-700 mb-2">
-//             Proposal Text
-//           </label>
-//           <textarea
-//             name="proposalText"
-//             placeholder="Enter proposal text..."
-//             value={formik.values.proposalText}
-//             onChange={formik.handleChange}
-//             onBlur={formik.handleBlur}
-//             rows={6}
-//             className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
-//               formik.touched.proposalText && formik.errors.proposalText
-//                 ? "border-red-500"
-//                 : ""
-//             }`}
-//           />
-//           {formik.touched.proposalText && formik.errors.proposalText && (
-//             <p className="mt-1 text-sm text-red-600">
-//               {formik.errors.proposalText}
-//             </p>
-//           )}
-//         </div>
-
-//         {/* Products */}
-
-
-//         {/* Actions */}
-//         <div className="flex flex-wrap md:flex-nowrap gap-4">
-//           <Button
-//             title="Cancel"
-//             variant="primary-outline"
-//             type="button"
-//             onClick={onClose}
-//             width="w-full"
-//           />
-//           <Button
-//             title={isPending ? "Sending..." : "Download Proposal"}
-//             type="submit"
-//             width="w-full"
-//             disabled={isPending}
-//           />
-//         </div>
-//       </form>
-//     </ModalOverlay>
-//   );
-// }
 
 "use client";
 
@@ -196,6 +17,7 @@ export interface IProposal {
   subtotal?: number,
   taxPercent?: number,
   finalAmount?: number,
+  quantity?: string
 }
 
 // export ProductRow so parent can reuse the type
@@ -204,6 +26,8 @@ export type ProductRow = {
   materialId: string;
   name: string;
   salePrice: string;
+  quantity: string;
+  total: number;
 };
 
 export interface SendProposalModalProps {
@@ -246,6 +70,8 @@ export function SendProposalModal({
       materialId: "",
       name: "",
       salePrice: "",
+      quantity: "1",
+      total: 0
     },
   ]);
 
@@ -256,7 +82,7 @@ export function SendProposalModal({
   const addRow = () => {
     setProductRows((prev) => [
       ...prev,
-      { id: generateId(), materialId: "", name: "", salePrice: "" },
+      { id: generateId(), materialId: "", name: "", salePrice: "", quantity: "1", total: 0 },
     ]);
   };
 
@@ -292,21 +118,15 @@ export function SendProposalModal({
     );
   };
 
-
-  // Handle manual sale price edit
-  const handleSalePriceChange = (rowId: string, value: string) => {
-    setProductRows((prev) => prev.map((r) => (r.id === rowId ? { ...r, salePrice: value } : r)));
-  };
-
   // Optionally expose productRows on submit or to parent — currently local only
   const handleLogProducts = () => {
     console.log("Products to submit:", productRows);
   };
 
-  const subtotal = productRows.reduce((acc, row) => {
-    const price = Number(row.salePrice) || 0; // safer than parseFloat + ||
-    return acc + price;
-  }, 0);
+
+
+  const subtotal = productRows.reduce((acc, row) => acc + row.total, 0);
+
 
   const taxRate = Number(taxPercent) || 0;
   const taxAmount = (subtotal * taxRate) / 100;
@@ -319,6 +139,7 @@ export function SendProposalModal({
       proposalNumber: initialValues.proposalNumber || "",
       proposalText: initialValues.proposalText || "",
       productsText: initialValues.productsText || "",
+      quantity: initialValues.quantity || "",
     },
     validationSchema: Yup.object().shape({
       proposalDate: Yup.string().required("Proposal date is required"),
@@ -327,6 +148,7 @@ export function SendProposalModal({
         .required("Proposal number is required"),
       proposalText: Yup.string().required("Proposal text is required"),
       productsText: Yup.string().optional(),
+      quantity: Yup.string().optional(),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -346,14 +168,40 @@ export function SendProposalModal({
           proposalDate: new Date().toISOString().split("T")[0],
           proposalNumber: "",
           proposalText: "",
-          productsText: ""
+          productsText: "",
+          quantity: ""
         },
       });
 
       // clear product rows to one empty
-      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "" }]);
+      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", quantity: "", total: 0 }]);
     },
   });
+
+  const updateRow = (
+    rowId: string,
+    updates: Partial<Pick<ProductRow, "salePrice" | "quantity" | "name" | "materialId">>
+  ) => {
+    setProductRows((prev) =>
+      prev.map((row) => {
+        if (row.id !== rowId) return row;
+
+        const salePrice = Number(updates.salePrice ?? row.salePrice) || 0;
+        const quantity = Number(updates.quantity ?? row.quantity) || 0;
+
+        if (updates.quantity) {
+          formik.setFieldValue('quantity', updates.quantity)
+        }
+
+        return {
+          ...row,
+          ...updates,
+          total: salePrice * quantity,
+        };
+      })
+    );
+  };
+
 
 
   // Reset form when modal closes
@@ -364,25 +212,15 @@ export function SendProposalModal({
           proposalDate: new Date().toISOString().split("T")[0],
           proposalNumber: "",
           proposalText: "",
-          productsText: ""
+          productsText: "",
+          quantity: ""
         },
       });
-      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "" }]);
+      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", quantity: "", total: 0 }]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
-  // useEffect(() => {
-  //   const sum = productRows.reduce((acc, row) => {
-  //     const price = parseFloat(row.salePrice) || 0;
-  //     return acc + price;
-  //   }, 0);
-
-  //   setSubtotal(sum);
-
-  //   const final = sum + (sum * taxPercent) / 100;
-  //   setFinalAmount(final);
-  // }, [productRows, taxPercent]);
 
 
   return (
@@ -462,7 +300,7 @@ export function SendProposalModal({
               <div key={row.id} className="grid grid-cols-12 gap-3 items-end">
 
                 {/* Dropdown (select) */}
-                <div className="col-span-5">
+                <div className="col-span-3">
                   <label className="block text-xs font-medium text-gray-700 mb-1">Item</label>
                   <select
                     value={row.materialId ?? ""}
@@ -502,7 +340,7 @@ export function SendProposalModal({
                   </div>
                 ) : (
                   /* Normal Name (read-only) */
-                  <div className="col-span-4">
+                  <div className="col-span-3">
                     <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
                     <input
                       type="text"
@@ -514,15 +352,38 @@ export function SendProposalModal({
                   </div>
                 )}
 
+                {/* Quantity */}
+                <div className="col-span-1">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Quantity</label>
+                  <input
+                    type="text"
+                    value={row.quantity}
+                    onChange={(e) => updateRow(row.id, { quantity: e.target.value })}
+                    placeholder="0"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
                 {/* Price */}
                 <div className="col-span-2">
                   <label className="block text-xs font-medium text-gray-700 mb-1">Price</label>
                   <input
                     type="text"
                     value={row.salePrice}
-                    onChange={(e) => handleSalePriceChange(row.id, e.target.value)}
+                    onChange={(e) => updateRow(row.id, { salePrice: e.target.value })}
                     placeholder="0.00"
                     className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+                {/*Total Price */}
+
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Total Price</label>
+                  <input
+                    type="text"
+                    value={row.total.toFixed(2)}
+                    disabled
+                    className="w-full px-3 py-2 border rounded-md bg-gray-100"
                   />
                 </div>
 
@@ -533,7 +394,7 @@ export function SendProposalModal({
                     onClick={() => removeRow(row.id)}
                     className="m-auto text-sm text-red-600 hover:underline"
                   >
-                      <X className="w-5 h-5" />
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
               </div>
