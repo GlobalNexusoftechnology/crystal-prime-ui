@@ -20,7 +20,13 @@ import { useAllMaterialTypeQuery } from "@/services/apis/clients/community-clien
 import { useUpdateMaterialMutation } from "@/services/apis/clients/community-client/query-hooks/useUpdateMaterialMutation";
 import { IMaterialManagementProps } from "@/constants/tables/material-management-list";
 import { gstOptions } from "@/constants/material";
-
+type IndianState =
+  | "Maharashtra"
+  | "Gujarat"
+  | "Karnataka"
+  | "Delhi"
+  | "Tamil Nadu"
+  | "Rajasthan";
 export interface IAddStaffFormValues {
   code: string;
   materialName: string;
@@ -38,7 +44,7 @@ export interface IAddStaffFormValues {
   purchaseDescription: string;
   alias: string;
   Upload: (File | string)[];
-  keywords?: string[] 
+  keywords?: string[]
 }
 
 const validationSchema = Yup.object({
@@ -72,6 +78,14 @@ const validationSchema = Yup.object({
     )
     .max(10, "You can upload up to 10 files").optional(),
 });
+const stateOptions: IndianState[] = [
+  "Maharashtra",
+  "Gujarat",
+  "Karnataka",
+  "Delhi",
+  "Tamil Nadu",
+  "Rajasthan",
+];
 
 export function AddMaterialModal({
   isOpen,
@@ -183,6 +197,14 @@ export function AddMaterialModal({
           salesDescription: initialData?.sales_description || "",
           purchaseDescription: initialData?.purchase_description || "",
           alias: initialData?.alias || "",
+          statePrices: {
+            Maharashtra: "",
+            Gujarat: "",
+            Karnataka: "",
+            Delhi: "",
+            "Tamil Nadu": "",
+            Rajasthan: "",
+          },
           Upload: initialUpload,
         }}
         validationSchema={validationSchema}
@@ -203,12 +225,20 @@ export function AddMaterialModal({
             sales_description: values.salesDescription,
             purchase_description: values.purchaseDescription,
             alias: values.alias,
+            // ✅ State-wise prices
+            state_prices: Object.fromEntries(
+              Object.entries(values.statePrices).map(([state, price]) => [
+                state,
+                Number(price),
+              ])
+            ),
+
             photos: values.Upload
               ? await Promise.all(
-                  (values.Upload as (File | string)[]).map(async (file) =>
-                    typeof file === "string" ? file : file.name
-                  )
+                (values.Upload as (File | string)[]).map(async (file) =>
+                  typeof file === "string" ? file : file.name
                 )
+              )
               : [],
           };
 
@@ -400,6 +430,32 @@ export function AddMaterialModal({
                 />
               </div>
 
+              {/* State-wise Prices */}
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h2 className="text-md font-semibold mb-3">
+                  State-wise Sales Price
+                </h2>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {stateOptions.map((state) => (
+                    <InputField
+                      key={state}
+                      label={`${state} Price`}
+                      name={`statePrices.${state}`}
+                      value={values.statePrices?.[state] || ""}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      placeholder={`Enter price for ${state}`}
+                      error={
+                        touched.statePrices?.[state] &&
+                        errors.statePrices?.[state]
+                      }
+                    />
+                  ))}
+                </div>
+              </div>
+
+
               {/* Upload */}
               <UploadPhotos
                 name="Upload"
@@ -445,8 +501,8 @@ export function AddMaterialModal({
                     isUploading
                       ? "Uploading..."
                       : isPending
-                      ? "Saving..."
-                      : "Save"
+                        ? "Saving..."
+                        : "Save"
                   }
                   type="submit"
                   variant="primary"

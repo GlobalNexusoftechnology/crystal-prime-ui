@@ -116,7 +116,7 @@ export const MODULES: TOptionItem[] = [
    { key: EModule.MATERIAL_MANAGEMENT, label: "Inventory Management", value: "32"},
    { key: EModule.MATERIAL_TYPE, label: "Inventory Type", value: "37" },
    { key: EModule.MATERIAL_BRAND, label: "Inventory Brand", value: "38" },
-   { key: EModule.PROPOSAL, label: "Proposal Management", value: "35" },
+  //  { key: EModule.PROPOSAL, label: "Proposal Management", value: "35" },
 ];
 
 export const ACTIONS: TOptionItem[] = [
