@@ -17,7 +17,6 @@ export interface IProposal {
   subtotal?: number,
   taxPercent?: number,
   finalAmount?: number,
-  quantity?: string
 }
 
 // export ProductRow so parent can reuse the type
@@ -26,8 +25,9 @@ export type ProductRow = {
   materialId: string;
   name: string;
   salePrice: string;
-  quantity: string;
-  total: number;
+  totalPrice: string;
+  count: string;
+
 };
 
 export interface SendProposalModalProps {
@@ -70,8 +70,8 @@ export function SendProposalModal({
       materialId: "",
       name: "",
       salePrice: "",
-      quantity: "1",
-      total: 0
+      totalPrice: "",
+      count: "1"
     },
   ]);
 
@@ -82,7 +82,7 @@ export function SendProposalModal({
   const addRow = () => {
     setProductRows((prev) => [
       ...prev,
-      { id: generateId(), materialId: "", name: "", salePrice: "", quantity: "1", total: 0 },
+      { id: generateId(), materialId: "", name: "", salePrice: "", count: "1", totalPrice: "" },
     ]);
   };
 
@@ -98,21 +98,23 @@ export function SendProposalModal({
         if (r.id !== rowId) return r;
 
         if (!materialId) {
-          return { ...r, materialId: "", name: "", salePrice: "" };
+          return { ...r, materialId: "", name: "", salePrice: "", count: "1" };
         }
 
         // 🔥 If custom product selected
         if (materialId === "custom") {
-          return { ...r, materialId: "custom", name: "", salePrice: "" };
+          return { ...r, materialId: "custom", name: "", salePrice: "", count: "1" };
         }
 
         const selected = materials.find((m: any) => m.id === materialId);
-
+        const updatedTotalPrice = Number(selected?.sales_price) * 1
         return {
           ...r,
           materialId,
           name: selected?.name ?? "",
           salePrice: selected?.sales_price ? String(selected.sales_price) : "",
+          count: "1",
+          totalPrice: String(updatedTotalPrice)
         };
       })
     );
@@ -125,7 +127,7 @@ export function SendProposalModal({
 
 
 
-  const subtotal = productRows.reduce((acc, row) => acc + row.total, 0);
+  const subtotal = productRows.reduce((acc, row) => acc + Number(row.totalPrice), 0);
 
 
   const taxRate = Number(taxPercent) || 0;
@@ -139,7 +141,6 @@ export function SendProposalModal({
       proposalNumber: initialValues.proposalNumber || "",
       proposalText: initialValues.proposalText || "",
       productsText: initialValues.productsText || "",
-      quantity: initialValues.quantity || "",
     },
     validationSchema: Yup.object().shape({
       proposalDate: Yup.string().required("Proposal date is required"),
@@ -148,7 +149,6 @@ export function SendProposalModal({
         .required("Proposal number is required"),
       proposalText: Yup.string().required("Proposal text is required"),
       productsText: Yup.string().optional(),
-      quantity: Yup.string().optional(),
     }),
     enableReinitialize: true,
     onSubmit: async (values) => {
@@ -169,34 +169,40 @@ export function SendProposalModal({
           proposalNumber: "",
           proposalText: "",
           productsText: "",
-          quantity: ""
         },
       });
 
       // clear product rows to one empty
-      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", quantity: "", total: 0 }]);
+      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", count: "0", totalPrice: "" }]);
     },
   });
 
   const updateRow = (
     rowId: string,
-    updates: Partial<Pick<ProductRow, "salePrice" | "quantity" | "name" | "materialId">>
+    updates: Partial<Pick<ProductRow, "salePrice" | "name" | "count" | "totalPrice" | "materialId">>
   ) => {
     setProductRows((prev) =>
       prev.map((row) => {
         if (row.id !== rowId) return row;
 
         const salePrice = Number(updates.salePrice ?? row.salePrice) || 0;
-        const quantity = Number(updates.quantity ?? row.quantity) || 0;
 
-        if (updates.quantity) {
-          formik.setFieldValue('quantity', updates.quantity)
+        if (updates.count) {
+          row.id === rowId ? {
+            ...row, count: updates.count
+          } : row
+
+          row.id === rowId ? {
+            ...row, totalPrice: salePrice * Number(updates.count)
+          } : row
         }
 
         return {
           ...row,
           ...updates,
-          total: salePrice * quantity,
+          total: salePrice,
+          count: updates?.count ?? "1",
+          totalPrice: String(salePrice * Number(updates.count))
         };
       })
     );
@@ -213,10 +219,9 @@ export function SendProposalModal({
           proposalNumber: "",
           proposalText: "",
           productsText: "",
-          quantity: ""
         },
       });
-      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", quantity: "", total: 0 }]);
+      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", count: "0", totalPrice: "" }]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -228,7 +233,7 @@ export function SendProposalModal({
       isOpen={isOpen}
       onClose={onClose}
       modalTitle="Create Proposal"
-      modalClassName="w-full md:w-[45rem] h-[95vh] max-h-[95vh] overflow-y-auto flex flex-col justify-center"
+      modalClassName="w-full md:w-[60rem] h-[95vh] max-h-[95vh] overflow-y-auto flex flex-col justify-center"
     >
       <form
         onSubmit={formik.handleSubmit}
@@ -322,7 +327,7 @@ export function SendProposalModal({
 
                 {/* If custom product → editable input */}
                 {row.materialId === "custom" ? (
-                  <div className="col-span-4">
+                  <div className="col-span-3">
                     <label className="block text-xs font-medium text-gray-700 mb-1">Custom Name</label>
                     <input
                       type="text"
@@ -352,21 +357,23 @@ export function SendProposalModal({
                   </div>
                 )}
 
+
+
                 {/* Quantity */}
                 <div className="col-span-1">
                   <label className="block text-xs font-medium text-gray-700 mb-1">Quantity</label>
                   <input
                     type="text"
-                    value={row.quantity}
-                    onChange={(e) => updateRow(row.id, { quantity: e.target.value })}
-                    placeholder="0"
+                    value={row.count}
+                    onChange={(e) => updateRow(row.id, { count: e.target.value })}
+                    placeholder="0.00"
                     className="w-full px-3 py-2 border rounded-md"
                   />
                 </div>
 
                 {/* Price */}
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Price</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Price Per Quantity</label>
                   <input
                     type="text"
                     value={row.salePrice}
@@ -375,17 +382,23 @@ export function SendProposalModal({
                     className="w-full px-3 py-2 border rounded-md"
                   />
                 </div>
-                {/*Total Price */}
-
+                {/* Total Price */}
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Total Price</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Price</label>
                   <input
                     type="text"
-                    value={row.total.toFixed(2)}
-                    disabled
-                    className="w-full px-3 py-2 border rounded-md bg-gray-100"
+                    value={String(Number(row.salePrice) * Number(row.count))}
+                    // value={row.totalPrice}
+                    onChange={() =>
+                      updateRow(row.id, {
+                        totalPrice: '1',
+                      })
+                    }
+                    placeholder="0.00"
+                    className="w-full px-3 py-2 border rounded-md"
                   />
                 </div>
+
 
                 {/* Remove */}
                 <div className="col-span-1 flex items-center">
@@ -424,7 +437,6 @@ export function SendProposalModal({
           )}
         </div>
 
-        {/* Totals Section */}
         {/* Totals Section */}
         <div className="border p-4 rounded-md bg-white flex flex-col gap-4">
           <div className="flex justify-between">
