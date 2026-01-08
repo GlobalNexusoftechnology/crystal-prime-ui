@@ -50,7 +50,8 @@ type ProductRow = {
   name: string;
   salePrice: string; // keep string in UI, convert below
   totalPrice: string; // keep string in UI, convert below
-  count: string
+  count: string;
+  state?: string;
 };
 
 
@@ -136,7 +137,8 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           name: p.name,
           salePrice: Number.isFinite(parsedPrice) ? parsedPrice : 0,
           totalPrice: Number.isFinite(parsedTotalPrice) ? parsedTotalPrice : 0,
-          count: p.count ?? "0"
+          count: p.count ?? "0",
+          state: p.state ?? ""
           // add other fields if your API expects them, e.g. quantity
           // quantity: p.quantity ?? 1,
         };

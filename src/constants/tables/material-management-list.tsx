@@ -25,7 +25,26 @@ export interface IMaterialManagementProps {
   purchase_description?: string;
   alias?: string;
   photos?: string[];
+  state_prices: {
+    Maharashtra?: number;
+    Gujarat?: number;
+    Karnataka?: number;
+    Delhi?: number;
+    "Tamil Nadu"?: number;
+    Rajasthan?: number;
+  };
+
 }
+
+type StatePrices = {
+  Maharashtra?: number;
+  Gujarat?: number;
+  Karnataka?: number;
+  Delhi?: number;
+  "Tamil Nadu"?: number;
+  Rajasthan?: number;
+};
+
 
 export const materialColumns: ITableColumn<IMaterialManagementProps>[] = [
   {
@@ -165,6 +184,28 @@ export const materialColumns: ITableColumn<IMaterialManagementProps>[] = [
       return <span className="text-gray-400">-</span>;
     },
   },
+
+  {
+    header: "STATE PRICES",
+    accessor: "state_prices",
+    cell: ({ value }: { value: StatePrices | null }) => {
+      if (!value) {
+        return <span className="text-gray-400">-</span>;
+      }
+
+      return (
+        <div className="flex flex-col gap-1 text-sm">
+          {Object.entries(value).map(([state, price]) => (
+            <div key={state} className="flex justify-between gap-2">
+              <span className="font-medium">{state}:</span>
+              <span>₹{price.toFixed(2)}</span>
+            </div>
+          ))}
+        </div>
+      );
+    },
+  },
+
   {
     header: "GST",
     accessor: "gst",

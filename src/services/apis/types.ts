@@ -2600,6 +2600,8 @@ export interface IAllMaterialsList {
   discount?: number;
   photos?: string[];
   active: boolean;
+  state_prices: any;
+  state: any
 }
 
 export interface IAllMaterialsResponse {

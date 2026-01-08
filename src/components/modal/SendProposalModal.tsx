@@ -28,8 +28,18 @@ export type ProductRow = {
   salePrice: string;
   totalPrice: string;
   count: string;
-
+  state?: string;
 };
+
+const STATE_OPTIONS = [
+  "Delhi",
+  "Gujarat",
+  "Karnataka",
+  "Rajasthan",
+  "Tamil Nadu",
+  "Maharashtra",
+] as const;
+
 
 export interface SendProposalModalProps {
   isOpen: boolean;
@@ -39,7 +49,6 @@ export interface SendProposalModalProps {
     subtotal?: any,
     taxPercent?: any,
     finalAmount?: any,
-
   ) => Promise<void> | void;
   initialValues: IProposal;
   isPending?: boolean;
@@ -72,7 +81,8 @@ export function SendProposalModal({
       name: "",
       salePrice: "",
       totalPrice: "",
-      count: "1"
+      count: "1",
+      state: ""
     },
   ]);
 
@@ -83,7 +93,7 @@ export function SendProposalModal({
   const addRow = () => {
     setProductRows((prev) => [
       ...prev,
-      { id: generateId(), materialId: "", name: "", salePrice: "", count: "1", totalPrice: "" },
+      { id: generateId(), materialId: "", name: "", salePrice: "", count: "1", totalPrice: "", state: "" },
     ]);
   };
 
@@ -99,15 +109,17 @@ export function SendProposalModal({
         if (r.id !== rowId) return r;
 
         if (!materialId) {
-          return { ...r, materialId: "", name: "", salePrice: "", count: "1" };
+          return { ...r, materialId: "", name: "", salePrice: "", count: "1", state: "" };
         }
 
         // 🔥 If custom product selected
         if (materialId === "custom") {
-          return { ...r, materialId: "custom", name: "", salePrice: "", count: "1" };
+          return { ...r, materialId: "custom", name: "", salePrice: "", count: "1", state: "" };
         }
 
         const selected = materials.find((m: any) => m.id === materialId);
+        console.log("selected", selected);
+
         const updatedTotalPrice = Number(selected?.sales_price) * 1
         return {
           ...r,
@@ -115,7 +127,8 @@ export function SendProposalModal({
           name: selected?.name ?? "",
           salePrice: selected?.sales_price ? String(selected.sales_price) : "",
           count: "1",
-          totalPrice: String(updatedTotalPrice)
+          totalPrice: String(updatedTotalPrice),
+          state: selected?.state
         };
       })
     );
@@ -126,9 +139,10 @@ export function SendProposalModal({
     console.log("Products to submit:", productRows);
   };
 
-
-
-  const subtotal = productRows.reduce((acc, row) => acc + Number(row.totalPrice), 0);
+  console.log("productRows", productRows);
+  const subtotal = productRows.reduce((acc, row) =>
+    acc + Number(row.totalPrice), 0
+  );
 
 
   const taxRate = Number(taxPercent) || 0;
@@ -174,13 +188,13 @@ export function SendProposalModal({
       });
 
       // clear product rows to one empty
-      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", count: "0", totalPrice: "" }]);
+      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", count: "1", totalPrice: "", state: "" }]);
     },
   });
 
   const updateRow = (
     rowId: string,
-    updates: Partial<Pick<ProductRow, "salePrice" | "name" | "count" | "totalPrice" | "materialId">>
+    updates: Partial<Pick<ProductRow, "salePrice" | "name" | "count" | 'state' | "totalPrice" | "materialId">>
   ) => {
     setProductRows((prev) =>
       prev.map((row) => {
@@ -188,13 +202,26 @@ export function SendProposalModal({
 
         const salePrice = Number(updates.salePrice ?? row.salePrice) || 0;
 
+        console.log(row, "updates", updates);
+        
+
         if (updates.count) {
           row.id === rowId ? {
-            ...row, count: updates.count
+            ...row, count: updates.count 
           } : row
 
           row.id === rowId ? {
             ...row, totalPrice: salePrice * Number(updates.count)
+          } : row
+
+             row.id === rowId ? {
+            ...row, state: updates?.state ?? row.state
+          } : row
+        }
+
+        if (updates.state) {
+          row.id === rowId ? {
+            ...row, state: updates?.state ?? ""
           } : row
         }
 
@@ -202,8 +229,9 @@ export function SendProposalModal({
           ...row,
           ...updates,
           total: salePrice,
-          count: updates?.count ?? "1",
-          totalPrice: String(salePrice * Number(updates.count))
+          count: updates?.count ?? "0",
+          totalPrice: String(salePrice * Number(updates.count)),
+          state: updates?.state
         };
       })
     );
@@ -222,7 +250,7 @@ export function SendProposalModal({
           productsText: "",
         },
       });
-      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", count: "0", totalPrice: "" }]);
+      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", count: "1", totalPrice: "", state: "" }]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -234,7 +262,7 @@ export function SendProposalModal({
       isOpen={isOpen}
       onClose={onClose}
       modalTitle="Create Proposal"
-      modalClassName="w-full md:w-[60rem] h-[95vh] max-h-[95vh] overflow-y-auto flex flex-col justify-center"
+      modalClassName="w-full md:w-[75rem] h-[95vh] max-h-[95vh] overflow-y-auto flex flex-col justify-center"
     >
       <form
         onSubmit={formik.handleSubmit}
@@ -306,7 +334,7 @@ export function SendProposalModal({
               <div key={row.id} className="grid grid-cols-12 gap-3 items-end">
 
                 {/* Dropdown (select) */}
-                <div className="col-span-3">
+                <div className="col-span-2">
                   <label className="block text-xs font-medium text-gray-700 mb-1">Item</label>
                   <select
                     value={row.materialId ?? ""}
@@ -328,7 +356,7 @@ export function SendProposalModal({
 
                 {/* If custom product → editable input */}
                 {row.materialId === "custom" ? (
-                  <div className="col-span-3">
+                  <div className="col-span-2">
                     <label className="block text-xs font-medium text-gray-700 mb-1">Custom Name</label>
                     <input
                       type="text"
@@ -346,7 +374,7 @@ export function SendProposalModal({
                   </div>
                 ) : (
                   /* Normal Name (read-only) */
-                  <div className="col-span-3">
+                  <div className="col-span-2">
                     <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
                     <input
                       type="text"
@@ -360,13 +388,56 @@ export function SendProposalModal({
 
 
 
+                {/* State */}
+                {/* State */}
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    State
+                  </label>
+                  <select
+                    value={row.state ?? ""}
+                    onChange={(e) => {
+                      const selectedState = e.target.value;
+
+                      const material = materials.find(
+                        (m: any) => m.id === row.materialId
+                      );
+
+                      console.log(material?.state_prices?.[selectedState], "material", material);
+
+
+                      // const statePrice = material?.sales_price; 
+
+                      const statePrice =
+                        material?.state_prices?.[selectedState] ??
+                        material?.sales_price ??
+                        0;
+
+                      updateRow(row.id, {
+                        state: selectedState,
+                        salePrice: String(statePrice),
+                        count: row.count
+                      });
+                    }}
+                    className="w-full px-3 py-2 border rounded-md"
+                  >
+                    <option value="">Select state</option>
+                    {STATE_OPTIONS.map((state) => (
+                      <option key={state} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+
                 {/* Quantity */}
                 <div className="col-span-1">
                   <label className="block text-xs font-medium text-gray-700 mb-1">Quantity</label>
                   <input
                     type="text"
-                    value={row.count}
-                    onChange={(e) => updateRow(row.id, { count: e.target.value })}
+                    value={row.count ?? "0"}
+                    onChange={(e) => updateRow(row.id, { count: e.target.value ?? "0", state: row?.state ?? "" })}
                     placeholder="0.00"
                     className="w-full px-3 py-2 border rounded-md"
                   />
@@ -388,7 +459,7 @@ export function SendProposalModal({
                   <label className="block text-xs font-medium text-gray-700 mb-1">Price</label>
                   <input
                     type="text"
-                    value={String(Number(row.salePrice) * Number(row.count))}
+                    value={String(Number(row.salePrice) * Number(row.count ?? "0"))}
                     // value={row.totalPrice}
                     onChange={() =>
                       updateRow(row.id, {

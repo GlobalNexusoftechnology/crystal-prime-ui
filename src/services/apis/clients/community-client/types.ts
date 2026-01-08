@@ -2990,6 +2990,7 @@ export interface ISendProposalProduct {
   salePrice: number;        // required
   count: string;        // required
   totalPrice: number;        // required
+  state?: string;
 }
 
 
