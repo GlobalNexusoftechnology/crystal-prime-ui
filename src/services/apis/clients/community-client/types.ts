@@ -2988,6 +2988,7 @@ export interface ISendProposalProduct {
   materialId: string;       // required
   name: string;             // required
   salePrice: number;        // required
+  productSize: number;        // required
   count: string;        // required
   totalPrice: number;        // required
   state?: string;

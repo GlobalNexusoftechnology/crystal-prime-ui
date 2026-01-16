@@ -49,6 +49,7 @@ type ProductRow = {
   materialId: string;
   name: string;
   salePrice: string; // keep string in UI, convert below
+  productSize: string; // keep string in UI, convert below
   totalPrice: string; // keep string in UI, convert below
   count: string;
   state?: string;
@@ -131,11 +132,13 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       const productsPayload = selectedProducts.map((p) => {
         // try to convert salePrice to a number, fallback to 0
         const parsedPrice = Number(String(p.salePrice).replace(/[^0-9.-]+/g, ""));
+        const parsedProductSize = Number(String(p.productSize).replace(/[^0-9.-]+/g, ""));
         const parsedTotalPrice = Number(String(p.totalPrice).replace(/[^0-9.-]+/g, ""));
         return {
           materialId: p.materialId,
           name: p.name,
           salePrice: Number.isFinite(parsedPrice) ? parsedPrice : 0,
+          productSize: Number.isFinite(parsedProductSize) ? parsedProductSize : 0,
           totalPrice: Number.isFinite(parsedTotalPrice) ? parsedTotalPrice : 0,
           count: p.count ?? "0",
           state: p.state ?? ""
