@@ -25,24 +25,26 @@ export interface IMaterialManagementProps {
   purchase_description?: string;
   alias?: string;
   photos?: string[];
-  state_prices: {
-    Maharashtra?: number;
-    Gujarat?: number;
-    Karnataka?: number;
-    Delhi?: number;
-    "Tamil Nadu"?: number;
-    Rajasthan?: number;
-  };
+state_prices: {
+  Maharashtra?: number;
+  Karnataka?: number;
+  Telangana?: number;
+  Gujarat?: number;
+  Chhattisgarh?: number;
+  Delhi?: number;
+  Goa?: number;
+};
 
 }
 
 type StatePrices = {
   Maharashtra?: number;
-  Gujarat?: number;
   Karnataka?: number;
+  Telangana?: number;
+  Gujarat?: number;
+  Chhattisgarh?: number;
   Delhi?: number;
-  "Tamil Nadu"?: number;
-  Rajasthan?: number;
+  Goa?: number;
 };
 
 

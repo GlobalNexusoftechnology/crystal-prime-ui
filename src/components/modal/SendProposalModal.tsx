@@ -26,18 +26,20 @@ export type ProductRow = {
   materialId: string;
   name: string;
   salePrice: string;
+  productSize: string;
   totalPrice: string;
   count: string;
   state?: string;
 };
 
 const STATE_OPTIONS = [
-  "Delhi",
-  "Gujarat",
-  "Karnataka",
-  "Rajasthan",
-  "Tamil Nadu",
   "Maharashtra",
+  "Karnataka",
+  "Telangana",
+  "Gujarat",
+  "Chhattisgarh",
+  "Delhi",
+  "Goa",
 ] as const;
 
 
@@ -80,6 +82,7 @@ export function SendProposalModal({
       materialId: "",
       name: "",
       salePrice: "",
+      productSize: "1",
       totalPrice: "",
       count: "1",
       state: ""
@@ -93,7 +96,7 @@ export function SendProposalModal({
   const addRow = () => {
     setProductRows((prev) => [
       ...prev,
-      { id: generateId(), materialId: "", name: "", salePrice: "", count: "1", totalPrice: "", state: "" },
+      { id: generateId(), materialId: "", name: "", productSize: "1", salePrice: "", count: "1", totalPrice: "", state: "" },
     ]);
   };
 
@@ -109,12 +112,12 @@ export function SendProposalModal({
         if (r.id !== rowId) return r;
 
         if (!materialId) {
-          return { ...r, materialId: "", name: "", salePrice: "", count: "1", state: "" };
+          return { ...r, materialId: "", name: "", productSize: "1", salePrice: "", count: "1", state: "" };
         }
 
         // 🔥 If custom product selected
         if (materialId === "custom") {
-          return { ...r, materialId: "custom", name: "", salePrice: "", count: "1", state: "" };
+          return { ...r, materialId: "custom", name: "", productSize: "1", salePrice: "", count: "1", state: "" };
         }
 
         const selected = materials.find((m: any) => m.id === materialId);
@@ -126,6 +129,7 @@ export function SendProposalModal({
           materialId,
           name: selected?.name ?? "",
           salePrice: selected?.sales_price ? String(selected.sales_price) : "",
+          productSize: "1",
           count: "1",
           totalPrice: String(updatedTotalPrice),
           state: selected?.state
@@ -188,13 +192,13 @@ export function SendProposalModal({
       });
 
       // clear product rows to one empty
-      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", count: "1", totalPrice: "", state: "" }]);
+      setProductRows([{ id: generateId(), materialId: "", productSize: "1", name: "", salePrice: "", count: "1", totalPrice: "", state: "" }]);
     },
   });
 
   const updateRow = (
     rowId: string,
-    updates: Partial<Pick<ProductRow, "salePrice" | "name" | "count" | 'state' | "totalPrice" | "materialId">>
+    updates: Partial<Pick<ProductRow, "salePrice" | "productSize" | "name" | "count" | 'state' | "totalPrice" | "materialId">>
   ) => {
     setProductRows((prev) =>
       prev.map((row) => {
@@ -202,19 +206,44 @@ export function SendProposalModal({
 
         const salePrice = Number(updates.salePrice ?? row.salePrice) || 0;
 
-        console.log(row, "updates", updates);
-        
+
 
         if (updates.count) {
+                    console.log(row, "cont", updates);
+
           row.id === rowId ? {
-            ...row, count: updates.count 
+            ...row, count: updates.count
           } : row
 
           row.id === rowId ? {
-            ...row, totalPrice: salePrice * Number(updates.count)
+            ...row, totalPrice: (salePrice * Number(updates?.productSize || 1)) * Number(updates.count || 1)
           } : row
 
-             row.id === rowId ? {
+          row.id === rowId ? {
+            ...row, state: updates?.state ?? row.state
+          } : row
+
+          row.id === rowId ? {
+            ...row, productSize: row.productSize
+          } : row
+        }
+
+        if (updates.productSize) {
+
+
+          row.id === rowId ? {
+            ...row, productSize: updates.productSize
+          } : row
+
+          row.id === rowId ? {
+            ...row, count: row.count
+          } : row
+
+          row.id === rowId ? {
+            ...row, totalPrice: (salePrice * Number(updates?.productSize || "1")) * Number(updates.count || row.count)
+          } : row
+
+          row.id === rowId ? {
             ...row, state: updates?.state ?? row.state
           } : row
         }
@@ -229,9 +258,10 @@ export function SendProposalModal({
           ...row,
           ...updates,
           total: salePrice,
-          count: updates?.count ?? "0",
+          count: updates?.count ?? "1",
           totalPrice: String(salePrice * Number(updates.count)),
-          state: updates?.state
+          state: updates?.state,
+          productSize: updates?.productSize ?? "1",
         };
       })
     );
@@ -250,7 +280,7 @@ export function SendProposalModal({
           productsText: "",
         },
       });
-      setProductRows([{ id: generateId(), materialId: "", name: "", salePrice: "", count: "1", totalPrice: "", state: "" }]);
+      setProductRows([{ id: generateId(), materialId: "", name: "", productSize: "1", salePrice: "", count: "1", totalPrice: "", state: "" }]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
@@ -416,7 +446,8 @@ export function SendProposalModal({
                       updateRow(row.id, {
                         state: selectedState,
                         salePrice: String(statePrice),
-                        count: row.count
+                        count: row.count,
+                        productSize: row.productSize
                       });
                     }}
                     className="w-full px-3 py-2 border rounded-md"
@@ -431,17 +462,19 @@ export function SendProposalModal({
                 </div>
 
 
-                {/* Quantity */}
+                {/* Size */}
                 <div className="col-span-1">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Quantity</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Size</label>
                   <input
                     type="text"
-                    value={row.count ?? "0"}
-                    onChange={(e) => updateRow(row.id, { count: e.target.value ?? "0", state: row?.state ?? "" })}
+                    value={row.productSize ?? "0"}
+                    onChange={(e) => updateRow(row.id, { productSize: e.target.value ?? "0", state: row?.state ?? "", count: row?.count ?? "" })}
                     placeholder="0.00"
                     className="w-full px-3 py-2 border rounded-md"
                   />
                 </div>
+
+
 
                 {/* Price */}
                 <div className="col-span-2">
@@ -454,12 +487,25 @@ export function SendProposalModal({
                     className="w-full px-3 py-2 border rounded-md"
                   />
                 </div>
+
+                {/* Quantity */}
+                <div className="col-span-1">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Quantity</label>
+                  <input
+                    type="text"
+                    value={row.count ?? "0"}
+                    onChange={(e) => updateRow(row.id, { count: e.target.value ?? "0", state: row?.state ?? "", productSize: row?.productSize ?? "" })}
+                    placeholder="0.00"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
                 {/* Total Price */}
                 <div className="col-span-2">
                   <label className="block text-xs font-medium text-gray-700 mb-1">Price</label>
                   <input
                     type="text"
-                    value={String(Number(row.salePrice) * Number(row.count ?? "0"))}
+                    value={String((Number(row.salePrice) * Number(row.productSize)) * Number(row.count ?? "0"))}
                     // value={row.totalPrice}
                     onChange={() =>
                       updateRow(row.id, {
