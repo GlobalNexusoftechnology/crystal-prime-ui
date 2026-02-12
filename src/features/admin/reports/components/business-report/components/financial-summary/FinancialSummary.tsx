@@ -27,7 +27,7 @@ export const FinancialSummary: React.FC<FinancialSummaryProps> = ({ data }) => {
   //   { label: "Amount Spent in Cash", value: data.amountSpentInCash },
   //   { label: "Amount Spent in Online", value: data.amountSpentInOnline },
   // ];
-
+console.log(data, "data");
   return (
     // <div className="border-b border-gray-400  p-6 ">
     //   <h2 className="text-[1.1rem]  font-semibold mb-6 ">
