@@ -27,11 +27,12 @@ export interface IMaterialManagementProps {
   photos?: string[];
 state_prices: {
   Maharashtra?: number;
-  Karnataka?: number;
-  Telangana?: number;
   Gujarat?: number;
-  Chhattisgarh?: number;
+  Uttar_Pradesh?: number;
+  Karnataka?: number;
+  West_Bengal?: number;
   Delhi?: number;
+  Odisha?: number;
   Goa?: number;
 };
 
@@ -39,11 +40,12 @@ state_prices: {
 
 type StatePrices = {
   Maharashtra?: number;
-  Karnataka?: number;
-  Telangana?: number;
   Gujarat?: number;
-  Chhattisgarh?: number;
+  Uttar_Pradesh?: number;
+  Karnataka?: number;
+  West_Bengal?: number;
   Delhi?: number;
+  Odisha?: number;
   Goa?: number;
 };
 

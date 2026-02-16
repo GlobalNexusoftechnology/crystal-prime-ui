@@ -22,11 +22,12 @@ import { IMaterialManagementProps } from "@/constants/tables/material-management
 import { gstOptions } from "@/constants/material";
 type IndianState =
   | "Maharashtra"
-  | "Karnataka"
-  | "Telangana"
   | "Gujarat"
-  | "Chhattisgarh"
+  | "Uttar_Pradesh"
+  | "Karnataka"
+  | "West_Bengal"
   | "Delhi"
+  | "Odisha"
   | "Goa";
 
 export interface IAddStaffFormValues {
@@ -82,11 +83,12 @@ const validationSchema = Yup.object({
 });
 const stateOptions: IndianState[] = [
   "Maharashtra",
-  "Karnataka",
-  "Telangana",
   "Gujarat",
-  "Chhattisgarh",
+  "Uttar_Pradesh",
+  "Karnataka",
+  "West_Bengal",
   "Delhi",
+  "Odisha",
   "Goa",
 ];
 export function AddMaterialModal({
@@ -201,11 +203,12 @@ export function AddMaterialModal({
           alias: initialData?.alias || "",
           statePrices: {
             Maharashtra: "",
-            Karnataka: "",
-            Telangana: "",
             Gujarat: "",
-            Chhattisgarh: "",
+            Uttar_Pradesh: "",
+            Karnataka: "",
+            West_Bengal: "",
             Delhi: "",
+            Odisha: "",
             Goa: "",
           },
           Upload: initialUpload,

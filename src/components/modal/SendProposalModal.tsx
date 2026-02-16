@@ -34,11 +34,12 @@ export type ProductRow = {
 
 const STATE_OPTIONS = [
   "Maharashtra",
-  "Karnataka",
-  "Telangana",
   "Gujarat",
-  "Chhattisgarh",
+  "Uttar Pradesh",
+  "Karnataka",
+  "West Bengal",
   "Delhi",
+  "Odisha",
   "Goa",
 ] as const;
 
