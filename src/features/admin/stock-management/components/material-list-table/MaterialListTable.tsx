@@ -2,19 +2,18 @@
 
 "use client";
 
-import { Table, Checkbox, DeleteModal } from "@/components";
+import { Checkbox, DeleteModal, Table } from "@/components";
 import { ITableAction, ITableColumn } from "@/constants";
-import toast from "react-hot-toast";
-import { IApiError } from "@/utils";
-import { useState } from "react";
 import {
   IMaterialManagementProps,
   materialColumns,
 } from "@/constants/tables/material-management-list";
-import { useDeleteMaterialMutation } from "@/services/apis/clients/community-client/query-hooks/useDeleteMaterialMutation";
-import { useChangeMaterialStatusMutation } from "@/services/apis/clients/community-client/query-hooks/useChangeMaterialStatusMutation";
 import { MaterialHistoryTab } from "@/features/admin/inventory-management/inventory-management";
+import { useChangeMaterialStatusMutation } from "@/services/apis/clients/community-client/query-hooks/useChangeMaterialStatusMutation";
 import { useDeleteInventoryMutation } from "@/services/apis/clients/community-client/query-hooks/useDeleteInventoryMutation";
+import { IApiError } from "@/utils";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 export function MaterialListTable({
   onEdit,

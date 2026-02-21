@@ -1,14 +1,13 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useDebounce } from "@/utils/hooks";
 
-import { Breadcrumb } from "../breadcrumb";
 import { IMaterialManagementProps } from "@/constants/tables/material-management-list";
-import { useAllMaterialsQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialsQuery";
-import { MaterialListTable } from "./components/material-list-table";
-import { AddMaterialModal, MaterialFilters } from "./components";
 import { useAllInventoryQuery } from "@/services/apis/clients/community-client/query-hooks/useAllInventoryQuery";
+import { Breadcrumb } from "../breadcrumb";
+import { AddMaterialModal, MaterialFilters } from "./components";
+import { MaterialListTable } from "./components/material-list-table";
 
 export function StockManagement() {
   const [searchInput, setSearchInput] = useState("");
