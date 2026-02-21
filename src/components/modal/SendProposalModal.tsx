@@ -5,19 +5,21 @@
 
 import { Button, DatePicker, InputField, ModalOverlay } from "@/components";
 import { useAllMaterialsQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialsQuery";
+import { useDebounce } from "@/utils/hooks";
 import { useFormik } from "formik";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import * as Yup from "yup";
+import { useMemo } from "react";
 
 export interface IProposal {
   proposalDate: string;
   proposalNumber: string;
   proposalText: string;
-  productsText?: string
-  subtotal?: number,
-  taxPercent?: number,
-  finalAmount?: number,
+  productsText?: string;
+  subtotal?: number;
+  taxPercent?: number;
+  finalAmount?: number;
 }
 
 // export ProductRow so parent can reuse the type
@@ -43,19 +45,20 @@ const STATE_OPTIONS = [
   "Goa",
 ] as const;
 
-
 export interface SendProposalModalProps {
   isOpen: boolean;
   onClose: () => void;
   // now accepts products array as the second argument
-  onSubmit: (values: IProposal, products: ProductRow[],
+  onSubmit: (
+    values: IProposal,
+    products: ProductRow[],
     subtotal?: any,
     taxPercent?: any,
     finalAmount?: any,
   ) => Promise<void> | void;
   initialValues: IProposal;
   isPending?: boolean;
-};
+}
 
 function generateId() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 9)}`;
@@ -70,8 +73,25 @@ export function SendProposalModal({
   isPending = false,
 }: SendProposalModalProps) {
   // ...rest of component (no changes needed except the onSubmit call inside formik)
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchInput, setSearchInput] = useState("");
 
-  const { allMaterialsData } = useAllMaterialsQuery();
+  const { debouncedValue: searchQuery } = useDebounce({
+    initialValue: searchInput,
+    delay: 500,
+    onChangeCb: () => {},
+  });
+
+  const filters = useMemo(
+    () => ({
+      searchText: searchQuery,
+      page: currentPage,
+      limit: 40,
+    }),
+    [searchQuery, currentPage],
+  );
+
+  const { allMaterialsData } = useAllMaterialsQuery(filters);
 
   // If your query returns data under a property (like `.data`), adjust here:
   const materials = allMaterialsData?.data ?? [];
@@ -86,18 +106,26 @@ export function SendProposalModal({
       productSize: "1",
       totalPrice: "",
       count: "1",
-      state: ""
+      state: "",
     },
   ]);
 
   const [taxPercent, setTaxPercent] = useState(0);
 
-
   // Add a new empty row
   const addRow = () => {
     setProductRows((prev) => [
       ...prev,
-      { id: generateId(), materialId: "", name: "", productSize: "1", salePrice: "", count: "1", totalPrice: "", state: "" },
+      {
+        id: generateId(),
+        materialId: "",
+        name: "",
+        productSize: "1",
+        salePrice: "",
+        count: "1",
+        totalPrice: "",
+        state: "",
+      },
     ]);
   };
 
@@ -113,18 +141,34 @@ export function SendProposalModal({
         if (r.id !== rowId) return r;
 
         if (!materialId) {
-          return { ...r, materialId: "", name: "", productSize: "1", salePrice: "", count: "1", state: "" };
+          return {
+            ...r,
+            materialId: "",
+            name: "",
+            productSize: "1",
+            salePrice: "",
+            count: "1",
+            state: "",
+          };
         }
 
         // 🔥 If custom product selected
         if (materialId === "custom") {
-          return { ...r, materialId: "custom", name: "", productSize: "1", salePrice: "", count: "1", state: "" };
+          return {
+            ...r,
+            materialId: "custom",
+            name: "",
+            productSize: "1",
+            salePrice: "",
+            count: "1",
+            state: "",
+          };
         }
 
         const selected = materials.find((m: any) => m.id === materialId);
         console.log("selected", selected);
 
-        const updatedTotalPrice = Number(selected?.sales_price) * 1
+        const updatedTotalPrice = Number(selected?.sales_price) * 1;
         return {
           ...r,
           materialId,
@@ -133,9 +177,9 @@ export function SendProposalModal({
           productSize: "1",
           count: "1",
           totalPrice: String(updatedTotalPrice),
-          state: selected?.state
+          state: selected?.state,
         };
-      })
+      }),
     );
   };
 
@@ -145,10 +189,10 @@ export function SendProposalModal({
   };
 
   console.log("productRows", productRows);
-  const subtotal = productRows.reduce((acc, row) =>
-    acc + Number(row.totalPrice), 0
+  const subtotal = productRows.reduce(
+    (acc, row) => acc + Number(row.totalPrice),
+    0,
   );
-
 
   const taxRate = Number(taxPercent) || 0;
   const taxAmount = (subtotal * taxRate) / 100;
@@ -173,12 +217,7 @@ export function SendProposalModal({
     enableReinitialize: true,
     onSubmit: async (values) => {
       // pass productRows to parent onSubmit which now expects (values, products)
-      await onSubmit(values, productRows,
-        subtotal,
-        taxPercent,
-        finalAmount,
-
-      );
+      await onSubmit(values, productRows, subtotal, taxPercent, finalAmount);
 
       // optional: log product rows
       handleLogProducts();
@@ -193,13 +232,35 @@ export function SendProposalModal({
       });
 
       // clear product rows to one empty
-      setProductRows([{ id: generateId(), materialId: "", productSize: "1", name: "", salePrice: "", count: "1", totalPrice: "", state: "" }]);
+      setProductRows([
+        {
+          id: generateId(),
+          materialId: "",
+          productSize: "1",
+          name: "",
+          salePrice: "",
+          count: "1",
+          totalPrice: "",
+          state: "",
+        },
+      ]);
     },
   });
 
   const updateRow = (
     rowId: string,
-    updates: Partial<Pick<ProductRow, "salePrice" | "productSize" | "name" | "count" | 'state' | "totalPrice" | "materialId">>
+    updates: Partial<
+      Pick<
+        ProductRow,
+        | "salePrice"
+        | "productSize"
+        | "name"
+        | "count"
+        | "state"
+        | "totalPrice"
+        | "materialId"
+      >
+    >,
   ) => {
     setProductRows((prev) =>
       prev.map((row) => {
@@ -207,52 +268,81 @@ export function SendProposalModal({
 
         const salePrice = Number(updates.salePrice ?? row.salePrice) || 0;
 
-
-
         if (updates.count) {
-                    console.log(row, "cont", updates);
+          console.log(row, "cont", updates);
 
-          row.id === rowId ? {
-            ...row, count: updates.count
-          } : row
+          row.id === rowId
+            ? {
+                ...row,
+                count: updates.count,
+              }
+            : row;
 
-          row.id === rowId ? {
-            ...row, totalPrice: (salePrice * Number(updates?.productSize || 1)) * Number(updates.count || 1)
-          } : row
+          row.id === rowId
+            ? {
+                ...row,
+                totalPrice:
+                  salePrice *
+                  Number(updates?.productSize || 1) *
+                  Number(updates.count || 1),
+              }
+            : row;
 
-          row.id === rowId ? {
-            ...row, state: updates?.state ?? row.state
-          } : row
+          row.id === rowId
+            ? {
+                ...row,
+                state: updates?.state ?? row.state,
+              }
+            : row;
 
-          row.id === rowId ? {
-            ...row, productSize: row.productSize
-          } : row
+          row.id === rowId
+            ? {
+                ...row,
+                productSize: row.productSize,
+              }
+            : row;
         }
 
         if (updates.productSize) {
+          row.id === rowId
+            ? {
+                ...row,
+                productSize: updates.productSize,
+              }
+            : row;
 
+          row.id === rowId
+            ? {
+                ...row,
+                count: row.count,
+              }
+            : row;
 
-          row.id === rowId ? {
-            ...row, productSize: updates.productSize
-          } : row
+          row.id === rowId
+            ? {
+                ...row,
+                totalPrice:
+                  salePrice *
+                  Number(updates?.productSize || "1") *
+                  Number(updates.count || row.count),
+              }
+            : row;
 
-          row.id === rowId ? {
-            ...row, count: row.count
-          } : row
-
-          row.id === rowId ? {
-            ...row, totalPrice: (salePrice * Number(updates?.productSize || "1")) * Number(updates.count || row.count)
-          } : row
-
-          row.id === rowId ? {
-            ...row, state: updates?.state ?? row.state
-          } : row
+          row.id === rowId
+            ? {
+                ...row,
+                state: updates?.state ?? row.state,
+              }
+            : row;
         }
 
         if (updates.state) {
-          row.id === rowId ? {
-            ...row, state: updates?.state ?? ""
-          } : row
+          row.id === rowId
+            ? {
+                ...row,
+                state: updates?.state ?? "",
+              }
+            : row;
         }
 
         return {
@@ -264,11 +354,9 @@ export function SendProposalModal({
           state: updates?.state,
           productSize: updates?.productSize ?? "1",
         };
-      })
+      }),
     );
   };
-
-
 
   // Reset form when modal closes
   useEffect(() => {
@@ -281,12 +369,21 @@ export function SendProposalModal({
           productsText: "",
         },
       });
-      setProductRows([{ id: generateId(), materialId: "", name: "", productSize: "1", salePrice: "", count: "1", totalPrice: "", state: "" }]);
+      setProductRows([
+        {
+          id: generateId(),
+          materialId: "",
+          name: "",
+          productSize: "1",
+          salePrice: "",
+          count: "1",
+          totalPrice: "",
+          state: "",
+        },
+      ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
-
-
 
   return (
     <ModalOverlay
@@ -305,7 +402,9 @@ export function SendProposalModal({
             <InputField
               label="Proposal Number"
               value={formik.values.proposalNumber}
-              onChange={(e) => formik.setFieldValue("proposalNumber", e.target.value)}
+              onChange={(e) =>
+                formik.setFieldValue("proposalNumber", e.target.value)
+              }
               onBlur={formik.handleBlur}
               placeholder="Enter proposal number (e.g., P-001)"
             />
@@ -323,7 +422,9 @@ export function SendProposalModal({
             placeholder="Select Proposal Date"
             datePickerWidth="w-full"
             error={
-              formik.touched.proposalDate ? formik.errors.proposalDate : undefined
+              formik.touched.proposalDate
+                ? formik.errors.proposalDate
+                : undefined
             }
             maxDate={new Date().toISOString().split("T")[0]}
           />
@@ -341,8 +442,11 @@ export function SendProposalModal({
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             rows={6}
-            className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${formik.touched.proposalText && formik.errors.proposalText ? "border-red-500" : ""
-              }`}
+            className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+              formik.touched.proposalText && formik.errors.proposalText
+                ? "border-red-500"
+                : ""
+            }`}
           />
           {formik.touched.proposalText && formik.errors.proposalText && (
             <p className="mt-1 text-sm text-red-600">
@@ -356,20 +460,28 @@ export function SendProposalModal({
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold">Products</h3>
             <div className="flex gap-2">
-              <Button title="Add Product" variant="primary-outline" type="button" onClick={addRow} />
+              <Button
+                title="Add Product"
+                variant="primary-outline"
+                type="button"
+                onClick={addRow}
+              />
             </div>
           </div>
 
           <div className="flex flex-col gap-3">
             {productRows.map((row) => (
               <div key={row.id} className="grid grid-cols-12 gap-3 items-end">
-
                 {/* Dropdown (select) */}
                 <div className="col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Item</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Item
+                  </label>
                   <select
                     value={row.materialId ?? ""}
-                    onChange={(e) => handleSelectMaterial(row.id, e.target.value)}
+                    onChange={(e) =>
+                      handleSelectMaterial(row.id, e.target.value)
+                    }
                     className="w-full px-3 py-2 border rounded-md focus:outline-none"
                   >
                     <option value="">Select item</option>
@@ -388,15 +500,19 @@ export function SendProposalModal({
                 {/* If custom product → editable input */}
                 {row.materialId === "custom" ? (
                   <div className="col-span-2">
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Custom Name</label>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Custom Name
+                    </label>
                     <input
                       type="text"
                       value={row.name}
                       onChange={(e) =>
                         setProductRows((prev) =>
                           prev.map((r) =>
-                            r.id === row.id ? { ...r, name: e.target.value } : r
-                          )
+                            r.id === row.id
+                              ? { ...r, name: e.target.value }
+                              : r,
+                          ),
                         )
                       }
                       placeholder="Enter custom product name"
@@ -406,7 +522,9 @@ export function SendProposalModal({
                 ) : (
                   /* Normal Name (read-only) */
                   <div className="col-span-2">
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">
+                      Name
+                    </label>
                     <input
                       type="text"
                       value={row.name}
@@ -416,8 +534,6 @@ export function SendProposalModal({
                     />
                   </div>
                 )}
-
-
 
                 {/* State */}
                 {/* State */}
@@ -431,13 +547,16 @@ export function SendProposalModal({
                       const selectedState = e.target.value;
 
                       const material = materials.find(
-                        (m: any) => m.id === row.materialId
+                        (m: any) => m.id === row.materialId,
                       );
 
-                      console.log(material?.state_prices?.[selectedState], "material", material);
+                      console.log(
+                        material?.state_prices?.[selectedState],
+                        "material",
+                        material,
+                      );
 
-
-                      // const statePrice = material?.sales_price; 
+                      // const statePrice = material?.sales_price;
 
                       const statePrice =
                         material?.state_prices?.[selectedState] ??
@@ -448,7 +567,7 @@ export function SendProposalModal({
                         state: selectedState,
                         salePrice: String(statePrice),
                         count: row.count,
-                        productSize: row.productSize
+                        productSize: row.productSize,
                       });
                     }}
                     className="w-full px-3 py-2 border rounded-md"
@@ -462,55 +581,19 @@ export function SendProposalModal({
                   </select>
                 </div>
 
-
                 {/* Size */}
                 <div className="col-span-1">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Size</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Size
+                  </label>
                   <input
                     type="text"
                     value={row.productSize ?? "0"}
-                    onChange={(e) => updateRow(row.id, { productSize: e.target.value ?? "0", state: row?.state ?? "", count: row?.count ?? "" })}
-                    placeholder="0.00"
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
-
-
-
-                {/* Price */}
-                <div className="col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Price Per Quantity</label>
-                  <input
-                    type="text"
-                    value={row.salePrice}
-                    onChange={(e) => updateRow(row.id, { salePrice: e.target.value })}
-                    placeholder="0.00"
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
-
-                {/* Quantity */}
-                <div className="col-span-1">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Quantity</label>
-                  <input
-                    type="text"
-                    value={row.count ?? "0"}
-                    onChange={(e) => updateRow(row.id, { count: e.target.value ?? "0", state: row?.state ?? "", productSize: row?.productSize ?? "" })}
-                    placeholder="0.00"
-                    className="w-full px-3 py-2 border rounded-md"
-                  />
-                </div>
-
-                {/* Total Price */}
-                <div className="col-span-2">
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Price</label>
-                  <input
-                    type="text"
-                    value={String((Number(row.salePrice) * Number(row.productSize)) * Number(row.count ?? "0"))}
-                    // value={row.totalPrice}
-                    onChange={() =>
+                    onChange={(e) =>
                       updateRow(row.id, {
-                        totalPrice: '1',
+                        productSize: e.target.value ?? "0",
+                        state: row?.state ?? "",
+                        count: row?.count ?? "",
                       })
                     }
                     placeholder="0.00"
@@ -518,6 +601,64 @@ export function SendProposalModal({
                   />
                 </div>
 
+                {/* Price */}
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Price Per Quantity
+                  </label>
+                  <input
+                    type="text"
+                    value={row.salePrice}
+                    onChange={(e) =>
+                      updateRow(row.id, { salePrice: e.target.value })
+                    }
+                    placeholder="0.00"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Quantity */}
+                <div className="col-span-1">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Quantity
+                  </label>
+                  <input
+                    type="text"
+                    value={row.count ?? "0"}
+                    onChange={(e) =>
+                      updateRow(row.id, {
+                        count: e.target.value ?? "0",
+                        state: row?.state ?? "",
+                        productSize: row?.productSize ?? "",
+                      })
+                    }
+                    placeholder="0.00"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
+
+                {/* Total Price */}
+                <div className="col-span-2">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                    Price
+                  </label>
+                  <input
+                    type="text"
+                    value={String(
+                      Number(row.salePrice) *
+                        Number(row.productSize) *
+                        Number(row.count ?? "0"),
+                    )}
+                    // value={row.totalPrice}
+                    onChange={() =>
+                      updateRow(row.id, {
+                        totalPrice: "1",
+                      })
+                    }
+                    placeholder="0.00"
+                    className="w-full px-3 py-2 border rounded-md"
+                  />
+                </div>
 
                 {/* Remove */}
                 <div className="col-span-1 flex items-center">
@@ -531,7 +672,6 @@ export function SendProposalModal({
                 </div>
               </div>
             ))}
-
           </div>
         </div>
 
@@ -546,8 +686,11 @@ export function SendProposalModal({
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             rows={6}
-            className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${formik.touched.productsText && formik.errors.productsText ? "border-red-500" : ""
-              }`}
+            className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+              formik.touched.productsText && formik.errors.productsText
+                ? "border-red-500"
+                : ""
+            }`}
           />
           {formik.touched.productsText && formik.errors.productsText && (
             <p className="mt-1 text-sm text-red-600">
@@ -576,10 +719,11 @@ export function SendProposalModal({
 
           <div className="flex justify-between">
             <span className="font-medium">Final Amount:</span>
-            <span className="text-lg font-semibold">₹ {finalAmount.toFixed(2)}</span>
+            <span className="text-lg font-semibold">
+              ₹ {finalAmount.toFixed(2)}
+            </span>
           </div>
         </div>
-
 
         {/* Actions */}
         <div className="flex flex-wrap md:flex-nowrap gap-4">
