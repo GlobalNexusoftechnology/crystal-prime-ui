@@ -47,7 +47,7 @@ export interface IAddStaffFormValues {
   purchaseDescription: string;
   alias: string;
   Upload: (File | string)[];
-  keywords?: string[]
+  keywords?: string[];
 }
 
 const validationSchema = Yup.object({
@@ -77,9 +77,10 @@ const validationSchema = Yup.object({
         .test("fileSize", "File too large", (value: any) => {
           if (!value || typeof value === "string") return true;
           return value instanceof File ? value.size <= 5 * 1024 * 1024 : true;
-        })
+        }),
     )
-    .max(10, "You can upload up to 10 files").optional(),
+    .max(10, "You can upload up to 10 files")
+    .optional(),
 });
 const stateOptions: IndianState[] = [
   "Maharashtra",
@@ -112,7 +113,7 @@ export function AddMaterialModal({
       (type: { name: any; id: { toString: () => any } }) => ({
         label: type?.name,
         value: type?.id.toString(),
-      })
+      }),
     ) || [];
 
   const brandOptions =
@@ -171,7 +172,7 @@ export function AddMaterialModal({
     <ModalOverlay
       isOpen={isOpen}
       onClose={onClose}
-      modalTitle={isEditMode ? "Edit Inventory " : "Add Inventory "}
+      modalTitle={isEditMode ? "Edit Product " : "Add Product "}
       modalClassName="w-[40rem] "
     >
       <Formik
@@ -236,15 +237,15 @@ export function AddMaterialModal({
               Object.entries(values.statePrices).map(([state, price]) => [
                 state,
                 Number(price),
-              ])
+              ]),
             ),
 
             photos: values.Upload
               ? await Promise.all(
-                (values.Upload as (File | string)[]).map(async (file) =>
-                  typeof file === "string" ? file : file.name
+                  (values.Upload as (File | string)[]).map(async (file) =>
+                    typeof file === "string" ? file : file.name,
+                  ),
                 )
-              )
               : [],
           };
 
@@ -270,18 +271,18 @@ export function AddMaterialModal({
           return (
             <Form className="flex flex-col gap-4 overflow-y-auto max-h-[80vh] bg-white rounded-lg  p-4  border  border-gray-200">
               <h1 className="text-lg  font-semibold">
-                {isEditMode ? "Edit Inventory " : "Add Inventory "}
+                {isEditMode ? "Edit Product " : "Add Product "}
               </h1>
 
-              {/* Inventory  Name & Code */}
+              {/* Product  Name & Code */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
-                  label="Inventory  Name"
+                  label="Product  Name"
                   name="materialName"
                   value={values.materialName}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="Enter Inventory  Name"
+                  placeholder="Enter Product  Name"
                   error={touched.materialName && errors.materialName}
                 />
                 <InputField
@@ -318,7 +319,7 @@ export function AddMaterialModal({
               {/* UOM */}
               <div className="grid grid-cols-1 gap-4">
                 <InputField
-                  label="UOM (Unit of Inventory )"
+                  label="UOM (Unit of Product )"
                   name="uom"
                   value={values.uom}
                   onChange={handleChange}
@@ -460,7 +461,6 @@ export function AddMaterialModal({
                   ))}
                 </div>
               </div>
-
 
               {/* Upload */}
               <UploadPhotos

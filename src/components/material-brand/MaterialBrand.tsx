@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { SearchBar, Button, Table } from "@/components";
-import { EAction, EModule,  ITableAction } from "@/constants";
+import { EAction, EModule, ITableAction } from "@/constants";
 import { DeleteModal } from "@/components";
 
 import { formatDate, IApiError } from "@/utils";
@@ -26,14 +26,22 @@ export function MaterialBrand() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const { hasPermission } = usePermission();
   const cavAddMaterialBrand = hasPermission(EModule.LEAD_SOURCES, EAction.ADD);
-  const cavEditMaterialBrand = hasPermission(EModule.LEAD_SOURCES, EAction.EDIT);
-  const cavDeleteMaterialBrand = hasPermission(EModule.LEAD_SOURCES, EAction.DELETE);
+  const cavEditMaterialBrand = hasPermission(
+    EModule.LEAD_SOURCES,
+    EAction.EDIT,
+  );
+  const cavDeleteMaterialBrand = hasPermission(
+    EModule.LEAD_SOURCES,
+    EAction.DELETE,
+  );
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
   };
 
-  const { allMaterialBrandData, allMaterialBrand } = useAllMaterialBrandQuery({ page: currentPage });
+  const { allMaterialBrandData, allMaterialBrand } = useAllMaterialBrandQuery({
+    page: currentPage,
+  });
 
   const { onDeleteMaterialBrand } = useDeleteMaterialBrandMutation({
     onSuccessCallback: (data) => {
@@ -50,14 +58,14 @@ export function MaterialBrand() {
   });
 
   // Prepare full list from API
-  const fullMaterialBrandList: IAllMaterialBrandList[] = (allMaterialBrandData?.data?.list ?? []).map(
-    (lead) => ({
-      id: lead?.id || "N/A",
-      name: lead?.name || "N/A",
-      created_at: `${formatDate(lead?.created_at)}` || "N/A",
-      updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
-    })
-  );
+  const fullMaterialBrandList: IAllMaterialBrandList[] = (
+    allMaterialBrandData?.data?.list ?? []
+  ).map((lead) => ({
+    id: lead?.id || "N/A",
+    name: lead?.name || "N/A",
+    created_at: `${formatDate(lead?.created_at)}` || "N/A",
+    updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
+  }));
 
   // Extract pagination data
   const paginationData = allMaterialBrandData?.data?.pagination;
@@ -70,7 +78,7 @@ export function MaterialBrand() {
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.created_at.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.updated_at.toLowerCase().includes(searchTerm.toLowerCase())
+        item.updated_at.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }, [searchTerm, fullMaterialBrandList]);
 
@@ -118,9 +126,7 @@ export function MaterialBrand() {
   return (
     <div className="bg-[#F8F8F8] p-5  rounded-xl  border  border-gray-300">
       <div className="flex justify-between items-center flex-wrap gap-4 ">
-        <h1 className="text-[1.2rem]  font-medium">
-          Inventory Brand List
-        </h1>
+        <h1 className="text-[1.2rem]  font-medium">Product Brand List</h1>
         <div className="flex items-center flex-wrap gap-4 ">
           <SearchBar
             onSearch={handleSearch}
@@ -129,7 +135,7 @@ export function MaterialBrand() {
           />
           {cavAddMaterialBrand ? (
             <Button
-              title="Add Inventory Brand"
+              title="Add Product Brand"
               variant="background-white"
               width="w-full md:w-fit"
               onClick={() => {
@@ -154,7 +160,9 @@ export function MaterialBrand() {
         <AddMaterialBrandModal
           isOpen={isAddModalOpen}
           onClose={handleModalClose}
-          onAddMaterialBrandSuccessCallback={handleAddMaterialBrandSuccessCallback}
+          onAddMaterialBrandSuccessCallback={
+            handleAddMaterialBrandSuccessCallback
+          }
           materialBrandId={selectedMaterialBrand?.id}
           materialBrandName={selectedMaterialBrand?.name}
           onClearEditData={() => setSelectedMaterialBrand(null)}
@@ -172,8 +180,8 @@ export function MaterialBrand() {
           setDeleteId(null);
         }}
         isLoading={false}
-        title="Delete Inventory Brand"
-        message="Are you sure you want to delete this Inventory Brand "
+        title="Delete Product Brand"
+        message="Are you sure you want to delete this Product Brand "
         itemName={materialBrandNameToDelete}
       />
     </div>

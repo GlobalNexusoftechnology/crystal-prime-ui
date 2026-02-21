@@ -15,7 +15,7 @@ interface ICreateMaterialOptions {
 }
 
 /**
- * Hook to create Inventory
+ * Hook to create Product
  */
 export const useCreateMaterialMutation = ({
   onSuccessCallback,

@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { SearchBar, Button, Table } from "@/components";
-import { EAction, EModule,  ITableAction } from "@/constants";
+import { EAction, EModule, ITableAction } from "@/constants";
 import { DeleteModal } from "@/components";
 // import {
 //   IAllMaterialTypeList,
@@ -31,13 +31,18 @@ export function MaterialType() {
   const { hasPermission } = usePermission();
   const cavAddMaterialType = hasPermission(EModule.LEAD_SOURCES, EAction.ADD);
   const cavEditMaterialType = hasPermission(EModule.LEAD_SOURCES, EAction.EDIT);
-  const cavDeleteMaterialType = hasPermission(EModule.LEAD_SOURCES, EAction.DELETE);
+  const cavDeleteMaterialType = hasPermission(
+    EModule.LEAD_SOURCES,
+    EAction.DELETE,
+  );
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
   };
 
-  const { allMaterialTypeData, allMaterialType } = useAllMaterialTypeQuery({ page: currentPage });
+  const { allMaterialTypeData, allMaterialType } = useAllMaterialTypeQuery({
+    page: currentPage,
+  });
 
   const { onDeleteMaterialType } = useDeleteMaterialTypeMutation({
     onSuccessCallback: (data) => {
@@ -54,14 +59,14 @@ export function MaterialType() {
   });
 
   // Prepare full list from API
-  const fullMaterialTypeList: IAllMaterialTypeList[] = (allMaterialTypeData?.data?.list ?? []).map(
-    (lead) => ({
-      id: lead?.id || "N/A",
-      name: lead?.name || "N/A",
-      created_at: `${formatDate(lead?.created_at)}` || "N/A",
-      updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
-    })
-  );
+  const fullMaterialTypeList: IAllMaterialTypeList[] = (
+    allMaterialTypeData?.data?.list ?? []
+  ).map((lead) => ({
+    id: lead?.id || "N/A",
+    name: lead?.name || "N/A",
+    created_at: `${formatDate(lead?.created_at)}` || "N/A",
+    updated_at: `${formatDate(lead?.updated_at)}` || "N/A",
+  }));
 
   // Extract pagination data
   const paginationData = allMaterialTypeData?.data?.pagination;
@@ -74,7 +79,7 @@ export function MaterialType() {
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.created_at.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.updated_at.toLowerCase().includes(searchTerm.toLowerCase())
+        item.updated_at.toLowerCase().includes(searchTerm.toLowerCase()),
     );
   }, [searchTerm, fullMaterialTypeList]);
 
@@ -122,9 +127,7 @@ export function MaterialType() {
   return (
     <div className="bg-[#F8F8F8] p-5  rounded-xl  border  border-gray-300">
       <div className="flex justify-between items-center flex-wrap gap-4 ">
-        <h1 className="text-[1.2rem]  font-medium">
-          Inventory Type List
-        </h1>
+        <h1 className="text-[1.2rem]  font-medium">Product Type List</h1>
         <div className="flex items-center flex-wrap gap-4 ">
           <SearchBar
             onSearch={handleSearch}
@@ -133,7 +136,7 @@ export function MaterialType() {
           />
           {cavAddMaterialType ? (
             <Button
-              title="Add Inventory Type"
+              title="Add Product Type"
               variant="background-white"
               width="w-full md:w-fit"
               onClick={() => {
@@ -158,7 +161,9 @@ export function MaterialType() {
         <AddMaterialTypeModal
           isOpen={isAddModalOpen}
           onClose={handleModalClose}
-          onAddMaterialTypeSuccessCallback={handleAddMaterialTypeSuccessCallback}
+          onAddMaterialTypeSuccessCallback={
+            handleAddMaterialTypeSuccessCallback
+          }
           materialTypeId={selectedMaterialType?.id}
           materialTypeName={selectedMaterialType?.name}
           onClearEditData={() => setSelectedMaterialType(null)}
@@ -176,8 +181,8 @@ export function MaterialType() {
           setDeleteId(null);
         }}
         isLoading={false}
-        title="Delete Inventory Type"
-        message="Are you sure you want to delete this Inventory Type "
+        title="Delete Product Type"
+        message="Are you sure you want to delete this Product Type "
         itemName={materialTypeNameToDelete}
       />
     </div>

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button, InputField, ModalOverlay } from "@/components";
 import { IApiError } from "@/utils";
 import React, { useEffect, useState } from "react";
@@ -6,7 +6,10 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 import toast from "react-hot-toast";
-import { ICreateMaterialTypeResponse, IUpdateMaterialTypeResponse } from "@/services/apis/types";
+import {
+  ICreateMaterialTypeResponse,
+  IUpdateMaterialTypeResponse,
+} from "@/services/apis/types";
 import { useCreateMaterialTypeMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateMaterialTypeMutation";
 import { useUpdateMaterialTypeMutation } from "@/services/apis/clients/community-client/query-hooks/useUpdateMaterialTypeMutation";
 
@@ -64,7 +67,7 @@ export const AddMaterialTypeModal: React.FC<AddLeadMaterialTypeModalProps> = ({
 
   return (
     <ModalOverlay
-      modalTitle="Back to Add Inventory Type"
+      modalTitle="Back to Add Product Type"
       isOpen={isOpen}
       onClose={onClose}
       modalClassName="w-full sm:w-[30rem]"
@@ -80,7 +83,10 @@ export const AddMaterialTypeModal: React.FC<AddLeadMaterialTypeModalProps> = ({
         onSubmit={(values, { resetForm }) => {
           const lowerCaseName = values.name.toLowerCase().trim();
           if (materialTypeId) {
-            onEditMaterialType({ id: materialTypeId, payload: { name: lowerCaseName } });
+            onEditMaterialType({
+              id: materialTypeId,
+              payload: { name: lowerCaseName },
+            });
           } else {
             onMaterialTypeMutation({ name: lowerCaseName });
           }
@@ -90,7 +96,7 @@ export const AddMaterialTypeModal: React.FC<AddLeadMaterialTypeModalProps> = ({
         {({ isSubmitting }) => (
           <Form className="flex flex-col gap-4  p-4  bg-white rounded-xl  border-gray-400">
             <h1 className="text-md  text-gray-900">
-              {materialTypeId ? "Edit  Inventory Type" : "Add New  Inventory Type"}
+              {materialTypeId ? "Edit  Product Type" : "Add New  Product Type"}
             </h1>
 
             <div className="flex flex-col gap-4 md:gap-8  md:flex-row justify-between items-center w-full">
@@ -101,7 +107,7 @@ export const AddMaterialTypeModal: React.FC<AddLeadMaterialTypeModalProps> = ({
                 <Field
                   name="name"
                   as={InputField}
-                  placeholder="Enter Inventory Type Name"
+                  placeholder="Enter Product Type Name"
                 />
                 <div className="text-red-500 text-[0.9rem] mt-1">
                   <ErrorMessage name="name" />
@@ -121,7 +127,9 @@ export const AddMaterialTypeModal: React.FC<AddLeadMaterialTypeModalProps> = ({
                 }}
               />
               <Button
-                title={materialTypeId ? "Update Inventory Type" : "Add Inventory Type"}
+                title={
+                  materialTypeId ? "Update Product Type" : "Add Product Type"
+                }
                 variant="primary"
                 width="w-full"
                 type="submit"

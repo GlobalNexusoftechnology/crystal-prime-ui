@@ -36,11 +36,11 @@ export function MaterialListTable({
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [materialToDelete, setMaterialToDelete] =
     useState<IMaterialManagementProps | null>(null);
-const [openTab, setOpenTab] = useState(false);
-const [id, setId] = useState("")
+  const [openTab, setOpenTab] = useState(false);
+  const [id, setId] = useState("");
   const { onDeleteMaterial, isPending } = useDeleteMaterialMutation({
     onSuccessCallback: (res) => {
-      toast.success(res?.message || "Inventory  deleted successfully");
+      toast.success(res?.message || "Product  deleted successfully");
       onRefetch();
       setShowDeleteConfirmation(false);
       setMaterialToDelete(null);
@@ -55,7 +55,7 @@ const [id, setId] = useState("")
   const { onChangeMaterialStatus, isPending: isStatusPending } =
     useChangeMaterialStatusMutation({
       onSuccessCallback: () => {
-        toast.success("Inventory  status updated");
+        toast.success("Product  status updated");
         onRefetch();
       },
       onErrorCallback: (err: IApiError) => {
@@ -63,7 +63,7 @@ const [id, setId] = useState("")
       },
     });
 
-    const closeTab = () => setOpenTab(false)
+  const closeTab = () => setOpenTab(false);
 
   // Use the data passed as props
   const normalizedData: IMaterialManagementProps[] = data || [];
@@ -97,10 +97,11 @@ const [id, setId] = useState("")
 
   const actions: ITableAction<IMaterialManagementProps>[] = [
     {
-      label:"Manage Inventory",
-       onClick: (row) => {setOpenTab(true);
-        setId(row.id)
-       }
+      label: "Manage Product",
+      onClick: (row) => {
+        setOpenTab(true);
+        setId(row.id);
+      },
     },
     {
       label: "Edit",
@@ -121,7 +122,7 @@ const [id, setId] = useState("")
   if (normalizedData.length === 0)
     return <div className="text-center py-10  ">No inventory found.</div>;
 
-  const datahistory = normalizedData.find((data) => data.id === id)
+  const datahistory = normalizedData.find((data) => data.id === id);
   return (
     <>
       <Table
@@ -142,14 +143,12 @@ const [id, setId] = useState("")
             onDeleteMaterial(materialToDelete.id);
           }
         }}
-        title="Delete Inventory "
+        title="Delete Product "
         message="Are you sure you want to delete this material"
         itemName={materialToDelete?.name || ""}
         isLoading={isPending}
       />
-      {
-        openTab && <MaterialHistoryTab data={datahistory} onClose={closeTab} />
-      }
+      {openTab && <MaterialHistoryTab data={datahistory} onClose={closeTab} />}
     </>
   );
 }

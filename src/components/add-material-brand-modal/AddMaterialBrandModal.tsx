@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Button, InputField, ModalOverlay } from "@/components";
 import { IApiError } from "@/utils";
 import React, { useEffect, useState } from "react";
@@ -7,7 +7,10 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import { useCreateMaterialBrandMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateMaterialBrandMutation";
 import { useUpdateMaterialBrandMutation } from "@/services/apis/clients/community-client/query-hooks/useUpdateMaterialBrandMutation";
-import { ICreateMaterialBrandResponse, IUpdateMaterialBrandResponse } from "@/services/apis/types";
+import {
+  ICreateMaterialBrandResponse,
+  IUpdateMaterialBrandResponse,
+} from "@/services/apis/types";
 
 interface AddLeadMaterialBrandModalProps {
   isOpen: boolean;
@@ -18,7 +21,9 @@ interface AddLeadMaterialBrandModalProps {
   materialBrandName?: string;
 }
 
-export const AddMaterialBrandModal: React.FC<AddLeadMaterialBrandModalProps> = ({
+export const AddMaterialBrandModal: React.FC<
+  AddLeadMaterialBrandModalProps
+> = ({
   isOpen,
   onClose,
   onAddMaterialBrandSuccessCallback,
@@ -63,7 +68,7 @@ export const AddMaterialBrandModal: React.FC<AddLeadMaterialBrandModalProps> = (
 
   return (
     <ModalOverlay
-      modalTitle="Back to Add Inventory Brand"
+      modalTitle="Back to Add Product Brand"
       isOpen={isOpen}
       onClose={onClose}
       modalClassName="w-full sm:w-[30rem]"
@@ -79,7 +84,10 @@ export const AddMaterialBrandModal: React.FC<AddLeadMaterialBrandModalProps> = (
         onSubmit={(values, { resetForm }) => {
           const lowerCaseName = values.name.toLowerCase().trim();
           if (materialBrandId) {
-            onEditMaterialBrand({ id: materialBrandId, payload: { name: lowerCaseName } });
+            onEditMaterialBrand({
+              id: materialBrandId,
+              payload: { name: lowerCaseName },
+            });
           } else {
             onMaterialBrandMutation({ name: lowerCaseName });
           }
@@ -89,7 +97,9 @@ export const AddMaterialBrandModal: React.FC<AddLeadMaterialBrandModalProps> = (
         {({ isSubmitting }) => (
           <Form className="flex flex-col gap-4  p-4  bg-white rounded-xl  border-gray-400">
             <h1 className="text-md  text-gray-900">
-              {materialBrandId ? "Edit material brand" : "Add New material brand"}
+              {materialBrandId
+                ? "Edit material brand"
+                : "Add New material brand"}
             </h1>
 
             <div className="flex flex-col gap-4 md:gap-8  md:flex-row justify-between items-center w-full">
@@ -120,7 +130,9 @@ export const AddMaterialBrandModal: React.FC<AddLeadMaterialBrandModalProps> = (
                 }}
               />
               <Button
-                title={materialBrandId ? "Update Inventory Brand" : "Add Inventory Brand"}
+                title={
+                  materialBrandId ? "Update Product Brand" : "Add Product Brand"
+                }
                 variant="primary"
                 width="w-full"
                 type="submit"

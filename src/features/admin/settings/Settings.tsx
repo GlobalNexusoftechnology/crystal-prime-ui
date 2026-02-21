@@ -33,10 +33,16 @@ export function Settings() {
   const cavViewTypes = hasPermission(EModule.LEAD_TYPES, EAction.VIEW);
   const cavViewProjectTemplate = hasPermission(
     EModule.PROJECT_TEMPLATE,
-    EAction.VIEW
+    EAction.VIEW,
   );
-    const cavViewMaterialType = hasPermission(EModule.MATERIAL_TYPE, EAction.VIEW);
-  const cavViewMaterialBrand = hasPermission(EModule.MATERIAL_BRAND, EAction.VIEW);
+  const cavViewMaterialType = hasPermission(
+    EModule.MATERIAL_TYPE,
+    EAction.VIEW,
+  );
+  const cavViewMaterialBrand = hasPermission(
+    EModule.MATERIAL_BRAND,
+    EAction.VIEW,
+  );
 
   // Dynamically build the tabs array based on permissions
   const tabs = useMemo(() => {
@@ -46,19 +52,29 @@ export function Settings() {
     if (cavViewSources) arr.push({ key: "leadSources", label: "Lead Sources" });
     if (cavViewStatuses) arr.push({ key: "leadStatus", label: "Lead Status" });
     if (cavViewRoles) arr.push({ key: "role", label: "Role" });
-  
-    if (cavViewMaterialType) arr.push({ key: "materialType", label: "Inventory Type" });
-    if (cavViewMaterialBrand) arr.push({ key: "materialBrand", label: "Inventory Brand" });
+
+    if (cavViewMaterialType)
+      arr.push({ key: "materialType", label: "Product Type" });
+    if (cavViewMaterialBrand)
+      arr.push({ key: "materialBrand", label: "Product Brand" });
     if (cavViewProjectTemplate)
       arr.push({ key: "projectTemplate", label: "Project Template" });
     return arr;
-  }, [cavViewTypes, cavViewSources, cavViewStatuses, cavViewRoles, cavViewMaterialType, cavViewMaterialBrand, cavViewProjectTemplate]);
+  }, [
+    cavViewTypes,
+    cavViewSources,
+    cavViewStatuses,
+    cavViewRoles,
+    cavViewMaterialType,
+    cavViewMaterialBrand,
+    cavViewProjectTemplate,
+  ]);
 
   // Read tab from query param
   const tabParam = searchParams.get("tab");
   const validTab = tabs.find((tab) => tab.key === tabParam);
   const [activePage, setActivePage] = useState(
-    () => validTab?.key || tabs[0]?.key
+    () => validTab?.key || tabs[0]?.key,
   );
 
   return (
@@ -75,19 +91,20 @@ export function Settings() {
           Settings
         </button>
         <div className="flex gap-4  overflow-x-auto">
-          {tabs?.length > 0 && tabs.map((tab) => (
-            <button
-              key={tab.key}
-              className={`p-2  w-fit whitespace-nowrap rounded  font-medium ${
-                activePage === tab.key
-                  ? "border-b-4 border-[#65558F] text-[1rem] "
-                  : "text-[0.9rem] "
-              }`}
-              onClick={() => setActivePage(tab.key)}
-            >
-              {tab.label}
-            </button>
-          ))}
+          {tabs?.length > 0 &&
+            tabs.map((tab) => (
+              <button
+                key={tab.key}
+                className={`p-2  w-fit whitespace-nowrap rounded  font-medium ${
+                  activePage === tab.key
+                    ? "border-b-4 border-[#65558F] text-[1rem] "
+                    : "text-[0.9rem] "
+                }`}
+                onClick={() => setActivePage(tab.key)}
+              >
+                {tab.label}
+              </button>
+            ))}
         </div>
       </div>
 
@@ -99,7 +116,7 @@ export function Settings() {
       {activePage === "projectTemplate" && <ProjectTemplateList />}
       {activePage === "eiLogTypes" && <EILogTypes />}
       {activePage === "eiLogHeads" && <EILogHeads />}
-           {activePage === "materialBrand" && <MaterialBrand />}
+      {activePage === "materialBrand" && <MaterialBrand />}
       {activePage === "materialType" && <MaterialType />}
     </div>
   );

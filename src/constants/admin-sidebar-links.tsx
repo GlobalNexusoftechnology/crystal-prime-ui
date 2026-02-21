@@ -7,7 +7,7 @@ import {
   ReportIcon,
   SettingsIcon,
   StaffManagementIcon,
-  UserListRoundedIcon
+  UserListRoundedIcon,
 } from "@/features";
 import { MaterialIcon } from "@/features/icons/MaterialIcon";
 import { LuTicket } from "react-icons/lu";
@@ -77,7 +77,7 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
   },
   {
     path: "/admin/material-management",
-    name: "Inventory",
+    name: "Product",
     icon: <MaterialIcon />,
     activeIcon: <MaterialIcon color="#221F21" />,
     // permission: { module: "MATERIAL_MANAGEMENT", actions: "VIEW" },

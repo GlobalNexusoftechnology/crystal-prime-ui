@@ -7,7 +7,10 @@ import * as Yup from "yup";
 import { Button, DatePicker, InputField, Table } from "@/components";
 import { IApiError } from "@/utils";
 import { IInventoryHistoryTableColumns } from "./inventory-history.columns";
-import { ICreateInventoryHistoryPayload, IInventoryHistoryItem } from "@/services";
+import {
+  ICreateInventoryHistoryPayload,
+  IInventoryHistoryItem,
+} from "@/services";
 import { useCreateInventoryHistoryMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateInventoryHistoryMutation";
 import { useDeleteInventoryHistoryMutation } from "@/services/apis/clients/community-client/query-hooks/useDeleteInventoryHistoryMutation";
 import { useInventoryHistoryByMaterialQuery } from "@/services/apis/clients/community-client/query-hooks/useInventoryHistoryByMaterialQuery";
@@ -29,8 +32,7 @@ interface IInventoryHistoryProps {
 export function InventoryHistory({ materialId }: IInventoryHistoryProps) {
   const queryClient = useQueryClient();
 
-    const { fetchAllMaterials } = useAllMaterialsQuery();
-  
+  const { fetchAllMaterials } = useAllMaterialsQuery();
 
   // 🔁 Fetch list for this material
   const { data: historyData, refetch } =
@@ -39,7 +41,7 @@ export function InventoryHistory({ materialId }: IInventoryHistoryProps) {
   // ➕ Create mutation
   const { createInventoryHistory } = useCreateInventoryHistoryMutation({
     onSuccessCallback: () => {
-      toast.success("Inventory history created");
+      toast.success("Product history created");
       formik.resetForm();
       refetch();
       queryClient.invalidateQueries({
@@ -61,37 +63,36 @@ export function InventoryHistory({ materialId }: IInventoryHistoryProps) {
       toast.error(err.message);
     },
   });
-const formik = useFormik<ICreateInventoryHistoryPayload>({
-  initialValues: {
-    material_id: materialId,
-    date: "",
-    used: 0,
-    notes: "",
-  },
-  enableReinitialize: true,
-  validationSchema,
-  onSubmit: async (values) => {
-    if (!materialId) {
-      toast.error("Material ID is missing");
-      return;
-    }
+  const formik = useFormik<ICreateInventoryHistoryPayload>({
+    initialValues: {
+      material_id: materialId,
+      date: "",
+      used: 0,
+      notes: "",
+    },
+    enableReinitialize: true,
+    validationSchema,
+    onSubmit: async (values) => {
+      if (!materialId) {
+        toast.error("Material ID is missing");
+        return;
+      }
 
-    try {
-      await createInventoryHistory({
-        ...values,
-        material_id: materialId,
-      });
+      try {
+        await createInventoryHistory({
+          ...values,
+          material_id: materialId,
+        });
 
-      fetchAllMaterials(); // ✅ runs ONLY after API success
-      toast.success("Inventory history created");
-      formik.resetForm();
-    } catch (err: any) {
-      // mutateAsync throws on error
-      toast.error(err?.message || "Failed to create inventory history");
-    }
-  },
-});
-
+        fetchAllMaterials(); // ✅ runs ONLY after API success
+        toast.success("Product history created");
+        formik.resetForm();
+      } catch (err: any) {
+        // mutateAsync throws on error
+        toast.error(err?.message || "Failed to create inventory history");
+      }
+    },
+  });
 
   const inventoryHistoryActions = [
     {
@@ -131,7 +132,9 @@ const formik = useFormik<ICreateInventoryHistoryPayload>({
             value={formik.values.used}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.used ? (formik.errors.used as string) : undefined}
+            error={
+              formik.touched.used ? (formik.errors.used as string) : undefined
+            }
           />
         </div>
 

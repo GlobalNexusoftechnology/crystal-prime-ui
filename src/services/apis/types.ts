@@ -76,7 +76,7 @@ export interface IApiClient {
   post<TResponseData = any, TRequestPayload = any>(
     endpoint: string,
     payload: TRequestPayload,
-    config?: IApiConfiguration<TRequestPayload>
+    config?: IApiConfiguration<TRequestPayload>,
   ): Promise<IApiResponse<TResponseData> | IApiError>;
   /**
    * Patch api function which returns Promise data as response.
@@ -84,7 +84,7 @@ export interface IApiClient {
   patch<TResponseData = any, TRequestPayload = any>(
     endpoint: string,
     payload: TRequestPayload,
-    config?: IApiConfiguration<TRequestPayload>
+    config?: IApiConfiguration<TRequestPayload>,
   ): Promise<IApiResponse<TResponseData> | IApiError>;
   /**
    * Put api function which returns Promise data as response.
@@ -92,14 +92,14 @@ export interface IApiClient {
   put<TResponseData = any, TRequestPayload = any>(
     endpoint: string,
     payload: TRequestPayload,
-    config?: IApiConfiguration<TRequestPayload>
+    config?: IApiConfiguration<TRequestPayload>,
   ): Promise<IApiResponse<TResponseData> | IApiError>;
   /**
    * Get api function which returns Promise data as response.
    */
   get<TResponseData = any, TRequestPayload = any>(
     endpoint: string,
-    config?: IApiConfiguration<TRequestPayload>
+    config?: IApiConfiguration<TRequestPayload>,
   ): Promise<IApiResponse<TResponseData> | IApiError>;
 }
 
@@ -2585,7 +2585,7 @@ export interface IAllMaterialsList {
   code: string;
   materialBrand?: { id: string; name: string };
   size?: string;
-  uom?: string; // Unit of Inventory
+  uom?: string; // Unit of Product
   pressure?: string;
   hsn?: string;
   materialType?: { id: string; name: string };
@@ -2601,7 +2601,7 @@ export interface IAllMaterialsList {
   photos?: string[];
   active: boolean;
   state_prices: any;
-  state: any
+  state: any;
 }
 
 export interface IAllMaterialsResponse {
@@ -2625,7 +2625,7 @@ export interface ICreateMaterialPayload {
   code: string;
   brand?: string;
   size?: string;
-  uom?: string; // Unit of Inventory
+  uom?: string; // Unit of Product
   pressure?: string;
   hsn?: string;
   type?: string;

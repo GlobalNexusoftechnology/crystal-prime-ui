@@ -12,7 +12,7 @@ export interface IMaterialManagementProps {
   code: string;
   materialBrand?: string | { id: string; name: string };
   size?: string;
-  uom?: string; // Unit of Inventory
+  uom?: string; // Unit of Product
   pressure?: string;
   hsn?: string;
   materialType?: string | { id: string; name: string };
@@ -25,17 +25,16 @@ export interface IMaterialManagementProps {
   purchase_description?: string;
   alias?: string;
   photos?: string[];
-state_prices: {
-  Maharashtra?: number;
-  Gujarat?: number;
-  Uttar_Pradesh?: number;
-  Karnataka?: number;
-  West_Bengal?: number;
-  Delhi?: number;
-  Odisha?: number;
-  Goa?: number;
-};
-
+  state_prices: {
+    Maharashtra?: number;
+    Gujarat?: number;
+    Uttar_Pradesh?: number;
+    Karnataka?: number;
+    West_Bengal?: number;
+    Delhi?: number;
+    Odisha?: number;
+    Goa?: number;
+  };
 }
 
 type StatePrices = {
@@ -48,7 +47,6 @@ type StatePrices = {
   Odisha?: number;
   Goa?: number;
 };
-
 
 export const materialColumns: ITableColumn<IMaterialManagementProps>[] = [
   {
@@ -151,7 +149,7 @@ export const materialColumns: ITableColumn<IMaterialManagementProps>[] = [
                 <Image
                   key={idx}
                   src={url}
-                  alt="Inventory  Photo"
+                  alt="Product  Photo"
                   width={500}
                   height={500}
                   className="w-12 h-12 object-cover rounded border cursor-pointer"

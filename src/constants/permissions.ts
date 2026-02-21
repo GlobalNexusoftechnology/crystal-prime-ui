@@ -77,7 +77,11 @@ export const MODULES: TOptionItem[] = [
   { key: EModule.ROLES, label: "Roles Module", value: "16" },
   { key: EModule.SETTINGS, label: "Settings Module", value: "17" },
   { key: EModule.LEAD_TYPES, label: "Lead Types Module", value: "18" },
-  { key: EModule.CLIENT_MANAGEMENT, label: "Client Management Module", value: "19" },
+  {
+    key: EModule.CLIENT_MANAGEMENT,
+    label: "Client Management Module",
+    value: "19",
+  },
   {
     key: EModule.PROJECT_TEMPLATE,
     label: "Project Template Module",
@@ -113,9 +117,13 @@ export const MODULES: TOptionItem[] = [
   },
   { key: EModule.MY_PROJECTS, label: "My Projects Module", value: "32" },
 
-   { key: EModule.MATERIAL_MANAGEMENT, label: "Inventory Management", value: "32"},
-   { key: EModule.MATERIAL_TYPE, label: "Inventory Type", value: "37" },
-   { key: EModule.MATERIAL_BRAND, label: "Inventory Brand", value: "38" },
+  {
+    key: EModule.MATERIAL_MANAGEMENT,
+    label: "Product Management",
+    value: "32",
+  },
+  { key: EModule.MATERIAL_TYPE, label: "Product Type", value: "37" },
+  { key: EModule.MATERIAL_BRAND, label: "Product Brand", value: "38" },
   //  { key: EModule.PROPOSAL, label: "Proposal Management", value: "35" },
 ];
 
