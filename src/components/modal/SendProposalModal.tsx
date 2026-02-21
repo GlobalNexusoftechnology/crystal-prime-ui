@@ -73,7 +73,9 @@ export function SendProposalModal({
   isPending = false,
 }: SendProposalModalProps) {
   // ...rest of component (no changes needed except the onSubmit call inside formik)
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [currentPage, setCurrentPage] = useState(1);
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   const [searchInput, setSearchInput] = useState("");
 
   const { debouncedValue: searchQuery } = useDebounce({
