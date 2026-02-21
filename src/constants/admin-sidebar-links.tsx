@@ -89,7 +89,7 @@ export const adminSidebarLinks: IAdminSidebarLink[] = [
     icon: <MaterialIcon />,
     activeIcon: <MaterialIcon color="#221F21" />,
     // permission: { module: "MATERIAL_MANAGEMENT", actions: "VIEW" },
-    permission: { module: "INVENTORY_MANAGEMENT", actions: "VIEW" },
+    permission: { module: "STOCK_MANAGEMENT", actions: "VIEW" },
   },
 
   {
