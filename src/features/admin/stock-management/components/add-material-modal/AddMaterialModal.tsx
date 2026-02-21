@@ -20,15 +20,6 @@ import { useAllMaterialBrandQuery } from "@/services/apis/clients/community-clie
 import { useAllMaterialTypeQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialTypeQuery";
 import { useCreateInventoryMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateInventoryMutation";
 import { useUpdateInventoryMutation } from "@/services/apis/clients/community-client/query-hooks/useUpdateInventoryMutation";
-type IndianState =
-  | "Maharashtra"
-  | "Gujarat"
-  | "Uttar_Pradesh"
-  | "Karnataka"
-  | "West_Bengal"
-  | "Delhi"
-  | "Odisha"
-  | "Goa";
 
 export interface IAddStaffFormValues {
   code: string;
