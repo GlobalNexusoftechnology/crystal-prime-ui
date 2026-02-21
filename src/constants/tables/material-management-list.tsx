@@ -24,6 +24,7 @@ export interface IMaterialManagementProps {
   sales_description?: string;
   purchase_description?: string;
   alias?: string;
+  prices?: string;
   photos?: string[];
   state_prices: {
     Maharashtra?: number;
@@ -133,6 +134,10 @@ export const materialColumns: ITableColumn<IMaterialManagementProps>[] = [
   {
     header: "ALIAS",
     accessor: "alias",
+  },
+  {
+    header: "Price",
+    accessor: "prices",
   },
   {
     header: "PHOTOS",

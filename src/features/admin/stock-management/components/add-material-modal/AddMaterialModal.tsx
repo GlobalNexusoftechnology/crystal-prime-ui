@@ -45,7 +45,7 @@ export interface IAddStaffFormValues {
   salesPrice: string;
   salesDescription: string;
   purchaseDescription: string;
-  alias: string;
+  prices: string;
   Upload: (File | string)[];
   keywords?: string[];
 }
@@ -65,7 +65,7 @@ const validationSchema = Yup.object({
   salesPrice: Yup.string().optional(),
   salesDescription: Yup.string().optional(),
   purchaseDescription: Yup.string().optional(),
-  alias: Yup.string().optional(),
+  prices: Yup.string().optional(),
   Upload: Yup.array()
     .of(
       Yup.mixed()
@@ -201,7 +201,7 @@ export function AddMaterialModal({
           salesPrice: initialData?.sales_price?.toString() || "",
           salesDescription: initialData?.sales_description || "",
           purchaseDescription: initialData?.purchase_description || "",
-          alias: initialData?.alias || "",
+          prices: initialData?.prices || "",
           statePrices: {
             Maharashtra: "",
             Gujarat: "",
@@ -231,12 +231,12 @@ export function AddMaterialModal({
             sales_price: Number(values.salesPrice),
             sales_description: values.salesDescription,
             purchase_description: values.purchaseDescription,
-            alias: values.alias,
+            prices: values.prices,
             // ✅ State-wise prices
             state_prices: Object.fromEntries(
-              Object.entries(values.statePrices).map(([state, price]) => [
+              Object.entries(values.statePrices).map(([state, prices]) => [
                 state,
-                Number(price),
+                Number(prices),
               ]),
             ),
 
@@ -415,7 +415,7 @@ export function AddMaterialModal({
                 />
               </div>
 
-              {/* Quantity & Alias */}
+              {/* Quantity & prices */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
                   label="Quantity"
@@ -427,38 +427,30 @@ export function AddMaterialModal({
                   error={touched.qty && errors.qty}
                 />
                 <InputField
-                  label="Alias"
-                  name="alias"
-                  value={values.alias}
+                  label="Price"
+                  name="prices"
+                  value={values.prices}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="Enter Alias"
-                  error={touched.alias && errors.alias}
+                  placeholder="Enter Price"
+                  error={touched.prices && errors.prices}
                 />
               </div>
 
               {/* State-wise Prices */}
               <div className="border border-gray-200 rounded-lg p-4">
-                <h2 className="text-md font-semibold mb-3">
-                  State-wise Sales Price
-                </h2>
+                <h2 className="text-md font-semibold mb-3">Price</h2>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {stateOptions.map((state) => (
-                    <InputField
-                      key={state}
-                      label={`${state} Price`}
-                      name={`statePrices.${state}`}
-                      value={values.statePrices?.[state] || ""}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      placeholder={`Enter price for ${state}`}
-                      error={
-                        touched.statePrices?.[state] &&
-                        errors.statePrices?.[state]
-                      }
-                    />
-                  ))}
+                  <InputField
+                    label="Prices"
+                    name="prices"
+                    value={values.prices}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    placeholder="Enter Price"
+                    error={touched.prices && errors.prices}
+                  />
                 </div>
               </div>
 

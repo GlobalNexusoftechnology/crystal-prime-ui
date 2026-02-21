@@ -2595,6 +2595,7 @@ export interface IAllMaterialsList {
   sales_description?: string;
   purchase_description?: string;
   alias?: string;
+  prices?: string;
   qty: number;
   quantity?: number; // API response field
   discount?: number;
@@ -2637,6 +2638,7 @@ export interface ICreateMaterialPayload {
   sales_description?: string;
   purchase_description?: string;
   alias?: string;
+  prices?: string;
   photos?: string[]; // URLs of uploaded images
 }
 export interface ICreateMaterialResponse {
@@ -2714,7 +2716,7 @@ export interface BoqItem {
   brand: string;
   sales_description?: string;
   purchase_description?: string;
-  alias?: string;
+  prices?: string;
   photos: string[];
   qty: number;
   rate: string;
@@ -2765,6 +2767,7 @@ export interface SearchMaterial {
   sales_description?: string;
   purchase_description?: string;
   alias?: string;
+  prices?: string;
   photos: string[];
   active: boolean;
 }
@@ -2840,6 +2843,7 @@ export interface ICreateBoqPayload {
     sales_description?: string;
     purchase_description?: string;
     alias?: string;
+    prices?: string;
     photos: string[];
     active: boolean;
   };
@@ -2934,6 +2938,7 @@ export interface IBoqDetailList {
     sales_description?: string;
     purchase_description?: string;
     alias?: string;
+    prices?: string;
     photos: string[];
     active: boolean;
   } | null;
@@ -2976,6 +2981,7 @@ export interface IBoqSearchList {
     sales_description?: string;
     purchase_description?: string;
     alias?: string;
+    prices?: string;
     photos: string[];
     active: boolean;
   };
