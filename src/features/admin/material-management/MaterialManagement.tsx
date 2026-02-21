@@ -26,9 +26,9 @@ export function MaterialManagement() {
     () => ({
       searchText: searchQuery,
       page: currentPage,
-      limit: 10,
+      limit: 40,
     }),
-    [searchQuery, currentPage]
+    [searchQuery, currentPage],
   );
 
   const { allMaterialsData, fetchAllMaterials } = useAllMaterialsQuery(filters);
