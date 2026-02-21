@@ -420,6 +420,17 @@ export const updateMaterialUrl = (id: string) => `/materials/${id}`; //put
 
 export const deleteMaterialUrl = (id: string) => `/materials/${id}`; //delete
 
+// Inventory
+export const fetchAllInventoryUrl = () => "/inventory"; //Get
+
+export const createInventoryUrl = () => "/inventory"; //post
+
+export const getInventoryDetailByIdUrl = (id: string) => `/inventory/${id}`; //get by id
+
+export const updateInventoryUrl = (id: string) => `/inventory/${id}`; //put
+
+export const deleteInventoryUrl = (id: string) => `/inventory/${id}`; //delete
+
 export const importMaterialFromExcelUrl = () => "/materials/import/excel";
 
 export const fetchMaterialExcelUrl = () => "/materials/export/excel";

@@ -403,6 +403,10 @@ import {
   createInventoryHistoryUrl,
   deleteInventoryHistoryUrl,
   inventoryHistoryByMaterialUrl,
+  fetchAllInventoryUrl,
+  updateInventoryUrl,
+  deleteInventoryUrl,
+  createInventoryUrl,
 } from "./urls";
 import {
   IClientDetails,
@@ -3116,10 +3120,38 @@ export class CommunityClient extends ApiClient {
 
     return response?.data;
   };
+  // create Inventory
+  public createInventory = async (payload: ICreateMaterialPayload) => {
+    const response = await this.post<ICreateMaterialResponse>(
+      createInventoryUrl(),
+      payload,
+      { requiresAuth: false },
+    );
+
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+
+    return response?.data;
+  };
   // update material
   public updateMaterial = async ({ id, payload }: IUpdateMaterialPayload) => {
     const response = await this.put<IUpdateMaterialResponse>(
       updateMaterialUrl(id),
+      payload,
+      {
+        requiresAuth: true,
+      },
+    );
+    if (!response?.success) {
+      throw response?.response?.data;
+    }
+    return response?.data;
+  };
+  // update inventory
+  public updateInventory = async ({ id, payload }: IUpdateMaterialPayload) => {
+    const response = await this.put<IUpdateMaterialResponse>(
+      updateInventoryUrl(id),
       payload,
       {
         requiresAuth: true,
@@ -3135,6 +3167,17 @@ export class CommunityClient extends ApiClient {
   public deleteMaterial = async (id: string) => {
     const response = await this.del<IDeleteMaterialResponse>(
       deleteMaterialUrl(id),
+    );
+
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data;
+  };
+  // delete inventory
+  public deleteInventory = async (id: string) => {
+    const response = await this.del<IDeleteMaterialResponse>(
+      deleteInventoryUrl(id),
     );
 
     if (!response?.success) {
@@ -3235,6 +3278,25 @@ export class CommunityClient extends ApiClient {
     const url = params.toString()
       ? `${fetchAllMaterialsUrl()}?${params.toString()}`
       : fetchAllMaterialsUrl();
+
+    const response = await this.get<IAllMaterialsResponse>(url);
+    if (!response?.success) {
+      throw response?.errorData;
+    }
+    return response?.data?.data;
+  };
+  //get all inventory
+  public fetchAllInventory = async (
+    filters: { searchText?: string; page?: number; limit?: number } = {},
+  ) => {
+    const params = new URLSearchParams();
+    if (filters.searchText) params.append("searchText", filters.searchText);
+    if (filters.page) params.append("page", filters.page.toString());
+    if (filters.limit) params.append("limit", filters.limit.toString());
+
+    const url = params.toString()
+      ? `${fetchAllInventoryUrl()}?${params.toString()}`
+      : fetchAllInventoryUrl();
 
     const response = await this.get<IAllMaterialsResponse>(url);
     if (!response?.success) {

@@ -8,6 +8,7 @@ import { IMaterialManagementProps } from "@/constants/tables/material-management
 import { useAllMaterialsQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialsQuery";
 import { MaterialListTable } from "./components/material-list-table";
 import { AddMaterialModal, MaterialFilters } from "./components";
+import { useAllInventoryQuery } from "@/services/apis/clients/community-client/query-hooks/useAllInventoryQuery";
 
 export function StockManagement() {
   const [searchInput, setSearchInput] = useState("");
@@ -31,7 +32,7 @@ export function StockManagement() {
     [searchQuery, currentPage],
   );
 
-  const { allMaterialsData, fetchAllMaterials } = useAllMaterialsQuery(filters);
+  const { allMaterialsData, fetchAllMaterials } = useAllInventoryQuery(filters);
 
   // Reset to first page when search changes
   useEffect(() => {
@@ -64,7 +65,7 @@ export function StockManagement() {
     <section className="flex flex-col gap-4  border  border-gray-300 rounded-lg  bg-white px-2 sm:px-6  py-2 sm:py-4 ">
       <Breadcrumb />
       <div className="flex flex-col gap-2 ">
-        <h1 className="text-xl font-medium">Product Management</h1>
+        <h1 className="text-xl font-medium">Inventory Management</h1>
       </div>
       <div className="flex flex-col gap-6  bg-customGray p-4  border  rounded-xl ">
         <MaterialFilters

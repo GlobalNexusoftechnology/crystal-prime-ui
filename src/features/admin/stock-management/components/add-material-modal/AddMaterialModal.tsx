@@ -20,6 +20,8 @@ import { useAllMaterialTypeQuery } from "@/services/apis/clients/community-clien
 import { useUpdateMaterialMutation } from "@/services/apis/clients/community-client/query-hooks/useUpdateMaterialMutation";
 import { IMaterialManagementProps } from "@/constants/tables/material-management-list";
 import { gstOptions } from "@/constants/material";
+import { useCreateInventoryMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateInventoryMutation";
+import { useUpdateInventoryMutation } from "@/services/apis/clients/community-client/query-hooks/useUpdateInventoryMutation";
 type IndianState =
   | "Maharashtra"
   | "Gujarat"
@@ -143,7 +145,7 @@ export function AddMaterialModal({
       },
     });
 
-  const { createMaterial, isPending: isCreating } = useCreateMaterialMutation({
+  const { createMaterial, isPending: isCreating } = useCreateInventoryMutation({
     onSuccessCallback: (res) => {
       toast.success(res.message);
       onClose();
@@ -154,7 +156,7 @@ export function AddMaterialModal({
     },
   });
 
-  const { updateMaterial, isPending: isUpdating } = useUpdateMaterialMutation({
+  const { updateMaterial, isPending: isUpdating } = useUpdateInventoryMutation({
     onSuccessCallback: (res) => {
       toast.success(res.message);
       onClose();
