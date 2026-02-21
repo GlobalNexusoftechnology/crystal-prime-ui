@@ -40,6 +40,7 @@ export enum EModule {
   MATERIAL_TYPE = "MATERIAL_TYPE",
   MATERIAL_BRAND = "MATERIAL_BRAND",
   SUPPLIER_MANAGEMENT = "SUPPLIER_MANAGEMENT",
+  STOCK_MANAGEMENT = "STOCK_MANAGEMENT",
 }
 
 export enum EAction {
@@ -61,6 +62,16 @@ export const MODULES: TOptionItem[] = [
     key: EModule.LEAD_MANAGEMENT,
     label: "Lead Management Module",
     value: "11",
+  },
+  {
+    key: EModule.LEAD_MANAGEMENT,
+    label: "Lead Management Module",
+    value: "11",
+  },
+  {
+    key: EModule.STOCK_MANAGEMENT,
+    label: "Stock Management Module",
+    value: "99",
   },
   {
     key: EModule.PROJECT_MANAGEMENT,
