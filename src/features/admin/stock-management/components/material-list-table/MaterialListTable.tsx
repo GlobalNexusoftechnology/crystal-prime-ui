@@ -40,7 +40,7 @@ export function MaterialListTable({
   const [id, setId] = useState("");
   const { onDeleteMaterial, isPending } = useDeleteMaterialMutation({
     onSuccessCallback: (res) => {
-      toast.success(res?.message || "Product  deleted successfully");
+      toast.success(res?.message || "Inventory  deleted successfully");
       onRefetch();
       setShowDeleteConfirmation(false);
       setMaterialToDelete(null);
@@ -55,7 +55,7 @@ export function MaterialListTable({
   const { onChangeMaterialStatus, isPending: isStatusPending } =
     useChangeMaterialStatusMutation({
       onSuccessCallback: () => {
-        toast.success("Product  status updated");
+        toast.success("Inventory  status updated");
         onRefetch();
       },
       onErrorCallback: (err: IApiError) => {
@@ -97,7 +97,7 @@ export function MaterialListTable({
 
   const actions: ITableAction<IMaterialManagementProps>[] = [
     {
-      label: "Manage Product",
+      label: "Manage Inventory",
       onClick: (row) => {
         setOpenTab(true);
         setId(row.id);
@@ -143,7 +143,7 @@ export function MaterialListTable({
             onDeleteMaterial(materialToDelete.id);
           }
         }}
-        title="Delete Product "
+        title="Delete Inventory "
         message="Are you sure you want to delete this material"
         itemName={materialToDelete?.name || ""}
         isLoading={isPending}

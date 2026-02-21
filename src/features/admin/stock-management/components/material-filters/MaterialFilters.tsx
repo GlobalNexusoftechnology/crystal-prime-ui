@@ -88,7 +88,7 @@ export function MaterialFilters({
 
   return (
     <div className="flex justify-between items-center flex-wrap gap-4 ">
-      <h1 className="text-[1.2rem]  font-medium">Product List</h1>
+      <h1 className="text-[1.2rem]  font-medium">Inventory List</h1>
       <div className="flex items-center flex-wrap gap-4 ">
         <SearchBar
           onSearch={onSearchChange}
@@ -97,7 +97,7 @@ export function MaterialFilters({
           width="w-full min-w-[12rem] md:w-[25vw] "
         />
         <Button
-          title="Add Product "
+          title="Add Inventory "
           variant="background-white"
           width="w-full md:w-fit"
           hover

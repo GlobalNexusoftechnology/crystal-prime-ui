@@ -172,7 +172,7 @@ export function AddMaterialModal({
     <ModalOverlay
       isOpen={isOpen}
       onClose={onClose}
-      modalTitle={isEditMode ? "Edit Product " : "Add Product "}
+      modalTitle={isEditMode ? "Edit Inventory " : "Add Inventory "}
       modalClassName="w-[40rem] "
     >
       <Formik
@@ -271,18 +271,18 @@ export function AddMaterialModal({
           return (
             <Form className="flex flex-col gap-4 overflow-y-auto max-h-[80vh] bg-white rounded-lg  p-4  border  border-gray-200">
               <h1 className="text-lg  font-semibold">
-                {isEditMode ? "Edit Product " : "Add Product "}
+                {isEditMode ? "Edit Inventory " : "Add Inventory "}
               </h1>
 
-              {/* Product  Name & Code */}
+              {/* Inventory  Name & Code */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <InputField
-                  label="Product  Name"
+                  label="Inventory  Name"
                   name="materialName"
                   value={values.materialName}
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  placeholder="Enter Product  Name"
+                  placeholder="Enter Inventory  Name"
                   error={touched.materialName && errors.materialName}
                 />
                 <InputField
@@ -319,7 +319,7 @@ export function AddMaterialModal({
               {/* UOM */}
               <div className="grid grid-cols-1 gap-4">
                 <InputField
-                  label="UOM (Unit of Product )"
+                  label="UOM (Unit of Inventory )"
                   name="uom"
                   value={values.uom}
                   onChange={handleChange}
