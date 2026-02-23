@@ -102,7 +102,6 @@ export function InventoryHistory({ materialId }: IInventoryHistoryProps) {
         if (!row.id) return;
         console.log("materialId", materialId);
         console.log("row", row);
-
         deleteInventoryHistory(row.id, materialId);
       },
     },
