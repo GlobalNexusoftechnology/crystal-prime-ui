@@ -100,7 +100,10 @@ export function InventoryHistory({ materialId }: IInventoryHistoryProps) {
       variant: "danger",
       onClick: (row: IInventoryHistoryItem) => {
         if (!row.id) return;
-        deleteInventoryHistory(row.id);
+        console.log("materialId", materialId);
+        console.log("row", row);
+
+        deleteInventoryHistory(row.id, materialId);
       },
     },
   ];
