@@ -462,7 +462,7 @@ export const deleteMaterialBrandUrl = (id: string) => `/material-brand/${id}`; /
 export const createInventoryHistoryUrl = () => `/inventory-history`;
 
 export const inventoryHistoryByMaterialUrl = (materialId: string) =>
-  `/inventory-history?materialId=${materialId}`;
+  `/inventory-history?id=${materialId}`;
 
 export const deleteInventoryHistoryUrl = (id: string) =>
   `/inventory-history/${id}`;
