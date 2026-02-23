@@ -1,9 +1,7 @@
 "use client";
 
-import { ITableColumn } from "../table";
 import { Checkbox } from "@/components";
-import React, { useState } from "react";
-import Image from "next/image";
+import { ITableColumn } from "../table";
 
 export interface IMaterialManagementProps {
   id: string;

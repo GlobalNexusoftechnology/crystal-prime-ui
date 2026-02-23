@@ -1,14 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import {
-  Button,
-  Dropdown,
-  InputField,
-  ModalOverlay,
-  UploadPhotos,
-} from "@/components";
-import { useUploadMultipleAttachmentsMutation } from "@/services";
+import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import toast from "react-hot-toast";
@@ -96,23 +89,6 @@ export function AddMaterialModal({
   const setFieldValueRef = React.useRef<
     FormikHelpers<IAddStaffFormValues>["setFieldValue"] | null
   >(null);
-  const latestUploadRef = React.useRef<(File | string)[]>([]);
-
-  const { onUploadMultipleAttachments, isPending: isUploading } =
-    useUploadMultipleAttachmentsMutation({
-      onSuccessCallback: (res) => {
-        if (setFieldValueRef.current) {
-          setFieldValueRef.current("Upload", [
-            ...(latestUploadRef.current || []),
-            ...(res.data || []),
-          ]);
-        }
-        toast.success("Photos uploaded successfully");
-      },
-      onErrorCallback: (err) => {
-        toast.error(err?.message || "Upload failed");
-      },
-    });
 
   const { createMaterial, isPending: isCreating } = useCreateInventoryMutation({
     onSuccessCallback: (res) => {
