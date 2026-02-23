@@ -464,5 +464,5 @@ export const createInventoryHistoryUrl = () => `/inventory-history`;
 export const inventoryHistoryByMaterialUrl = (materialId: string) =>
   `/inventory-history?id=${materialId}`;
 
-export const deleteInventoryHistoryUrl = (id: string, inventoryId: string) =>
-  `/inventory-history/${id}?inventoryId=${inventoryId}`;
+export const deleteInventoryHistoryUrl = (id: string) =>
+  `/inventory-history/${id}`;

@@ -3409,9 +3409,9 @@ export class CommunityClient extends ApiClient {
   };
 
   // ❌ Delete an entry
-  public deleteInventoryHistory = async (id: string, inventoryId: string) => {
+  public deleteInventoryHistory = async (id: string) => {
     const response = await this.del<IDeleteInventoryHistoryResponse>(
-      deleteInventoryHistoryUrl(id, inventoryId),
+      deleteInventoryHistoryUrl(id),
     );
 
     if (!response?.success) {
