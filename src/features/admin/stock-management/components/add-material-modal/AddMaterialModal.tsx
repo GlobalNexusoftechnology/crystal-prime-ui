@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
+import { Dropdown, InputField, ModalOverlay } from "@/components";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import toast from "react-hot-toast";
@@ -213,7 +213,6 @@ export function AddMaterialModal({
           touched,
         }) => {
           setFieldValueRef.current = setFieldValue;
-          const isPending = isCreating || isUpdating || isUploading;
 
           return (
             <Form className="flex flex-col gap-4 overflow-y-auto max-h-[80vh] bg-white rounded-lg  p-4  border  border-gray-200">
