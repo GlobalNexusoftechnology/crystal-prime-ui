@@ -70,10 +70,7 @@ export const materialColumns: ITableColumn<IMaterialManagementProps>[] = [
     sortable: true,
     headerClassName: "min-w-[10rem] ",
   },
-  {
-    header: "CODE",
-    accessor: "code",
-  },
+
   {
     header: "BRAND",
     accessor: "materialBrand",
@@ -84,137 +81,9 @@ export const materialColumns: ITableColumn<IMaterialManagementProps>[] = [
       return "-";
     },
   },
-  {
-    header: "SIZE",
-    accessor: "size",
-  },
-  {
-    header: "UOM",
-    accessor: "uom",
-    cell: ({ value }) => <span>{String(value || "-")}</span>,
-  },
-  {
-    header: "PRESSURE",
-    accessor: "pressure",
-  },
-  {
-    header: "HSN",
-    accessor: "hsn",
-  },
-  {
-    header: "TYPE",
-    accessor: "materialType",
-    cell: ({ value }) => {
-      if (typeof value === "string") return value;
-      if (value && typeof value === "object" && "name" in value)
-        return value.name;
-      return "-";
-    },
-  },
-  {
-    header: "PURCHASE PRICE",
-    accessor: "purchase_price",
-  },
-  {
-    header: "SALES PRICE",
-    accessor: "sales_price",
-  },
-  {
-    header: "SALES DESCRIPTION",
-    accessor: "sales_description",
-  },
-  {
-    header: "PURCHASE DESCRIPTION",
-    accessor: "purchase_description",
-  },
-  {
-    header: "QUANTITY",
-    accessor: "quantity",
-  },
-  {
-    header: "ALIAS",
-    accessor: "alias",
-  },
+
   {
     header: "Price",
     accessor: "prices",
-  },
-  {
-    header: "PHOTOS",
-    accessor: "photos",
-    cell: function PhotosCell({ value }) {
-      const [modalOpen, setModalOpen] = useState(false);
-      const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
-
-      if (Array.isArray(value) && value.length > 0) {
-        return (
-          <>
-            <div className="flex gap-2">
-              {value.map((url, idx) => (
-                <Image
-                  key={idx}
-                  src={url}
-                  alt="Product  Photo"
-                  width={500}
-                  height={500}
-                  className="w-12 h-12 object-cover rounded border cursor-pointer"
-                  style={{ maxWidth: 48, maxHeight: 48 }}
-                  onClick={() => {
-                    setSelectedUrl(url);
-                    setModalOpen(true);
-                  }}
-                />
-              ))}
-            </div>
-            {modalOpen && selectedUrl && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
-                <div className="relative bg-white rounded-lg p-4 flex flex-col items-center">
-                  <button
-                    className="absolute top-2 right-2 text-gray-700 bg-gray-200 rounded-full px-2 py-1 text-lg"
-                    onClick={() => setModalOpen(false)}
-                  >
-                    ×
-                  </button>
-                  <Image
-                    src={selectedUrl}
-                    alt="Preview"
-                    width={600}
-                    height={600}
-                    className="max-w-[80vw] max-h-[80vh] object-contain rounded"
-                  />
-                </div>
-              </div>
-            )}
-          </>
-        );
-      }
-      return <span className="text-gray-400">-</span>;
-    },
-  },
-
-  {
-    header: "STATE PRICES",
-    accessor: "state_prices",
-    cell: ({ value }: { value: StatePrices | null }) => {
-      if (!value) {
-        return <span className="text-gray-400">-</span>;
-      }
-
-      return (
-        <div className="flex flex-col gap-1 text-sm">
-          {Object.entries(value).map(([state, price]) => (
-            <div key={state} className="flex justify-between gap-2">
-              <span className="font-medium">{state}:</span>
-              <span>₹{price.toFixed(2)}</span>
-            </div>
-          ))}
-        </div>
-      );
-    },
-  },
-
-  {
-    header: "GST",
-    accessor: "gst",
   },
 ];
