@@ -90,7 +90,7 @@ export function AddMaterialModal({
     FormikHelpers<IAddStaffFormValues>["setFieldValue"] | null
   >(null);
 
-  const { createMaterial, isPending: isCreating } = useCreateInventoryMutation({
+  const { createMaterial } = useCreateInventoryMutation({
     onSuccessCallback: (res) => {
       toast.success(res.message);
       onClose();
@@ -101,7 +101,7 @@ export function AddMaterialModal({
     },
   });
 
-  const { updateMaterial, isPending: isUpdating } = useUpdateInventoryMutation({
+  const { updateMaterial } = useUpdateInventoryMutation({
     onSuccessCallback: (res) => {
       toast.success(res.message);
       onClose();
