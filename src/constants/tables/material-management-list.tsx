@@ -36,17 +36,6 @@ export interface IMaterialManagementProps {
   };
 }
 
-type StatePrices = {
-  Maharashtra?: number;
-  Gujarat?: number;
-  Uttar_Pradesh?: number;
-  Karnataka?: number;
-  West_Bengal?: number;
-  Delhi?: number;
-  Odisha?: number;
-  Goa?: number;
-};
-
 export const materialColumns: ITableColumn<IMaterialManagementProps>[] = [
   {
     header: "ACTIVE",
