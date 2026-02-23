@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Dropdown, InputField, ModalOverlay } from "@/components";
+import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import toast from "react-hot-toast";
@@ -90,7 +90,7 @@ export function AddMaterialModal({
     FormikHelpers<IAddStaffFormValues>["setFieldValue"] | null
   >(null);
 
-  const { createMaterial } = useCreateInventoryMutation({
+  const { createMaterial, isPending: isCreating } = useCreateInventoryMutation({
     onSuccessCallback: (res) => {
       toast.success(res.message);
       onClose();
@@ -101,7 +101,7 @@ export function AddMaterialModal({
     },
   });
 
-  const { updateMaterial } = useUpdateInventoryMutation({
+  const { updateMaterial, isPending: isUpdating } = useUpdateInventoryMutation({
     onSuccessCallback: (res) => {
       toast.success(res.message);
       onClose();
@@ -213,6 +213,7 @@ export function AddMaterialModal({
           touched,
         }) => {
           setFieldValueRef.current = setFieldValue;
+          const isPending = isCreating || isUpdating;
 
           return (
             <Form className="flex flex-col gap-4 overflow-y-auto max-h-[80vh] bg-white rounded-lg  p-4  border  border-gray-200">
@@ -253,6 +254,21 @@ export function AddMaterialModal({
                     error={touched.prices && errors.prices}
                   />
                 </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex justify-end gap-4">
+                <Button
+                  title="Cancel"
+                  variant="background-white"
+                  onClick={onClose}
+                />
+                <Button
+                  title={isPending ? "Saving..." : "Save"}
+                  type="submit"
+                  variant="primary"
+                  disabled={isPending}
+                />
               </div>
             </Form>
           );
