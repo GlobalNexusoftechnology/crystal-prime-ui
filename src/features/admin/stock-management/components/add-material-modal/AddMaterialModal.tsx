@@ -280,39 +280,6 @@ export function AddMaterialModal({
                 </div>
               </div>
 
-              {/* Upload */}
-              <UploadPhotos
-                name="Upload"
-                setFieldValue={setFieldValue}
-                value={
-                  values.Upload && values.Upload.length > 0
-                    ? typeof values.Upload[0] === "string"
-                      ? (values.Upload as string[])
-                      : (values.Upload as File[])
-                    : []
-                }
-                error={
-                  Array.isArray(errors.Upload)
-                    ? errors.Upload.filter(Boolean).join(", ")
-                    : (errors.Upload as string | undefined)
-                }
-                touched={
-                  Array.isArray(touched.Upload)
-                    ? touched.Upload.some(Boolean)
-                    : !!touched.Upload
-                }
-                placeholder="Upload Photos"
-                multiple
-                onFilesSelected={(files) => {
-                  if (files.length > 0) {
-                    const formData = new FormData();
-                    files.forEach((file) => formData.append("image", file));
-                    latestUploadRef.current = values.Upload || [];
-                    onUploadMultipleAttachments(formData);
-                  }
-                }}
-              />
-
               {/* Actions */}
               <div className="flex justify-end gap-4">
                 <Button
