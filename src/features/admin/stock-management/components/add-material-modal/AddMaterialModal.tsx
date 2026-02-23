@@ -267,19 +267,6 @@ export function AddMaterialModal({
                   placeholder="Enter Inventory  Name"
                   error={touched.materialName && errors.materialName}
                 />
-                <InputField
-                  label="Code"
-                  name="code"
-                  value={values.code}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter Code"
-                  error={touched.code && errors.code}
-                />
-              </div>
-
-              {/* Brand & Size */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Dropdown
                   label="Brand"
                   options={brandOptions}
@@ -287,142 +274,10 @@ export function AddMaterialModal({
                   onChange={(v) => setFieldValue("brand", v)}
                   error={touched.brand ? errors.brand : undefined}
                 />
-                <InputField
-                  label="Size"
-                  name="size"
-                  value={values.size}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter Size"
-                  error={touched.size && errors.size}
-                />
-              </div>
-
-              {/* UOM */}
-              <div className="grid grid-cols-1 gap-4">
-                <InputField
-                  label="UOM (Unit of Inventory )"
-                  name="uom"
-                  value={values.uom}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter UOM (e.g., kg, m, pcs, etc.)"
-                  error={touched.uom && errors.uom}
-                />
-              </div>
-
-              {/* Pressure & HSN */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  label="Pressure"
-                  name="pressure"
-                  value={values.pressure}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter Pressure"
-                  error={touched.pressure && errors.pressure}
-                />
-                <InputField
-                  label="HSN"
-                  name="hsn"
-                  value={values.hsn}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter HSN"
-                  error={touched.hsn && errors.hsn}
-                />
-              </div>
-
-              {/* Type & GST */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Dropdown
-                  label="Type"
-                  options={typeOptions}
-                  value={values.type}
-                  onChange={(v) => setFieldValue("type", v)}
-                  error={touched.type ? errors.type : undefined}
-                />
-                <Dropdown
-                  label="GST"
-                  options={gstOptions}
-                  value={values.gst}
-                  onChange={(v) => setFieldValue("gst", v)}
-                  error={touched.gst ? errors.gst : undefined}
-                />
-              </div>
-
-              {/* Purchase Price & Desc */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  label="Purchase Price"
-                  name="purchasePrice"
-                  value={values.purchasePrice}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter Purchase Price"
-                  error={touched.purchasePrice && errors.purchasePrice}
-                />
-                <InputField
-                  label="Purchase Description"
-                  name="purchaseDescription"
-                  value={values.purchaseDescription}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter Purchase Description"
-                  error={
-                    touched.purchaseDescription && errors.purchaseDescription
-                  }
-                />
-              </div>
-
-              {/* Sales Price & Desc */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  label="Sales Price"
-                  name="salesPrice"
-                  value={values.salesPrice}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter Sales Price"
-                  error={touched.salesPrice && errors.salesPrice}
-                />
-                <InputField
-                  label="Sales Description"
-                  name="salesDescription"
-                  value={values.salesDescription}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter Sales Description"
-                  error={touched.salesDescription && errors.salesDescription}
-                />
-              </div>
-
-              {/* Quantity & prices */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <InputField
-                  label="Quantity"
-                  name="qty"
-                  value={values.qty}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter Quantity"
-                  error={touched.qty && errors.qty}
-                />
-                <InputField
-                  label="Price"
-                  name="prices"
-                  value={values.prices}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  placeholder="Enter Price"
-                  error={touched.prices && errors.prices}
-                />
               </div>
 
               {/* State-wise Prices */}
               <div className="border border-gray-200 rounded-lg p-4">
-                <h2 className="text-md font-semibold mb-3">Price</h2>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <InputField
                     label="Prices"
