@@ -97,13 +97,6 @@ export function MaterialListTable({
 
   const actions: ITableAction<IMaterialManagementProps>[] = [
     {
-      label: "Manage Product",
-      onClick: (row) => {
-        setOpenTab(true);
-        setId(row.id);
-      },
-    },
-    {
       label: "Edit",
       onClick: (row) => {
         onEdit(row);

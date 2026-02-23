@@ -4,10 +4,8 @@
 
 import { Checkbox, DeleteModal, Table } from "@/components";
 import { ITableAction, ITableColumn } from "@/constants";
-import {
-  IMaterialManagementProps,
-  materialColumns,
-} from "@/constants/tables/material-management-list";
+import { inventoryColumns } from "@/constants/tables/inventory-management-list";
+import { IMaterialManagementProps } from "@/constants/tables/material-management-list";
 import { MaterialHistoryTab } from "@/features/admin/inventory-management/inventory-management";
 import { useChangeMaterialStatusMutation } from "@/services/apis/clients/community-client/query-hooks/useChangeMaterialStatusMutation";
 import { useDeleteInventoryMutation } from "@/services/apis/clients/community-client/query-hooks/useDeleteInventoryMutation";
@@ -69,7 +67,7 @@ export function MaterialListTable({
   const normalizedData: IMaterialManagementProps[] = data || [];
 
   // Create columns with interactive checkbox for 'active'
-  const columns = materialColumns.map((col) => {
+  const columns = inventoryColumns.map((col) => {
     if (col.accessor === "active") {
       return {
         ...col,

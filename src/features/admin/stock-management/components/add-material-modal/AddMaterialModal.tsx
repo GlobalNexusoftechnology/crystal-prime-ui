@@ -242,18 +242,26 @@ export function AddMaterialModal({
               </div>
 
               {/* State-wise Prices */}
-              <div className="border border-gray-200 rounded-lg p-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <InputField
-                    label="Prices"
-                    name="prices"
-                    value={values.prices}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    placeholder="Enter Price"
-                    error={touched.prices && errors.prices}
-                  />
-                </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <InputField
+                  label="Prices"
+                  name="prices"
+                  value={values.prices}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter Price"
+                  error={touched.prices && errors.prices}
+                />
+                <InputField
+                  label="Quantity"
+                  name="qty"
+                  value={values.qty}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter Quantity"
+                  error={touched.qty && errors.qty}
+                />
               </div>
 
               {/* Actions */}
