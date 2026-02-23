@@ -16,7 +16,6 @@ import * as Yup from "yup";
 
 import { IMaterialManagementProps } from "@/constants/tables/material-management-list";
 import { useAllMaterialBrandQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialBrandQuery";
-import { useAllMaterialTypeQuery } from "@/services/apis/clients/community-client/query-hooks/useAllMaterialTypeQuery";
 import { useCreateInventoryMutation } from "@/services/apis/clients/community-client/query-hooks/useCreateInventoryMutation";
 import { useUpdateInventoryMutation } from "@/services/apis/clients/community-client/query-hooks/useUpdateInventoryMutation";
 
@@ -85,17 +84,8 @@ export function AddMaterialModal({
   onSuccess?: () => void;
 }) {
   const { allMaterialBrandData } = useAllMaterialBrandQuery();
-  const { allMaterialTypeData } = useAllMaterialTypeQuery();
 
   const isEditMode = Boolean(initialData);
-
-  const typeOptions =
-    allMaterialTypeData?.data?.list?.map(
-      (type: { name: any; id: { toString: () => any } }) => ({
-        label: type?.name,
-        value: type?.id.toString(),
-      }),
-    ) || [];
 
   const brandOptions =
     allMaterialBrandData?.data?.list?.map((brand: any) => ({
