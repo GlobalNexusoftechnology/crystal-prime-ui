@@ -255,27 +255,6 @@ export function AddMaterialModal({
                   />
                 </div>
               </div>
-
-              {/* Actions */}
-              <div className="flex justify-end gap-4">
-                <Button
-                  title="Cancel"
-                  variant="background-white"
-                  onClick={onClose}
-                />
-                <Button
-                  title={
-                    isUploading
-                      ? "Uploading..."
-                      : isPending
-                        ? "Saving..."
-                        : "Save"
-                  }
-                  type="submit"
-                  variant="primary"
-                  disabled={isPending}
-                />
-              </div>
             </Form>
           );
         }}
