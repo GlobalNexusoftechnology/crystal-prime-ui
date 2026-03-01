@@ -83,16 +83,16 @@ const validationSchema = Yup.object({
     .max(10, "You can upload up to 10 files")
     .optional(),
 });
-const stateOptions: IndianState[] = [
-  "Maharashtra",
-  "Gujarat",
-  "Uttar_Pradesh",
-  "Karnataka",
-  "West_Bengal",
-  "Delhi",
-  "Odisha",
-  "Goa",
-];
+// const stateOptions: IndianState[] = [
+//   "Maharashtra",
+//   "Gujarat",
+//   "Uttar_Pradesh",
+//   "Karnataka",
+//   "West_Bengal",
+//   "Delhi",
+//   "Odisha",
+//   "Goa",
+// ];
 export function AddMaterialModal({
   isOpen,
   onClose,
