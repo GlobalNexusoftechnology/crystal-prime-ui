@@ -2,6 +2,7 @@
 "use client";
 
 import React from "react";
+import { useState } from "react";
 import {
   Button,
   Dropdown,
@@ -105,6 +106,9 @@ export function AddMaterialModal({
 }) {
   const { allMaterialBrandData } = useAllMaterialBrandQuery();
   const { allMaterialTypeData } = useAllMaterialTypeQuery();
+
+  const [newStateName, setNewStateName] = useState("");
+  const [newStatePrice, setNewStatePrice] = useState("");
 
   const isEditMode = Boolean(initialData);
 
@@ -443,22 +447,62 @@ export function AddMaterialModal({
                   State-wise Sales Price
                 </h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {stateOptions.map((state) => (
-                    <InputField
-                      key={state}
-                      label={`${state} Price`}
-                      name={`statePrices.${state}`}
-                      value={values.statePrices?.[state] || ""}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      placeholder={`Enter price for ${state}`}
-                      error={
-                        touched.statePrices?.[state] &&
-                        errors.statePrices?.[state]
-                      }
+                {/* Existing States */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  {Object.entries(values.statePrices || {}).map(
+                    ([state, price]) => (
+                      <InputField
+                        key={state}
+                        label={`${state} Price`}
+                        name={`statePrices.${state}`}
+                        value={price}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        placeholder={`Enter price for ${state}`}
+                      />
+                    ),
+                  )}
+                </div>
+
+                {/* Add New State Box */}
+                <div className="border border-dashed border-gray-300 rounded-lg p-4">
+                  <h3 className="text-sm font-medium mb-3">Add New State</h3>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <input
+                      type="text"
+                      placeholder="State Name"
+                      value={newStateName}
+                      onChange={(e) => setNewStateName(e.target.value)}
+                      className="border rounded-md px-3 py-2 text-sm"
                     />
-                  ))}
+
+                    <input
+                      type="number"
+                      placeholder="Price"
+                      value={newStatePrice}
+                      onChange={(e) => setNewStatePrice(e.target.value)}
+                      className="border rounded-md px-3 py-2 text-sm"
+                    />
+
+                    <button
+                      type="button"
+                      className="bg-black text-white rounded-md px-4 py-2 text-sm hover:bg-gray-800"
+                      onClick={() => {
+                        if (!newStateName || !newStatePrice) return;
+
+                        setFieldValue(
+                          `statePrices.${newStateName}`,
+                          newStatePrice,
+                        );
+
+                        setNewStateName("");
+                        setNewStatePrice("");
+                      }}
+                    >
+                      Add State
+                    </button>
+                  </div>
                 </div>
               </div>
 
