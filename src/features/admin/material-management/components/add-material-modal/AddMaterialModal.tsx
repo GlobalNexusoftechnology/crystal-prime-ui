@@ -174,6 +174,22 @@ export function AddMaterialModal({
   const initialUpload: (File | string)[] =
     isEditMode && Array.isArray(initialData?.photos) ? initialData.photos : [];
 
+  const defaultStates = {
+    Maharashtra: "",
+    Gujarat: "",
+    Uttar_Pradesh: "",
+    Karnataka: "",
+    West_Bengal: "",
+    Delhi: "",
+    Odisha: "",
+    Goa: "",
+  };
+
+  const mergedStatePrices = {
+    ...defaultStates,
+    ...(initialData?.state_prices || {}),
+  };
+
   return (
     <ModalOverlay
       isOpen={isOpen}
@@ -208,16 +224,24 @@ export function AddMaterialModal({
           salesDescription: initialData?.sales_description || "",
           purchaseDescription: initialData?.purchase_description || "",
           alias: initialData?.alias || "",
-          statePrices: {
-            Maharashtra: "",
-            Gujarat: "",
-            Uttar_Pradesh: "",
-            Karnataka: "",
-            West_Bengal: "",
-            Delhi: "",
-            Odisha: "",
-            Goa: "",
-          },
+          // statePrices: {
+          //   Maharashtra: "",
+          //   Gujarat: "",
+          //   Uttar_Pradesh: "",
+          //   Karnataka: "",
+          //   West_Bengal: "",
+          //   Delhi: "",
+          //   Odisha: "",
+          //   Goa: "",
+          // },
+
+          statePrices: Object.fromEntries(
+            Object.entries(mergedStatePrices).map(([k, v]) => [
+              k,
+              v?.toString() ?? "",
+            ]),
+          ),
+
           Upload: initialUpload,
         }}
         validationSchema={validationSchema}
