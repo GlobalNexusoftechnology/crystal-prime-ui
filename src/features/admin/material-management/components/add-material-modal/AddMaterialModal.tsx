@@ -182,7 +182,7 @@ export function AddMaterialModal({
       modalClassName="w-[40rem] "
     >
       <Formik
-        enableReinitialize={!!initialData}
+        enableReinitialize
         initialValues={{
           code: initialData?.code || "",
           materialName: initialData?.name || "",
@@ -217,14 +217,11 @@ export function AddMaterialModal({
             Delhi: "",
             Odisha: "",
             Goa: "",
-            ...(initialData?.state_prices ?? {}),
           },
           Upload: initialUpload,
         }}
         validationSchema={validationSchema}
         onSubmit={async (values: any, actions: any) => {
-          console.log("onSubmit");
-
           const payload: any = {
             name: values.materialName,
             code: values.code,
@@ -243,10 +240,12 @@ export function AddMaterialModal({
             alias: values.alias,
             // ✅ State-wise prices
             state_prices: Object.fromEntries(
-              Object.entries(values.statePrices)
-                .filter(([, price]) => price !== "" && !isNaN(Number(price)))
-                .map(([state, price]) => [state, Number(price)]),
+              Object.entries(values.statePrices).map(([state, price]) => [
+                state,
+                Number(price),
+              ]),
             ),
+
             photos: values.Upload
               ? await Promise.all(
                   (values.Upload as (File | string)[]).map(async (file) =>
