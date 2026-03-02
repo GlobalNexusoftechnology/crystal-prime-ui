@@ -84,17 +84,6 @@ const validationSchema = Yup.object({
     )
     .max(10, "You can upload up to 10 files")
     .optional(),
-  statePrices: Yup.object()
-    .test(
-      "state-price-values",
-      "Prices must be numbers",
-      (value: { [s: string]: unknown } | ArrayLike<unknown>) =>
-        value &&
-        Object.values(value).every(
-          (v) => v === "" || (!isNaN(Number(v)) && Number(v) >= 0),
-        ),
-    )
-    .nullable(),
 });
 // const stateOptions: IndianState[] = [
 //   "Maharashtra",
