@@ -37,14 +37,15 @@ export function Step1BasicInfo({
   hideMilestoneTemplateOption = false,
 }: Step1BasicInfoProps) {
   const { activeSession } = useAuthStore();
-  const isAdmin = (activeSession?.user?.role.role ?? "").toLowerCase() === "admin";
+  const isAdmin =
+    (activeSession?.user?.role.role ?? "").toLowerCase() === "admin";
   const isMilestoneSelected = values.milestoneOption === "milestone";
   const isTemplateSelected = values.milestoneOption === "template";
-console.log(clientOptions);
+  console.log(clientOptions);
 
   // Fetch lead/project types
   // const { allTypesData } = useAllTypesQuery();
-  const { allTypesData } = useAllDropdownDataQuery()
+  const { allTypesData } = useAllDropdownDataQuery();
 
   const projectTypeOptions =
     allTypesData?.data?.list?.map((type) => ({
@@ -55,7 +56,7 @@ console.log(clientOptions);
   // Helper to ensure string for DatePicker
   const toDateString = (val: string | Date | undefined) => {
     if (!val) return "";
-    
+
     if (typeof val === "string") {
       // If it's already a valid date string in YYYY-MM-DD format, return it
       if (/^\d{4}-\d{2}-\d{2}$/.test(val)) {
@@ -68,11 +69,11 @@ console.log(clientOptions);
       }
       return "";
     }
-    
+
     if (val instanceof Date && !isNaN(val.getTime())) {
       return val.toISOString().slice(0, 10);
     }
-    
+
     return "";
   };
 
@@ -101,10 +102,7 @@ console.log(clientOptions);
     } catch {}
   }
   if (costOfLabour > 0 || overheadCost > 0 || extraCost > 0) {
-    estimatedCost = (
-      (costOfLabour + overheadCost) * (days > 0 ? days : 0) +
-      extraCost
-    ).toString();
+    estimatedCost = (costOfLabour + overheadCost + extraCost).toString();
   }
 
   // After estimatedCost calculation
@@ -124,7 +122,7 @@ console.log(clientOptions);
     setFieldValue("name", value);
   };
   const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     setFieldValue("description", e.target.value);
   };
@@ -158,15 +156,15 @@ console.log(clientOptions);
           }
           dropdownWidth="w-full"
         />
-        
-     <Dropdown
+
+        <Dropdown
           label="Client"
           options={
             clientLoading
               ? [{ label: "Loading...", value: "" }]
               : clientError
-              ? [{ label: "Error loading clients", value: "" }]
-              : clientOptions
+                ? [{ label: "Error loading clients", value: "" }]
+                : clientOptions
           }
           value={values.client_id || ""}
           onChange={(val) => setFieldValue("client_id", val)}
@@ -177,7 +175,6 @@ console.log(clientOptions);
           }
           dropdownWidth="w-full"
         />
-
       </div>
       <InputField
         label="Project Description"
@@ -254,7 +251,8 @@ console.log(clientOptions);
             onChange={handleChange}
             onBlur={handleBlur}
             error={
-              touched.cost_of_labour && typeof errors.cost_of_labour === "string"
+              touched.cost_of_labour &&
+              typeof errors.cost_of_labour === "string"
                 ? errors.cost_of_labour
                 : undefined
             }
@@ -296,11 +294,7 @@ console.log(clientOptions);
             {(() => {
               const est = Number(values.estimated_cost);
               const bud = Number(values.budget);
-              if (
-                !isNaN(est) &&
-                !isNaN(bud) &&
-                est > bud
-              ) {
+              if (!isNaN(est) && !isNaN(bud) && est > bud) {
                 const diff = est - bud;
                 return (
                   <p className="text-red-500 text-[0.9rem]   mt-1">
