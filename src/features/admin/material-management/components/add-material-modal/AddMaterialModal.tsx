@@ -193,7 +193,7 @@ export function AddMaterialModal({
       modalClassName="w-[40rem] "
     >
       <Formik
-        enableReinitialize
+        enableReinitialize={!!initialData}
         initialValues={{
           code: initialData?.code || "",
           materialName: initialData?.name || "",
@@ -228,7 +228,7 @@ export function AddMaterialModal({
             Delhi: "",
             Odisha: "",
             Goa: "",
-            ...(initialData?.state_prices || {}),
+            ...(initialData?.state_prices ?? {}),
           },
           Upload: initialUpload,
         }}
