@@ -84,6 +84,17 @@ const validationSchema = Yup.object({
     )
     .max(10, "You can upload up to 10 files")
     .optional(),
+  statePrices: Yup.object()
+    .test(
+      "state-price-values",
+      "Prices must be numbers",
+      (value: { [s: string]: unknown } | ArrayLike<unknown>) =>
+        value &&
+        Object.values(value).every(
+          (v) => v === "" || (!isNaN(Number(v)) && Number(v) >= 0),
+        ),
+    )
+    .nullable(),
 });
 // const stateOptions: IndianState[] = [
 //   "Maharashtra",
@@ -217,6 +228,7 @@ export function AddMaterialModal({
             Delhi: "",
             Odisha: "",
             Goa: "",
+            ...(initialData?.state_prices || {}),
           },
           Upload: initialUpload,
         }}
@@ -240,12 +252,10 @@ export function AddMaterialModal({
             alias: values.alias,
             // ✅ State-wise prices
             state_prices: Object.fromEntries(
-              Object.entries(values.statePrices).map(([state, price]) => [
-                state,
-                Number(price),
-              ]),
+              Object.entries(values.statePrices)
+                .filter(([, price]) => price !== "" && !isNaN(Number(price)))
+                .map(([state, price]) => [state, Number(price)]),
             ),
-
             photos: values.Upload
               ? await Promise.all(
                   (values.Upload as (File | string)[]).map(async (file) =>
