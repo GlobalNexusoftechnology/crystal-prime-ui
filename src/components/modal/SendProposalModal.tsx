@@ -35,14 +35,15 @@ export type ProductRow = {
 };
 
 const STATE_OPTIONS = [
+  "Mumbai",
   "Maharashtra",
   "Gujarat",
+  "Goa",
   "Uttar Pradesh",
   "Karnataka",
   "West Bengal",
-  "Delhi",
   "Odisha",
-  "Goa",
+  "Bangalore",
 ] as const;
 
 export interface SendProposalModalProps {

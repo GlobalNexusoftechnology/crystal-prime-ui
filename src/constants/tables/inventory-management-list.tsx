@@ -25,14 +25,15 @@ export interface IMaterialManagementProps {
   prices?: string;
   photos?: string[];
   state_prices: {
+    Mumbai?: number;
     Maharashtra?: number;
     Gujarat?: number;
+    Goa?: number;
     Uttar_Pradesh?: number;
     Karnataka?: number;
     West_Bengal?: number;
-    Delhi?: number;
     Odisha?: number;
-    Goa?: number;
+    Bangalore?: number;
   };
 }
 
