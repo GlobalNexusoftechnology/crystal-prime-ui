@@ -150,14 +150,15 @@ export function AddMaterialModal({
           purchaseDescription: initialData?.purchase_description || "",
           prices: initialData?.prices || "",
           statePrices: {
+            Mumbai: "",
             Maharashtra: "",
             Gujarat: "",
+            Goa: "",
             Uttar_Pradesh: "",
             Karnataka: "",
             West_Bengal: "",
-            Delhi: "",
             Odisha: "",
-            Goa: "",
+            Bangalore: "",
           },
           Upload: initialUpload,
         }}

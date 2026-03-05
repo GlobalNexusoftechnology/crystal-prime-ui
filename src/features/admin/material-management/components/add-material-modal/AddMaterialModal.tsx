@@ -175,14 +175,15 @@ export function AddMaterialModal({
     isEditMode && Array.isArray(initialData?.photos) ? initialData.photos : [];
 
   const defaultStates = {
+    Mumbai: "",
     Maharashtra: "",
     Gujarat: "",
+    Goa: "",
     Uttar_Pradesh: "",
     Karnataka: "",
     West_Bengal: "",
-    Delhi: "",
     Odisha: "",
-    Goa: "",
+    Bangalore: "",
   };
 
   const mergedStatePrices = {
