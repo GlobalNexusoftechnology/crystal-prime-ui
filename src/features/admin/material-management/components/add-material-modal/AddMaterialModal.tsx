@@ -44,6 +44,7 @@ export interface IAddStaffFormValues {
   type: string;
   gst: string;
   qty: string;
+  minqty: string;
   purchasePrice: string;
   salesPrice: string;
   salesDescription: string;
@@ -62,6 +63,7 @@ const validationSchema = Yup.object({
   pressure: Yup.string().optional(),
   hsn: Yup.string().optional(),
   qty: Yup.string().optional(),
+  minqty: Yup.string().optional(),
   type: Yup.string().optional(),
   gst: Yup.string().optional(),
   purchasePrice: Yup.string().optional(),

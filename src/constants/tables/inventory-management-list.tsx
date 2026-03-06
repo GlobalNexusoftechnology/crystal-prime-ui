@@ -16,6 +16,7 @@ export interface IMaterialManagementProps {
   materialType?: string | { id: string; name: string };
   gst?: string;
   qty?: number;
+  minqty?: number;
   quantity?: number; // API response field
   purchase_price?: string;
   sales_price?: string;

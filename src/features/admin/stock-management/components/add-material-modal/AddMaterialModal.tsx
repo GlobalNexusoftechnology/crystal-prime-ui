@@ -23,6 +23,7 @@ export interface IAddStaffFormValues {
   type: string;
   gst: string;
   qty: string;
+  minqty: string;
   purchasePrice: string;
   salesPrice: string;
   salesDescription: string;
@@ -41,6 +42,7 @@ const validationSchema = Yup.object({
   pressure: Yup.string().optional(),
   hsn: Yup.string().optional(),
   qty: Yup.string().optional(),
+  minqty: Yup.string().optional(),
   type: Yup.string().optional(),
   gst: Yup.string().optional(),
   purchasePrice: Yup.string().optional(),
@@ -144,6 +146,7 @@ export function AddMaterialModal({
             initialData?.qty?.toString() ||
             initialData?.quantity?.toString() ||
             "",
+          minqty: initialData?.minqty?.toString() || "",
           purchasePrice: initialData?.purchase_price?.toString() || "",
           salesPrice: initialData?.sales_price?.toString() || "",
           salesDescription: initialData?.sales_description || "",
@@ -175,6 +178,7 @@ export function AddMaterialModal({
             materialTypeId: values.type,
             gst: values.gst,
             quantity: Number(values.qty),
+            minqty: Number(values.minqty),
             purchase_price: Number(values.purchasePrice),
             sales_price: Number(values.salesPrice),
             sales_description: values.salesDescription,
@@ -262,6 +266,15 @@ export function AddMaterialModal({
                   onBlur={handleBlur}
                   placeholder="Enter Quantity"
                   error={touched.qty && errors.qty}
+                />
+                <InputField
+                  label="Min Quantity"
+                  name="minqty"
+                  value={values.minqty}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Enter Min Quantity"
+                  error={touched.minqty && errors.minqty}
                 />
               </div>
 
