@@ -72,8 +72,8 @@ export const inventoryColumns: ITableColumn<IMaterialManagementProps>[] = [
   },
 
   {
-    header: "QUANTITY",
-    accessor: "quantity",
+    header: "MIN QUANTITY",
+    accessor: "minqty",
   },
   {
     header: "QUANTITY",
