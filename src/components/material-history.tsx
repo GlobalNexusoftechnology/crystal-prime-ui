@@ -41,7 +41,7 @@ export function InventoryHistory({ materialId }: IInventoryHistoryProps) {
   // ➕ Create mutation
   const { createInventoryHistory } = useCreateInventoryHistoryMutation({
     onSuccessCallback: () => {
-      toast.success("Product history created");
+      toast.success("Inventory history created");
       formik.resetForm();
       refetch();
       queryClient.invalidateQueries({
@@ -85,7 +85,7 @@ export function InventoryHistory({ materialId }: IInventoryHistoryProps) {
         });
 
         fetchAllMaterials(); // ✅ runs ONLY after API success
-        toast.success("Product history created");
+        // toast.success("Product history created");
         formik.resetForm();
       } catch (err: any) {
         // mutateAsync throws on error
