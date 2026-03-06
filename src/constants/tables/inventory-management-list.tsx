@@ -75,6 +75,25 @@ export const inventoryColumns: ITableColumn<IMaterialManagementProps>[] = [
     header: "QUANTITY",
     accessor: "quantity",
   },
+  {
+    header: "QUANTITY",
+    accessor: "quantity",
+    cell: ({ value, row }) => {
+      const minQty = row.minqty ?? 1;
+
+      const isLowStock = value <= minQty;
+
+      return (
+        <div
+          className={`px-2 py-1 rounded-md text-center ${
+            isLowStock ? "bg-red-500 text-white font-semibold" : ""
+          }`}
+        >
+          {value}
+        </div>
+      );
+    },
+  },
 
   {
     header: "Price",
