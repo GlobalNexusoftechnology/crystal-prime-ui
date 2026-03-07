@@ -414,6 +414,7 @@ export default function Dashboard() {
         priority?: string;
         due_date?: string;
         assigned_to?: string;
+        assigned_by?: any;
         delay_days?: number | null;
         created_at?: string;
         updated_at?: string;
@@ -457,7 +458,7 @@ export default function Dashboard() {
         clientName: project.client?.name || "-",
         clientNumber: project.client?.contact_number || "-",
         staffName: getStaffName(t.assigned_to || ""),
-        assigneeName: getAssigneeName(t || ""),
+        assigneeName: getAssigneeName(t.assigned_by || ""),
         teamLeadName: teamLeadName,
         delay_days: t.delay_days || 0,
         created_at: t.created_at ? formatDate(t.created_at) : "-",
