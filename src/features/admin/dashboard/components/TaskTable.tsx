@@ -34,6 +34,7 @@ export interface TaskRow {
   clientName?: string;
   clientNumber?: string;
   staffName?: string;
+  assigneeName?: string;
   created_at?: string;
   updated_at?: string;
   rawCreatedAt?: string;
@@ -97,7 +98,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
     delay: 500,
-    onChangeCb: () => { },
+    onChangeCb: () => {},
   });
 
   // Apply preset filters pushed from parent
@@ -240,6 +241,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
         task.milestoneName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         task.clientName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         task.clientNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        task.assigneeName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         task.staffName?.toLowerCase().includes(searchQuery.toLowerCase());
 
       const statusMatch = !statusFilter || task.status === statusFilter;
@@ -258,12 +260,12 @@ const TaskTable: React.FC<TaskTableProps> = ({
         const taskDateStart = new Date(
           taskDateObj.getFullYear(),
           taskDateObj.getMonth(),
-          taskDateObj.getDate()
+          taskDateObj.getDate(),
         );
         const nowStart = new Date(
           now.getFullYear(),
           now.getMonth(),
-          now.getDate()
+          now.getDate(),
         );
 
         switch (timePeriodFilter) {
@@ -272,7 +274,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
             break;
           case "yesterday":
             const yesterdayStart = new Date(
-              nowStart.getTime() - 24 * 60 * 60 * 1000
+              nowStart.getTime() - 24 * 60 * 60 * 1000,
             );
             timePeriodMatch =
               taskDateStart.getTime() === yesterdayStart.getTime();
@@ -303,7 +305,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
         const taskDateStart = new Date(
           taskDateObj.getFullYear(),
           taskDateObj.getMonth(),
-          taskDateObj.getDate()
+          taskDateObj.getDate(),
         );
 
         if (fromDate) {
@@ -311,22 +313,22 @@ const TaskTable: React.FC<TaskTableProps> = ({
           dateMatch =
             dateMatch &&
             taskDateStart >=
-            new Date(
-              fromDateObj.getFullYear(),
-              fromDateObj.getMonth(),
-              fromDateObj.getDate()
-            );
+              new Date(
+                fromDateObj.getFullYear(),
+                fromDateObj.getMonth(),
+                fromDateObj.getDate(),
+              );
         }
         if (toDate) {
           const toDateObj = new Date(toDate);
           dateMatch =
             dateMatch &&
             taskDateStart <=
-            new Date(
-              toDateObj.getFullYear(),
-              toDateObj.getMonth(),
-              toDateObj.getDate()
-            );
+              new Date(
+                toDateObj.getFullYear(),
+                toDateObj.getMonth(),
+                toDateObj.getDate(),
+              );
         }
       }
 
@@ -337,7 +339,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
         const dueDateStart = new Date(
           dueDateObj.getFullYear(),
           dueDateObj.getMonth(),
-          dueDateObj.getDate()
+          dueDateObj.getDate(),
         );
 
         if (dueFromDate) {
@@ -345,22 +347,22 @@ const TaskTable: React.FC<TaskTableProps> = ({
           dueDateMatch =
             dueDateMatch &&
             dueDateStart >=
-            new Date(
-              fromDateObj.getFullYear(),
-              fromDateObj.getMonth(),
-              fromDateObj.getDate()
-            );
+              new Date(
+                fromDateObj.getFullYear(),
+                fromDateObj.getMonth(),
+                fromDateObj.getDate(),
+              );
         }
         if (dueToDate) {
           const toDateObj = new Date(dueToDate);
           dueDateMatch =
             dueDateMatch &&
             dueDateStart <=
-            new Date(
-              toDateObj.getFullYear(),
-              toDateObj.getMonth(),
-              toDateObj.getDate()
-            );
+              new Date(
+                toDateObj.getFullYear(),
+                toDateObj.getMonth(),
+                toDateObj.getDate(),
+              );
         }
       }
 
@@ -375,7 +377,7 @@ const TaskTable: React.FC<TaskTableProps> = ({
         dueDateMatch
       );
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     taskList,
     searchQuery,
@@ -400,8 +402,8 @@ const TaskTable: React.FC<TaskTableProps> = ({
       <div className="text-red-500">
         Error loading tasks:{" "}
         {typeof tasksErrorObj === "object" &&
-          tasksErrorObj &&
-          "message" in tasksErrorObj
+        tasksErrorObj &&
+        "message" in tasksErrorObj
           ? (tasksErrorObj as { message: string }).message
           : "Unknown error"}
       </div>
@@ -431,8 +433,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
 
       <div className="flex justify-start items-end flex-wrap gap-4 my-4 ">
         <DatePicker
-          key={`from - date - ${presetFilter} -${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`
-            } `}
+          key={`from - date - ${presetFilter} -${presetTrigger}${
+            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+          } `}
           label="From Date"
           value={fromDate}
           onChange={setFromDate}
@@ -440,8 +443,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
           datePickerWidth="w-full md:w-[12rem]"
         />
         <DatePicker
-          key={`to - date - ${presetFilter} -${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`
-            } `}
+          key={`to - date - ${presetFilter} -${presetTrigger}${
+            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+          } `}
           label="To Date"
           value={toDate}
           onChange={setToDate}
@@ -458,8 +462,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
           />
         )}
         <DatePicker
-          key={`due - from - ${presetFilter} -${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`
-            } `}
+          key={`due - from - ${presetFilter} -${presetTrigger}${
+            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+          } `}
           label="Due From"
           value={dueFromDate}
           onChange={setDueFromDate}
@@ -467,8 +472,9 @@ const TaskTable: React.FC<TaskTableProps> = ({
           datePickerWidth="w-full md:w-[12rem]"
         />
         <DatePicker
-          key={`due - to - ${presetFilter} -${presetTrigger}${presetFilter === "followups" ? "" : `-${datePickerResetKey}`
-            } `}
+          key={`due - to - ${presetFilter} -${presetTrigger}${
+            presetFilter === "followups" ? "" : `-${datePickerResetKey}`
+          } `}
           label="Due To"
           value={dueToDate}
           onChange={setDueToDate}
@@ -530,14 +536,14 @@ const TaskTable: React.FC<TaskTableProps> = ({
           toDate ||
           dueFromDate ||
           dueToDate) && (
-            <Button
-              variant="background-white"
-              width="w-full md:w-fit"
-              onClick={handleClearAllFilters}
-              leftIcon={<FiX className="w-5 h-5  " />}
-              tooltip="Clear All Filters"
-            />
-          )}
+          <Button
+            variant="background-white"
+            width="w-full md:w-fit"
+            onClick={handleClearAllFilters}
+            leftIcon={<FiX className="w-5 h-5  " />}
+            tooltip="Clear All Filters"
+          />
+        )}
       </div>
 
       <Table

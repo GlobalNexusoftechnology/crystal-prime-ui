@@ -1,5 +1,12 @@
 import React, { useState, useMemo } from "react";
-import { Dropdown, DatePicker, Button, Table, Loading, SearchBar } from "@/components";
+import {
+  Dropdown,
+  DatePicker,
+  Button,
+  Table,
+  Loading,
+  SearchBar,
+} from "@/components";
 import { FiX, FiPlus } from "react-icons/fi";
 import { ITableAction, ITableColumn } from "@/constants/table";
 import { useDebounce } from "@/utils/hooks";
@@ -18,6 +25,7 @@ export interface DailyTaskRow {
   clientName?: string;
   clientNumber?: string;
   staffName?: string;
+  assigneeName?: string;
   created_at?: string;
   [key: string]: unknown;
 }
@@ -79,7 +87,7 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
 
   const handleStatusChange = (value: string) => setStatusFilter(value);
   const handlePriorityChange = (value: string) => setPriorityFilter(value);
-  
+
   const handleClearDates = () => {
     setFromDate("");
     setToDate("");
@@ -89,11 +97,13 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
   const filteredDailyTaskList = useMemo(() => {
     return dailyTaskList.filter((task) => {
       // Search filter
-      const searchMatch = !searchQuery || 
+      const searchMatch =
+        !searchQuery ||
         task.name?.toLowerCase().includes(searchQuery) ||
         task.description?.toLowerCase().includes(searchQuery) ||
         task.projectName?.toLowerCase().includes(searchQuery) ||
         task.clientName?.toLowerCase().includes(searchQuery) ||
+        task.assigneeName?.toLowerCase().includes(searchQuery) ||
         task.staffName?.toLowerCase().includes(searchQuery);
 
       // Status filter
@@ -123,7 +133,14 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
 
       return searchMatch && statusMatch && priorityMatch && dateMatch;
     });
-  }, [dailyTaskList, searchQuery, statusFilter, priorityFilter, fromDate, toDate]);
+  }, [
+    dailyTaskList,
+    searchQuery,
+    statusFilter,
+    priorityFilter,
+    fromDate,
+    toDate,
+  ]);
   // if (userRole.toLowerCase() === "admin") return null;
   if (dailyTasksLoading) return <Loading />;
   if (dailyTasksError)
@@ -140,9 +157,7 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
   return (
     <div className="p-4  border  border-grey-300 rounded-xl ">
       <div className="flex justify-between items-center flex-wrap gap-4 ">
-        <h1 className="text-[1.2rem]  font-medium">
-          Daily Task List
-        </h1>
+        <h1 className="text-[1.2rem]  font-medium">Daily Task List</h1>
         <div className="flex items-center flex-wrap gap-4 ">
           <SearchBar
             onSearch={handleSearch}
@@ -183,25 +198,23 @@ const DailyTaskTable: React.FC<DailyTaskTableProps> = ({
               variant="background-white"
               width="w-full md:w-fit"
               onClick={handleClearDates}
-              leftIcon={
-                <FiX className="w-5 h-5  " />
-              }
+              leftIcon={<FiX className="w-5 h-5  " />}
               tooltip="Clear Dates"
             />
           </div>
         )}
         <Dropdown
-            options={statusOptions}
-            value={statusFilter}
-            onChange={handleStatusChange}
-            dropdownWidth="w-full md:w-fit"
-          />
-          <Dropdown
-            options={priorityOptions}
-            value={priorityFilter}
-            onChange={handlePriorityChange}
-            dropdownWidth="w-full md:w-fit"
-          />
+          options={statusOptions}
+          value={statusFilter}
+          onChange={handleStatusChange}
+          dropdownWidth="w-full md:w-fit"
+        />
+        <Dropdown
+          options={priorityOptions}
+          value={priorityFilter}
+          onChange={handlePriorityChange}
+          dropdownWidth="w-full md:w-fit"
+        />
       </div>
       <Table
         data={filteredDailyTaskList}

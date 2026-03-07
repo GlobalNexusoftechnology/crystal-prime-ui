@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -397,6 +399,11 @@ export default function Dashboard() {
       const user = usersData.data.list.find((u) => u.id === assignedTo);
       return user ? `${user.first_name} ${user.last_name}` : "-";
     };
+    const getAssigneeName = (assignedBy: any) => {
+      return assignedBy
+        ? `${assignedBy.first_name} ${assignedBy.last_name}`
+        : "-";
+    };
 
     const transformedTasks = list.map((task) => {
       const t = task as {
@@ -450,6 +457,7 @@ export default function Dashboard() {
         clientName: project.client?.name || "-",
         clientNumber: project.client?.contact_number || "-",
         staffName: getStaffName(t.assigned_to || ""),
+        assigneeName: getAssigneeName(t || ""),
         teamLeadName: teamLeadName,
         delay_days: t.delay_days || 0,
         created_at: t.created_at ? formatDate(t.created_at) : "-",
@@ -697,6 +705,7 @@ export default function Dashboard() {
       },
     },
     { header: "STAFF NAME", accessor: "staffName" },
+    { header: "ASSIGNEE NAME", accessor: "assigneeName" },
     { header: "TEAM LEAD", accessor: "teamLeadName" },
     { header: "PROJECT NAME", accessor: "projectName" },
     { header: "MILESTONE NAME", accessor: "milestoneName" },
