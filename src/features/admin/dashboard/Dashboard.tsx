@@ -58,11 +58,12 @@ export default function Dashboard() {
 
   // State to track which descriptions are expanded
   const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(
-    new Set()
+    new Set(),
   );
 
   // State for task status filter
-  const [selectedTaskStatus, setSelectedTaskStatus] = useState<string>("allTask");
+  const [selectedTaskStatus, setSelectedTaskStatus] =
+    useState<string>("allTask");
 
   // Trigger and preset for TaskTable external filter control
   const [taskTablePreset, setTaskTablePreset] = useState<
@@ -74,8 +75,9 @@ export default function Dashboard() {
   const { dashboardSummary, isLoading, error } = useDashboardSummaryQuery();
   const { activeSession } = useAuthStore();
   const userRole = activeSession?.user?.role?.role || "";
-  const currentUserName = `${activeSession?.user?.first_name ?? ""} ${activeSession?.user?.last_name ?? ""
-    }`.trim();
+  const currentUserName = `${activeSession?.user?.first_name ?? ""} ${
+    activeSession?.user?.last_name ?? ""
+  }`.trim();
   const currentUserId = activeSession?.user?.id ?? "";
 
   const handleProjectChange = (projectId: string) => {
@@ -111,7 +113,6 @@ export default function Dashboard() {
   // const { allUsersData: usersData } = useAllUsersQuery();
   const { allUsersData: usersData } = useAllDropdownDataQuery();
 
-
   // Fetch all tasks directly
   const { allTasksData, isLoading: isLoadingTasks } = useAllTasksQuery();
   // Still fetch projects for dropdowns and routing context
@@ -129,7 +130,7 @@ export default function Dashboard() {
   useEffect(() => {
     if (selectedProjectId && projectsData) {
       const selectedProject = projectsData.find(
-        (project) => project.id === selectedProjectId
+        (project) => project.id === selectedProjectId,
       );
       if (
         selectedProject?.milestones &&
@@ -138,7 +139,7 @@ export default function Dashboard() {
       ) {
         // Filter out support milestones and select the first non-support milestone
         const filteredMilestones = selectedProject.milestones.filter(
-          (milestone) => !milestone.name?.toLowerCase().includes("support")
+          (milestone) => !milestone.name?.toLowerCase().includes("support"),
         );
         if (filteredMilestones.length > 0) {
           setSelectedMilestoneId(filteredMilestones[0].id || "");
@@ -178,7 +179,7 @@ export default function Dashboard() {
     }
 
     const selectedProject = projectsData.find(
-      (project) => project.id === selectedProjectId
+      (project) => project.id === selectedProjectId,
     );
     if (!selectedProject?.milestones) {
       return [{ label: "No milestones found", value: "" }];
@@ -186,7 +187,7 @@ export default function Dashboard() {
 
     // Filter out support milestones
     const filteredMilestones = selectedProject.milestones.filter(
-      (milestone) => !milestone.name?.toLowerCase().includes("support")
+      (milestone) => !milestone.name?.toLowerCase().includes("support"),
     );
 
     if (filteredMilestones.length === 0) {
@@ -242,17 +243,17 @@ export default function Dashboard() {
       const taskDateOnly = new Date(
         taskDate.getFullYear(),
         taskDate.getMonth(),
-        taskDate.getDate()
+        taskDate.getDate(),
       );
       const todayOnly = new Date(
         today.getFullYear(),
         today.getMonth(),
-        today.getDate()
+        today.getDate(),
       );
       const yesterdayOnly = new Date(
         yesterday.getFullYear(),
         yesterday.getMonth(),
-        yesterday.getDate()
+        yesterday.getDate(),
       );
 
       const isToday = taskDateOnly.getTime() === todayOnly.getTime();
@@ -272,24 +273,27 @@ export default function Dashboard() {
 
     switch (status) {
       case "completed":
-        return `${taskList.filter((task) => task.status === "Completed").length
-          } Task`;
+        return `${
+          taskList.filter((task) => task.status === "Completed").length
+        } Task`;
       case "inprogress":
-        return `${taskList.filter((task) => task.status === "In Progress").length
-          } Task`;
+        return `${
+          taskList.filter((task) => task.status === "In Progress").length
+        } Task`;
       case "approval":
-        return `${taskList.filter((task) => task.status === "Approval").length
-          } Task`;
+        return `${
+          taskList.filter((task) => task.status === "Approval").length
+        } Task`;
       case "open":
-        return `${taskList.filter((task) => task.status === "Open").length
-          } Task`;
+        return `${
+          taskList.filter((task) => task.status === "Open").length
+        } Task`;
       case "allTask":
         return `${filteredCount} Task`;
       default:
         return `${filteredCount} Task`;
     }
   };
-
 
   // Handler for deleting a task
   const handleDeleteTask = async () => {
@@ -316,9 +320,9 @@ export default function Dashboard() {
   // Get data for selected month
   const renewalDataForSelectedMonth =
     dashboardSummary &&
-      selectedMonth &&
-      dashboardSummary?.projectRenewalData &&
-      dashboardSummary?.projectRenewalData[selectedMonth]
+    selectedMonth &&
+    dashboardSummary?.projectRenewalData &&
+    dashboardSummary?.projectRenewalData[selectedMonth]
       ? dashboardSummary?.projectRenewalData[selectedMonth]
       : [];
 
@@ -426,7 +430,8 @@ export default function Dashboard() {
 
       // Extract team lead name
       const teamLeadName = t.team_lead
-        ? `${t.team_lead.first_name || ""} ${t.team_lead.last_name || ""}`.trim() || "-"
+        ? `${t.team_lead.first_name || ""} ${t.team_lead.last_name || ""}`.trim() ||
+          "-"
         : "-";
 
       return {
@@ -508,7 +513,7 @@ export default function Dashboard() {
       const d = new Date(created);
       const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
         2,
-        "0"
+        "0",
       )}-${String(d.getDate()).padStart(2, "0")}`;
       if (dStr === todayStr) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -535,7 +540,7 @@ export default function Dashboard() {
       const d = new Date(created);
       const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(
         2,
-        "0"
+        "0",
       )}-${String(d.getDate()).padStart(2, "0")}`;
       if (dStr === todayStr) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -554,60 +559,59 @@ export default function Dashboard() {
   const statsData = (dashboardSummary as any) || {};
   const analyticalCards = dashboardSummary?.stats
     ? dashboardSummary?.stats?.map((card) => ({
-      ...card,
-      icon: <AnalyticalCardIcon />,
-    }))
+        ...card,
+        icon: <AnalyticalCardIcon />,
+      }))
     : [
-      {
-        count: statsData?.myTaskCount,
-        title: "My Task",
-        subtitle: "Open & In Process",
-        icon: <AnalyticalCardIcon />,
-      },
-      {
-        count: getTaskCountByStatus(selectedTaskStatus),
-        title: "Open",
-        subtitle: "Open",
-        icon: <AnalyticalCardIcon />,
-        customContent: (
-          <div className="flex flex-col items-start gap-2">
-            <SimpleDropdown
-              options={[
-                { label: "Open", value: "open" },
-                { label: "All Task", value: "allTask" },
-                { label: "Completed", value: "completed" },
-                { label: "In Progress", value: "inprogress" },
-                { label: "Approval", value: "approval" },
-              ]}
-              value={selectedTaskStatus}
-              onChange={(newStatus) => handleTaskStatusChange(newStatus)}
-              dropdownWidth="w-40 "
-              dropdownBorderRadius="rounded-md"
-              buttonClassName="text-sm"
-            />
-          </div>
-        ),
-
-      },
-      {
-        count: statsData?.todayFollowups,
-        title: "Today Follow up",
-        subtitle: "Due Today",
-        icon: <AnalyticalCardIcon />,
-      },
-      {
-        count: statsData?.projectCount,
-        title: "Project",
-        subtitle: "Assigned Projects",
-        icon: <AnalyticalCardIcon />,
-      },
-      {
-        count: statsData?.performanceRatio,
-        title: "Performance Ratio",
-        subtitle: "Completed/Assigned",
-        icon: <AnalyticalCardIcon />,
-      },
-    ];
+        {
+          count: statsData?.myTaskCount,
+          title: "My Task",
+          subtitle: "Open & In Process",
+          icon: <AnalyticalCardIcon />,
+        },
+        {
+          count: getTaskCountByStatus(selectedTaskStatus),
+          title: "Open",
+          subtitle: "Open",
+          icon: <AnalyticalCardIcon />,
+          customContent: (
+            <div className="flex flex-col items-start gap-2">
+              <SimpleDropdown
+                options={[
+                  { label: "Open", value: "open" },
+                  { label: "All Task", value: "allTask" },
+                  { label: "Completed", value: "completed" },
+                  { label: "In Progress", value: "inprogress" },
+                  { label: "Approval", value: "approval" },
+                ]}
+                value={selectedTaskStatus}
+                onChange={(newStatus) => handleTaskStatusChange(newStatus)}
+                dropdownWidth="w-40 "
+                dropdownBorderRadius="rounded-md"
+                buttonClassName="text-sm"
+              />
+            </div>
+          ),
+        },
+        {
+          count: statsData?.todayFollowups,
+          title: "Today Follow up",
+          subtitle: "Due Today",
+          icon: <AnalyticalCardIcon />,
+        },
+        {
+          count: statsData?.projectCount,
+          title: "Project",
+          subtitle: "Assigned Projects",
+          icon: <AnalyticalCardIcon />,
+        },
+        {
+          count: statsData?.performanceRatio,
+          title: "Performance Ratio",
+          subtitle: "Completed/Assigned",
+          icon: <AnalyticalCardIcon />,
+        },
+      ];
 
   const taskListColumn: ITableColumn<TaskRow>[] = [
     {
@@ -708,7 +712,7 @@ export default function Dashboard() {
       label: "View",
       onClick: (row: TaskRow) => {
         router.push(
-          `/admin/project-management/${row.projectId}/${row.milestoneId}/${row.id}`
+          `/admin/project-management/${row.projectId}/${row.milestoneId}/${row.id}`,
         );
       },
       className: "text-blue-500 whitespace-nowrap",
@@ -719,7 +723,7 @@ export default function Dashboard() {
         // Find raw task data from projectsData to avoid formatted fields
         const project = projectsData?.find((p) => p.id === row.projectId);
         const milestone = project?.milestones?.find(
-          (m) => m.id === row.milestoneId
+          (m) => m.id === row.milestoneId,
         );
         const task = milestone?.tasks?.find((t) => t.id === row.id);
 
@@ -815,23 +819,25 @@ export default function Dashboard() {
         month: label,
         income: dashboardSummary?.expenses?.weekly?.income?.[i] ?? 0,
         expense: dashboardSummary?.expenses?.weekly?.expense?.[i] ?? 0,
-      })
+      }),
     ),
     monthly: (dashboardSummary?.expenses?.monthly?.labels ?? []).map(
       (label, i) => ({
         month: label,
         income: dashboardSummary?.expenses?.monthly?.income?.[i] ?? 0,
         expense: dashboardSummary?.expenses?.monthly?.expense?.[i] ?? 0,
-      })
+      }),
     ),
     yearly: (dashboardSummary?.expenses?.yearly?.labels ?? []).map(
       (label, i) => ({
         month: label,
         income: dashboardSummary?.expenses?.yearly?.income?.[i] ?? 0,
         expense: dashboardSummary?.expenses?.yearly?.expense?.[i] ?? 0,
-      })
+      }),
     ),
   };
+
+  console.log("taskList", taskList);
 
   return (
     <div className="p-6 md:p-8  bg-[#fafbfc] border  border-gray-300 rounded-xl  min-h-screen">
@@ -879,14 +885,14 @@ export default function Dashboard() {
                     onClick={
                       isTodayFollowUpCard
                         ? () => {
-                          setTaskTablePreset("dueToday");
-                          setTaskTablePresetTrigger((v) => v + 1);
-                        }
-                        : isFollowUpCard
-                          ? () => {
-                            setTaskTablePreset("followups");
+                            setTaskTablePreset("dueToday");
                             setTaskTablePresetTrigger((v) => v + 1);
                           }
+                        : isFollowUpCard
+                          ? () => {
+                              setTaskTablePreset("followups");
+                              setTaskTablePresetTrigger((v) => v + 1);
+                            }
                           : undefined
                     }
                   />
@@ -991,14 +997,14 @@ export default function Dashboard() {
                   editingTaskId
                     ? editInitialValues
                     : {
-                      title: "",
-                      description: "",
-                      due_date: new Date().toISOString().slice(0, 10),
-                      status: "Open",
-                      priority: "Medium",
-                      assigned_to: selectedAssignedTo || "",
-                      milestone_id: selectedMilestoneId || "",
-                    }
+                        title: "",
+                        description: "",
+                        due_date: new Date().toISOString().slice(0, 10),
+                        status: "Open",
+                        priority: "Medium",
+                        assigned_to: selectedAssignedTo || "",
+                        milestone_id: selectedMilestoneId || "",
+                      }
                 }
                 isPending={
                   editingTaskId ? isUpdatingMilestoneTask : isCreatingTask
