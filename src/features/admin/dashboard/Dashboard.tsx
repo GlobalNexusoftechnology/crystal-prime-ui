@@ -710,11 +710,11 @@ export default function Dashboard() {
     { header: "TEAM LEAD", accessor: "teamLeadName" },
     { header: "PROJECT NAME", accessor: "projectName" },
     { header: "MILESTONE NAME", accessor: "milestoneName" },
-    { header: "CLIENT NAME", accessor: "clientName" },
-    { header: "CLIENT NUMBER", accessor: "clientNumber" },
-    { header: "DUE DATE", accessor: "due_date" },
-    { header: "DELAY DAY", accessor: "delay_days" },
+    // { header: "CLIENT NAME", accessor: "clientName" },
+    // { header: "CLIENT NUMBER", accessor: "clientNumber" },
     { header: "CREATED AT", accessor: "created_at" },
+    { header: "DELAY DAY", accessor: "delay_days" },
+    { header: "DUE DATE", accessor: "due_date" },
   ];
 
   const taskListAction: ITableAction<TaskRow>[] = [
