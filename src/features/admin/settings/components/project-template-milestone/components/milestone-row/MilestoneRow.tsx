@@ -23,10 +23,10 @@ interface MilestoneRowProps {
   onSave: () => void;
   onCancel: () => void;
   handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   handleBlur: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => void;
   editingTaskId: string | null;
   setEditingTaskId: (id: string | null) => void;
@@ -134,7 +134,7 @@ export function MilestoneRow({
               const value = e.target.value.replace(/[^0-9]/g, "");
               formik.setFieldValue(
                 `milestones[${index}].estimated_days`,
-                value
+                value,
               );
             }}
             onBlur={formik.handleBlur}
@@ -180,6 +180,29 @@ export function MilestoneRow({
         ) : (
           <p className="truncate">{milestone.description}</p>
         )}
+        {isEditing ? (
+          <InputField
+            name={`milestones[${index}].description`}
+            value={formik.values.milestones[index]?.description}
+            onChange={(e) => {
+              // Disallow special characters
+              const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+              formik.setFieldValue(`milestones[${index}].description`, value);
+            }}
+            onBlur={formik.handleBlur}
+            placeholder="Enter Description"
+            error={
+              formik.touched.milestones?.[index]?.description &&
+              typeof formik.errors.milestones?.[index] === "object" &&
+              formik.errors.milestones?.[index] &&
+              "description" in formik.errors.milestones[index]
+                ? formik.errors.milestones[index].description
+                : undefined
+            }
+          />
+        ) : (
+          <p className="truncate">{milestone.description}</p>
+        )}
         <div className="flex items-center justify-end gap-2">
           {isEditing && !readOnly ? (
             <>
@@ -191,17 +214,17 @@ export function MilestoneRow({
                   await formik.setFieldTouched(
                     `milestones[${index}].name`,
                     true,
-                    true
+                    true,
                   );
                   await formik.setFieldTouched(
                     `milestones[${index}].estimated_days`,
                     true,
-                    true
+                    true,
                   );
                   await formik.setFieldTouched(
                     `milestones[${index}].description`,
                     true,
-                    true
+                    true,
                   );
 
                   // Validate the milestone fields
@@ -295,7 +318,7 @@ export function MilestoneRow({
                             setEditingTaskId("0"); // Use the first index as the editing key
                           } else {
                             toast.error(
-                              "Please complete the current task before adding a new one."
+                              "Please complete the current task before adding a new one.",
                             );
                           }
                         }}
@@ -320,14 +343,14 @@ export function MilestoneRow({
                     isEditing={
                       !!editingTaskId &&
                       editingTaskId.startsWith(
-                        task.id ? task.id : String(taskIndex)
+                        task.id ? task.id : String(taskIndex),
                       )
                     }
                     onEdit={() =>
                       setEditingTaskId(
                         (task.id ? task.id : String(taskIndex)) +
                           "-" +
-                          Date.now()
+                          Date.now(),
                       )
                     }
                     onDelete={taskArrayHelpers.remove}
