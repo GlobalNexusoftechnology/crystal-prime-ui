@@ -122,9 +122,6 @@ export function ProjectTemplateMilestone({
               <span className="text-[0.9rem]  font-medium text-gray-500">
                 Description
               </span>
-              <span className="text-[0.9rem]  font-medium text-gray-500">
-                Assignee
-              </span>
             </div>
             {values.milestones?.map((milestone: Milestone, index: number) => {
               const milestoneKey = milestone.id || String(index);
