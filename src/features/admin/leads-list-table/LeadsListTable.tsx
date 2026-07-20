@@ -18,6 +18,7 @@ import {
   ILeadsListProps,
   ITableAction,
   leadsListColumn,
+  leadsListColumnForStaff,
 } from "@/constants";
 import { ExportIcon } from "@/features";
 import {
@@ -55,7 +56,6 @@ type ProductRow = {
   state?: string;
 };
 
-
 export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const queryClient = useQueryClient();
   const [leadId, setLeadId] = useState("");
@@ -63,22 +63,28 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const [searchInput, setSearchInput] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All Status");
   const [selectedType, setSelectedType] = useState("All Type");
-  const [selectedAssignedTo, setSelectedAssignedTo] = useState("All Assigned To");
+  const [selectedAssignedTo, setSelectedAssignedTo] =
+    useState("All Assigned To");
   const [viewLead, setViewLead] = useState<ILeadsListProps | null>(null);
   const [followupFromDate, setFollowupFromDate] = useState("");
   const [followupToDate, setFollowupToDate] = useState("");
   const [dateRangeFilter, setDateRangeFilter] = useState<
     "All" | "Daily" | "Weekly" | "Monthly"
   >("All");
-  const [selectedAssignedToId, setSelectedAssignedToId] = useState<string | undefined>(undefined);
-  const [pendingStatusName, setPendingStatusName] = useState<string | null>(null);
+  const [selectedAssignedToId, setSelectedAssignedToId] = useState<
+    string | undefined
+  >(undefined);
+  const [pendingStatusName, setPendingStatusName] = useState<string | null>(
+    null,
+  );
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [isSendProposalModalOpen, setIsSendProposalModalOpen] = useState(false);
-  const [selectedLeadForProposal, setSelectedLeadForProposal] = useState<ILeadsListProps | null>(null);
-  const { mutate: sendProposal, isPending: isSendingProposal } = useSendProposalMutation();
-
+  const [selectedLeadForProposal, setSelectedLeadForProposal] =
+    useState<ILeadsListProps | null>(null);
+  const { mutate: sendProposal, isPending: isSendingProposal } =
+    useSendProposalMutation();
 
   // Send Proposal Handler
   // const handleSendProposal = async (proposalData: { proposalDate: string; proposalNumber: string; proposalText: string }) => {
@@ -102,17 +108,18 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   //   }
   // };
 
-
-
   const handleSendProposal = async (
     proposalData: {
-      proposalDate: string; proposalNumber: string; proposalText: string, productsText?: string,
+      proposalDate: string;
+      proposalNumber: string;
+      proposalText: string;
+      productsText?: string;
     },
     productRows: ProductRow[],
-    
+
     subtotal?: any,
     taxPercent?: any,
-    finalAmount?: any
+    finalAmount?: any,
   ) => {
     try {
       if (!selectedLeadForProposal?.id) {
@@ -121,7 +128,9 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       }
 
       // Filter only rows where a material was selected
-      const selectedProducts = (productRows ?? []).filter((r) => !!r.materialId);
+      const selectedProducts = (productRows ?? []).filter(
+        (r) => !!r.materialId,
+      );
 
       if (selectedProducts.length === 0) {
         toast.error("Please add at least one product and select an item.");
@@ -131,17 +140,25 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       // Build products payload — convert salePrice to number where possible
       const productsPayload = selectedProducts.map((p) => {
         // try to convert salePrice to a number, fallback to 0
-        const parsedPrice = Number(String(p.salePrice).replace(/[^0-9.-]+/g, ""));
-        const parsedProductSize = Number(String(p.productSize).replace(/[^0-9.-]+/g, ""));
-        const parsedTotalPrice = Number(String(p.totalPrice).replace(/[^0-9.-]+/g, ""));
+        const parsedPrice = Number(
+          String(p.salePrice).replace(/[^0-9.-]+/g, ""),
+        );
+        const parsedProductSize = Number(
+          String(p.productSize).replace(/[^0-9.-]+/g, ""),
+        );
+        const parsedTotalPrice = Number(
+          String(p.totalPrice).replace(/[^0-9.-]+/g, ""),
+        );
         return {
           materialId: p.materialId,
           name: p.name,
           salePrice: Number.isFinite(parsedPrice) ? parsedPrice : 0,
-          productSize: Number.isFinite(parsedProductSize) ? parsedProductSize : 0,
+          productSize: Number.isFinite(parsedProductSize)
+            ? parsedProductSize
+            : 0,
           totalPrice: Number.isFinite(parsedTotalPrice) ? parsedTotalPrice : 0,
           count: p.count ?? "0",
-          state: p.state ?? ""
+          state: p.state ?? "",
           // add other fields if your API expects them, e.g. quantity
           // quantity: p.quantity ?? 1,
         };
@@ -172,11 +189,10 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     }
   };
 
-
   const { debouncedValue: searchQuery } = useDebounce({
     initialValue: searchInput,
     delay: 500,
-    onChangeCb: () => { }, // not needed for this use case
+    onChangeCb: () => {}, // not needed for this use case
   });
 
   const filters = useMemo(
@@ -192,13 +208,27 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       followupFrom: followupFromDate || undefined,
       followupTo: followupToDate || undefined,
       assignedToId: selectedAssignedToId || undefined,
-      assignedTo: selectedAssignedTo && selectedAssignedTo !== "All Assigned To" ? selectedAssignedTo : undefined,
+      assignedTo:
+        selectedAssignedTo && selectedAssignedTo !== "All Assigned To"
+          ? selectedAssignedTo
+          : undefined,
       page: currentPage,
     }),
-    [searchQuery, selectedStatus, selectedType, dateRangeFilter, followupFromDate, followupToDate, selectedAssignedToId, selectedAssignedTo, currentPage]
+    [
+      searchQuery,
+      selectedStatus,
+      selectedType,
+      dateRangeFilter,
+      followupFromDate,
+      followupToDate,
+      selectedAssignedToId,
+      selectedAssignedTo,
+      currentPage,
+    ],
   );
 
   const { activeSession } = useAuthStore();
+  const userRole = activeSession?.user?.role?.role || "";
 
   // React to card clicks from LeadManagement cards
   useEffect(() => {
@@ -250,12 +280,15 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   }, [activeSession?.user?.id]);
 
   // Resolve pending business done once statuses are loaded
-  const { allTypesData, allUsersData, allStatusesData } = useAllDropdownDataQuery()
+  const { allTypesData, allUsersData, allStatusesData } =
+    useAllDropdownDataQuery();
   useEffect(() => {
     if (!pendingStatusName) return;
     const list = allStatusesData?.data?.list || [];
     if (!list || list.length === 0) return;
-    const target = list.find((s: { id?: string; name?: string }) => (s?.name || "").toLowerCase().includes("business"));
+    const target = list.find((s: { id?: string; name?: string }) =>
+      (s?.name || "").toLowerCase().includes("business"),
+    );
     if (target?.id) {
       setSelectedStatus(String(target.id));
       setPendingStatusName(null);
@@ -288,19 +321,19 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const { hasPermission } = usePermission();
   const cavAddLeadManagement = hasPermission(
     EModule.LEAD_MANAGEMENT,
-    EAction.ADD
+    EAction.ADD,
   );
   const cavViewLeadManagement = hasPermission(
     EModule.LEAD_MANAGEMENT,
-    EAction.VIEW
+    EAction.VIEW,
   );
   const cavEditLeadManagement = hasPermission(
     EModule.LEAD_MANAGEMENT,
-    EAction.EDIT
+    EAction.EDIT,
   );
   const cavDeleteLeadManagement = hasPermission(
     EModule.LEAD_MANAGEMENT,
-    EAction.DELETE
+    EAction.DELETE,
   );
 
   const handleLeadDownloadExcel = async () => {
@@ -402,7 +435,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   const leadsList: ILeadsListProps[] = (allLeadList?.data?.list ?? []).map(
     (lead) => {
       const status = allStatusesData?.data?.list?.find(
-        (s) => s.id === lead?.status?.id
+        (s) => s.id === lead?.status?.id,
       );
       return {
         id: lead?.id || "N/A",
@@ -427,7 +460,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
           `${lead?.assigned_to?.first_name} ${lead?.assigned_to?.last_name}` ||
           "Unassigned",
       };
-    }
+    },
   );
 
   // Extract pagination data
@@ -569,9 +602,9 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
 
   const leadNameToDelete = deleteId
     ? (() => {
-      const lead = leadsList.find((l) => l.id === deleteId);
-      return lead ? `${lead.first_name} ${lead.last_name}` : "";
-    })()
+        const lead = leadsList.find((l) => l.id === deleteId);
+        return lead ? `${lead.first_name} ${lead.last_name}` : "";
+      })()
     : "";
 
   if (isError) {
@@ -585,9 +618,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
   return (
     <div className="flex flex-col gap-6  bg-customGray mx-4  p-4  border  rounded-xl ">
       <div className="flex justify-between items-center flex-wrap gap-4 ">
-        <h1 className="text-[1.2rem]  font-medium">
-          Leads List
-        </h1>
+        <h1 className="text-[1.2rem]  font-medium">Leads List</h1>
         <div className="flex items-center flex-wrap gap-4 ">
           <SearchBar
             onSearch={handleSearch}
@@ -600,9 +631,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
                 title="Add Lead"
                 variant="background-white"
                 width="w-full md:w-fit"
-                leftIcon={
-                  <FiPlus className="w-5 h-5  " />
-                }
+                leftIcon={<FiPlus className="w-5 h-5  " />}
                 onClick={() => setAddLeadModalOpen(true)}
               />
             </div>
@@ -618,9 +647,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
             variant="background-white"
             width="w-full md:w-fit"
             onClick={handleLeadDownloadTemplateExcel}
-            leftIcon={
-              <ImDownload2 className="w-5 h-5  " />
-            }
+            leftIcon={<ImDownload2 className="w-5 h-5  " />}
             tooltip="Download Template"
           />
         </div>
@@ -647,9 +674,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
               variant="background-white"
               width="w-full md:w-fit"
               onClick={handleClearFollowupDates}
-              leftIcon={
-                <FiX className="w-5 h-5  " />
-              }
+              leftIcon={<FiX className="w-5 h-5  " />}
               tooltip="Clear Dates"
             />
           </div>
@@ -686,7 +711,11 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       ) : (
         <Table
           data={leadsList}
-          columns={leadsListColumn}
+          columns={
+            userRole.toLocaleLowerCase() !== "admin"
+              ? leadsListColumnForStaff
+              : leadsListColumn
+          }
           actions={leadLeadManagementAction}
           paginationData={paginationData}
           onPageChange={handlePageChange}

@@ -1,4 +1,10 @@
-import { Button, Dropdown, InputField, ModalOverlay, NumberInput } from "@/components";
+import {
+  Button,
+  Dropdown,
+  InputField,
+  ModalOverlay,
+  NumberInput,
+} from "@/components";
 import {
   ICreateLeadPayload,
   ICreateLeadResponse,
@@ -18,8 +24,6 @@ interface IAddLeadModalProps {
   setAddLeadModalOpen: (open: boolean) => void;
   leadsRefetch?: () => void;
 }
-
-
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
@@ -50,7 +54,8 @@ export function AddLeadModal({
   leadsRefetch,
 }: IAddLeadModalProps) {
   const queryClient = useQueryClient();
-  const { allSourcesData, allStatusesData, allUsersData, allTypesData } = useAllDropdownDataQuery();
+  const { allSourcesData, allStatusesData, allUsersData, allTypesData } =
+    useAllDropdownDataQuery();
 
   const { createLead, isPending } = useCreateLeadMutation({
     onSuccessCallback: (response: ICreateLeadResponse) => {
@@ -102,9 +107,7 @@ export function AddLeadModal({
     >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         <div className="bg-white rounded-lg  p-4  border  border-gray-200">
-          <h2 className="text-lg  font-semibold">
-            Lead Information
-          </h2>
+          <h2 className="text-lg  font-semibold">Lead Information</h2>
           <Formik<ICreateLeadPayload>
             initialValues={{
               first_name: "",
@@ -125,18 +128,28 @@ export function AddLeadModal({
             }}
             validationSchema={validationSchema}
             onSubmit={(values) => {
-              const { source_id, status_id, type_id, assigned_to, email, ...rest } = values;
-              
+              const {
+                source_id,
+                status_id,
+                type_id,
+                assigned_to,
+                email,
+                ...rest
+              } = values;
+
               const payload = {
                 ...rest,
                 budget: values.budget ?? 0,
-                possibility_of_conversion: values.possibility_of_conversion ?? 0,
+                possibility_of_conversion:
+                  values.possibility_of_conversion ?? 0,
                 // Only include email if it's not empty
-                ...(email && email.trim() !== '' && { email }),
+                ...(email && email.trim() !== "" && { email }),
                 // Filter out empty strings for optional fields
                 ...(values.last_name && { last_name: values.last_name }),
                 ...(values.company && { company: values.company }),
-                ...(values.other_contact && { other_contact: values.other_contact }),
+                ...(values.other_contact && {
+                  other_contact: values.other_contact,
+                }),
                 ...(values.location && { location: values.location }),
                 ...(values.requirement && { requirement: values.requirement }),
                 ...(source_id && { source_id }),
@@ -144,7 +157,7 @@ export function AddLeadModal({
                 ...(type_id && { type_id }),
                 ...(assigned_to && { assigned_to }),
               };
-              
+
               createLead(payload);
             }}
           >
@@ -200,12 +213,12 @@ export function AddLeadModal({
                     name="other_contact"
                     type="text"
                     value={values?.other_contact}
-                    onChange={e => {
+                    onChange={(e) => {
                       let digitsOnly = e.target.value.replace(/[^0-9]/g, "");
-                      if (digitsOnly.length > 15) digitsOnly = digitsOnly.slice(0, 15);
+                      if (digitsOnly.length > 15)
+                        digitsOnly = digitsOnly.slice(0, 15);
                       setFieldValue("other_contact", digitsOnly);
                     }}
-
                   />
                   <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
                     <label className="text-[0.9rem] font-medium text-gray-700">
@@ -213,7 +226,9 @@ export function AddLeadModal({
                     </label>
                     <NumberInput
                       value={values.possibility_of_conversion || 0}
-                      onChange={(value) => setFieldValue("possibility_of_conversion", value)}
+                      onChange={(value) =>
+                        setFieldValue("possibility_of_conversion", value)
+                      }
                       min={0}
                       max={100}
                       placeholder="Enter Possibility of Conversion"

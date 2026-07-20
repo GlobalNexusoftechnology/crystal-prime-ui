@@ -10,6 +10,7 @@ import {
   ICreateLeadPayload,
   IUpdateLeadResponse,
   useAllDropdownDataQuery,
+  useAuthStore,
   useCreateLeadFollowUpMutation,
   useUpdateLeadMutation,
 } from "@/services";
@@ -21,14 +22,11 @@ import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
 import * as Yup from "yup";
 
-
 interface IEditLeadModalProps {
   setIsEditLeadModalOpen: (open: boolean) => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   lead: any; // Adjust type as needed
 }
-
-
 
 const validationSchema = Yup.object().shape({
   first_name: Yup.string().required("First Name is required"),
@@ -61,7 +59,11 @@ export function EditLeadModal({
 }: IEditLeadModalProps) {
   const queryClient = useQueryClient();
 
-  const { allSourcesData, allStatusesData, allUsersData, allTypesData} = useAllDropdownDataQuery()
+  const { allSourcesData, allStatusesData, allUsersData, allTypesData } =
+    useAllDropdownDataQuery();
+
+  const { activeSession } = useAuthStore();
+  const userRole = activeSession?.user?.role?.role || "";
 
   const { onEditLead, isPending } = useUpdateLeadMutation({
     onSuccessCallback: (response: IUpdateLeadResponse) => {
@@ -136,11 +138,13 @@ export function EditLeadModal({
       typeof lead.email === "string"
         ? lead.email
         : Array.isArray(lead.email) && lead.email.length > 0
-        ? lead.email[0]
-        : "",
+          ? lead.email[0]
+          : "",
     location: lead.location || "",
     budget: lead.budget ? Number(lead.budget) : 0,
-    possibility_of_conversion: lead.possibility_of_conversion ? Number(lead.possibility_of_conversion) : 0,
+    possibility_of_conversion: lead.possibility_of_conversion
+      ? Number(lead.possibility_of_conversion)
+      : 0,
     requirement: lead.requirement || "",
     source_id: lead.source?.id?.toString() || lead.source_id?.toString() || "",
     status_id: lead.status?.id?.toString() || lead.status_id?.toString() || "",
@@ -157,26 +161,34 @@ export function EditLeadModal({
     >
       <div className="overflow-y-auto max-h-[80vh] space-y-4">
         <div className="bg-white rounded-lg  p-4  border  border-gray-200">
-          <h2 className="text-[1rem]  font-semibold">
-            Edit Lead Information
-          </h2>
+          <h2 className="text-[1rem]  font-semibold">Edit Lead Information</h2>
           <Formik<ICreateLeadPayload>
             key={lead.id} // Ensures Formik reinitializes when lead changes
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={(values: ICreateLeadPayload) => {
-              const { source_id, status_id, type_id, assigned_to, email, ...rest } = values;
-              
+              const {
+                source_id,
+                status_id,
+                type_id,
+                assigned_to,
+                email,
+                ...rest
+              } = values;
+
               const payload = {
                 ...rest,
                 budget: values.budget ?? 0,
-                possibility_of_conversion: values.possibility_of_conversion ?? 0,
+                possibility_of_conversion:
+                  values.possibility_of_conversion ?? 0,
                 // Only include email if it's not empty
-                ...(email && email.trim() !== '' && { email }),
+                ...(email && email.trim() !== "" && { email }),
                 // Filter out empty strings for optional fields
                 ...(values.last_name && { last_name: values.last_name }),
                 ...(values.company && { company: values.company }),
-                ...(values.other_contact && { other_contact: values.other_contact }),
+                ...(values.other_contact && {
+                  other_contact: values.other_contact,
+                }),
                 ...(values.location && { location: values.location }),
                 ...(values.requirement && { requirement: values.requirement }),
                 ...(source_id && { source_id }),
@@ -184,7 +196,7 @@ export function EditLeadModal({
                 ...(type_id && { type_id }),
                 ...(assigned_to && { assigned_to }),
               };
-              
+
               onEditLead({
                 id: lead.id,
                 payload,
@@ -192,7 +204,7 @@ export function EditLeadModal({
 
               if (values.escalate_to) {
                 const newAssignee = allUsersData?.data?.list?.find(
-                  (user) => user.id.toString() === values.assigned_to
+                  (user) => user.id.toString() === values.assigned_to,
                 );
 
                 const previousAssigneeName = `${
@@ -241,7 +253,6 @@ export function EditLeadModal({
                       name="company"
                       value={values.company}
                       onChange={handleChange}
-
                     />
                     <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
                       <label className=" text-gray-700 block">
@@ -267,12 +278,12 @@ export function EditLeadModal({
                       name="other_contact"
                       type="text"
                       value={values?.other_contact}
-                      onChange={e => {
+                      onChange={(e) => {
                         let digitsOnly = e.target.value.replace(/[^0-9]/g, "");
-                        if (digitsOnly.length > 15) digitsOnly = digitsOnly.slice(0, 15);
+                        if (digitsOnly.length > 15)
+                          digitsOnly = digitsOnly.slice(0, 15);
                         setFieldValue("other_contact", digitsOnly);
                       }}
-
                     />
                     <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
                       <label className="text-[0.9rem] font-medium text-gray-700">
@@ -280,7 +291,9 @@ export function EditLeadModal({
                       </label>
                       <NumberInput
                         value={values.possibility_of_conversion || 0}
-                        onChange={(value) => setFieldValue("possibility_of_conversion", value)}
+                        onChange={(value) =>
+                          setFieldValue("possibility_of_conversion", value)
+                        }
                         min={0}
                         max={100}
                         placeholder="Enter Possibility of Conversion"
@@ -303,7 +316,6 @@ export function EditLeadModal({
                       name="location"
                       value={values.location}
                       onChange={handleChange}
-
                     />
                   </div>
 
@@ -322,9 +334,9 @@ export function EditLeadModal({
                     <Dropdown
                       label="Assigned To"
                       options={userOptions}
+                      disabled={userRole.toLocaleLowerCase() !== "admin"}
                       value={values.assigned_to || ""}
                       onChange={(val) => setFieldValue("assigned_to", val)}
-
                     />
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
@@ -333,14 +345,12 @@ export function EditLeadModal({
                       options={sourceOptions}
                       value={values.source_id || ""}
                       onChange={(val) => setFieldValue("source_id", val)}
-
                     />
                     <Dropdown
                       label="Status"
                       options={statusOptions}
                       value={values.status_id || ""}
                       onChange={(val) => setFieldValue("status_id", val)}
-
                     />
                   </div>
                   <div className="grid grid-cols-1 gap-4  py-2 ">
@@ -349,7 +359,6 @@ export function EditLeadModal({
                       options={typeOptions}
                       value={values.type_id || ""}
                       onChange={(val) => setFieldValue("type_id", val)}
-
                     />
                   </div>
                   <div className="grid grid-cols-1 gap-4  py-2 ">
@@ -360,7 +369,6 @@ export function EditLeadModal({
                       type="textarea"
                       value={values.requirement}
                       onChange={handleChange}
-
                     />
                     <div className="py-2 ">
                       <Checkbox
