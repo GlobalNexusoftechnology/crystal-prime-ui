@@ -2,40 +2,39 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import type { ICreateProjectTask } from "@/services";
+import {
+  useAllClientFollowUpQuery,
+  useAllDropdownDataQuery,
+  useAllProjectsQuery,
+  useAllTasksQuery,
+  useAuthStore,
+  useCreateMilestoneTaskMutation,
+  useDashboardSummaryQuery,
+  useDeleteMilestoneTaskMutation,
+  useUpdateMilestoneTaskMutation,
+  useUpdateTaskStatusMutation,
+} from "@/services";
+import React, { useEffect, useState } from "react";
+import { AnalyticalCard } from "../analytical-card";
 import {
   ClientDashboard,
   ExpensesOverviewChart,
   LeadAnalyticsChart,
-  LeadTypeChart,
-  ProjectRenewalList,
   ProjectSnapshotChart,
 } from "./components";
-import { AnalyticalCard } from "../analytical-card";
-import {
-  useDashboardSummaryQuery,
-  useAllProjectsQuery,
-  useAllTasksQuery,
-  useUpdateTaskStatusMutation,
-  useCreateMilestoneTaskMutation,
-  useUpdateMilestoneTaskMutation,
-  useDeleteMilestoneTaskMutation,
-  useAuthStore,
-  useAllClientFollowUpQuery,
-  useAllDropdownDataQuery,
-} from "@/services";
-import type { ICreateProjectTask } from "@/services";
 
+import { AddTaskModal, DeleteModal, SimpleDropdown, Table } from "@/components";
 import { AnalyticalCardIcon } from "@/features";
-import { AddTaskModal, SimpleDropdown, DeleteModal } from "@/components";
 
-import TaskTable from "./components/TaskTable";
 import type { ITableAction, ITableColumn } from "@/constants/table";
+import TaskTable from "./components/TaskTable";
 
-import type { TaskRow } from "./components/TaskTable";
-import { useRouter } from "next/navigation";
 import { formatDate } from "@/utils/helpers/formatDate";
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import type { TaskRow } from "./components/TaskTable";
+import { ProjectColForAdmin } from "@/constants";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -206,30 +205,30 @@ export default function Dashboard() {
   }, [selectedProjectId, projectsData]);
 
   // ProjectRenewalList month selection logic
-  const renewalMonthOptions = dashboardSummary?.projectRenewalData
-    ? Object.keys(dashboardSummary.projectRenewalData)
-    : [];
+  // const renewalMonthOptions = dashboardSummary?.projectRenewalData
+  //   ? Object.keys(dashboardSummary.projectRenewalData)
+  //   : [];
 
-  // Get current month name
-  const getCurrentMonth = () => {
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    return months[new Date().getMonth()];
-  };
+  // // Get current month name
+  // const getCurrentMonth = () => {
+  //   const months = [
+  //     "January",
+  //     "February",
+  //     "March",
+  //     "April",
+  //     "May",
+  //     "June",
+  //     "July",
+  //     "August",
+  //     "September",
+  //     "October",
+  //     "November",
+  //     "December",
+  //   ];
+  //   return months[new Date().getMonth()];
+  // };
 
-  const currentMonth = getCurrentMonth();
+  // const currentMonth = getCurrentMonth();
 
   // Helper function to check if a date is today or yesterday
   const isTodayOrYesterday = (dateString: string): boolean => {
@@ -312,21 +311,21 @@ export default function Dashboard() {
   };
 
   // Add current month to options if it doesn't exist
-  const allMonthOptions = renewalMonthOptions.includes(currentMonth)
-    ? renewalMonthOptions
-    : [currentMonth, ...renewalMonthOptions];
+  // const allMonthOptions = renewalMonthOptions.includes(currentMonth)
+  //   ? renewalMonthOptions
+  //   : [currentMonth, ...renewalMonthOptions];
 
-  const [selectedMonth, setSelectedMonth] = useState(currentMonth);
-  const handleMonthChange = (month: string) => setSelectedMonth(month);
+  // const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+  // const handleMonthChange = (month: string) => setSelectedMonth(month);
 
-  // Get data for selected month
-  const renewalDataForSelectedMonth =
-    dashboardSummary &&
-    selectedMonth &&
-    dashboardSummary?.projectRenewalData &&
-    dashboardSummary?.projectRenewalData[selectedMonth]
-      ? dashboardSummary?.projectRenewalData[selectedMonth]
-      : [];
+  // // Get data for selected month
+  // const renewalDataForSelectedMonth =
+  //   dashboardSummary &&
+  //   selectedMonth &&
+  //   dashboardSummary?.projectRenewalData &&
+  //   dashboardSummary?.projectRenewalData[selectedMonth]
+  //     ? dashboardSummary?.projectRenewalData[selectedMonth]
+  //     : [];
 
   // Remove old transformation for leadAnalyticsChartDataMap
   // Prepare safe dataMap for LeadAnalyticsChart
@@ -807,20 +806,20 @@ export default function Dashboard() {
   };
 
   // LeadTypeChart
-  const leadTypeDataMap = {
-    weekly: (dashboardSummary?.leadType?.weekly ?? []).map((item) => ({
-      name: item?.type ?? "",
-      value: item?.count,
-    })),
-    monthly: (dashboardSummary?.leadType?.monthly ?? []).map((item) => ({
-      name: item.type ?? "",
-      value: item.count,
-    })),
-    yearly: (dashboardSummary?.leadType?.yearly ?? []).map((item) => ({
-      name: item.type ?? "",
-      value: item.count,
-    })),
-  };
+  // const leadTypeDataMap = {
+  //   weekly: (dashboardSummary?.leadType?.weekly ?? []).map((item) => ({
+  //     name: item?.type ?? "",
+  //     value: item?.count,
+  //   })),
+  //   monthly: (dashboardSummary?.leadType?.monthly ?? []).map((item) => ({
+  //     name: item.type ?? "",
+  //     value: item.count,
+  //   })),
+  //   yearly: (dashboardSummary?.leadType?.yearly ?? []).map((item) => ({
+  //     name: item.type ?? "",
+  //     value: item.count,
+  //   })),
+  // };
 
   // ExpensesOverviewChart
   const expensesDataMap = {
@@ -849,6 +848,20 @@ export default function Dashboard() {
 
   console.log("taskList", taskList);
 
+  const inProgressProjects =
+    dashboardSummary?.projectSnapshot?.allProject?.filter(
+      (project: any) => project.status === "In Progress",
+    ) || [];
+
+  const openProjects =
+    dashboardSummary?.projectSnapshot?.allProject?.filter(
+      (project) => project.status === "Open",
+    ) || [];
+
+  const completedProjects =
+    dashboardSummary?.projectSnapshot?.allProject?.filter(
+      (project) => project.status === "Completed",
+    ) || [];
   return (
     <div className="p-6 md:p-8  bg-[#fafbfc] border  border-gray-300 rounded-xl  min-h-screen">
       {userRole === "client" ? (
@@ -949,8 +962,40 @@ export default function Dashboard() {
                     <LeadAnalyticsChart dataMap={leadAnalyticsDataMap} />
                   </div>
                 </div>
-                <div className="flex flex-wrap lg:flex-nowrap gap-6  my-6 ">
-                  <div className="w-full lg:w-[50%]">
+
+                {/* On Going Project Snapshot */}
+                <div className="my-6">
+                  {userRole.toLowerCase() === "admin" && inProgressProjects && (
+                    <>
+                      <h1 style={{ fontSize: "1.2rem" }}>
+                        On-Going Project Snapshot
+                      </h1>
+
+                      <Table
+                        data={inProgressProjects}
+                        columns={ProjectColForAdmin}
+                      />
+                    </>
+                  )}
+                </div>
+
+                {/* On Completed Project Snapshot */}
+                <div className="my-6">
+                  {userRole.toLowerCase() === "admin" && completedProjects && (
+                    <>
+                      <h1 style={{ fontSize: "1.2rem" }}>
+                        Completed Project Snapshot
+                      </h1>
+
+                      <Table
+                        data={completedProjects}
+                        columns={ProjectColForAdmin}
+                      />
+                    </>
+                  )}
+                </div>
+
+                {/* <div className="w-full lg:w-[50%]">
                     <LeadTypeChart
                       chartDataMap={leadTypeDataMap}
                       colors={["#6366F1", "#F59E42", "#10B981", "#EF4444"]}
@@ -963,8 +1008,8 @@ export default function Dashboard() {
                       onMonthChange={handleMonthChange}
                       monthOptions={allMonthOptions}
                     />
-                  </div>
-                </div>
+                  </div> */}
+
                 <ExpensesOverviewChart dataMap={expensesDataMap} />
               </div>
             )}

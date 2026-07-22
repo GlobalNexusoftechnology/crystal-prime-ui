@@ -872,7 +872,7 @@ export interface IUsersDetails {
   phone_number: string;
   role_id: string;
   dob: string;
-  keywords?: string[]
+  keywords?: string[];
 }
 export interface IUserViewDetails {
   id: string;
@@ -905,7 +905,7 @@ export interface IAllUsersListResponse {
   role_id: string;
   team_lead?: string;
   team_lead_id?: string;
-  keywords?: string[]
+  keywords?: string[];
 }
 
 export interface IAllUsersResponse {
@@ -963,7 +963,7 @@ export interface ICreateUserPayload {
   password: string;
   role_id: string;
   team_lead_id?: string;
-  keywords?:string[]
+  keywords?: string[];
 }
 export interface IUserUpdatePayload {
   employee_id: string;
@@ -1982,6 +1982,7 @@ export interface DashboardSummary {
     inProgress: number;
     completed: number;
     open: number;
+    allProject?: [];
   };
   leadAnalytics: {
     weekly: { status: string; count: number }[];
@@ -2985,23 +2986,21 @@ export interface IAnnouncementResponse {
 }
 
 export interface ISendProposalProduct {
-  materialId: string;       // required
-  name: string;             // required
-  salePrice: number;        // required
-  productSize: number;        // required
-  count: string;        // required
-  totalPrice: number;        // required
+  materialId: string; // required
+  name: string; // required
+  salePrice: number; // required
+  productSize: number; // required
+  count: string; // required
+  totalPrice: number; // required
   state?: string;
 }
 
-
-  export interface ISendProposalPayload {
-    proposalDate: string;
-    proposalNumber?: string;
-    proposalText: string;
-      products: ISendProposalProduct[];   // <-- added
-
-  }
+export interface ISendProposalPayload {
+  proposalDate: string;
+  proposalNumber?: string;
+  proposalText: string;
+  products: ISendProposalProduct[]; // <-- added
+}
 
 export type ISendProposalResponse = Blob;
 
@@ -3019,7 +3018,6 @@ export interface ITodayStatusAPIResponse {
   data: ITodayStatusResponse;
 }
 // src/services/apis/types/inventoryHistory.types.ts
-
 
 export interface ICreateInventoryHistoryPayload {
   material_id: string;

@@ -219,3 +219,31 @@ export const leadsListColumnForStaff: ITableColumn<ILeadsListProps>[] = [
     headerClassName: "min-w-[10rem] ",
   },
 ];
+
+export const ProjectColForAdmin = [
+  {
+    header: "Project Name",
+    accessor: "name",
+    headerClassName: "min-w-[10rem] ",
+  },
+  {
+    header: "Total MileStone",
+    accessor: "totalMilestones",
+    headerClassName: "min-w-[10rem] ",
+  },
+  {
+    header: "Completed MileStone",
+    accessor: "completedMilestoneCount",
+    headerClassName: "min-w-[10rem] ",
+  },
+  {
+    header: "In Progress Milestone",
+    accessor: "inProgressMilestoneCount",
+    headerClassName: "min-w-[10rem] ",
+  },
+  {
+    header: "Open Milestone",
+    accessor: "openMilestoneCount",
+    headerClassName: "min-w-[10rem] ",
+  },
+];
