@@ -871,7 +871,7 @@ export interface IUsersDetails {
   last_name: string;
   phone_number: string;
   role_id: string;
-  target: number;
+  target?: number;
   keywords?: string[];
 }
 export interface IUserViewDetails {
@@ -888,7 +888,7 @@ export interface IUserViewDetails {
   password?: string;
   team_lead_id?: string;
   keywords?: string[];
-  target: number;
+  target?: number;
 }
 
 export interface IAllUsersListResponse {
@@ -905,7 +905,7 @@ export interface IAllUsersListResponse {
   team_lead?: string;
   team_lead_id?: string;
   keywords?: string[];
-  target: number;
+  target?: number;
 }
 
 export interface IAllUsersResponse {
@@ -958,10 +958,9 @@ export interface ICreateUserPayload {
   first_name: string;
   last_name: string;
   email: string;
-
   phone_number: string;
   password: string;
-  target: number;
+  target?: number;
   role_id: string;
   team_lead_id?: string;
   keywords?: string[];
@@ -971,7 +970,7 @@ export interface IUserUpdatePayload {
   first_name: string;
   last_name: string;
   email: string;
-  target: number;
+  target?: number;
   phone_number: string;
   password?: string;
   role_id: string;
