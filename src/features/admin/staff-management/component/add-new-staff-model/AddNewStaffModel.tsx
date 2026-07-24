@@ -347,12 +347,11 @@ export interface IAddStaffFormValues {
   employeeId: string;
   firstName: string;
   lastName: string;
-
   phoneNumber: string;
   email: string;
   role: string;
   password: string;
-  target: number;
+  target?: number;
   teamLead: string;
   keywords?: string[];
 }
@@ -453,7 +452,6 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
     const createUserPayload: ICreateUserPayload = {
       first_name: values.firstName,
       last_name: values.lastName,
-
       email: values.email,
       password: values.password,
       target: values.target,

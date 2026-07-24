@@ -62,7 +62,6 @@ const initialEditValues: IAddStaffFormValues = {
   employeeId: "",
   firstName: "",
   lastName: "",
-
   phoneNumber: "",
   email: "",
   role: "",
@@ -129,7 +128,6 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
         employeeId: selectStaff.employee_id,
         firstName: selectStaff.first_name || "",
         lastName: selectStaff.last_name || "",
-
         phoneNumber: selectStaff.phone_number || "",
         email: selectStaff.email || "",
         role: selectStaff.role_id?.toString() || "",
