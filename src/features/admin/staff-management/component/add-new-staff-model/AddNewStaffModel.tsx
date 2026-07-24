@@ -84,7 +84,7 @@
 //         .max(40, "Keyword is too long")
 //     )
 //     .max(MAX_KEYWORDS, `Maximum ${MAX_KEYWORDS} keywords allowed`)
-//     .nullable(), 
+//     .nullable(),
 // });
 
 // export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
@@ -101,7 +101,6 @@
 //   const handleTagChange = (newTags?: string[]) => {
 //     if (newTags) setTags(newTags);
 //   };
-
 
 //   const roleOptions =
 //     allRoleData?.data?.list
@@ -123,7 +122,6 @@
 //         value: user.id.toString(),
 //       })) || [])
 //   ];
-
 
 //   const handleCreateUserSuccessCallback = (response: ICreateUserResponse) => {
 //     toast.success(response.message);
@@ -156,7 +154,6 @@
 
 //     onCreateUser(createUserPayload);
 //   };
-
 
 //   return (
 //     <div>
@@ -319,7 +316,6 @@
 //   );
 // };
 
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
@@ -345,7 +341,7 @@ import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FiEyeOff, FiEye } from "react-icons/fi";
 
 interface AddNewStaffModelProps {
   isOpen: boolean;
@@ -357,11 +353,12 @@ export interface IAddStaffFormValues {
   employeeId: string;
   firstName: string;
   lastName: string;
-  dob: string;
+
   phoneNumber: string;
   email: string;
   role: string;
   password: string;
+  target: number;
   teamLead: string;
   keywords?: string[];
 }
@@ -372,11 +369,12 @@ const initialValues: IAddStaffFormValues = {
   employeeId: "",
   firstName: "",
   lastName: "",
-  dob: "",
+
   phoneNumber: "",
   email: "",
   role: "",
   password: "",
+  target: 0,
   teamLead: "",
   keywords: [],
 };
@@ -384,10 +382,7 @@ const initialValues: IAddStaffFormValues = {
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First name is required"),
   lastName: Yup.string().required("Last name is required"),
-  dob: Yup.date()
-    .max(new Date(), "DOB cannot be in the future")
-    .required("Date of Birth is required")
-    .typeError("Invalid date format (YYYY-MM-DD)"),
+
   phoneNumber: Yup.string()
     .required("Phone number is required")
     .matches(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits"),
@@ -398,14 +393,18 @@ const validationSchema = Yup.object({
   role: Yup.string().required("Role is required"),
   password: Yup.string()
     .min(6, "Password must be at least 6 characters")
-    .matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/, "Password must contain at least one letter and one number")
+    .matches(
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+      "Password must contain at least one letter and one number",
+    )
     .required("Password is required"),
+  target: Yup.number().optional(),
   keywords: Yup.array()
     .of(
       Yup.string()
         .trim()
         .min(1, "Keyword is too short")
-        .max(40, "Keyword is too long")
+        .max(40, "Keyword is too long"),
     )
     .max(MAX_KEYWORDS, `Maximum ${MAX_KEYWORDS} keywords allowed`)
     .nullable(),
@@ -424,7 +423,7 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
     allRoleData?.data?.list
       ?.filter(
         (role, index, self) =>
-          index === self.findIndex((r) => r.role === role.role)
+          index === self.findIndex((r) => r.role === role.role),
       )
       ?.map((roleData) => ({
         label: roleData?.role,
@@ -460,9 +459,10 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
     const createUserPayload: ICreateUserPayload = {
       first_name: values.firstName,
       last_name: values.lastName,
-      dob: values.dob,
+
       email: values.email,
       password: values.password,
+      target: values.target,
       phone_number: values.phoneNumber,
       role_id: values.role,
       employee_id: values.employeeId,
@@ -475,9 +475,24 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
 
   return (
     <div>
-      <ModalOverlay modalTitle="Back to Staffs" isOpen={isOpen} onClose={onClose}>
-        <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleAddNewStaffSubmit}>
-          {({ values, handleChange, handleBlur, setFieldValue, errors, touched }) => {
+      <ModalOverlay
+        modalTitle="Back to Staffs"
+        isOpen={isOpen}
+        onClose={onClose}
+      >
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleAddNewStaffSubmit}
+        >
+          {({
+            values,
+            handleChange,
+            handleBlur,
+            setFieldValue,
+            errors,
+            touched,
+          }) => {
             // keywords handler that writes directly to Formik state
             const handleKeywordsChange = (newKeywords: string[]) => {
               const normalized = (newKeywords || [])
@@ -533,15 +548,6 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
-                  <DatePicker
-                    label="DOB"
-                    name="dob"
-                    value={values.dob}
-                    onChange={(value) => setFieldValue("dob", value)}
-                    placeholder="Select DOB"
-                    error={touched.dob && (errors.dob as string)}
-                    maxDate={new Date().toISOString().split("T")[0]}
-                  />
                   <div className="w-full grid grid-cols-1 gap-2 pb-2 relative">
                     <label className="text-gray-700 block">Phone Number</label>
                     <PhoneInput
@@ -551,12 +557,12 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                       inputProps={{ name: "phoneNumber" }}
                     />
                     {errors.phoneNumber && touched.phoneNumber && (
-                      <p className="text-red-500 text-[0.9rem]">{errors.phoneNumber as string}</p>
+                      <p className="text-red-500 text-[0.9rem]">
+                        {errors.phoneNumber as string}
+                      </p>
                     )}
                   </div>
-                </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
                   <InputField
                     label="Email"
                     name="email"
@@ -566,6 +572,9 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                     onBlur={handleBlur}
                     error={touched.email && (errors.email as string)}
                   />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
                   <Dropdown
                     label="Role Name"
                     options={roleOptions}
@@ -573,15 +582,13 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                     onChange={(val: string) => setFieldValue("role", val)}
                     error={touched.role ? (errors.role as string) : undefined}
                   />
+                  <Dropdown
+                    label="Team Lead (Optional)"
+                    options={userOptions}
+                    value={values.teamLead}
+                    onChange={(val: string) => setFieldValue("teamLead", val)}
+                  />
                 </div>
-
-                <Dropdown
-                  label="Team Lead (Optional)"
-                  options={userOptions}
-                  value={values.teamLead}
-                  onChange={(val: string) => setFieldValue("teamLead", val)}
-                />
-
                 <div className="mt-3">
                   <InputField
                     label="Enter Password"
@@ -592,16 +599,41 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                     onBlur={handleBlur}
                     error={touched.password && (errors.password as string)}
                     type={showPassword ? "text" : "password"}
-                    suffixIcon={<span style={{ userSelect: "none" }}>{showPassword ? <FiEyeOff size={20} /> : <FiEye size={20} />}</span>}
+                    suffixIcon={
+                      <span style={{ userSelect: "none" }}>
+                        {showPassword ? (
+                          <FiEyeOff size={20} />
+                        ) : (
+                          <FiEye size={20} />
+                        )}
+                      </span>
+                    }
                     onIconClick={() => setShowPassword((prev) => !prev)}
                   />
                 </div>
-
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+                  <div className="mt-3">
+                    <InputField
+                      label="Enter Monthly Target"
+                      name="target"
+                      placeholder="Enter Monthly Target"
+                      value={values.target}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touched.target && (errors.target as string)}
+                      type="number"
+                    />
+                  </div>
+                </div>
                 <div className="mt-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Keywords (skills, responsibilities)</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Keywords (skills, responsibilities)
+                  </label>
 
                   <TagsInput
-                    value={Array.isArray(values.keywords) ? values.keywords : []}
+                    value={
+                      Array.isArray(values.keywords) ? values.keywords : []
+                    }
                     onChange={handleKeywordsChange}
                     inputProps={{
                       placeholder: "Add a keyword and press Enter",
@@ -611,17 +643,37 @@ export const AddNewStaffModel: React.FC<AddNewStaffModelProps> = ({
                   />
 
                   {touched.keywords && errors.keywords && (
-                    <p className="text-red-500 text-[0.9rem] mt-1">{(errors.keywords as any) || ""}</p>
+                    <p className="text-red-500 text-[0.9rem] mt-1">
+                      {(errors.keywords as any) || ""}
+                    </p>
                   )}
 
-                  <p className="mt-2 text-xs text-gray-500">{(values.keywords?.length ?? 0)}/{MAX_KEYWORDS} keywords</p>
+                  <p className="mt-2 text-xs text-gray-500">
+                    {values.keywords?.length ?? 0}/{MAX_KEYWORDS} keywords
+                  </p>
 
-                  <p className="mt-2 text-sm text-gray-600">Current Keywords: {(values.keywords && values.keywords.length > 0) ? values.keywords.join(", ") : "No keywords added"}</p>
+                  <p className="mt-2 text-sm text-gray-600">
+                    Current Keywords:{" "}
+                    {values.keywords && values.keywords.length > 0
+                      ? values.keywords.join(", ")
+                      : "No keywords added"}
+                  </p>
                 </div>
 
                 <div className="flex justify-between mt-6 space-x-4">
-                  <Button title="Cancel" variant="primary-outline" width="w-full" onClick={onClose} type="button" />
-                  <Button disabled={isPending} title="Add Staff" width="w-full" type="submit" />
+                  <Button
+                    title="Cancel"
+                    variant="primary-outline"
+                    width="w-full"
+                    onClick={onClose}
+                    type="button"
+                  />
+                  <Button
+                    disabled={isPending}
+                    title="Add Staff"
+                    width="w-full"
+                    type="submit"
+                  />
                 </div>
               </Form>
             );

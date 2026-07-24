@@ -15,7 +15,6 @@ export interface IUser {
   last_name: string;
   phone_number: string;
   role_id: string;
-  dob: string;
 }
 
 export interface IActiveSession {
@@ -44,5 +43,5 @@ export type TSetAuthState = (
     | IAuthState
     | Partial<IAuthState>
     | ((state: IAuthState) => IAuthState | Partial<IAuthState>),
-  replace?: false | undefined
+  replace?: false | undefined,
 ) => void;

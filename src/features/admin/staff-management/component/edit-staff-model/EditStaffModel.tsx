@@ -46,11 +46,6 @@ const validationSchema = Yup.object({
     .min(2, "Last name must be at least 2 characters")
     .max(50, "Last name must be at most 50 characters"),
 
-  dob: Yup.date()
-    .max(new Date(), "DOB cannot be in the future")
-    .required("Date of Birth is required")
-    .typeError("Invalid date format (YYYY-MM-DD)"),
-
   phoneNumber: Yup.string()
     .required("Phone number is required")
     .matches(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits"),
@@ -68,7 +63,7 @@ const initialEditValues: IAddStaffFormValues = {
   employeeId: "",
   firstName: "",
   lastName: "",
-  dob: "",
+
   phoneNumber: "",
   email: "",
   role: "",
@@ -114,7 +109,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
       ?.map((user: any) => ({
         label: `${user.first_name} ${user.last_name}`,
         value: user.id.toString(),
-      })) || [])
+      })) || []),
   ];
 
   const { onEditUser } = useUpdateUserMutation({
@@ -130,12 +125,11 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
 
   useEffect(() => {
     if (selectStaff) {
-      const convertedDOB = formatDateForSave(selectStaff.dob);
       setInitialValues({
         employeeId: selectStaff.employee_id,
         firstName: selectStaff.first_name || "",
         lastName: selectStaff.last_name || "",
-        dob: convertedDOB,
+
         phoneNumber: selectStaff.phone_number || "",
         email: selectStaff.email || "",
         role: selectStaff.role_id?.toString() || "",
@@ -165,7 +159,6 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
             employee_id: values.employeeId,
             first_name: values.firstName,
             last_name: values.lastName,
-            dob: values.dob,
             email: values.email,
             role_id: values.role,
             phone_number: values.phoneNumber,
@@ -221,19 +214,8 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
-              <DatePicker
-                label="DOB"
-                name="dob"
-                value={values.dob}
-                onChange={(value) => setFieldValue("dob", value)}
-                placeholder="Select DOB"
-                maxDate={new Date().toISOString().split("T")[0]}
-                error={touched.dob && errors.dob}
-              />
               <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
-                <label className=" text-gray-700 block">
-                  Phone Number
-                </label>
+                <label className=" text-gray-700 block">Phone Number</label>
                 <PhoneInput
                   country="in"
                   value={values.phoneNumber}

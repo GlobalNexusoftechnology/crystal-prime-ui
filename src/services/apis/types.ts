@@ -129,6 +129,7 @@ export interface DashboardSummary {
   projectRenewalData: any[];
   expensesDataMap: Record<string, ExpensesData>;
   leadAnalyticsChartDataMap: Record<string, { name: string; value: number }[]>;
+  staffPerformance: any[];
 }
 
 export interface ICreateMaterialResponse {
@@ -1054,7 +1055,6 @@ export interface IUsersDetails {
   last_name: string;
   phone_number: string;
   role_id: string;
-  dob: string;
 }
 export interface IUserViewDetails {
   id: string;
@@ -1067,7 +1067,6 @@ export interface IUserViewDetails {
   phone_number: string;
   role_id: string;
   password?: string;
-  dob: string;
 }
 
 export interface IAllUsersListResponse {
@@ -1079,7 +1078,6 @@ export interface IAllUsersListResponse {
   first_name: string;
   last_name: string;
   number: string;
-  dob: string;
   role_id: string;
 }
 
@@ -1132,7 +1130,6 @@ export interface ICreateUserPayload {
   first_name: string;
   last_name: string;
   email: string;
-  dob: string;
   phone_number: string;
   password: string;
   role_id: string;
@@ -1141,7 +1138,7 @@ export interface IUserUpdatePayload {
   first_name: string;
   last_name: string;
   email: string;
-  dob: string;
+
   phone_number: string;
   password?: string;
   role_id: string;
@@ -2598,6 +2595,7 @@ export interface IAllMaterialsList {
   prices?: string;
   qty: number;
   quantity?: number; // API response field
+  minqty?: number; // API response field
   discount?: number;
   photos?: string[];
   active: boolean;

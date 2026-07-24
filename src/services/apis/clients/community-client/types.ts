@@ -871,7 +871,7 @@ export interface IUsersDetails {
   last_name: string;
   phone_number: string;
   role_id: string;
-  dob: string;
+  target: number;
   keywords?: string[];
 }
 export interface IUserViewDetails {
@@ -886,9 +886,9 @@ export interface IUserViewDetails {
   phone_number: string;
   role_id: string;
   password?: string;
-  dob: string;
   team_lead_id?: string;
   keywords?: string[];
+  target: number;
 }
 
 export interface IAllUsersListResponse {
@@ -901,11 +901,11 @@ export interface IAllUsersListResponse {
   first_name: string;
   last_name: string;
   number: string;
-  dob: string;
   role_id: string;
   team_lead?: string;
   team_lead_id?: string;
   keywords?: string[];
+  target: number;
 }
 
 export interface IAllUsersResponse {
@@ -958,9 +958,10 @@ export interface ICreateUserPayload {
   first_name: string;
   last_name: string;
   email: string;
-  dob: string;
+
   phone_number: string;
   password: string;
+  target: number;
   role_id: string;
   team_lead_id?: string;
   keywords?: string[];
@@ -970,7 +971,7 @@ export interface IUserUpdatePayload {
   first_name: string;
   last_name: string;
   email: string;
-  dob: string;
+  target: number;
   phone_number: string;
   password?: string;
   role_id: string;
@@ -2694,7 +2695,7 @@ export interface ITicketCommentResponse {
     last_name: string;
     email: string;
     phone_number?: string | null;
-    dob?: string | null;
+
     otp?: string | null;
     otpExpiresAt?: string | null;
     isOtpVerified?: boolean;
@@ -2867,7 +2868,7 @@ export interface IAttendance {
     employee_id: string;
     last_name: string;
     phone_number: string;
-    dob: string | null;
+
     otp: string | null;
     otpExpiresAt: string | null;
     isOtpVerified: boolean;
@@ -2914,7 +2915,7 @@ export interface IStaff {
   employee_id: string;
   last_name: string;
   phone_number: string;
-  dob: string | null;
+
   otp: string | null;
   otpExpiresAt: string | null;
   isOtpVerified: boolean;

@@ -15,7 +15,7 @@ import { format } from "date-fns";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { UserDropdown } from "../user-dropdown";
 
@@ -33,11 +33,16 @@ interface AdminHeaderProps {
  * @param {Function} props.SetIsVisibleSidebar - Function to toggle the sidebar visibility.
  * @returns {JSX.Element} The rendered AdminHeader component.
  */
-export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: AdminHeaderProps) {
+export function AdminHeader({
+  SetIsVisibleSidebar,
+  setIsAnnouncementOpen,
+}: AdminHeaderProps) {
   const router = useRouter();
   const { activeSession } = useAuthStore();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSupportTickets, setShowSupportTickets] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+
   const { notifications, isLoading } = useNotificationsQuery();
   const notificationRef = useRef<HTMLDivElement>(null); // ⬅️ Ref for dropdown
   const supportTicketsRef = useRef<HTMLDivElement>(null); // ⬅️ Ref for support tickets dropdown
@@ -52,6 +57,15 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
   const unreadCount =
     notifications?.filter((n: INotification) => !n.isRead).length || 0;
 
+  const unreadNotifications = useMemo(
+    () => notifications?.filter((n: INotification) => !n.isRead) ?? [],
+    [notifications],
+  );
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const currentNotification = unreadNotifications[currentIndex];
+
   // Support Tickets Query
   const {
     ticketsData,
@@ -64,7 +78,7 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
   // Filter to only show open tickets
   const openTickets =
     ticketsData?.data.list?.filter(
-      (ticket: ITicketData) => ticket.status.toLowerCase() === "open"
+      (ticket: ITicketData) => ticket.status.toLowerCase() === "open",
     ) || [];
 
   const { markNotificationAsRead } = useMarkAsReadNotificationMutation({
@@ -86,7 +100,7 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
 
   const handleDeleteNotification = (
     e: React.MouseEvent,
-    notificationId: string
+    notificationId: string,
   ) => {
     e.stopPropagation();
     deleteNotification({ id: notificationId });
@@ -186,6 +200,13 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
     }
   };
 
+  useEffect(() => {
+    if (unreadNotifications.length > 0) {
+      setShowPopup(true);
+      setCurrentIndex(0);
+    }
+  }, [unreadNotifications]);
+
   // Close dropdown on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -220,8 +241,6 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
         </button>
       </div>
       <div className="flex items-center gap-4 ">
-   
-
         {/* Notifications Icon */}
         <div
           className="relative cursor-pointer border  bg-customGray border-gray-300 p-4  rounded-xl "
@@ -263,8 +282,9 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
             notifications?.map((notification: INotification) => (
               <div
                 key={notification.id}
-                className={`border rounded-xl p-4 shadow-sm ${!notification.isRead ? "bg-blue-50" : ""
-                  } relative group cursor-pointer`}
+                className={`border rounded-xl p-4 shadow-sm ${
+                  !notification.isRead ? "bg-blue-50" : ""
+                } relative group cursor-pointer`}
               >
                 <button
                   onClick={(e) => handleDeleteNotification(e, notification?.id)}
@@ -291,14 +311,16 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
                             </span>
                           </p>
                         )}
-                        {notification.metadata.assignedBy || notification?.metadata?.assignedByName && (
-                          <p>
-                            Assigned by:{" "}
-                            <span className="font-semibold text-blue-600 capitalize">
-                              {notification?.metadata?.assignedBy || notification?.metadata?.assignedByName}
-                            </span>
-                          </p>
-                        )}
+                        {notification.metadata.assignedBy ||
+                          (notification?.metadata?.assignedByName && (
+                            <p>
+                              Assigned by:{" "}
+                              <span className="font-semibold text-blue-600 capitalize">
+                                {notification?.metadata?.assignedBy ||
+                                  notification?.metadata?.assignedByName}
+                              </span>
+                            </p>
+                          ))}
                         {notification.metadata.leadContact && (
                           <p>
                             Contact:{" "}
@@ -313,7 +335,7 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
                             <span className="font-semibold text-blue-600">
                               {format(
                                 new Date(notification.metadata.dueDate),
-                                "MMM d, yyyy"
+                                "MMM d, yyyy",
                               )}
                             </span>
                           </p>
@@ -332,7 +354,7 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
                       <p className="text-xs text-gray-500">
                         {format(
                           new Date(notification.created_at),
-                          "MMM d, yyyy h:mm a"
+                          "MMM d, yyyy h:mm a",
                         )}
                       </p>
                     </div>
@@ -394,12 +416,10 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
                           </h4>
                           <div className="flex flex-wrap gap-3  mb-1  font-medium text-[#1D2939]">
                             <span>
-                              <span className=" font-normal">
-                                Priority:{" "}
-                              </span>
+                              <span className=" font-normal">Priority: </span>
                               <span
                                 className={`underline  ${getPriorityColor(
-                                  ticket.priority
+                                  ticket.priority,
                                 )}`}
                               >
                                 {ticket.priority}
@@ -407,9 +427,7 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
                             </span>
                             {ticket.project && (
                               <span>
-                                <span className=" font-normal">
-                                  Project:{" "}
-                                </span>
+                                <span className=" font-normal">Project: </span>
                                 <span className="underline  text-blue-600">
                                   {ticket.project.name}
                                 </span>
@@ -466,6 +484,80 @@ export function AdminHeader({ SetIsVisibleSidebar, setIsAnnouncementOpen }: Admi
                   ))}
                 </div>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showPopup && currentNotification && (
+        <div className="fixed inset-0 z-[9999] bg-black/40 flex items-center justify-center">
+          <div className="bg-white rounded-2xl w-[550px] shadow-xl">
+            <div className="border-b p-5">
+              <h2 className="text-xl font-semibold">
+                {getNotificationTitle(currentNotification.type)}
+              </h2>
+            </div>
+
+            <div className="p-5 space-y-4">
+              <p>{currentNotification.message}</p>
+
+              {currentNotification.metadata?.leadName && (
+                <p>
+                  <strong>Lead:</strong> {currentNotification.metadata.leadName}
+                </p>
+              )}
+
+              {currentNotification.metadata?.assignedByName && (
+                <p>
+                  <strong>Assigned By:</strong>{" "}
+                  {currentNotification.metadata.assignedByName}
+                </p>
+              )}
+
+              {currentNotification.metadata?.leadContact && (
+                <p>
+                  <strong>Contact:</strong>{" "}
+                  {currentNotification.metadata.leadContact}
+                </p>
+              )}
+            </div>
+
+            <div className="border-t p-4 flex justify-between">
+              <span>
+                {currentIndex + 1} / {unreadNotifications.length}
+              </span>
+
+              <div className="flex gap-3">
+                <button
+                  className="border px-4 py-2 rounded-lg"
+                  onClick={() => {
+                    markNotificationAsRead({
+                      id: currentNotification.id,
+                    });
+
+                    if (currentIndex === unreadNotifications.length - 1) {
+                      setShowPopup(false);
+                    } else {
+                      setCurrentIndex((i) => i + 1);
+                    }
+                  }}
+                >
+                  Mark as Read
+                </button>
+
+                <button
+                  className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+                  onClick={() => {
+                    if (currentIndex === unreadNotifications.length - 1) {
+                      setShowPopup(false);
+                    } else {
+                      setCurrentIndex((i) => i + 1);
+                    }
+                  }}
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </div>
         </div>

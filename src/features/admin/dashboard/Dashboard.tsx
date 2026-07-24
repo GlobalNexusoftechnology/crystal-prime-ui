@@ -15,14 +15,14 @@ import {
   useUpdateMilestoneTaskMutation,
   useUpdateTaskStatusMutation,
 } from "@/services";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { AnalyticalCard } from "../analytical-card";
 import {
   ClientDashboard,
-  ExpensesOverviewChart,
   LeadAnalyticsChart,
   ProjectSnapshotChart,
 } from "./components";
+import { useDebounce } from "@/utils/hooks";
 
 import { AddTaskModal, DeleteModal, SimpleDropdown, Table } from "@/components";
 import { AnalyticalCardIcon } from "@/features";
@@ -35,6 +35,8 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import type { TaskRow } from "./components/TaskTable";
 import { ProjectColForAdmin } from "@/constants";
+import { useAllInventoryQuery } from "@/services/apis/clients/community-client/query-hooks/useAllInventoryQuery";
+import { inventoryColumns } from "@/constants/tables/inventory-management-list";
 
 export default function Dashboard() {
   const router = useRouter();
@@ -56,6 +58,15 @@ export default function Dashboard() {
       assigned_to: "",
       milestone_id: "",
     });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [searchInput, setSearchInput] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { debouncedValue: searchQuery } = useDebounce({
+    initialValue: searchInput,
+    delay: 500,
+    onChangeCb: () => {},
+  });
 
   // State to track which descriptions are expanded
   const [expandedDescriptions, setExpandedDescriptions] = useState<Set<string>>(
@@ -114,6 +125,18 @@ export default function Dashboard() {
   // const { allUsersData: usersData } = useAllUsersQuery();
   const { allUsersData: usersData } = useAllDropdownDataQuery();
 
+  // Inventory
+  const filters = useMemo(
+    () => ({
+      searchText: searchQuery,
+      page: currentPage,
+      limit: 40,
+    }),
+    [searchQuery, currentPage],
+  );
+
+  const { allMaterialsData } = useAllInventoryQuery(filters);
+
   // Fetch all tasks directly
   const { allTasksData, isLoading: isLoadingTasks } = useAllTasksQuery();
   // Still fetch projects for dropdowns and routing context
@@ -158,6 +181,10 @@ export default function Dashboard() {
       value: user.id,
     }));
   }, [usersData]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   // Prepare project options for project selection
   const projectOptions = React.useMemo(() => {
@@ -388,6 +415,10 @@ export default function Dashboard() {
       },
     });
 
+  const lowStockItems =
+    allMaterialsData?.data &&
+    allMaterialsData?.data.filter((item) => Number(item.quantity) < 10);
+
   // Task Data Transformation - Extract tasks from projects data with custom filtering
   const taskList: TaskRow[] = React.useMemo(() => {
     const list = (allTasksData as { data?: unknown[] } | undefined)?.data ?? [];
@@ -565,6 +596,9 @@ export default function Dashboard() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const statsData = (dashboardSummary as any) || {};
+  const staffPerformanceData =
+    ((dashboardSummary as any)?.staffPerformance as any) || {};
+
   const analyticalCards = dashboardSummary?.stats
     ? dashboardSummary?.stats?.map((card) => ({
         ...card,
@@ -572,53 +606,77 @@ export default function Dashboard() {
       }))
     : [
         {
-          count: statsData?.myTaskCount,
-          title: "My Task",
-          subtitle: "Open & In Process",
+          count: statsData?.leadStatusDaily?.todayLeads,
+          title: "Today's Leads",
+          subtitle: "New leads assigned today",
           icon: <AnalyticalCardIcon />,
         },
         {
-          count: getTaskCountByStatus(selectedTaskStatus),
-          title: "Open",
-          subtitle: "Open",
-          icon: <AnalyticalCardIcon />,
-          customContent: (
-            <div className="flex flex-col items-start gap-2">
-              <SimpleDropdown
-                options={[
-                  { label: "Open", value: "open" },
-                  { label: "All Task", value: "allTask" },
-                  { label: "Completed", value: "completed" },
-                  { label: "In Progress", value: "inprogress" },
-                  { label: "Approval", value: "approval" },
-                ]}
-                value={selectedTaskStatus}
-                onChange={(newStatus) => handleTaskStatusChange(newStatus)}
-                dropdownWidth="w-40 "
-                dropdownBorderRadius="rounded-md"
-                buttonClassName="text-sm"
-              />
-            </div>
-          ),
-        },
-        {
-          count: statsData?.todayFollowups,
-          title: "Today Follow up",
-          subtitle: "Due Today",
+          count: statsData?.leadStatusDaily?.pendingFollowups,
+          title: "Pending Follow-ups",
+          subtitle: "Follow-ups awaiting action",
           icon: <AnalyticalCardIcon />,
         },
         {
-          count: statsData?.projectCount,
-          title: "Project",
-          subtitle: "Assigned Projects",
+          count: statsData?.leadStatusDaily?.followupsDone,
+          title: "Follow-ups Completed",
+          subtitle: "Completed today",
           icon: <AnalyticalCardIcon />,
         },
         {
-          count: statsData?.performanceRatio,
-          title: "Performance Ratio",
-          subtitle: "Completed/Assigned",
+          count: statsData?.leadStatusDaily?.convertedLeads,
+          title: "Converted Leads",
+          subtitle: "Leads converted today",
           icon: <AnalyticalCardIcon />,
         },
+        // {
+        //   count: statsData?.myTaskCount,
+        //   title: "My Task",
+        //   subtitle: "Open & In Process",
+        //   icon: <AnalyticalCardIcon />,
+        // },
+        // {
+        //   count: getTaskCountByStatus(selectedTaskStatus),
+        //   title: "Open",
+        //   subtitle: "Open",
+        //   icon: <AnalyticalCardIcon />,
+        //   customContent: (
+        //     <div className="flex flex-col items-start gap-2">
+        //       <SimpleDropdown
+        //         options={[
+        //           { label: "Open", value: "open" },
+        //           { label: "All Task", value: "allTask" },
+        //           { label: "Completed", value: "completed" },
+        //           { label: "In Progress", value: "inprogress" },
+        //           { label: "Approval", value: "approval" },
+        //         ]}
+        //         value={selectedTaskStatus}
+        //         onChange={(newStatus) => handleTaskStatusChange(newStatus)}
+        //         dropdownWidth="w-40 "
+        //         dropdownBorderRadius="rounded-md"
+        //         buttonClassName="text-sm"
+        //       />
+        //     </div>
+        //   ),
+        // },
+        // {
+        //   count: statsData?.todayFollowups,
+        //   title: "Today Follow up",
+        //   subtitle: "Due Today",
+        //   icon: <AnalyticalCardIcon />,
+        // },
+        // {
+        //   count: statsData?.projectCount,
+        //   title: "Project",
+        //   subtitle: "Assigned Projects",
+        //   icon: <AnalyticalCardIcon />,
+        // },
+        // {
+        //   count: statsData?.performanceRatio,
+        //   title: "Performance Ratio",
+        //   subtitle: "Completed/Assigned",
+        //   icon: <AnalyticalCardIcon />,
+        // },
       ];
 
   const taskListColumn: ITableColumn<TaskRow>[] = [
@@ -714,6 +772,35 @@ export default function Dashboard() {
     { header: "CREATED AT", accessor: "created_at" },
     { header: "DELAY DAY", accessor: "delay_days" },
     { header: "DUE DATE", accessor: "due_date" },
+  ];
+
+  // Table Col for Staff Performance
+  const monthColumns = Object.keys(staffPerformanceData[0] || {})
+    .filter((key) => !["staffId", "staffName"].includes(key))
+    .flatMap((month) => [
+      {
+        header: `${month} Assigned`,
+        accessor: `${month}.leadsAssigned`,
+        cell: ({ row }) => row[month]?.leadsAssigned ?? 0,
+      },
+      {
+        header: `${month} Converted`,
+        accessor: `${month}.convertedLeads`,
+        cell: ({ row }) => row[month]?.convertedLeads ?? 0,
+      },
+      {
+        header: `${month} Sales`,
+        accessor: `${month}.sales`,
+        cell: ({ row }) => row[month]?.sales ?? 0,
+      },
+    ]);
+
+  const staffPerformanceDataColumns = [
+    {
+      header: "Staff Name",
+      accessor: "staffName",
+    },
+    ...monthColumns,
   ];
 
   const taskListAction: ITableAction<TaskRow>[] = [
@@ -822,29 +909,29 @@ export default function Dashboard() {
   // };
 
   // ExpensesOverviewChart
-  const expensesDataMap = {
-    weekly: (dashboardSummary?.expenses?.weekly?.labels ?? []).map(
-      (label, i) => ({
-        month: label,
-        income: dashboardSummary?.expenses?.weekly?.income?.[i] ?? 0,
-        expense: dashboardSummary?.expenses?.weekly?.expense?.[i] ?? 0,
-      }),
-    ),
-    monthly: (dashboardSummary?.expenses?.monthly?.labels ?? []).map(
-      (label, i) => ({
-        month: label,
-        income: dashboardSummary?.expenses?.monthly?.income?.[i] ?? 0,
-        expense: dashboardSummary?.expenses?.monthly?.expense?.[i] ?? 0,
-      }),
-    ),
-    yearly: (dashboardSummary?.expenses?.yearly?.labels ?? []).map(
-      (label, i) => ({
-        month: label,
-        income: dashboardSummary?.expenses?.yearly?.income?.[i] ?? 0,
-        expense: dashboardSummary?.expenses?.yearly?.expense?.[i] ?? 0,
-      }),
-    ),
-  };
+  // const expensesDataMap = {
+  //   weekly: (dashboardSummary?.expenses?.weekly?.labels ?? []).map(
+  //     (label, i) => ({
+  //       month: label,
+  //       income: dashboardSummary?.expenses?.weekly?.income?.[i] ?? 0,
+  //       expense: dashboardSummary?.expenses?.weekly?.expense?.[i] ?? 0,
+  //     }),
+  //   ),
+  //   monthly: (dashboardSummary?.expenses?.monthly?.labels ?? []).map(
+  //     (label, i) => ({
+  //       month: label,
+  //       income: dashboardSummary?.expenses?.monthly?.income?.[i] ?? 0,
+  //       expense: dashboardSummary?.expenses?.monthly?.expense?.[i] ?? 0,
+  //     }),
+  //   ),
+  //   yearly: (dashboardSummary?.expenses?.yearly?.labels ?? []).map(
+  //     (label, i) => ({
+  //       month: label,
+  //       income: dashboardSummary?.expenses?.yearly?.income?.[i] ?? 0,
+  //       expense: dashboardSummary?.expenses?.yearly?.expense?.[i] ?? 0,
+  //     }),
+  //   ),
+  // };
 
   console.log("taskList", taskList);
 
@@ -853,14 +940,16 @@ export default function Dashboard() {
       (project: any) => project.status === "In Progress",
     ) || [];
 
-  const openProjects =
-    dashboardSummary?.projectSnapshot?.allProject?.filter(
-      (project) => project.status === "Open",
-    ) || [];
+  // const openProjects =
+  //   dashboardSummary?.projectSnapshot?.allProject?.filter(
+  //     (project: any) => project.status === "Open",
+  //   ) || [];
+
+  console.log("staffPerformanceData", staffPerformanceData);
 
   const completedProjects =
     dashboardSummary?.projectSnapshot?.allProject?.filter(
-      (project) => project.status === "Completed",
+      (project: any) => project.status === "Completed",
     ) || [];
   return (
     <div className="p-6 md:p-8  bg-[#fafbfc] border  border-gray-300 rounded-xl  min-h-screen">
@@ -888,7 +977,7 @@ export default function Dashboard() {
               Wishing you a productive and fulfilling day ahead!
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4  mb-4 ">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4  mb-4 ">
             {analyticalCards?.length > 0 &&
               analyticalCards.map((card, idx) => {
                 const title = String(card.title || "");
@@ -994,6 +1083,37 @@ export default function Dashboard() {
                     </>
                   )}
                 </div>
+                {/* On Completed Project Snapshot */}
+                <div className="my-6">
+                  {userRole.toLowerCase() === "admin" && completedProjects && (
+                    <>
+                      <h1 style={{ fontSize: "1.2rem" }}>Inventory Snapshot</h1>
+
+                      <Table
+                        data={lowStockItems ?? []}
+                        columns={inventoryColumns}
+                        paginationData={allMaterialsData?.pagination}
+                        onPageChange={handlePageChange}
+                      />
+                    </>
+                  )}
+                </div>
+
+                {/* Staff Performance Report */}
+                <div className="my-6">
+                  {userRole.toLowerCase() === "admin" && (
+                    <>
+                      <h1 style={{ fontSize: "1.2rem" }}>Staff Performance</h1>
+
+                      <Table
+                        data={staffPerformanceData ?? []}
+                        columns={staffPerformanceDataColumns as any}
+                        paginationData={allMaterialsData?.pagination}
+                        onPageChange={handlePageChange}
+                      />
+                    </>
+                  )}
+                </div>
 
                 {/* <div className="w-full lg:w-[50%]">
                     <LeadTypeChart
@@ -1010,7 +1130,7 @@ export default function Dashboard() {
                     />
                   </div> */}
 
-                <ExpensesOverviewChart dataMap={expensesDataMap} />
+                {/* <ExpensesOverviewChart dataMap={expensesDataMap} /> */}
               </div>
             )}
             {/* Add Task Modal */}

@@ -2,10 +2,9 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
-import { Button, SearchBar, Table } from "@/components";
-import toast from "react-hot-toast";
+import { Button, DeleteModal, SearchBar, Table } from "@/components";
 import { EAction, EModule, ITableAction, staffListColumn } from "@/constants";
+import { ExportIcon } from "@/features";
 import {
   IAllUsersListResponse,
   IUserViewDetails,
@@ -13,26 +12,24 @@ import {
   useAllUsersQuery,
   useDeleteUserMutation,
 } from "@/services";
-import { ExportIcon } from "@/features";
+import { downloadBlobFile, formatDate, IApiError } from "@/utils";
+import { usePermission } from "@/utils/hooks";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { AddNewStaffModel } from "../add-new-staff-model";
 import { EditStaffModel } from "../edit-staff-model";
-import {
-  downloadBlobFile,
-  formatDate,
-  formatDateToDDMMYYYY,
-  IApiError,
-} from "@/utils";
-import { usePermission } from "@/utils/hooks";
-import { DeleteModal } from "@/components";
 
 export function StaffListTable() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [currentPage, setCurrentPage] = useState(1);
-  const { allUsersData, refetchAllUsers } = useAllUsersQuery({ searchText: searchQuery, page: currentPage });
+  const { allUsersData, refetchAllUsers } = useAllUsersQuery({
+    searchText: searchQuery,
+    page: currentPage,
+  });
   const [isAddStaffModalOpen, setIsAddStaffModalOpen] = useState(false);
   const [isEditStaffModalOpen, setIsEditStaffModalOpen] = useState(false);
   const [selectedStaff, setSelectedStaff] = useState<IUserViewDetails | null>(
-    null
+    null,
   );
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -47,16 +44,16 @@ export function StaffListTable() {
   const { hasPermission } = usePermission();
   const cavAddStaffManagement = hasPermission(
     EModule.STAFF_MANAGEMENT,
-    EAction.ADD
+    EAction.ADD,
   );
 
   const cavEditStaffManagement = hasPermission(
     EModule.STAFF_MANAGEMENT,
-    EAction.EDIT
+    EAction.EDIT,
   );
   const cavDeleteStaffManagement = hasPermission(
     EModule.STAFF_MANAGEMENT,
-    EAction.DELETE
+    EAction.DELETE,
   );
 
   const { onDeleteUser } = useDeleteUserMutation({
@@ -81,26 +78,26 @@ export function StaffListTable() {
   };
 
   // Prepare staff list data for table (no frontend filtering)
-  const userList: IAllUsersListResponse[] = (allUsersData?.data?.list ?? []).map(
-    (user) => ({
-      id: user.id || "",
-      employee_id: user?.employee_id || "",
-      first_name: user?.first_name || "",
-      last_name: user?.last_name || "",
-      number: user?.phone_number || "",
-      email: user?.email || "",
-      role: user?.role?.role || "",
-      dob: formatDateToDDMMYYYY(user?.dob) || "",
-      created_at: formatDate(user?.created_at) || "",
-      updated_at: formatDate(user?.updated_at) || "",
-      role_id: user?.role?.id || "",
-      team_lead: (user as any)?.team_lead
-        ? `${(user as any).team_lead.first_name} ${(user as any).team_lead.last_name}`
-        : "",
-      team_lead_id: (user as any)?.team_lead?.id || "",
-      keywords: user?.keywords,
-    })
-  );
+  const userList: IAllUsersListResponse[] = (
+    allUsersData?.data?.list ?? []
+  ).map((user) => ({
+    id: user.id || "",
+    employee_id: user?.employee_id || "",
+    first_name: user?.first_name || "",
+    last_name: user?.last_name || "",
+    number: user?.phone_number || "",
+    email: user?.email || "",
+    role: user?.role?.role || "",
+    target: user?.target || 0,
+    created_at: formatDate(user?.created_at) || "",
+    updated_at: formatDate(user?.updated_at) || "",
+    role_id: user?.role?.id || "",
+    team_lead: (user as any)?.team_lead
+      ? `${(user as any).team_lead.first_name} ${(user as any).team_lead.last_name}`
+      : "",
+    team_lead_id: (user as any)?.team_lead?.id || "",
+    keywords: user?.keywords,
+  }));
   const filteredUserList = userList;
 
   // Extract pagination data
@@ -119,7 +116,7 @@ export function StaffListTable() {
           last_name: row.last_name || "",
           email: row.email || "",
           phone_number: row.number || "",
-          dob: row.dob || "",
+          target: row.target || 0,
           role: row?.role || "",
           role_id: row.role_id || "",
           created_at: formatDate(row.created_at) || "",
@@ -150,17 +147,15 @@ export function StaffListTable() {
 
   const staffNameToDelete = deleteId
     ? (() => {
-      const staff = filteredUserList.find((u) => u.id === deleteId);
-      return staff ? `${staff.first_name} ${staff.last_name}` : "";
-    })()
+        const staff = filteredUserList.find((u) => u.id === deleteId);
+        return staff ? `${staff.first_name} ${staff.last_name}` : "";
+      })()
     : "";
 
   return (
     <div className="flex flex-col gap-6  bg-customGray mx-4  p-4  border  rounded-xl ">
       <div className="flex justify-between items-center flex-wrap gap-4 ">
-        <h1 className="text-[1.2rem]  font-medium">
-          Staff List
-        </h1>
+        <h1 className="text-[1.2rem]  font-medium">Staff List</h1>
         <div className="flex items-center flex-wrap gap-4 ">
           <SearchBar
             onSearch={setSearchQuery}

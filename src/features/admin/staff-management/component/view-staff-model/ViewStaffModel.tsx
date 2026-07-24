@@ -16,8 +16,6 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
   isOpen,
   onClose,
 }) => {
-  const dob = selectStaff && formatDateToDDMMYYYY(selectStaff?.dob);
-
   return (
     <div>
       <ModalOverlay
@@ -30,21 +28,17 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
           <div className="bg-white flex flex-col gap-8  p-4  border border-gray-300  rounded-lg ">
             <div className="flex flex-col md:flex-row gap-1 justify-between ">
               <div className="flex flex-col gap-1 ">
-                <span className="text-[0.9rem]  text-gray-600">
-                  First Name
-                </span>
+                <span className="text-[0.9rem]  text-gray-600">First Name</span>
                 <span className="underline text-[1rem]  ">
                   {selectStaff?.first_name}
                 </span>
               </div>
               <div className="flex flex-col gap-1 ">
-                <span className="text-[0.9rem]  text-gray-600">
-                  Last Name
-                </span>
+                <span className="text-[0.9rem]  text-gray-600">Last Name</span>
                 <span className="underline text-[1rem]  ">
                   {selectStaff?.last_name}
                 </span>
-              </div>  
+              </div>
             </div>
             <div className="flex flex-col gap-4 md:flex-row justify-between md:gap-1 ">
               {/* Contact Info */}
@@ -65,34 +59,20 @@ export const ViewStaffModel: React.FC<ViewStaffModelProps> = ({
 
           <div className="bg-white flex flex-col gap-4  p-4  border border-gray-300  rounded-lg ">
             <div className="flex flex-col gap-3 md:flex-row md:gap-1 justify-between ">
-              <div className="flex flex-col ">
-                <span className="text-[0.9rem]  text-gray-600">
-                  DOB
-                </span>
-                <span className=" text-[1rem] ">{dob}</span>
-              </div>
               <div className="flex flex-col gap-1 ">
-                <span className="text-[0.9rem]  text-gray-600">
-                  Created At
-                </span>
+                <span className="text-[0.9rem]  text-gray-600">Created At</span>
                 <span className=" text-[1rem] ">
                   {formatDate(`${selectStaff?.created_at}`)}
                 </span>
               </div>
 
               <div className="flex flex-col gap-1 ">
-                <span className="text-[0.9rem]  text-gray-600">
-                  Role Name
-                </span>
-                <span className=" text-[1rem] ">
-                  {selectStaff?.role}
-                </span>
+                <span className="text-[0.9rem]  text-gray-600">Role Name</span>
+                <span className=" text-[1rem] ">{selectStaff?.role}</span>
               </div>
             </div>
             <div className="flex flex-col gap-1 ">
-              <span className="text-[0.9rem]  text-gray-600">
-                Updated At
-              </span>
+              <span className="text-[0.9rem]  text-gray-600">Updated At</span>
               <span className=" text-[1rem] ">
                 {formatDate(`${selectStaff?.updated_at}`)}
               </span>
