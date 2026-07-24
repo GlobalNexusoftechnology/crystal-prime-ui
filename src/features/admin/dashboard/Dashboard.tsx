@@ -781,17 +781,17 @@ export default function Dashboard() {
       {
         header: `${month} Assigned`,
         accessor: `${month}.leadsAssigned`,
-        cell: ({ row }) => row[month]?.leadsAssigned ?? 0,
+        cell: ({ row }: { row: any }) => row[month]?.leadsAssigned ?? 0,
       },
       {
         header: `${month} Converted`,
         accessor: `${month}.convertedLeads`,
-        cell: ({ row }) => row[month]?.convertedLeads ?? 0,
+        cell: ({ row }: { row: any }) => row[month]?.convertedLeads ?? 0,
       },
       {
         header: `${month} Sales`,
         accessor: `${month}.sales`,
-        cell: ({ row }) => row[month]?.sales ?? 0,
+        cell: ({ row }: { row: any }) => row[month]?.sales ?? 0,
       },
     ]);
 
