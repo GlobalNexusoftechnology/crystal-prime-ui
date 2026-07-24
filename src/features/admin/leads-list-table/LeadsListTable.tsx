@@ -506,6 +506,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
       email: leadDetailById?.assigned_to?.email || "",
       role: leadDetailById?.assigned_to?.role || "",
       role_id: leadDetailById?.assigned_to?.role_id || "",
+      target: leadDetailById?.assigned_to?.target || 0,
       created_at:
         formatDate(`${leadDetailById?.assigned_to?.created_at}`) || "",
       updated_at:
