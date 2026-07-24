@@ -528,7 +528,7 @@ export function AdminHeader({
               </span>
 
               <div className="flex gap-3">
-                <button
+                {/* <button
                   className="border px-4 py-2 rounded-lg"
                   onClick={() => {
                     markNotificationAsRead({
@@ -543,7 +543,7 @@ export function AdminHeader({
                   }}
                 >
                   Mark as Read
-                </button>
+                </button> */}
 
                 <button
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg"
