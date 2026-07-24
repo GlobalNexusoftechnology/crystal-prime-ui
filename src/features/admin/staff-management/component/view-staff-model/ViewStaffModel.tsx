@@ -1,6 +1,6 @@
 import { ModalOverlay } from "@/components";
 import { IUserViewDetails } from "@/services";
-import { formatDate, formatDateToDDMMYYYY } from "@/utils";
+import { formatDate } from "@/utils";
 import { Mail, Phone } from "lucide-react";
 import React from "react";
 

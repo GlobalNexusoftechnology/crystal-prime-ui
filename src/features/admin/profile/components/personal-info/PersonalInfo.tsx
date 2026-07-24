@@ -1,17 +1,16 @@
 "use client";
 
 import { Button, InputField } from "@/components";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import {
-  useUpdateUserMutation,
   useAuthStore,
+  useUpdateUserMutation,
   useUserDetailQuery,
 } from "@/services";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
-import { DatePicker } from "@/components";
+import { Form, Formik } from "formik";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
+import * as Yup from "yup";
 
 /**
  * PersonalInfo component

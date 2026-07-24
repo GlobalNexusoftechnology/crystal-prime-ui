@@ -318,30 +318,24 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import {
-  Button,
-  DatePicker,
-  Dropdown,
-  InputField,
-  ModalOverlay,
-} from "@/components";
-import React from "react";
-import TagsInput from "react-tagsinput";
-import "react-tagsinput/react-tagsinput.css";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
+import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
 import {
   ICreateUserPayload,
   ICreateUserResponse,
   useAllDropdownDataQuery,
-  useCreateUserMutation,
   useAllUsersQuery,
+  useCreateUserMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
+import { Form, Formik } from "formik";
+import React from "react";
 import toast from "react-hot-toast";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
-import { FiEyeOff, FiEye } from "react-icons/fi";
+import TagsInput from "react-tagsinput";
+import "react-tagsinput/react-tagsinput.css";
+import * as Yup from "yup";
 
 interface AddNewStaffModelProps {
   isOpen: boolean;

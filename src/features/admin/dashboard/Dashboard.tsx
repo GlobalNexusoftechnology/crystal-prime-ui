@@ -97,12 +97,12 @@ export default function Dashboard() {
     setSelectedMilestoneId(""); // Reset milestone when project changes
   };
 
-  const handleTaskStatusChange = (newStatus: string) => {
-    setSelectedTaskStatus(newStatus);
-    // Reset task table preset when status filter changes
-    setTaskTablePreset("none");
-    setTaskTablePresetTrigger((v) => v + 1);
-  };
+  // const handleTaskStatusChange = (newStatus: string) => {
+  //   setSelectedTaskStatus(newStatus);
+  //   // Reset task table preset when status filter changes
+  //   setTaskTablePreset("none");
+  //   setTaskTablePresetTrigger((v) => v + 1);
+  // };
 
   // Task status update hook
   const { onUpdateTaskStatus, isPending: isUpdatingTaskStatus } =
@@ -295,33 +295,33 @@ export default function Dashboard() {
   };
 
   // Helper function to get task count by status
-  const getTaskCountByStatus = (status: string) => {
-    // Get the actual filtered task count from taskList
-    const filteredCount = taskList.length;
+  // const getTaskCountByStatus = (status: string) => {
+  //   // Get the actual filtered task count from taskList
+  //   const filteredCount = taskList.length;
 
-    switch (status) {
-      case "completed":
-        return `${
-          taskList.filter((task) => task.status === "Completed").length
-        } Task`;
-      case "inprogress":
-        return `${
-          taskList.filter((task) => task.status === "In Progress").length
-        } Task`;
-      case "approval":
-        return `${
-          taskList.filter((task) => task.status === "Approval").length
-        } Task`;
-      case "open":
-        return `${
-          taskList.filter((task) => task.status === "Open").length
-        } Task`;
-      case "allTask":
-        return `${filteredCount} Task`;
-      default:
-        return `${filteredCount} Task`;
-    }
-  };
+  //   switch (status) {
+  //     case "completed":
+  //       return `${
+  //         taskList.filter((task) => task.status === "Completed").length
+  //       } Task`;
+  //     case "inprogress":
+  //       return `${
+  //         taskList.filter((task) => task.status === "In Progress").length
+  //       } Task`;
+  //     case "approval":
+  //       return `${
+  //         taskList.filter((task) => task.status === "Approval").length
+  //       } Task`;
+  //     case "open":
+  //       return `${
+  //         taskList.filter((task) => task.status === "Open").length
+  //       } Task`;
+  //     case "allTask":
+  //       return `${filteredCount} Task`;
+  //     default:
+  //       return `${filteredCount} Task`;
+  //   }
+  // };
 
   // Handler for deleting a task
   const handleDeleteTask = async () => {

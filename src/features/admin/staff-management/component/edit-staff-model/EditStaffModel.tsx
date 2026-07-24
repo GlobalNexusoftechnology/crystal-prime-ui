@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 import {
   Button,
-  DatePicker,
   Dropdown,
   InputField,
   Loading,
@@ -16,14 +15,14 @@ import {
   IUserUpdatePayload,
   IUserViewDetails,
   useAllRoleListQuery,
-  useUpdateUserMutation,
   useAllUsersQuery,
+  useUpdateUserMutation,
 } from "@/services";
 import { IApiError } from "@/utils";
 import toast from "react-hot-toast";
-import { IAddStaffFormValues } from "../add-new-staff-model/AddNewStaffModel";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/style.css";
+import { IAddStaffFormValues } from "../add-new-staff-model/AddNewStaffModel";
 
 interface EditStaffModelProps {
   isOpen: boolean;
@@ -84,6 +83,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
   const { allUsersData } = useAllUsersQuery();
 
   // Format date for form field (YYYY-MM-DD)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const formatDateForSave = (inputDate: string) => {
     if (!inputDate) return "";
     if (inputDate.includes("T")) {
