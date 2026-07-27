@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { UserDropdown } from "../user-dropdown";
-
+import { X } from "lucide-react";
 interface AdminHeaderProps {
   SetIsVisibleSidebar: () => void;
   setIsAnnouncementOpen: (value: boolean) => void;
@@ -492,10 +492,20 @@ export function AdminHeader({
       {showPopup && currentNotification && (
         <div className="fixed inset-0 z-[9999] bg-black/40 flex items-center justify-center">
           <div className="bg-white rounded-2xl w-[550px] shadow-xl">
-            <div className="border-b p-5">
+            <div className="border-b p-5 flex items-center justify-between">
               <h2 className="text-xl font-semibold">
                 {getNotificationTitle(currentNotification.type)}
               </h2>
+
+              <button
+                className="p-1 rounded-full hover:bg-gray-100 transition"
+                onClick={() => {
+                  markNotificationAsRead();
+                  setShowPopup(false);
+                }}
+              >
+                <X size={22} />
+              </button>
             </div>
 
             <div className="p-5 space-y-4">
@@ -528,23 +538,6 @@ export function AdminHeader({
               </span>
 
               <div className="flex gap-3">
-                {/* <button
-                  className="border px-4 py-2 rounded-lg"
-                  onClick={() => {
-                    markNotificationAsRead({
-                      id: currentNotification.id,
-                    });
-
-                    if (currentIndex === unreadNotifications.length - 1) {
-                      setShowPopup(false);
-                    } else {
-                      setCurrentIndex((i) => i + 1);
-                    }
-                  }}
-                >
-                  Mark as Read
-                </button> */}
-
                 <button
                   className="bg-blue-600 text-white px-4 py-2 rounded-lg"
                   onClick={() => {
