@@ -48,7 +48,7 @@ const validationSchema = Yup.object({
   phoneNumber: Yup.string()
     .required("Phone number is required")
     .matches(/^[0-9]{10,15}$/, "Phone number must be 10-15 digits"),
-
+  target: Yup.number().optional(),
   email: Yup.string()
     .trim()
     .email("Invalid email format")
@@ -66,6 +66,7 @@ const initialEditValues: IAddStaffFormValues = {
   email: "",
   role: "",
   password: "",
+  target: 0,
   teamLead: "",
 };
 
@@ -130,6 +131,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
         lastName: selectStaff.last_name || "",
         phoneNumber: selectStaff.phone_number || "",
         email: selectStaff.email || "",
+        target: selectStaff.target || 0,
         role: selectStaff.role_id?.toString() || "",
         password: "",
         teamLead: (selectStaff as any).team_lead_id?.toString() || "",
@@ -160,6 +162,7 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
             email: values.email,
             role_id: values.role,
             phone_number: values.phoneNumber,
+            target: values.target,
             team_lead_id: values.teamLead || undefined,
             ...(values.password &&
               values.password.trim() !== "" && { password: values.password }),
@@ -261,6 +264,21 @@ export const EditStaffModel: React.FC<EditStaffModelProps> = ({
               onChange={handleChange}
               onBlur={handleBlur}
             />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-2">
+              <div className="mt-3">
+                <InputField
+                  label="Enter Monthly Target"
+                  name="target"
+                  placeholder="Enter Monthly Target"
+                  value={values.target}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={touched.target && (errors.target as string)}
+                  type="number"
+                />
+              </div>
+            </div>
 
             <div className="flex justify-between mt-6  space-x-4">
               <Button

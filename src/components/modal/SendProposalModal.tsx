@@ -89,7 +89,7 @@ export function SendProposalModal({
     () => ({
       searchText: searchQuery,
       page: currentPage,
-      limit: 40,
+      limit: 400,
     }),
     [searchQuery, currentPage],
   );
