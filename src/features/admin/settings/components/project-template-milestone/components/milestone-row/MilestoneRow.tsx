@@ -180,29 +180,7 @@ export function MilestoneRow({
         ) : (
           <p className="truncate">{milestone.description}</p>
         )}
-        {isEditing ? (
-          <InputField
-            name={`milestones[${index}].description`}
-            value={formik.values.milestones[index]?.description}
-            onChange={(e) => {
-              // Disallow special characters
-              const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
-              formik.setFieldValue(`milestones[${index}].description`, value);
-            }}
-            onBlur={formik.handleBlur}
-            placeholder="Enter Description"
-            error={
-              formik.touched.milestones?.[index]?.description &&
-              typeof formik.errors.milestones?.[index] === "object" &&
-              formik.errors.milestones?.[index] &&
-              "description" in formik.errors.milestones[index]
-                ? formik.errors.milestones[index].description
-                : undefined
-            }
-          />
-        ) : (
-          <p className="truncate">{milestone.description}</p>
-        )}
+
         <div className="flex items-center justify-end gap-2">
           {isEditing && !readOnly ? (
             <>

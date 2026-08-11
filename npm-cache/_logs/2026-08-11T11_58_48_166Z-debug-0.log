@@ -1,0 +1,20 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.8.2
+2 info using node@v20.19.6
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:c:\Users\Admin\Documents\SearchX Digital\crystal prime\crystal-prime-ui\.npmrc
+5 silly config load:file:C:\Users\Admin\.npmrc
+6 silly config load:file:C:\Users\Admin\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm view framer-motion description dist-tags.latest homepage version time
+8 verbose argv "view" "--json" "--" "framer-motion" "description" "dist-tags.latest" "homepage" "version" "time"
+9 verbose logfile logs-max:10 dir:C:\Users\Admin\Documents\SearchX Digital\crystal prime\crystal-prime-ui\npm-cache\_logs\2026-08-11T11_58_48_166Z-
+10 verbose logfile C:\Users\Admin\Documents\SearchX Digital\crystal prime\crystal-prime-ui\npm-cache\_logs\2026-08-11T11_58_48_166Z-debug-0.log
+11 silly logfile start cleaning logs, removing 4 files
+12 silly logfile done cleaning log files
+13 http fetch GET 200 https://registry.npmjs.org/framer-motion 1704ms (cache miss)
+14 verbose cwd c:\Users\Admin\Documents\SearchX Digital\crystal prime\crystal-prime-ui
+15 verbose os Windows_NT 10.0.19045
+16 verbose node v20.19.6
+17 verbose npm  v10.8.2
+18 verbose exit 0
+19 info ok

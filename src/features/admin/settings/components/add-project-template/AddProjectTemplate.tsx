@@ -4,14 +4,23 @@ import { useFormik, FormikProvider } from "formik";
 import { Dropdown, InputField, Button } from "@/components";
 import { ProjectTemplateMilestone } from "../project-template-milestone";
 import { ProjectTemplateFormValues } from "./types";
-import { useAllDropdownDataQuery, useCreateProjectTemplateMutation, useUpdateProjectTemplateMutation } from "@/services";
+import {
+  useAllDropdownDataQuery,
+  useCreateProjectTemplateMutation,
+  useUpdateProjectTemplateMutation,
+} from "@/services";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useProjectTemplateDetailQuery } from "@/services";
-import { useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from "@tanstack/react-query";
 
-
-export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: string, refetchAllProjectTemplates: () => void }) {
+export function AddProjectTemplate({
+  id,
+  refetchAllProjectTemplates,
+}: {
+  id?: string;
+  refetchAllProjectTemplates: () => void;
+}) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { onCreateProjectTemplate } = useCreateProjectTemplateMutation({
@@ -29,7 +38,9 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
       toast.success(response.message);
       refetchAllProjectTemplates();
       if (id) {
-        queryClient.invalidateQueries({ queryKey: ['project-template-detail-query-key', id] });
+        queryClient.invalidateQueries({
+          queryKey: ["project-template-detail-query-key", id],
+        });
       }
       router.push("/admin/settings?tab=projectTemplate");
     },
@@ -37,9 +48,10 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
       toast.error(err.message);
     },
   });
-  const { projectTemplateDetailData, isLoading } = useProjectTemplateDetailQuery(id ?? "");
+  const { projectTemplateDetailData, isLoading } =
+    useProjectTemplateDetailQuery(id ?? "");
 
-  const { allTypesData } = useAllDropdownDataQuery()
+  const { allTypesData } = useAllDropdownDataQuery();
 
   const projectTypeOptions =
     allTypesData?.data?.list?.map((type) => ({
@@ -47,32 +59,44 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
       value: type?.id.toString(),
     })) || [];
 
-  const initialValues: ProjectTemplateFormValues = id && projectTemplateDetailData
-    ? {
-        name: projectTemplateDetailData.name || "",
-        project_type: projectTemplateDetailData.project_type || "",
-        estimated_days: projectTemplateDetailData.estimated_days?.toString() || "",
-        description: projectTemplateDetailData.description || "",
-        milestones: (projectTemplateDetailData.project_milestone_master || []).map(m => ({
-          id: m.id,
-          name: m.name,
-          estimated_days: m.estimated_days?.toString() || "",
-          description: m.description,
-          tasks: (m.project_task_master || []).map(t => ({
-            id: t.id,
-            title: t.title,
-            estimated_days: t.estimated_days?.toString() || "",
-            description: t.description,
+  const initialValues: ProjectTemplateFormValues =
+    id && projectTemplateDetailData
+      ? {
+          name: projectTemplateDetailData.name || "",
+          project_type: projectTemplateDetailData.project_type || "",
+          estimated_days:
+            projectTemplateDetailData.estimated_days?.toString() || "",
+          description: projectTemplateDetailData.description || "",
+          milestones: (
+            projectTemplateDetailData.project_milestone_master || []
+          ).map((m) => ({
+            id: m.id,
+            name: m.name,
+            estimated_days: m.estimated_days?.toString() || "",
+            description: m.description,
+            tasks: (m.project_task_master || []).map((t) => ({
+              id: t.id,
+              title: t.title,
+              estimated_days: t.estimated_days?.toString() || "",
+              description: t.description,
+            })),
           })),
-        })),
-      }
-    : {
-        name: "",
-        project_type: "",
-        estimated_days: "",
-        description: "",
-        milestones: [{ id: "", name: "", estimated_days: "", description: "", tasks: [] }],
-      };
+        }
+      : {
+          name: "",
+          project_type: "",
+          estimated_days: "",
+          description: "",
+          milestones: [
+            {
+              id: "",
+              name: "",
+              estimated_days: "",
+              description: "",
+              tasks: [],
+            },
+          ],
+        };
 
   const formik = useFormik<ProjectTemplateFormValues>({
     enableReinitialize: true,
@@ -84,47 +108,68 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
         ...(id ? { id } : {}),
         name: values.name,
         project_type: values.project_type,
-        estimated_days: values.estimated_days ? Number(values.estimated_days) : 0,
+        estimated_days: values.estimated_days
+          ? Number(values.estimated_days)
+          : 0,
         description: values.description,
         milestones: values.milestones?.map((milestone) => ({
           ...(milestone.id ? { id: milestone.id } : {}),
           name: milestone.name,
           description: milestone.description,
-          estimated_days: milestone.estimated_days ? Number(milestone.estimated_days) : 0,
+          estimated_days: milestone.estimated_days
+            ? Number(milestone.estimated_days)
+            : 0,
           tasks: milestone.tasks?.map((task) => ({
             ...(task.id ? { id: task.id } : {}),
             title: task.title,
             description: task.description,
-            estimated_days: task.estimated_days ? Number(task.estimated_days) : 0,
+            estimated_days: task.estimated_days
+              ? Number(task.estimated_days)
+              : 0,
           })),
         })),
       };
       if (id) {
-        const milestoneSum = payload.milestones.reduce((acc, m) => acc + Number(m.estimated_days || 0), 0);
-        if (payload.estimated_days !== milestoneSum) {
-          toast.error("Project estimated days must equal the sum of its milestones' estimated days.");
-          return;
-        }
+        // const milestoneSum = payload.milestones.reduce((acc, m) => acc + Number(m.estimated_days || 0), 0);
+        // if (payload.estimated_days !== milestoneSum) {
+        //   toast.error("Project estimated days must equal the sum of its milestones' estimated days.");
+        //   return;
+        // }
         for (let i = 0; i < payload.milestones.length; i++) {
           const milestone = payload.milestones[i];
-          const taskSum = (milestone.tasks || []).reduce((acc, t) => acc + Number(t.estimated_days || 0), 0);
+          const taskSum = (milestone.tasks || []).reduce(
+            (acc, t) => acc + Number(t.estimated_days || 0),
+            0,
+          );
           if (Number(milestone.estimated_days) !== taskSum) {
-            toast.error(`Milestone "${milestone.name}" estimated days must equal the sum of its tasks' estimated days.`);
+            toast.error(
+              `Milestone "${milestone.name}" estimated days must equal the sum of its tasks' estimated days.`,
+            );
             return;
           }
         }
-        onUpdateProjectTemplate({id, payload});
+        onUpdateProjectTemplate({ id, payload });
       } else {
-        const milestoneSum = payload.milestones.reduce((acc, m) => acc + Number(m.estimated_days || 0), 0);
-        if (payload.estimated_days !== milestoneSum) {
-          toast.error("Project estimated days must equal the sum of its milestones' estimated days.");
-          return;
-        }
+        // const milestoneSum = payload.milestones.reduce(
+        //   (acc, m) => acc + Number(m.estimated_days || 0),
+        //   0,
+        // );
+        // if (payload.estimated_days !== milestoneSum) {
+        //   toast.error(
+        //     "Project estimated days must equal the sum of its milestones' estimated days.",
+        //   );
+        //   return;
+        // }
         for (let i = 0; i < payload.milestones.length; i++) {
           const milestone = payload.milestones[i];
-          const taskSum = (milestone.tasks || []).reduce((acc, t) => acc + Number(t.estimated_days || 0), 0);
+          const taskSum = (milestone.tasks || []).reduce(
+            (acc, t) => acc + Number(t.estimated_days || 0),
+            0,
+          );
           if (Number(milestone.estimated_days) !== taskSum) {
-            toast.error(`Milestone "${milestone.name}" estimated days must equal the sum of its tasks' estimated days.`);
+            toast.error(
+              `Milestone "${milestone.name}" estimated days must equal the sum of its tasks' estimated days.`,
+            );
             return;
           }
         }
@@ -137,14 +182,9 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
 
   return (
     <FormikProvider value={formik}>
-      <form
-        onSubmit={formik.handleSubmit}
-        className="flex flex-col gap-4 "
-      >
+      <form onSubmit={formik.handleSubmit} className="flex flex-col gap-4 ">
         <div className="rounded-lg  border  border-borderGray p-4  bg-white">
-          <h1 className="text-[1.1rem]  font-medium mb-4">
-            Project Info
-          </h1>
+          <h1 className="text-[1.1rem]  font-medium mb-4">Project Info</h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 ">
             <InputField
@@ -152,17 +192,13 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               name="name"
               placeholder="Enter Template Name"
               value={formik.values.name}
-              onChange={e => {
+              onChange={(e) => {
                 // Disallow special characters
-                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
-                formik.setFieldValue('name', value);
+                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+                formik.setFieldValue("name", value);
               }}
               onBlur={formik.handleBlur}
-              error={
-                formik.touched.name
-                  ? formik.errors.name
-                  : undefined
-              }
+              error={formik.touched.name ? formik.errors.name : undefined}
             />
 
             <Dropdown
@@ -184,10 +220,10 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               name="estimated_days"
               placeholder="Enter Estimated Days"
               value={formik.values.estimated_days}
-              onChange={e => {
+              onChange={(e) => {
                 // Allow only numbers
-                const value = e.target.value.replace(/[^0-9]/g, '');
-                formik.setFieldValue('estimated_days', value);
+                const value = e.target.value.replace(/[^0-9]/g, "");
+                formik.setFieldValue("estimated_days", value);
               }}
               onBlur={formik.handleBlur}
               error={
@@ -199,16 +235,14 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
           </div>
 
           <div className="flex flex-col gap-2  mt-4">
-            <span className="text-[1rem] ">
-              Template Description
-            </span>
+            <span className="text-[1rem] ">Template Description</span>
             <textarea
               name="description"
               value={formik.values.description}
-              onChange={e => {
+              onChange={(e) => {
                 // Disallow special characters
-                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, '');
-                formik.setFieldValue('description', value);
+                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+                formik.setFieldValue("description", value);
               }}
               onBlur={formik.handleBlur}
               placeholder="Write something..."
@@ -231,7 +265,11 @@ export function AddProjectTemplate({ id, refetchAllProjectTemplates }: { id?: st
               width="w-fit"
               onClick={() => router.push("/admin/settings?tab=projectTemplate")}
             />
-            <Button type="submit" title={id ? "Save Changes" : "Create Template"} width="w-fit" />
+            <Button
+              type="submit"
+              title={id ? "Save Changes" : "Create Template"}
+              width="w-fit"
+            />
           </div>
         </div>
       </form>
