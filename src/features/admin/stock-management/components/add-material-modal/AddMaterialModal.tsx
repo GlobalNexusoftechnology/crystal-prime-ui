@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { Button, Dropdown, InputField, ModalOverlay } from "@/components";
+import {
+  Button,
+  DatePicker,
+  Dropdown,
+  InputField,
+  ModalOverlay,
+} from "@/components";
 import { Form, Formik, FormikHelpers } from "formik";
 import React from "react";
 import toast from "react-hot-toast";
@@ -24,6 +30,9 @@ export interface IAddStaffFormValues {
   gst: string;
   qty: string;
   minqty: string;
+  date?: any;
+  stockLocation?: string;
+  vendorName?: string;
   purchasePrice: string;
   salesPrice: string;
   salesDescription: string;
@@ -43,6 +52,9 @@ const validationSchema = Yup.object({
   hsn: Yup.string().optional(),
   qty: Yup.string().optional(),
   minqty: Yup.string().optional(),
+  date: Yup.string().optional(),
+  stockLocation: Yup.string().optional(),
+  vendorName: Yup.string().optional(),
   type: Yup.string().optional(),
   gst: Yup.string().optional(),
   purchasePrice: Yup.string().optional(),
@@ -147,6 +159,9 @@ export function AddMaterialModal({
             initialData?.quantity?.toString() ||
             "",
           minqty: initialData?.minqty?.toString() || "",
+          date: initialData?.date?.toString() || "",
+          stockLocation: initialData?.stockLocation?.toString() || "",
+          vendorName: initialData?.vendorName?.toString() || "",
           purchasePrice: initialData?.purchase_price?.toString() || "",
           salesPrice: initialData?.sales_price?.toString() || "",
           salesDescription: initialData?.sales_description || "",
@@ -179,6 +194,9 @@ export function AddMaterialModal({
             gst: values.gst,
             quantity: Number(values.qty),
             minqty: Number(values.minqty),
+            stockLocation: values.stockLocation,
+            vendorName: values.vendorName,
+            date: values.date,
             purchase_price: Number(values.purchasePrice),
             sales_price: Number(values.salesPrice),
             sales_description: values.salesDescription,
@@ -275,6 +293,38 @@ export function AddMaterialModal({
                   onBlur={handleBlur}
                   placeholder="Enter Min Quantity"
                   error={touched.minqty && errors.minqty}
+                />
+
+                <DatePicker
+                  label="Date"
+                  name="date"
+                  value={values.date}
+                  onChange={(date: any) => {
+                    setFieldValue(
+                      "date",
+                      date ? new Date(date).toISOString().split("T")[0] : "",
+                    );
+                  }}
+                  placeholder="Enter Date"
+                  error={touched.date && errors.date}
+                />
+                <InputField
+                  label="Stock Location"
+                  name="stockLocation"
+                  value={values.stockLocation}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Stock Location"
+                  error={touched.stockLocation && errors.stockLocation}
+                />
+                <InputField
+                  label="Vendor Name"
+                  name="vendorName"
+                  value={values.vendorName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  placeholder="Vendor Name"
+                  error={touched.vendorName && errors.vendorName}
                 />
               </div>
 

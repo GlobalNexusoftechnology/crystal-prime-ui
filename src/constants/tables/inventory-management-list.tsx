@@ -17,6 +17,9 @@ export interface IMaterialManagementProps {
   gst?: string;
   qty?: number;
   minqty?: number;
+  date?: string;
+  stockLocation?: string;
+  vendorName?: string;
   quantity?: number; // API response field
   purchase_price?: string;
   sales_price?: string;
@@ -98,5 +101,17 @@ export const inventoryColumns: ITableColumn<IMaterialManagementProps>[] = [
   {
     header: "Price",
     accessor: "prices",
+  },
+  {
+    header: "Date",
+    accessor: "date",
+  },
+  {
+    header: "Stock Location",
+    accessor: "stockLocation",
+  },
+  {
+    header: "Vendor Name",
+    accessor: "vendorName",
   },
 ];

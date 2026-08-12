@@ -2596,6 +2596,9 @@ export interface IAllMaterialsList {
   qty: number;
   quantity?: number; // API response field
   minqty?: number; // API response field
+  date?: any;
+  stockLocation?: string;
+  vendorName?: string;
   discount?: number;
   photos?: string[];
   active: boolean;
