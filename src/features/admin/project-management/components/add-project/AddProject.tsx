@@ -84,39 +84,44 @@ const initialValues: IAddProjectFormValues = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getValidationSchema = (isAdmin: boolean) =>
   Yup.object({
-    name: Yup.string()
-      .required("Project Name is required")
-      .matches(
-        /^[a-zA-Z0-9 .,'-]*$/,
-        "No special characters allowed in Project Name."
-      ),
+    name: Yup.string().required("Project Name is required"),
     project_type: Yup.string().optional(),
     client_id: Yup.string().optional(),
     description: Yup.string().optional(),
     start_date: Yup.date()
       .typeError("Estimated Start Date is required")
       .optional(),
-    end_date: Yup.date()
-      .typeError("Estimated End Date is required")
-      .optional(),
+    end_date: Yup.date().typeError("Estimated End Date is required").optional(),
     budget: (isAdmin
-      ? Yup.number().typeError("Budget must be a number").required("Budget is required")
-      : Yup.number().transform((value, originalValue) => (originalValue === "" ? undefined : value)).optional()) as Yup.NumberSchema<number | undefined>,
+      ? Yup.number()
+          .typeError("Budget must be a number")
+          .required("Budget is required")
+      : Yup.number()
+          .transform((value, originalValue) =>
+            originalValue === "" ? undefined : value,
+          )
+          .optional()) as Yup.NumberSchema<number | undefined>,
     estimated_cost: (isAdmin
-      ? Yup.number().typeError("Estimated Cost must be a number").required("Estimated Cost is required")
-      : Yup.number().transform((value, originalValue) => (originalValue === "" ? undefined : value)).optional()) as Yup.NumberSchema<number | undefined>,
+      ? Yup.number()
+          .typeError("Estimated Cost must be a number")
+          .required("Estimated Cost is required")
+      : Yup.number()
+          .transform((value, originalValue) =>
+            originalValue === "" ? undefined : value,
+          )
+          .optional()) as Yup.NumberSchema<number | undefined>,
 
     cost_of_labour: Yup.number()
       .typeError("Cost Of Labour must be a number")
       .optional()
       .transform((value, originalValue) =>
-        originalValue === "" ? undefined : value
+        originalValue === "" ? undefined : value,
       ),
     overhead_cost: Yup.number()
       .typeError("Over Head Cost must be a number")
       .optional()
       .transform((value, originalValue) =>
-        originalValue === "" ? undefined : value
+        originalValue === "" ? undefined : value,
       ),
     milestoneOption: Yup.string().required("Milestone Option is required"),
   });
@@ -151,7 +156,10 @@ function createValidate(isAdmin: boolean) {
               // skip
             } else {
               // Skip admin-only cost fields for non-admins
-              if (!isAdmin && (err.path === "budget" || err.path === "estimated_cost")) {
+              if (
+                !isAdmin &&
+                (err.path === "budget" || err.path === "estimated_cost")
+              ) {
                 // ignore
               } else {
                 errors[err.path as keyof IAddProjectFormValues] = err.message;
@@ -162,12 +170,13 @@ function createValidate(isAdmin: boolean) {
       }
     }
     // Custom: Prevent special characters in name only
-    const allowedPattern = /^[a-zA-Z0-9 .,'-]*$/;
-    if (values.name && !allowedPattern.test(values.name)) {
-      errors.name = "No special characters allowed in Project Name.";
-    }
+    // const allowedPattern = /^[a-zA-Z0-9 .,'-]*$/;
+    // if (values.name && !allowedPattern.test(values.name)) {
+    //   errors.name = "No special characters allowed in Project Name.";
+    // }
     // Custom: Estimated Cost vs Budget
-    if (isAdmin &&
+    if (
+      isAdmin &&
       values.estimated_cost !== undefined &&
       values.estimated_cost !== "" &&
       values.budget !== undefined &&
@@ -178,8 +187,10 @@ function createValidate(isAdmin: boolean) {
     }
     // Custom: Cost of Labour + Overhead Cost vs Estimated Cost
     const sum =
-      (Number(values.cost_of_labour) || 0) + (Number(values.overhead_cost) || 0);
-    if (isAdmin &&
+      (Number(values.cost_of_labour) || 0) +
+      (Number(values.overhead_cost) || 0);
+    if (
+      isAdmin &&
       values.estimated_cost !== undefined &&
       values.estimated_cost !== "" &&
       sum > Number(values.estimated_cost)
@@ -273,32 +284,54 @@ export function AddProject({
 
   // Local state for edit mode
   const [editCurrentStep, setEditCurrentStep] = useState(1);
-  const [editBasicInfo, setEditBasicInfo] = useState<IAddProjectFormValues | null>(propInitialFormValues || null);
-  const [editMilestones, setEditMilestones] = useState<Milestone[]>(existingMilestones);
+  const [editBasicInfo, setEditBasicInfo] =
+    useState<IAddProjectFormValues | null>(propInitialFormValues || null);
+  const [editMilestones, setEditMilestones] =
+    useState<Milestone[]>(existingMilestones);
   const [editMilestoneOption, setEditMilestoneOption] = useState("milestone");
-  const [editSelectedProjectTemplate, setEditSelectedProjectTemplate] = useState(propInitialFormValues?.template_id || "");
-  const [editUploadedFiles, setEditUploadedFiles] = useState<File[]>(existingAttachments);
-  const [editUploadedFileUrls, setEditUploadedFileUrls] = useState<string[]>([]);
+  const [editSelectedProjectTemplate, setEditSelectedProjectTemplate] =
+    useState(propInitialFormValues?.template_id || "");
+  const [editUploadedFiles, setEditUploadedFiles] =
+    useState<File[]>(existingAttachments);
+  const [editUploadedFileUrls, setEditUploadedFileUrls] = useState<string[]>(
+    [],
+  );
 
   // Use appropriate state based on mode
   const currentStep = mode === "edit" ? editCurrentStep : createCurrentStep;
   const basicInfo = mode === "edit" ? editBasicInfo : createBasicInfo;
   const milestones = mode === "edit" ? editMilestones : createMilestones;
-  const milestoneOption = mode === "edit" ? editMilestoneOption : createMilestoneOption;
-  const selectedProjectTemplate = mode === "edit" ? editSelectedProjectTemplate : createSelectedProjectTemplate;
-  const uploadedFiles = mode === "edit" ? editUploadedFiles : createUploadedFiles;
-  const uploadedFileUrls = mode === "edit" ? editUploadedFileUrls : createUploadedFileUrls;
+  const milestoneOption =
+    mode === "edit" ? editMilestoneOption : createMilestoneOption;
+  const selectedProjectTemplate =
+    mode === "edit"
+      ? editSelectedProjectTemplate
+      : createSelectedProjectTemplate;
+  const uploadedFiles =
+    mode === "edit" ? editUploadedFiles : createUploadedFiles;
+  const uploadedFileUrls =
+    mode === "edit" ? editUploadedFileUrls : createUploadedFileUrls;
 
   // Use appropriate setters based on mode
-  const setCurrentStep = mode === "edit" ? setEditCurrentStep : setCreateCurrentStep;
+  const setCurrentStep =
+    mode === "edit" ? setEditCurrentStep : setCreateCurrentStep;
   const setBasicInfo = mode === "edit" ? setEditBasicInfo : setCreateBasicInfo;
-  const setMilestones = mode === "edit" ? setEditMilestones : setCreateMilestones;
-  const setMilestoneOption = mode === "edit" ? setEditMilestoneOption : setCreateMilestoneOption;
-  const setSelectedProjectTemplate = mode === "edit" ? setEditSelectedProjectTemplate : setCreateSelectedProjectTemplate;
-  const setUploadedFiles = mode === "edit" ? setEditUploadedFiles : setCreateUploadedFiles;
-  const setUploadedFileUrls = mode === "edit" ? setEditUploadedFileUrls : setCreateUploadedFileUrls;
-  const goToPreviousStep = mode === "edit" ? () => setEditCurrentStep(Math.max(editCurrentStep - 1, 1)) : createGoToPreviousStep;
-
+  const setMilestones =
+    mode === "edit" ? setEditMilestones : setCreateMilestones;
+  const setMilestoneOption =
+    mode === "edit" ? setEditMilestoneOption : setCreateMilestoneOption;
+  const setSelectedProjectTemplate =
+    mode === "edit"
+      ? setEditSelectedProjectTemplate
+      : setCreateSelectedProjectTemplate;
+  const setUploadedFiles =
+    mode === "edit" ? setEditUploadedFiles : setCreateUploadedFiles;
+  const setUploadedFileUrls =
+    mode === "edit" ? setEditUploadedFileUrls : setCreateUploadedFileUrls;
+  const goToPreviousStep =
+    mode === "edit"
+      ? () => setEditCurrentStep(Math.max(editCurrentStep - 1, 1))
+      : createGoToPreviousStep;
 
   const {
     allClientData,
@@ -344,11 +377,11 @@ export function AddProject({
         console.error("No project ID in response");
         console.error(
           "Full response structure:",
-          JSON.stringify(response, null, 2)
+          JSON.stringify(response, null, 2),
         );
       }
     },
-    onErrorCallback: () => { },
+    onErrorCallback: () => {},
   });
 
   const { onUpdateProject } = useUpdateProjectMutation({
@@ -371,7 +404,7 @@ export function AddProject({
         clearProjectCreation();
       }
     },
-    onErrorCallback: () => { },
+    onErrorCallback: () => {},
   });
 
   const { onUploadMultipleAttachments, isPending } =
@@ -463,8 +496,8 @@ export function AddProject({
       budget: basicInfo.budget !== "" ? Number(basicInfo.budget) : undefined,
       is_renewal: basicInfo.is_renewal,
       ...(basicInfo.is_renewal &&
-        basicInfo.renewal_date &&
-        !isNaN(new Date(basicInfo.renewal_date).getTime())
+      basicInfo.renewal_date &&
+      !isNaN(new Date(basicInfo.renewal_date).getTime())
         ? { renewal_date: basicInfo.renewal_date }
         : {}),
       ...(basicInfo.is_renewal && basicInfo.renewal_type
@@ -504,7 +537,7 @@ export function AddProject({
 
   const handleSubmit = (
     values: IAddProjectFormValues,
-    actions: FormikHelpers<IAddProjectFormValues>
+    actions: FormikHelpers<IAddProjectFormValues>,
   ) => {
     console.log("Hnadle Submit");
 
@@ -545,7 +578,7 @@ export function AddProject({
     updated_at: new Date().toLocaleString(),
   };
   const selectedClient = allClientData?.data?.list?.find(
-    (client) => client.id === basicInfo?.client_id
+    (client) => client.id === basicInfo?.client_id,
   );
 
   const clientInfo: IClientInfo = {
@@ -598,8 +631,9 @@ export function AddProject({
       return {
         name: file.name,
         uploaded_by: originalAttachment.uploaded_by?.first_name
-          ? `${originalAttachment.uploaded_by.first_name} ${originalAttachment.uploaded_by.last_name || ""
-          }`
+          ? `${originalAttachment.uploaded_by.first_name} ${
+              originalAttachment.uploaded_by.last_name || ""
+            }`
           : userId,
         created_at:
           originalAttachment.created_at || new Date().toLocaleString(),
@@ -618,9 +652,7 @@ export function AddProject({
     }
   });
 
-  useEffect(() => { }, [isModalOpen, createdProjectId]);
-
-
+  useEffect(() => {}, [isModalOpen, createdProjectId]);
 
   // Clear project store when user navigates back to project list
   const handleBackNavigation = () => {
@@ -650,8 +682,12 @@ export function AddProject({
       {currentStep === 1 && (
         <Formik
           initialValues={basicInfo || propInitialFormValues || initialValues}
-          validationSchema={getValidationSchema((activeSession?.user?.role.role ?? "").toLowerCase() === "admin")}
-          validate={createValidate((activeSession?.user?.role.role ?? "").toLowerCase() === "admin")}
+          validationSchema={getValidationSchema(
+            (activeSession?.user?.role.role ?? "").toLowerCase() === "admin",
+          )}
+          validate={createValidate(
+            (activeSession?.user?.role.role ?? "").toLowerCase() === "admin",
+          )}
           onSubmit={handleSubmit}
           validateOnChange={true}
           validateOnBlur={true}
@@ -721,7 +757,7 @@ export function AddProject({
             }
             // Only upload new files (no originalAttachment property)
             const newFiles = files.filter(
-              (f) => !(f as FileWithAttachment).originalAttachment
+              (f) => !(f as FileWithAttachment).originalAttachment,
             );
             if (newFiles.length > 0) {
               const formData = new FormData();

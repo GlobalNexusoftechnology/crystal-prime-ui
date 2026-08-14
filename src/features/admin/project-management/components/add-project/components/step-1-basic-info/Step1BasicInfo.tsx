@@ -120,7 +120,8 @@ export function Step1BasicInfo({
 
   // Filtering handler for name and description
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.replace(/[^a-zA-Z0-9 .,'-]/g, "");
+    // const value = e.target.value.replace(/[^a-zA-Z0-9 .,'-]/g, "");
+    const value = e.target.value;
     setFieldValue("name", value);
   };
   const handleDescriptionChange = (
