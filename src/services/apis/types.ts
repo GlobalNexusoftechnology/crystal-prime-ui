@@ -706,7 +706,7 @@ export interface ICreateLeadPayload {
   email: string[];
   location: string;
   budget?: number | null;
-  remark?: string | null;
+  remark?: string | undefined;
   possibility_of_conversion?: number | null;
   requirement: string;
   // conversion: number;

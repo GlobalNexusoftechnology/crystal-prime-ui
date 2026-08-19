@@ -483,6 +483,7 @@ export function LeadsListTable({ setAddLeadModalOpen }: LeadsListTableProps) {
     requirement: leadDetailById?.requirement || "null",
     location: leadDetailById?.location || "null",
     budget: leadDetailById?.budget || "null",
+    remark: leadDetailById?.remark || "null",
     possibility_of_conversion:
       leadDetailById?.possibility_of_conversion ?? null,
     status: leadDetailById?.status || {
