@@ -39,10 +39,11 @@ export function TaskRow({
           }
           onChange={(e) => {
             // Disallow special characters
-            const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+            // const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+            const value = e.target.value;
             formik.setFieldValue(
               `milestones[${milestoneIndex}].tasks[${taskIndex}].title`,
-              value
+              value,
             );
           }}
           onBlur={formik.handleBlur}
@@ -75,10 +76,10 @@ export function TaskRow({
           }
           onChange={(e) => {
             // Allow only numbers
-            const value = e.target.value.replace(/[^0-9]/g, "");
+            const value = e.target.value;
             formik.setFieldValue(
               `milestones[${milestoneIndex}].tasks[${taskIndex}].estimated_days`,
-              value
+              value,
             );
           }}
           onBlur={formik.handleBlur}
@@ -119,10 +120,10 @@ export function TaskRow({
           }
           onChange={(e) => {
             // Disallow special characters
-            const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+            const value = e.target.value;
             formik.setFieldValue(
               `milestones[${milestoneIndex}].tasks[${taskIndex}].description`,
-              value
+              value,
             );
           }}
           onBlur={formik.handleBlur}
@@ -158,17 +159,17 @@ export function TaskRow({
                 await formik.setFieldTouched(
                   `milestones[${milestoneIndex}].tasks[${taskIndex}].title`,
                   true,
-                  true
+                  true,
                 );
                 await formik.setFieldTouched(
                   `milestones[${milestoneIndex}].tasks[${taskIndex}].estimated_days`,
                   true,
-                  true
+                  true,
                 );
                 await formik.setFieldTouched(
                   `milestones[${milestoneIndex}].tasks[${taskIndex}].description`,
                   true,
-                  true
+                  true,
                 );
 
                 // Validate the task fields

@@ -284,6 +284,7 @@ export interface IAllLeadsList {
   email: string;
   location: string;
   budget: string;
+  remark: string;
   possibility_of_conversion?: number | null;
   requirement: string;
   source: ISource;
@@ -446,6 +447,7 @@ export interface ICreateLeadPayload {
   email?: string;
   location?: string;
   budget?: number | null;
+  remark?: string | null;
   possibility_of_conversion?: number | null;
   requirement?: string;
   source_id?: string;

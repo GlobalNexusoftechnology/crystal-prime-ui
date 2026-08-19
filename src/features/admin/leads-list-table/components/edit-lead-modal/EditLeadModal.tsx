@@ -50,6 +50,7 @@ const validationSchema = Yup.object().shape({
     .matches(/^[0-9]{8,15}$/, "Other Contact must be 8 to 15 digits")
     .optional(),
   budget: Yup.number().optional(),
+  remark: Yup.string().optional(),
   possibility_of_conversion: Yup.number().nullable().optional(),
 });
 
@@ -142,6 +143,7 @@ export function EditLeadModal({
           : "",
     location: lead.location || "",
     budget: lead.budget ? Number(lead.budget) : 0,
+    remark: lead.budget ? lead.budget : "",
     possibility_of_conversion: lead.possibility_of_conversion
       ? Number(lead.possibility_of_conversion)
       : 0,
@@ -318,7 +320,15 @@ export function EditLeadModal({
                       onChange={handleChange}
                     />
                   </div>
-
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
+                    <InputField
+                      label="Remark"
+                      placeholder="Enter Remark"
+                      name="remark"
+                      value={values.remark}
+                      onChange={handleChange}
+                    />
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
                     <div className="w-full grid grid-cols-1 gap-2  pb-2  relative">
                       <label className="text-[0.9rem] font-medium text-gray-700">

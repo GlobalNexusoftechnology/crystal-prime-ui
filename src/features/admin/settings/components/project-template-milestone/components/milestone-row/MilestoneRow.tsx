@@ -98,7 +98,8 @@ export function MilestoneRow({
               value={formik.values.milestones[index]?.name}
               onChange={(e) => {
                 // Disallow special characters
-                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+                // const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+                const value = e.target.value;
                 formik.setFieldValue(`milestones[${index}].name`, value);
               }}
               onBlur={formik.handleBlur}
@@ -131,7 +132,8 @@ export function MilestoneRow({
             value={formik.values.milestones[index]?.estimated_days}
             onChange={(e) => {
               // Allow only numbers
-              const value = e.target.value.replace(/[^0-9]/g, "");
+              // const value = e.target.value.replace(/[^0-9]/g, "");
+              const value = e.target.value;
               formik.setFieldValue(
                 `milestones[${index}].estimated_days`,
                 value,
@@ -163,7 +165,8 @@ export function MilestoneRow({
             value={formik.values.milestones[index]?.description}
             onChange={(e) => {
               // Disallow special characters
-              const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+              // const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+              const value = e.target.value;
               formik.setFieldValue(`milestones[${index}].description`, value);
             }}
             onBlur={formik.handleBlur}

@@ -11,6 +11,7 @@ export interface ILeadsListProps {
   email: string;
   location: string;
   budget: string;
+  remark: string;
   possibility_of_conversion?: number | null;
   requirement: string;
   source_id: string;
@@ -33,6 +34,7 @@ export interface ILeadsListDetailsProps {
   email: string;
   location: string;
   budget: string;
+  remark: string;
   possibility_of_conversion?: number | null;
   requirement: string;
   source: ISource;
@@ -108,6 +110,11 @@ export const leadsListColumn: ITableColumn<ILeadsListProps>[] = [
   {
     header: "BUDGET",
     accessor: "budget",
+    headerClassName: "min-w-[10rem] ",
+  },
+  {
+    header: "REMARK",
+    accessor: "remark",
     headerClassName: "min-w-[10rem] ",
   },
   {
@@ -193,6 +200,11 @@ export const leadsListColumnForStaff: ITableColumn<ILeadsListProps>[] = [
   {
     header: "BUDGET",
     accessor: "budget",
+    headerClassName: "min-w-[10rem] ",
+  },
+  {
+    header: "REMARK",
+    accessor: "remark",
     headerClassName: "min-w-[10rem] ",
   },
   {

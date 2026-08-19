@@ -131,6 +131,12 @@ export function LeadDetailModal({ onClose, data }: LeadDetailsModalProps) {
             </p>
           </div>
           <div className="flex flex-col gap-1 ">
+            <p className="text-[0.9rem] ">Remark</p>
+            <p className="text-textColor text-[1rem]  capitalize">
+              {data.remark || "N/A"}
+            </p>
+          </div>
+          <div className="flex flex-col gap-1 ">
             <p className="text-[0.9rem] ">
               Possibility of Conversion
             </p>

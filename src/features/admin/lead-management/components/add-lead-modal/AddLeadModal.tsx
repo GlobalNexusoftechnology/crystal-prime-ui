@@ -46,6 +46,7 @@ const validationSchema = Yup.object().shape({
     .matches(/^[0-9]{8,15}$/, "Other Contact must be 8 to 15 digits")
     .optional(),
   budget: Yup.number().optional(),
+  remark: Yup.string().optional(),
   possibility_of_conversion: Yup.number().nullable().optional(),
 });
 
@@ -119,6 +120,7 @@ export function AddLeadModal({
               email: "",
               location: "",
               budget: 0,
+              remark: "",
               possibility_of_conversion: 0,
               requirement: "",
               source_id: "",
@@ -140,6 +142,7 @@ export function AddLeadModal({
               const payload = {
                 ...rest,
                 budget: values.budget ?? 0,
+                remark: values.remark ?? "",
                 possibility_of_conversion:
                   values.possibility_of_conversion ?? 0,
                 // Only include email if it's not empty
@@ -250,6 +253,15 @@ export function AddLeadModal({
                     placeholder="Enter Location"
                     name="location"
                     value={values.location}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">
+                  <InputField
+                    label="Remark"
+                    placeholder="Enter Remark"
+                    name="remark"
+                    value={values.remark}
                     onChange={handleChange}
                   />
                 </div>

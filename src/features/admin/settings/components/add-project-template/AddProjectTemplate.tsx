@@ -194,7 +194,8 @@ export function AddProjectTemplate({
               value={formik.values.name}
               onChange={(e) => {
                 // Disallow special characters
-                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+                // const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+                const value = e.target.value;
                 formik.setFieldValue("name", value);
               }}
               onBlur={formik.handleBlur}
@@ -222,7 +223,8 @@ export function AddProjectTemplate({
               value={formik.values.estimated_days}
               onChange={(e) => {
                 // Allow only numbers
-                const value = e.target.value.replace(/[^0-9]/g, "");
+                // const value = e.target.value.replace(/[^0-9]/g, "");
+                const value = e.target.value;
                 formik.setFieldValue("estimated_days", value);
               }}
               onBlur={formik.handleBlur}
@@ -241,7 +243,8 @@ export function AddProjectTemplate({
               value={formik.values.description}
               onChange={(e) => {
                 // Disallow special characters
-                const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+                // const value = e.target.value.replace(/[^a-zA-Z0-9\s]/g, "");
+                const value = e.target.value;
                 formik.setFieldValue("description", value);
               }}
               onBlur={formik.handleBlur}
