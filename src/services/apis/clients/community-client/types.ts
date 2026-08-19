@@ -447,7 +447,7 @@ export interface ICreateLeadPayload {
   email?: string;
   location?: string;
   budget?: number | null;
-  remark?: string | null;
+  remark?: string;
   possibility_of_conversion?: number | null;
   requirement?: string;
   source_id?: string;
@@ -2504,7 +2504,7 @@ export interface ITicketData {
     estimated_date?: string | null;
     assigned_to?: string | null;
     status: string;
-    remark?: string | null;
+    remark?: string;
   };
   project?: {
     id: string;
@@ -2542,7 +2542,7 @@ export interface ITicketData {
       estimated_date?: string | null;
       assigned_to?: string | null;
       status: string;
-      remark?: string | null;
+      remark?: string;
     };
   } | null;
 }

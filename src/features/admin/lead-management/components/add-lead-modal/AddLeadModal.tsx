@@ -260,9 +260,9 @@ export function AddLeadModal({
                   <InputField
                     label="Remark"
                     placeholder="Enter Remark"
-                    name="remark"
+                    // name="remark"
                     value={values.remark}
-                    onChange={handleChange}
+                    onChange={(value) => setFieldValue("remark", value)}
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4  py-2 ">

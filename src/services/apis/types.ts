@@ -706,7 +706,7 @@ export interface ICreateLeadPayload {
   email: string[];
   location: string;
   budget?: number | null;
-  remark?: string | undefined;
+  remark?: string;
   possibility_of_conversion?: number | null;
   requirement: string;
   // conversion: number;
@@ -1468,8 +1468,7 @@ export interface ICreateProjectPayload {
   name: string;
   description?: string;
   project_type?: string;
-  budget?: number;
-  remark?: string;
+  budget?: number;  
   estimated_cost?: number;
   cost_of_labour?: number;
   extra_cost?: number;
